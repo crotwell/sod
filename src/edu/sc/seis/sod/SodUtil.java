@@ -47,7 +47,6 @@ public class SodUtil {
         } catch (InvocationTargetException e) {
             // occurs if the constructor throws an exception
             // don't repackage ConfigurationExceptioN
-            e.printStackTrace();
             Throwable subException = e.getTargetException();
             if (subException instanceof ConfigurationException) {
                 throw (ConfigurationException)subException;
