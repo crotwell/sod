@@ -24,7 +24,7 @@ import javax.xml.parsers.*;
  * @version
  */
 
-public class Start {
+public class Start implements SodExceptionListener {
     /**
      * Creates a new <code>Start</code> instance.
      *
@@ -66,7 +66,7 @@ public class Start {
 		    logger.info(subElement.getTagName());
 		} else if (subElement.getTagName().equals("eventArm")) {
 		    logger.info(subElement.getTagName());
-		    eventArm = new EventArm(subElement);
+		    eventArm = new EventArm(subElement, this);
 		    Thread eventArmThread = new Thread(eventArm);
 		    eventArmThread.start();
 		} else if (subElement.getTagName().equals("networkArm")) {
@@ -75,7 +75,7 @@ public class Start {
 		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
-		    waveFormArm = new WaveFormArm(subElement, networkArm);
+		    waveFormArm = new WaveFormArm(subElement, networkArm, this);
 		    Thread waveFormArmThread = new Thread(waveFormArm);
 		    waveFormArmThread.start();
 		    
@@ -228,6 +228,13 @@ public class Start {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder docBuilder = factory.newDocumentBuilder();
 	return docBuilder.parse(xmlFile);
+    }
+
+
+    public void sodExceptionHandler(SodException sodException) {
+	System.out.println("Caught Exception in start becoz of the Listener");
+	System.exit(0);
+	
     }
 
 

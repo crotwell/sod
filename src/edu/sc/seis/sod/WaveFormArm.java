@@ -22,7 +22,7 @@ import org.apache.log4j.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class WaveFormArm implements Runnable {
+public class WaveFormArm extends SodExceptionSource implements Runnable {
 
     /**
      * Creates a new <code>WaveFormArm</code> instance.
@@ -30,7 +30,7 @@ public class WaveFormArm implements Runnable {
      * @param config an <code>Element</code> value
      * @param networkArm a <code>NetworkArm</code> value
      */
-    public WaveFormArm(Element config, NetworkArm networkArm) throws Exception {
+    public WaveFormArm(Element config, NetworkArm networkArm, SodExceptionListener sodExceptionListener) throws Exception {
 		if ( ! config.getTagName().equals("waveFormArm")) {
 		    throw new IllegalArgumentException("Configuration element must be a waveFormArm tag");
 		}
@@ -39,6 +39,8 @@ public class WaveFormArm implements Runnable {
 
 		this.config = config;
 		this.networkArm = networkArm;
+		addSodExceptionListener(sodExceptionListener);
+		this.sodExceptionListener = sodExceptionListener;
     }
 	
     /**
@@ -60,7 +62,8 @@ public class WaveFormArm implements Runnable {
 								     eventStationSubsetter,
 								     fixedDataCenterSubsetter,
 								     localSeismogramArm,
-								     successfulChannels, this));
+								     successfulChannels, this,
+								     sodExceptionListener));
 		    thread.start();
 		}
 	    }
@@ -71,6 +74,7 @@ public class WaveFormArm implements Runnable {
 	} catch(Exception e) {
 
 		e.printStackTrace();
+		notifyListeners(this, e);
 	}
     }
 
@@ -129,6 +133,8 @@ public class WaveFormArm implements Runnable {
     private Element config = null;
 
     private FixedDataCenter fixedDataCenterSubsetter= null;
+
+    private SodExceptionListener sodExceptionListener;
 
     static Category logger = 
 	Category.getInstance(WaveFormArm.class.getName());

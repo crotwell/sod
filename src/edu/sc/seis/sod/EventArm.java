@@ -21,18 +21,19 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class EventArm implements Runnable{
+public class EventArm extends SodExceptionSource implements Runnable{
     /**
      * Creates a new <code>EventArm</code> instance.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public EventArm (Element config) throws ConfigurationException {
+    public EventArm (Element config, SodExceptionListener sodExceptionListener) throws ConfigurationException {
 	if ( ! config.getTagName().equals("eventArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
 	this.config = config;
+	addSodExceptionListener(sodExceptionListener);
 	processConfig(config);
     }
 
@@ -48,6 +49,7 @@ public class EventArm implements Runnable{
 	    
 	    System.out.println("Exception caught while processing the EventArm");
 	    e.printStackTrace();
+	    notifyListeners(this, e);
 	}
 	Start.getEventQueue().setSourceAlive(false);
 	System.out.println("The number of events in the eventQueue are "

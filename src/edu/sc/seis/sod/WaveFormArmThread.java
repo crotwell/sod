@@ -26,12 +26,12 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class WaveFormArmThread implements Runnable{
+public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     public WaveFormArmThread (EventAccess eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
 			      FixedDataCenter fixedDataCenterSubsetter, 
 			      LocalSeismogramArm localSeismogramArm,
-			      Channel[] successfulChannels, WaveFormArm parent){
+			      Channel[] successfulChannels, WaveFormArm parent, SodExceptionListener sodExceptionListener){
 	this.eventAccess = eventAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
 	this.fixedDataCenterSubsetter = fixedDataCenterSubsetter;
@@ -39,6 +39,7 @@ public class WaveFormArmThread implements Runnable{
 	this.networkArm = networkArm;
 	this.successfulChannels = successfulChannels;
 	this.parent = parent;
+	addSodExceptionListener(sodExceptionListener);
     }
 
     public void run() {
@@ -46,6 +47,7 @@ public class WaveFormArmThread implements Runnable{
 	    processWaveFormArm(eventAccess);
 	} catch(Exception ce) {
 	    ce.printStackTrace();
+	    notifyListeners(this, ce);
 	}
 	
     }
