@@ -32,7 +32,7 @@ Maps only update once every two minutes
 <td># Retry Channels</td>
 <td># Reject Channels</td>
 </tr>
-<stations>
+<eventStations>
 <statusFilter>
    <status>SUCCESS</status>
 </statusFilter>
@@ -47,8 +47,8 @@ Maps only update once every two minutes
 <td><numFailed/></td>
 </tr>
 </station>
-</stations>
-<stations>
+</eventStations>
+<eventStations>
 <statusFilter>
    <status>FAILURE</status>
 </statusFilter>
@@ -61,7 +61,7 @@ Maps only update once every two minutes
 <td><numFailed/></td>
 </tr>
 </station>
-</stations>
+</eventStations>
 </table>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
