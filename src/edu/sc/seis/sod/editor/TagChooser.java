@@ -51,12 +51,12 @@ public class TagChooser implements EditorPlugin {
         Iterator it = subTypes.iterator();
         while(it.hasNext()) {
             String ssType = (String)it.next();
-            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(ssType);
+            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(editor.getDisplayName(ssType));
+            popupGroup.add(menuItem);
             if (ssType.equals(element.getTagName())) {
                 menuItem.setSelected(true);
             }
             popup.add(menuItem);
-            popupGroup.add(menuItem);
         }
         replace.addMouseListener(new MouseAdapter() {
                     public void mousePressed(MouseEvent e) {
@@ -80,7 +80,10 @@ public class TagChooser implements EditorPlugin {
 
 
                 });
-        b.add(replace);
+        Box vBox = Box.createVerticalBox();
+        vBox.add(replace);
+        vBox.add(Box.createGlue());
+        b.add(vBox);
 
         EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
         JComponent comp;
