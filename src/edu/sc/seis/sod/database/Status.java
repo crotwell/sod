@@ -26,6 +26,16 @@ public class Status {
 	    return COMPLETE_SUCCESS;
 	case 3:
 	    return COMPLETE_REJECT;
+	case 4:
+	   return RE_OPEN;
+	case 5:
+	    return RE_OPEN_PROCESSING;
+	case 6:
+	    return RE_OPEN_SUCCESS;
+	case 7:
+	    return RE_OPEN_REJECT;
+	case 8: 
+	    return AWAITING_FINAL_STATUS;
 	default:
 	    return COMPLETE_SUCCESS;
 	}
@@ -45,6 +55,16 @@ public class Status {
 	    return "COMPLETE_SUCCESS";
 	case 3:
 	    return "COMPLETE_REJECT";
+	case 4: 
+	    return "RE_OPEN";
+	case 5:
+	    return "RE_OPEN_PROCESSING";
+	case 6:
+	    return "RE_OPEN_SUCCESS";
+	case 7:
+	    return "RE_OPEN_REJECT";
+	case 8:
+	    return "AWAITING_FINAL_STATUS";
 	default:
 	    return "COMPLETE_SUCCESS";
 	}
@@ -58,6 +78,16 @@ public class Status {
     public final static Status COMPLETE_SUCCESS = new Status(2);
 
     public final static Status COMPLETE_REJECT = new Status(3);
+
+    public final static Status RE_OPEN = new Status(4);
+
+    public final static Status RE_OPEN_PROCESSING = new Status(5);
+
+    public final static Status RE_OPEN_SUCCESS = new Status(6);
+
+    public final  static Status RE_OPEN_REJECT = new Status(7);
+
+    public final static Status AWAITING_FINAL_STATUS = new Status(8);
     
     private int status;
 }// Status

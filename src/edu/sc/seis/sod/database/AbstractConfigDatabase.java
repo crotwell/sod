@@ -193,6 +193,7 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     public void delete(String tableName) {
 	try {
 	    connection.createStatement().execute(deleteStmt+tableName);
+	    System.out.println("The query that is executed is "+ (deleteStmt+tableName));
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}

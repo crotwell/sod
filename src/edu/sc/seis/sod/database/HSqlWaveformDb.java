@@ -34,6 +34,7 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 			       " qtime timestamp) ");
 	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
 			       " ( waveformeventid int, "+
+			       " waveformnetworkid int, "+
 			       " waveformstationid int, "+
 			       " numsites int, "+
 			       " qtime timestamp) ");
@@ -41,23 +42,52 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 	    stmt.executeUpdate(" CREATE TABLE waveformsitedb "+
 			       " ( waveformeventid int, "+
 			       " waveformsiteid int, "+
+			       " waveformstationid int, "+
 			       " numchannels int, "+
 			       " qtime timestamp) ");
 	    stmt.executeUpdate(" CREATE TABLE waveformchanneldb "+
 			       " ( waveformid  int IDENTITY PRIMARY KEY,"+
 			       " waveformeventid int, "+
 			       " waveformchannelid int, "+
+			       " wavefromsiteid int, "+
 			       " qtime timestamp , "+
 			       " status int, "+
 			       " numretrys int, "+
 			       " reason VARCHAR)");
-			      
+	  
 
 	    
 	} catch(SQLException sqle) {
 	    logger.debug("one or more tables of waveformdatabase are already created");
 	}
+	try {
+	     beginTransStmt = connection.prepareStatement("SET AUTOCOMMIT FALSE");
+	      
+	     endTransStmt = connection.prepareStatement("COMMIT");
+    	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
     }
+
+    public void beginTransaction() {
+	try {
+	    beginTransStmt.executeUpdate();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    public void endTransaction() {
+	try {
+	    endTransStmt.executeUpdate();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    PreparedStatement beginTransStmt;
+
+    PreparedStatement endTransStmt;
 
     static Category logger = 
 	Category.getInstance(HSqlWaveformDb.class.getName());

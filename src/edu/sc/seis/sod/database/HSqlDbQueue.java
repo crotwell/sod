@@ -38,12 +38,26 @@ public class HSqlDbQueue implements Queue {
 	else { 
 		eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
 	}
+	if(Start.RE_OPEN_EVENTS) {
+		eventDatabase.reOpenEvents();	
+	}
+	if(Start.GET_NEW_EVENTS) {
+		deleteTimeConfig();
+	}
+    }
 
+    public void clean() {
 	if(Start.REMOVE_DATABASE == true) {
 	    eventDatabase.clean();
 	}
-	
-	if(Start.GET_NEW_EVENTS == true) {
+	deleteTimeConfig();
+    }
+
+
+    public void deleteTimeConfig() {
+	//if(Start.GET_NEW_EVENTS == true)  
+	{
+	    System.out.println("The GET NEW EVNETS IS SET TO BRE TRUE SO START FROM THE BEGINNING");
 	    eventDatabase.deleteTimeConfig();
 	}
 
@@ -52,11 +66,11 @@ public class HSqlDbQueue implements Queue {
     public void updateEventDatabase() {
 	if(getPersistanceType(props) == 0) {
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
+	    eventDatabase.updateStatus(Status.AWAITING_FINAL_STATUS, Status.NEW);
 	    //delete(Status.COMPLETE_SUCCESS);
 	} else {
-	    //   delete(Status.COMPLETE_SUCCESS);
-	    //delete(Status.PROCESSING);
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.COMPLETE_REJECT);
+	    eventDatabase.updateStatus(Status.AWAITING_FINAL_STATUS, Status.COMPLETE_REJECT);
 	}
     }
 
@@ -136,7 +150,14 @@ public class HSqlDbQueue implements Queue {
 
     public synchronized void setFinalStatus(EventAccess eventAccess, Status status) {
 	System.out.println("UPDATING THE STATUS");
+	
 	int dbid = eventDatabase.get(eventAccess);
+	Status st = eventDatabase.getStatus(dbid);
+	if(!(st.getId() == Status.AWAITING_FINAL_STATUS.getId() ||
+	     st.getId() == Status.PROCESSING.getId())) {
+	    return;
+	}
+
 	eventDatabase.updateStatus(dbid, status);
 	System.out.println("Notifying in  updateStatus ");
 
@@ -156,21 +177,34 @@ public class HSqlDbQueue implements Queue {
      * @return a <code>java.lang.Object</code> value
      */
     public synchronized int pop() {
-	int dbid = eventDatabase.getFirst(Status.NEW);
-	
+	int dbid;
+	//if(Start.RE_OPEN_EVENTS == true) {
+	//	dbid = eventDatabase.getFirst(Status.RE_OPEN);
+//	} else {
+		dbid = eventDatabase.getFirst(Status.NEW);
+ //	}
+
 	while((getLength() == 0 && sourceAlive == true)  || 
 	    (dbid == -1 && sourceAlive == true)){
 	    try {
 		wait();
 		if(dbid == -1) {
-		    dbid = eventDatabase.getFirst(Status.NEW);
+		   // if(Start.RE_OPEN_EVENTS == true) {
+		 //	dbid = eventDatabase.getFirst(Status.RE_OPEN);
+		  //  } else {
+		    	dbid = eventDatabase.getFirst(Status.NEW);
+		   // }
 		}
 	    } catch(InterruptedException ie) { 
 		ie.printStackTrace();
 	    }
 
 	}
-	eventDatabase.updateStatus(dbid, Status.PROCESSING);
+	//if(Start.RE_OPEN_EVENTS == true) {
+		eventDatabase.updateStatus(dbid, Status.PROCESSING);
+	//} else {
+	//	eventDatabase.updateStatus(dbid, Status.RE_OPEN_PROCESSING);
+	//}
 	return dbid;
 // 	EventAccess eventAccess = getEventAccess(dbid);
 // 	if(getLength() <= 4){ 
@@ -229,11 +263,17 @@ public class HSqlDbQueue implements Queue {
     public synchronized int getLength() {
 	int numNew = eventDatabase.getCount(Status.NEW);
 	int numProcessing = eventDatabase.getCount(Status.PROCESSING);
+	int reopen = eventDatabase.getCount(Status.RE_OPEN);
+	int reopenProcessing = eventDatabase.getCount(Status.RE_OPEN_PROCESSING);
 	int numSuccessful = eventDatabase.getCount(Status.COMPLETE_SUCCESS);
+	int reopenSuccessful = eventDatabase.getCount(Status.RE_OPEN_SUCCESS);
 	System.out.println("THE NUMBER OF EVENTS THAT ARE NEW :::::::::::::::::::: "+numNew);
 	System.out.println("THE NUMBER OF EVENTS THAT ARE PROCESSED :::::::::::::: "+numProcessing);
 	System.out.println("THE NUMBER OF SUCCESSFUL EVENTS ARE :::::::::::::::::: "+numSuccessful);
-	return (numNew + numProcessing);
+	System.out.println("THE NUMBER REOPEN ARE ::::::::::: "+reopen);
+	System.out.println("THE NUMBER REOPEN PROCESSED :::::: "+reopenProcessing);
+	System.out.println("THE NUMBER REOPEN SUCCESSFUL ::::: "+reopenSuccessful);
+	return (numNew + numProcessing + reopen + reopenProcessing);
     }
 
     private int getNew() {
@@ -318,6 +358,10 @@ public class HSqlDbQueue implements Queue {
 	return new CacheEvent(eventAccess);
     }
 
+    public Status getStatus(int eventid) {
+	return eventDatabase.getStatus(eventid);
+    }
+
     public void closeDatabase() {
 	if(getDatabaseType(props) == 0) DatabaseManager.getDatabaseManager(props, "hsqldb").close();
 	else DatabaseManager.getDatabaseManager(props, "postgres").close();
@@ -360,3 +404,4 @@ public class HSqlDbQueue implements Queue {
     private PreparedStatement getMaxIdStmt;
   
 }// HSqlDbQueue
+

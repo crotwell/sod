@@ -57,32 +57,32 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 							     " VALUES(?, ?, ?, ?) ");
 
 		putStationInfoStmt = connection.prepareStatement(" INSERT INTO waveformstationdb "+
-								 " VALUES(?, ?, ?, ?)");
+								 " VALUES(?, ?, ?, ?, ?)");
 
 		putSiteInfoStmt = connection.prepareStatement(" INSERT INTO waveformsitedb "+
-							      " VALUES(?, ?, ?, ?)");
+							      " VALUES(?, ?, ?, ?, ?)");
 
 		putChannelInfoStmt = connection.prepareStatement(" INSERT INTO waveformchanneldb "+
-								 " (waveformeventid, waveformchannelid, "+
+								 " (waveformeventid, waveformchannelid, waveformsiteid, "+
 								 " qtime, status, numretrys, reason ) "+
-								 " VALUES(?, ?, ?, ?, ?, ?)");
+								 " VALUES(?, ?, ?, ?, ?, ?, ?)");
 
 		networkCountStmt = connection.prepareStatement(" UPDATE waveformdb "+
-							      " SET numnetworks = numnetworks -1 "+
+							      " SET numnetworks = numnetworks + ? "+
 							      " WHERE waveformeventid = ? ");
 
 		stationCountStmt = connection.prepareStatement(" UPDATE waveformnetworkdb "+
-							       " SET numstations = numstations -1 "+
+							       " SET numstations = numstations + ? "+
 							       " WHERE waveformeventid = ? AND "+
 							       " waveformnetworkid = ? ");
 
 		siteCountStmt = connection.prepareStatement(" UPDATE waveformstationdb "+
-							    " SET numsites = numsites -1 "+
+							    " SET numsites = numsites + ? "+
 							    " WHERE waveformeventid = ? AND "+
 							    " waveformstationid = ? ");
 		
 		channelCountStmt = connection.prepareStatement(" UPDATE waveformsitedb "+
-							       " SET numchannels = numchannels - 1 "+
+							       " SET numchannels = numchannels + ? "+
 							       " WHERE waveformeventid = ? AND "+
 							       " waveformsiteid = ? ");
 
@@ -145,8 +145,39 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		
 		getIdsStmt = connection.prepareStatement(" SELECT waveformid from "+
 							 " waveformchanneldb "+
-							 " WHERE status = ? OR "+
-							 " status = ? ");
+							 " WHERE ( status = ? OR "+
+							 " status = ? ) AND "+
+							 " waveformeventid = ? ");
+
+		unfinishedEventsStmt = connection.prepareStatement("SELECT waveformeventid FROM "+
+								   " waveformdb WHERE "+
+								   " numNetworks > ? ");
+		
+		unfinishedNetworkCountStmt = connection.prepareStatement("SELECT count(*) FROM "+
+									 " waveformnetworkdb WHERE "+
+									 " waveformeventid = ? AND "+
+									 " waveformeventid = ? AND "+
+									 " numStations > ? ");
+
+		unfinishedStationCountStmt = connection.prepareStatement("SELECT count(*) FROM "+
+									 " waveformstationdb WHERE "+
+									 " waveformeventid = ? AND "+
+									 " waveformnetworkid = ? AND "+
+ 									 " numSites > ?");
+
+
+		unfinishedSiteCountStmt = connection.prepareStatement("SELECT count(*) FROM "+
+								      " waveformsitedb WHERE "+
+								      " waveformeventid = ? AND "+
+								      " waveformstationid = ? AND "+
+ 								      " numchannels > ? ");
+
+		unfinishedChannelCountStmt = connection.prepareStatement("SELECT count(*) FROM "+
+									 " waveformchanneldb WHERE "+
+									 " waveformeventid = ? AND "+
+									 " waveformsiteid = ? AND "+
+									 " (status = 0 OR status = 1) ");
+		    
 
 		deleteStmt = "DELETE FROM ";
 		    
@@ -158,6 +189,10 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     }
 
     public abstract void create();
+    
+    public abstract void beginTransaction();
+
+    public abstract void endTransaction();
 
     public int putInfo(int waveformeventid, 
 		       int numNetworks) {
@@ -193,12 +228,10 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 				     networkid)) {
 		return 0;
 	    }
-	    insert(putNetInfoStmt,
-		   1,
-		   waveformeventid, 
-		   networkid,
-		   numstations,
-		   date);
+	    putNetInfoStmt.setInt(1, waveformeventid);
+	    putNetInfoStmt.setInt(2, networkid);
+	    putNetInfoStmt.setInt(3, numstations);
+	    putNetInfoStmt.setTimestamp(4, date.getTimestamp());
 	    putNetInfoStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -221,6 +254,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public int putStationInfo(int waveformeventid, 
  			      int stationid,
+			      int networkid,
 			      int numsites,
 			      MicroSecondDate date) {
 	try {
@@ -230,6 +264,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		   1,
 		   waveformeventid, 
 		   stationid,
+		   networkid,
 		   numsites,
 		   date);
 	    putStationInfoStmt.executeUpdate();
@@ -240,7 +275,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     }
 
     private boolean isStationInfoInserted(int waveformeventid,
-				     int stationid) {
+					  int stationid
+					  ) {
 	try {
 	    isStationInfoIns.setInt(1,waveformeventid);
 	    isStationInfoIns.setInt(2, stationid);
@@ -254,31 +290,56 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public int putSiteInfo(int waveformeventid, 
 			   int siteid,
+			   int stationid,
 			   int numchannels,
 			   MicroSecondDate date) {
 	try {
 	   //  if(siteid == 5){  System.out.println("siteid is 5");
 // 	    // System.exit(0);
 // 	    }
-	    
+	    System.out.println("IN the database putSiteInfo entered");
+	  
 	    if(isSiteInfoInserted(waveformeventid,
 				  siteid)) return 0;
 	  //   if(siteid == 5){  System.out.println("siteid is 5 after ischeck");
 // 	    System.exit(0);
 // 	    }
-	    
-					       
+
+	    System.out.println("In the database putSiteInfo after isSiteInfoInserted");
+	    //if(siteid == 2) System.exit(0);			       
 	    insert(putSiteInfoStmt,
 		   1,
 		   waveformeventid, 
 		   siteid,
+		   stationid, 
 		   numchannels,
 		   date);
+	    System.out.println("Before executeupdate in putSiteInfo");
 	    putSiteInfoStmt.executeUpdate();
+	    System.out.println("After executeupdate in putSiteInfo");
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
 	return 0;
+    }
+
+    private int insert(PreparedStatement stmt, 
+		       int index,
+		       int waveformeventid,
+		       int refid, 
+		       int refdbid,
+		       int numentries,
+		       MicroSecondDate date) {
+	try {
+	    stmt.setInt(index++, waveformeventid);
+	    stmt.setInt(index++, refid);
+	    stmt.setInt(index++,  refdbid);
+	    stmt.setInt(index++, numentries);
+	    stmt.setTimestamp(index++, date.getTimestamp());
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return index;
     }
 
     public boolean isSiteInfoInserted(int waveformeventid,
@@ -296,16 +357,18 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
   
     public int putChannelInfo(int waveformeventid, 
 			      int channelid,
+			      int siteid, 
 			      MicroSecondDate date) {
 	try {
 	    if(isChannelInfoInserted(waveformeventid,
 				     channelid)) return 0;
 	    putChannelInfoStmt.setInt(1, waveformeventid);
 	    putChannelInfoStmt.setInt(2, channelid);
-	    putChannelInfoStmt.setTimestamp(3, date.getTimestamp());
-	    putChannelInfoStmt.setInt(4, Status.NEW.getId());
-	    putChannelInfoStmt.setInt(5, 0);
-	    putChannelInfoStmt.setString(6, "");
+	    putChannelInfoStmt.setInt(3, siteid);
+	    putChannelInfoStmt.setTimestamp(4, date.getTimestamp());
+	    putChannelInfoStmt.setInt(5, Status.NEW.getId());
+	    putChannelInfoStmt.setInt(6, 0);
+	    putChannelInfoStmt.setString(7, "");
 	    putChannelInfoStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -328,7 +391,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public void decrementNetworkCount(int waveformeventid) {
 	try {
-	    networkCountStmt.setInt(1, waveformeventid);
+	    networkCountStmt.setInt(1, -1);
+	    networkCountStmt.setInt(2, waveformeventid);
 	    networkCountStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -337,8 +401,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public void decrementStationCount(int waveformeventid, int networkid) {
 	try {
-	    stationCountStmt.setInt(1, waveformeventid);
-	    stationCountStmt.setInt(2, networkid);	
+	    insertForIncrDecr(stationCountStmt,
+			      1, -1, waveformeventid, networkid);
 	    stationCountStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -347,8 +411,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public void decrementSiteCount(int waveformeventid, int stationid) {
 	try {
-	    siteCountStmt.setInt(1, waveformeventid);
-	    siteCountStmt.setInt(2, stationid);
+	    insertForIncrDecr(siteCountStmt, 
+			      1, -1, waveformeventid, stationid);
 	    siteCountStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -357,14 +421,75 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     public void decrementChannelCount(int waveformeventid, int siteid) {
 	try {
-	    channelCountStmt.setInt(1, waveformeventid);
-	    channelCountStmt.setInt(2, siteid);
-	    channelCountStmt.executeUpdate();
+	    // synchronized(connection) {
+		insertForIncrDecr(channelCountStmt, 
+				  1, -1, waveformeventid, siteid);
+		int count = getChannelCount(waveformeventid, siteid);
+		logger.debug(".......... channel count before is "+count);
+		channelCountStmt.executeUpdate();
+		
+		System.out.println("The channel count after decrement is "+
+				   getChannelCount(waveformeventid, siteid));
+		//}
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
     }
 
+    public void incrementNetworkCount(int waveformeventid) {
+	try {
+		networkCountStmt.setInt(1, 1);
+		networkCountStmt.setInt(2, waveformeventid);
+		networkCountStmt.executeUpdate();	
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+    }
+
+    public void incrementStationCount(int waveformeventid,
+					  int networkid) {
+	try {
+		insertForIncrDecr(stationCountStmt,
+				  1, 1, waveformeventid, networkid);
+		stationCountStmt.executeUpdate();
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+    }
+
+    public void incrementSiteCount(int waveformeventid,
+				       int stationid) {
+	try {
+	 	insertForIncrDecr(siteCountStmt,
+				  1, 1, waveformeventid, stationid);
+		siteCountStmt.executeUpdate();
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+    }
+
+    public void incrementChannelCount(int waveformeventid, 
+				       int siteid) {
+	try {
+		insertForIncrDecr(channelCountStmt,
+				  1, 1, waveformeventid, siteid);
+		channelCountStmt.executeUpdate();
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+    }
+
+   private int insertForIncrDecr( PreparedStatement stmt, int index,
+ 				  int incrvalue, int eventid, int paramid) {
+	try {
+		stmt.setInt(index++, incrvalue);
+		stmt.setInt(index++, eventid);
+		stmt.setInt(index++, paramid);
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+	return index;
+   }
   
     public int getNetworkCount(int waveformeventid) {
 	try {
@@ -407,29 +532,107 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		getChannelCountStmt.setInt(2, siteid);
 		ResultSet rs = getChannelCountStmt.executeQuery();
 		if(rs.next()) return rs.getInt(1);
+		else {
+		    System.out.println("The channel is not in the database");
+		    System.out.println(" the siteid is "+siteid);
+		    System.out.println(" the eventid is "+waveformeventid);
+		    System.exit(0);
+		}	
 	} catch(SQLException sqle) {
 		sqle.printStackTrace();
 	}
 	return -1;
     }
-    
 
-    private int insert(PreparedStatement stmt, 
-		       int index,
-		       int waveformeventid,
-		       int refdbid,
-		       int numentries,
-		       MicroSecondDate date) {
+
+    public int  unfinishedNetworkCount(int waveformeventid){
+	try {
+	    insertForUnfinishedCount(unfinishedNetworkCountStmt,
+				     1, 
+				     waveformeventid,
+				     waveformeventid, 
+				     0);
+	    ResultSet rs = unfinishedNetworkCountStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return 0;
+    }
+
+
+    public int  unfinishedStationCount(int waveformeventid, int networkid){
+	try {
+	    insertForUnfinishedCount(unfinishedStationCountStmt,
+				     1,
+				     waveformeventid,
+				     networkid,
+				     0);
+	    
+	    ResultSet rs = unfinishedStationCountStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return 0;
+    }
+
+
+    public int  unfinishedSiteCount(int waveformeventid, int stationid){
+	try {
+	    insertForUnfinishedCount(unfinishedSiteCountStmt,
+				     1,
+				     waveformeventid,
+				     stationid, 
+				     0);
+	    ResultSet rs = unfinishedSiteCountStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return 0;
+    }
+
+
+    public int  unfinishedChannelCount(int waveformeventid, int siteid){
+	try {
+	    unfinishedChannelCountStmt.setInt(1, waveformeventid);
+	    unfinishedChannelCountStmt.setInt(2, siteid);
+	    ResultSet rs = unfinishedChannelCountStmt.executeQuery();
+	    if(rs.next()) { 
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return 0;
+    }
+
+    private int insertForUnfinishedCount(PreparedStatement stmt,
+					 int index,
+					 int waveformeventid,
+					 int refid,
+					 int number) {
+
 	try {
 	    stmt.setInt(index++, waveformeventid);
-	    stmt.setInt(index++, refdbid);
-	    stmt.setInt(index++, numentries);
-	    stmt.setTimestamp(index++, date.getTimestamp());
-	} catch(SQLException sqle) {
+	    stmt.setInt(index++, refid);
+	    stmt.setInt(index++, number);
+	} catch(SQLException  sqle) {
 	    sqle.printStackTrace();
 	}
 	return index;
     }
+
+    
+
+    
    
     public int getChannelDbId(int waveformeventid, int waveformchannelid) {
 
@@ -449,7 +652,10 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     public int getFirst() {
 	try {
 	    getByStatusStmt.setInt(1, Status.NEW.getId());
-	    ResultSet rs = getByStatusStmt.executeQuery();
+	    ResultSet rs = null;
+	    //  synchronized(connection) {
+		rs = getByStatusStmt.executeQuery();
+		//  }
 	    if(rs.next()) {
 		int rtnValue = rs.getInt(1);
 		updateStatus(rtnValue, Status.PROCESSING);
@@ -600,11 +806,12 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	}
     }
 
-    public int[] getIds() {
+    public int[] getIds(int eventid) {
 	ArrayList arrayList = new ArrayList();
 	try {
 	    getIdsStmt.setInt(1, Status.COMPLETE_SUCCESS.getId());
 	    getIdsStmt.setInt(2, Status.COMPLETE_REJECT.getId());
+	    getIdsStmt.setInt(3, eventid);
 	    ResultSet rs = getIdsStmt.executeQuery();
 	    while(rs.next()) {
 		arrayList.add(new Integer(rs.getInt(1)));
@@ -615,6 +822,38 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	int[] rtnValues = new int[arrayList.size()];
 	for(int counter = 0; counter < arrayList.size(); counter++) {
 	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	}
+	return rtnValues;
+    }
+
+    public int[] getIds() {
+	int[] eventids = getUnfinishedEvents();
+	int[] rtnValues = new  int[0];
+	for(int counter = 0; counter < eventids.length; counter++) {
+		System.out.println("THE EVENT ID THAT IS OBTAINED IS "+eventids[counter]);
+		int[] ids = getIds(eventids[counter]);
+		int[] tmp = new int[rtnValues.length + ids.length];
+		System.arraycopy(rtnValues, 0, tmp, 0, rtnValues.length);
+		System.arraycopy(ids, 0, tmp, rtnValues.length, ids.length);
+		rtnValues = tmp;
+	}
+	return rtnValues;
+    }
+
+    public int[] getUnfinishedEvents() {
+	ArrayList arrayList = new ArrayList();
+	try {
+		unfinishedEventsStmt.setInt(1, 0);
+		ResultSet rs = unfinishedEventsStmt.executeQuery();
+		while(rs.next())  {
+			arrayList.add(new Integer(rs.getInt(1)));
+		}
+	} catch(SQLException sqle) {
+		sqle.printStackTrace();
+	}
+	int[] rtnValues = new int[arrayList.size()];
+	for(int counter = 0 ; counter< arrayList.size(); counter++) {
+		rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
 	}
 	return rtnValues;
     }
@@ -634,6 +873,12 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	delete("waveformsitedb");
 	delete("waveformchanneldb");
     }
+
+    public Connection getConnection() {
+
+	return this.connection;
+    }
+   
 
     protected Connection connection;
 
@@ -675,6 +920,14 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     private PreparedStatement getChannelCountStmt;
 
+    private PreparedStatement unfinishedNetworkCountStmt;
+
+    private PreparedStatement unfinishedStationCountStmt;
+
+    private PreparedStatement unfinishedSiteCountStmt;
+
+    private PreparedStatement unfinishedChannelCountStmt;
+
     private PreparedStatement delInfoStmt;
 
     private PreparedStatement delNetworkInfoStmt;
@@ -698,6 +951,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
      private PreparedStatement getIdsStmt; 
 
     private String deleteStmt;
+
+    private PreparedStatement unfinishedEventsStmt;
 
     static Category logger = 
         Category.getInstance(AbstractWaveformDatabase.class.getName());

@@ -68,4 +68,6 @@ public interface EventDatabase {
     public void clean();
     
     public void deleteTimeConfig();
+
+    public void reOpenEvents();
 }// EventDatabase

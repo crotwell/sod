@@ -37,12 +37,14 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
 			       " ( waveformeventid int, "+
 			       " waveformstationid int, "+
+			       " waveformnetworkid int, "+
 			       " numsites int, "+
 			       " qtime timestamp) ");
 
 	    stmt.executeUpdate(" CREATE TABLE waveformsitedb "+
 			       " ( waveformeventid int, "+
 			       " waveformsiteid int, "+
+			       " waveformstationid int , "+
 			       " numchannels int, "+
 			       " qtime timestamp) ");
 
@@ -50,6 +52,7 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 			       " ( waveformid int PRIMARY KEY DEFAULT nextval('waveformconfigsequence'),"+
 			       " waveformeventid int, "+
 			       " waveformchannelid int, "+
+			       " waveformsiteid int, "+
 			       " qtime timestamp , "+
 			       " status int, "+
 			       " numretrys int, "+
@@ -57,7 +60,42 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 	} catch(SQLException sqle) {
 	    logger.debug("one or more tables of the waveform database are already created");
 	}
+	try {
+	    beginTransStmt = connection.prepareStatement("BEGIN TRANSACTION");
+	      
+	     endTransStmt = connection.prepareStatement("END TRANSACTION");
+	     
+	     serializableLevelStmt = connection.prepareStatement("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
     }
+
+    public void beginTransaction() {
+	try {
+	    System.out.println("BEGINNING TRANSACTION IN POSTGRES ................................................");
+	    // System.exit(0);
+	    beginTransStmt.executeUpdate();
+	    // serializableLevelStmt.executeUpdate();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+    
+    public void endTransaction() {
+	try {
+	    endTransStmt.executeUpdate();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    
+    PreparedStatement beginTransStmt;
+
+    PreparedStatement endTransStmt;
+
+    PreparedStatement serializableLevelStmt;
 
     static Category logger = 
         Category.getInstance(PostgresWaveformDb.class.getName());

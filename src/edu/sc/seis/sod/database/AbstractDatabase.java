@@ -250,6 +250,11 @@ public abstract class AbstractDatabase implements EventDatabase{
 	}
     }
 
+
+   public void reOpenEvents() {
+	updateStatus(Status.COMPLETE_SUCCESS, Status.NEW);
+   }
+
     public void updateStatus(Status oldStatus, Status newStatus) {
 	try {
 	    statusUpdateStmt.setInt(1, newStatus.getId());
