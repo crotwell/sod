@@ -1,10 +1,10 @@
 /**
  * ForkProcessor.java
- *
+ * 
  * @author Philip Crotwell
  */
-
 package edu.sc.seis.sod.process.waveform;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -22,79 +22,73 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 public class ForkProcess implements WaveformProcess {
 
-    public ForkProcess (Element config) throws ConfigurationException {
+    public ForkProcess(Element config) throws ConfigurationException {
         this.config = config;
         NodeList children = config.getChildNodes();
         Node node;
-        for (int i=0; i<children.getLength(); i++) {
+        for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
-            if (node instanceof Element) {
-                if (((Element)node).getTagName().equals("description")) {
+            if(node instanceof Element) {
+                if(((Element)node).getTagName().equals("description")) {
                     // skip description element
                     continue;
                 }
-                Object sodElement = SodUtil.load((Element)node,"waveform");
+                Object sodElement = SodUtil.load((Element)node, "waveform");
                 if(sodElement instanceof WaveformProcess) {
                     localSeisProcessList.add(sodElement);
                 } else {
-                    logger.warn("Unknown tag in LocalSeismogramArm config. " +sodElement);
+                    logger.warn("Unknown tag in LocalSeismogramArm config. "
+                            + sodElement);
                 } // end of else
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
-
     }
 
     /**
-     * Forks the processing off the LocalSeismograms. The processes that
-     * are contained in this tag are processed, but the return value off
-     * the process method is the original seismograms. This allows, for
-     * example to process both a original and a filtered version of the
-     * seismograms independently.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
+     * Forks the processing off the LocalSeismograms. The processes that are
+     * contained in this tag are processed, but the return value off the process
+     * method is the original seismograms. This allows, for example to process
+     * both a original and a filtered version of the seismograms independently.
      */
     public WaveformResult process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar
-                                        ) throws Exception {
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  RequestFilter[] available,
+                                  LocalSeismogramImpl[] seismograms,
+                                  CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[] out = copySeismograms(seismograms);
-
         // pass originals to the contained processors
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        WaveformResult result = new WaveformResult(seismograms, new StringTreeLeaf(this, true));
-        while (it.hasNext() && result.isSuccess()) {
+        WaveformResult result = new WaveformResult(seismograms,
+                                                   new StringTreeLeaf(this,
+                                                                      true));
+        while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
-            synchronized (processor) {
-                result = processor.process(event, channel, original,
-                                                available, result.getSeismograms(), cookieJar);
+            synchronized(processor) {
+                result = processor.process(event,
+                                           channel,
+                                           original,
+                                           available,
+                                           result.getSeismograms(),
+                                           cookieJar);
             }
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
         return new WaveformResult(out,
-                                         new StringTreeBranch(this,
-                                                              result.isSuccess(),
-                                                                  (StringTree[])reasons.toArray(new StringTree[0])));
+                                  new StringTreeBranch(this,
+                                                       result.isSuccess(),
+                                                       (StringTree[])reasons.toArray(new StringTree[0])));
     }
 
     public static LocalSeismogramImpl[] copySeismograms(LocalSeismogramImpl[] seismograms) {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-        for (int i = 0; i < out.length; i++) {
-            out[i] = new LocalSeismogramImpl(seismograms[i], seismograms[i].data);
+        for(int i = 0; i < out.length; i++) {
+            out[i] = new LocalSeismogramImpl(seismograms[i],
+                                             seismograms[i].data);
         }
         return out;
     }
@@ -105,4 +99,3 @@ public class ForkProcess implements WaveformProcess {
 
     private static final Logger logger = Logger.getLogger(ForkProcess.class);
 }
-

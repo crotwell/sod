@@ -16,19 +16,12 @@ import org.w3c.dom.Element;
 
 /**
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
- *
+ * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 10364 2004-09-04 02:39:12Z crotwell $
+ * @version $Id: PhaseCut.java 10413 2004-09-09 18:40:30Z groves $
  */
 public class PhaseCut implements WaveformProcess {
 
-    /**
-     * Creates a new <code>PhaseCut</code> instance.
-     *
-     * @param config
-     *            an <code>Element</code> that contains the configuration for
-     *            this Processor
-     */
     public PhaseCut(Element config) throws ConfigurationException {
         this.config = config;
         // use existing PhaseRequest class to calculate phase times
@@ -37,30 +30,13 @@ public class PhaseCut implements WaveformProcess {
 
     /**
      * Cuts the seismograms based on phase arrivals.
-     *
-     * @param event
-     *            an <code>EventAccessOperations</code> value
-     * @param network
-     *            a <code>NetworkAccess</code> value
-     * @param channel
-     *            a <code>Channel</code> value
-     * @param original
-     *            a <code>RequestFilter[]</code> value
-     * @param available
-     *            a <code>RequestFilter[]</code> value
-     * @param seismograms
-     *            a <code>LocalSeismogram[]</code> value
-     * @param cookies
-     *            a <code>CookieJar</code> value
-     * @exception Exception
-     *                if an error occurs
      */
     public WaveformResult process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar) throws Exception {
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  RequestFilter[] available,
+                                  LocalSeismogramImpl[] seismograms,
+                                  CookieJar cookieJar) throws Exception {
         RequestFilter[] cutRequest = phaseRequest.generateRequest(event,
                                                                   channel,
                                                                   cookieJar);
@@ -77,10 +53,9 @@ public class PhaseCut implements WaveformProcess {
             }
         } // end of for (int i=0; i<seismograms.length; i++)
         if(list.size() != 0) { return new WaveformResult((LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
-                                                                new StringTreeLeaf(this,
-                                                                                   true)); }
-        return new WaveformResult(seismograms,
-                                         new StringTreeLeaf(this, false));
+                                                         new StringTreeLeaf(this,
+                                                                            true)); }
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, false));
     }
 
     Element config;

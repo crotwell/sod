@@ -1,6 +1,6 @@
 /**
  * SeismogramImageProcess.java
- *
+ * 
  * @author Created by Philip Oliver-Paull
  */
 package edu.sc.seis.sod.process.waveform;
@@ -49,22 +49,10 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 public class SeismogramImageProcess implements WaveformProcess {
 
-    private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
-
-    private String fileDir;
-
-    private EventFormatter eventFormatter;
-
-    private StationFormatter stationFormatter;
-
-    private ChannelFormatter chanFormatter;
-
-    private TauPUtil tauP;
-
     public SeismogramImageProcess(String fileDir,
-                                  EventFormatter eventDirFormatter,
-                                  StationFormatter stationDirFormatter,
-                                  ChannelFormatter imageNameFormatter) throws Exception {
+            EventFormatter eventDirFormatter,
+            StationFormatter stationDirFormatter,
+            ChannelFormatter imageNameFormatter) throws Exception {
         this.fileDir = fileDir;
         eventFormatter = eventDirFormatter;
         stationFormatter = stationDirFormatter;
@@ -97,14 +85,14 @@ public class SeismogramImageProcess implements WaveformProcess {
             } else if(n.getNodeName().equals("prefix")) {
                 prefix = SodUtil.getNestedText((Element)n);
             } else if(n.getNodeName().equals("fileType")) {
-                fileType = SodUtil.getNestedText((Element)n);
+                defaultFileType = SodUtil.getNestedText((Element)n);
             }
         }
         if(fileDir == null) {
             fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         if(fileDir == null || eventFormatter == null
-           || stationFormatter == null || chanFormatter == null) { throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig"); }
+                || stationFormatter == null || chanFormatter == null) { throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig"); }
         initTaup();
     }
 
@@ -117,26 +105,6 @@ public class SeismogramImageProcess implements WaveformProcess {
         }
     }
 
-    /**
-     * Processes localSeismograms, possibly modifying them.
-     *
-     * @param event
-     *            an <code>EventAccessOperations</code> value
-     * @param network
-     *            a <code>NetworkAccess</code> value
-     * @param channel
-     *            a <code>Channel</code> value
-     * @param original
-     *            a <code>RequestFilter[]</code> value
-     * @param available
-     *            a <code>RequestFilter[]</code> value
-     * @param seismograms
-     *            a <code>LocalSeismogram[]</code> value
-     * @param cookies
-     *            a <code>CookieJar</code> value
-     * @exception Exception
-     *                if an error occurs
-     */
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,
                                   RequestFilter[] original,
@@ -147,7 +115,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                        channel,
                        original,
                        seismograms,
-                       fileType,
+                       defaultFileType,
                        cookieJar);
     }
 
@@ -163,7 +131,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                        original,
                        seismograms,
                        fileType,
-                       phases,
+                       DEFAULT_PHASES,
                        cookieJar);
     }
 
@@ -202,16 +170,16 @@ public class SeismogramImageProcess implements WaveformProcess {
             phaseTime.setTauP(tauptime);
         }
         final BasicSeismogramDisplay bsd = relTime ? new BasicSeismogramDisplay(phaseTime)
-            : new BasicSeismogramDisplay();
+                : new BasicSeismogramDisplay();
         MemoryDataSetSeismogram memDSS = null;
         PhaseRequest phaseRequest = null;
         String tempPrefix = "";
         if(phaseWindow == null) {
             memDSS = new MemoryDataSetSeismogram(original[0], "");
             memDSS.setBeginTime(DisplayUtils.firstBeginDate(original)
-                                    .getFissuresTime());
+                    .getFissuresTime());
             memDSS.setEndTime(DisplayUtils.lastEndDate(original)
-                                  .getFissuresTime());
+                    .getFissuresTime());
             tempPrefix = "original_";
         } else {
             phaseRequest = phaseWindow.getPhaseRequest();
@@ -220,24 +188,25 @@ public class SeismogramImageProcess implements WaveformProcess {
                                                                    null);
             memDSS = new MemoryDataSetSeismogram(request[0], "");
             memDSS.setBeginTime(DisplayUtils.firstBeginDate(request)
-                                    .getFissuresTime());
+                    .getFissuresTime());
             memDSS.setEndTime(DisplayUtils.lastEndDate(request)
-                                  .getFissuresTime());
+                    .getFissuresTime());
         }
         for(int i = 0; i < seismograms.length; i++) {
             memDSS.add(seismograms[i]);
         }
         DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
-                                                + memDSS.getName(), "temp", new AuditInfo[0]);
+                + memDSS.getName(), "temp", new AuditInfo[0]);
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
         dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
         bsd.add(new MemoryDataSetSeismogram[] {memDSS});
         Origin origin = EventUtil.extractOrigin(event);
-        TimeInterval filterOffset = new TimeInterval(10 , UnitImpl.SECOND);
+        TimeInterval filterOffset = new TimeInterval(10, UnitImpl.SECOND);
         final MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
         final Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(channel.my_site.my_station,
                                                                             origin,
-                                                                            phases), filterOffset);
+                                                                            phases),
+                                                       filterOffset);
         final SodFlag[] flags = new SodFlag[arrivals.length];
         final String phasePrefix = tempPrefix;
         for(int i = 0; i < arrivals.length; i++) {
@@ -247,77 +216,85 @@ public class SeismogramImageProcess implements WaveformProcess {
             bsd.add(flags[i]);
         }
         final String picFileName = FissuresFormatter.filize(fileDir + '/'
-                                                                + eventFormatter.getResult(event) + '/'
-                                                                + stationFormatter.getResult(channel.my_site.my_station) + '/'
-                                                                + prefix + chanFormatter.getResult(channel) + "." + fileType);
+                + eventFormatter.getResult(event) + '/'
+                + stationFormatter.getResult(channel.my_site.my_station) + '/'
+                + prefix + chanFormatter.getResult(channel) + "." + fileType);
         SwingUtilities.invokeAndWait(new Runnable() {
 
-                    public void run() {
-                        logger.debug("writing " + picFileName);
-                        try {
-                            if(fileType.equals(PDF)) {
-                                bsd.outputToPDF(new File(picFileName));
-                            } else {
-                                bsd.outputToPNG(new File(picFileName), dimension);
-                            }
-                            /*Currently only the regions around
-                             first P and first S Flags are made clickable
-                             */
-                            int pFlagCount = NUM_PFLAGS_MARKED;
-                            int sFlagCount = NUM_SFLAGS_MARKED;
-                            for(int i = 0; i < arrivals.length; i++) {
-                                String phase = arrivals[i].getName();
-                                boolean putData = false;
-                                if((phase.startsWith("P") && (pFlagCount != 0)) ||
-                                       (phase.startsWith("S") && (sFlagCount !=0))) {
-                                    putData = true;
-                                    if(phase.startsWith("P"))
-                                        pFlagCount--;
-                                    else if(phase.startsWith("S"))
-                                        sFlagCount--;
-                                }
-                                if(putData) {
-                                    FlagData flagData = flags[i].getFlagData();
-                                    cookieJar.put(phasePrefix
-                                                      + "SeismogramImageProcess_flagPixels_"
-                                                      + arrivals[i].getName(), flagData);
-                                }
-                            }
-                        } catch(Throwable e) {
-                            GlobalExceptionHandler.handle("unable to save seismogram image to "
-                                                              + picFileName,
-                                                          e);
+            public void run() {
+                logger.debug("writing " + picFileName);
+                try {
+                    if(fileType.equals(PDF)) {
+                        bsd.outputToPDF(new File(picFileName));
+                    } else {
+                        bsd.outputToPNG(new File(picFileName),
+                                        DEFAULT_DIMENSION);
+                    }
+                    /*
+                     * Currently only the regions around first P and first S
+                     * Flags are made clickable
+                     */
+                    int pFlagCount = NUM_PFLAGS_MARKED;
+                    int sFlagCount = NUM_SFLAGS_MARKED;
+                    for(int i = 0; i < arrivals.length; i++) {
+                        String phase = arrivals[i].getName();
+                        boolean putData = false;
+                        if((phase.startsWith("P") && (pFlagCount != 0))
+                                || (phase.startsWith("S") && (sFlagCount != 0))) {
+                            putData = true;
+                            if(phase.startsWith("P")) pFlagCount--;
+                            else if(phase.startsWith("S")) sFlagCount--;
+                        }
+                        if(putData) {
+                            FlagData flagData = flags[i].getFlagData();
+                            cookieJar.put(phasePrefix
+                                    + "SeismogramImageProcess_flagPixels_"
+                                    + arrivals[i].getName(), flagData);
                         }
                     }
-                });
-        return new WaveformResult(seismograms, new StringTreeLeaf(this,
-                                                                        true));
+                } catch(Throwable e) {
+                    GlobalExceptionHandler.handle("unable to save seismogram image to "
+                                                          + picFileName,
+                                                  e);
+                }
+            }
+        });
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    private CookieJar cookierJar = null;
-
-    private static TauP_Time tauptime = null;
-
-    private static Dimension dimension = new Dimension(500, 200);
-
-    //private static String[] phases = {"P", "S"};
-    private static String[] phases = {"ttp", "tts"};
+    private TauPUtil tauP;
 
     private PhaseWindow phaseWindow = null;
 
     private String modelName = "iasp91";
 
+    private String fileDir;
+
+    private EventFormatter eventFormatter;
+
+    private StationFormatter stationFormatter;
+
+    private ChannelFormatter chanFormatter;
+
     private String prefix = "";
 
-    private String fileType = PNG;
+    private String defaultFileType = PNG;
 
     private boolean relativeTime = false;
 
+    private static TauP_Time tauptime = null;
+
     public static final String PDF = "pdf";
+
+    public static final String PNG = "png";
+
+    private static final String[] DEFAULT_PHASES = {"ttp", "tts"};
 
     private static final int NUM_PFLAGS_MARKED = 1;
 
     private static final int NUM_SFLAGS_MARKED = 1;
 
-    public static final String PNG = "png";
+    private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
+
+    private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
 }

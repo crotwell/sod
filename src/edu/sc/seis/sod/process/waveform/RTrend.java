@@ -16,17 +16,11 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 10364 2004-09-04 02:39:12Z crotwell $
+ * @version $Id: RTrend.java 10413 2004-09-09 18:40:30Z groves $
  */
 
 public class RTrend implements WaveformProcess {
 
-    /**
-     * Creates a new <code>RTrend</code> instance.
-     *
-     * @param config an <code>Element</code> that contains the configuration
-     * for this Processor
-     */
     public RTrend (Element config) {
         this.config = config;
         rtrend = new edu.sc.seis.fissuresUtil.bag.RTrend();
@@ -34,15 +28,6 @@ public class RTrend implements WaveformProcess {
 
     /**
      * Removes the mean from the seismograms.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
      */
     public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
