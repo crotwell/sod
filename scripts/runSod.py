@@ -24,8 +24,7 @@ def main(argv):
     if command.endswith('.bat'):
         os.spawnlp(os.P_WAIT, command, 'cmd', command, '-f', config, '-props', 'cwg.prop')
     else:
-	print 'actually running sh'
-        os.spawnlp(os.P_WAIT, command, '/bin/sh', command, '-f', config)
+        os.spawnlp(os.P_WAIT, command, 'sh', command, '-f', config)
     print '\ndone'
 
 if __name__ == "__main__":
