@@ -1,10 +1,13 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.IfEvent.*;
 import edu.sc.seis.sod.subsetter.eventArm.*;
-import java.util.*;
 
 import edu.iris.Fissures.Area;
+import edu.iris.Fissures.IfEvent.EventAccess;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -13,8 +16,10 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder;
-import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -191,7 +196,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
             ((EventStatus)it.next()).setArmStatus(status);
         }
     }
-        
+    
     
     private void startProcessors(EventAccessOperations eventAccess) throws Exception {
         Iterator it = processors.iterator();
