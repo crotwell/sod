@@ -13,6 +13,7 @@ public abstract class AbstractForm implements Form {
         this.min = min;
         this.max = max;
         this.parent = parent;
+        ann.setFormProvider(this);
     }
 
     public boolean isAncestorOf(Form f) { return false; }
@@ -51,6 +52,6 @@ public abstract class AbstractForm implements Form {
     private Definition def;
     private int min, max;
     private Form parent;
-    private Annotation ann;
+    private Annotation ann = new Annotation();
 }
 
