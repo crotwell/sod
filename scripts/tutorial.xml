@@ -109,7 +109,7 @@
                 <networkStatusTemplate
                     outputLocation="status/network.html" xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/network.xml" />
                 <networkInfoTemplateGenerator>
-                    <fileLoc>status/<code/>/stations.html</fileLoc>
+                    <fileLoc>status/<code/>-<firstWord/>/stations.html</fileLoc>
                     <externalConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
                 </networkInfoTemplateGenerator>
         </networkArm>
