@@ -8,6 +8,7 @@
         <choice>
             <ref name="simpleHTML"/>
             <ref name="logFactor5"/>
+            <ref name="networkStatusTemplate"/>
         </choice>
     </define>
     <define name="simpleHTML">
@@ -24,4 +25,11 @@
             <empty/>
         </element>
     </define>
+        <define name="networkStatusTemplate">
+                <element name="networkInfoTemplateGenerator">
+                    <zeroOrMore>
+                    <externalRef href="../base/externalRef/anyXML.rng"/>
+                    </zeroOrMore>
+                </element>
+        </define>
 </grammar>

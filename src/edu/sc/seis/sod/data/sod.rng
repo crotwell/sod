@@ -214,7 +214,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any4"/>
+                                <ref name="any5"/>
                             </zeroOrMore>
                         </element>
                     </choice>
@@ -234,7 +234,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any3"/>
+                                <ref name="any4"/>
                             </zeroOrMore>
                         </element>
                         <element name="eventStatusTemplate">
@@ -304,7 +304,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any2"/>
+                                <ref name="any3"/>
                             </zeroOrMore>
                         </element>
                     </choice>
@@ -320,6 +320,11 @@
                         </element>
                         <element name="logFactor5NetworkStatus">
                             <empty/>
+                        </element>
+                        <element name="networkInfoTemplateGenerator">
+                            <zeroOrMore>
+                                <ref name="any2"/>
+                            </zeroOrMore>
                         </element>
                     </choice>
                 </zeroOrMore>
@@ -561,6 +566,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="any5">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any5"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="any3">
         <element>
             <anyName/>
@@ -589,7 +608,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="phaseExists2">
+    <define name="phaseExists">
         <element name="phaseExists">
             <zeroOrMore>
                 <element name="modelName">
@@ -601,7 +620,7 @@
             </element>
         </element>
     </define>
-    <define name="phaseExists">
+    <define name="phaseExists2">
         <element name="phaseExists">
             <zeroOrMore>
                 <element name="modelName">
@@ -982,9 +1001,9 @@
             <element name="eventStationNOT">
                 <ref name="eventStation2"/>
             </element>
-            <ref name="phaseExists2"/>
+            <ref name="phaseExists"/>
             <element name="phaseInteraction">
-                <ref name="phaseExists2"/>
+                <ref name="phaseExists"/>
                 <element name="interactionStyle">
                     <choice>
                         <value>TOPSIDE REFLECTION</value>
@@ -1071,9 +1090,9 @@
             <element name="eventStationNOT">
                 <ref name="eventStation"/>
             </element>
-            <ref name="phaseExists"/>
+            <ref name="phaseExists2"/>
             <element name="phaseInteraction">
-                <ref name="phaseExists"/>
+                <ref name="phaseExists2"/>
                 <element name="interactionStyle">
                     <choice>
                         <value>TOPSIDE REFLECTION</value>
@@ -2192,7 +2211,7 @@
             </element>
         </choice>
     </define>
-    <define name="range4">
+    <define name="range2">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -2250,7 +2269,7 @@
             </element>
         </optional>
     </define>
-    <define name="range2">
+    <define name="range4">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
