@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfEvent.*;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 /**
  * EventDbObject.java
@@ -13,15 +13,15 @@ import edu.iris.Fissures.IfEvent.*;
  */
 
 public class EventDbObject extends DbObject{
-    public EventDbObject (int dbid, EventAccessOperations eventAccess){
-	super(dbid);
-	this.eventAccess = eventAccess;
+    public EventDbObject (int dbid, CacheEvent eventAccess){
+        super(dbid);
+        this.getEvent = eventAccess;
     }
-
-    public EventAccessOperations getEventAccess() {
-	return this.eventAccess;
+    
+    public CacheEvent getGetEvent() {
+        return this.getEvent;
     }
-
-    private EventAccessOperations eventAccess;
+    
+    private CacheEvent getEvent;
     
 }// EventDbObject
