@@ -82,6 +82,7 @@ public class EditorUtil {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
         b.add(getComboBox(element, vals));
+        b.add(Box.createHorizontalGlue());
         return b;
     }
 
