@@ -3638,6 +3638,11 @@
     </define>
     <define name="channel4">
         <choice>
+            <element name="channelCode">
+                <data type="string">
+                    <param name="pattern">[A-Z]{3}</param>
+                </data>
+            </element>
             <element name="bandCode">
                 <ref name="channelCodeUtil4"/>
             </element>
@@ -3735,6 +3740,11 @@
     </define>
     <define name="channel3">
         <choice>
+            <element name="channelCode">
+                <data type="string">
+                    <param name="pattern">[A-Z]{3}</param>
+                </data>
+            </element>
             <element name="bandCode">
                 <ref name="channelCodeUtil3"/>
             </element>
@@ -3832,6 +3842,11 @@
     </define>
     <define name="channel2">
         <choice>
+            <element name="channelCode">
+                <data type="string">
+                    <param name="pattern">[A-Z]{3}</param>
+                </data>
+            </element>
             <element name="bandCode">
                 <ref name="channelCodeUtil2"/>
             </element>
@@ -3929,6 +3944,11 @@
     </define>
     <define name="channel">
         <choice>
+            <element name="channelCode">
+                <data type="string">
+                    <param name="pattern">[A-Z]{3}</param>
+                </data>
+            </element>
             <element name="bandCode">
                 <ref name="channelCodeUtil"/>
             </element>
@@ -4646,6 +4666,23 @@
                     <data type="float"/>
                 </element>
             </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="fileDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="seismogramConfig">
+                    <attribute>
+                        <name ns="http://www.w3.org/1999/xlink/">href</name>
+                    </attribute>
+                </element>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess">
@@ -4813,6 +4850,23 @@
                 <element name="ratio">
                     <data type="float"/>
                 </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="fileDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="seismogramConfig">
+                    <attribute>
+                        <name ns="http://www.w3.org/1999/xlink/">href</name>
+                    </attribute>
+                </element>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>

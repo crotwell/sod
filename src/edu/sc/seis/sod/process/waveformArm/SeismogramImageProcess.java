@@ -79,6 +79,10 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 tmpEl = SodUtil.getElement(seismogramImageConfig, "picName");
                 chanFormatter = new ChannelFormatter((Element)tmpEl);
                 seismogramImageConfig.removeChild(tmpEl);
+            } else if(n.getNodeName().equals("modelName")) {
+                modelName = SodUtil.getNestedText((Element)n);
+            } else if(n.getNodeName().equals("prefix")) {
+                prefix = SodUtil.getNestedText((Element)n);
             }
         }
         if (fileDir == null){
@@ -91,7 +95,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
     }
 
     private void initTaup() throws TauModelException{
-        tauP = new TauPUtil("iasp91");
+        tauP = new TauPUtil(modelName);
     }
 
     /**
@@ -137,6 +141,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         final String picFileName = fileDir + '/'
             + eventFormatter.getResult(event) + '/'
             + stationFormatter.getResult(channel.my_site.my_station) + '/'
+            + prefix
             + chanFormatter.getResult(channel);
 
         SwingUtilities.invokeAndWait(new Runnable(){
@@ -156,6 +161,8 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
 
     private static Dimension dimension = new Dimension(500, 200);
     private static String[] phases = {"P", "S"};
+    private String modelName = "iasp91";
+    private String prefix = "";
 }
 
 

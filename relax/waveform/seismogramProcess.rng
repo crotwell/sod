@@ -20,6 +20,7 @@
             <ref name="filter"/>
             <ref name="forkProcess"/>
             <ref name="phaseSignalToNoiseCalculator" />
+            <ref name="seismogramImageProcess" />
         </choice>
     </define>
     <define name="phaseCut">
@@ -190,6 +191,23 @@
             <element name="ratio">
                 <data type="float"/>
             </element>
+        </element>
+    </define>
+    <define name="seismogramImageProcess">
+        <element name="seismogramImageProcess">
+            <optional>
+                <element name="fileDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="seismogramConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+            <optional>
+                <element name="prefix">
+                    <data type="string"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
