@@ -1,54 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-        <property>
-            <name>sod.start.RunName</name>
-            <value>WEED Emulator</value>
-        </property>
-        <property>
-            <name>sod.start.StatusBaseDirectory</name>
-            <value>status</value>
-        </property>
-        <property>
-                <name>sod.start.ReopenEvents</name>
-                <value>true</value>
-        </property>
-                <property>
-                        <name>edu.sc.seis.sod.databasetype</name>
-                        <value>edu.sc.seis.sod.database.HSqlDbManager</value>
-                </property>
-        <!-- amount of time per request to eventFinder -->
-        <property>
-                <name>sod.event.QueryIncrement.value</name>
-                <value>1</value>
-        </property>
-        <property>
-                <name>sod.event.QueryIncrement.unit</name>
-                <value>week</value>
-        </property>
-                <!-- number of seconds to wait for events to arrive past the
-                     current time. Sod continues this long after the end time-->
-                <property>
-                        <name>sod.event.Lag.unit</name>
-                        <value>week</value>
-                </property>
-        <property>
-                <name>sod.event.Lag.value</name>
-                <value>1</value>
-        </property>
-        <!--  time to wait between queries for events   -->
-        <property>
-                <name>sod.event.RefreshInterval.value</name>
-                <value>6</value>
-        </property>
-            <property>
-            <name>sod.event.RefreshInterval.unit</name>
-            <value>MINUTE</value>
-        </property>
-        <property>
-            <name>edu.sc.seis.sod.waveformarm.threads</name>
-            <value>1</value>
-        </property>
+	    <runName>WEED Emulator</runName>            
+            <statusBase>status</statusBase>
+                <reopenEvents/>
+            <eventQueryIncrement>
+		<unit>WEEK</unit>
+		<value>1</value>
+	    </eventQueryIncrement>
+            <eventLag>
+		<unit>WEEK</unit>
+		<value>1</value>
+	    </eventLag>
+            <eventRefreshInterval>
+		<value>6</value>
+		<unit>MINUTE</unit>
+	     </eventRefreshInterval>
+             <waveformWorkerThreads>1</waveformWorkerThreads>
         </properties>
         <eventArm>
                 <eventFinder>
