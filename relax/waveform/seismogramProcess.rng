@@ -413,7 +413,10 @@
             </optional>
             <optional>
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>png</value>
+                        <value>pdf</value>
+                    </choice>
                 </element>
             </optional>
         </element>
