@@ -2,7 +2,7 @@ package edu.sc.seis.sod.status.waveFormArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.status.eventArm.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.apache.log4j.Logger;
 
-public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStatus{
+public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveFormStatus{
     public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException {
         if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();
