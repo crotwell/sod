@@ -41,7 +41,7 @@ def main(argv):
         if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
             os.spawnlp(os.P_WAIT, 'schemaDocumenter.bat', 'cmd', 'schemaDocumenter.bat')
         else:
-            os.spawnlp(os.P_WAIT, 'schemaDocumenter.sh', 'sh', 'schemaDocumenter.sh')
+            os.spawnlp(os.P_WAIT, './schemaDocumenter.sh', 'sh', 'schemaDocumenter.sh')
         print 'done'
     else:
         print "nothing chaged"
