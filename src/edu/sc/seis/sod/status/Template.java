@@ -32,11 +32,13 @@ public abstract class Template{
     /** actually return Templates for common tags. This is to allow subclasses to
      * avoid throwing ConfigurationException if it can never really happen.
      **/
-    protected final Object getCommonTemplate(String tag, Element el) {
-        if(tag.equals("runName")) return new RunNameTemplate();
-        else if(tag.equals("startTime")) return new StartTimeTemplate();
-        else if(tag.equals("now"))  return new NowTemplate();
-        else if(tag.equals("configFileName")) return textTemplate(Start.getConfigFileName());
+    protected Object getCommonTemplate(String tag, Element el) {
+        if(tag.equals("runName")){ return new RunNameTemplate(); }
+        else if(tag.equals("startTime")){ return new StartTimeTemplate(); }
+        else if(tag.equals("now")){  return new NowTemplate();}
+        else if(tag.equals("configFileName")){
+            return textTemplate(Start.getConfigFileName());
+        }
         return null;
     }
 
