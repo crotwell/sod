@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<filename>event.html</filename>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Events</title>
+<style media="all">@import "main.css";</style>
+<script type="text/javascript" src="sorttable.js"> </script>
+<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
+</head>
+<body>
+<div id="Header">
+Events
+</div>
+<div id="Content">
+<h1>Events</h1>
+<h2>Status:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
+<armStatus/><br/>
+<h2>Map:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
+<img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
+<h2>Successful:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
+<table class="ruler sortable" id="events">
+<tr class="title">
+<td>Region</td>
+<td>Time (GMT)</td>
+<td>Magnitude</td>
+<td>Depth</td>
+<td class="num">Successful Channels</td>
+<td class="num">Retry Channels</td>
+<td class="num">Rejected Channels</td>
+</tr>
+<events><eventLabel><tr>
+<td><a><attribute name="href"><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td><magnitude/></td>
+<td class="selected"><depth/></td>
+<td class="num"><waveformChannels>SUCCESS</waveformChannels></td>
+<td class="num"><waveformChannels>RETRY</waveformChannels></td>
+<td class="num"><waveformChannels>REJECT</waveformChannels></td>
+</tr>
+</eventLabel><sorting><depth order="descending"/><status>SUCCESS</status></sorting></events>
+</table>
+<h2>In progress:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
+<table class="ruler">
+<tr class="title">
+<td>Region</td>
+<td ><a href="time.html">Time (GMT)</a></td>
+<td><a href="mag.html">Magnitude</a></td>
+<td class="selected"><a href="depth.html">Depth</a></td>
+<td>Status</td>
+</tr>
+<events><eventLabel><tr>
+<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td><magnitude/></td>
+<td class="selected"><depth/></td>
+<td><eventStatus/></td>
+</tr>
+</eventLabel><sorting><depth order="descending"/><status>IN PROGRESS</status></sorting></events>
+</table>
+<h2>Failed:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
+<table class="ruler">
+<tr class="title">
+<td>Region</td>
+<td ><a href="time.html">Time (GMT)</a></td>
+<td><a href="mag.html">Magnitude</a></td>
+<td><a href="depth.html">Depth</a></td>
+<td>Status</td>
+</tr>
+<events><eventLabel><tr>
+<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td><magnitude/></td>
+<td class="selected"><depth/></td>
+<td><eventStatus/></td>
+</tr>
+</eventLabel><sorting><depth order="descending"/><status>FAILED</status></sorting></events>
+</table>
+</div>
+<menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
+</body>
+</html></template>
