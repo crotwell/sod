@@ -43,6 +43,7 @@ public class HSqlDbQueue implements Queue {
 
     private int getDatabaseType(Properties props) {
 	String value = props.getProperty("edu.sc.seis.sod.databasetype");
+	if(value == null) value = "hsqldb";
 	if(value.equalsIgnoreCase("POSTGRES")) return 1;
 	else return 0;
     }
@@ -50,6 +51,7 @@ public class HSqlDbQueue implements Queue {
     private int getPersistanceType(Properties props) {
 	
 	String value = props.getProperty("edu.sc.seis.sod.persistencetype");
+	if(value == null) value = "ATLEASTONCE";
 	if(value.equalsIgnoreCase("ATMOSTONCE")) return 1;
 	else return 0;
     }
