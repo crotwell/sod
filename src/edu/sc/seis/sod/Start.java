@@ -160,9 +160,8 @@ public class Start{
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
         NodeList children = docElement.getChildNodes();
-        Node node;
         for (int i=0; i<children.getLength(); i++) {
-            node = children.item(i);
+            Node node = children.item(i);
             if (node instanceof Element) {
                 Element el = (Element)node;
                 if (el.getTagName().equals("description")) {
@@ -183,7 +182,6 @@ public class Start{
                     waveform = new WaveFormArm(el, network, poolSize);
                     waveFormArmThread = new Thread(waveform, "waveFormArm Thread");
                     waveFormArmThread.start();
-
                 }  else {
                     logger.debug("process "+el.getTagName());
                 }
