@@ -35,7 +35,7 @@ public class JDBCEventRecordSection extends SodJDBC {
                 + tableName + " WHERE eventid=? AND imageName=?";
         if(!DBUtil.tableExists(recChannelTableName,conn)){
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate(JDBCEventRecordSection.getCreateStatement(recChannelTableName));
+            stmt.executeUpdate(JDBCRecordSectionChannel.getCreateStatement(recChannelTableName));
         }
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
