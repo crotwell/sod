@@ -120,30 +120,50 @@ public class SodUtil {
 		} else if (tagName.equals("max")) {
 		    max = Double.parseDouble(getText(subElement));
 		}		
+		 UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
+		 return unitRange;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	UnitRange unitRange = new UnitRangeImpl(min, max, unit);
-	return null;
+	throw new ConfigurationException("Unable to load unit from "+config.getNodeName());
     }
 
-    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config)  throws ConfigurationException {
-		return null;
+    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) 
+	throws ConfigurationException {
+	NodeList children = config.getChildNodes();
+	Node node;
+	edu.iris.Fissures.Time begin=null, end=null;
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    logger.debug(node.getNodeName());
+	    if (node instanceof Element) {
+		Element subElement = (Element)node;
+		String tagName = subElement.getTagName();
+		 if (tagName.equals("startTime")) {
+		     ISOTime tmp = new ISOTime(getText(subElement));
+		     begin = tmp.getDate().getFissuresTime();
+		} else if (tagName.equals("endTime")) {
+		    ISOTime tmp = new ISOTime(getText(subElement));
+		    end = tmp.getDate().getFissuresTime();
+		}		
+	    } // end of if (node instanceof Element)
+	} // end of for (int i=0; i<children.getSize(); i++)
+	return new TimeRange(begin, end);
     }
     
     public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config)  throws ConfigurationException {
-		return null;
+	return new GlobalAreaImpl();
     }
 
     public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)  throws ConfigurationException {
-		return null;
+	return null;
     }
 
     public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)  throws ConfigurationException {
-		return null;
+	return null;
     }
 
     public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config)  throws ConfigurationException {
-		return null;
+	return null;
     }
 
     /** returns the first text child within the node.
