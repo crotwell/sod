@@ -147,7 +147,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
 
         BooleanEditor bool = new BooleanEditor(this);
-        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "localSeismogram"};
+        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "seismogramSubsetter"};
         String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
         for (int i = 0; i < switchTypes.length; i++) {
             for (int j = 0; j < logicals.length; j++) {
