@@ -1,41 +1,39 @@
 package edu.sc.seis.sod.subsetter;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
+
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.SodUtil;
 
 public class RangeSubsetter {
 
-    public RangeSubsetter(Element config) throws ConfigurationException {
+    public RangeSubsetter(Element config) {
         NodeList children = config.getChildNodes();
-        for(int i = 0; i < children.getLength() ; i++) {
-           Node node = children.item(i);
-            if(node instanceof Element)  {
-                String tagName = ((Element)node).getTagName();
-                if(tagName.equals("min")) minElement = ((Element)node);
-                else if(tagName.equals("max")) maxElement = ((Element)node);
+        for(int i = 0; i < children.getLength(); i++) {
+            if(children.item(i) instanceof Element) {
+                Element el = (Element)children.item(i);
+                String tagName = el.getTagName();
+                if(tagName.equals("min")) {
+                    min = extractValue(el);
+                } else if(tagName.equals("max")) {
+                    max = extractValue(el);
+                }
             }
         }
-        if (getMinValue() > getMaxValue()) {
-            throw new ConfigurationException("min > max: min="+getMinValue()+"  max="+getMaxValue());
-        }
+    }
+
+    private static float extractValue(Element e) {
+        return Float.parseFloat(SodUtil.getNestedText(e));
     }
 
     public float getMinValue() {
-        if(minElement == null) return -1f * (Float.MAX_VALUE - 1);
-        String rtnValue = SodUtil.getNestedText(minElement);
-        return  Float.parseFloat(rtnValue);
+        return min;
     }
 
     public float getMaxValue() {
-        if(maxElement == null) return Float.MAX_VALUE;
-        String rtnValue = SodUtil.getNestedText(maxElement);
-        return Float.parseFloat(rtnValue);
-
+        return max;
     }
 
-    private Element minElement = null;
+    float min = -1f * (Float.MAX_VALUE - 1);
 
-    private Element maxElement = null;
+    float max = Float.MAX_VALUE;
 }
