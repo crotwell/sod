@@ -154,7 +154,7 @@
                         <max>90</max>
                     </latitudeRange>
                     <longitudeRange>
-                        <unit>DEGREE</unit>
+                        <min>-180</max>
                         <max>180</max>
                     </longitudeRange>
                 </boxArea>
