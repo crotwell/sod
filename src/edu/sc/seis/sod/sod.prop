@@ -29,4 +29,7 @@ log4j.appender.C.Threshold=warn
 #    corbaloc:iiop:host.domain:port/NameService
 # You should put your own choices for host.domain and port
 #
-edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+# for pooh
+#edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+# for iris
+edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
