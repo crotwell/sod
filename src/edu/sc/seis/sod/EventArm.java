@@ -1,14 +1,9 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.sod.status.eventArm.*;
+import edu.iris.Fissures.IfEvent.*;
 import edu.sc.seis.sod.subsetter.eventArm.*;
-import edu.sc.seis.sod.process.eventArm.*;
+import java.util.*;
 
 import edu.iris.Fissures.Area;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -17,20 +12,12 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventQueryTime;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.process.eventArm.EventArmProcess;
+import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
-import edu.sc.seis.sod.subsetter.eventArm.EventTimeRange;
-import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
-import edu.sc.seis.sod.subsetter.eventArm.NullEventAttrSubsetter;
-import edu.sc.seis.sod.subsetter.eventArm.NullOriginSubsetter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
@@ -38,11 +25,6 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import java.util.LinkedList;
-import edu.iris.Fissures.IfEvent.EventSeqIter;
-import edu.iris.Fissures.IfEvent.EventSeqHolder;
-import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
-import edu.iris.Fissures.IfEvent.EventAccess;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
@@ -185,7 +167,8 @@ public class EventArm implements Runnable{
     }
 
     private void waitForProcessing() throws SQLException {
-        while(eventStatus.getAll(EventCondition.PROCESSOR_PASSED).length > 2) {
+        while(eventStatus.getAll(Status.get(Status.EVENT_CHANNEL_POPULATION,
+                                            Status.IN_PROG)).length > 2) {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {}
@@ -265,23 +248,28 @@ public class EventArm implements Runnable{
     }
 
     public void handle(CacheEvent event) throws Exception{
-        change(event, EventCondition.NEW);
+        change(event, Status.get(Status.EVENT_ATTR_SUBSETTER,
+                                 Status.IN_PROG));
         EventAttr attr = event.get_attributes();
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
             Origin origin = event.get_preferred_origin();
             if(originSubsetter.accept(event, origin, null)) {
-                change(event, EventCondition.SUBSETTER_PASSED);
+                change(event, Status.get(Status.PROCESSOR,
+                                         Status.IN_PROG));
                 process(event);
-                change(event, EventCondition.PROCESSOR_PASSED);
+                change(event, Status.get(Status.EVENT_CHANNEL_POPULATION,
+                                         Status.SUCCESS));
             }else{
-                change(event, EventCondition.PROCESSOR_FAILED);
+                change(event, Status.get(Status.EVENT_ORIGIN_SUBSETTER,
+                                         Status.REJECT));
             }
         }else{
-            change(event, EventCondition.SUBSETTER_FAILED);
+            change(event, Status.get(Status.EVENT_ATTR_SUBSETTER,
+                                     Status.REJECT));
         }
     }
 
-    private void change(EventAccessOperations event, EventCondition status) throws Exception{
+    private void change(EventAccessOperations event, Status status) throws Exception{
         eventStatus.setStatus(event, status);
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
