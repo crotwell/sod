@@ -77,7 +77,7 @@
                 </stationEffectiveTimeOverlap>
                 <siteAND>
                         <siteOR>
-                                <siteCode/>
+                                <siteCode>  </siteCode>
                                 <siteCode>00</siteCode>
                         </siteOR>
                         <siteEffectiveTimeOverlap>
