@@ -2,6 +2,8 @@ package edu.sc.seis.sod;
 
 import org.w3c.dom.*;
 import java.lang.reflect.*;
+import edu.iris.Fissures.*;
+import edu.iris.Fissures.model.*;
 
 /**
  * SubsetterUtil.java
@@ -96,30 +98,66 @@ public class SodUtil {
 	} // end of try-catch
     }
 
-    public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config) {
+    public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config)  throws ConfigurationException {
+	Unit unit = null;
+	double min = Double.MIN_VALUE;
+	double max = Double.MAX_VALUE;
+
+	NodeList children = config.getChildNodes();
+	Node node;
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    logger.debug(node.getNodeName());
+	    if (node instanceof Element) {
+		Element subElement = (Element)node;
+		String tagName = subElement.getTagName();
+		 if (tagName.equals("unit")) {
+		    unit = loadUnit(subElement);
+		} else if (tagName.equals("min")) {
+		    min = Double.parseDouble(getText(subElement));
+		} else if (tagName.equals("max")) {
+		    max = Double.parseDouble(getText(subElement));
+		}		
+	    } // end of if (node instanceof Element)
+	} // end of for (int i=0; i<children.getSize(); i++)
+	UnitRange unitRange = new UnitRangeImpl(min, max, unit);
 	return null;
     }
 
-    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) {
+    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config)  throws ConfigurationException {
 		return null;
     }
     
-    public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config) {
+    public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config)  throws ConfigurationException {
 		return null;
     }
 
-    public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config) {
+    public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)  throws ConfigurationException {
 		return null;
     }
 
-    public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config) {
+    public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)  throws ConfigurationException {
 		return null;
     }
 
-    public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config) {
+    public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config)  throws ConfigurationException {
 		return null;
     }
 
+    /** returns the first text child within the node.
+     */
+    protected static String getText(Element config) {
+	NodeList children = config.getChildNodes();
+	Node node;
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    if (node instanceof Text) {
+		return node.getNodeValue();
+	    }
+	}
+	// nothing found, return null
+	return null;
+    }
     static org.apache.log4j.Category logger = 
         org.apache.log4j.Category.getInstance(SodUtil.class.getName());
 
