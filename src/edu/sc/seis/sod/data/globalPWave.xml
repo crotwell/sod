@@ -26,9 +26,10 @@ n<?xml version="1.0"?>
           <value>telukutl</value>
 </property>
 
-<!-- postgres or hsqldb
+<!-- postgres or hsqldb or hsqldb memory only
           <value>edu.sc.seis.sod.database.PostgresDbManager</value>
           <value>edu.sc.seis.sod.database.HSQLDbManager</value>
+          <value>edu.sc.seis.sod.database.HSQLMemoryDbManager</value>
 -->
 <property>
           <name>edu.sc.seis.sod.databasetype</name>
