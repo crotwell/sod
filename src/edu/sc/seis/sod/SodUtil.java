@@ -6,11 +6,13 @@ import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.sod.SodUtil;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,14 +29,8 @@ import org.w3c.dom.Text;
  */
 
 public class SodUtil {
-    public SodUtil (){
-        
-    }
-    
     public static synchronized Object loadExternal(Element config)
-        
         throws ConfigurationException {
-        
         try {
             String classname;
             Element classNameElement = SodUtil.getElement(config, "classname");
@@ -89,10 +85,8 @@ public class SodUtil {
     
     public static synchronized Object load(Element config, String packageName)
         throws ConfigurationException {
-        
         try {
-            Class[] constructorArgTypes = new Class[1];
-            constructorArgTypes[0] = Element.class;
+            Class[] argTypes = {Element.class};
             String tagName = config.getTagName();
             
             // make sure first letter is upper case
@@ -118,23 +112,13 @@ public class SodUtil {
             }
             
             // not a known non-sodElement type, so load via reflection
-            Class subsetterSubclass =
-                Class.forName(packageName+"."+
-                                  tagName);
-            //logger.debug("IN sod UTIL "+packageName+"."+tagName);
-            
-            Constructor constructor =
-                subsetterSubclass.getConstructor(constructorArgTypes);
-            Object[] constructorArgs = new Object[1];
-            constructorArgs[0] = config;
-            Object obj =
-                constructor.newInstance(constructorArgs);
-            if(tagName.equals("NetworkFinder")) return obj;
-            
-            return (SodElement)obj;
+            Class subsetter = Class.forName(packageName+"."+ tagName);
+            Constructor constructor = subsetter.getConstructor(argTypes);
+            Object[] args = {config };
+            return constructor.newInstance(args);
         } catch (InvocationTargetException e) {
             // occurs if the constructor throws an exception
-            // don't repackage ConfigurationExceptioN
+            // don't repackage ConfigurationException
             e.printStackTrace();
             Throwable subException = e.getTargetException();
             if (subException instanceof ConfigurationException) {
@@ -230,23 +214,25 @@ public class SodUtil {
         float maxLatitude = 0 ;
         float minLongitude = 0 ;
         float maxLongitude = 0;
+        logger.debug("Creating box area");
         for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
             if(node instanceof Element) {
-                
                 Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod");
                 if(obj instanceof LatitudeRange) {
+                    logger.debug("Found Latitude range");
                     minLatitude = ((LatitudeRange)obj).getMinValue();
                     maxLatitude = ((LatitudeRange)obj).getMaxValue();
                 } else if(obj instanceof LongitudeRange) {
-                    
+                    logger.debug("Found longitude range");
                     minLongitude = ((LongitudeRange)obj).getMinValue();
                     maxLongitude = ((LongitudeRange)obj).getMaxValue();
                 }
-                
+                logger.debug("FOUND OTHER!!!!");
             }
             
         }
+        logger.debug("creating box area with lat range " + minLatitude + ", " + maxLatitude + " lon range " + minLongitude + ", " + maxLongitude);
         return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
     
@@ -336,9 +322,6 @@ public class SodUtil {
             }
         }
     }
-    
-    
-    static org.apache.log4j.Category logger =
-        org.apache.log4j.Category.getInstance(SodUtil.class.getName());
+    private static Logger logger = Logger.getLogger(SodUtil.class);
     
 }// SubsetterUtil
