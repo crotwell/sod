@@ -102,6 +102,8 @@ public class Start {
 
     private static boolean waitOnError = true;
 
+    private static boolean replaceDBConfig = false;
+
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
         System.err.println("You told SOD to use "
@@ -364,7 +366,7 @@ public class Start {
     private void checkConfig(InputSource is) {
         try {
             String configString = JDBCConfig.extractConfigString(is);
-            JDBCConfig dbConfig = new JDBCConfig(configString);
+            JDBCConfig dbConfig = new JDBCConfig(configString, replaceDBConfig);
             if(!dbConfig.isSameConfig(configString)) {
                 allHopeAbandon("Your config file has changed since your last run.  "
                         + "It may not be advisable to continue this SOD run.");
@@ -411,6 +413,8 @@ public class Start {
                     waitOnError = false;
                 } else if(args[i].equals("-i")) {
                     waitOnError = false;
+                } else if(args[i].equals("--new-config")) {
+                    replaceDBConfig = true;
                 }
             }
             Start start = new Start(confFilename, args);
