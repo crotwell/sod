@@ -11,6 +11,11 @@ eventchannelstatus.create=CREATE TABLE eventchannelstatus( pairid int, \
                                                            status int, \
                                                            PRIMARY KEY (pairid), \
                                                            UNIQUE (eventid, channelid))
+eventchannelretry.create=CREATE TABLE eventchannelretry( pairid int, \
+                                                         status int, \
+                                                         numfailure int DEFAULT 0, \
+                                                         retry_time timestamp, \
+                                                         PRIMARY KEY (pairid))
                                     
 
 EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
