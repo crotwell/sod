@@ -37,8 +37,6 @@ public class DatabaseManager {
 	return databaseManager;
 	} catch(Exception e) {
 		e.printStackTrace();
-		System.out.println("Unable to load  "+className);
-		System.exit(0);
 		return null;
 	}
     }
