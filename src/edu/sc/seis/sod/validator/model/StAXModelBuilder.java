@@ -171,7 +171,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
             } else if(isData(tag)) {
                 kids.add(handleData());
             } else {
-                System.out.println("Unknown tag!" + tag + " " + definedGrammar);
+                System.out.println("Unknown tag! " + tag + " " + definedGrammar);
                 System.exit(0);
             }
         }
