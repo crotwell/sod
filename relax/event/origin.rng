@@ -11,6 +11,7 @@
                         <ref name="originTimeRange"/>
                         <externalRef href="../base/externalRef/magnitudeRange.rng"/>
                         <ref name="depthRange"/>
+                        <ref name="originPointDistance"/>
                         <ref name="eventArea"/>
                         <externalRef href="catalog.rng"/>
                         <externalRef href="contributor.rng"/>
@@ -156,6 +157,31 @@
                 <element name="originNOT">
                         <ref name="origin"/>
                 </element>
+        </define>
+        <define name="originPointDistance">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Distance range from a fixed point. </summary>
+                                <description> True if the origin is within the
+                                given distance of the given lat and lon. </description>
+                                <example>
+                                        <originPointDistance>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </originPointDistance>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="latitude">
+                   <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range"/>
         </define>
         <define name="NULL">
                 <xsd:annotation>
