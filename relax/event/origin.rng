@@ -6,6 +6,7 @@
         </start>
         <include href="../base/include/timeRange.rng"/>
         <include href="../base/include/range.rng"/>
+        <include href="../base/include/quantity.rng"/>
         <define name="origin">
                 <choice>
                         <ref name="name"/>
@@ -296,6 +297,21 @@
                         <data type="double"/>
                     </element>
                     <ref name="range"/>
+                </element>
+        </define>
+        <define name="removeEventDuplicate">
+                <element name="removeEventDuplicate">
+                    <optional>
+                        <element name="timeVariance">
+                            <ref name="time" />
+                        </element>
+                        <element name="depthVariance">
+                            <ref name="length" />
+                        </element>
+                        <element name="distanceVariance">
+                            <ref name="length" />
+                        </element>
+                    </optional>
                 </element>
         </define>
         <define name="NULL">
