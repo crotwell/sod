@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 /**
- * LocalSeismogramProcessor.java
+ * LocalSeismogramProcess.java
  *
  *
  * Created: Thu Dec 13 18:03:03 2001
@@ -14,7 +14,7 @@ import edu.iris.Fissures.IfSeismogramDC.*;
  * @version
  */
 
-public interface LocalSeismogramProcessor extends WaveFormArmProcess {
+public interface LocalSeismogramProcess extends WaveFormArmProcess {
 
     public void process(EventAccessOperations event, 
 			NetworkAccessOperations network, 
