@@ -4,7 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.process.eventArm.EventArmProcess;
+import edu.sc.seis.sod.process.eventArm.EventProcess;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import java.io.BufferedWriter;
@@ -14,7 +14,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 
-public class PrintLineEventProcess implements EventArmProcess {
+public class PrintLineEventProcess implements EventProcess {
     public PrintLineEventProcess (Element config) throws TransformerException, ConfigurationException{
         Element fileEl = (Element)XPathAPI.selectSingleNode(config, "filename");
         if(fileEl != null){

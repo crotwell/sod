@@ -12,7 +12,7 @@ import edu.sc.seis.sod.process.Process;
  * @version
  */
 
-public interface EventArmProcess extends Process {
+public interface EventProcess extends Process {
 
     public void process(EventAccessOperations event) throws Exception;
 
