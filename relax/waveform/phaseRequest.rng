@@ -3,9 +3,12 @@
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
     <include href="../base/include/quantity.rng"/>
     <start combine="choice">
-            <notAllowed/>
+        <choice>
+         <ref name="phaseRequest"/>
+        </choice>
     </start>
     <define name="phaseRequest">
+        <element name="phaseRequest">
             <optional>
                 <element name="model">
                     <data type="string"/>
@@ -23,5 +26,6 @@
             <element name="endOffset">
                 <ref name="time"/>
             </element>
+        </element>
     </define>
 </grammar>
