@@ -366,6 +366,7 @@ in the instance document
 	<!-- element representing the process -->
 	<xsd:element name="eventProcess" type="processType" abstract="true"/>
 	<xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
+	<xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
 
 	<xsd:complexType name="eventArmType">	
 		<xsd:complexContent>
@@ -374,7 +375,7 @@ in the instance document
 					<xsd:element ref="eventSource"/>
 					<xsd:element ref="eventAttr" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="origin" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="printLineEventProcess" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element ref="eventProcess" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

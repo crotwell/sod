@@ -111,7 +111,7 @@
 		<xsd:complexContent>
 			<xsd:extension base="eventStationType">
 				<xsd:sequence>
-					<xsd:element name="distance" type="distanceRangeType"/>
+					<xsd:element name="distanceRange" type="distanceRangeType"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -319,7 +319,14 @@
 
 	<!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
 
-	<xsd:complexType name="waveformProcessorType">
+	<xsd:complexType name="externalWaveformProcessType">
+		<xsd:complexContent>
+			<xsd:extension base="externalProcessType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="printLineWaveformProcessorType">
 		<xsd:complexContent>
 			<xsd:extension base="internalProcessType">
 				<xsd:sequence>
@@ -373,7 +380,8 @@
 
 	<!-- element representing the process -->
 	<xsd:element name="waveFormProcess" type="processType" abstract="true"/>
-	<xsd:element name="printlineWaveformProcessor" type="waveformProcessorType"  substitutionGroup="waveFormProcess"/>
+	<xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
+	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
 
 	<xsd:complexType name="waveFormArmType">
 		<xsd:complexContent>
