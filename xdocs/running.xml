@@ -5,6 +5,14 @@
         </properties>
         <body>
                 <section name="Starting SOD">
+                        <section name="Solaris, MacOSX, Linux, etc">
+                                <p>If you're on a Unix-like OS, use the sod.sh script in the bin
+                                        directory. To run it, cd to SOD's bin directory and execute
+                                        'sod.sh -f <em>config file name</em>'. The -f option
+                                        specifies the config file SOD uses to set up its arms. The
+                                        command 'sod.sh -f ../docs/tutorial.xml' runs the same
+                                        tutorial that the editor opens by default.</p>
+                        </section>
                         <section name="Windows">
                                 <p> SOD runs are currently started with a .bat file in Windows. To
                                         execute it, open a command window and cd to the bin
@@ -13,14 +21,6 @@
                                         using the config file specified after the -f flag. The
                                         command 'sod.bat -f ../docs/tutorial.xml' starts SOD with
                                         the same tutorial config file used by the editor.</p>
-                        </section>
-                        <section name="Everybody Else">
-                                <p>If you're not on Windows, use the sod.sh script in the bin
-                                        directory. To run it, cd to SOD's bin directory and execute
-                                        'sod.sh -f <em>config file name</em>'. The -f option
-                                        specifies the config file SOD uses to set up its arms. The
-                                        command 'sod.sh -f ../docs/tutorial.xml' runs the same
-                                        tutorial that the editor opens by default.</p>
                         </section>
                         <section name="Running in a directory other than bin">
                                 <p>SOD's scripts use the variable SOD_HOME to locate SOD's lib
@@ -93,7 +93,7 @@
                                         sale on attractive green tractors) and SOD is interrupted,
                                         unset this property so SOD will continue where it left off.
                                         You can unset it by either changing TRUE inside the
-                                        removeDatabase tag to false, or unchecking the Remove
+                                        removeDatabase tag to FALSE, or unchecking the Remove
                                         Database option in the editor and saving the file.</p>
                         </section>
                 </section>
