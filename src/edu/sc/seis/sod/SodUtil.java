@@ -33,15 +33,22 @@ public class SodUtil {
 
 	    // first check for things that are not SodElements
 	    if (tagName.equals("Unit")) {
-		 
+		return loadUnit(config);
 	    } else if (tagName.equals("UnitRange")) {
+		return loadUnitRange(config);
 	    } else if (tagName.equals("TimeRange")) {
+		return loadTimeRange(config);
 	    } else if (tagName.equals("GlobalArea")) {
+		return loadGlobalArea(config);
 	    } else if (tagName.equals("BoxArea")) {
+		return loadBoxArea(config);
 	    } else if (tagName.equals("PointArea")) {
-	    
+		return loadBoxArea(config);
+	    } else if (tagName.equals("FlinnEngdahlArea")) {
+		return loadFEArea(config);
 	    }
 	   
+	    // not a known non-sodElement type, so load via reflection
 	    Class subsetterSubclass = 
 		Class.forName("edu.sc.seis.sod.subsetter."+
 			      tagName);
@@ -71,5 +78,49 @@ public class SodUtil {
 					     config.getTagName(), e);
 	} // end of try-catch
     }
+
+    public static edu.iris.Fissures.model.UnitImpl loadUnit(Element config) throws ConfigurationException {
+	String unitName = null;
+	NodeList children = config.getChildNodes();
+	Node node = children.item(0);
+	logger.debug(node.getNodeName());
+	if (node instanceof Text) {
+	    unitName = node.getNodeValue();
+	}
+	try {
+	    Field field =
+		edu.iris.Fissures.model.UnitImpl.class.getField(unitName);
+	    return (edu.iris.Fissures.model.UnitImpl)field.get(edu.iris.Fissures.model.UnitImpl.SECOND);
+	} catch (Exception e) {
+	    throw new ConfigurationException("Can't find unit "+unitName, e);
+	} // end of try-catch
+    }
+
+    public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config) {
+	return null;
+    }
+
+    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) {
+		return null;
+    }
+    
+    public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config) {
+		return null;
+    }
+
+    public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config) {
+		return null;
+    }
+
+    public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config) {
+		return null;
+    }
+
+    public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config) {
+		return null;
+    }
+
+    static org.apache.log4j.Category logger = 
+        org.apache.log4j.Category.getInstance(SodUtil.class.getName());
 
 }// SubsetterUtil
