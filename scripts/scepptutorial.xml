@@ -130,7 +130,6 @@
             <dns>edu/sc/seis</dns>
         </fixedDataCenter>
         <someCoverage/>
-        <recordSectionGenerator/>
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
             <fileType>sac</fileType>
