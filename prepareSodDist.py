@@ -29,7 +29,6 @@ def buildExternal(proj, name):
     extras = [('scripts/tutorial.xml', 'docs/tutorial.xml'),
               ('scripts/weed.xml', 'docs/weed.xml'),
               ('site/generatedSite', 'docs')]
-    name = buildName(proj)
     zip = zipfile.ZipFile(name + ".zip", 'w')
     tar = tarfile.open(name + '.tar', 'w')
     buildDist(proj, scripts, name, extras, [tar, zip])
