@@ -2,6 +2,7 @@ package edu.sc.seis.sod.database.event;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
@@ -37,6 +38,16 @@ public class JDBCEventStatus extends SodJDBC{
                                              Standing.IN_PROG).getAsShort());
         getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
         getAll = prepare("SELECT eventid, eventcondition FROM eventstatus");
+        getByTimeAndDepthRanges = prepare("SELECT DISTINCT eventid, time_stamp, quantity_value "
+                                              + "from origin,time, quantity, eventstatus "
+                                              + "where origin_time_id = time_id "
+                                              + "and time_stamp > ? "
+                                              + "and time_stamp < ? "
+                                              + "and quantity_id = "
+                                              + "(select loc_depth_id from location where origin_location_id = loc_id)"
+                                              + "and quantity_value > ? "
+                                              + "and quantity_value < ? "
+                                              + "and eventid = origin_event_id");
     }
 
     public void restartCompletedEvents() throws SQLException {
@@ -59,6 +70,18 @@ public class JDBCEventStatus extends SodJDBC{
     public CacheEvent[] getAll(Status status) throws SQLException {
         getAllOfEventArmStatus.setShort(1, status.getAsShort());
         return extractEvents(getAllOfEventArmStatus);
+    }
+
+    public CacheEvent[] getEventsByTimeAndDepthRanges(MicroSecondDate minTime,
+                                                      MicroSecondDate maxTime,
+                                                      double minDepthKM,
+                                                      double maxDepthKM)
+        throws SQLException{
+        getByTimeAndDepthRanges.setTimestamp(1, minTime.getTimestamp());
+        getByTimeAndDepthRanges.setTimestamp(2, maxTime.getTimestamp());
+        getByTimeAndDepthRanges.setDouble(3, minDepthKM);
+        getByTimeAndDepthRanges.setDouble(4, maxDepthKM);
+        return extractEvents(getByTimeAndDepthRanges);
     }
 
     private CacheEvent[] extractEvents(PreparedStatement eventStatement)
@@ -157,7 +180,8 @@ public class JDBCEventStatus extends SodJDBC{
 
     private PreparedStatement getStatus, putEvent, updateStatus,
         getAllOfEventArmStatus, getAllOfWaveformArmStatus,
-        getWaveformStatus, getAllOrderByDate, getNextStmt, getAll;
+        getWaveformStatus, getAllOrderByDate, getNextStmt, getAll,
+        getByTimeAndDepthRanges;
 
     private Connection conn;
 }
