@@ -64,12 +64,6 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return pairId;
     }
     
-    public int pop() throws SQLException {
-        ResultSet rs = pop.executeQuery();
-        if(rs.next()) return rs.getInt("pairid");
-        return -1;
-    }
-    
     public int insert(int eventId, int chanId) throws SQLException{
         try {
             return getPairId(eventId, chanId);
