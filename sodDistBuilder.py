@@ -1,5 +1,5 @@
 import sodBuilder
-import sys, os, time
+import sys, os, time, zipfile, tarfile
 sys.path.append("../devTools/maven")
 sys.path.append("./scripts")
 import distBuilder, sodScriptBuilder, ProjectParser
@@ -21,16 +21,17 @@ def buildExternal(proj, name=None):
     extras = [('scripts/tutorial.xml', 'docs/tutorial.xml'),
               ('scripts/weed.xml', 'docs/weed.xml'),
               ('site/generatedSite', 'docs')]
-    buildDist(proj, scripts, name, extras)
+    name = buildName(proj)
+    zip = zipfile.ZipFile(name + ".zip", 'w')
+    tar = tarfile.open(name + '.tar', 'w')
+    buildDist(proj, scripts, name, extras, [tar, zip])
 
-def buildDist(proj, scripts, name=None, extras=[]):
-    sodBuilder.build(proj)
+def buildDist(proj, scripts, name=None, extras=[], archives=[]):
+    #sodBuilder.build(proj)
     if not os.path.exists('scripts/logs'): os.mkdir('scripts/logs')
-    scriptsWithTarloc = []
-    for script in scripts:
-        scriptsWithTarloc.append((script, 'bin/'+script))
+    scriptsWithTarloc = [(script, 'bin/'+script) for script in scripts]
     if name is None: name = buildName(proj)
-    distBuilder.buildDist(proj, True, extras, scriptsWithTarloc, name)
+    distBuilder.buildDist(proj, archives, True, extras, scriptsWithTarloc, name)
 
 def buildName(proj):
     return proj.name + '-' + time.strftime('%y%m%d')
