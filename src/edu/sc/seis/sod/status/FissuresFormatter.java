@@ -147,6 +147,12 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
+        if (from == null) {
+            throw new NullPointerException("from Location is null");
+        }
+        if (to == null) {
+            throw new NullPointerException("to Location is null");
+        }
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
