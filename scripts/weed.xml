@@ -127,7 +127,8 @@
                 </channelAND>
 
                 <responseWriter>
-                    <responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
+                    <directory>responses</directory>
+                    <filePattern><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</filePattern>
                  </responseWriter>
 
                 <networkInfoTemplateGenerator>
