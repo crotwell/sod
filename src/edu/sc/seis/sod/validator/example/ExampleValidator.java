@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -100,10 +101,10 @@ public class ExampleValidator {
         System.out.println(getPercentage(numAnns, totalValid)+ "% valid");
     }
 
-    public static double getPercentage(double total, double actual){
-        if(actual == total){ return 100; }
+    public static String getPercentage(double total, double actual){
+        if(actual == total){ return "" + 100; }
         double percentage = actual/total * 100;
-        return percentage - percentage%.01;
+        return new DecimalFormat("0.00").format(percentage);
     }
     
     public static void printExamples(String prefix, String[] examples) {
@@ -126,6 +127,6 @@ public class ExampleValidator {
 
     public static void main(String[] args) throws IOException,
             XMLStreamException {
-        validate("f:/seis/sod/relax/sod.rng");
+        validate("sod.rng");
     }
 }
