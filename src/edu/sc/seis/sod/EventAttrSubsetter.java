@@ -11,7 +11,7 @@ import edu.iris.Fissures.event.*;
  * @version
  */
 
-public interface EventAttrSubsetter {
+public interface EventAttrSubsetter extends Subsetter {
 
     public boolean accept(EventAttr event, CookieJar cookies);
 

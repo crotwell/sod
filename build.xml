@@ -82,10 +82,11 @@ packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  maxmemory="64m" >
        </target>
 
        <target name="dist" depends="testcompile, signjar">
-         <copy todir="${dist}/doc" 
-              file="${src}/edu/sc/seis/sod/sodconfigurator.xsd" />
-         <copy todir="${dist}/doc" 
-              file="${src}/edu/sc/seis/sod/DefaultConfig.xml" />
+         <copy todir="${dist}/doc" >
+              <fileset dir=".">
+		            <include name="xml" />
+              </fileset>
+         </copy>
          <zip zipfile="${dist}/lib/sod_src.zip" >
               <fileset dir=".." >
                  <include name="sod/**/*.java" />

@@ -6,6 +6,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
+import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
 import org.apache.log4j.*;
 import java.io.*;
 import java.util.*;
@@ -31,8 +32,10 @@ public class Start {
 	document = initParser(configFile);
     }
 
-    public void start() {
-	NodeList children = document.getChildNodes();
+    public void start() throws ConfigurationException {
+	Element docElement = document.getDocumentElement();
+	logger.info("start "+docElement.getTagName());
+	NodeList children = docElement.getChildNodes();
 	Node node;
 	Class[] constructorArgTypes = new Class[1];
 	constructorArgTypes[0] = Element.class;
@@ -45,14 +48,15 @@ public class Start {
 		    logger.info(subElement.getTagName());
 		} else if (subElement.getTagName().equals("eventArm")) {
 		    logger.info(subElement.getTagName());
-		    
+		    eventArm = new EventArm(subElement);
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
 		    
-		} else if (subElement.getTagName().equals("waveformArm")) {
+		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
 		    
 		} else {
+		logger.debug("process "+subElement.getTagName());
 		    
 		}
 	    }
@@ -116,9 +120,20 @@ public class Start {
 	    } // end of else
 	    
             logger.info("Logging configured");
+
+	    InputStream in = new BufferedInputStream(new FileInputStream("../xml/sample0.xml"));
+	    Start start = new Start(in);
+            logger.info("Start init()");
+	    start.init();
+            logger.info("Start start()");
+	    start.start();
 	} catch(Exception e) {
+	    if (e instanceof WrappedException) {
+	    logger.error("Problem, wrapped is ", ((WrappedException)e).getCausalException());
+	    } // end of if (e instanceof WrappedException)
 	    logger.error("Problem... ", e);
 	}
+	logger.info("Done.");
     } // end of main ()
 
     protected Document initParser(InputStream xmlFile) 
@@ -131,6 +146,8 @@ public class Start {
     InputStream configFile;
 
     Document document;
+
+    EventArm eventArm;
 
     static Category logger = 
         Category.getInstance(Start.class.getName());

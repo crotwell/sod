@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 /**
  * EventArm.java
@@ -13,20 +14,27 @@ import org.w3c.dom.*;
  */
 
 public class EventArm {
-    public EventArm (Element config){
-	if ( ! config.getTagName().equals("EventArm")) {
+    public EventArm (Element config) throws ConfigurationException {
+	if ( ! config.getTagName().equals("eventArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
 	processConfig(config);
     }
 
-    protected void processConfig(Element config) {
+    protected void processConfig(Element config) 
+	throws ConfigurationException {
+
 	NodeList children = config.getChildNodes();
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
+	    logger.debug(node.getNodeName());
+	    if (node instanceof Element) {
+		SodElement sodElement = SodUtil.load((Element)node);
+	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	
     }
     
+    static Category logger = 
+        Category.getInstance(EventArm.class.getName());
 }// EventArm
