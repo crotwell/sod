@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.status;
 
-
 import edu.sc.seis.sod.CommonAccess;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,9 +9,10 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
-public abstract class FileWritingTemplate extends Template implements GenericTemplate {
-    public FileWritingTemplate(String loc) throws IOException  {
+public class FileWritingTemplate extends Template implements GenericTemplate {
+    protected FileWritingTemplate(String loc) throws IOException  {
         this.outputLocation = testOutputLoc(loc);
     }
     
@@ -30,7 +30,7 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
             }
         }
     }
-   
+    
     public String getResult() {
         StringBuffer buf = new StringBuffer();
         Iterator e = templates.iterator();
@@ -44,6 +44,8 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
         };
     }
     
+    public String getOutputLocation(){ return outputLocation; }
+    
     public String getFilename()  {
         return new File(outputLocation).getName();
     }
@@ -53,10 +55,9 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
     }
     
     private class ScheduledWriter extends TimerTask {
-        
         public void run()  {
             try  {
-                logger.debug("writing " + getOutputDirectory() + '/' + getFilename());
+                logger.debug("writing " + outputLocation);
                 File loc = new File(outputLocation);
                 File temp = File.createTempFile(loc.getName(), null);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
@@ -64,14 +65,12 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
                 writer.close();
                 loc.delete();
                 temp.renameTo(loc);
-                
                 scheduled = new Boolean(false);
             }
             catch (IOException e)  {
                 CommonAccess.handleException(e, "trouble writing file " + getFilename());
             }
         }
-        
     }
     
     private String outputLocation;
