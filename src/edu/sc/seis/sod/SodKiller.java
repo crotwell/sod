@@ -7,6 +7,8 @@ public class SodKiller {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 			public void run() {
+                System.out.println("Killing SOD");
+                System.err.println("Killing SOD");
 				System.exit(0);
 			}
 		};
