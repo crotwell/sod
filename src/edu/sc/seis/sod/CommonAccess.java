@@ -26,7 +26,7 @@ public class CommonAccess {
 
     public static CommonAccess getCommonAccess() { return commonAccess; }
 
-    public FissuresNamingService getFissuresNamingService() throws Exception{
+    public FissuresNamingService getFissuresNamingService() throws ConfigurationException {
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingService(getORB());
             java.util.Properties props = System.getProperties();
@@ -75,6 +75,7 @@ public class CommonAccess {
     static final String NAME_SERVICE_PROP =
         "edu.sc.seis.sod.nameServiceCorbaLoc";
 
-    static Logger logger = Logger.getLogger(CommonAccess.class);
+    private static Logger logger = Logger.getLogger(CommonAccess.class);
+
 }// CommonAccess
 
