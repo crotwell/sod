@@ -13,24 +13,24 @@ import org.apache.log4j.*;
  */
 
 public class SodException {
-    public SodException (java.lang.Object object, Exception e){
-	
-	this.object = object;
-	this.exception = e;
+    public SodException (java.lang.Object object, Throwable e){
+
+    this.object = object;
+    this.exception = e;
     }
-    
+
     public java.lang.Object getSource() {
-	return this.object;
+    return this.object;
     }
-    
-    public Exception getException() {
-	return this.exception;
+
+    public Throwable getThrowable() {
+    return this.exception;
     }
 
     private java.lang.Object object;
-    private Exception exception;
+    private Throwable exception;
 
-    static Category logger = 
+    static Category logger =
         Category.getInstance(SodException.class.getName());
-    
+
 }// SodException

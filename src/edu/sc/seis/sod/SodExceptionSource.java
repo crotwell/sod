@@ -17,18 +17,18 @@ import org.apache.log4j.*;
 
 public class SodExceptionSource {
     public SodExceptionSource (){
-	
+
     }
 
     /**
      * adds a sodExceptionListener.
      *
      */
-    
+
 
     public void addSodExceptionListener(SodExceptionListener sodExceptionListener) {
 
-	vector.add(sodExceptionListener);
+    vector.add(sodExceptionListener);
     }
 
     /**
@@ -37,26 +37,26 @@ public class SodExceptionSource {
 
     public void removeSodExceptionListener(SodExceptionListener sodExceptionListener) {
 
-	vector.remove(sodExceptionListener);
-	
+    vector.remove(sodExceptionListener);
+
     }
 
     /**
      * notifys the Listeners about the occurence of a sodException.
      */
 
-    public void notifyListeners(java.lang.Object object, Exception e) {
+    public void notifyListeners(java.lang.Object object, Throwable e) {
 
-	for(int counter = 0; counter < vector.size(); counter++) {
-	    SodExceptionListener sodExceptionListener = (SodExceptionListener)vector.get(counter);
-	    sodExceptionListener.sodExceptionHandler(new SodException(object, e));
-	}
+    for(int counter = 0; counter < vector.size(); counter++) {
+        SodExceptionListener sodExceptionListener = (SodExceptionListener)vector.get(counter);
+        sodExceptionListener.sodExceptionHandler(new SodException(object, e));
     }
-    
+    }
+
     //vector to hold the sodExceptionListeners.
     private Vector vector = new Vector();
 
-    static Category logger = 
-	Category.getInstance(SodExceptionSource.class.getName());
-    
+    static Category logger =
+    Category.getInstance(SodExceptionSource.class.getName());
+
 }// SodExceptionSource
