@@ -3,6 +3,7 @@ package edu.sc.seis.sod.status;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.EventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
+import edu.sc.seis.fissuresUtil.map.layers.ShapeLayerPropertiesHandler;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 
 public class MapPool{
@@ -11,7 +12,7 @@ public class MapPool{
         free = new boolean[mapCount];
         for (int i = 0; i < maps.length; i++) {
             maps[i] = 
-            	new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
+            	new OpenMap(ShapeLayerPropertiesHandler.getProperties());
             maps[i].setEtopoLayer("edu/sc/seis/mapData");
             maps[i].setEventLayer(new EventLayer(maps[i], colorizer));
             maps[i].setStationLayer(new StationLayer());
