@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import edu.sc.seis.sod.ConfigurationException;
 
 
-public class ForkProcessor implements LocalSeismogramProcess {
+public class ForkProcess implements LocalSeismogramProcess {
 
 
     /**
@@ -31,7 +31,7 @@ public class ForkProcessor implements LocalSeismogramProcess {
      * @param config an <code>Element</code> that contains the configuration
      * for this Processor
      */
-    public ForkProcessor (Element config) throws ConfigurationException {
+    public ForkProcess (Element config) throws ConfigurationException {
         this.config = config;
         NodeList children = config.getChildNodes();
         Node node;
@@ -103,6 +103,6 @@ public class ForkProcessor implements LocalSeismogramProcess {
 
     Element config;
 
-    private static final Logger logger = Logger.getLogger(ForkProcessor.class);
+    private static final Logger logger = Logger.getLogger(ForkProcess.class);
 }
 
