@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.database.waveform;
 
+import edu.sc.seis.sod.*;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -12,11 +14,6 @@ import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.NetworkArm;
-import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.SodJDBC;
@@ -26,9 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JDBCEventChannelStatus extends SodJDBC{
     public JDBCEventChannelStatus() throws SQLException{
@@ -65,6 +60,46 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                                         "channelid = chan_id AND " +
                                                         "channel.site_id = site.site_id AND " +
                                                         "site.sta_id = station.sta_id");
+        channelsForPair = conn.prepareStatement("SELECT " + JDBCChannel.getNeededForChannel() + " FROM channel, eventchannelstatus " +
+                                                    "WHERE pairid = ? AND " +
+                                                    "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
+        dbIdForEventAndChan = conn.prepareStatement("SELECT pairid FROM eventchannelstatus " +
+                                                        "WHERE eventid = ? AND channelid = ?");
+
+    }
+
+    public Channel[] getAllChansForSite(int pairId) throws SQLException{
+        channelsForPair.setInt(1, pairId);
+        channelsForPair.setInt(2, pairId);
+        try {
+            return chanTable.extractAllChans(channelsForPair);
+        } catch (NotFound e) {
+            GlobalExceptionHandler.handle("Shouldn't be able to happen.  The ids are right in the statement",
+                                          e);
+            return new Channel[]{};
+        }
+    }
+
+    public int[] getPairs(EventAccessOperations ev, ChannelGroup cg) throws NotFound, SQLException{
+        int evDbid = eventTable.getDBId(ev);
+        int[] channelDbIds = new int[cg.getChannels().length];
+        for (int i = 0; i < cg.getChannels().length; i++) {
+            channelDbIds[i] = chanTable.getDBId(cg.getChannels()[i].get_id(),
+                                                cg.getChannels()[i].my_site);
+        }
+        int[] ids = new int[channelDbIds.length];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = getDbId(evDbid, channelDbIds[i]);
+        }
+        return ids;
+    }
+
+    private int getDbId(int evDbid, int channelDbId) throws SQLException {
+        dbIdForEventAndChan.setInt(1, evDbid);
+        dbIdForEventAndChan.setInt(2, channelDbId);
+        ResultSet rs = dbIdForEventAndChan.executeQuery();
+        rs.next();
+        return rs.getInt("pairid");
     }
 
     public PreparedStatement prepareStatement(String stmt) throws SQLException {
@@ -223,7 +258,9 @@ public class JDBCEventChannelStatus extends SodJDBC{
 
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
         ofPair, ofStatus, eventsOfStatus,
-        stationsNotOfStatus, stationsOfStatus;
+        stationsNotOfStatus, stationsOfStatus,
+        channelsForPair,
+        dbIdForEventAndChan;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
