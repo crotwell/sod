@@ -12,17 +12,17 @@ import org.w3c.dom.Document;
 import java.io.StringBufferInputStream;
 import org.xml.sax.SAXException;
 import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 
 public class XMLConfigUtil
 {
 
-    public static Element parse(String xmlData) throws SAXException, IOException {
-        Document doc = docBuilder.parse(new StringBufferInputStream(xmlData));
+    public static Element parse(String xmlData) throws SAXException, IOException, ParserConfigurationException, SAXException, IOException {
+        Document doc = XMLDataSet.getDocumentBuilder().parse(new StringBufferInputStream(xmlData));
         return doc.getDocumentElement();
     }
 
-    private static DocumentBuilder docBuilder = XMLDataSet.getDocumentBuilder();
 }
 
