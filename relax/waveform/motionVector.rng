@@ -19,7 +19,7 @@
                 <externalRef href="channelGroupAvailableData.rng"/>
             </optional>
             <zeroOrMore>
-                <externalRef href="channelGroupSeismogramProcess.rng"/>
+                <externalRef href="waveformVectorProcess.rng"/>
             </zeroOrMore>
             <zeroOrMore>
                 <externalRef href="status.rng"/>
