@@ -42,11 +42,12 @@ td#Selected{
 }
 td{
     padding:0px 10px 0px 0px;
+    font-family:verdana, arial, helvetica, sans-serif;
+    font-size:11px;
 }
 tr#title{
     font-weight: bold;
 }
-
 
 #Header {
     font-size:11px;
@@ -75,6 +76,11 @@ length values to user agents that exhibit the parsing error exploited above yet 
 the CSS box model right and understand the CSS2 parent-child selector. ALWAYS include
 a "be nice to Opera 5" rule every time you use the Tantek Celik hack (above). */
 body>#Header {height:14px;}
+
+#Header a{
+    font-size:13px;
+}
+
 
 #Content {
     margin:0px 50px 50px 200px;
