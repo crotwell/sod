@@ -21,7 +21,7 @@ has been done in Java.</para>
 <para>Sod is currently event based. This assumption that requests will only
 be for data
 that is associated in some sense to a particular seismic event certainly does
-not cover all of seismology, but is without a doubt the largest catagory. A
+not cover all of seismology, but is without a doubt the largest category. A
 future version of Sod may allow non-event based requests.
 </para>
 <para>
@@ -46,8 +46,8 @@ rate and channel orientation.
 </para>
 <para>
 The last arm is the waveform arm. It merges the successful events and channels
-from the two previous arms and uses them to request wavefoms. Criteria
-here include things such as disstance and azimuth that require the combination
+from the two previous arms and uses them to request waveforms. Criteria
+here include things such as distance and azimuth that require the combination
 of both station and event information, as well as measurements on the actual
 waveform.
 </para>
@@ -57,11 +57,11 @@ waveform.
 <title>Structure</title>
 <para>
 The Structure of a sod configuration file is shown below. In general, for 
-each step there are multiple tags that can fufull that function, and those 
-shown below are merely placeholders. In addition to the specialized subsetters,
+each step there are multiple tags that can fill that function, and those 
+shown below are merely place holders. In addition to the specialized subsetters,
  there are also logical subsetters for each type. For example, at the eventAttr
 subsetter location, there are eventAttrAND, eventAttrOR, eventAttrXOR and 
-eventAttrNOT. Each of these logical subsetters take as subtags any subsetter
+eventAttrNOT. Each of these logical subsetters take as sub-tags any subsetter
 of the same type allowing the creation of complex subsetters from the existing
 simple ones. See the sod tag documentation at <ulink url="http://www.seis.sc.edu/software/sod/sodDocs">http://www.seis.sc.edu/software/sod/sodDocs</ulink>.
 </para>
@@ -105,20 +105,20 @@ simple ones. See the sod tag documentation at <ulink url="http://www.seis.sc.edu
 <title>Common Elements</title>
 <para>
 There are many elements that are used within more than one place within a
-sod configuration file. In order to avoid repitition, each common element is
+sod configuration file. In order to avoid repetition, each common element is
 documented here, and referenced from the places where they can be used.
 </para>
 <sect1>
 <title>Data Sources</title>
 <para>
 Each connection to a remote server must contain information to allow sod
-to conect to it. In general, each data source element, whether it be events,
-networks, or seismograms, specifies two subtags in order to identify the
-server to conntect to.
+to connect to it. In general, each data source element, whether it be events,
+networks, or seismograms, specifies two sub-tags in order to identify the
+server to connect to.
 </para>
 <para> 
-The serverDNS gives the heirarchy of naming
-contexts, or directories, in reveresd DNS format. This is similar to the 
+The serverDNS gives the hierarchy of naming
+contexts, or directories, in reversed DNS format. This is similar to the 
 Java package naming convention, and so a server located within the seismology
 program at the University of South Carolina might have a serverDNS of
 &gt;serverDNS&lt;edu/sc/seis&gt;/serverDNS&lt;. 

@@ -17,7 +17,7 @@
 This is a short tutorial designed to show the basics of sod. It does not
 exploit all the features of sod, and is rather simple. Once the basics are
 understood, it is not hard to add a little here and a little there and
-come up with a saphisticated processing system.
+come up with a sophisticated processing system.
 </para>
 <para>
 Both this tutorial and Sod in general should be considered a work in progress.
@@ -135,23 +135,23 @@ magnitude to be at least 6. Here is the eventFinder section to accomplish this.
 &lt;/eventFinder&gt;
 </programlisting>
 <para>
-You will notice that there are quite alot of extra items here that aren't 
+You will notice that there are quite a lot of extra items here that aren't 
 directly related to our query. They will not eliminate any events, and will
 make it easier to modify later. The basics are that we are connecting to the
 IRIS_EventDC server, which is registered under the edu/iris/dmc domain. We are
-asking for events with January 2003, with a mignitude of 6 or greater, 
-anywhere in the world. One suttle point is that a single real earthquake will
+asking for events with January 2003, with a magnitude of 6 or greater, 
+anywhere in the world. One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is no way
 to automatically group these related origins into a single event based on
 the information that the DMC has, these origins each appear in separate events.
-So, it is usually wise to pick a particular catalog to avoid dupliate 
+So, it is usually wise to pick a particular catalog to avoid duplicate 
 processing.
 </para>
 <para>
 Now that we have our events locally, we could do some subsetting based on the 
 origin, but we will assume all of these events are fine. Just to make running
 sod a little more interesting, we will add an event processor. This one just
-prints out a line everytime an event arrives. This finishes the event arm.
+prints out a line every time an event arrives. This finishes the event arm.
 </para>
 <programlisting>
     &lt;printlineEventProcess/&gt;
@@ -305,7 +305,7 @@ within the prem model.
     &lt;/phaseRequest&gt;
 </programlisting>
 <para>
-The available data subsetter allows checking on the availablity of data before
+The available data subsetter allows checking on the availability of data before
 asking for the actual data. In this case, we will simply say that some data
 must exist by using the someCoverage element.
 </para>
