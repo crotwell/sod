@@ -82,7 +82,7 @@ public class ExampleBuilder {
                 }
             }
             if (ne.getChild() instanceof Empty){
-                System.out.println("ne.getChild() instanceof Empty");
+                //System.out.println("ne.getChild() instanceof Empty");
                 buf.append(" /" + closeBracket + '\n');
             } else {
                 buf.append(closeBracket);
