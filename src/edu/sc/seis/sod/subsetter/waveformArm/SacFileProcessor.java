@@ -85,6 +85,8 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         } catch (ParserConfigurationException e) {
             throw new ConfigurationException("Problem trying to create top level dataset", e);
         }
+        nameGenerator = new NameGenerator(SodUtil.getElement(config,
+                                                             "eventDirLabel"));
     }
     
     /**
@@ -303,26 +305,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
     }
     
     protected String getLabel(EventAccessOperations event) {
-        Element labelConfig = SodUtil.getElement(config, "eventDirLabel");
-        if (labelConfig == null) {
-            String eventFileName =
-                regions.getRegionName(event.get_attributes().region);
-            try {
-                eventFileName+=
-                    " "+event.get_preferred_origin().origin_time.date_time;
-            } catch (NoPreferredOrigin e) {
-                eventFileName+=" "+eventFileNum;
-                eventFileNum++;
-            } // end of try-catch
-            
-            return eventFileName;
-        } // end of if (labelConfig == null)
-        
-        if (nameGenerator == null) {
-            nameGenerator = new NameGenerator(labelConfig);
-        }
-        return nameGenerator.getName(event);
-        
+        return nameGenerator.getFilizedName(event);
     }
     
     String getRelativeURLString(File base, File ref) {
@@ -357,8 +340,6 @@ public class SacFileProcessor implements LocalSeismogramProcess {
     File masterDSFile;
     
     LinkedList masterDSNames = new LinkedList();
-    
-    int eventFileNum = 1;
     
     NameGenerator nameGenerator = null;
     
