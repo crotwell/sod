@@ -27,16 +27,24 @@ function ts_makeSortable(table) {
     if (!firstRow) return;
 
     // We have a first row: assume it's the header, and make its contents clickable links
+    var sortedColumn = firstRow.cells[0];
     for (var i=0;i<firstRow.cells.length;i++) {
         var cell = firstRow.cells[i];
+        var name = cell.className;
+        var order = "";//sortdir='up' ";
+        if(name.length > 0 && name.indexOf('initiallySorted') != -1) {
+            sortedColumn = cell;
+            if(name.indexOf('descending')){ order = "sortdir='down' "; }
+            window.alert(cell.className);
+        }
         var txt = ts_getInnerText(cell);
-        cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow"><img src="'+img_dir+'none.gif"/></span></a>';
+        cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow" ' + order + '><img src="'+img_dir+'none.gif"/></span></a>';
     }
 
-    var firstKids = firstRow.cells[0].childNodes;
-    for (var ci=0; ci < firstKids.length; ci++){
-        if (firstKids[ci].tagName && firstKids[ci].tagName.toLowerCase() == 'a'){
-          ts_resortTable(firstKids[ci]);
+    var sortedKids = sortedColumn.childNodes;
+    for (var ci=0; ci < sortedKids.length; ci++){
+        if (sortedKids[ci].tagName && sortedKids[ci].tagName.toLowerCase() == 'a'){
+          ts_resortTable(sortedKids[ci]);
           break;
         }
     }
