@@ -536,6 +536,22 @@
     
     <!-- EVENT STATION PHASE EXISTS TYPE -->
     <xsd:complexType name="phaseExistsType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Accepts a event-station pair if the given phase exists.
+            </summary>
+            <description>
+                Accepts a event-station pair if the given phase exists. 
+            </description>
+            <example>
+               <phaseExists>
+	          <modelName>prem</modelName>
+                  <phaseName>P</phaseName>
+               </phaseExists>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="phaseAbstractType">
             </xsd:extension>
@@ -609,8 +625,6 @@
     </xsd:complexType>
     
     
-    
-    
     <!-- PHASE DISTANCE REFERENCE TYPE -->
     <xsd:simpleType name="phaseDistanceReferenceType">
         <xsd:restriction base="xsd:string">
@@ -623,6 +637,29 @@
       
     <!-- EMBEDDED EVENT STATION TYPE -->	
     <xsd:complexType name="embeddedEventStationType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Allows an event station subsetter to be embedded within a
+		event channel subsetter. 
+            </summary>
+            <description>
+                Allows an event station subsetter to be embedded within a
+		event channel subsetter. The is most often used within
+		an EventChannel logical subsetter.
+            </description>
+            <example>
+               <embeddedEventStation>
+	          <eventStationDistance>
+                     <distanceRange>
+                        <unit>DEGREE</unit>
+                        <min>40</min>
+                     </distanceRange>
+                  </eventStationDistance>
+               </embeddedEventStation>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -634,6 +671,31 @@
     
     <!-- EMBEDDED CHANNEL TYPE -->
     <xsd:complexType name="embeddedChannelType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Allows a Channel subsetter to be embedded within an 
+ 		EventChannel.
+            </summary>
+            <description>
+                Allows a Channel subsetter to be embedded within an 
+ 		EventChannel. This is most often used within a EventChannel
+                logical.
+            </description>
+            <example>
+	    <embeddedChannel>
+                <sampling>
+                    <min>1</min>
+                            <max>40</max>
+                            <interval>
+                                <unit>SECOND</unit>
+                                <value>1</value>
+                            </interval>
+                        </sampling>
+	    </embeddedChannel>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -645,6 +707,24 @@
     
     <!-- EMBEDDED CHANNELID TYPE -->
     <xsd:complexType name="embeddedChannelIDType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Allows a ChannelId subsetter to be embedded within an 
+ 		EventChannel.
+            </summary>
+            <description>
+                Allows a ChannelId subsetter to be embedded within an 
+ 		EventChannel. This is most often used within a EventChannel
+                logical.
+            </description>
+            <example>
+               <embeddedChannel>
+                  <bandCode>B</bandCode>
+               </embeddedChannel>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
