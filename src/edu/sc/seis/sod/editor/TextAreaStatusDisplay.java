@@ -40,7 +40,7 @@ public class TextAreaStatusDisplay implements EventArmMonitor, WaveformArmMonito
         write(status+"\n");
     }
 
-    public void update(EventChannelPair ecp) throws Exception {
+    public void update(EventChannelPair ecp) {
         write(EventFormatter.getDefaultResult(ecp.getEvent())+" "+ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id())+" "+ecp.getStatus()+"\n");
     }
 
