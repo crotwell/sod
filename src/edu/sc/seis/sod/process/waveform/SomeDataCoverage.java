@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -38,7 +39,7 @@ public class SomeDataCoverage implements WaveformProcess {
             MicroSecondTimeRange curSeisTimeRange = seisTimeRanges[i];
             for(int j = 0; j < rfTimeRanges.length; j++) {
                 MicroSecondTimeRange rfTimeRange = rfTimeRanges[j];
-                if(DisplayUtils.areOverlapping(curSeisTimeRange, rfTimeRange)) {
+                if(RangeTool.areOverlapping(curSeisTimeRange, rfTimeRange)) {
                     StringTreeLeaf leaf = new StringTreeLeaf(this,
                                                              true,
                                                              "Some of the data received overlapped the requested time");

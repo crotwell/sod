@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.time.RangeTool;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -27,8 +28,8 @@ public class NoDataGaps implements WaveformProcess {
         for(int i = 1; i < seismograms.length; i++) {
             LocalSeismogramImpl cur = seismograms[i];
             LocalSeismogramImpl prev = seismograms[i - 1];
-            if(!DisplayUtils.areOverlapping(cur, prev)
-                    && !DisplayUtils.areContiguous(cur, prev)) {
+            if(!RangeTool.areOverlapping(cur, prev)
+                    && !RangeTool.areContiguous(cur, prev)) {
                 String reason = "There is a gap in the returned data";
                 return new WaveformResult(seismograms,
                                           new StringTreeLeaf(this,

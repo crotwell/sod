@@ -16,6 +16,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.status.StringTree;
@@ -112,7 +113,7 @@ public class LocalSeismogramArm implements Subsetter {
                 return;
             }
         }
-        processRequestSubsetter(ecp, DisplayUtils.sortByDate(infilters));
+        processRequestSubsetter(ecp, SortTool.sortByDate(infilters));
     }
 
     public void processRequestSubsetter(EventChannelPair ecp,
@@ -194,7 +195,7 @@ public class LocalSeismogramArm implements Subsetter {
             processAvailableDataSubsetter(ecp,
                                           dataCenter,
                                           infilters,
-                                          DisplayUtils.sortByDate(outfilters));
+                                          SortTool.sortByDate(outfilters));
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
             failLogger.info(ecp);
@@ -338,7 +339,7 @@ public class LocalSeismogramArm implements Subsetter {
             processSeismograms(ecp,
                                infilters,
                                outfilters,
-                               DisplayUtils.sortByDate(tempLocalSeismograms));
+                               SortTool.sortByDate(tempLocalSeismograms));
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.RETRY));
