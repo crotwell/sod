@@ -79,7 +79,6 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
     }
 
     public void change(EventAccessOperations event, Status status) {
-        eventStatus = status;
         write();
     }
 
@@ -90,5 +89,4 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
 
     private Logger logger = Logger.getLogger(EventStatusTemplate.class);
     private String armStatus = "";
-    private Status eventStatus = null;
 }
