@@ -12,8 +12,25 @@ import java.util.List;
 
 public class ExampleBuilder {
 
+    public ExampleBuilder(boolean htmlReadable){
+        if (htmlReadable){
+            openBracket = "&lt;";
+            closeBracket = "&gt;";
+        }
+        else {
+            openBracket = "<";
+            closeBracket = ">";
+        }
+    }
+
+    public ExampleBuilder(String openBracket, String closeBracket){
+        this.openBracket = openBracket;
+        this.closeBracket = closeBracket;
+    }
+
     public void write(Form f){
         if (f.getMin() == 0) return;
+        //this attribute stuff is wrong.  Don't worry right now
         if (f instanceof Attribute){
             Attribute attr = (Attribute)f;
             if (!attrQueue.contains(attr)){
@@ -51,19 +68,19 @@ public class ExampleBuilder {
             }
         } else if (f instanceof NamedElement) {
             NamedElement ne = (NamedElement)f;
-            buf.append('<' + ne.getName());
+            buf.append(openBracket + ne.getName());
             if (ne.getAttributes() != null){
                 Attribute[] attrs = ne.getAttributes();
                 for (int i = 0; i < attrs.length; i++) {
                     write(attrs[i]);
                 }
             }
-            buf.append('>');
+            buf.append(closeBracket);
             Form kid = ne.getChild();
             if (kid != null){
                 write(kid);
             }
-            buf.append("</" + ne.getName() + ">\n");
+            buf.append(openBracket + '/' + ne.getName() + closeBracket + '\n');
         } else if (f instanceof Text) {
             buf.append(DEFAULT_TEXT_VALUE);
         } else if (f instanceof Empty) {
@@ -77,6 +94,7 @@ public class ExampleBuilder {
 
     private StringBuffer buf = new StringBuffer();
     private List attrQueue = new ArrayList();
+    private String openBracket, closeBracket;
 
     public static final String DEFAULT_TEXT_VALUE = "text";
     public static final int DEFAULT_INT_VALUE = 12;
