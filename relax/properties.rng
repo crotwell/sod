@@ -15,12 +15,12 @@
                                         </element>
                             </optional>
                             <optional>
-                                        <element name=" eventQueryIncrement">
+                                        <element name="eventQueryIncrement">
                                                 <ref name="time"/>
                                         </element>
                             </optional>
                             <optional>
-                                        <element name=" eventRefreshInterval">
+                                        <element name="eventRefreshInterval">
                                                 <ref name="time"/>
                                         </element>
                             </optional>
