@@ -183,9 +183,9 @@ public class LocalSeismogramArm implements Subsetter{
                     outfilters = dataCenter.available_data(infilters);
                     break;
                 } catch (org.omg.CORBA.SystemException e) {
+                    retries++;
                     if (retries < MAX_RETRY) {
                         logger.info("Caught CORBA exception, retrying..."+retries, e);
-                        retries++;
                         try {
                             Thread.sleep(1000*retries);
                         } catch(InterruptedException ex) {}
