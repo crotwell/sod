@@ -53,25 +53,29 @@ public class WaveFormArm implements Runnable {
      *
      */
     public void run() {
-	
-	EventAccess eventAccess = null;
-	while(eventAccess == null)
+	Channel[] successfulChannels = networkArm.getSuccessfulChannels();
+	EventAccess eventAccess = null;  
+	do
 	{
-	    //	System.out.println("RETRIEVED THE EVENT ACCESS FROM EVENT QUEUE");
+	  
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
+	    
 	    else System.out.println("Event Access is VALID");
-	    try {
-		Thread.sleep(3000);	
-	    } catch(Exception e){}
-	  
-	}
-	try {
-	    if(eventAccess == null){ System.out.println("EventAccess is NULL");System.exit(0);}
-	    processWaveFormArm(eventAccess);
-	} catch(Exception ce) {
-	    ce.printStackTrace();
-	}
+	 
+	    if(eventAccess != null) {
+		Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
+							     eventStationSubsetter, 
+							     localSeismogramArm,
+							     successfulChannels));
+		thread.start();
+	    }
+
+	    //	System.out.println("RETRIEVED THE EVENT ACCESS FROM EVENT QUEUE");
+	    
+	}while(eventAccess != null);
+
+	
     }
 
     /**
@@ -102,26 +106,7 @@ public class WaveFormArm implements Runnable {
 
     }
 
-    /**
-     * Describe <code>processWaveFormArm</code> method here.
-     *
-     * @param eventAccess an <code>EventAccess</code> value
-     * @exception Exception if an error occurs
-     */
-    public void processWaveFormArm(EventAccess eventAccess) throws Exception{
-
-	Channel[] successfulChannels = networkArm.getSuccessfulChannels();
-	
-	for(int counter = 0; counter < successfulChannels.length; counter++) {
-	    System.out.println("Calling accept on eventStationSubsetter");
-	    if(eventStationSubsetter == null) System.out.println("NULL");
-	    else System.out.println("NOT NULL");
-	    if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
-		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter]);  
-	    }
-	}
-	
-    }
+   
 
    
 

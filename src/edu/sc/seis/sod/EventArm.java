@@ -60,7 +60,7 @@ public class EventArm implements Runnable{
      */
     protected void processConfig(Element config) 
 	throws ConfigurationException {
-
+	Start.getEventQueue().setSourceAlive(true);
 	NodeList children = config.getChildNodes();
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
@@ -86,13 +86,13 @@ public class EventArm implements Runnable{
 
 	    System.out.println("Exception caught while processing the EventArm");
 	}
-
+	Start.getEventQueue().setSourceAlive(false);
 	System.out.println("The number of events in the eventQueue are "
 	+Start.getEventQueue().getLength());
+	/*Start.getEventQueue().pop();
 	Start.getEventQueue().pop();
 	Start.getEventQueue().pop();
-	Start.getEventQueue().pop();
-	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());
+	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());*/
     }
 
     /**

@@ -51,7 +51,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) {
 	try {
-	      FileWriter fwriter = new FileWriter("_my_seismograms_temp_", true);
+	      FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
 	    BufferedWriter bwriter = new BufferedWriter(fwriter);
 	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
 	    String debugStr = "Got "+seismograms.length+" seismograms for "+
