@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
     private String fileDir, netsOutputFileName, stasOutputFileName, sitesOutputFileName, chansOutputFileName;
@@ -81,7 +82,7 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
             }
         }
         if (fileDir == null){
-            fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         if (fileDir == null || netFormatter == null || staFormatter == null || netConfig == null
             || staConfig == null || chanConfig == null || netsOutputFileName == null

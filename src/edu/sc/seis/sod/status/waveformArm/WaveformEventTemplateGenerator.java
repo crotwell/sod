@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveformArmMonitor{
     public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException {
@@ -42,7 +43,7 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
             }
         }
         if (fileDir == null){
-            fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         if(formatter == null  || config == null) {
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformConfig");

@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
 
@@ -45,7 +46,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             }
         }
         if (fileDir == null){
-            fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);

@@ -12,6 +12,11 @@ import java.io.File;
 
 
 public class IndexTemplate extends FileWritingTemplate{
+
+    public IndexTemplate() throws IOException {
+        this(FileWritingTemplate.getBaseDirectoryName());
+    }
+
     public IndexTemplate(String dirName) throws IOException{
         super(dirName, "index.html");
         try {

@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class SeismogramImageProcess implements LocalSeismogramProcess {
 
@@ -72,7 +73,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
             }
         }
         if (fileDir == null){
-            fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         if (fileDir == null || eventFormatter == null || stationFormatter == null || chanFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");

@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class Start{
 
@@ -187,8 +188,7 @@ public class Start{
                 }
             }
         }
-        new IndexTemplate(props.getProperty("sod.start.StatusBaseDirectory",
-                                            "status"));
+        IndexTemplate indexTemplate = new IndexTemplate();
     }
 
     public static Properties getProperties() {return props; }

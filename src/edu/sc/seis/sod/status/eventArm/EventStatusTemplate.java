@@ -44,7 +44,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
             Logger.getLogger(EventStatusTemplate.class).debug("fileDir element is null! using default");
         }
         if (fileDir == null){
-            fileDir = Start.getProperties().getProperty("sod.start.statusBaseDirectory", "status");
+            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         return fileDir;
     }

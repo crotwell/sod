@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.Start;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
@@ -83,6 +84,12 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
             } catch (IOException e) {}
         }
     }
+
+    public static String getBaseDirectoryName() {
+        return Start.getProperties().getProperty(FileWritingTemplate.BASE_DIR_PROP_NAME, "status");
+    }
+
+    public static final String BASE_DIR_PROP_NAME = "sod.start.StatusBaseDirectory";
 
     private String baseDir;
     private Writer w = new Writer();
