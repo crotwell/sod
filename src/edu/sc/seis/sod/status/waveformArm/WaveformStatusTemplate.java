@@ -6,13 +6,6 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +15,12 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.FileWritingTemplate;
+import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
 
 public class WaveformStatusTemplate extends FileWritingTemplate implements WaveformMonitor{
     public WaveformStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException, ConfigurationException{
