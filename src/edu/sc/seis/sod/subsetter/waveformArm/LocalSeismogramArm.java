@@ -86,6 +86,17 @@ public class LocalSeismogramArm implements Subsetter{
 					  NetworkAccess networkAccess, 
 					  Channel channel, 
 					  DataCenter dataCenter) throws Exception{
+	MicroSecondDate chanBegin = new MicroSecondDate(channel.effective_time.start_time);
+	MicroSecondDate chanEnd = new MicroSecondDate(channel.effective_time.end_time);
+	MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
+	TimeInterval day = new TimeInterval(1, UnitImpl.DAY);
+	if (chanBegin.after(originTime.add(day))
+	    || chanEnd.before(originTime)) {
+	    // channel doesn't overlap origin
+	    logger.info("fail "+ChannelIdUtil.toString(channel.get_id())+" doesn't everlap originTime="+originTime+" endTime="+chanEnd+" begin="+chanBegin);
+	    return;
+	}
+	
 	processEventChannelSubsetter(eventAccess, 
 				     networkAccess, 
 				     channel, 
