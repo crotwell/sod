@@ -53,7 +53,8 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	    
 	    processWaveFormArm(eventAccess);
 	} catch(Throwable ce) {
-	    ce.printStackTrace();
+	    logger.error("Waveform processing thread dies unexpectantly. ", 
+			 ce);
 //	    notifyListeners(this, ce);
 	}
 	
