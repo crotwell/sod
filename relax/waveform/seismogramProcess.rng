@@ -194,6 +194,18 @@
         </element>
     </define>
     <define name="responseGainProcessor">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Response Gain Correction</summary>
+                <description>Applies a overall sensitivity from the response to the seismograms.
+                    This will convert int or short seismograms into floats to avoid rounding
+                    errors that could result in the output seismograms being all zeros. There
+                    is no configuration.</description>
+                <example>
+                    <responseGainProcessor/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="responseGainProcessor">
             <empty/>
         </element>
