@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
 <outputLocation>
+    <fileDir><statusBase/></fileDir>
 <eventDir>events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></eventDir>
 <stationDir><networkCode/>.<stationCode/></stationDir>
 <picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></picName>
