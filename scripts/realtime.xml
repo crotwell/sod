@@ -42,7 +42,7 @@
                 <max>1000</max>
             </originDepthRange>
             <originTimeRange>
-                <startTime>20040901T00:00:00.001Z</startTime>
+                <startTime>20041101T00:00:00.001Z</startTime>
                 <endTime>20050131T23:59:59.999Z</endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -72,7 +72,7 @@
             <networkCode>US</networkCode>
         </networkOR>
         <stationEffectiveTimeOverlap>
-            <startTime>20040101T00:00:00.001Z</startTime>
+            <startTime>20041101T00:00:00.001Z</startTime>
             <endTime>20050131T23:59:59.999Z</endTime>
         </stationEffectiveTimeOverlap>
         <siteAND>
@@ -81,7 +81,7 @@
                 <siteCode>00</siteCode>
             </siteOR>
             <siteEffectiveTimeOverlap>
-                <startTime>20040101T00:00:00.001Z</startTime>
+                <startTime>20041101T00:00:00.001Z</startTime>
                 <endTime>20050131T23:59:59.999Z</endTime>
             </siteEffectiveTimeOverlap>
         </siteAND>
@@ -89,7 +89,7 @@
             <bandCode>B</bandCode>
             <gainCode>H</gainCode>
             <channelEffectiveTimeOverlap>
-                <startTime>20040101T00:00:00.001Z</startTime>
+                <startTime>20041101T00:00:00.001Z</startTime>
                 <endTime>20050131T23:59:59.999Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
