@@ -433,9 +433,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                             getLabel(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
+        logger.debug("Event directory " + eventDirectory);
         File dsmlFile = new File(eventDirectory,
                                  DataSetToXML.createFileName(dataset));
-        if(dsmlFile.exists()) return dataSetFile;
+        logger.debug("DSML file " + dsmlFile);
+        if(dsmlFile.exists()) return dsmlFile;
         else throw new FileNotFoundException("Dsml File not found for "
                 + EventUtil.getEventInfo(event));
     }
