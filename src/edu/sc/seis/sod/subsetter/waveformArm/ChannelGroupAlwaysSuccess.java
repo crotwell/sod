@@ -14,10 +14,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.ChannelGroup;
-import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
@@ -27,7 +27,7 @@ import edu.sc.seis.sod.process.waveformArm.ForkProcess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
-public class ChannelGroupAlwaysSuccess implements ChannelGroupLocalSeismogramProcess {
+public class ChannelGroupAlwaysSuccess implements WaveformVectorProcess {
 
    public ChannelGroupAlwaysSuccess (Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -39,8 +39,8 @@ public class ChannelGroupAlwaysSuccess implements ChannelGroupLocalSeismogramPro
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveformArm");
-                if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
-                    channelGroupLocalSeisProcess = (ChannelGroupLocalSeismogramProcess)sodElement;
+                if(sodElement instanceof WaveformVectorProcess) {
+                    channelGroupLocalSeisProcess = (WaveformVectorProcess)sodElement;
                 } else {
                     logger.warn("Unknown tag in ChannelGroupAlwaysSuccess config. " +sodElement);
                 }
@@ -67,7 +67,7 @@ public class ChannelGroupAlwaysSuccess implements ChannelGroupLocalSeismogramPro
     }
 
 
-    ChannelGroupLocalSeismogramProcess channelGroupLocalSeisProcess;
+    WaveformVectorProcess channelGroupLocalSeisProcess;
 
     private static final Logger logger = Logger.getLogger(ChannelGroupAlwaysSuccess.class);
 
