@@ -17,7 +17,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     public HSqlDbManager (Properties props){
 	super(props);
 	//here set the log size and if possible even the size of the script file.
-	setLogSize();
+	//setLogSize();
     }
 
      public ConfigDatabase getConfigDatabase() {
@@ -61,7 +61,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 	    return connection;
 	} catch(Exception sqle) {
 	    //	    sqle.printStackTrace();
-	    logger.debug("Unable to create the connection to HSQLDB database "+getDatabaseName());
+	    logger.debug("Unable to create the connection to HSQLDB database "+getDatabaseName(),sqle);
 	    return null;
 	}
 	
