@@ -20,7 +20,7 @@ originAND=Event Logical And
 originOR=Event Logical Or
 originXOR=Event Logical XOr
 originNOT=Event Logical Not
-originPointDistance=Distance from Event
+originPointDistance=Distance from point
 originPointAzimuth=Azimuth from Event
 originPointBackAzimuth=Back Azimuth from Event
 originDepthRange=Event depth
@@ -35,6 +35,8 @@ siteCode=Site Code
 stationCode=Station Code
 networkCode=Network Code
 channelCode=Channel Code
+bandCode=Band Code
+gainCode=Gain Code
 networkInfoTemplateGenerator=Network Status
 boxArea=Area
 eventStatusTemplate=Event Status
@@ -42,5 +44,3 @@ edu/iris/dmc/IRIS_NetworkDC=IRIS
 edu/sc/seis/SCEPPNetworkDC=SCEPP
 edu/berkeley/geo/quake/NCEDC_NetworkDC=Berkeley
 networkFinder=Query to network server
-
-
