@@ -33,7 +33,12 @@ public class OrientationCode implements ChannelIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
-       	if(channelId.channel_code.charAt(2) == SodUtil.getNestedText(config).charAt(2)) return true;
+	//System.out.println("accepting the orientation Code "+channelId.channel_code.charAt(2));
+       	if(channelId.channel_code.charAt(2) == SodUtil.getNestedText(config).charAt(2)) {
+	    // System.out.println("accepting the orientation Code "+channelId.channel_code.charAt(2));
+	    //System.exit(0);
+	    return true;
+	}
 	else return false;
     }
 

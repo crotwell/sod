@@ -33,8 +33,13 @@ public class BandCode implements ChannelIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
+	System.out.println("not sure at this point the band Code "+channelId.channel_code.charAt(0));
+	if(channelId.channel_code.charAt(0) == SodUtil.getNestedText(config).charAt(0)) {
+	    System.out.println("accepting the band Code "+channelId.channel_code.charAt(0));
+	    //System.exit(0);
+	    return true;
 
-	if(channelId.channel_code.charAt(0) == SodUtil.getNestedText(config).charAt(0)) return true;
+	}
 	else return false;
 
     }

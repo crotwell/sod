@@ -33,8 +33,12 @@ public class GainCode implements ChannelIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
-
-       	if(channelId.channel_code.charAt(1) == SodUtil.getNestedText(config).charAt(1)) return true;
+	//System.out.println("accepting the Gain Code "+channelId.channel_code.charAt(1));
+       	if(channelId.channel_code.charAt(1) == SodUtil.getNestedText(config).charAt(1)) {
+	    // System.out.println("accepting the Gain Code "+channelId.channel_code.charAt(1));
+	    //System.exit(0);
+	    return true;
+	}
 	else return false;
 	
     }

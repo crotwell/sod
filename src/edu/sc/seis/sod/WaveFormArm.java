@@ -51,7 +51,6 @@ public class WaveFormArm implements Runnable {
      *
      */
     public void run() {
-	Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	EventAccess eventAccess = null;  
 	do
 	{
@@ -59,8 +58,10 @@ public class WaveFormArm implements Runnable {
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
 	    
-	    else System.out.println("Event Access is VALID");
-	    
+	    else {System.out.println("Event Access is VALID");
+	    //System.exit(0);
+	    }
+	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    if(eventAccess != null) {
 		Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 							     eventStationSubsetter, 

@@ -168,7 +168,7 @@ public class EventArm implements Runnable{
      * @exception Exception if an error occurs
      */
     public void handleEventArmProcess(EventAccess eventAccess, Origin origin) throws Exception{
-	//System.out.println("passed THE TEST ************************************************************");
+	System.out.println("passed THE TEST ************************************************************");
 	Start.getEventQueue().push(eventAccess);
 	eventArmProcess.process(eventAccess, null);
 

@@ -29,7 +29,8 @@ public class Interval implements Subsetter{
      * @return a <code>String</code> value
      */
     public UnitImpl getUnit() throws ConfigurationException{
-	return (UnitImpl)SodUtil.load(config,"edu.sc.seis.sod.subsetter");//here the second parameter doesnot matter.
+	Element element = SodUtil.getElement(config, "unit");
+	return (UnitImpl)SodUtil.load(element,"edu.sc.seis.sod.subsetter");//here the second parameter doesnot matter.
     }
 
     /**

@@ -37,6 +37,7 @@ public class NetworkArm {
 	}
 	System.out.println("In Network Arm");
 	this.config = config;
+	processConfig();
 	//	processConfig(config);
     }
 
@@ -76,13 +77,13 @@ public class NetworkArm {
 
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	try {
+	/*try {
 	    processNetworkArm();
 
 	} catch(Exception e) {
 
 	    System.out.println("Exception caught while processing Network Arm");
-	}
+	    }*/
     }
 
     /*
@@ -241,18 +242,27 @@ public class NetworkArm {
      */
     public Channel[] getSuccessfulChannels() {
 	try {
-	    RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
-	    Date currentDate = Calendar.getInstance().getTime();
-	    MicroSecondDate lastTime = new MicroSecondDate(lastDate);
-	    MicroSecondDate currentTime = new MicroSecondDate(currentDate);
-	    TimeInterval timeInterval = currentTime.difference(lastTime);
-	    int minutes = (int)timeInterval.value / (100*1000);
-	    System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
-	    if(minutes >= refreshInterval.getValue()) {
-		processConfig();
-		lastDate = Calendar.getInstance().getTime();
+	    if(lastDate != null) {
+		RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+		Date currentDate = Calendar.getInstance().getTime();
+		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
+		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
+		TimeInterval timeInterval = currentTime.difference(lastTime);
+		int minutes = (int)timeInterval.value / (100*1000);
+		System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
+		if(minutes >= refreshInterval.getValue()) {
+		    processNetworkArm();
+		    lastDate = Calendar.getInstance().getTime();
+		}
+	    } else {
+		 processNetworkArm();
+		 lastDate = Calendar.getInstance().getTime();
+		
 	    }
-	} catch(Exception e) {}
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+	System.out.println("successfulChannels length is "+successfulChannels.length);
 	return successfulChannels;
 	
     }
@@ -276,7 +286,7 @@ public class NetworkArm {
     private ArrayList channelList;
     private  Channel[] successfulChannels = new Channel[0];
     
-    private static java.util.Date lastDate = Calendar.getInstance().getTime();
+    private static java.util.Date lastDate = null;
 
     static Category logger = 
         Category.getInstance(NetworkArm.class.getName());
