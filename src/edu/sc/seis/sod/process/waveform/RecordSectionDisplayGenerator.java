@@ -40,8 +40,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                "fileNameBase"));
         this.numSeisPerImage = new Integer(SodUtil.getText(SodUtil.getElement(config,
                                                                               "numSeisPerRecordSection"))).intValue();
-        recordSectionChannel = new JDBCRecordSectionChannel();
-        eventRecordSection = new JDBCEventRecordSection();
+        String eventRecSecTableName="eventRecordSection" + this.id;
+        String recSecChanTableName="recSecChannel"+ this.id;
+        recordSectionChannel = new JDBCRecordSectionChannel(recSecChanTableName,eventRecSecTableName);
+        eventRecordSection = new JDBCEventRecordSection(eventRecSecTableName,recSecChanTableName);
         eventAccess = new JDBCEventAccess();
         channel = new JDBCChannel();
     }
