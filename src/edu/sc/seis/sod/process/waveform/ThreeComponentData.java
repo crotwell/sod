@@ -18,24 +18,24 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class ThreeComponentData implements WaveformVectorProcess {
 
     public WaveformVectorResult process(EventAccessOperations event,
-                                                     ChannelGroup channelGroup,
-                                                     RequestFilter[][] original,
-                                                     RequestFilter[][] available,
-                                                     LocalSeismogramImpl[][] seismograms,
-                                                     CookieJar cookieJar) {
+                                        ChannelGroup channelGroup,
+                                        RequestFilter[][] original,
+                                        RequestFilter[][] available,
+                                        LocalSeismogramImpl[][] seismograms,
+                                        CookieJar cookieJar) {
         for (int i = 0; i < seismograms.length; i++) {
             if (seismograms[i].length == 0) {
                 return new WaveformVectorResult(false,
-                                                             seismograms,
-                                                             new StringTreeLeaf(this,
-                                                                                false,
-                                                                                "seismograms["+i+"] is empty"));
+                                                seismograms,
+                                                new StringTreeLeaf(this,
+                                                                   false,
+                                                                   "seismograms["+i+"] is empty"));
             }
         }
         return new WaveformVectorResult(true,
-                                                     seismograms,
-                                                     new StringTreeLeaf(this,
-                                                                        true));
+                                        seismograms,
+                                        new StringTreeLeaf(this,
+                                                           true));
     }
 
 }
