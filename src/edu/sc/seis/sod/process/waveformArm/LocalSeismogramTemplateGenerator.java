@@ -1,6 +1,6 @@
 /**
  * LocalSeismogramTemplateGenerator.java
- * 
+ *
  * @author Created by Philip Oliver-Paull
  */
 package edu.sc.seis.sod.process.waveformArm;
@@ -67,9 +67,11 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
             waveformSeismogramConfig.removeChild(tmpEl);
         }
         if(fileDir == null || waveformSeismogramConfig == null
-                || eventFormatter == null || stationFormatter == null) { throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig"); }
+                || eventFormatter == null || stationFormatter == null) {
+            throw new IllegalArgumentException("The configuration element must contain a fileDir and a template");
+        }
         if(fileName != null) {
-            template = new LocalSeismogramTemplate(waveformSeismogramConfig,
+            template = new LocalSeismogramTemplate(el,
                                                    fileDir + "/");
         }
     }
