@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.editor;
 import javax.swing.Box;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import org.w3c.dom.Element;
@@ -17,7 +18,9 @@ public class ContributorEditor implements EditorPlugin {
         Box b = Box.createHorizontalBox();
         b.add(Box.createHorizontalGlue());
         b.add(new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
-        b.add(EditorUtil.getComboBox(element, presetContributors));
+        JComboBox comBox = EditorUtil.getComboBox(element, presetContributors);
+        comBox.setEditable(true);
+        b.add(comBox);
         b.add(Box.createHorizontalGlue());
         return b;
     }
