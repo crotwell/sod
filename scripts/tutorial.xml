@@ -21,6 +21,7 @@
             <unit>DAY</unit>
         </maxRetryDelay>
              <removeDatabase>TRUE</removeDatabase>
+	<eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
         </properties>
         <eventArm>
                 <eventFinder>
