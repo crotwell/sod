@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author>Philip Crotwell</author>
+    <title>SOD Installation</title>
+  </properties>
+
+<body>
+
+<section name="Take off your shoes, wiggle your toes and take a walk on the SOD">
+<p>
+We shall assume that you have successfully downloaded and extracted SOD from
+its tar or zip file. If not please have a look at the
+<a href="install.html">installation</a> document.
+</p>
+<p>
+Slide into the SOD directory, where you should see various files and subdirectories.
+Start up the GUI editor, by running <code>./bin/editor.sh</code> or <code>bin\editor.bat</code>.
+The editor should start with the tutorial configuration preloaded. This is
+contained within the editor, so there is no need to worry about messing anything
+up as it can be reset by choosing ***TODO*** from the ***TODO*** menu. You will
+see several tabs which cover the various sectios of a SOD run. We will cover each
+in turn.
+</p>
+<section name="Event">
+<p>
+The Event tab, also known as the Event Arm, selects which events are of interest.
+The tutorial configuration file by default gets events from the IRIS Event server
+from anywhere in the world with magnitude greater than 6 during January of 2003.
+These values can be changed and SOD can do quite a bit more things, but this is
+a minimal set paramters. One subtle point is that a single real earthquake will
+be in multiple catalogs within the DMC's database. Because there is currently
+no way to automatically group these related origins into a single event based on
+the information that the DMC has, these origins each appear in separate events.
+So, it is usually wise to pick a particular catalog to avoid duplicate
+processing. The default here is the PREF catalog from the DMC. PREF is not a true
+catalog, but rather somethign that the DMC Event server understands as the "best"
+catalog depending on the time range. The weeklies, or WHDF, catalog from the
+NEIC is another common one for historical data and if you
+are doing a SOD run and want near real time data, then you probably want to
+use FINGER catalog as that has a short delay from earthquake occuring to the
+location being in the FINGER catalog.
+</p>
+<p>
+After the query to the remote event server, we have our events locally and
+could do some subsetting based on the origin, but for the tutorial we will
+assume all of these events are fine. Just to make running
+sod a little more interesting, we will include an event processor. This one just
+prints out a line every time an event arrives. This finishes the event arm.
+</p>
+<p>
+Feel free to modify any of these values to customize your search. Be aware that
+some servers may not have data for all types of earthquakes, and it is possible
+to make choices that result in no data matching. Mistakes are the best way to
+learn, so click away!
+</p>
+</section>
+
+<section name="Network">
+<p>
+The Network tab is the other side of the coin, once you have earthquakes, you must
+pick stations in order to ask for data.
+</p>
+</section>
+
+<section name="Waveform">
+<p>
+</p>
+</section>
+
+</section>
+</body>
+</document>
