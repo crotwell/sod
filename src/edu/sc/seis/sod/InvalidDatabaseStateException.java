@@ -7,30 +7,27 @@ import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.WrappedException;
  *
  * Created: Mon Jan 27 11:39:50 2003
  *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla </a>$Id: InvalidDatabaseStateException.java 3201 2003-01-27 17:16:33Z telukutl $
+ * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla </a>$Id: InvalidDatabaseStateException.java 4059 2003-05-27 01:46:03Z crotwell $
  * @version
  */
 
 public class InvalidDatabaseStateException extends Exception implements WrappedException {
     public InvalidDatabaseStateException (){
-	
+
     }
 
     public InvalidDatabaseStateException(String s) {
-	super(s);
+    super(s);
     }
 
-    public InvalidDatabaseStateException(String s, Exception e) {
+    public InvalidDatabaseStateException(String s, Throwable e) {
 
-	super(s);
-	causalException = e;
+    super(s, e);
     }
 
-    public Exception getCausalException() {
-	return this.causalException;
+    public Throwable getCausalException() {
+    return getCause();
     }
-    
-    protected Exception causalException = null;
-    
-   
+
+
 }// InvalidDatabaseStateException

@@ -12,8 +12,8 @@ import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
  * @version
  */
 
-public class ConfigurationException 
-    extends Exception  implements WrappedException 
+public class ConfigurationException
+    extends Exception  implements WrappedException
 {
 
     /**
@@ -21,7 +21,7 @@ public class ConfigurationException
      *
      */
     public ConfigurationException (){
-	
+
     }
 
     /**
@@ -30,7 +30,7 @@ public class ConfigurationException
      * @param s a <code>String</code> value
      */
     public ConfigurationException (String s){
-        super(s);       
+        super(s);
     }
 
     /**
@@ -39,24 +39,17 @@ public class ConfigurationException
      * @param s a <code>String</code> value
      * @param e an <code>Exception</code> value
      */
-    public ConfigurationException (String s, Exception e){
-        super(s);
-        causalException = e;
+    public ConfigurationException (String s, Throwable e){
+        super(s, e);
     }
-
-    /**
-     * Describe variable <code>causalException</code> here.
-     *
-     */
-    protected Exception causalException = null;
 
     /**
      * Describe <code>getCausalException</code> method here.
      *
      * @return an <code>Exception</code> value
      */
-    public Exception getCausalException() {
-        return causalException;
+    public Throwable getCausalException() {
+        return getCause();
     }
-    
+
 }// ConfigurationException
