@@ -1,3 +1,4 @@
+#!/bin/sh
 echo 'Generating html from xml'
 java org.apache.xalan.xslt.Process -in allPages.xml -xsl allPageGenerator.xsl
 echo 'Copying over included stuff'
