@@ -56,7 +56,7 @@ Maps only update once every two minutes
 <td><networkCode/>.<stationCode/></td>
 <td><beginTime>MM/dd/yyyy</beginTime></td>
 <td><endTime>MM/dd/yyyy</endTime></td>
-<td><numSuccess/></td>
+<td>0</td>
 <td><numRetry/></td>
 <td><numFailed/></td>
 </tr>
