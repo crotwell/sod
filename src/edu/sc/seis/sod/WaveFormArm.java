@@ -8,7 +8,6 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.WaveFormArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
