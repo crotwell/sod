@@ -33,12 +33,12 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * SacFileProcessor.java
+ * SaveSeismogramToFile.java
  * A example config Element is:<br>
  * <pre>
- * &lt;SacFileProcessor>
+ * &lt;saveSeismogramToFile>
  *    &lt;dataDirectory>research/sodtest/data&lt;/dataDirectory>
- * &lt;/SacFileProcessor>
+ * &lt;/saveSeismogramToFile>
  * </pre>
  *
  *
@@ -79,7 +79,16 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
         } // end of if (dataDirectory.exits())
 
-        Element prefixElement = SodUtil.getElement(config, "seismogramPrefix");
+        Element subDSElement = SodUtil.getElement(config, "subEventDataSet");
+        if (subDSElement != null) {
+            String subDSText =
+                SodUtil.getText(subDSElement);
+            if ( subDSText != null && subDSText.length() != 0) {
+                subDS = subDSText;
+            } // end of if (dataDirectory.exits())
+        }
+
+        Element prefixElement = SodUtil.getElement(config, "prefix");
         if (prefixElement != null) {
             String dssPrefix =
                 SodUtil.getText(prefixElement);
@@ -88,6 +97,14 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
             } // end of if (dataDirectory.exits())
         }
 
+        nameGenerator = new EventFormatter(SodUtil.getElement(config,
+                                                              "eventDirLabel"));
+        if (masterDataSetElement == null) {
+            createMasterDS();
+        }
+    }
+
+    protected  void createMasterDS() throws ConfigurationException {
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
                                  "seismogram loaded via sod.");
@@ -105,8 +122,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         } catch (ParserConfigurationException e) {
             throw new ConfigurationException("Problem trying to create top level dataset", e);
         }
-        nameGenerator = new EventFormatter(SodUtil.getElement(config,
-                                                              "eventDirLabel"));
     }
 
     /**
@@ -136,23 +151,20 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                         " at "+event.get_preferred_origin().origin_time.date_time);
 
         if (seismograms.length == 0) { return seismograms; }
+        synchronized(masterDataSetElement) {
+            saveInDataSet(event, channel, seismograms, fileType);
 
-        if ( ! event.equals(lastEvent)) {
-            // this also updates lastDataSetElement, lastDataSetFile
-            DataSet dataset = getDataSet(event);
-        }
-        saveInDataSet(event, channel, seismograms, fileType);
-
-        boolean found = false;
-        Iterator it = masterDSNames.iterator();
-        while (it.hasNext()) {
-            if (lastDataSet.getName().equals(it.next())) {
-                found = true;
+            boolean found = false;
+            Iterator it = masterDSNames.iterator();
+            while (it.hasNext()) {
+                if (lastDataSet.getName().equals(it.next())) {
+                    found = true;
+                }
             }
-        }
-        if ( ! found) {
-            masterDSNames.add(lastDataSet.getName());
-            updateMasterDataSet(lastDataSetFile, lastDataSet.getName());
+            if ( ! found) {
+                masterDSNames.add(lastDataSet.getName());
+                updateMasterDataSet(lastDataSetFile, lastDataSet.getName());
+            }
         }
         return seismograms;
     }
@@ -176,64 +188,87 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         NoPreferredOrigin,
         ParserConfigurationException,
         UnsupportedFileTypeException,
-        SeedFormatException {
+        SeedFormatException, SAXException {
 
-        File eventDirectory = getEventDirectory(event);
-        File dataDirectory = new File(eventDirectory, "data");
-        dataDirectory.mkdirs();
-
-        AuditInfo[] audit = new AuditInfo[1];
-        audit[0] = new AuditInfo(System.getProperty("user.name"),
-                                 "seismogram loaded via sod.");
-        File seisFile;
-        URL[] seisURL = new URL[seismograms.length];
-        SeismogramFileTypes[] seisFileTypeArray = new SeismogramFileTypes[seisURL.length];
-        String[] seisURLStr = new String[seismograms.length];
-        for (int i=0; i<seismograms.length; i++) {
-            // seismograms from the DMC in particular, have the times in the
-            // channel_id wrong. This is due to the server not interacting with
-            // the oracle database, only the mseed files
-            // so we set the channel of the seismogram to match the original
-            // channel from the request
-            logger.debug("saveInDataset "+i+" "+ChannelIdUtil.toString(seismograms[i].channel_id));
-            seismograms[i].channel_id = channel.get_id();
-
-            seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
-                                                   dataDirectory,
-                                                   channel,
-                                                   event,
-                                                   fileType);
-            seisURLStr[i] = getRelativeURLString(lastDataSetFile, seisFile);
-            seisURL[i] = seisFile.toURI().toURL();
-            seisFileTypeArray[i] = seisFileType;  // all are the same
+        if (subDS.length() != 0) {
+            return saveInDataSet(event, channel, seismograms, seisFileType, getDataSet(event, subDS));
+        } else {
+            return saveInDataSet(event, channel, seismograms, seisFileType, getDataSet(event));
         }
-        URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
-                                                               seisFileTypeArray,
-                                                               lastDataSet);
-        if (prefix != null && prefix.length() != 0) {
-            urlDSS.setName(prefix+urlDSS.getName());
+    }
+
+    protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
+                                                 Channel channel,
+                                                 LocalSeismogramImpl[] seismograms,
+                                                 SeismogramFileTypes seisFileType,
+                                                 DataSet dataset)
+        throws ConfigurationException,
+        CodecException,
+        IOException,
+        NoPreferredOrigin,
+        ParserConfigurationException,
+        UnsupportedFileTypeException,
+        SeedFormatException, SAXException {
+
+
+        synchronized(masterDataSetElement) {
+            File eventDirectory = getEventDirectory(event);
+            File dataDirectory = new File(eventDirectory, "data");
+            dataDirectory.mkdirs();
+
+            AuditInfo[] audit = new AuditInfo[1];
+            audit[0] = new AuditInfo(System.getProperty("user.name"),
+                                     "seismogram loaded via sod.");
+            File seisFile;
+            URL[] seisURL = new URL[seismograms.length];
+            SeismogramFileTypes[] seisFileTypeArray = new SeismogramFileTypes[seisURL.length];
+            String[] seisURLStr = new String[seismograms.length];
+            for (int i=0; i<seismograms.length; i++) {
+                // seismograms from the DMC in particular, have the times in the
+                // channel_id wrong. This is due to the server not interacting with
+                // the oracle database, only the mseed files
+                // so we set the channel of the seismogram to match the original
+                // channel from the request
+                logger.debug("saveInDataset "+i+" "+ChannelIdUtil.toString(seismograms[i].channel_id));
+                seismograms[i].channel_id = channel.get_id();
+
+                seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
+                                                       dataDirectory,
+                                                       channel,
+                                                       event,
+                                                       fileType);
+                seisURLStr[i] = getRelativeURLString(lastDataSetFile, seisFile);
+                seisURL[i] = seisFile.toURI().toURL();
+                seisFileTypeArray[i] = seisFileType;  // all are the same
+            }
+            URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
+                                                                   seisFileTypeArray,
+                                                                   lastDataSet);
+            if (prefix != null && prefix.length() != 0) {
+                urlDSS.setName(prefix+urlDSS.getName());
+            }
+            for (int i = 0; i < seisURL.length; i++) {
+                urlDSS.addToCache(seisURL[i], seisFileType, seismograms[i]);
+            }
+
+            urlDSS.addAuxillaryData(StdAuxillaryDataNames.NETWORK_BEGIN,
+                                    channel.get_id().network_id.begin_time.date_time);
+            urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
+                                    channel.get_id().begin_time.date_time);
+
+            lastDataSet.addDataSetSeismogram(urlDSS, audit);
+            dsToXML.insert(lastDataSetElement,urlDSS, lastDataSetFile.getParentFile().toURI().toURL());
+            lastDataSet.addParameter(DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
+                                     channel,
+                                     audit);
+            dsToXML.insert(lastDataSetElement,
+                           DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
+                           channel);
+
+            dsToXML.writeToFile(lastDataSetElement, lastDataSetFile);
+            lastDataSetFileModTime = lastDataSetFile.lastModified();
+            return urlDSS;
         }
-        for (int i = 0; i < seisURL.length; i++) {
-            urlDSS.addToCache(seisURL[i], seisFileType, seismograms[i]);
-        }
-
-        urlDSS.addAuxillaryData(StdAuxillaryDataNames.NETWORK_BEGIN,
-                                channel.get_id().network_id.begin_time.date_time);
-        urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
-                                channel.get_id().begin_time.date_time);
-
-        lastDataSet.addDataSetSeismogram(urlDSS, audit);
-        dsToXML.insert(lastDataSetElement,urlDSS, lastDataSetFile.getParentFile().toURI().toURL());
-        lastDataSet.addParameter(DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
-                                 channel,
-                                 audit);
-        dsToXML.insert(lastDataSetElement,
-                       DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
-                       channel);
-
-        dsToXML.writeToFile(lastDataSetElement, lastDataSetFile);
-
-        return urlDSS;
     }
 
     protected File saveDataSet(DataSet ds)
@@ -279,25 +314,48 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         // assume that processing is in event order and never reopens
         // bad but just temporary
         if (lastDataSet != null && lastDataSet.getEvent().equals(event)) {
-            dataset = lastDataSet;
-        } else {
-            logger.debug("creating new dataset "+getLabel(event));
-            //temp
-            dataset = new MemoryDataSet(event.get_preferred_origin().origin_time.date_time,
-                                        getLabel(event),
-                                        System.getProperty("user.name"),
-                                        new AuditInfo[0]);
-            dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
-            lastDataSet = dataset;
-            lastEvent = event;
-            lastDataSetFile = new File(eventDirectory, DataSetToXML.createFileName(dataset));
-            if (lastDataSetFile.exists()) {
-                lastDataSet = DataSetToXML.load(lastDataSetFile.toURI().toURL());
+            // check for file modification outside of this object
+            if (lastDataSetFileModTime == lastDataSetFile.lastModified()) {
                 dataset = lastDataSet;
+                return dataset;
             }
-            lastDataSetElement = dsToXML.createDocument(lastDataSet, eventDirectory);
-            //dataset = getDataSet(eventDirectory, eventDirName, event);
         }
+
+        logger.debug("creating new dataset "+getLabel(event));
+        //temp
+        dataset = new MemoryDataSet(event.get_preferred_origin().origin_time.date_time,
+                                    getLabel(event),
+                                    System.getProperty("user.name"),
+                                    new AuditInfo[0]);
+        dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
+        lastDataSet = dataset;
+        lastEvent = event;
+        lastDataSetFile = new File(eventDirectory, DataSetToXML.createFileName(dataset));
+        if (lastDataSetFile.exists()) {
+            lastDataSet = DataSetToXML.load(lastDataSetFile.toURI().toURL());
+            dataset = lastDataSet;
+        }
+        lastDataSetElement = dsToXML.createDocument(lastDataSet, eventDirectory);
+        lastDataSetFileModTime = lastDataSetFile.lastModified();
+        //dataset = getDataSet(eventDirectory, eventDirName, event);
+
+        return dataset;
+    }
+
+    public DataSet getDataSet(EventAccessOperations event, String subDSName)
+        throws NoPreferredOrigin, ConfigurationException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, IOException, SAXException, UnsupportedFileTypeException {
+        DataSet eventDS = getDataSet(event);
+        String[] dsNames = eventDS.getDataSetNames();
+        for (int i = 0; i < dsNames.length; i++) {
+            if (dsNames[i].equals(subDSName)) {
+                return eventDS.getDataSet(dsNames[i]);
+            }
+        }
+        MemoryDataSet dataset = new MemoryDataSet(event.get_preferred_origin().origin_time.date_time+"/"+subDSName,
+                                                  subDSName,
+                                                  System.getProperty("user.name"),
+                                                  new AuditInfo[0]);
+        eventDS.addDataSet(dataset, new AuditInfo[0]);
         return dataset;
     }
 
@@ -352,21 +410,23 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         return ref.getPath();
     }
 
-    DataSetToXML dsToXML = new DataSetToXML();
+    static DataSetToXML dsToXML = new DataSetToXML();
 
-    EventAccessOperations lastEvent = null;
+    static EventAccessOperations lastEvent = null;
 
-    DataSet lastDataSet = null;
+    static DataSet lastDataSet = null;
 
-    Element lastDataSetElement = null;
+    static Element lastDataSetElement = null;
 
-    File lastDataSetFile;
+    static File lastDataSetFile;
 
-    Element masterDataSetElement;
+    static long lastDataSetFileModTime;
 
-    File masterDSFile;
+    static Element masterDataSetElement;
 
-    LinkedList masterDSNames = new LinkedList();
+    static File masterDSFile;
+
+    static LinkedList masterDSNames = new LinkedList();
 
     EventFormatter nameGenerator = null;
 
@@ -378,7 +438,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
     SeismogramFileTypes fileType;
 
-    String prefix;
+    String prefix = "";
+
+    String subDS = "";
 
     private static final Logger logger =
         Logger.getLogger(SaveSeismogramToFile.class);
