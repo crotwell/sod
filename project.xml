@@ -316,10 +316,10 @@
                     <include>weed.xml</include>
                     <include>tutorial.xml</include>
                     <include>legacyExecute.xml</include>
-                    <include>legacyExecuteMoVec.xml</include>
+                    <include>legacyVectorExecute.xml</include>
                     <include>realtime.xml</include>
                     <include>breqfast.xml</include>
-                    <include>motionvector.xml</include>
+                    <include>vector.xml</include>
                 </includes>
             </resource>
             <resource>
