@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import java.util.*;
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 /**
  * An abstract superclass for all of the logical operations, AND,
@@ -50,9 +51,13 @@ public abstract class LogicalSubsetter implements Subsetter {
 		Object obj = SodUtil.load(subElement, getPackageName());
 		if (obj instanceof Subsetter) {
 		    filterList.add((Subsetter)obj);
-		} // end of if (sodElement instanceof EventAttrSubsetter)
+		} else {
+		    logger.error("obj not instance of Subsetter "+obj);
+		} // end of else
 		
-	    } // end of if (node instanceof Element)
+	    } else {
+		logger.error("node not instance of Element "+node);
+	    } // end of else
 	    
 	} // end of for (int i=0; i<children.getSize(); i++)
 	
@@ -71,5 +76,10 @@ public abstract class LogicalSubsetter implements Subsetter {
      *
      */
     protected List filterList = new LinkedList();
+
+
+
+    static Category logger = 
+	Category.getInstance(LogicalSubsetter.class.getName());
 
 }// LogicalSubsetter
