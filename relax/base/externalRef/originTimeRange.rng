@@ -6,8 +6,7 @@
         <element name="originTimeRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Matches events whose preferred origin's time occurs within the given
-                        time range. </summary>
+                    <summary>Matches events whose time occurs within the given range</summary>
                     <example>
                         <originTimeRange>
                             <startTime>20010101T00:00:00Z</startTime>
