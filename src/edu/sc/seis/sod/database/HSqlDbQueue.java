@@ -84,7 +84,8 @@ public class HSqlDbQueue implements Queue {
 	    cfe.printStackTrace();
 	}
 	try {
-	    if(waitFlag){  
+	    //if(waitFlag){  
+	    if(getLength() > 4) {
 		System.out.println("&*********************&&&&&&&&&&&&&&&&&&& Waiting in push ");
 		System.out.println("Before Wait push of queue");
 		wait();
@@ -130,6 +131,7 @@ public class HSqlDbQueue implements Queue {
 	int dbid = eventDatabase.get(eventAccess);
 	eventDatabase.updateStatus(dbid, status);
 	System.out.println("Notifying in  updateStatus ");
+
 	notifyAll();
 
 	getLength();
