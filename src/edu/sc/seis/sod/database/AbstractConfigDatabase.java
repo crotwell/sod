@@ -115,9 +115,7 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	Calendar calendar = Calendar.getInstance();
 	calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
 	calendar.setTime(microSecondDate);
-	System.out.println("before add"+calendar.getTime());
 	calendar.add(Calendar.DAY_OF_YEAR, days);
-	System.out.println("after add"+calendar.getTime());
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	time = microSecondDate.getFissuresTime();
 	updateTime(serverName,
@@ -140,14 +138,6 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	}
     }
     
-  //   public String getServerDNS() {
-// 	return this.serverDNS;
-//     }
-
-//     public String getServerName() {
-// 	return this.serverName;
-//     }
-
 
     private byte[] getBytes(Object obj) {
 	try {
@@ -193,7 +183,6 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     public void delete(String tableName) {
 	try {
 	    connection.createStatement().execute(deleteStmt+tableName);
-	    System.out.println("The query that is executed is "+ (deleteStmt+tableName));
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
@@ -211,10 +200,6 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     protected  Connection connection;
 
     protected String tableName;
-
-  //   private String serverDNS;
-
-//     private String serverName;
 
     private PreparedStatement setTimeStmt;
     
