@@ -59,7 +59,12 @@
     <xsl:template match="section" mode="sub">
         <div class="section">
             <h4>
-                <xsl:value-of select="@name"/>
+                <a>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="@name"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="@name"/>
+                </a>
             </h4>
             <xsl:apply-templates select="*" mode="sub"/>
         </div>
