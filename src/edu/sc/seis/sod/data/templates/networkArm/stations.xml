@@ -7,7 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Stations</title>
 <style media="all">@import "../../main.css";</style>
-<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript" src="../../tableRuler.js"> </script>
 <script type="text/javascript">
         window.onload=function(){tableruler();}
 </script>
