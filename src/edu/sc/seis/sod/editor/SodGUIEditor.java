@@ -63,6 +63,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("orientationCode", netCodeEdit);
         editors.put("boxArea", new BoxAreaEditor());
         editors.put("distanceRange", new DistanceRangeEditor());
+        editors.put("phaseRequest", new PhaseRequestEditor());
     }
 
     protected HashMap editors = new HashMap();
