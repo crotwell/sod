@@ -71,7 +71,7 @@ public class DistanceRangeSubsetter implements SodElement{
      *
      * @return a <code>Quantity</code> value
      */
-    public Quantity getMinDistance() {
+    public QuantityImpl getMinDistance() {
 
     return new QuantityImpl(getDistanceRange().min_value, getDistanceRange().the_units);
 
@@ -83,7 +83,7 @@ public class DistanceRangeSubsetter implements SodElement{
      *
      * @return a <code>Quantity</code> value
      */
-    public Quantity getMaxDistance() {
+    public QuantityImpl getMaxDistance() {
 
     return new QuantityImpl(getDistanceRange().max_value, getDistanceRange().the_units);
     }
