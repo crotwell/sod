@@ -76,7 +76,8 @@ public class Start{
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         try {
-            if(!Validator.validate(createInputSource(cl, confFilename))){
+			Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
+            if(!validator.validate(createInputSource(cl, confFilename))){
                 logger.info("Invalid config file!");
                 allHopeAbandon("Invalid config file! ");
             }else{
@@ -190,7 +191,7 @@ public class Start{
         new JDBCStatus();
     }
 
-    private void allHopeAbandon(String message) {
+    public static void allHopeAbandon(String message) {
         System.err.println();
         System.err.println("******************************************************************");
         System.err.println();
