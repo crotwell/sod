@@ -69,27 +69,27 @@ public class NetworkArm {
             finder =
                 (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
-            if (attrSubsetter instanceof NullNetworkSubsetter ) {
+            if (attrSubsetter instanceof PassNetwork) {
                 attrSubsetter = (NetworkSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one NetworkAttrSubsetter is in the configuration file: "+sodElement);
             } // end of else
         } else if(sodElement instanceof StationSubsetter) {
-            if ( stationSubsetter instanceof NullStationSubsetter ) {
+            if ( stationSubsetter instanceof PassStation) {
                 stationSubsetter = (StationSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one StationSubsetter is in the configuration file: "+sodElement);
             } // end of else
 
         } else if(sodElement instanceof SiteSubsetter) {
-            if ( siteSubsetter instanceof NullSiteSubsetter ) {
+            if ( siteSubsetter instanceof PassSite) {
                 siteSubsetter = (SiteSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one SiteSubsetter is in the configuration file: "+sodElement);
             } // end of else
 
         } else if(sodElement instanceof ChannelSubsetter) {
-            if ( channelSubsetter instanceof NullChannelSubsetter ) {
+            if ( channelSubsetter instanceof PassChannel) {
                 channelSubsetter = (ChannelSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one ChannelSubsetter is in the configuration file: "+sodElement);
@@ -488,10 +488,10 @@ public class NetworkArm {
     }
 
     private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder finder = null;
-    private NetworkSubsetter attrSubsetter = new NullNetworkSubsetter();
-    private StationSubsetter stationSubsetter = new NullStationSubsetter();
-    private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
-    private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
+    private NetworkSubsetter attrSubsetter = new PassNetwork();
+    private StationSubsetter stationSubsetter = new PassStation();
+    private SiteSubsetter siteSubsetter = new PassSite();
+    private ChannelSubsetter channelSubsetter = new PassChannel();
     private List networkArmProcesses = new ArrayList();
     private JDBCQueryTime queryTimeTable;
     private JDBCNetworkUnifier netTable;
