@@ -132,6 +132,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    } // end of try-catch
 	    
 	    out.write(".QUALITY "+getConfig("quality")+nl);
+	    out.write(".LABEL "+eventFileName+nl);
 	    out.write(".END"+nl);
 	    out.write(nl);
 	} // end of if ( ! fileExists)
