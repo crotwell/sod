@@ -131,7 +131,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		audit[0] = new AuditInfo(System.getProperty("user.name"),
 					 "seismogram loaded via sod.");
 		dataset.addSeismogramRef(seisFile.toURL(), 
-					 lseis.getName(), 
+					 seisFilename, 
 					 new Property[0], 
 					 lseis.parm_ids,
 					 audit);
