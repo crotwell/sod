@@ -46,6 +46,22 @@ class schemaDocs(sodScriptParameters):
         self.mainclass = 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter'
         self.xOptions['mx']='mx512m'
 
+class eventCircles(sodScriptParameters):
+    def __init__(self, mods):
+        scriptBuilder.jacorbParameters.__init__(self)
+        for mod in mods: self.update(mod)
+        self.name = 'eventCircles'
+        self.mainclass = 'edu.sc.seis.sod.EventCircleGenerator'
+        self.xOptions['mx']='mx512m'
+
+class stationTriangles(sodScriptParameters):
+    def __init__(self, mods):
+        scriptBuilder.jacorbParameters.__init__(self)
+        for mod in mods: self.update(mod)
+        self.name = 'stationTriangles'
+        self.mainclass = 'edu.sc.seis.sod.StationTriangleGenerator'
+        self.xOptions['mx']='mx512m'
+
 
 def buildAllScripts(proj):
     scripts = buildRunScripts(proj)
@@ -53,6 +69,8 @@ def buildAllScripts(proj):
     scripts.extend(buildEditorScripts(proj))
     scripts.extend(buildProfileScripts(proj))
     scripts.extend(buildKillScripts(proj))
+    scripts.extend(buildEventCircleScripts(proj))
+    scripts.extend(buildStationTriangleScripts(proj))
     return scripts
 
 def buildRunScripts(proj):
@@ -99,6 +117,20 @@ def buildSchemaDocScripts(proj):
     scripts = [scriptBuilder.build(schemaDocs([]), proj)]
     scriptBuilder.setVarWindows()
     scripts.append(scriptBuilder.build(schemaDocs([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
+def buildEventCircleScripts(proj):
+    scriptBuilder.setVarSh()
+    scripts = [scriptBuilder.build(eventCircles([]), proj)]
+    scriptBuilder.setVarWindows()
+    scripts.append(scriptBuilder.build(eventCircles([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
+def buildStationTriangleScripts(proj):
+    scriptBuilder.setVarSh()
+    scripts = [scriptBuilder.build(stationTriangles([]), proj)]
+    scriptBuilder.setVarWindows()
+    scripts.append(scriptBuilder.build(stationTriangles([scriptBuilder.windowsParameters()]), proj))
     return scripts
 
 def buildJars(sodProj, clean=False):
