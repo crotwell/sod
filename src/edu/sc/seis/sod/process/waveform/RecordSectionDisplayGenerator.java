@@ -225,15 +225,16 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         ArrayList dssList = new ArrayList();
         if(dataSeis.length > 0) {
             DataSetSeismogram lastFrontSeis = dataSeis[0];
+            DataSetSeismogram lastSeis = dataSeis[dataSeis.length - 1];
+            DataSetSeismogram lastBackSeis = lastSeis;
             double curFrontDistance = DisplayUtils.calculateDistance(lastFrontSeis)
                     .get_value();
-            DataSetSeismogram lastBackSeis = dataSeis[dataSeis.length - 1];
-            double curBackDistance = DisplayUtils.calculateDistance(lastBackSeis)
+            double lastSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
                     .get_value();
-            if(Math.abs(curFrontDistance - curBackDistance) >= minSpacing) {
-                dssList.add(lastBackSeis);
-            }
             DataSetSeismogram curSeis = null;
+            double firstSeisDistance = curFrontDistance;
+            double curBackDistance = lastSeisDist;
+            dssList.add(lastFrontSeis);
             while(curFrontDistance <= range / 2) {
                 curSeis = getBestSeis(dataSeis,
                                       lastFrontSeis,
@@ -262,13 +263,15 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 }
                 curBackDistance -= spacing;
             }
-            dssList.add(lastFrontSeis);
             double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
                     .get_value();
             double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
                     .get_value();
             if(Math.abs(lastFrontSeisDist - lastBackSeisDist) < minSpacing) {
                 dssList.remove(dssList.size() - 1);
+            }
+            if(Math.abs(firstSeisDistance - lastSeisDist) >= minSpacing) {
+                dssList.add(lastSeis);
             }
             DataSetSeismogram[] tempDSS = new DataSetSeismogram[dssList.size()];
             tempDSS = (DataSetSeismogram[])dssList.toArray(tempDSS);
@@ -313,11 +316,12 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                         DataSetSeismogram[] dataSeis)
             throws IOException, SQLException, NotFound {
         int dataSeisArrLen = dataSeis.length;
+        DistanceRange distRange = new DistanceRange(0, 180);
         if(dataSeisArrLen > 0) {
             int fileNameCounter = 0;
             if(dataSeisArrLen <= numSeisPerImage) {
                 writeImage(dataSeis, event, fileNameBase + fileNameCounter
-                        + fileExtension, null, recSecDim);
+                        + fileExtension, distRange, recSecDim);
                 return;
             } else {
                 DataSetSeismogram[] tempDSS;
@@ -330,7 +334,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                         index += spacing;
                     }
                     writeImage(tempDSS, event, fileNameBase + fileNameCounter
-                            + fileExtension, null, recSecDim);
+                            + fileExtension, distRange, recSecDim);
                     fileNameCounter++;
                 }
                 if((dataSeisArrLen % numSeisPerImage) != 0) {
@@ -341,7 +345,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                         tempDSS[k] = dataSeis[maxIndex + k + 1];
                     }
                     writeImage(tempDSS, event, fileNameBase + fileNameCounter
-                            + fileExtension, null, recSecDim);
+                            + fileExtension, distRange, recSecDim);
                 }
             }
         }
@@ -384,11 +388,14 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         } else {
             rsDisplay = (RecordSectionDisplay)displayCreator.createDisplay();
         }
-        if(distRange != null) {
-            CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
-                                                                   distRange.getMaxDistance());
-            rsDisplay.setLayout(custConfig);
+        CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
+                                                               distRange.getMaxDistance());
+        boolean swapAxes = false;
+        if(rsDisplay.getSwapAxes()){
+            swapAxes = true;
         }
+        custConfig.setSwapAxes(swapAxes);
+        rsDisplay.setLayout(custConfig);
         rsDisplay.add(dataSeis);
         try {
             File outPNG = new File(base + "/" + fullName);
