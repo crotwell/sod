@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<template>
+<outputLocation>
+<eventDir><originTime>yyyyMMddHHmmssSSS</originTime></eventDir>
+<stationDir><networkCode/>.<stationCode/></stationDir>
+</outputLocation>
+<filename>seismograms.html</filename>
+<picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.png</picName>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Seismograms in <station><name/></station> for <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime> Mag <magnitude/></event></title>
+<style media="all">@import "../../../main.css";</style>
+</head>
+<body>
+<div id="Header">
+<a href="../../location.html"> Events</a>
+> <a href="../event.html"><event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event></a>
+> <station><networkCode/>.<stationCode/>-<name/></station>
+</div>
+<div id="Content">
+<h1>Seismograms for this Event</h1>
+<h2>Event Info</h2>
+<event>
+<table>
+<tr>
+<td><b>Region</b></td>
+<td><feRegionName/></td>
+</tr>
+<tr>
+<td><b>Time</b></td>
+<td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+</tr>
+<tr>
+<td><b>Magnitude</b></td>
+<td><magnitude/></td>
+</tr>
+<tr>
+<td><b>Depth</b></td>
+<td><depth/></td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td><latitude/></td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td><longitude/></td>
+</tr>
+</table>
+</event>
+<station>
+<h2>Station Info</h2>
+<table>
+<tr>
+<td><b>Id</b></td>
+<td><stationCode/></td>
+</tr>
+<tr>
+<td><b>Name</b></td>
+<td><name/></td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td><lat/></td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td><lon/></td>
+</tr>
+<tr>
+<td><b>Begin Time</b></td>
+<td><beginTime/></td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td><endTime/></td>
+</tr>
+</table>
+</station>
+<h2>Seismograms</h2>
+<table>
+<channels>
+<tr>
+<channel>
+<td><b><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></b></td>
+<td><img><attribute name="src"><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.png</attribute></img></td>
+</channel>
+</tr>
+</channels>
+</table>
+</div>
+<div id="Menu">
+<ul>
+<li>
+<a href="../../location.html">Events</a>
+</li>
+<li>
+<a href="../../networks.html">Networks</a>
+</li>
+</ul>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
+</body>
+</html>
+</template>
+
