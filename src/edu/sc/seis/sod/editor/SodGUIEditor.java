@@ -118,7 +118,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("phaseSignalToNoise", new PhaseSignalToNoiseEditor());
 
         BooleanEditor bool = new BooleanEditor(this);
-        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "requestSubsetter", "seismogram", "waveformVector"};
+        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "request", "seismogram", "waveformVector"};
         String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
         for (int i = 0; i < switchTypes.length; i++) {
             for (int j = 0; j < logicals.length; j++) {
