@@ -24,13 +24,13 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
-import edu.sc.seis.fissuresUtil.display.BorderedDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
-import edu.sc.seis.fissuresUtil.display.borders.Border;
 import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
 import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
@@ -127,6 +127,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                                              500))};
         }
         colors = extractColors(config);
+        if(DOMHelper.hasElement(config, "displayConfig")) {
+            displayCreator = new SeismogramDisplayConfiguration(DOMHelper.getElement(config,
+                                                                                     "displayConfig"));
+        }
     }
 
     public static Color[] extractColors(Element config) {
@@ -143,7 +147,12 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public SaveSeismogramToFile getSaveSeismogramToFile()
             throws ConfigurationException {
-        WaveformArm waveform = Start.getWaveformArm();
+        return getSaveSeismogramToFile(Start.getWaveformArm(), id);
+    }
+
+    public static SaveSeismogramToFile getSaveSeismogramToFile(WaveformArm waveform,
+                                                               String id)
+            throws ConfigurationException {
         WaveformProcess[] waveformProcesses = null;
         if(waveform.getLocalSeismogramArm() != null) {
             waveformProcesses = waveform.getLocalSeismogramArm().getProcesses();
@@ -355,23 +364,31 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         } else {
             recSecId = eventRecordSection.getRecSecId(eventId, fullName);
         }
-        RecordSectionDisplay rsDisplay = new RecordSectionDisplay(true);
+        RecordSectionDisplay rsDisplay;
+        if(displayCreator == null) {
+            rsDisplay = new RecordSectionDisplay(true);
+            DistanceBorder distBorder = new DistanceBorder(rsDisplay,
+                                                           DistanceBorder.BOTTOM,
+                                                           DistanceBorder.ASCENDING);
+            distBorder.setPreferredSize(new Dimension(BasicSeismogramDisplay.PREFERRED_WIDTH,
+                                                      50));
+            TimeBorder timeBorder = new TimeBorder(rsDisplay,
+                                                   TimeBorder.ASCENDING);
+            timeBorder.setPreferredSize(new Dimension(80, 50));
+            rsDisplay.setDistBorder(distBorder,
+                                    RecordSectionDisplay.BOTTOM_CENTER);
+            rsDisplay.setTimeBorder(timeBorder,
+                                    RecordSectionDisplay.CENTER_LEFT);
+            rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
+            rsDisplay.setColors(colors);
+        } else {
+            rsDisplay = (RecordSectionDisplay)displayCreator.createDisplay();
+        }
         if(distRange != null) {
             CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
                                                                    distRange.getMaxDistance());
             rsDisplay.setLayout(custConfig);
         }
-        DistanceBorder distBorder = new DistanceBorder(rsDisplay,
-                                                       DistanceBorder.BOTTOM,
-                                                       DistanceBorder.ASCENDING);
-        distBorder.setPreferredSize(new Dimension(BasicSeismogramDisplay.PREFERRED_WIDTH,
-                                                  50));
-        TimeBorder timeBorder = new TimeBorder(rsDisplay, TimeBorder.ASCENDING);
-        timeBorder.setPreferredSize(new Dimension(80, 50));
-        rsDisplay.setDistBorder(distBorder, RecordSectionDisplay.BOTTOM_CENTER);
-        rsDisplay.setTimeBorder(timeBorder, RecordSectionDisplay.CENTER_LEFT);
-        rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
-        rsDisplay.setColors(colors);
         rsDisplay.add(dataSeis);
         try {
             File outPNG = new File(base + "/" + fullName);
@@ -550,6 +567,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private double minSpacing;
 
     private RecordSectionGrouping[] groupings;
+
+    private SeismogramDisplayConfiguration displayCreator = null;
 
     private Dimension recSecDim;
 
