@@ -40,14 +40,14 @@ networkCode=Network Code
 channelCode=Channel Code
 bandCode=Band Code
 gainCode=Gain Code
-networkInfoTemplateGenerator=Network Status
+networkInfoTemplateGenerator=Generate network arm summary HTML
 boxArea=Area
 eventStatusTemplate=Event Status
 edu/iris/dmc/IRIS_NetworkDC=IRIS
 edu/sc/seis/SCEPPNetworkDC=SCEPP
 edu/berkeley/geo/quake/NCEDC_NetworkDC=Berkeley
 networkFinder=Query to network server
-midPoint=MidPoint
+midPoint=Midpoint
 seismicRegion=Seismic region
 geographicRegion=Geographic region
 azimuthRange=Azimuth
@@ -62,4 +62,21 @@ maxRetryDelay=Max Retry Delay
 runName=Run Name
 statusBase=Status Directory
 waveformWorkerThreads=Waveform Arm Threads
-printLineEventProcess=Print Events to Standard Out
+printLineEventProcess=Print event info to standard out as processed
+
+phaseRequest=Phase Arrival Characteristics
+model=Model
+
+edu/iris/dmc/IRIS_PondDataCenter=IRIS Pond
+edu/iris/dmc/IRIS_BudDataCenter=IRIS Bud
+edu/iris/dmc/IRIS_ArchiveDataCenter=IRIS Archive
+edu/berkeley/geo/quake/NCEDC_DataCenter=Berkeley NCEDC
+edu/sc/seis/SCEPPSeismogramDC=SCEPP
+
+someCoverage=Some Coverage
+
+printlineSeismogramProcess=Print waveforms to standard out as processed
+localSeismogramTemplateGenerator=Generate event station summary HTML
+waveformEventTemplateGenerator=Generate event summary HTML
+
+saveSeismogramToFile=Save waveforms
