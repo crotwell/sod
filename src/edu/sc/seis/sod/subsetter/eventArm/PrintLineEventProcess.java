@@ -56,6 +56,6 @@ public class PrintLineEventProcess implements EventArmProcess {
     protected String filename = null;
 
     protected static edu.sc.seis.fissuresUtil.display.ParseRegions regions
-        = new edu.sc.seis.fissuresUtil.display.ParseRegions();;
+        = edu.sc.seis.fissuresUtil.display.ParseRegions.getInstance();
 
 }// PrintLineEventProcess

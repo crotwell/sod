@@ -57,7 +57,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
      */
     public SacFileProcessor (Element config) throws ConfigurationException {
         this.config = config;
-        regions = new ParseRegions();
+        regions = ParseRegions.getInstance();
         String datadirName =
             SodUtil.getText(SodUtil.getElement(config, "dataDirectory"));
         this.dataDirectory = new File(datadirName);

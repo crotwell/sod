@@ -30,7 +30,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      */
     public PrintlineSeismogramProcess (Element config){
         filename = SodUtil.getNestedText(config);
-        regions = new ParseRegions();
+        regions = ParseRegions.getInstance();
     }
 
     /**

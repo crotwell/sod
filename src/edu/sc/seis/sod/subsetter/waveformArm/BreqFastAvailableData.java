@@ -31,7 +31,7 @@ import java.text.*;
 public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElement {
     public BreqFastAvailableData(Element config) {
         this.config = config;
-        regions = new ParseRegions();
+        regions = ParseRegions.getInstance();
         String datadirName = getConfig("dataDirectory");
         this.dataDirectory = new File(datadirName);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
