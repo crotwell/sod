@@ -424,9 +424,7 @@
                     <zeroOrMore>
                         <choice>
                             <ref name="seismogramProcess4"/>
-                            <element name="phaseRequest">
-                                <ref name="phaseRequest4"/>
-                            </element>
+                            <ref name="phaseRequest4"/>
                         </choice>
                     </zeroOrMore>
                     <zeroOrMore>
@@ -1268,9 +1266,7 @@
                 <zeroOrMore>
                     <choice>
                         <ref name="seismogramProcess3"/>
-                        <element name="phaseRequest">
-                            <ref name="phaseRequest3"/>
-                        </element>
+                        <ref name="phaseRequest3"/>
                     </choice>
                 </zeroOrMore>
             </element>
@@ -1278,9 +1274,7 @@
                 <zeroOrMore>
                     <choice>
                         <ref name="seismogramProcess2"/>
-                        <element name="phaseRequest">
-                            <ref name="phaseRequest2"/>
-                        </element>
+                        <ref name="phaseRequest2"/>
                     </choice>
                 </zeroOrMore>
             </element>
@@ -1337,9 +1331,7 @@
             </element>
             <choice>
                 <ref name="seismogramProcess"/>
-                <element name="phaseRequest">
-                    <ref name="phaseRequest"/>
-                </element>
+                <ref name="phaseRequest"/>
             </choice>
             <element name="externalWaveformVectorProcess">
                 <element name="classname">
@@ -7817,15 +7809,23 @@
         </choice>
     </define>
     <define name="phaseRequest2">
-        <ref name="phaseWindow2"/>
+        <element name="phaseRequest">
+            <ref name="phaseWindow2"/>
+        </element>
     </define>
     <define name="phaseRequest3">
-        <ref name="phaseWindow3"/>
+        <element name="phaseRequest">
+            <ref name="phaseWindow3"/>
+        </element>
     </define>
     <define name="phaseRequest4">
-        <ref name="phaseWindow4"/>
+        <element name="phaseRequest">
+            <ref name="phaseWindow4"/>
+        </element>
     </define>
     <define name="phaseRequest">
-        <ref name="phaseWindow"/>
+        <element name="phaseRequest">
+            <ref name="phaseWindow"/>
+        </element>
     </define>
 </grammar>
