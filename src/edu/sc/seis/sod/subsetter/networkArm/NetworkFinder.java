@@ -46,7 +46,7 @@ public class NetworkFinder extends AbstractSource{
         String objectName = getSourceName();
         Element subElement = SodUtil.getElement(element,"refreshInterval");
         if(subElement != null) {
-            refreshInterval = TimeInterval.createTimeInterval(SodUtil.loadQuantity(subElement));
+            refreshInterval = SodUtil.loadTimeInterval(subElement);
         } else refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
         netDC = new RetryNetworkDC(new NSNetworkDC(dns, objectName, fns), 2);
     }

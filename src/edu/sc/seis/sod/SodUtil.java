@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
 
 public class SodUtil {
 
@@ -174,6 +175,16 @@ public class SodUtil {
         } // end of try-catch
     }
 
+
+    public static TimeInterval loadTimeInterval(Element config) throws ConfigurationException {
+        try {
+            double value = Double.parseDouble(XMLUtil.getText(XMLUtil.getElement(config, "value")));
+            UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
+            return new TimeInterval(value, unit);
+        } catch (Exception e) {
+            throw new ConfigurationException("Can't load TimeInterval from "+config.getTagName(), e);
+        } // end of try-catch
+    }
 
     public static QuantityImpl loadQuantity(Element config) throws ConfigurationException {
         try {
