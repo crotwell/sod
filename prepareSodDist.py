@@ -5,19 +5,21 @@ import sys, os, time, zipfile, tarfile
 sys.path.append("../devTools/maven")
 sys.path.append("./scripts")
 import distBuilder, buildSodScripts, ProjectParser
+from optparse import OptionParser
 
-def buildInternal(proj, name=None):
+def buildInternal(proj, name):
+    if name == buildName(proj): name = "internal" + name
     scripts=buildSodScripts.buildAll(proj)
-    name =  'internal' + buildName(proj)
-    extras = [('scripts/revtest.xml', 'bin/revtest.xml'),
-              ('scripts/tutorial.xml', 'bin/tutorial.xml'),
-              ('scripts/weed.xml', 'bin/weed.xml'),
-              ('scripts/yjpagent.dll', 'bin/yjpagent.dll'),
-              ('scripts/cwg.prop', 'bin/cwg.prop'),
-              ('scripts/logs', 'bin/logs', False)]
+    configs = []
+    for item in os.listdir('scripts'):
+        if item.endswith('.xml'): configs.append(item)
+    extras = [('scripts/' + item, 'bin/' + item) for item in configs]
+    extras.extend([('scripts/yjpagent.dll', 'yjpagent.dll'),
+              ('scripts/cwg.prop', 'cwg.prop'),
+              ('scripts/logs', 'logs', False)])
     buildDist(proj, scripts, name, extras)
 
-def buildExternal(proj, name=None):
+def buildExternal(proj, name):
     scripts=buildSodScripts.buildSodScripts(proj)
     scripts.extend(buildSodScripts.buildEditorScripts(proj))
     os.chdir('site')
@@ -44,5 +46,13 @@ def buildName(proj): return proj.name + '-' + time.strftime('%y%m%d')
 
 if __name__ == "__main__":
     proj = ProjectParser.ProjectParser('./project.xml')
-    if len(sys.argv) > 1:  buildExternal(proj)
-    else: buildInternal(proj)
+    parser = OptionParser()
+    parser.add_option("-n", "--name", dest="name",
+                      help="tar base name", metavar="NAME",
+                      default=buildName(proj))
+    parser.add_option("-e", "--external", dest="external",
+                      help="build external dist", default=False,
+                      action="store_true")
+    options = parser.parse_args()[0]
+    if options.external : buildExternal(proj, options.name)
+    else: buildInternal(proj, options.name)
