@@ -3,25 +3,25 @@
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
-        <ref name="channelGroupSeismogramProcess"/>
+        <ref name="waveformVectorProcess"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
     <include href="../base/include/quantity.rng"/>
-    <define name="channelGroupSeismogramProcess">
+    <define name="waveformVectorProcess">
         <choice>
             <ref name="threeComponentData"/>
-            <ref name="ANDLocalSeismogramWrapper"/>
-            <ref name="ORLocalSeismogramWrapper"/>
-            <ref name="externalChannelGroupSeismogramProcess"/>
-            <ref name="channelGroupLegacyExecute"/>
-            <ref name="channelGroupFork"/>
-            <ref name="channelGroupAND"/>
-            <ref name="channelGroupOR"/>
-            <ref name="channelGroupNOT"/>
-            <ref name="channelGroupXOR"/>
-            <ref name="channelGroupAlwaysSuccess"/>
+            <ref name="ANDWaveformProcessWrapper"/>
+            <ref name="ORWaveformProcessWrapper"/>
+            <ref name="externalWaveformVectorProcess"/>
+            <ref name="legacyVectorExecute"/>
+            <ref name="waveformVectorFork"/>
+            <ref name="waveformVectorAND"/>
+            <ref name="waveformVectorOR"/>
+            <ref name="waveformVectorNOT"/>
+            <ref name="waveformVectorXOR"/>
+            <ref name="waveformVectorAlwaysSuccess"/>
             <!-- local seismogramProcesses directly in the motion vector arm
-              are treaded as if they are in a ANDLocalSeismogramWrapper -->
+              are treaded as if they are in a ANDWaveformProcessWrapper -->
             <externalRef href="seismogramProcess.rng"/>
             <ref name="external"/>
         </choice>
@@ -33,37 +33,27 @@
                     <summary> Checks for data in all three components. </summary>
                     <description> If there is some data in all three components, then this returns
                         true, if any are empty, then false. </description>
-                    <example>
-                        <threeComponentData/>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <empty/>
         </element>
     </define>
-    <define name="channelGroupForkProcess">
-        <element name="channelGroupForkProcess">
-            <zeroOrMore>
-                <ref name="channelGroupSeismogramProcess"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="ANDLocalSeismogramWrapper">
-        <element name="ANDLocalSeismogramWrapper">
+    <define name="ANDWaveformProcessWrapper">
+        <element name="ANDWaveformProcessWrapper">
             <zeroOrMore>
                 <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>
         </element>
     </define>
-    <define name="ORLocalSeismogramWrapper">
-        <element name="ORLocalSeismogramWrapper">
+    <define name="ORWaveformProcessWrapper">
+        <element name="ORWaveformProcessWrapper">
             <zeroOrMore>
                 <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>
         </element>
     </define>
-    <define name="externalChannelGroupSeismogramProcess">
-        <element name="externalChannelGroupSeismogramProcess">
+    <define name="externalWaveformVectorProcess">
+        <element name="externalWaveformVectorProcess">
             <element name="classname">
                 <data type="string"/>
             </element>
@@ -72,19 +62,19 @@
             </zeroOrMore>
         </element>
     </define>
-    <define name="channelGroupLegacyExecute">
-        <element name="channelGroupLegacyExecute">
+    <define name="legacyVectorExecute">
+        <element name="legacyVectorExecute">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Executes an external program.</summary>
-                    <description>The channelGroupLegacyExecute processor is capable of running
+                    <description>The legacyVectorExecute processor is capable of running
                         existing command line programs. It does this by passing the filenames of the
                         seismograms saved by a earlier SaveSeismogramToFile processor to a program
                         started with Runtime.exec(). </description>
                     <example>
-                        <channelGroupLegacyExecute>
+                        <legacyVectorExecute>
                             <command>echo</command>
-                        </channelGroupLegacyExecute>
+                        </legacyVectorExecute>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
@@ -103,8 +93,8 @@
             </optional>
         </element>
     </define>
-    <define name="channelGroupFork">
-        <element name="channelGroupFork">
+    <define name="waveformVectorFork">
+        <element name="waveformVectorFork">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Forks the processing for three component data. </summary>
@@ -112,7 +102,7 @@
                         independent processing of the same data. The return value is true if all of
                         the sub processors complete successfully, false otherwise. </description>
                     <example>
-                        <channelGroupFork>
+                        <waveformVectorFork>
                             <rmean/>
                             <saveSeismogramToFile>
                                 <fileType>sac</fileType>
@@ -120,107 +110,107 @@
                                 <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                                 </eventDirLabel>
                             </saveSeismogramToFile>
-                        </channelGroupFork>
+                        </waveformVectorFork>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="channelGroupSeismogramProcess"/>
+                <ref name="waveformVectorProcess"/>
             </zeroOrMore>
         </element>
     </define>
-    <define name="channelGroupAND">
-        <element name="channelGroupAND">
+    <define name="waveformVectorAND">
+        <element name="waveformVectorAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between channelGroup subsetters. </summary>
+                    <summary> Logical AND between waveformVector subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
                         subsetters. The subsetters after the first false outputed are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored.</description>
                     <example>
-                        <channelGroupAND>
+                        <waveformVectorAND>
                             <xyz/>
                             <pdq/>
-                        </channelGroupAND>
+                        </waveformVectorAND>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channelGroupSeismogramProcess"/>
+                <ref name="waveformVectorProcess"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="channelGroupOR">
-        <element name="channelGroupOR">
+    <define name="waveformVectorOR">
+        <element name="waveformVectorOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between channelGroup subsetters. </summary>
+                    <summary> Logical OR between waveformVector subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
                         subsetters. The subsetters after the first true outputed are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored. </description>
                     <example>
-                        <channelGroupOR>
+                        <waveformVectorOR>
                             <xyz/>
                             <pdq/>
-                        </channelGroupOR>
+                        </waveformVectorOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channelGroupSeismogramProcess"/>
+                <ref name="waveformVectorProcess"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="channelGroupXOR">
-        <element name="channelGroupXOR">
+    <define name="waveformVectorXOR">
+        <element name="waveformVectorXOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between channelGroup subsetters. </summary>
+                    <summary> Logical XOR between waveformVector subsetters. </summary>
                     <description> The output is the logical XOR of the outputs of all included
                         subsetters. The seismic data passed down the chain is the data passed in,
                         seismogram results of the contained processors are ignored. </description>
                     <example>
-                        <channelGroupXOR>
+                        <waveformVectorXOR>
                             <xyz/>
                             <pdq/>
-                        </channelGroupXOR>
+                        </waveformVectorXOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="channelGroupSeismogramProcess"/>
-            <ref name="channelGroupSeismogramProcess"/>
+            <ref name="waveformVectorProcess"/>
+            <ref name="waveformVectorProcess"/>
         </element>
     </define>
-    <define name="channelGroupNOT">
-        <element name="channelGroupNOT">
+    <define name="waveformVectorNOT">
+        <element name="waveformVectorNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an channelGroup subsetter. </summary>
+                    <summary> Logical NOT of an waveformVector subsetter. </summary>
                     <description> The output is the logical NOT of the output of the included
                         subsetters. The seismic data passed down the chain is the data passed in,
                         seismogram results of the contained processors are ignored.</description>
                     <example>
-                        <channelGroupNOT>
+                        <waveformVectorNOT>
                             <xyz/>
-                        </channelGroupNOT>
+                        </waveformVectorNOT>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="channelGroupSeismogramProcess"/>
+            <ref name="waveformVectorProcess"/>
         </element>
     </define>
-    <define name="channelGroupAlwaysSuccess">
-        <element name="channelGroupAlwaysSuccess">
+    <define name="waveformVectorAlwaysSuccess">
+        <element name="waveformVectorAlwaysSuccess">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Executes a subprocessor, but always returns true.</summary>
                     <description>This executes the enclosed processor, but always returns a success
                         regardless of whether the enclosed processor succeeded or failed. </description>
                     <example>
-                        <channelGroupAlwaysSuccess>
-                            <channelGroupFork>
+                        <waveformVectorAlwaysSuccess>
+                            <waveformVectorFork>
                                 <rmean/>
                                 <saveSeismogramToFile>
                                     <fileType>sac</fileType>
@@ -228,12 +218,12 @@
                                     <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                                     </eventDirLabel>
                                 </saveSeismogramToFile>
-                            </channelGroupFork>
-                        </channelGroupAlwaysSuccess>
+                            </waveformVectorFork>
+                        </waveformVectorAlwaysSuccess>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="channelGroupSeismogramProcess"/>
+            <ref name="waveformVectorProcess"/>
         </element>
     </define>
     <define name="external">
