@@ -43,6 +43,9 @@ public class Switcher extends TagChooser{
         Box b = Box.createHorizontalBox();
         b.add(changeHolder);
         EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
+        if (plugin instanceof Switcher) {
+            throw new RuntimeException("Custom plugins must never be Switchers: "+element.getTagName());
+        }
         JComponent comp;
         if (plugin != null) {
             comp = plugin.getGUI(element);
