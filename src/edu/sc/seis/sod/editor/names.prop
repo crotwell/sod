@@ -89,4 +89,4 @@ type=Type
 directory=Directory
 filePattern=File Pattern
 resp=IRIS Resp File
-sac=SAC Pole Zero
+polezero=SAC Pole Zero

@@ -20,7 +20,7 @@ public class ResponseWriterEditor  implements EditorPlugin {
         Box b = Box.createVerticalBox();
         Element respType = SodUtil.getElement(element, "type");
         if (respType != null) {
-            b.add(EditorUtil.getLabeledComboBox(respType, new String[] {"sac", "resp"}));
+            b.add(EditorUtil.getLabeledComboBox(respType, new String[] {"polezero", "resp"}));
         }
         b.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
         Element dirElement = SodUtil.getElement(element, "directory");
