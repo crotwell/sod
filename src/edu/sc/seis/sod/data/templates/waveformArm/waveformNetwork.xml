@@ -5,12 +5,13 @@
 <h2>$network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())</h2>
 <br/>
 <table>
-#foreach ( $sta in $network.retrieve_stations() )
+#foreach ( $sta in $stations.getSuccessful() )
+#set ( $stacode = $sta.get_code())
 <tr>
 <td>$sta.get_code()</td>
-<td><a href="$network.getNetworkAccess().get_attributes().get_code()/$sta.get_code().html">$fissures.stationName($sta)</a></td>
+<td><a href="$network.getNetworkAccess().get_attributes().get_code()/$network.getNetworkAccess().get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
 </tr>
 #end
 </table>
 </body>
-</html></template>
+</html>

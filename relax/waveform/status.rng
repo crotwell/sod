@@ -37,6 +37,9 @@
                                 <element name="template">
                                         <data type="string"/>
                                 </element>
+                                <element name="networkListTemplate">
+                                        <data type="string"/>
+                                </element>
                         </element>
                         <element name="waveformStationStatus">
                                 <optional>
@@ -52,3 +55,4 @@
         </start>
         <include href="../base/include/eventLabel.rng"/>
 </grammar>
+

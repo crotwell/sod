@@ -7,10 +7,12 @@
     
   <body>
     <menu name="Essentials">
-      <item name="Front Page"            href="/index.html"/>
+      <item name="SOD Home Page"            href="/index.html"/>
       <item name="News and Status"     href="/news.html"/>
+      <item name="Install"          href="/install.html"/>
+      <item name="Run"          href="/running.html"/>
+      <item name="WalkThrough"          href="/walkthrough.html"/>
       <item name="Tutorial"          href="/tutorial.html"/>
-      <item name="Manual"          href="/manual.html"/>
       <item name="XML Tag Docs"          href="/sodDocs/index.html"/>
       <item name="Bugs and Problems"     href="/bugs.html"/>
       <item name="Tuning"     href="/tuning.html"/>

@@ -55,21 +55,33 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
         if (templateName == null) {
             throw new MalformedURLException("template config param is null");
         }
-        loadTemplate();
+        template = loadTemplate();
 
     }
 
-    protected void loadTemplate() throws IOException {
+    /** loads the default template, given by the <template> tag in the config. */
+    protected String loadTemplate() throws IOException {
+        return loadTemplate(templateName);
+    }
+
+    protected String loadTemplate(String templateName) throws IOException {
         URL templateURL = TemplateFileLoader.getUrl(this.getClass().getClassLoader(), templateName);
         BufferedReader read = new BufferedReader(new InputStreamReader(templateURL.openStream()));
-        String line;
+        String line, outTemplate="";
         while ((line = read.readLine()) != null) {
-            template += line+System.getProperty("line.separator");
+            outTemplate += line+System.getProperty("line.separator");
         }
         read.close();
+        return outTemplate;
     }
 
+    /** Schedules the default template (from the <template> element in the config,
+     * for output. */
     public void scheduleOutput(final String filename, final Context context) {
+        scheduleOutput(filename, context, template);
+    }
+
+    public void scheduleOutput(final String filename, final Context context, final String template) {
         if ( ! runnableMap.containsKey(filename)) {
             Runnable runner = new Runnable() {
                 public void run() {
@@ -82,7 +94,7 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
                             // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
                             boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(context),
                                                                                                      out,
-                                                                                                     "waveformNetworkStatus",
+                                                                                                     filename,
                                                                                                      template);
                         }
                         FileWritingTemplate.write(fileDir+"/"+filename,
@@ -108,4 +120,5 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
     protected HashMap runnableMap = new HashMap();
 
 }
+
 

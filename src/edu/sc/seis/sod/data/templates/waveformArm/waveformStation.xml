@@ -18,8 +18,9 @@
 </tr>
 #foreach ( $event in $station_events )
 #set ( $origin = $event.get_preferred_origin() )
+#set ( $eventDir = $velocity_date.format("yyyyMMddHHmmssSSS", $event.get_preferred_origin().getTime()) )
 <tr>
-<td>$FERegion.getRegionName(${event.get_attributes().region})</td>
+<td><a href="../../$eventDir/$fissures.formatStation($station.get_id())/seismograms.html">$FERegion.getRegionName(${event.get_attributes().region})</a></td>
 <td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $event.get_preferred_origin().getTime())</td>
 <td>
 #foreach ($m in $origin.Magnitudes)
@@ -36,3 +37,4 @@ $fissures.formatMagnitude($m),
 </table>
 </body>
 </html>
+

@@ -11,10 +11,13 @@ import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
+import edu.sc.seis.sod.status.networkArm.VelocityStationGetter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
@@ -27,6 +30,12 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
 
     public WaveformNetworkStatus(Element config) throws SQLException, MalformedURLException, IOException {
         super(config);
+        Element element = SodUtil.getElement(config, "networkListTemplate");
+        if (element != null){
+            networkListTemplateName = SodUtil.getNestedText(element);
+        }
+
+        networkListTemplate = loadTemplate(networkListTemplateName);
         if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
     }
 
@@ -45,19 +54,25 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     }
 
     public void change(NetworkAccess networkAccess, Status s) {
-        // update the index list
-        scheduleOutput("waveformNetworks.html", networkArmContext);
+        if (s.getStanding().equals(Standing.SUCCESS)) {
+            // update the index list
+            scheduleOutput("waveformNetworks.html", networkArmContext, networkListTemplate);
 
-        VelocityContext context = new VelocityContext(networkArmContext);
-        context.put("network", networkAccess);
-        scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id())+".html",
-                       context);
-
+            VelocityContext context = new VelocityContext(networkArmContext);
+            context.put("network", networkAccess);
+            context.put("stations", new VelocityStationGetter(networkAccess));
+            scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id())+".html",
+                           context);
+        }
     }
 
     public void change(Site site, Status s) {
     }
 
+    protected String networkListTemplateName;
+
+    protected String networkListTemplate;
 }
+
 
 

@@ -3,7 +3,7 @@
 <header><title>Networks in the waveform arm</title></header>
 <body>
 <table>
-#foreach ( $net in $network_arm_successful )
+#foreach ( $net in $successful_networks )
 #set ($netyear = $fissures.networkCodeYear($net.getNetworkAccess()) )
 #set ($netCode = $fissures.formatNetwork($net.getNetworkAccess().get_attributes().get_id()) )
 <tr>
@@ -18,4 +18,5 @@
 </table>
 </body>
 </html></template>
+
 

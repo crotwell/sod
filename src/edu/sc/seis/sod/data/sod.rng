@@ -611,6 +611,9 @@
                             <element name="template">
                                 <data type="string"/>
                             </element>
+                            <element name="networkListTemplate">
+                                <data type="string"/>
+                            </element>
                         </element>
                         <element name="waveformStationStatus">
                             <optional>
