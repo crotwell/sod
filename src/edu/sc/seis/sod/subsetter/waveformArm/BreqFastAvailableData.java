@@ -183,6 +183,10 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    if(node instanceof Element ) {
 		if(((Element)node).getTagName().equals("separator")) {
 		    separatorValue = SodUtil.getText((Element)node);
+		    if (separatorValue == null) {
+			separatorValue = "";
+		    } // end of if (sep == null)
+		    
 		}
 	    }
 	}
