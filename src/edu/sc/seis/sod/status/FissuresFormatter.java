@@ -71,7 +71,7 @@ public class FissuresFormatter {
 
     public static String formatNetworkYear(NetworkId id) {
         return id.network_code
-                + yearDateFormat.format(new MicroSecondDate(id.begin_time));
+                + formatYear(new MicroSecondDate(id.begin_time));
     }
 
     public static String networkName(NetworkAccess net) {
@@ -188,7 +188,9 @@ public class FissuresFormatter {
     }
 
     public static String formatDate(Date d) {
+        synchronized(longFormat) {
         return longFormat.format(d);
+        }
     }
 
     public static String formatDate(Time t) {
@@ -196,7 +198,9 @@ public class FissuresFormatter {
     }
 
     public static String formatDateForFile(Date d) {
+        synchronized(longFileFormat) {
         return longFileFormat.format(d);
+        }
     }
 
     public static String formatDateForFile(Time t) {
@@ -208,7 +212,15 @@ public class FissuresFormatter {
     }
 
     public static String fancyFormat(Date d) {
+        synchronized(fancyFormat) {
         return fancyFormat.format(d);
+        }
+    }
+    
+    public static String formatYear(Date d) {
+        synchronized(yearDateFormat) {
+            return yearDateFormat.format(d);
+        }
     }
 
     public static MicroSecondDate now() {
