@@ -88,13 +88,15 @@ public class PhaseSignalToNoise  implements LocalSeismogramProcess {
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) throws Exception {
-        if (seismograms.length == 0 ) { return LocalSeismogramResult.FAIL; }
+        if (seismograms.length == 0 ) {
+            return new LocalSeismogramResult(false, seismograms);
+        }
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null && trigger.getValue() > ratio) {
             cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
             return new LocalSeismogramResult(true, seismograms);
         }
-        return LocalSeismogramResult.FAIL;
+        return new LocalSeismogramResult(false, seismograms);
     }
 
     /** This method exists to make the trigger available to other subsetters

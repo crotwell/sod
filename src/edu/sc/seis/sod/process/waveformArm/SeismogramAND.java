@@ -42,7 +42,7 @@ public class SeismogramAND extends ForkProcess {
         if (result.isSuccess()) {
             return new LocalSeismogramResult(result.isSuccess(), seismograms);
         } else {
-            return LocalSeismogramResult.FAIL;
+            return new LocalSeismogramResult(false, seismograms);
         }
     }
 

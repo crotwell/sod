@@ -45,7 +45,7 @@ public class SeismogramOR extends ForkProcess {
         if (orResult) {
             return new LocalSeismogramResult(orResult, seismograms);
         } else {
-            return LocalSeismogramResult.FAIL;
+            return new LocalSeismogramResult(false, seismograms);
         }
     }
 }

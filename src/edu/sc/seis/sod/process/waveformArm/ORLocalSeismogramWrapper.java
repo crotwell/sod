@@ -64,7 +64,7 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
         if (b) {
             return new ChannelGroupLocalSeismogramResult(true, out);
         }
-        return ChannelGroupLocalSeismogramResult.FAIL;
+        return new ChannelGroupLocalSeismogramResult(false, seismograms);
     }
 
     public String toString() {

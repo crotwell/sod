@@ -23,8 +23,6 @@ public class LocalSeismogramResult {
         return seismograms;
     }
 
-    public static final LocalSeismogramResult FAIL = new LocalSeismogramResult(false, new LocalSeismogramImpl[0]);
-
     private boolean success;
 
     private LocalSeismogramImpl[] seismograms;

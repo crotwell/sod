@@ -37,11 +37,7 @@ public class SeismogramNOT extends ForkProcess {
             result = processor.process(event, channel, original,
                                        available, copySeismograms(seismograms), cookieJar);
         }
-        if ( ! result.isSuccess()) {
-            return new LocalSeismogramResult( ! result.isSuccess(), seismograms);
-        } else {
-            return LocalSeismogramResult.FAIL;
-        }
+        return new LocalSeismogramResult( ! result.isSuccess(), result.getSeismograms());
     }
 }
 

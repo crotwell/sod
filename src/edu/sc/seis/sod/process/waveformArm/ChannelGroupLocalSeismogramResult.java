@@ -23,8 +23,6 @@ public class ChannelGroupLocalSeismogramResult {
         return seismograms;
     }
 
-    public static final ChannelGroupLocalSeismogramResult FAIL = new ChannelGroupLocalSeismogramResult(false, new LocalSeismogramImpl[0][]);
-
     private boolean success;
 
     private LocalSeismogramImpl[][] seismograms;

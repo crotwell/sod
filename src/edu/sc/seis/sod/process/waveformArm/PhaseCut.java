@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 8857 2004-05-21 20:02:00Z crotwell $
+ * @version $Id: PhaseCut.java 8870 2004-05-24 14:57:23Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -68,7 +68,7 @@ public class PhaseCut implements LocalSeismogramProcess {
         if (list.size() != 0) {
             return new LocalSeismogramResult(true, (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]));
         } else {
-            return LocalSeismogramResult.FAIL;
+            return new LocalSeismogramResult(false, seismograms);
         }
     }
 

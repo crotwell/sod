@@ -44,7 +44,7 @@ public class SeismogramXOR extends ForkProcess {
         if ( resultA.isSuccess() != resultB.isSuccess()) {
             return new LocalSeismogramResult( true, seismograms);
         } else {
-            return LocalSeismogramResult.FAIL;
+            return new LocalSeismogramResult(false, seismograms);
         }
     }
 }

@@ -61,7 +61,7 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
             b &= result.isSuccess();
         }
         if (! b) {
-            return ChannelGroupLocalSeismogramResult.FAIL;
+            return new ChannelGroupLocalSeismogramResult(false, seismograms);
         }
         return new ChannelGroupLocalSeismogramResult(true, out);
     }
