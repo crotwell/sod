@@ -47,9 +47,9 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             SodUtil.copyFile(none, dirName + "/images/none.gif");
             String configFileLoc = Start.getConfigFileName();
             String configFileName = new File(configFileLoc).getName();
-            /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
-            convertToHTML(configFileLoc, dirName);
             SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + configFileName);
+            /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
+            convertToHTML(dirName + "/" + configFileName, dirName);
         } catch (Exception e) {
             GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
         }
