@@ -26,25 +26,21 @@ public class WaveformCountProcessor implements WaveformMonitor {
         Status processorSuccess = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
         if(ecp.getStatus() == processorSuccess) {
             waveformCounter++;
-            FileWriter fileWriter = null;
             try {
-                File temp = File.createTempFile("", WAVEFORM_FILE);
-                fileWriter = new FileWriter(temp);
-                fileWriter.write(description + waveformCounter);
+                File temp = File.createTempFile(WAVEFORM_FILE, null);
+                FileWriter fileWriter = null;
+                try {
+                    fileWriter = new FileWriter(temp);
+                    fileWriter.write(description + waveformCounter);
+                } finally {
+                    fileWriter.close();
+                }
                 File actualOutputLocation = new File(WAVEFORM_FILE);
                 actualOutputLocation.delete();
                 temp.renameTo(actualOutputLocation);
             } catch(IOException ie) {
                 GlobalExceptionHandler.handle("problem writing the waveformCount into file ",
                                               ie);
-            } finally {
-                try {
-                    fileWriter.close();
-                } catch(IOException ie) {
-                    GlobalExceptionHandler.handle("problem closing the output file"
-                                                          + "in WaveformCountProcessor ",
-                                                  ie);
-                }
             }
         }
     }
