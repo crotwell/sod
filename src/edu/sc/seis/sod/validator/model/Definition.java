@@ -27,7 +27,6 @@ public class Definition {
         if(form instanceof Form) {
             form = ((Form)form).deref(null, this);
         }
-        f.getClass();
     }
 
     public Form getForm() {
@@ -47,6 +46,10 @@ public class Definition {
 
     public Grammar getGrammar() {
         return grammar;
+    }
+
+    public String toString() {
+        return getGrammar().getLoc() + ":" + getName();
     }
 
     private int combine;
