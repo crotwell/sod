@@ -18,7 +18,7 @@
 <lastEvent><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></lastEvent>
 </div>
 <div><b>Nubmer waveforms processed: </b><numSuccessfulECP/></div>
-<b>Events to date:</b>
+<div><b>Events to date:</b></div>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
