@@ -159,13 +159,13 @@
 		</element>
 	</define>
 	<define name="PASS">
-		<element name="passEventChannelGroup">
+		<element name="passEventChannel">
 			<xsd:annotation>
 				<xsd:documentation xml:lang="en">
 					<summary> Always returns true. </summary>
 					<description> Simple subsetter that always returns true, useful for testing. </description>
 					<example>
-						<passEventChannelGroup/>
+						<passEventChannel/>
 					</example>
 				</xsd:documentation>
 			</xsd:annotation>
