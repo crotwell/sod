@@ -46,13 +46,13 @@ public class EventFormatterTest extends TestCase{
     public void testLat(){
         EventFormatter generator = new EventFormatter(createElement(latitude));
         assertEquals("0", generator.getResult(epochInAlaska));
-        assertEquals("52", generator.getResult(fallOfWall));
+        assertEquals("52.3", generator.getResult(fallOfWall));
     }
     
     public void testLon(){
         EventFormatter generator = new EventFormatter(createElement(longitude));
         assertEquals("0", generator.getResult(epochInAlaska));
-        assertEquals("13", generator.getResult(fallOfWall));
+        assertEquals("13.2", generator.getResult(fallOfWall));
     }
     
     public void testMag(){
