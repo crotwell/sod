@@ -31,11 +31,9 @@ import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
 import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
-import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
@@ -51,7 +49,6 @@ import edu.sc.seis.sod.database.waveform.JDBCEventRecordSection;
 import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess {
 
@@ -72,15 +69,17 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
         displayOption = SodUtil.getText(SodUtil.getElement(config,
                                                            "displayOption"));
-        fileNameBase = SodUtil.getText(SodUtil.getElement(config,
-                                                          "fileNameBase"));
+        if(DOMHelper.hasElement(config, "fileNameBase")) {
+            fileNameBase = SodUtil.getText(SodUtil.getElement(config,
+                                                              "fileNameBase"));
+        }
         if(DOMHelper.hasElement(config, "numSeisPerRecordSection")) {
-            numSeisPerImage = new Integer(SodUtil.getText(SodUtil.getElement(config,
-                                                                             "numSeisPerRecordSection"))).intValue();
+            numSeisPerRecSec = new Integer(SodUtil.getText(SodUtil.getElement(config,
+                                                                              "numSeisPerRecordSection"))).intValue();
         }
         if(DOMHelper.hasElement(config, "percentSeisHeight")) {
-            percentSeisHeight = new Integer(SodUtil.getText(SodUtil.getElement(config,
-                                                                               "percentSeisHeight"))).intValue();
+            percentSeisHeight = new Double(SodUtil.getText(SodUtil.getElement(config,
+                                                                              "percentSeisHeight"))).doubleValue();
         }
         if(DOMHelper.hasElement(config, "minimumSpacing")) {
             minSpacing = new Double(SodUtil.getText(SodUtil.getElement(config,
@@ -95,40 +94,15 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                         "height"))).intValue();
             recSecDim = new Dimension(width, height);
         }
-        groups = initGroups(config);
+        if(DOMHelper.hasElement(config, "distanceRange")) {
+            distRange = new DistanceRange(SodUtil.getElement(config,
+                                                             "distanceRange"));
+        }
         colors = extractColors(config);
         if(DOMHelper.hasElement(config, "displayConfig")) {
             displayCreator = SeismogramDisplayConfiguration.create(DOMHelper.getElement(config,
                                                                                         "displayConfig"));
         }
-    }
-
-    public RecordSectionGrouping[] initGroups(Element config) {
-        RecordSectionGrouping[] groupings = null;
-        NodeList groups = config.getElementsByTagName("recordSectionGrouping");
-        if(groups.getLength() != 0) {
-            groupings = new RecordSectionGrouping[groups.getLength()];
-            for(int i = 0; i < groups.getLength(); i++) {
-                groupings[i] = new RecordSectionGrouping((Element)groups.item(i));
-                if(groupings[i].getPercentSeisHeight() == 0) {
-                    groupings[i].setPercentSeisHeight(percentSeisHeight);
-                }
-                if(groupings[i].getRecSecDimension() == null) {
-                    groupings[i].setRecSecDimension(recSecDim);
-                }
-                if(groupings[i].getMinSpacing() == 0) {
-                    groupings[i].setMinSpacing(minSpacing);
-                }
-            }
-        } else {
-            groupings = new RecordSectionGrouping[] {new RecordSectionGrouping(new MagnitudeRange(),
-                                                                               new DistanceRange(0,
-                                                                                                 180),
-                                                                               percentSeisHeight,
-                                                                               minSpacing,
-                                                                               recSecDim)};
-        }
-        return groupings;
     }
 
     public static Color[] extractColors(Element config) {
@@ -190,18 +164,9 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             }
             EventAttr eventAttr = event.get_attributes();
             Origin eventOrigin = EventFormatter.getOrigin(event);
-            RecordSectionGrouping selectedGroup = null;
-            for(int j = 0; j < groups.length; j++) {
-                if(groups[j].getMagnitudeRange().accept(event,
-                                                        eventAttr,
-                                                        eventOrigin)) {
-                    selectedGroup = groups[j];
-                    break;
-                }
-            }
             sortByDistance(dss);
             if(displayOption.equals("BEST")) {
-                outputBestRecordSections(event, selectedGroup, dss);
+                outputBestRecordSections(event, dss);
             } else {
                 outputAllRecordSections(event, dss);
             }
@@ -213,13 +178,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     }
 
     public void outputBestRecordSections(EventAccessOperations event,
-                                         RecordSectionGrouping group,
                                          DataSetSeismogram[] dataSeis)
             throws IOException, NotFound, SQLException {
-        DistanceRange distRange = group.getDistanceRange();
-        double minSpacing = group.getMinSpacing();
         double range = (distRange.getMaxDistance() - distRange.getMinDistance());
-        double spacing = (range) / (numSeisPerImage - 1);
+        double spacing = range / (numSeisPerRecSec - 1);
         ArrayList dssList = new ArrayList();
         if(dataSeis.length > 0) {
             DataSetSeismogram lastFrontSeis = dataSeis[0];
@@ -237,8 +199,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 curSeis = getBestSeis(dataSeis,
                                       lastFrontSeis,
                                       curFrontDistance,
-                                      spacing,
-                                      minSpacing);
+                                      spacing);
                 if(curSeis != null) {
                     dssList.add(curSeis);
                     curFrontDistance = DisplayUtils.calculateDistance(curSeis)
@@ -251,8 +212,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 curSeis = getBestSeis(dataSeis,
                                       lastBackSeis,
                                       curBackDistance,
-                                      spacing,
-                                      minSpacing);
+                                      spacing);
                 if(curSeis != null) {
                     dssList.add(curSeis);
                     curBackDistance = DisplayUtils.calculateDistance(curSeis)
@@ -273,19 +233,14 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             }
             DataSetSeismogram[] tempDSS = new DataSetSeismogram[dssList.size()];
             tempDSS = (DataSetSeismogram[])dssList.toArray(tempDSS);
-            writeImage(tempDSS,
-                       event,
-                       fileNameBase + fileExtension,
-                       distRange,
-                       group.getRecSecDimension());
+            writeImage(tempDSS, event, fileNameBase + fileExtension);
         }
     }
 
     public DataSetSeismogram getBestSeis(DataSetSeismogram[] dataSeis,
                                          DataSetSeismogram lastSeis,
                                          double curDistance,
-                                         double idealSpacing,
-                                         double minSpacing) {
+                                         double idealSpacing) {
         double maxDist = idealSpacing / 2;
         double upperDistBound = curDistance + maxDist;
         double lastSeisDist = DisplayUtils.calculateDistance(lastSeis)
@@ -317,33 +272,33 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         DistanceRange distRange = new DistanceRange(0, 180);
         if(dataSeisArrLen > 0) {
             int fileNameCounter = 0;
-            if(dataSeisArrLen <= numSeisPerImage) {
+            if(dataSeisArrLen <= numSeisPerRecSec) {
                 writeImage(dataSeis, event, fileNameBase + fileNameCounter
-                        + fileExtension, distRange, recSecDim);
+                        + fileExtension);
                 return;
             } else {
                 DataSetSeismogram[] tempDSS;
-                int spacing = dataSeisArrLen / numSeisPerImage;
+                int spacing = dataSeisArrLen / numSeisPerRecSec;
                 for(int i = 0; i < spacing; i++) {
-                    tempDSS = new DataSetSeismogram[numSeisPerImage];
+                    tempDSS = new DataSetSeismogram[numSeisPerRecSec];
                     int index = i;
-                    for(int j = 0; j < numSeisPerImage; j++) {
+                    for(int j = 0; j < numSeisPerRecSec; j++) {
                         tempDSS[j] = dataSeis[index];
                         index += spacing;
                     }
                     writeImage(tempDSS, event, fileNameBase + fileNameCounter
-                            + fileExtension, distRange, recSecDim);
+                            + fileExtension);
                     fileNameCounter++;
                 }
-                if((dataSeisArrLen % numSeisPerImage) != 0) {
-                    int maxIndex = numSeisPerImage * spacing - 1;
+                if((dataSeisArrLen % numSeisPerRecSec) != 0) {
+                    int maxIndex = numSeisPerRecSec * spacing - 1;
                     tempDSS = new DataSetSeismogram[dataSeisArrLen - maxIndex
                             - 1];
                     for(int k = 0; k < dataSeisArrLen - maxIndex - 1; k++) {
                         tempDSS[k] = dataSeis[maxIndex + k + 1];
                     }
                     writeImage(tempDSS, event, fileNameBase + fileNameCounter
-                            + fileExtension, distRange, recSecDim);
+                            + fileExtension);
                 }
             }
         }
@@ -351,10 +306,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private void writeImage(DataSetSeismogram[] dataSeis,
                             EventAccessOperations event,
-                            String fileName,
-                            DistanceRange distRange,
-                            Dimension recordSecDim) throws IOException,
-            NotFound, SQLException {
+                            String fileName) throws IOException, NotFound,
+            SQLException {
         int recSecId = -1;
         int eventId = eventAccess.getDBId(event);
         String base = Start.getRunProps().getStatusBaseDir() + "/earthquakes";
@@ -378,13 +331,11 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                distRange.getMaxDistance(),
                                                                percentSeisHeight);
         custConfig.setSwapAxes(rsDisplay.getSwapAxes());
-        rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
-        rsDisplay.setTimeConfig(new BasicTimeConfig());
         rsDisplay.setLayout(custConfig);
         rsDisplay.add(dataSeis);
         try {
             File outPNG = new File(base + "/" + fullName);
-            rsDisplay.outputToPNG(outPNG, recordSecDim);
+            rsDisplay.outputToPNG(outPNG, recSecDim);
             HashMap seisToPixelMap = rsDisplay.getPixelMap();
             for(int j = 0; j < dataSeis.length; j++) {
                 ChannelId channel_id = dataSeis[j].getRequestFilter().channel_id;
@@ -431,89 +382,6 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         });
     }
 
-    private class RecordSectionGrouping {
-
-        public RecordSectionGrouping(Element el) {
-            try {
-                magRange = new MagnitudeRange((Element)(el.getElementsByTagName("magnitudeRange")).item(0));
-                distRange = new DistanceRange((Element)el.getElementsByTagName("distanceRange")
-                        .item(0));
-                if(DOMHelper.hasElement(el, "percentSeisHeight")) {
-                    percentSeisHeight = new Integer(SodUtil.getText(SodUtil.getElement(el,
-                                                                                       "percentSeisHeight"))).intValue();
-                }
-                if(DOMHelper.hasElement(el, "minimumSpacing")) {
-                    percentSeisHeight = new Integer(SodUtil.getText(SodUtil.getElement(el,
-                                                                                       "minimumSpacing"))).intValue();
-                }
-                if(DOMHelper.hasElement(el, "recordSectionSize")) {
-                    int width = new Integer(SodUtil.getText(SodUtil.getElement(SodUtil.getElement(el,
-                                                                                                  "recordSectionSize"),
-                                                                               "width"))).intValue();
-                    int height = new Integer(SodUtil.getText(SodUtil.getElement(SodUtil.getElement(el,
-                                                                                                   "recordSectionSize"),
-                                                                                "height"))).intValue();
-                    recSecDim = new Dimension(width, height);
-                }
-            } catch(ConfigurationException ce) {
-                GlobalExceptionHandler.handle("Error in the recordsectiondisplaygenerator configuration",
-                                              ce);
-            }
-        }
-
-        public RecordSectionGrouping(MagnitudeRange magRange,
-                DistanceRange distRange, double percentSeisHeight,
-                double minSpacing, Dimension recSecDim) {
-            this.magRange = magRange;
-            this.distRange = distRange;
-            this.percentSeisHeight = percentSeisHeight;
-            this.minSpacing = minSpacing;
-            this.recSecDim = recSecDim;
-        }
-
-        public MagnitudeRange getMagnitudeRange() {
-            return magRange;
-        }
-
-        public Dimension getRecSecDimension() {
-            return recSecDim;
-        }
-
-        public double getPercentSeisHeight() {
-            return percentSeisHeight;
-        }
-
-        public double getMinSpacing() {
-            return minSpacing;
-        }
-
-        public DistanceRange getDistanceRange() {
-            return distRange;
-        }
-
-        public void setRecSecDimension(Dimension recSecDim) {
-            this.recSecDim = recSecDim;
-        }
-
-        public void setPercentSeisHeight(double percentSeisHeight) {
-            this.percentSeisHeight = percentSeisHeight;
-        }
-
-        public void setMinSpacing(double minSpacing) {
-            this.minSpacing = minSpacing;
-        }
-
-        private double percentSeisHeight = 0;
-
-        private double minSpacing = 0;
-
-        private Dimension recSecDim;
-
-        private MagnitudeRange magRange;
-
-        private DistanceRange distRange;
-    }
-
     private class DistanceRange {
 
         public DistanceRange(Element el) {
@@ -545,9 +413,11 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private String id;
 
+    private DistanceRange distRange = new DistanceRange(0, 180);
+
     private Color[] colors;
 
-    private int numSeisPerImage = 10;
+    private int numSeisPerRecSec = 10;
 
     private String displayOption = "";
 
@@ -559,13 +429,11 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private JDBCChannel channel;
 
-    private String fileNameBase;
+    private String fileNameBase = "recordsection";
 
     private double percentSeisHeight = 10;
 
     private double minSpacing = 10;
-
-    private RecordSectionGrouping[] groups;
 
     private SeismogramDisplayConfiguration displayCreator = null;
 
