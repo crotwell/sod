@@ -321,8 +321,8 @@ public class WaveformArm implements Runnable {
                 boolean accepted = false;
                 try {
                     Station evStation = ecp.getChannel().my_site.my_station;
-                    eventStationSubsetter.accept(ecp.getEvent(),
-                                                 evStation);
+                    accepted  = eventStationSubsetter.accept(ecp.getEvent(),
+                                                             evStation);
                 } catch (Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
