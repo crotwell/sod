@@ -38,6 +38,11 @@ import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
 
 public class MotionVectorArm implements Subsetter {
 
+    public ChannelGroupLocalSeismogramProcess[] getProcesses() {
+        ChannelGroupLocalSeismogramProcess[] result = new ChannelGroupLocalSeismogramProcess[processes.size()];
+        return (ChannelGroupLocalSeismogramProcess[])processes.toArray(result);
+    }
+
     public void handle(Object sodElement) {
         if(sodElement instanceof EventChannelGroupSubsetter) {
             eventChannelGroup = (EventChannelGroupSubsetter)sodElement;
