@@ -61,7 +61,7 @@
         <xsl:template name="menu">
                 <div id="menu">
                         <ul>
-                                <xsl:apply-templates select="document('allPages.xml')/pages/*" mode="menuGeneration"/>
+                                <xsl:apply-templates select="document('allPages.xml')/pages/page" mode="menuGeneration"/>
                         </ul>
                 </div>
         </xsl:template>
