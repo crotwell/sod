@@ -8,10 +8,10 @@ OBNAMING=$MAVEN/repository/OBNaming/jars/OBNaming-4.1.0.jar
 
 SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta.jar
 FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.1beta.jar
-FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.jar
+FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.1beta.jar
 FISSURESIDL=$MAVEN/repository/fissuresIDL/jars/fissuresIDL-1.0.jar
 GEOTOOLS=$MAVEN/repository/Geotools1/jars/geotools1.2.jar
-LOG4J=$MAVEN/repository/log4j/jars/log4j-1.2.6.jar
+LOG4J=$MAVEN/repository/log4j/jars/log4j-1.2.8.jar
 TAUP=$MAVEN/repository/TauP/jars/TauP-1.1.4.jar
 XALAN=$MAVEN/repository/xalan/jars/xalan-2.5.1.jar
 XERCES=$MAVEN/repository/xerces/jars/xerces-2.4.0.jar
@@ -22,5 +22,5 @@ HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-1.7.1.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
-java -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.Start $*
+java -Xmx128m -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.Start $*
 
