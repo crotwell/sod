@@ -48,12 +48,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    processEventArm();
 	} catch(Exception e) {
 	    
-	    System.out.println("Exception caught while processing the EventArm");
-	    e.printStackTrace();
+	    logger.error("Exception caught while processing the EventArm", e);
 	    notifyListeners(this, e);
 	}
 	if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
-	System.out.println("The number of events in the eventQueue are "
+	logger.debug("The number of events in the eventQueue are "
 			   +Start.getEventQueue().getLength());
 	
     }
@@ -151,11 +150,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
 	}
 	    
-	System.out.println("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
+	logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
 	for (int i=0; i<searchTypes.length; i++) {
-	System.out.println("magnitudes "+searchTypes[i]);
+        logger.debug("magnitudes "+searchTypes[i]);
 	} // end of for (int i=0; i<searchTypes.length; i++)
-	System.out.println("mag "+minMagnitude+" "+maxMagnitude);
+	logger.debug("mag "+minMagnitude+" "+maxMagnitude);
 
 	EventAccess[] eventAccessOrig = 
         finder.query_events(eventFinderSubsetter.getArea(),
@@ -171,7 +170,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 							eventSeqIterHolder
 							);
 	
-	System.out.println("The number of events returned are "+eventAccessOrig.length);
+	logger.info("The number of events returned are "+eventAccessOrig.length);
 	EventAccessOperations[] eventAccess = 
         new EventAccessOperations[eventAccessOrig.length];
 	for(int counter = 0; counter < eventAccess.length; counter++) {
@@ -181,7 +180,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    handleEventAttrSubsetter(eventAccess[counter], attr);
 	    
 	}
-	System.out.println("The number of events returned are "+eventAccess.length);
+
     }
 
     /**
