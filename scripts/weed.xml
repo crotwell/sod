@@ -114,7 +114,6 @@
             </channelEffectiveTimeOverlap>
         </channelAND>
         <responseWriter>
-            <type>resp</type>
             <directory>responses</directory>
             <filePattern>
                 <networkCode/>.<stationCode/> .<siteCode/> .<channelCode/> .resp </filePattern>

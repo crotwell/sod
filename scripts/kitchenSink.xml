@@ -288,31 +288,31 @@
             </stationOR>
             <stationOR>
                 <stationPointDistance>
-                    <latitude>35</latitude>
-                    <longitude>-85</longitude>
                     <unit>DEGREE</unit>
                     <min>30</min>
                     <max>90</max>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
                 </stationPointDistance>
                 <passStation/>
             </stationOR>
             <stationOR>
                 <stationPointAzimuth>
-                    <latitude>35</latitude>
-                    <longitude>-85</longitude>
                     <unit>DEGREE</unit>
                     <min>30</min>
                     <max>90</max>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
                 </stationPointAzimuth>
                 <passStation/>
             </stationOR>
             <stationOR>
                 <stationPointBackAzimuth>
-                    <latitude>35</latitude>
-                    <longitude>-85</longitude>
                     <unit>DEGREE</unit>
                     <min>30</min>
                     <max>90</max>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
                 </stationPointBackAzimuth>
                 <passStation/>
             </stationOR>
@@ -454,7 +454,6 @@
         </channelAND>
         <printlineChannelProcessor/>
         <responseWriter>
-            <type>resp</type>
             <directory>responses</directory>
             <filePattern>
                 <networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</filePattern>
