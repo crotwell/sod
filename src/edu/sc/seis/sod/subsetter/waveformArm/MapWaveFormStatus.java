@@ -17,13 +17,14 @@ import edu.sc.seis.fissuresUtil.display.EQDataEvent;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.MapPool;
-import org.w3c.dom.Element;
 import java.io.IOException;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class MapWaveFormStatus implements WaveFormStatus {
     
@@ -47,47 +48,53 @@ public class MapWaveFormStatus implements WaveFormStatus {
     }
     private class MapWriter extends TimerTask{
         public void run() {
-            synchronized(channelMap){
-                OpenMap map = pool.getMap();
-                StationLayer sl = map.getStationLayer();
-                sl.honorRepaint(false);
-                Iterator it = channelMap.keySet().iterator();
-                while(it.hasNext()){
-                    Channel cur = (Channel)it.next();
-                    sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
-                    Status status = (Status)channelMap.get(cur);
-                    if (status == Status.COMPLETE_REJECT ||
-                        status == Status.SOD_FAILURE){
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.DOWN));
+            try{
+                synchronized(channelMap){
+                    OpenMap map = pool.getMap();
+                    StationLayer sl = map.getStationLayer();
+                    sl.honorRepaint(false);
+                    Iterator it = channelMap.keySet().iterator();
+                    while(it.hasNext()){
+                        Channel cur = (Channel)it.next();
+                        sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
+                        Status status = (Status)channelMap.get(cur);
+                        if (status == Status.COMPLETE_REJECT ||
+                            status == Status.SOD_FAILURE){
+                            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                                       cur.my_site.my_station,
+                                                                                       AvailableStationDataEvent.DOWN));
+                        }
+                        else if (status == Status.COMPLETE_SUCCESS){
+                            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                                       cur.my_site.my_station,
+                                                                                       AvailableStationDataEvent.UP));
+                        }
+                        else{
+                            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                                       cur.my_site.my_station,
+                                                                                       AvailableStationDataEvent.UNKNOWN));
+                        }
                     }
-                    else if (status == Status.COMPLETE_SUCCESS){
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.UP));
+                    sl.honorRepaint(true);
+                    EventLayer el = map.getEventLayer();
+                    synchronized(events){
+                        it = events.iterator();
+                        while(it.hasNext()){
+                            EventAccessOperations ev = (EventAccessOperations)it.next();
+                            el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
+                        }
                     }
-                    else{
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.UNKNOWN));
+                    
+                    try{
+                        map.writeMapToPNG(fileLoc);
+                    } catch (IOException e) {
+                        logger.error("unable to save map to "+fileLoc, e);
                     }
+                    pool.returnMap(map);
+                    scheduled = new Boolean(false);
                 }
-                sl.honorRepaint(true);
-                EventLayer el = map.getEventLayer();
-                it = events.iterator();
-                while(it.hasNext()){
-                    EventAccessOperations ev = (EventAccessOperations)it.next();
-                    el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
-                }
-                
-                try{
-                    map.writeMapToPNG(fileLoc);
-                } catch (IOException e) {
-                    logger.error("unable to save map to "+fileLoc, e);
-                }
-                pool.returnMap(map);
-                scheduled = new Boolean(false);
+            }catch(Throwable t){
+                CommonAccess.getCommonAccess().handleException(t, "Waveform map updater had a problem");
             }
         }
     }
@@ -114,20 +121,23 @@ public class MapWaveFormStatus implements WaveFormStatus {
     }
     
     public boolean add(Channel chan, Status status){
-        if(channelMap.put(chan, status) != status) return true;
+        synchronized(channelMap){
+            if(channelMap.put(chan, status) != status) return true;
+        }
         return false;
     }
     
     public boolean add(EventAccessOperations ev){
         if (events.contains(ev)) return false;
-        events.add(ev);
+        synchronized(events){
+            events.add(ev);
+        }
         return true;
     }
     
     public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
     
     public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
-    
     
     public boolean contains(EventAccessOperations ev) {
         return events.contains(ev);
