@@ -53,7 +53,7 @@ public class SimpleHTMLWaveformStatus extends SimpleHTMLPage implements WaveForm
             eventSection.add(page);
             write();
         }
-        page.add(ecp.getChannel());
+        page.add(ecp.getChannel(), ecp.getStatus(), true);
     }
     
     public String fileizeEvent(EventAccessOperations event){
