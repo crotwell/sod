@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -167,25 +166,17 @@ public class Start{
 
     private void startArms(NodeList armNodes) throws Exception{
         for (int i=0; i<armNodes.getLength(); i++) {
-            Node node = armNodes.item(i);
-            if (node instanceof Element) {
-                Element el = (Element)node;
-                if (el.getTagName().equals("description")) {
-                    logger.info(el.getTagName());
-                } else if (el.getTagName().equals("eventArm")) {
-                    logger.info(el.getTagName());
+            if (armNodes.item(i) instanceof Element) {
+                Element el = (Element)armNodes.item(i);
+                if (el.getTagName().equals("eventArm")) {
                     event = new EventArm(el);
                     new Thread(event, "Event Arm").start();
                 } else if (el.getTagName().equals("networkArm")) {
-                    logger.info(el.getTagName());
                     network = new NetworkArm(el);
                 } else if (el.getTagName().equals("waveformArm")) {
-                    logger.info(el.getTagName());
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, network, poolSize);
                     new Thread(waveform, "Waveform Arm").start();
-                }  else {
-                    logger.debug("process "+el.getTagName());
                 }
             }
         }
