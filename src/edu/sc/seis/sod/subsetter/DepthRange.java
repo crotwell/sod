@@ -2,12 +2,8 @@ package edu.sc.seis.sod.subsetter;
 
 
 
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.model.QuantityImpl;
+import org.w3c.dom.Element;
 
 /**
  * DepthRange.java Utility class for Depth Range.
@@ -26,16 +22,16 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange {
      * @param config an <code>Element</code> value
      */
     public DepthRange (Element config) throws Exception{
-	super(config);
+    super(config);
     }
- 
+
     /**
      * Describe <code>getMinDepth</code> method here.
      *
      * @return a <code>Quantity</code> value
      */
-    public Quantity getMinDepth() {
-	return new QuantityImpl(getUnitRange().min_value, getUnitRange().the_units);
+    public QuantityImpl getMinDepth() {
+    return new QuantityImpl(getUnitRange().min_value, getUnitRange().the_units);
     }
 
     /**
@@ -43,8 +39,8 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange {
      *
      * @return a <code>Quantity</code> value
      */
-    public Quantity getMaxDepth() {
-	return new QuantityImpl(getUnitRange().max_value, getUnitRange().the_units);
+    public QuantityImpl getMaxDepth() {
+    return new QuantityImpl(getUnitRange().max_value, getUnitRange().the_units);
     }
-  
+
 }// DepthRange
