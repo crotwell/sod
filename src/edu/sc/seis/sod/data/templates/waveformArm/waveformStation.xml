@@ -2,7 +2,7 @@
 <html>
 <header><title>Events for $fissures.formatStation($station.get_id())</title>
 <style media="all">@import "../../main.css";</style>
-<script type="text/javascript" src="../../tableRuler.js"> </script>
+<script type="text/javascript" src="../../tableRuler.js"/>
 <script type="text/javascript">
         window.onload=function(){tableruler();}
 </script>
@@ -27,8 +27,9 @@ table.sortable span.sortarrow {
 <div id="Header">
 Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())
 </div>
+<div id="Container">
 <div id="Content">
-<table class="sortable" id="eventTable">
+<table class="sortable ruler" id="eventTable">
 <tr class="title">
 <th><b>Region</b></th>
 <th><b>Time</b></th>
@@ -40,6 +41,7 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 <th><b>Azimuth</b></th>
 <th><b>Back Azimuth</b></th>
 </tr>
+#set( $extraRows = 5 )
 #foreach ( $event in $station_events )
 <tr>
 #set ( $origin = $event.get_preferred_origin() )
@@ -57,12 +59,20 @@ $fissures.formatMagnitude($m),
 <td>$fissures.formatQuantity($fissures.getAzimuth($station.location, $origin.location))</td>
 <td>$fissures.formatQuantity($fissures.getBackAzimuth($station.location, $origin.location))</td>
 </tr>
+#set( $extraRows = $extraRows - 1 )
+#end
+#if ( $extraRows > 0 )
+#foreach ( $row in [1..$extraRows])
+<tr/>
+#end
 #end
 </table>
 </div>
 <div id="footer">
 <h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
 </div>
+</div>
+$menu
 </body>
 </html>
 

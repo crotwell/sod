@@ -3,7 +3,7 @@
 <header>
 <title>$network.getNetworkAccess().get_attributes().get_code() in the waveform arm</title>
 <style media="all">@import "../main.css";</style>
-<script type="text/javascript" src="../tableRuler.js"> </script>
+<script type="text/javascript" src="../tableRuler.js"/>
 <script type="text/javascript">
         window.onload=function(){tableruler();}
 </script>
@@ -28,8 +28,10 @@ table.sortable span.sortarrow {
 <div id="Header">
 $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())
 </div>
+<div id="Container">
 <div id="Content">
-<table class="sortable" id="stationtable">
+<table class="sortable ruler" id="stationtable">
+#set( $extraRows = 10 )
 <tr class="title">
 <td>Code</td>
 <td>Name</td>
@@ -40,11 +42,19 @@ $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($n
 <td>$sta.get_code()</td>
 <td><a href="$network.getNetworkAccess().get_attributes().get_code()/$network.getNetworkAccess().get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
 </tr>
+#set( $extraRows = $extraRows - 1 )
+#end
+#if ( $extraRows > 0 )
+#foreach ( $row in [1..$extraRows])
+<tr/>
+#end
 #end
 </table>
 </div>
 <div id="footer">
 <h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
 </div>
+</div>
+$menu
 </body>
 </html>
