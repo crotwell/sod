@@ -28,14 +28,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         };
     }
     
-    protected boolean isInterpreted(String tag) {
-        if(tag.equals("stationCode") || tag.equals("networkCode") ||
-           tag.equals("siteCode") || tag.equals("beginTime") ||
-           tag.equals("orientation") || tag.equals("name")) return true;
-        return false;
-    }
-    
-    protected Object getInterpreter(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) {
         if(tag.equals("stationCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
@@ -85,7 +78,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
     
     public String getResult(Channel chan) {
         StringBuffer buf = new StringBuffer();
-        Iterator it = pieces.iterator();
+        Iterator it = templates.iterator();
         while(it.hasNext()){
             ChannelTemplate cur = (ChannelTemplate)it.next();
             buf.append(cur.getResult(chan));

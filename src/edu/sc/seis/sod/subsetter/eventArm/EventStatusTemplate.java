@@ -19,13 +19,7 @@ public class EventStatusTemplate extends ExternalFileTemplate implements EventSt
         update();
     }
     
-    public boolean isInterpreted(String tag){
-        if(tag.equals("events") || tag.equals("status") || tag.equals("mapImgLink"))
-            return true;
-        return false;
-    }
-    
-    public Object getInterpreter(String tag, Element el){
+    public Object getTemplate(String tag, Element el){
         if(tag.equals("events")){
             EventGroupTemplate egt = new EventGroupTemplate(el);
             internalStatusWatchers.add(egt);

@@ -16,45 +16,64 @@ public abstract class Template{
         else useDefaultConfig();
     }
     
+    /** A subclass should use this method to add some templates to the templates
+     *list so it returns decent results
+     */
+    protected void useDefaultConfig(){}
+    
+    /** This method is called in Template's constructor so that if subclasses
+     * need to initialize instance variables for use in getTemplate, they can.
+     * Otherwise, as Template's constructor must be called before the subclasses
+     * constructor, and Template's constructor calls parse which may need
+     * instances in the subclass
+     */
+    protected void setUp(){}
+    
+    /**
+     *returns an object of the template type that this class uses, and returns
+     * the passed in text when the getResult method of that template type is
+     * called
+     */
+    protected abstract Object textTemplate(String text);
+    
+    /**if this class has an template for this tag, it creates it using the
+     * passed in element and returns it.  Otherwise it returns null.
+     */
+    protected abstract Object getTemplate(String tag, Element el);
+    
     private void parse(NodeList nl){
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeType() == Node.TEXT_NODE) pieces.add(textTemplate(n.getNodeValue()));
-            else if(isInterpreted(n.getNodeName()))
-                pieces.add(getInterpreter(n.getNodeName(), (Element)n));
+            if(n.getNodeType() == Node.TEXT_NODE)
+                templates.add(textTemplate(n.getNodeValue()));
             else{
-                pieces.add(textTemplate("<" + n.getNodeName()));
-                addAttributes(n);
-                if(n.getChildNodes().getLength() == 0){
-                    pieces.add(textTemplate("/>"));
-                }else{
-                    pieces.add(textTemplate(">"));
-                    parse(n.getChildNodes());
-                    pieces.add(textTemplate("</" + n.getNodeName() + ">"));
+                String name = n.getNodeName();
+                Object template = getTemplate(name, (Element)n);
+                if(template != null) templates.add(template);
+                else{
+                    templates.add(textTemplate("<" + name));
+                    addAttributes(n);
+                    if(n.getChildNodes().getLength() == 0){
+                        templates.add(textTemplate("/>"));
+                    }else{
+                        templates.add(textTemplate(">"));
+                        parse(n.getChildNodes());
+                        templates.add(textTemplate("</" + name + ">"));
+                    }
                 }
             }
         }
     }
     
-    protected void useDefaultConfig(){}
-    
-    protected void setUp(){}
-    
-    protected abstract Object textTemplate(String text);
-    
-    protected abstract Object getInterpreter(String tag, Element el);
-    
-    protected abstract boolean isInterpreted(String tag);
-    
     private int addAttributes(Node n){
-        pieces.add(textTemplate(getAttrString(n)));
+        templates.add(textTemplate(getAttrString(n)));
         int numChild = n.getChildNodes().getLength();
         int attrCount = 0;
         for (int i = 0; i < numChild && childName(i, n).equals("attribute"); i++) {
             Element attr = (Element)n.getChildNodes().item(i);
-            pieces.add(textTemplate(" " + attr.getAttribute("name") + "=\""));
+            templates.add(textTemplate(" " + attr.getAttribute("name") + "=\""));
             parse(attr.getChildNodes());
-            pieces.add(textTemplate("\""));
+            templates.add(textTemplate("\""));
             n.removeChild(attr);
         }
         return attrCount;
@@ -74,10 +93,7 @@ public abstract class Template{
         return result;
     }
     
-    private String template = "";
-    
-    protected List pieces = new ArrayList();
+    protected List templates = new ArrayList();
     
     private static Logger logger = Logger.getLogger(Template.class);
 }
-

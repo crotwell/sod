@@ -1,11 +1,14 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.eventArm.EventGroupTemplate;
 import edu.sc.seis.sod.subsetter.eventArm.EventTemplate;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,14 +24,9 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
     
     public void setUp(){ ecpListeners = new ArrayList(); }
     
-    public Object getInterpreter(String tag, Element el){
+    public Object getTemplate(String tag, Element el){
         if(tag.equals("channelCount")) return new ChannelCount(el);
-        return super.getInterpreter(tag, el);
-    }
-    
-    public boolean isInterpreted(String tag){
-        if(tag.equals("channelCount")) return true;
-        return super.isInterpreted(tag);
+        return super.getTemplate(tag, el);
     }
     
     public void update(EventChannelPair ecp) {
@@ -38,8 +36,8 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
     }
     
     public void useDefaultConfig(){
-        pieces.add(new ChannelCount(null));
-        pieces.add("\n");
+        templates.add(new ChannelCount(null));
+        templates.add("\n");
     }
     
     private class ChannelCount implements EventTemplate, WaveFormStatus{

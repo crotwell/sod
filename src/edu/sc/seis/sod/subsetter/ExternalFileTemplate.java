@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.subsetter;
 
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.Start;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,9 +24,19 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public abstract class ExternalFileTemplate extends Template implements GenericTemplate{
+    /**This constructor expects and element of the form
+     * <templateTagName xlink:link="template configuration file" outputLocation="file output location"/>
+     * It simple extracts the main element contained in template configuration file
+     * and uses the value of the outputLocation attribute to call the
+     * ExternalFileTemplate(Element, String) constructor
+     */
     public ExternalFileTemplate(Element el)throws IOException{
-        super(getTemplate(el));
-        outputLocation = getOutLoc(el);
+        this(getTemplate(el), el.getAttribute("outputLocation"));
+    }
+    
+    public ExternalFileTemplate(Element el, String loc){
+        super(el);
+        this.outputLocation = testOutputLoc(loc);
     }
     
     private static Element getTemplate(Element el) throws MalformedURLException,
@@ -42,13 +53,14 @@ public abstract class ExternalFileTemplate extends Template implements GenericTe
         }catch (ParserConfigurationException e) {throw new RuntimeException(e);}
     }
     
-    private static String getOutLoc(Element el){
-        Attr attr = (Attr)el.getAttributes().getNamedItem("outputLocation");
-        File outFile = new File(attr.getValue());
+    private static String testOutputLoc(String loc){
+        File outFile = new File(loc);
         try {
             outFile.getCanonicalFile().getParentFile().mkdirs();
-        } catch (IOException e) {}
-        return attr.getValue();
+        } catch (IOException e) {
+            CommonAccess.getCommonAccess().handleException(e, "Trouble making directories for output location for an external file template");
+        }
+        return loc;
     }
     
     public void update(){
@@ -63,11 +75,8 @@ public abstract class ExternalFileTemplate extends Template implements GenericTe
     
     public String getResult(){
         StringBuffer buf = new StringBuffer();
-        Iterator it = pieces.iterator();
-        while(it.hasNext()){
-            GenericTemplate cur = (GenericTemplate)it.next();
-            buf.append(cur.getResult());
-        }
+        Iterator e = templates.iterator();
+        while(e.hasNext()) buf.append(((GenericTemplate)e.next()).getResult());
         return buf.toString();
     }
     

@@ -11,7 +11,7 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.sc.seis.sod.subsetter.NameGenerator;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -118,11 +118,11 @@ public class EventSorter{
     private class LocationSorter extends Sorter{
         public int getPosition(EventAccessOperations event){
             int i = 0;
-            String loc = NameGenerator.getRegionName(event);
+            String loc = EventFormatter.getRegionName(event);
             Iterator it = sorted.iterator();
             while(it.hasNext()){
                 EventAccessOperations cur = (EventAccessOperations)it.next();
-                String curLoc = NameGenerator.getRegionName(cur);
+                String curLoc = EventFormatter.getRegionName(cur);
                 if(loc.compareTo(curLoc) < 0) break;
                 i++;
             }

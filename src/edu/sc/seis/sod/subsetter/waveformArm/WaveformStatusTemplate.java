@@ -19,21 +19,15 @@ import org.w3c.dom.Element;
 public class WaveformStatusTemplate extends ExternalFileTemplate implements WaveFormStatus{
     public WaveformStatusTemplate(Element el)throws IOException { super(el); }
     
-    protected boolean isInterpreted(String tag) {
-        if(tag.equals("events")) return true;
-        return false;
-    }
-    
     protected void setUp(){ eventTemplates = new ArrayList(); }
     
-    protected Object getInterpreter(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) {
         if(tag.equals("events")){
             WaveformEventGroup ect = new WaveformEventGroup(el);
             eventTemplates.add(ect);
             return ect;
-        }else{
-            throw new IllegalArgumentException("I have no interpreter for that tag");
         }
+        return null;
     }
     
     public void update(EventChannelPair ecp) {

@@ -4,7 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
-import edu.sc.seis.sod.subsetter.NameGenerator;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.Template;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,18 +23,19 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
     }
     
     protected void useDefaultConfig(){
-        pieces.add(new NameGenerator());
+        templates.add(new EventFormatter());
     }
     
     
-    protected Object getInterpreter(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) {
         if(el.getNodeName().equals("eventLabel")){
-            gen = new NameGenerator(el);
+            gen = new EventFormatter(el);
             return gen;
         }else if(el.getNodeName().equals("sorting")){
             sorter = new EventSorter(el);
+            return textTemplate("");
         }
-        return textTemplate("");
+        return null;
     }
     
     public Object textTemplate(final String text){
@@ -42,14 +43,6 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
             public String getResult(EventAccessOperations ev) { return text; }
         };
     }
-    
-    private class Nothing{ public String toString(){ return "";} }
-    
-    protected boolean isInterpreted(String tag) {
-        if(tag.equals("eventLabel") || tag.equals("sorting")) return true;
-        return false;
-    }
-    
     
     public void change(EventAccessOperations event, RunStatus status) {
         if(eventToMonitors.containsKey(event)){
@@ -69,7 +62,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
             Iterator it = sorted.iterator();
             while(it.hasNext()){
                 MonitoredEvent curEv = (MonitoredEvent)eventToMonitors.get(it.next());
-                Iterator e = pieces.iterator();
+                Iterator e = templates.iterator();
                 while(e.hasNext()){
                     Object cur = e.next();
                     if(cur instanceof EventTemplate)
@@ -100,7 +93,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
     
     private Map eventToMonitors = new HashMap();
     
-    private NameGenerator gen;
+    private EventFormatter gen;
     
     private EventSorter sorter;
 }
