@@ -5,8 +5,7 @@ import edu.sc.seis.sod.subsetter.networkArm.*;
 import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -63,7 +62,7 @@ public class NetworkArm {
 
     private static final String armName =  "networkArm";
 
-    void loadConfigElement(Object sodElement) throws ConfigurationException {
+    private void loadConfigElement(Object sodElement) throws ConfigurationException {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {
             finder =
                 (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
@@ -164,16 +163,17 @@ public class NetworkArm {
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
         for(int i = 0; i < allNets.length; i++) {
             try {
-                if (allNets[i] != null) {
-                    allNets[i] = new CacheNetworkAccess(new RetryNetworkAccess(allNets[i], 2));
-                    if(attrSubsetter.accept(allNets[i].get_attributes())){
-                        int dbid = netTable.put(allNets[i].get_attributes());
-                        networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
-                        change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
-                                                      Standing.SUCCESS));
-                    }else change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
-                                                        Standing.REJECT));
-                } // end of if (allNets[counter] != null)
+                allNets[i] = new BulletproofNetworkAccess(allNets[i], netDC,
+                                                          allNets[i].get_attributes().get_id());
+                if(attrSubsetter.accept(allNets[i].get_attributes())){
+                    int dbid = netTable.put(allNets[i].get_attributes());
+                    networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
+                    change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                  Standing.SUCCESS));
+                }else{
+                    change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                  Standing.REJECT));
+                }
             } catch(Throwable th) {
                 GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
             }
@@ -420,7 +420,7 @@ public class NetworkArm {
     private JDBCQueryTime queryTimeTable;
     private JDBCNetworkUnifier netTable;
     private NetworkDbObject[] netDbs;
-    private HashMap cookieJarCache = new HashMap();
     private List statusMonitors = new ArrayList();
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 }// NetworkArm
+
