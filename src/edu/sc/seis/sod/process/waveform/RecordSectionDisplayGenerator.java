@@ -3,7 +3,6 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
@@ -11,24 +10,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Category;
-import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.EventAttr;
-import edu.iris.Fissures.IfEvent.EventIdHelper;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
@@ -42,7 +33,6 @@ import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
 import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
-import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
@@ -51,7 +41,6 @@ import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
@@ -60,7 +49,6 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.database.waveform.JDBCEventRecordSection;
 import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
-import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess {
@@ -329,12 +317,6 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         String dir = saveSeisToFile.getLabel(event);
         new File(base + "/" + dir).mkdirs();
         String fullName = dir + "/" + fileName;
-        if(!eventRecordSection.imageExists(eventId, fullName)) {
-            recSecId = eventRecordSection.insert(eventId, fullName);
-        } else {
-            recSecId = eventRecordSection.getRecSecId(eventId, fullName);
-            int deleteCnt = recordSectionChannel.deleteRecSec(recSecId);
-        }
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(dataSeis);
         logger.debug("Added " + dataSeis.length
@@ -342,17 +324,23 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         try {
             File outPNG = new File(base + "/" + fullName);
             rsDisplay.outputToPNG(outPNG, recSecDim);
-            HashMap seisToPixelMap = rsDisplay.getPixelMap();
-            for(int j = 0; j < dataSeis.length; j++) {
-                ChannelId channel_id = dataSeis[j].getRequestFilter().channel_id;
-                int channelId = channel.getDBId(channel_id);
-                double[] pixelInfo = (double[])seisToPixelMap.get(channel_id);
-                recordSectionChannel.insert(recSecId, channelId, pixelInfo);
-            }
         } catch(IOException e) {
             logger.debug("Problem writing recordsection output to PNG", e);
             throw new IOException("Problem writing recordSection output to PNG "
                     + e);
+        }
+        if(!eventRecordSection.imageExists(eventId, fullName)) {
+            recSecId = eventRecordSection.insert(eventId, fullName);
+        } else {
+            recSecId = eventRecordSection.getRecSecId(eventId, fullName);
+            recordSectionChannel.deleteRecSec(recSecId);
+        }
+        HashMap seisToPixelMap = rsDisplay.getPixelMap();
+        for(int j = 0; j < dataSeis.length; j++) {
+            ChannelId channel_id = dataSeis[j].getRequestFilter().channel_id;
+            int channelId = channel.getDBId(channel_id);
+            double[] pixelInfo = (double[])seisToPixelMap.get(channel_id);
+            recordSectionChannel.insert(recSecId, channelId, pixelInfo);
         }
     }
 
