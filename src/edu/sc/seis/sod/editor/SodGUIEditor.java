@@ -84,7 +84,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("endTime", dateEdit);
         TimeRangeEditor timeRangeEdit = new TimeRangeEditor();
         editors.put("effectiveTimeOverlap", timeRangeEdit);
-        editors.put("eventTimeRange", new OriginTimeRangeEditor());
+        editors.put("originTimeRange", new OriginTimeRangeEditor());
         NetCodeEditor netCodeEdit = new NetCodeEditor();
         editors.put("networkCode", netCodeEdit);
         editors.put("stationCode", netCodeEdit);

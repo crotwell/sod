@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 public class OriginTimeRangeEditor implements EditorPlugin{
 
     public JComponent getGUI(Element element) throws Exception {
-        JComponent gui = timeRangeEditor.getGUI((Element)XPathAPI.selectSingleNode(element, "timeRange"));
+        JComponent gui = timeRangeEditor.getGUI(element);
         gui.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
         return gui;
     }

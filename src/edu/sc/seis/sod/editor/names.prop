@@ -7,7 +7,7 @@ latitudeRange=Latitude
 longitude=Longitude
 longitudeRange=Longitude
 magnitudeRange=Magnitude
-eventTimeRange=Event Time Range
+originTimeRange=Origin Time Range
 magType=Type
 min=Minimum
 max=Maximum
@@ -55,6 +55,8 @@ backAzimuthRange=Back Azimuth
 unitRange=Range
 distanceRange=Distance
 
+removeDatabase=Clean Database at Start
+
 eventLag=Event Lag
 eventQueryIncrement=Event Query Increment
 eventRefreshInterval=Event Refresh Interval
@@ -62,9 +64,9 @@ maxRetryDelay=Max Retry Delay
 runName=Run Name
 statusBase=Status Directory
 waveformWorkerThreads=Waveform Arm Threads
-printLineEventProcess=Print event info to standard out as processed
+printLineEventProcess=Print events to standard out as processed
 
-phaseRequest=Phase Arrival Characteristics
+phaseRequest=Phase-based Data Request Time Window
 model=Model
 
 edu/iris/dmc/IRIS_PondDataCenter=IRIS Pond
