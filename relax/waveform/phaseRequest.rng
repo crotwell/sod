@@ -2,13 +2,12 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
     <include href="../base/include/quantity.rng"/>
-    <start combine="choice">
-        <choice>
+    <start>
+        <element name="phaseRequest">
          <ref name="phaseRequest"/>
-        </choice>
+         </element>
     </start>
     <define name="phaseRequest">
-        <element name="phaseRequest">
             <optional>
                 <element name="model">
                     <data type="string"/>
@@ -26,6 +25,5 @@
             <element name="endOffset">
                 <ref name="time"/>
             </element>
-        </element>
     </define>
 </grammar>
