@@ -6,7 +6,7 @@
     </start>
     <include href="../base/include/eventLabel.rng"/>
     <include href="../base/include/quantity.rng"/>
-    <include href="phaseRequest.rng"/>
+    <include href="../base/include/phaseWindow.rng"/>
     <define name="seismogramProcess">
         <choice>
             <xsd:annotation>
@@ -140,7 +140,7 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="phaseRequest"/>
+            <ref name="phaseWindow"/>
         </element>
     </define>
     <define name="filter">
