@@ -13,60 +13,86 @@ import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCRecordSectionChannel extends SodJDBC {
 
-    public JDBCRecordSectionChannel() throws SQLException {
-        this(ConnMgr.createConnection());
+    public JDBCRecordSectionChannel(String tableName,
+            String eventRecSecTableName) throws SQLException {
+        this(tableName, eventRecSecTableName, ConnMgr.createConnection());
     }
 
-    public JDBCRecordSectionChannel(Connection conn)
-            throws SQLException {
+    public JDBCRecordSectionChannel(String tableName,
+            String eventRecSecTableName, Connection conn) throws SQLException {
         this.conn = conn;
-        String createStmt = "CREATE TABLE "
-            + tableName
-            + " (recSecId varchar, eq_dbid int, channelid int,topLeftX double, topLeftY double,bottomRightX double,"
-            + "bottomRightY double, best int)";
+        this.tableName = tableName;
+        this.eventRecSecTableName = eventRecSecTableName;
+        String createStmt = getCreateStatement(tableName);
         String insertStmt = "INSERT INTO "
                 + tableName
-                + " (recSecId,eq_dbid,channelid,topLeftX,topLeftY,bottomRightX,bottomRightY,best) VALUES (?, ?, ?, ?, ?, ?,?,?)";
+                + " (recSecId, channelid,topLeftX,topLeftY,bottomRightX,bottomRightY) VALUES (?, ?, ?, ?, ?, ?)";
+        String updateRecordSectionStmt = "UPDATE "
+                + tableName
+                + " SET  recSecId=?, topLeftX=?, topLeftY=?, bottomRightX=?, bottomRightY=? WHERE recSecId=? and channelid=?";
         String getChannelsStmt = " SELECT channelid FROM " + tableName
-                + " WHERE recSecId ='"+"?"+"' and eq_dbid=? and best=?";
-        String channelExistsStmt = "SELECT count(channelid) from " + tableName + " where  recSecId ='"+"?"+"' AND eq_dbid=? AND channelid=?";
+                + " WHERE recSecId = ?";
+        String delRecSecStmt = "delete from " + tableName + " where recSecId=?";
+        if(!DBUtil.tableExists(eventRecSecTableName,conn)){
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(JDBCEventRecordSection.getCreateStatement(eventRecSecTableName));
+        }
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
         }
         insert = conn.prepareStatement(insertStmt);
+        updateRecordSection = conn.prepareStatement(updateRecordSectionStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
-        channelExists = conn.prepareStatement(channelExistsStmt);
+        deleteRecSec = conn.prepareStatement(delRecSecStmt);
     }
 
-    public void insert(String recSecId,
-                       int eq_dbid,
-                       int channelid,
-                       double[] pixelInfo,
-                       int best) throws SQLException {
-        insert.setString(1, recSecId);
-        insert.setInt(2, eq_dbid);
-        insert.setInt(3, channelid);
-        insert.setDouble(4, pixelInfo[0]);
-        insert.setDouble(5, pixelInfo[1]);
-        insert.setDouble(6, pixelInfo[2]);
-        insert.setDouble(7, pixelInfo[3]);
-        insert.setInt(8, best);
+    public void insert(int recSecId, int channelid, double[] pixelInfo)
+            throws SQLException {
+        insert.setInt(1, recSecId);
+        insert.setInt(2, channelid);
+        insert.setDouble(3, pixelInfo[0]);
+        insert.setDouble(4, pixelInfo[1]);
+        insert.setDouble(5, pixelInfo[2]);
+        insert.setDouble(6, pixelInfo[3]);
         insert.executeUpdate();
     }
 
-    public double[] getPixelInfo(String recSecId, int eq_dbid, int channelId)
+    public static String getCreateStatement(String tableName) {
+        String createStmt = "CREATE TABLE "
+                + tableName
+                + " (recSecId int,channelid int,topLeftX double, topLeftY double,bottomRightX double,bottomRightY double)";
+        return createStmt;
+    }
+
+    public void updateRecordSection(int newRecSecId,
+                                    int eventId,
+                                    int channelId,
+                                    double[] pixelInfo) throws SQLException {
+        int curRecSecId = getRecSecId(eventId, channelId);
+        updateRecordSection.setInt(1, newRecSecId);
+        updateRecordSection.setDouble(2, pixelInfo[0]);
+        updateRecordSection.setDouble(3, pixelInfo[1]);
+        updateRecordSection.setDouble(4, pixelInfo[2]);
+        updateRecordSection.setDouble(5, pixelInfo[3]);
+        updateRecordSection.setInt(6, curRecSecId);
+        updateRecordSection.setInt(7, channelId);
+        updateRecordSection.executeUpdate();
+    }
+
+    public double[] getPixelInfo(int eventId, int channelId)
             throws SQLException {
         if(getPixelInfo == null) {
             String getPixelInfoStmt = "select topLeftX,topLeftY,bottomRightX,bottomRightY from "
                     + tableName
-                    + " WHERE"
-                    + " recSecId=? AND eq_dbid=? AND channelid=?";
+                    + " recSecChannel,"
+                    + eventRecSecTableName
+                    + " eventRecSec WHERE"
+                    + "eventRecSec.recSecId=recSecChannel.recSecId  AND eventid=? AND channelid=?";
             getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
         }
-        getPixelInfo.setString(1, recSecId);
-        getPixelInfo.setInt(2, eq_dbid);
-        getPixelInfo.setInt(3, channelId);
+        getPixelInfo.setInt(1, eventId);
+        getPixelInfo.setInt(2, channelId);
         double[] pixelInfo = {-1, -1, -1, -1};
         ResultSet rs = getPixelInfo.executeQuery();
         if(rs.next()) {
@@ -82,58 +108,54 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return pixelInfo;
     }
 
-    public int[] getChannels(String recSecId,int eq_dbid, int best) throws SQLException {
-        getChannels.setString(1, recSecId);
-        getChannels.setInt(2,eq_dbid);
-        getChannels.setInt(3,best);
+    public int[] getChannels(int recSecId) throws SQLException {
+        getChannels.setInt(1, recSecId);
         List results = new ArrayList();
         ResultSet rs = getChannels.executeQuery();
         while(rs.next()) {
             results.add(new Integer(rs.getInt("channelId")));
         }
-        int[] channels = new int[results.size()];
-        for(int i = 0; i < channels .length; i++) {
-            channels[i] = ((Integer)results.get(i)).intValue();
+        int[] ints = new int[results.size()];
+        for(int i = 0; i < ints.length; i++) {
+            ints[i] = ((Integer)results.get(i)).intValue();
         }
-        return channels;
+        return ints;
     }
-    
-    public boolean channelExists(String recSecId, int eq_dbid, int channelid) throws SQLException{
-        channelExists.setString(1, recSecId);
-        channelExists.setInt(2, eq_dbid);
-        channelExists.setInt(3, channelid);
-        ResultSet rs = channelExists.executeQuery();
-        while(rs.next()){
-            if(rs.getInt(1) != 0){
-                return true;
-            }
-        }
+
+    public boolean channelExists(int eventId, int channelId)
+            throws SQLException {
+        if(getRecSecId(eventId, channelId) != -1) { return true; }
         return false;
     }
-    
-   public void updateChannels(String recSecId, int eq_dbid, int[] channelIds) throws SQLException{
-    String updateChannelStmt = "UPDATE " + tableName + " set best=0 where recSecId='"+recSecId+"' AND eq_dbid=" +eq_dbid+
-    		" AND channelid NOT IN (";
-    String updateBestChannelStmt = "UPDATE " + tableName + " set best=1 where recSecId='"+recSecId+"' AND eq_dbid=" +eq_dbid+
-	" AND channelid IN (";
-    StringBuffer sb = new StringBuffer();
-    for(int i=0;i<channelIds.length;i++){
-        sb.append(channelIds[i] +",");
-        if(i == channelIds.length-1){
-            sb.deleteCharAt(sb.length()-1);
-        }
-    }
-    String channelsString = sb.toString();
-    updateChannelStmt += channelsString+")";
-    updateBestChannelStmt += channelsString+")";
-    Statement st = conn.createStatement();
-    st.executeUpdate(updateChannelStmt);
-    st.executeUpdate(updateBestChannelStmt);
-   }
 
-    PreparedStatement insert, getPixelInfo, getChannels, channelExists;
+    public int getRecSecId(int eventId, int channelId) throws SQLException {
+        if(getRecSecId == null) {
+            String getRecSecIdStmt = "SELECT recSecId FROM "
+                    + tableName
+                    + " recSecChannel,"
+                    + eventRecSecTableName
+                    + " eventRecSec WHERE "
+                    + "eventRecSec.recSecId=recSecChannel.recSecId AND eventid=? AND channelid=?";
+            getRecSecId = conn.prepareStatement(getRecSecIdStmt);
+        }
+        getRecSecId.setInt(1, eventId);
+        getRecSecId.setInt(2, channelId);
+        ResultSet rs = getRecSecId.executeQuery();
+        if(rs.next()) return rs.getInt(1);
+        return -1;
+    }
+
+    public int deleteRecSec(int recSecId) throws SQLException {
+        deleteRecSec.setInt(1, recSecId);
+        return deleteRecSec.executeUpdate();
+    }
+
+    PreparedStatement insert, updateRecordSection, getRecSecId, getPixelInfo,
+            getChannels, deleteRecSec;
 
     Connection conn;
-    
-    String tableName = "recsecchannel";
+
+    String tableName;
+
+    String eventRecSecTableName;
 }
