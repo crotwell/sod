@@ -1336,7 +1336,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkIDType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
@@ -1344,118 +1344,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- NETWORKID AND TYPE -->
-    <xsd:complexType name="networkIDANDType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical AND between networkId subsetters.
-                </summary>
-                <description>
-                    The output is the logical AND of the outputs of all
-                    included subsetters. The subsetters after the
-                    first false outputed are not evaluated.
-                </description>
-                <example>
-                    <networkIdAND>
-                        <networkCode><value>IC</value></networkCode>
-                        <networkCode><value>IC</value></networkCode>
-                    </networkIdAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="networkIDType">
-                <xsd:sequence>
-                    <xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- NETWORKID OR TYPE -->
-    <xsd:complexType name="networkIDORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical OR between networkId subsetters.
-                </summary>
-                <description>
-                    The output is the logical OR of the outputs of all
-                    included subsetters. If the first subsetters returns
-                    true then the second is not evaluated.
-                </description>
-                <example>
-                    <networkIdOR>
-                        <networkCode><value>CD</value></networkCode>
-                        <networkCode><value>IC</value></networkCode>
-                    </networkIdOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="networkIDType">
-                <xsd:sequence>
-                    <xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- NETWORKID XOR TYPE -->
-    <xsd:complexType name="networkIDXORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical XOR between networkId subsetters.
-                </summary>
-                <description>
-                    The output is the logical XOR of the outputs of all
-                    included subsetters.
-                </description>
-                <example>
-                    <networkIdXOR>
-                        <networkCode><value>CD</value></networkCode>
-                        <networkCode><value>IC</value></networkCode>
-                    </networkIdXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="networkIDType">
-                <xsd:sequence>
-                    <xsd:element ref="networkID" minOccurs="2" maxOccurs="2"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- NETWORKID NOT TYPE -->
-    <xsd:complexType name="networkIDNOTType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical NOT of an networkId subsetter.
-                </summary>
-                <description>
-                    The output is the logical NOT of the output of the
-                    included subsetter.
-                </description>
-                <example>
-                    <networkIdNOT>
-                        <networkCode><value>CD</value></networkCode>
-                    </networkIdNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="networkIDType">
-                <xsd:sequence>
-                    <xsd:element ref="networkID" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
 
     <!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
     <xsd:complexType name="networkEffectiveTimeOverlapType">
@@ -1482,7 +1370,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
                     <xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
                 </xsd:sequence>
@@ -1490,7 +1378,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrNameType">
+    <xsd:complexType name="networkNameType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
@@ -1500,14 +1388,14 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     Matches the name of a network.
                 </description>
                 <example>
-                    <networkAttrName>
+                    <networkName>
                         <value>Global Seismograph Network (GSN - IRIS/USGS)</value>
-                    </networkAttrName>
+                    </networkName>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
@@ -1515,7 +1403,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrOwnerType">
+    <xsd:complexType name="networkOwnerType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
@@ -1526,14 +1414,14 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     comparision, and so care must be taken for it to be useful.
                 </description>
                 <example>
-                    <networkAttrOwner>
+                    <networkOwner>
                         <value>Scripps Institution of Oceanography</value>
-                    </networkAttrOwner>
+                    </networkOwner>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
@@ -1541,11 +1429,11 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrANDType">
+    <xsd:complexType name="networkANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between networkAttr subsetters.
+                    Logical AND between network subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all
@@ -1553,34 +1441,34 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     first false outputed are not evaluated.
                 </description>
                 <example>
-                    <networkAttrAND>
-                        <networkAttrOwner>
+                    <networkAND>
+                        <networkOwner>
                             <value>Scripps Institution of Oceanography</value>
-                        </networkAttrOwner>
+                        </networkOwner>
                         <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
                         </networkEffectiveTimeOverlap>
-                    </networkAttrAND>
+                    </networkAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
-                    <xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="network" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrORType">
+    <xsd:complexType name="networkORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical OR between networkAttr subsetters.
+                    Logical OR between network subsetters.
                 </summary>
                 <description>
                     The output is the logical OR of the outputs of all
@@ -1588,91 +1476,92 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     true then the second is not evaluated.
                 </description>
                 <example>
-                    <networkAttrOR>
-                        <networkAttrOwner>
+                    <networkOR>
+                        <networkOwner>
                             <value>Scripps Institution of Oceanography</value>
-                        </networkAttrOwner>
+                        </networkOwner>
                         <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
                         </networkEffectiveTimeOverlap>
-                    </networkAttrOR>
+                    </networkOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
-                    <xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="network" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrXORType">
+    <xsd:complexType name="networkXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical XOR between networkAttr subsetters.
+                    Logical XOR between network subsetters.
                 </summary>
                 <description>
                     The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
-                    <networkAttrXOR>
-                        <networkAttrOwner>
+                    <networkXOR>
+                        <networkOwner>
                             <value>Scripps Institution of Oceanography</value>
-                        </networkAttrOwner>
+                        </networkOwner>
                         <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
                         </networkEffectiveTimeOverlap>
-                    </networkAttrXOR>
+                    </networkXOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
-                    <xsd:element ref="networkAttr" minOccurs="2" maxOccurs="2"/>
+                    <xsd:element ref="network" minOccurs="2" maxOccurs="2"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="networkAttrNOTType">
+    <xsd:complexType name="networkNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical NOT of an networkAttr subsetter.
+                    Logical NOT of an network subsetter.
                 </summary>
                 <description>
                     The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
-                    <networkAttrNOT>
-                        <networkAttrOwner>
+                    <networkNOT>
+                        <networkOwner>
                             <value>Scripps Institution of Oceanography</value>
-                        </networkAttrOwner>
-                    </networkAttrNOT>
+                        </networkOwner>
+                    </networkNOT>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="networkAttrType">
+            <xsd:extension base="networkType">
                 <xsd:sequence>
-                    <xsd:element ref="networkAttr" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="network" minOccurs="1" maxOccurs="1"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
+<!-- station subsetters -->
     <xsd:complexType name="stationCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1688,127 +1577,13 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="stationIDType">
+            <xsd:extension base="stationType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-
-
-    <xsd:complexType name="stationIDANDType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical AND between StationId subsetters.
-                </summary>
-                <description>
-                    The output is the logical AND of the outputs of all
-                    included subsetters. The subsetters after the
-                    first false outputed are not evaluated.
-                </description>
-                <example>
-                    <stationIDAND>
-                        <stationCode><value>ANMO</value></stationCode>
-                        <stationCode><value>ANMO</value></stationCode>
-                    </stationIDAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="stationIDType">
-                <xsd:sequence>
-                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!--STATIONID OR TYPE-->
-    <xsd:complexType name="stationIDORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical OR between stationId subsetters.
-                </summary>
-                <description>
-                    The output is the logical OR of the outputs of all
-                    included subsetters. If the first subsetters returns
-                    true then the second is not evaluated.
-                </description>
-                <example>
-                    <stationIDOR>
-                        <stationCode><value>ANMO</value></stationCode>
-                        <stationCode><value>SNZO</value></stationCode>
-                    </stationIDOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="stationIDType">
-                <xsd:sequence>
-                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!--STATIONID XOR TYPE-->
-    <xsd:complexType name="stationIDXORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical XOR between stationId subsetters.
-                </summary>
-                <description>
-                    The output is the logical XOR of the outputs of all
-                    included subsetters.
-                </description>
-                <example>
-                    <stationIDXOR>
-                        <stationCode><value>ANMO</value></stationCode>
-                        <stationCode><value>SNZO</value></stationCode>
-                    </stationIDXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="stationIDType">
-                <xsd:sequence>
-                    <xsd:element ref="stationID" minOccurs="2" maxOccurs="2"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!--STATIONID NOT TYPE-->
-    <xsd:complexType name="stationIDNOTType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical NOT of an stationId subsetter.
-                </summary>
-                <description>
-                    The output is the logical NOT of the output of the
-                    included subsetter.
-                </description>
-                <example>
-                    <stationIDNOT>
-                        <stationCode><value>ANMO</value></stationCode>
-                    </stationIDNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="stationIDType">
-                <xsd:sequence>
-                    <xsd:element ref="stationID" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
 
     <!-- STATION NAME TYPE -->
     <xsd:complexType name="stationNameType">
@@ -2131,114 +1906,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="siteIDANDType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical AND between siteId subsetters.
-                </summary>
-                <description>
-                    The output is the logical AND of the outputs of all
-                    included subsetters. The subsetters after the
-                    first false outputed are not evaluated.
-                </description>
-                <example>
-                    <siteIdAND>
-                        <siteCode>  </siteCode>
-                        <siteCode>00</siteCode>
-                    </siteIdAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="siteIDType">
-                <xsd:sequence>
-                    <xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="siteIDORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical OR between siteId subsetters.
-                </summary>
-                <description>
-                    The output is the logical OR of the outputs of all
-                    included subsetters. If the first subsetters returns
-                    true then the second is not evaluated.
-                </description>
-                <example>
-                    <siteIdOR>
-                        <siteCode>  </siteCode>
-                        <siteCode>00</siteCode>
-                    </siteIdOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="siteIDType">
-                <xsd:sequence>
-                    <xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="siteIDXORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical XOR between siteId subsetters.
-                </summary>
-                <description>
-                    The output is the logical XOR of the outputs of all
-                    included subsetters.
-                </description>
-                <example>
-                    <siteIdXOR>
-                        <siteCode>  </siteCode>
-                        <siteCode>00</siteCode>
-                    </siteIdXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="siteIDType">
-                <xsd:sequence>
-                    <xsd:element ref="siteID" minOccurs="2" maxOccurs="2"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="siteIDNOTType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical NOT of a siteId subsetter.
-                </summary>
-                <description>
-                    The output is the logical NOT of the output of the
-                    included subsetter.
-                </description>
-                <example>
-                    <siteIdNOT>
-                        <siteCode>00</siteCode>
-                    </siteIdNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="siteIDType">
-                <xsd:sequence>
-                    <xsd:element ref="siteID" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER SITE -->
 
     <xsd:complexType name="siteCodeType">
         <xsd:annotation>
@@ -2255,7 +1923,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="siteIDType">
+            <xsd:extension base="siteType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
@@ -2264,7 +1932,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     </xsd:complexType>
 
 
-    <!-- TYPE DECLARATIONS FOR THE SUBSETTER SITE -->
 
     <xsd:complexType name="siteDepthRangeType">
         <xsd:annotation>
@@ -2513,117 +2180,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- TYPE DECLARATIONS FOR THE SUBSETTER CHANNELID -->
-
-    <xsd:complexType name="channelIDANDType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical AND between channelId subsetters.
-                </summary>
-                <description>
-                    The output is the logical AND of the outputs of all
-                    included subsetters. The subsetters after the
-                    first false outputed are not evaluated.
-                </description>
-                <example>
-                    <channelIDAND>
-                        <bandCode><value>B</value></bandCode>
-                        <gainCode><value>H</value></gainCode>
-                    </channelIDAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="channelIDType">
-                <xsd:sequence>
-                    <xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="channelIDORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical OR between channelID subsetters.
-                </summary>
-                <description>
-                    The output is the logical OR of the outputs of all
-                    included subsetters. If the first subsetters returns
-                    true then the second is not evaluated.
-                </description>
-                <example>
-                    <channelIDOR>
-                        <bandCode><value>B</value></bandCode>
-                        <gainCode><value>H</value></gainCode>
-                    </channelIDOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="channelIDType">
-                <xsd:sequence>
-                    <xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="channelIDXORType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical XOR between subsetters.
-                </summary>
-                <description>
-                    The output is the logical XOR of the outputs of all
-                    included subsetters.
-                </description>
-                <example>
-                    <channelIDXOR>
-                        <bandCode><value>B</value></bandCode>
-                        <gainCode><value>H</value></gainCode>
-                    </channelIDXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="channelIDType">
-                <xsd:sequence>
-                    <xsd:element ref="channelID" minOccurs="2" maxOccurs="2"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="channelIDNOTType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical NOT of an channelId subsetter.
-                </summary>
-                <description>
-                    The output is the logical NOT of the output of the
-                    included subsetter.
-                </description>
-                <example>
-                    <channelIDAND>
-                        <gainCode><value>H</value></gainCode>
-                    </channelIDAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="channelIDType">
-                <xsd:sequence>
-                    <xsd:element ref="channelID" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****CHANNEL***** -->
     <xsd:complexType name="bandCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -2641,7 +2198,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="channelIDType">
+            <xsd:extension base="channelType">
                 <xsd:sequence>
                     <xsd:element name="value" type="channelCodeUtilType"/>
                 </xsd:sequence>
@@ -2666,7 +2223,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="channelIDType">
+            <xsd:extension base="channelType">
                 <xsd:sequence>
                     <xsd:element name="value" type="channelCodeUtilType"/>
                 </xsd:sequence>
@@ -2692,16 +2249,13 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="channelIDType">
+            <xsd:extension base="channelType">
                 <xsd:sequence>
                     <xsd:element name="value" type="channelCodeUtilType"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-
-
-    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****CHANNEL***** -->
 
     <xsd:complexType name="channelANDType">
         <xsd:annotation>
@@ -3038,35 +2592,20 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
 
     <xsd:element name="networkFinder" type="networkFinderType" substitutionGroup="networkSource"/>
 
-    <!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->
-    <xsd:element name="networkID" abstract="true"/>
-    <xsd:element name="networkCode" type="networkCodeType" substitutionGroup="networkID"/>
-    <xsd:element name="networkIDAND" type="networkIDANDType" substitutionGroup="networkID"/>
-    <xsd:element name="networkIDOR" type="networkIDORType" substitutionGroup="networkID"/>
-    <xsd:element name="networkIDXOR" type="networkIDXORType" substitutionGroup="networkID"/>
-    <xsd:element name="networkIDNOT" type="networkIDNOTType" substitutionGroup="networkID"/>
-
-
-    <!-- ELEMENT DECLARATIONS FOR NETWORK ATTR TYPE -->
-    <xsd:element name="networkAttr" type="networkAttrType" abstract="true"/>
-    <xsd:element name="networkAttrName" type="networkAttrNameType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkAttrOwner" type="networkAttrOwnerType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkEffectiveTimeOverlap" type="networkEffectiveTimeOverlapType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkAttrAND" type="networkAttrANDType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkAttrOR" type="networkAttrORType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkAttrXOR" type="networkAttrXORType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkAttrNOT" type="networkAttrNOTType" substitutionGroup="networkAttr"/>
-
-    <!-- ELEMENT DECLARATIONS FOR STATION ID TYPE -->
-    <xsd:element name="stationID" type="stationIDType" abstract="true"/>
-    <xsd:element name="stationCode" type="stationCodeType" substitutionGroup="stationID"/>
-    <xsd:element name="stationIDAND" type="stationIDANDType" substitutionGroup="stationID"/>
-    <xsd:element name="stationIDOR" type="stationIDORType" substitutionGroup="stationID"/>
-    <xsd:element name="stationIDXOR" type="stationIDXORType" substitutionGroup="stationID"/>
-    <xsd:element name="stationIDNOT" type="stationIDNOTType" substitutionGroup="stationID"/>
+    <!-- ELEMENT DECLARATIONS FOR NETWORK  TYPE -->
+    <xsd:element name="network" type="networkType" abstract="true"/>
+    <xsd:element name="networkCode" type="networkCodeType" substitutionGroup="network"/>
+    <xsd:element name="networkName" type="networkNameType" substitutionGroup="network"/>
+    <xsd:element name="networkOwner" type="networkOwnerType" substitutionGroup="network"/>
+    <xsd:element name="networkEffectiveTimeOverlap" type="networkEffectiveTimeOverlapType" substitutionGroup="network"/>
+    <xsd:element name="networkAND" type="networkANDType" substitutionGroup="network"/>
+    <xsd:element name="networkOR" type="networkORType" substitutionGroup="network"/>
+    <xsd:element name="networkXOR" type="networkXORType" substitutionGroup="network"/>
+    <xsd:element name="networkNOT" type="networkNOTType" substitutionGroup="network"/>
 
     <!-- ELEMENT DECLARATIONS FOR STATION TYPE -->
     <xsd:element name="station" type="stationType" abstract="true"/>
+    <xsd:element name="stationCode" type="stationCodeType" substitutionGroup="station"/>
     <xsd:element name="stationName" type="stationNameType" substitutionGroup="station"/>
     <xsd:element name="stationOperator" type="stationOperatorType" substitutionGroup="station"/>
     <xsd:element name="stationDepthRange" type="stationDepthRangeType" substitutionGroup="station"/>
@@ -3078,16 +2617,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="stationXOR" type="stationXORType" substitutionGroup="station"/>
     <xsd:element name="stationNOT" type="stationNOTType" substitutionGroup="station"/>
 
-    <!-- ELEMENT DECLARATIONS FOR SITE ID TYPE -->
-    <xsd:element name="siteID" type="siteIDType" abstract="true"/>
-    <xsd:element name="siteCode" type="siteCodeType" substitutionGroup="siteID"/>
-    <xsd:element name="siteIDAND" type="siteIDANDType" substitutionGroup="siteID"/>
-    <xsd:element name="siteIDOR" type="siteIDORType" substitutionGroup="siteID"/>
-    <xsd:element name="siteIDXOR" type="siteIDXORType" substitutionGroup="siteID"/>
-    <xsd:element name="siteIDNOT" type="siteIDNOTType" substitutionGroup="siteID"/>
-
     <!-- ELEMENT DECLARATIONS FOR SITE TYPE -->
     <xsd:element name="site" type="siteType" abstract="true"/>
+    <xsd:element name="siteCode" type="siteCodeType" substitutionGroup="site"/>
     <xsd:element name="siteDepthRange" type="siteDepthRangeType" substitutionGroup="site"/>
     <xsd:element name="siteEffectiveTimeOverlap" type="siteEffectiveTimeOverlapType" substitutionGroup="site"/>
     <!-- element representing siteArea -->
@@ -3097,18 +2629,11 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="siteXOR" type="siteXORType" substitutionGroup="site"/>
     <xsd:element name="siteNOT" type="siteNOTType" substitutionGroup="site"/>
 
-    <!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->
-    <xsd:element name="channelID" type="channelIDType" abstract="true"/>
-    <xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channelID"/>
-    <xsd:element name="gainCode" type="gainCodeType" substitutionGroup="channelID"/>
-    <xsd:element name="orientationCode" type="orientationCodeType" substitutionGroup="channelID"/>
-    <xsd:element name="channelIDAND" type="channelIDANDType" substitutionGroup="channelID"/>
-    <xsd:element name="channelIDOR" type="channelIDORType" substitutionGroup="channelID"/>
-    <xsd:element name="channelIDXOR" type="channelIDXORType" substitutionGroup="channelID"/>
-    <xsd:element name="channelIDNOT" type="channelIDNOTType" substitutionGroup="channelID"/>
-
     <!-- ELEMENT DECLARATIONS FOR CHANNEL TYPE -->
     <xsd:element name="channel" type="channelType" abstract="true"/>
+    <xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channel"/>
+    <xsd:element name="gainCode" type="gainCodeType" substitutionGroup="channel"/>
+    <xsd:element name="orientationCode" type="orientationCodeType" substitutionGroup="channel"/>
     <xsd:element name="sampling" type="samplingType" substitutionGroup="channel"/>
     <xsd:element name="channelEffectiveTimeOverlap" type="channelEffectiveTimeOverlapType" substitutionGroup="channel"/>
     <xsd:element name="orientationRange" type="orientationRangeType" substitutionGroup="channel"/>
@@ -3131,13 +2656,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             <xsd:extension base="armType">
                 <xsd:sequence>
                     <xsd:element ref="networkSource"  minOccurs="1" maxOccurs="1"/>
-                    <xsd:element ref="networkID"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="networkAttr"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="network"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="station"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="siteID"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="site"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="channelID"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="channel"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="networkProcess" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
