@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sod xmlns:xlink="http://www.w3.org/1999/xlink/">
+<sod>
     <properties>
         <runName>Realtime Run</runName>
         <statusBase>status</statusBase>
@@ -54,7 +54,9 @@
             <catalog>PREF</catalog>
         </eventFinder>
         <removeEventDuplicate/>
-        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
+        <eventStatusTemplate>
+            <template>jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml</template>
+        </eventStatusTemplate>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -94,9 +96,15 @@
             </channelEffectiveTimeOverlap>
         </channelAND>
         <networkInfoTemplateGenerator>
-            <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
-            <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
-            <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
+            <netConfig>
+                <template>jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml</template>
+            </netConfig>
+            <stationConfig>
+                <template>jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml</template>
+            </stationConfig>
+            <channelConfig>
+                <template>jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml</template>
+            </channelConfig>
         </networkInfoTemplateGenerator>
     </networkArm>
     <waveformVectorArm>
@@ -254,8 +262,12 @@
             <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
             </eventDirLabel>
         </saveSeismogramToFile>
-        <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+        <localSeismogramTemplateGenerator>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</template>
+        </localSeismogramTemplateGenerator>
+        <waveformEventTemplateGenerator>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml</template>
+        </waveformEventTemplateGenerator>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
             <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
