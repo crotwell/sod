@@ -60,7 +60,27 @@ learn, so click away!
 <section name="Network">
 <p>
 The Network tab is the other side of the coin, once you have earthquakes, you must
-pick stations in order to ask for data.
+pick stations in order to ask for data. This query is sent to the IRIS Network
+server. We will get only stations in the II network, sites (which loosely correspond
+to seed loc ids) that are either space-space or 00 and channels that are long
+period. The construction is that the band code must be L and the gain code
+cannot be O. This accepts both LH? and LL? channels, but rejects LOG channels.
+Of course there are other, probably better ways, of accomplishing this same
+thing, but this is a good way of introducing the logical subsetters. Notice that
+there are three channel subsetters joined with a logical AND, and one of these
+is a logical NOT that contains another subsetter. SOD allows, and in fact depends
+on the ability to build up complex queries from simple building blocks glued
+together with logical operators.
+</p>
+<p>
+You will also notice that there are quite a few effective time subsetters. These
+are not strictly required, and the SOD run would likely generate the same exact
+result if they were not there, but adding them allow SOD to be more efficient.
+By rejecting stations and channels that were not in existence at the time of
+the earthquake, SOD is able to avoid a significant number of calls on the remote
+server. For example, if you eliminate a station, SOD need not retrieve the
+channels for that station. In general, SOD will run faster if you try to
+eliminate as much as possible as early as possible.
 </p>
 </section>
 
