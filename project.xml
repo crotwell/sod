@@ -207,7 +207,7 @@
       <groupId>msv</groupId>
       <artifactId>relaxngDatatype</artifactId>
       <version>20030807</version>
-      <url>http://wwws.sun.com/software/xml/developers/multischema/</url>
+      <url>http://www.thaiopensource.com/relaxng/jing.html</url>
     </dependency>
     <dependency>
       <groupId>msv</groupId>
