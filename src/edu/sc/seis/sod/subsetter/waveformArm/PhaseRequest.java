@@ -63,7 +63,7 @@ public class PhaseRequest implements RequestGenerator{
     public RequestFilter[] generateRequest(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 
-			  CookieJar cookies){
+			  CookieJar cookies) throws Exception{
 	System.out.println("the begin phase is "+beginPhase.getPhase());
 	System.out.println("the end phase is "+endPhase.getPhase());
 	System.out.println("the beginOffset unit is "+beginOffset.getUnit());
@@ -80,8 +80,8 @@ public class PhaseRequest implements RequestGenerator{
 	edu.iris.Fissures.Time originTime = origin.origin_time;
 	System.out.println("originTime is "+origin.origin_time.date_time);
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
-	TimeInterval bInterval = new TimeInterval(Integer.parseInt(beginOffset.getValue()), UnitImpl.SECOND);
-	TimeInterval eInterval = new TimeInterval(Integer.parseInt(endOffset.getValue()), UnitImpl.SECOND);
+	TimeInterval bInterval = new TimeInterval(beginOffset.getValue(), UnitImpl.SECOND);
+	TimeInterval eInterval = new TimeInterval(endOffset.getValue(), UnitImpl.SECOND);
 	MicroSecondDate bDate = originDate.add(bInterval);
 	MicroSecondDate eDate = originDate.add(eInterval);
 	RequestFilter[] filters;
