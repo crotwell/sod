@@ -45,6 +45,10 @@
                         The scripts are smart enough to append lib or bin as needed.
                     </p>
                     <p>
+                       Lastly, you should either add sod.sh and sodeditor.sh, or sod.bat and sodeditor.bat, to your
+                       system PATH.
+                    </p>
+                    <p>
                       Now SOD can be run from any
                         directory, which makes segregating results from runs easier.  Once you've
                         done that SOD is officially installed. If you're not too worn out,
