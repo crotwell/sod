@@ -7,7 +7,7 @@
     <organization>
         <name>Seismology at the University of South Carolina</name>
         <url>http://www.seis.sc.edu</url>
-        <logo>http://www.seis.sc.edu/software/wily/header.gif</logo>
+        <logo>http://www.seis.sc.edu/software/wily/.headergif</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>edu.sc.seis.sod</package>
@@ -261,7 +261,27 @@
             <version>1.1-rc1</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
-        
+       <dependency>
+  <groupId>stax</groupId>
+  <artifactId>jax-qname</artifactId>
+  <version>1.0</version>
+</dependency>
+<dependency>
+  <groupId>stax</groupId>
+  <artifactId>jsr173_api</artifactId>
+  <version>1.0</version>
+</dependency>
+<dependency>
+  <groupId>stax</groupId>
+  <artifactId>jsr173_ri</artifactId>
+  <version>1.0</version>
+</dependency>
+<dependency>
+  <groupId>stax</groupId>
+  <artifactId>namespace</artifactId>
+  <version>1.0</version>
+</dependency>
+ 
     </dependencies>
     <build>
         <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
