@@ -34,8 +34,8 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 			       " qtime timestamp) ");
 	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
 			       " ( waveformeventid int, "+
-			       " waveformnetworkid int, "+
 			       " waveformstationid int, "+
+			       " waveformnetworkid int, "+
 			       " numsites int, "+
 			       " qtime timestamp) ");
 
