@@ -39,17 +39,11 @@ public class SodUtil {
             String classname;
             Element classNameElement = SodUtil.getElement(config, "classname");
             classname = getNestedText(classNameElement);
-            Class[] constructorArgTypes = new Class[1];
-            constructorArgTypes[0] = Element.class;
-            
-            Class externalClass =
-                Class.forName(classname);
-            Constructor constructor =
-                externalClass.getConstructor(constructorArgTypes);
-            Object[] constructorArgs = new Object[1];
-            constructorArgs[0] = config;
-            Object obj =
-                constructor.newInstance(constructorArgs);
+            Class[] argTypes = { Element.class };
+            Class extClass = Class.forName(classname);
+            Constructor constructor = extClass.getConstructor(argTypes);
+            Object[] args = {config};
+            Object obj = constructor.newInstance(args);
             return (SodElement)obj;
         } catch (InvocationTargetException e) {
             // occurs if the constructor throws an exception
@@ -85,12 +79,8 @@ public class SodUtil {
             }
         }
         File htmlDir = new File(outputDirName);
-        if(outputDirName != null){
-            htmlDir = new File(outputDirName);
-        }
-        if(!htmlDir.exists()){
-            htmlDir.mkdirs();
-        }
+        if(outputDirName != null) htmlDir = new File(outputDirName);
+        if(!htmlDir.exists()) htmlDir.mkdirs();
         if(!htmlDir.isDirectory()){
             throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory");
         }
