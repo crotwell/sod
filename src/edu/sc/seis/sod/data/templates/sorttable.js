@@ -26,16 +26,20 @@ function ts_makeSortable(table) {
     }
     if (!firstRow) return;
 
-    var firstColumn;
     // We have a first row: assume it's the header, and make its contents clickable links
     for (var i=0;i<firstRow.cells.length;i++) {
         var cell = firstRow.cells[i];
         var txt = ts_getInnerText(cell);
         cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow"><img src="'+img_dir+'none.gif"/></span></a>';
-        if( i == 0){ firstColumn = cell.innerHTML; }
     }
 
-    ts_resortTable(firstColumn);
+    var firstKids = firstRow.cells[0].childNodes;
+    for (var ci=0; ci < firstKids.length; ci++){
+        if (firstKids[ci].tagName && firstKids[ci].tagName.toLowerCase() == 'a'){
+          ts_resortTable(firstKids[ci]);
+          break;
+        }
+    }
 }
 
 function ts_getInnerText(el) {
@@ -209,4 +213,5 @@ function addEvent(elm, evType, fn, useCapture)
     alert("Handler could not be removed");
   }
 }
+
 
