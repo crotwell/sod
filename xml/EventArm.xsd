@@ -14,6 +14,11 @@
 
 	<!-- This is the base abstract Type -->
 	<xsd:complexType name="eventAttrSubsetterType" abstract="true">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			Superclass for all subsetters that act on EventAttr objects. 
+		</xsd:documentation>
+      </xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="subsetterType"/>
 		</xsd:complexContent>
@@ -21,6 +26,13 @@
 
 	<!-- origin abstract type -->
 	<xsd:complexType name="originType" abstract="true">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+               Superclass for all subsetters that act on Origin objects.
+            </summary>
+		</xsd:documentation>
+      </xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="subsetterType"/>
 		</xsd:complexContent>
@@ -36,6 +48,25 @@
 
 	<!-- This type is used for eventAttrANDType minOccurs="0" maxOccurs="unbounded"  -->
 	<xsd:complexType name="eventAttrANDType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Logical AND between EventAttr subsetters.
+            </summary>
+            <description>
+                The output is the logical AND of the outputs of all 
+                included EventAttr subsetters. The subsetters after the
+                first false outputed are not evaluated. 
+            </description>
+            <example>
+               <eventAttrAND>
+                  <eventAttrName>Fred</eventAttrName>
+                  <geographicRegion>47</geographicRegion>
+               </eventAttrAND>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 			 <xsd:sequence>
@@ -48,6 +79,25 @@
 
 	 <!-- This type is used for eventAttrORType minOccurs="0" maxOccurs="unbounded"  -->
 	<xsd:complexType name="eventAttrORType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Logical OR between EventAttr subsetters.
+            </summary>
+            <description>
+                The output is the logical OR of the outputs of all 
+                included EventAttr subsetters. If the first subsetters returns
+                true then the second is not evaluated. 
+            </description>
+            <example>
+               <eventAttrOR>
+                  <eventAttrName>Fred</eventAttrName>
+                  <geographicRegion>47</geographicRegion>
+               </eventAttrOR>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>
@@ -60,6 +110,24 @@
 
 	 <!-- This type is used for eventAttrXORType minOccurs="2" maxOccurs="2"  -->
 	<xsd:complexType name="eventAttrXORType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Logical XOR between EventAttr subsetters.
+            </summary>
+            <description>
+                The output is the logical XOR of the outputs of all 
+                included EventAttr subsetters.
+            </description>
+            <example>
+               <eventAttrXOR>
+                  <eventAttrName>Fred</eventAttrName>
+                  <geographicRegion>47</geographicRegion>
+               </eventAttrXOR>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>
@@ -71,6 +139,23 @@
 
  <!-- This type is used for eventAttrNOTType minOccurs="1" maxOccurs="1"  -->
 	<xsd:complexType name="eventAttrNOTType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Logical NOT between EventAttr subsetters.
+            </summary>
+            <description>
+                The output is the logical NOT of the output of the 
+                included EventAttr subsetter.
+            </description>
+            <example>
+               <eventAttrNOT>
+                  <geographicRegion><value>47</value></geographicRegion>
+               </eventAttrNOT>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>
@@ -82,6 +167,22 @@
 
 <!-- The EventAttrName Tag it containts string for now  might be changed latter -->
 	<xsd:complexType name="eventAttrNameType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Matches the event name.
+            </summary>
+            <description>
+                Evaluates to true if the name of the event matches the string.
+            </description>
+            <example>
+               <eventAttrName>
+                  <value>Fred</value>
+               </eventAttrName>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>
@@ -93,6 +194,23 @@
 
 <!-- The geographicRegionType contains a list of numbers for now, might be changed latter -->
 	<xsd:complexType name="geographicRegionType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Matches the geographic Flinn-Engdahl region number.
+            </summary>
+            <description>
+                Evaluates to true if the numerical value of the geographic 
+                region of the event matches one of the values in the list.
+            </description>
+            <example>
+               <geographicRegion>
+                  <value>12 47</value>
+               </geographicRegion>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>
@@ -104,6 +222,23 @@
 
  <!-- The seismicRegionType contains a list of numbers for now, might be changed latter -->
 	<xsd:complexType name="seismicRegionType">
+      <xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			<summary>
+                Matches the seismic Flinn-Engdahl region number.
+            </summary>
+            <description>
+                Evaluates to true if the numerical value of the seismic 
+                region of the event matches one of the values in the list.
+            </description>
+            <example>
+               <seismicRegion>
+                  <value>12 47</value> 
+               </seismicRegion>
+            </example>
+		</xsd:documentation>
+      </xsd:annotation>
+        
 		<xsd:complexContent>
 			<xsd:extension base="eventAttrSubsetterType">
 				<xsd:sequence>

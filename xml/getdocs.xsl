@@ -44,6 +44,9 @@
       <xsl:value-of select="@name" />
     </h3>
     <p>
+      <xsl:apply-templates select="xsd:annotation" />
+    </p>
+    <p>
       <xsl:apply-templates select="(preceding-sibling::*|preceding-sibling::comment())[last()]" mode="comments"/>
       <h5><xsl:text>Elements</xsl:text></h5>
       <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
@@ -115,5 +118,19 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="xsd:annotation">
+    <xsl:apply-templates select="xsd:documentation" />
+  </xsl:template>
+
+  <xsl:template match="xsd:documentation" >
+    <h4>Summary</h4>
+    <xsl:copy-of select="summary" />
+    <h4>Description</h4>
+    <xsl:copy-of select="description" />
+    <h4>Example</h4>
+    <pre>
+      <xsl:copy-of select="example" />
+    </pre>
+  </xsl:template>
 </xsl:stylesheet>
 
