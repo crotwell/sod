@@ -80,35 +80,12 @@
                         <value>30</value>
                 </refreshInterval>
 	</networkFinder>
-	<networkIDOR>
-		<networkCode><value>II</value></networkCode>
-		<networkCode><value>IU</value></networkCode>
-		<networkCode><value>SP</value></networkCode>
-	</networkIDOR>
-
-	<networkeffectiveTimeOverlap>
-		<effectiveTimeOverlap>
-			<min>1990-01-01T00:00:00Z</min>
-			<max>2003-01-01T00:00:00Z</max>
-		</effectiveTimeOverlap>
-	</networkeffectiveTimeOverlap>
-
-	<siteCode><value>00</value></siteCode>
 
 	<channelIDAND>
 		<bandCode><value>B</value></bandCode>
 		<gainCode><value>H</value></gainCode>
                 <orientationCode><value>Z</value></orientationCode>
 	</channelIDAND>
-
-	<sampling>
-		<min>1</min>
-		<max>40</max>
-		<interval>
-			<unit>SECOND</unit>
-			<value>1</value>
-		</interval>
-	</sampling>
 
 	<printlineChannelProcessor/>
 	
