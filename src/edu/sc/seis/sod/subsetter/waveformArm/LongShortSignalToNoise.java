@@ -5,6 +5,7 @@
  */
 
 package edu.sc.seis.sod.subsetter.waveformArm;
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -16,6 +17,7 @@ import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import java.util.LinkedList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -48,16 +50,22 @@ public class LongShortSignalToNoise implements LocalSeismogramSubsetter {
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
-                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
-        for (int i = 0; i < seismograms.length; i++) {
-            LongShortTrigger[] triggers = sToN.calcTriggers(seismograms[i]);
-            if (triggers.length != 0) {
-                return true;
-            }
-        }
-        return false;
+                          LocalSeismogramImpl[] seismograms,
+                          CookieJar cookieJar) throws Exception {
+        LongShortTrigger[] triggers = calcTriggers(seismograms);
+        return (triggers.length != 0);
     }
 
+    public LongShortTrigger[] calcTriggers(LocalSeismogramImpl[] seismograms) throws FissuresException {
+        LinkedList out = new LinkedList();
+        for (int i = 0; i < seismograms.length; i++) {
+            LongShortTrigger[] triggers = sToN.calcTriggers(seismograms[i]);
+            for (int j = 0; j < triggers.length; j++) {
+                out.add(triggers[j]);
+            }
+        }
+        return (LongShortTrigger[])out.toArray(new LongShortTrigger[0]);
+    }
 
     LongShortStoN sToN;
 
