@@ -511,6 +511,26 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<xsd:complexType name="breqfastAvailableDataType"> 
+		<xsd:complexContent>
+			<xsd:extension base="printLineWaveformProcessorType">
+				<xsd:sequence>
+					<xsd:element name="dataDirectory" type="xsd:string"/>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="inst" type="xsd:string"/>
+					<xsd:element name="mail" type="xsd:string"/>
+					<xsd:element name="email" type="xsd:string"/>
+					<xsd:element name="phone" type="xsd:string"/>
+					<xsd:element name="fax" type="xsd:string"/>
+					<xsd:element name="media" type="xsd:string"/>
+					<xsd:element name="altmedia1" type="xsd:string"/>
+					<xsd:element name="altmedia2" type="xsd:string"/>
+					<xsd:element name="quality" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 
 	<!-- ELEMENT DECLARATIONS -->
 
@@ -571,6 +591,8 @@
 	<xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
 	<xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
+	<xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
+
 	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="externalSeismogramProcess"
 	type="externalWaveformProcessType"
