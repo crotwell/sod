@@ -14,8 +14,8 @@
     </menu>
 
     <menu name="Download">
-        <item name="Binaries"              href="/software/mavenRepository/sod/jars"/>
-        <item name="Source Code"           href="/software/mavenRepository/sod/distributions"/>
+        <item name="Binaries"              href="/../software/mavenRepository/sod/jars"/>
+        <item name="Source Code"           href="/../software/mavenRepository/sod/distributions"/>
     </menu>
 
     <menu name="Related Projects">
