@@ -42,6 +42,7 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
         }
         else if(tag.equals("statusFilter")){
             if(SodUtil.getNestedText(el).equals("SUCCESS")){ success = true; }
+            else if(SodUtil.getNestedText(el).equals("FAILURE")){ failure = true; }
             return new AllTextTemplate("");
         }
         return getCommonTemplate(tag, el);
@@ -63,7 +64,8 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
             Station[] stations;
             synchronized(evStatus){
                 if(success){ stations = evStatus.getOfStatus(status, ev); }
-                else{ stations = evStatus.getNotOfStatus(status, ev); }
+                else if(failure){ stations = evStatus.getNotOfStatus(status, ev); }
+                else{ stations = evStatus.getStations(ev); }
             }
             Iterator it = eventStationFormatters.iterator();
             while(it.hasNext()){
@@ -84,7 +86,7 @@ public class EventStationGroupTemplate extends Template implements EventTemplate
     }
 
     private List eventStationFormatters = new ArrayList();
-    private boolean success = false;
+    private boolean success = false, failure = false;
     private static final Status status = Status.get(Stage.PROCESSOR,
                                                     Standing.SUCCESS);
 
