@@ -26,7 +26,7 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange imple
      *
      * @param config an <code>Element</code> value
      */
-    public OriginDepthRange (Element config){
+    public OriginDepthRange (Element config) throws Exception{
 	super(config);
     }
     
