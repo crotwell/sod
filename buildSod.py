@@ -1,4 +1,5 @@
-#! /usr/bin/python -O
+#!/usr/bin/python
+
 import sys, os
 sys.path.append("../devTools/maven")
 import ProjectParser, mavenExecutor
