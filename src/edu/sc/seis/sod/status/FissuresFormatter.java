@@ -41,6 +41,7 @@ public class FissuresFormatter {
     }
 
     public static String formatChannel(ChannelId id) {
+        if (id == null) { return "null"; }
         return ChannelIdUtil.toStringNoDates(id);
     }
 
@@ -150,6 +151,7 @@ public class FissuresFormatter {
     }
 
 }
+
 
 
 
