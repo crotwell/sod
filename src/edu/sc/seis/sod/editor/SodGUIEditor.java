@@ -31,7 +31,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
-        grammer = new SchemaGrammer();
+        grammar = new SchemaGrammer();
 
         frameName = "SOD Editor";
         tabs = true;
@@ -68,11 +68,11 @@ public class SodGUIEditor extends SimpleGUIEditor {
         super.start();
     }
 
-    public SchemaGrammer getGrammer() {
-        return grammer;
+    public SchemaGrammer getGrammar() {
+        return grammar;
     }
 
-    SchemaGrammer grammer;
+    SchemaGrammer grammar;
 
     JComponent getCompForElement(Element element) {
         try {
@@ -121,7 +121,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
             String tagName = (String)vector.get(i);
             if (editors.containsKey(tagName)) {
                 // save original with _tagChooser appended
-                editors.put(tagName+"_TagChooser", editors.get(tagName));
+                editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
             }
             editors.put(tagName, originTC);
         }
