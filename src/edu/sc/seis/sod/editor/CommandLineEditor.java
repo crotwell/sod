@@ -41,6 +41,16 @@ public class CommandLineEditor {
         processArgs();
     }
 
+    public void start() throws ParserConfigurationException, TransformerException {
+        //Document doc = doReplacements(args);
+        //            BufferedWriter buf =
+        //                new BufferedWriter(new OutputStreamWriter(System.out));
+        //            Writer xmlWriter = new Writer();
+        //            xmlWriter.setOutput(buf);
+        //            xmlWriter.write(doc);
+        testXPath(args);
+    }
+
     void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, TransformerException {
         boolean help = false;
         for (int i = 0; i < args.length; i++) {
@@ -55,13 +65,6 @@ public class CommandLineEditor {
         if (help) {
             printOptions(new DataOutputStream(System.out));
         } else {
-            //Document doc = doReplacements(args);
-            //            BufferedWriter buf =
-            //                new BufferedWriter(new OutputStreamWriter(System.out));
-            //            Writer xmlWriter = new Writer();
-            //            xmlWriter.setOutput(buf);
-            //            xmlWriter.write(doc);
-            testXPath(args);
         }
     }
 
@@ -79,7 +82,7 @@ public class CommandLineEditor {
                     expr += "/text()";
                 }
                 String value = args[i].substring(args[i].indexOf("="));
-                Node node = XPathAPI.selectSingleNode(doc, expr);
+                Node node = XPathAPI.selectSingleNode(doc, expr, doc.getDocumentElement());
                 if (node instanceof Text) {
                     ((Text)node).setData(value);
                 } else if (node == null) {
@@ -105,7 +108,7 @@ public class CommandLineEditor {
             } else {
                 logger.debug("Processing "+args[i]);
                 String expr = args[i];
-                NodeList list = XPathAPI.selectNodeList(doc.getDocumentElement(), expr);
+                NodeList list = XPathAPI.selectNodeList(doc.getDocumentElement(), expr, doc.getDocumentElement());
                 System.out.println("node list is length "+list.getLength());
                 for (int j = 0; j < list.getLength(); j++) {
                     Node node = list.item(j);
@@ -184,6 +187,7 @@ public class CommandLineEditor {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, TransformerException, ParserConfigurationException, SAXException, IOException, DOMException {
         BasicConfigurator.configure();
         CommandLineEditor cle = new CommandLineEditor(args);
+        cle.start();
         System.out.println("Done editing.");
     }
 
