@@ -13,6 +13,8 @@
 <div id="Content">
 <h1><runName/> Information</h1>
 <h2>Started on: </h2><startTime/>
+<h2>Amount of SAC data written: </h2><sacDataWritten/>
+<h2>Last event received: </h2><lastEvent/>
 <h2>Events to date:</h2>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
