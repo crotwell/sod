@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import java.util.*;
+
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
@@ -14,11 +16,6 @@ import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
 import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
 import edu.sc.seis.sod.validator.model.datatype.Token;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -33,7 +30,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 definedGrammar = new Grammar(relaxLoc);
                 NamedElement anyXML = new NamedElement(1, 1, "anyXML");
                 anyXML.setChild(new Empty(anyXML));
-                Definition start = new Definition("");
+                Definition start = new Definition("", definedGrammar);
                 start.set(anyXML);
                 definedGrammar.addStart(start);
             }else{
@@ -111,7 +108,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 name = reader.getAttributeValue(i);
             }
         }
-        Definition def = new Definition(name, combo);
+        Definition def = new Definition(name, definedGrammar, combo);
         nextTag();
         def.set(handleAll());
         return def;
@@ -369,6 +366,16 @@ public class StAXModelBuilder implements XMLStreamConstants{
             } catch(Exception e) { e.printStackTrace();}
         }
         return (Grammar)parsedGrammars.get(loc);
+    }
+
+    public static Collection getAllDefinitions(){
+        Set defs = new HashSet();
+        Iterator it = parsedGrammars.values().iterator();
+        while(it.hasNext()){
+            Grammar cur = (Grammar)it.next();
+            defs.addAll(cur.getDefs());
+        }
+        return defs;
     }
 
     private XMLStreamReader reader;
