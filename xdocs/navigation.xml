@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<project name="The Standing Order for Data"
+	 href="http://www.seis.sc.edu/software/sod/">
+
+  <title>The Standing Order for Data</title>
+<logo href="/images/fissures_header.gif">The FISSURES Project</logo>
+    
+  <body>
+    <menu name="Essentials">
+      <item name="Front Page"            href="/index.html"/>
+      <item name="News &amp; Status"     href="/news.html"/>
+      <item name="Bugs and Problems"          href="/bugs.html"/>
+    </menu>
+
+    <menu name="Download">
+        <item name="Binaries"              href="/software/mavenRepository/sod/jars"/>
+        <item name="Source Code"           href="/software/mavenRepository/sod/distributions"/>
+    </menu>
+
+    <menu name="Related Projects">
+        <item name="Seed Codec"               href="/../SeedCodec"/>
+        <item name="Core IDL"               href="/../fissuresIDL"/>
+        <item name="Fissures Impl"          href="/../fissuresImpl"/>
+        <item name="Fissures Util"          href="/../fissuresUtil"/>
+        <item name="SEED"                   href="/seed.html"/>
+        <item name="SOD"          href="/../sod"/>
+        <item name="GEE"          href="/../gee"/>
+        <item name="JEvalResp"          item="http://www.isti.com/JEvalResp/"/>
+        <item name="VASE"          item="http://www.iris.washington.edu/DHI/clients.html"/>
+    </menu>
+
+  </body>
+</project>
