@@ -2,8 +2,22 @@ properties=Properties
 eventArm=Event
 networkArm=Network
 waveformArm=WaveForm
+latitude=Latitude
+longitude=Longitude
 magnitudeRange=Magnitude
 eventTimeRange=Event Time Range
 magType=Type
 min=Minimum
 max=Maximum
+catalog=Catalog
+contributor=Contributor
+eventAttrName=Event Name
+eventArea=Event Area
+geographicalRegion=Geographical Region
+nullOriginSubsetter=Pass All Events
+originAND=Event Logical And
+originOR=Event Logical Or
+originXOR=Event Logical XOr
+originNOT=Event Logical Not
+
+
