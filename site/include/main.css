@@ -97,6 +97,11 @@ background:#eee;
 background:white;
 }
 
+#menu .notSelected{
+background:#eee;
+}
+
+
 #menu li{
 }
 
