@@ -212,7 +212,7 @@ public class WaveformArm implements Runnable {
 
     private void retryIfAvailable() throws SQLException{
         WaveformWorkUnit retryUnit = getNextRetry();
-        if(retryUnit != null)invokeLaterAsCapacityAllows(retryUnit);
+        if(retryUnit != null){ invokeLaterAsCapacityAllows(retryUnit); }
     }
 
     private WaveformWorkUnit getNextRetry() throws SQLException {
@@ -222,10 +222,39 @@ public class WaveformArm implements Runnable {
         }
         if(pairId != -1) {
             if (motionVectorArm != null) {
-                int[] pairs = new int[3];
-                GlobalExceptionHandler.handle("Retry on motion vector arm is BROKEN", new Exception());
-                return null;
-                //  return new RetryMotionVectorWaveformWorkUnit(pairs);
+                try {
+                    EventChannelPair ecp;
+                    try {
+                        ecp = evChanStatus.get(pairId, this);
+                    } catch (NotFound e) {
+                        GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair " + pairId + " right after it gave it to me",
+                                                      e);
+                        return null;
+                    }
+                    Channel[] chans = evChanStatus.getAllChansForSite(pairId);
+                    ChannelGroup[] groups = ChannelGroup.group(chans, new ArrayList());
+                    ChannelGroup pairGroup = null;
+                    for (int i = 0; i < groups.length; i++) {
+                        if(groups[i].contains(ecp.getChannel())){
+                            pairGroup = groups[i];
+                            break;
+                        }
+                    }
+                    if(pairGroup == null){
+                        GlobalExceptionHandler.handle("WaveformArm unable to match up a channel with a group that must've previously existed",
+                                                      new RuntimeException());
+                        return null;
+                    }
+                    try {
+                        return new RetryMotionVectorWaveformWorkUnit(evChanStatus.getPairs(ecp.getEvent(), pairGroup));
+                    } catch (NotFound e) {
+                        GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair right after it gave it to me",
+                                                      e);
+                    }
+                } catch (SQLException e) {
+                    GlobalExceptionHandler.handle("Trouble matching up a pair with its waveform group",
+                                                  e);
+                }
             } else {
                 return new RetryWaveformWorkUnit(pairId);
             }
