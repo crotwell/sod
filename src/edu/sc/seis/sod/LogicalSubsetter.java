@@ -56,7 +56,7 @@ public abstract class LogicalSubsetter implements Subsetter {
                 } // end of else
 		
             } else {
-                if ( node instanceof TextNode && node.getValue().trim().equals("")) {
+                if ( node instanceof Text && node.getNodeValue().trim().equals("")) {
                     // don't worry about empty text
                 } else {
                     logger.error("node not instance of Element "+node);
