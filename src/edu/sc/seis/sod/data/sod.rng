@@ -3633,9 +3633,11 @@
                 <element name="fileNameBase">
                     <data type="string"/>
                 </element>
-                <element name="numSeisPerRecordSection">
-                    <data type="integer"/>
-                </element>
+                <optional>
+                    <element name="numSeisPerRecordSection">
+                        <data type="integer"/>
+                    </element>
+                </optional>
                 <zeroOrMore>
                     <element name="recordSectionGrouping">
                         <element name="magnitudeRange">
@@ -3983,9 +3985,11 @@
                 <element name="fileNameBase">
                     <data type="string"/>
                 </element>
-                <element name="numSeisPerRecordSection">
-                    <data type="integer"/>
-                </element>
+                <optional>
+                    <element name="numSeisPerRecordSection">
+                        <data type="integer"/>
+                    </element>
+                </optional>
                 <zeroOrMore>
                     <element name="recordSectionGrouping">
                         <element name="magnitudeRange">
@@ -4333,9 +4337,11 @@
                 <element name="fileNameBase">
                     <data type="string"/>
                 </element>
-                <element name="numSeisPerRecordSection">
-                    <data type="integer"/>
-                </element>
+                <optional>
+                    <element name="numSeisPerRecordSection">
+                        <data type="integer"/>
+                    </element>
+                </optional>
                 <zeroOrMore>
                     <element name="recordSectionGrouping">
                         <element name="magnitudeRange">
@@ -4683,9 +4689,11 @@
                 <element name="fileNameBase">
                     <data type="string"/>
                 </element>
-                <element name="numSeisPerRecordSection">
-                    <data type="integer"/>
-                </element>
+                <optional>
+                    <element name="numSeisPerRecordSection">
+                        <data type="integer"/>
+                    </element>
+                </optional>
                 <zeroOrMore>
                     <element name="recordSectionGrouping">
                         <element name="magnitudeRange">
