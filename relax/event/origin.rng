@@ -175,13 +175,15 @@
                                 </example>
                         </xsd:documentation>
                 </xsd:annotation>
-                <element name="latitude">
-                   <data type="double"/>
+                <element name="originPointDistance">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
                 </element>
-                <element name="longitude">
-                    <data type="double"/>
-                </element>
-                <ref name="range"/>
         </define>
         <define name="NULL">
                 <xsd:annotation>
