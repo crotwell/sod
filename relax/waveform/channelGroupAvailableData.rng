@@ -8,6 +8,10 @@
         <choice>
             <ref name="ANDAvailableDataWrapper"/>
             <ref name="ORAvailableDataWrapper"/>
+            <ref name="channelGroupAvailableDataAND"/>
+            <ref name="channelGroupAvailableDataOR"/>
+            <ref name="channelGroupAvailableDataXOR"/>
+            <ref name="channelGroupAvailableDataNOT"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">
@@ -50,4 +54,82 @@
             <externalRef href="availableData.rng"/>
         </element>
     </define>
+        <define name="channelGroupAvailableDataAND">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Logical AND between AvailableData subsetters. </summary>
+                                <description> The output is the logical AND of the outputs of all
+                                        included subsetters. The subsetters after the first false
+                                        outputed are not evaluated. </description>
+                                <example>
+                                        <channelGroupAvailableDataAND>
+                                                <noGaps/>
+                                                <fullCoverage/>
+                                        </channelGroupAvailableDataAND>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="channelGroupAvailableDataAND">
+                        <oneOrMore>
+                                <ref name="channelGroupAvailableData"/>
+                        </oneOrMore>
+                </element>
+        </define>
+        <define name="channelGroupAvailableDataOR">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Logical OR between AvailableData subsetters. </summary>
+                                <description> The output is the logical OR of the outputs of all
+                                        included subsetters. The subsetters after the first true
+                                        outputed are not evaluated. </description>
+                                <example>
+                                        <channelGroupAvailableDataOR>
+                                                <noGaps/>
+                                                <fullCoverage/>
+                                        </channelGroupAvailableDataOR>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="channelGroupAvailableDataOR">
+                        <oneOrMore>
+                                <ref name="channelGroupAvailableData"/>
+                        </oneOrMore>
+                </element>
+        </define>
+        <define name="channelGroupAvailableDataXOR">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Logical XOR between AvailableData subsetters. </summary>
+                                <description> The output is the logical XOR of the outputs of all
+                                        included subsetters. </description>
+                                <example>
+                                        <channelGroupAvailableDataXOR>
+                                                <noGaps/>
+                                                <fullCoverage/>
+                                        </channelGroupAvailableDataXOR>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="channelGroupAvailableDataXOR">
+                        <ref name="channelGroupAvailableData"/>
+                        <ref name="channelGroupAvailableData"/>
+                </element>
+        </define>
+        <define name="channelGroupAvailableDataNOT">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Logical NOT of an AvailableData subsetter. </summary>
+                                <description> The output is the logical NOT of the output of the
+                                        included subsetters. </description>
+                                <example>
+                                        <channelGroupAvailableDataNOT>
+                                                <noGaps/>
+                                        </channelGroupAvailableDataNOT>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="channelGroupAvailableDataNOT">
+                        <ref name="channelGroupAvailableData"/>
+                </element>
+        </define>
 </grammar>

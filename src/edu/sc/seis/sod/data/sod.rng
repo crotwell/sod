@@ -17,22 +17,22 @@
                         </optional>
                         <optional>
                             <element name="eventQueryIncrement">
-                                <ref name="time3"/>
+                                <ref name="time4"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventRefreshInterval">
-                                <ref name="time3"/>
+                                <ref name="time4"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventLag">
-                                <ref name="time3"/>
+                                <ref name="time4"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="maxRetryDelay">
-                                <ref name="time3"/>
+                                <ref name="time4"/>
                             </element>
                         </optional>
                         <optional>
@@ -266,7 +266,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml3"/>
+                                    <ref name="xml4"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -281,7 +281,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml2"/>
+                                    <ref name="xml3"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -363,7 +363,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml4"/>
+                                    <ref name="xml5"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -380,7 +380,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml5"/>
+                                    <ref name="xml6"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -426,13 +426,13 @@
                                 <data type="string"/>
                             </element>
                             <element name="beginOffset">
-                                <ref name="time2"/>
+                                <ref name="time3"/>
                             </element>
                             <element name="endPhase">
                                 <data type="string"/>
                             </element>
                             <element name="endOffset">
-                                <ref name="time2"/>
+                                <ref name="time3"/>
                             </element>
                         </element>
                         <optional>
@@ -463,14 +463,7 @@
                     </element>
                     <element name="motionVectorArm">
                         <optional>
-                            <choice>
-                                <element name="ANDEventChannelWrapper">
-                                    <ref name="eventChannel2"/>
-                                </element>
-                                <element name="OREventChannelWrapper">
-                                    <ref name="eventChannel3"/>
-                                </element>
-                            </choice>
+                            <ref name="eventChannel4"/>
                         </optional>
                         <element name="requestGeneratorWrapper">
                             <element name="phaseRequest">
@@ -483,25 +476,18 @@
                                     <data type="string"/>
                                 </element>
                                 <element name="beginOffset">
-                                    <ref name="time4"/>
+                                    <ref name="time5"/>
                                 </element>
                                 <element name="endPhase">
                                     <data type="string"/>
                                 </element>
                                 <element name="endOffset">
-                                    <ref name="time4"/>
+                                    <ref name="time5"/>
                                 </element>
                             </element>
                         </element>
                         <optional>
-                            <choice>
-                                <element name="ANDRequestSubsetterWrapper">
-                                    <ref name="requestSubsetter2"/>
-                                </element>
-                                <element name="ORRequestSubsetterWrapper">
-                                    <ref name="requestSubsetter3"/>
-                                </element>
-                            </choice>
+                            <ref name="channelGroupRequestSubsetter"/>
                         </optional>
                         <element name="fixedDataCenter">
                             <optional>
@@ -517,14 +503,7 @@
                             </element>
                         </element>
                         <optional>
-                            <choice>
-                                <element name="ANDAvailableDataWrapper">
-                                    <ref name="availableData2"/>
-                                </element>
-                                <element name="ORAvailableDataWrapper">
-                                    <ref name="availableData3"/>
-                                </element>
-                            </choice>
+                            <ref name="channelGroupAvailableData"/>
                         </optional>
                         <zeroOrMore>
                             <ref name="channelGroupSeismogramProcess"/>
@@ -573,7 +552,7 @@
             </element>
         </element>
     </start>
-    <define name="phaseExists">
+    <define name="phaseExists4">
         <element name="phaseExists">
             <zeroOrMore>
                 <element name="modelName">
@@ -585,7 +564,7 @@
             </element>
         </element>
     </define>
-    <define name="phaseExists4">
+    <define name="phaseExists">
         <element name="phaseExists">
             <zeroOrMore>
                 <element name="modelName">
@@ -620,6 +599,33 @@
                 <data type="string"/>
             </element>
         </element>
+    </define>
+    <define name="eventChannel4">
+        <choice>
+            <element name="ANDEventChannelWrapper">
+                <ref name="eventChannel2"/>
+            </element>
+            <element name="OREventChannelWrapper">
+                <ref name="eventChannel3"/>
+            </element>
+            <element name="eventChannelGroupAND">
+                <oneOrMore>
+                    <ref name="eventChannel4"/>
+                </oneOrMore>
+            </element>
+            <element name="eventChannelGroupOR">
+                <oneOrMore>
+                    <ref name="eventChannel4"/>
+                </oneOrMore>
+            </element>
+            <element name="eventChannelGroupXOR">
+                <ref name="eventChannel4"/>
+                <ref name="eventChannel4"/>
+            </element>
+            <element name="eventChannelGroupNOT">
+                <ref name="eventChannel4"/>
+            </element>
+        </choice>
     </define>
     <define name="eventChannel">
         <choice>
@@ -699,6 +705,33 @@
             </element>
             <element name="eventChannelNOT">
                 <ref name="eventChannel3"/>
+            </element>
+        </choice>
+    </define>
+    <define name="channelGroupAvailableData">
+        <choice>
+            <element name="ANDAvailableDataWrapper">
+                <ref name="availableData2"/>
+            </element>
+            <element name="ORAvailableDataWrapper">
+                <ref name="availableData3"/>
+            </element>
+            <element name="channelGroupAvailableDataAND">
+                <oneOrMore>
+                    <ref name="channelGroupAvailableData"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupAvailableDataOR">
+                <oneOrMore>
+                    <ref name="channelGroupAvailableData"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupAvailableDataXOR">
+                <ref name="channelGroupAvailableData"/>
+                <ref name="channelGroupAvailableData"/>
+            </element>
+            <element name="channelGroupAvailableDataNOT">
+                <ref name="channelGroupAvailableData"/>
             </element>
         </choice>
     </define>
@@ -1158,6 +1191,107 @@
             </element>
         </zeroOrMore>
     </define>
+    <define name="requestSubsetter">
+        <choice>
+            <element name="requestSubsetterAND">
+                <oneOrMore>
+                    <ref name="requestSubsetter"/>
+                </oneOrMore>
+            </element>
+            <element name="requestSubsetterOR">
+                <oneOrMore>
+                    <ref name="requestSubsetter"/>
+                </oneOrMore>
+            </element>
+            <element name="requestSubsetterXOR">
+                <ref name="requestSubsetter"/>
+                <ref name="requestSubsetter"/>
+            </element>
+            <element name="requestSubsetterNOT">
+                <ref name="requestSubsetter"/>
+            </element>
+            <element name="requestPrint">
+                <empty/>
+            </element>
+            <element name="breqFastRequestSubsetter">
+                <element name="dataDirectory">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="label">
+                        <interleave>
+                            <text/>
+                            <optional>
+                                <element name="feRegionName">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="feRegionNumber">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="depth">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="magnitude">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="latitude">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="longitude">
+                                    <empty/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="originTime">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
+                        </interleave>
+                    </element>
+                </optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+                <element name="inst">
+                    <data type="string"/>
+                </element>
+                <element name="mail">
+                    <data type="string"/>
+                </element>
+                <element name="email">
+                    <data type="string"/>
+                </element>
+                <element name="phone">
+                    <data type="string"/>
+                </element>
+                <element name="fax">
+                    <data type="string"/>
+                </element>
+                <element name="media">
+                    <data type="string"/>
+                </element>
+                <element name="altmedia1">
+                    <data type="string"/>
+                </element>
+                <element name="altmedia2">
+                    <data type="string"/>
+                </element>
+                <element name="quality">
+                    <data type="string"/>
+                </element>
+            </element>
+        </choice>
+    </define>
     <define name="requestSubsetter3">
         <choice>
             <element name="requestSubsetterAND">
@@ -1277,107 +1411,6 @@
             </element>
             <element name="requestSubsetterNOT">
                 <ref name="requestSubsetter2"/>
-            </element>
-            <element name="requestPrint">
-                <empty/>
-            </element>
-            <element name="breqFastRequestSubsetter">
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="label">
-                        <interleave>
-                            <text/>
-                            <optional>
-                                <element name="feRegionName">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="feRegionNumber">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="depth">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="magnitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="latitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="longitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="originTime">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                        </interleave>
-                    </element>
-                </optional>
-                <element name="name">
-                    <data type="string"/>
-                </element>
-                <element name="inst">
-                    <data type="string"/>
-                </element>
-                <element name="mail">
-                    <data type="string"/>
-                </element>
-                <element name="email">
-                    <data type="string"/>
-                </element>
-                <element name="phone">
-                    <data type="string"/>
-                </element>
-                <element name="fax">
-                    <data type="string"/>
-                </element>
-                <element name="media">
-                    <data type="string"/>
-                </element>
-                <element name="altmedia1">
-                    <data type="string"/>
-                </element>
-                <element name="altmedia2">
-                    <data type="string"/>
-                </element>
-                <element name="quality">
-                    <data type="string"/>
-                </element>
-            </element>
-        </choice>
-    </define>
-    <define name="requestSubsetter">
-        <choice>
-            <element name="requestSubsetterAND">
-                <oneOrMore>
-                    <ref name="requestSubsetter"/>
-                </oneOrMore>
-            </element>
-            <element name="requestSubsetterOR">
-                <oneOrMore>
-                    <ref name="requestSubsetter"/>
-                </oneOrMore>
-            </element>
-            <element name="requestSubsetterXOR">
-                <ref name="requestSubsetter"/>
-                <ref name="requestSubsetter"/>
-            </element>
-            <element name="requestSubsetterNOT">
-                <ref name="requestSubsetter"/>
             </element>
             <element name="requestPrint">
                 <empty/>
@@ -2040,6 +2073,33 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+        </choice>
+    </define>
+    <define name="channelGroupRequestSubsetter">
+        <choice>
+            <element name="ANDRequestSubsetterWrapper">
+                <ref name="requestSubsetter2"/>
+            </element>
+            <element name="ORRequestSubsetterWrapper">
+                <ref name="requestSubsetter3"/>
+            </element>
+            <element name="channelGroupRequestSubsetterAND">
+                <oneOrMore>
+                    <ref name="channelGroupRequestSubsetter"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupRequestSubsetterOR">
+                <oneOrMore>
+                    <ref name="channelGroupRequestSubsetter"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupRequestSubsetterXOR">
+                <ref name="channelGroupRequestSubsetter"/>
+                <ref name="channelGroupRequestSubsetter"/>
+            </element>
+            <element name="channelGroupRequestSubsetterNOT">
+                <ref name="channelGroupRequestSubsetter"/>
             </element>
         </choice>
     </define>
@@ -5654,6 +5714,108 @@
             </element>
         </choice>
     </define>
+    <define name="channel2">
+        <choice>
+            <element name="channelCode">
+                <data type="string">
+                    <param name="pattern">[A-Z]{3}</param>
+                </data>
+            </element>
+            <element name="bandCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="gainCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="orientationCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="sampling">
+                <optional>
+                    <element name="min">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="max">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <element name="interval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>HOUR</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="channelEffectiveTimeOverlap">
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="orientationRange">
+                <element name="azimuth">
+                    <data type="float"/>
+                </element>
+                <element name="dip">
+                    <data type="float"/>
+                </element>
+                <element name="maxOffset">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationAzimuthRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationDipRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="channelAND">
+                <oneOrMore>
+                    <ref name="channel2"/>
+                </oneOrMore>
+            </element>
+            <element name="channelOR">
+                <oneOrMore>
+                    <ref name="channel2"/>
+                </oneOrMore>
+            </element>
+            <element name="channelXOR">
+                <ref name="channel2"/>
+                <ref name="channel2"/>
+            </element>
+            <element name="channelNOT">
+                <ref name="channel2"/>
+            </element>
+        </choice>
+    </define>
     <define name="channel4">
         <choice>
             <element name="channelCode">
@@ -5858,108 +6020,6 @@
             </element>
         </choice>
     </define>
-    <define name="channel2">
-        <choice>
-            <element name="channelCode">
-                <data type="string">
-                    <param name="pattern">[A-Z]{3}</param>
-                </data>
-            </element>
-            <element name="bandCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="gainCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="orientationCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="sampling">
-                <optional>
-                    <element name="min">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <element name="interval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>HOUR</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
-            </element>
-            <element name="channelEffectiveTimeOverlap">
-                <element name="startTime">
-                    <data type="string"/>
-                </element>
-                <element name="endTime">
-                    <data type="string"/>
-                </element>
-            </element>
-            <element name="orientationRange">
-                <element name="azimuth">
-                    <data type="float"/>
-                </element>
-                <element name="dip">
-                    <data type="float"/>
-                </element>
-                <element name="maxOffset">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationAzimuthRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationDipRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="channelAND">
-                <oneOrMore>
-                    <ref name="channel2"/>
-                </oneOrMore>
-            </element>
-            <element name="channelOR">
-                <oneOrMore>
-                    <ref name="channel2"/>
-                </oneOrMore>
-            </element>
-            <element name="channelXOR">
-                <ref name="channel2"/>
-                <ref name="channel2"/>
-            </element>
-            <element name="channelNOT">
-                <ref name="channel2"/>
-            </element>
-        </choice>
-    </define>
     <define name="seismogramProcess5">
         <choice>
             <element name="printlineSeismogramProcess">
@@ -6056,7 +6116,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml8"/>
+                        <ref name="xml9"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -6114,16 +6174,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -6287,7 +6347,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml7"/>
+                        <ref name="xml8"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -6345,16 +6405,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -6518,7 +6578,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml"/>
+                        <ref name="xml2"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -6576,16 +6636,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -6749,7 +6809,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml10"/>
+                        <ref name="xml"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -6807,16 +6867,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time8"/>
+                    <ref name="time"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time8"/>
+                    <ref name="time"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time8"/>
+                    <ref name="time"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time8"/>
+                    <ref name="time"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -6980,7 +7040,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml6"/>
+                        <ref name="xml7"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -7038,16 +7098,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time5"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time5"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time5"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time5"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -7187,7 +7247,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml9"/>
+                        <ref name="xml10"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -7862,13 +7922,13 @@
                 <data type="string"/>
             </element>
             <element name="beginOffset">
-                <ref name="time"/>
+                <ref name="time2"/>
             </element>
             <element name="endPhase">
                 <data type="string"/>
             </element>
             <element name="endOffset">
-                <ref name="time"/>
+                <ref name="time2"/>
             </element>
         </element>
     </define>
@@ -7883,13 +7943,13 @@
                 <data type="string"/>
             </element>
             <element name="beginOffset">
-                <ref name="time5"/>
+                <ref name="time6"/>
             </element>
             <element name="endPhase">
                 <data type="string"/>
             </element>
             <element name="endOffset">
-                <ref name="time5"/>
+                <ref name="time6"/>
             </element>
         </element>
     </define>
@@ -7904,13 +7964,13 @@
                 <data type="string"/>
             </element>
             <element name="beginOffset">
-                <ref name="time6"/>
+                <ref name="time7"/>
             </element>
             <element name="endPhase">
                 <data type="string"/>
             </element>
             <element name="endOffset">
-                <ref name="time6"/>
+                <ref name="time7"/>
             </element>
         </element>
     </define>
@@ -7925,13 +7985,13 @@
                 <data type="string"/>
             </element>
             <element name="beginOffset">
-                <ref name="time8"/>
+                <ref name="time"/>
             </element>
             <element name="endPhase">
                 <data type="string"/>
             </element>
             <element name="endOffset">
-                <ref name="time8"/>
+                <ref name="time"/>
             </element>
         </element>
     </define>
@@ -7946,13 +8006,13 @@
                 <data type="string"/>
             </element>
             <element name="beginOffset">
-                <ref name="time7"/>
+                <ref name="time8"/>
             </element>
             <element name="endPhase">
                 <data type="string"/>
             </element>
             <element name="endOffset">
-                <ref name="time7"/>
+                <ref name="time8"/>
             </element>
         </element>
     </define>

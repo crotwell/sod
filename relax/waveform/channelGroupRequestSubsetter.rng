@@ -8,6 +8,10 @@
         <choice>
             <ref name="ANDRequestSubsetterWrapper"/>
             <ref name="ORRequestSubsetterWrapper"/>
+            <ref name="channelGroupRequestSubsetterAND"/>
+            <ref name="channelGroupRequestSubsetterOR"/>
+            <ref name="channelGroupRequestSubsetterXOR"/>
+            <ref name="channelGroupRequestSubsetterNOT"/>
         </choice>
     </define>
     <define name="ANDRequestSubsetterWrapper">
@@ -48,6 +52,82 @@
         </xsd:annotation>
         <element name="ORRequestSubsetterWrapper">
             <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+    <define name="channelGroupRequestSubsetterAND">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical AND between RequestSubsetter subsetters. </summary>
+                <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                <example>
+                    <channelGroupRequestSubsetterAND>
+                        <something/>
+                        <somethingelse/>
+                    </channelGroupRequestSubsetterAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelGroupRequestSubsetterAND">
+            <oneOrMore>
+                <ref name="channelGroupRequestSubsetter"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channelGroupRequestSubsetterOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical OR between RequestSubsetter subsetters. </summary>
+                <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                <example>
+                    <channelGroupRequestSubsetterOR>
+                        <something/>
+                        <somethingelse/>
+                    </channelGroupRequestSubsetterOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelGroupRequestSubsetterOR">
+            <oneOrMore>
+                <ref name="channelGroupRequestSubsetter"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channelGroupRequestSubsetterXOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical XOR between RequestSubsetter subsetters. </summary>
+                <description> The output is the logical XOR of the outputs of all included
+                    subsetters. </description>
+                <example>
+                    <channelGroupRequestSubsetterXOR>
+                        <something/>
+                        <somethingelse/>
+                    </channelGroupRequestSubsetterXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelGroupRequestSubsetterXOR">
+            <ref name="channelGroupRequestSubsetter"/>
+            <ref name="channelGroupRequestSubsetter"/>
+        </element>
+    </define>
+    <define name="channelGroupRequestSubsetterNOT">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
+                <description> The output is the logical NOT of the output of the included
+                    subsetters. </description>
+                <example>
+                    <channelGroupRequestSubsetterNOT>
+                        <something/>
+                    </channelGroupRequestSubsetterNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelGroupRequestSubsetterNOT">
+            <ref name="channelGroupRequestSubsetter"/>
         </element>
     </define>
 </grammar>
