@@ -4,6 +4,7 @@ import edu.iris.Fissures.model.AllVTFactory;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
+import java.io.IOException;
 
 
 /**
@@ -18,9 +19,13 @@ import org.apache.log4j.lf5.util.LogMonitorAdapter;
 
 public class CommonAccess {
     private CommonAccess (){}
-
+    
+    public void handleException(Throwable t, String reason) {
+        //TODO
+    }
+    
     public static CommonAccess getCommonAccess() { return commonAccess; }
-
+    
     public FissuresNamingServiceImpl getFissuresNamingService() throws Exception{
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingServiceImpl(getORB());
@@ -29,11 +34,11 @@ public class CommonAccess {
                 fissuresNamingService.setNameServiceCorbaLoc((String)props.get(NAME_SERVICE_PROP));
             } // end of if ()
         } // end of if (fissuresNamingService == null)
-
+        
         return fissuresNamingService;
-
+        
     }
-
+    
     protected void initORB(String[] args, java.util.Properties props) {
         if (orb == null) {
             // Initialize the ORB.
@@ -44,32 +49,32 @@ public class CommonAccess {
             vt.register(orb);
         }
     }
-
+    
     public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
         if (orb == null) {
             initORB(null, null);
         } // end of if (orb == null)
         return orb;
     }
-
+    
     public LogMonitorAdapter getLF5Adapter(){
         if(adapter == null){
             adapter = LogMonitorAdapter.newInstance(RunStatus.getLogLevels());
         }
         return adapter;
     }
-
+    
     private static CommonAccess commonAccess = new CommonAccess();
-
+    
     private LogMonitorAdapter adapter;
-
+    
     private org.omg.CORBA_2_3.ORB orb = null;
-
+    
     FissuresNamingServiceImpl fissuresNamingService;
-
+    
     static final String NAME_SERVICE_PROP =
         "edu.sc.seis.sod.nameServiceCorbaLoc";
-
+    
     static Logger logger = Logger.getLogger(CommonAccess.class);
 }// CommonAccess
 
