@@ -54,7 +54,7 @@ import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess {
 
-    public RecordSectionDisplayGenerator(Element config) throws SQLException {
+    public RecordSectionDisplayGenerator(Element config) throws SQLException, NoSuchFieldException {
         initConfig(config);
         String eventRecSecTableName = "eventRecordSection" + id;
         String recSecChanTableName = "recordSectionChannel" + id;
@@ -66,7 +66,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         channel = new JDBCChannel();
     }
 
-    private void initConfig(Element config) {
+    private void initConfig(Element config) throws NoSuchFieldException {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
         displayOption = SodUtil.getText(SodUtil.getElement(config,
                                                            "displayOption"));
