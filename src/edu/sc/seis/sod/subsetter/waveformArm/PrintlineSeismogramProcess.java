@@ -30,6 +30,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      */
     public PrintlineSeismogramProcess (Element config){
         filename = SodUtil.getNestedText(config);
+        regions = new ParseRegions();
     }
 
     /**
@@ -43,20 +44,21 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public LocalSeismogram[] process(EventAccessOperations event, 
-			NetworkAccess network, 
-			Channel channel, 
-			RequestFilter[] original, 
-			RequestFilter[] available,
-			LocalSeismogram[] seismograms, 
-			CookieJar cookies) {
+    public LocalSeismogram[] process(EventAccessOperations event,
+            NetworkAccess network,
+            Channel channel,
+            RequestFilter[] original,
+            RequestFilter[] available,
+            LocalSeismogram[] seismograms,
+            CookieJar cookies) {
         if (filename != null && filename.length() != 0) {
-        	try {
+            try {
                 FileWriter fwriter = new FileWriter(filename, true);
                 BufferedWriter bwriter = new BufferedWriter(fwriter);
                 String debugStr = "Got "+seismograms.length+" seismograms for "+
                     ChannelIdUtil.toString(channel.get_id())+
                     " for event in "+
+                        regions.getRegionName(event.get_attributes().region)+
                     " at "+event.get_preferred_origin().origin_time.date_time;
                 bwriter.write(debugStr, 0, debugStr.length());
                 bwriter.newLine();
@@ -82,14 +84,14 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
             } // end of try-catch
         } // end of else
         
-	return seismograms;
+    return seismograms;
     }
    
     ParseRegions regions;
 
     String filename = null;
 
-    static Category logger = 
-	Category.getInstance(PrintlineSeismogramProcess.class.getName());
+    static Category logger =
+    Category.getInstance(PrintlineSeismogramProcess.class.getName());
 
 }// PrintlineWaveformProcessor
