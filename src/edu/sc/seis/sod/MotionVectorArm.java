@@ -13,7 +13,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.UnitBase;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
@@ -290,6 +292,12 @@ public class MotionVectorArm implements Subsetter{
                             logger.debug("before retrieve_seismograms");
                             try {
                                 localSeismograms[i] = dataCenter.retrieve_seismograms(infilters[i]);
+                                for (int j = 0; j < localSeismograms[i].length; j++) {
+                                    if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit).equals(COUNT_SQR)) {
+                                        logger.debug("NOAMP get seis units="+localSeismograms[i][j].y_unit);
+                                        localSeismograms[i][j].y_unit = UnitImpl.COUNT;
+                                    }
+                                }
                             } catch (FissuresException e) {
                                 handle(ecp, Stage.DATA_SUBSETTER, e);
                                 return;
@@ -419,5 +427,6 @@ public class MotionVectorArm implements Subsetter{
 
     private static final Logger logger = Logger.getLogger(MotionVectorArm.class);
 
+    private static final UnitImpl COUNT_SQR = new UnitImpl(UnitBase.COUNT, 10, "Dumb COUNT Squared", 1, 2);
 }
 

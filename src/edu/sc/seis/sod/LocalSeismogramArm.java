@@ -6,7 +6,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.UnitBase;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
@@ -223,11 +225,11 @@ public class LocalSeismogramArm implements Subsetter{
                         NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
                         if(nsDC.getServerDNS().equals("edu/iris/dmc") &&
                            nsDC.getServerName().equals("IRIS_ArchiveDataCenter")){
-						    synchronized(this){
+                            synchronized(this){
                             //Archive doesn't support retrieve_seismograms
                             //so try using the queue set of retrieve calls
-                            	try {
-                                	String id = dataCenter.queue_seismograms(infilters);
+                                try {
+                                    String id = dataCenter.queue_seismograms(infilters);
                                 String status = dataCenter.request_status(id);
                                 while(status.equals(RETRIEVING_DATA)){
                                     try {
@@ -242,10 +244,16 @@ public class LocalSeismogramArm implements Subsetter{
                                 handle(ecp, Stage.DATA_SUBSETTER, ex);
                                 return;
                             }
-							}
+                            }
                         }else{
                             try {
                                 localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                                for (int j = 0; j < localSeismograms.length; j++) {
+                                    if(UnitImpl.createUnitImpl(localSeismograms[j].y_unit).equals(COUNT_SQR)) {
+                                        logger.debug("NOAMP get seis units="+localSeismograms[j].y_unit);
+                                        localSeismograms[j].y_unit = UnitImpl.COUNT;
+                                    }
+                                }
                             } catch (FissuresException e) {
                                 handle(ecp, Stage.DATA_SUBSETTER, e);
                                 return;}
@@ -374,6 +382,8 @@ public class LocalSeismogramArm implements Subsetter{
     public static final String NO_DATA = "no_data";
     public static final String DATA_RETRIEVED = "Finished";
     public static final String RETRIEVING_DATA = "Processing";
+
+    private static final UnitImpl COUNT_SQR = new UnitImpl(UnitBase.COUNT, 10, "Dumb COUNT Squared", 1, 2);
 
     private static final Logger logger =Logger.getLogger(LocalSeismogramArm.class);
 }// LocalSeismogramArm
