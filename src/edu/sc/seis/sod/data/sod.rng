@@ -17,22 +17,22 @@
                         </optional>
                         <optional>
                             <element name="eventQueryIncrement">
-                                <ref name="time7"/>
+                                <ref name="time6"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventRefreshInterval">
-                                <ref name="time7"/>
+                                <ref name="time6"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventLag">
-                                <ref name="time7"/>
+                                <ref name="time6"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="maxRetryDelay">
-                                <ref name="time7"/>
+                                <ref name="time6"/>
                             </element>
                         </optional>
                         <optional>
@@ -426,13 +426,13 @@
                                 <data type="string"/>
                             </element>
                             <element name="beginOffset">
-                                <ref name="time8"/>
+                                <ref name="time7"/>
                             </element>
                             <element name="endPhase">
                                 <data type="string"/>
                             </element>
                             <element name="endOffset">
-                                <ref name="time8"/>
+                                <ref name="time7"/>
                             </element>
                         </element>
                         <optional>
@@ -480,13 +480,13 @@
                                     <data type="string"/>
                                 </element>
                                 <element name="beginOffset">
-                                    <ref name="time6"/>
+                                    <ref name="time5"/>
                                 </element>
                                 <element name="endPhase">
                                     <data type="string"/>
                                 </element>
                                 <element name="endOffset">
-                                    <ref name="time6"/>
+                                    <ref name="time5"/>
                                 </element>
                             </element>
                         </element>
@@ -5141,13 +5141,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
             </element>
             <element name="rMean">
@@ -5220,9 +5220,9 @@
                 </element>
             </element>
             <element name="forkProcess">
-                <zeroOrMore>
+                <oneOrMore>
                     <ref name="seismogramProcess3"/>
-                </zeroOrMore>
+                </oneOrMore>
             </element>
             <element name="alwaysSuccess">
                 <ref name="seismogramProcess3"/>
@@ -5237,16 +5237,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time4"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5270,7 +5270,10 @@
                 </optional>
                 <optional>
                     <element name="fileType">
-                        <data type="string"/>
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
                     </element>
                 </optional>
             </element>
@@ -5385,13 +5388,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
             </element>
             <element name="rMean">
@@ -5464,9 +5467,9 @@
                 </element>
             </element>
             <element name="forkProcess">
-                <zeroOrMore>
+                <oneOrMore>
                     <ref name="seismogramProcess2"/>
-                </zeroOrMore>
+                </oneOrMore>
             </element>
             <element name="alwaysSuccess">
                 <ref name="seismogramProcess2"/>
@@ -5481,16 +5484,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5514,7 +5517,10 @@
                 </optional>
                 <optional>
                     <element name="fileType">
-                        <data type="string"/>
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
                     </element>
                 </optional>
             </element>
@@ -5629,13 +5635,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
             </element>
             <element name="rMean">
@@ -5708,9 +5714,9 @@
                 </element>
             </element>
             <element name="forkProcess">
-                <zeroOrMore>
+                <oneOrMore>
                     <ref name="seismogramProcess4"/>
-                </zeroOrMore>
+                </oneOrMore>
             </element>
             <element name="alwaysSuccess">
                 <ref name="seismogramProcess4"/>
@@ -5725,16 +5731,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time5"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5758,7 +5764,10 @@
                 </optional>
                 <optional>
                     <element name="fileType">
-                        <data type="string"/>
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
                     </element>
                 </optional>
             </element>
@@ -5952,9 +5961,9 @@
                 </element>
             </element>
             <element name="forkProcess">
-                <zeroOrMore>
+                <oneOrMore>
                     <ref name="seismogramProcess"/>
-                </zeroOrMore>
+                </oneOrMore>
             </element>
             <element name="alwaysSuccess">
                 <ref name="seismogramProcess"/>
@@ -6002,7 +6011,10 @@
                 </optional>
                 <optional>
                     <element name="fileType">
-                        <data type="string"/>
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
                     </element>
                 </optional>
             </element>
@@ -6117,13 +6129,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
             </element>
             <element name="rMean">
@@ -6196,9 +6208,9 @@
                 </element>
             </element>
             <element name="forkProcess">
-                <zeroOrMore>
+                <oneOrMore>
                     <ref name="seismogramProcess5"/>
-                </zeroOrMore>
+                </oneOrMore>
             </element>
             <element name="alwaysSuccess">
                 <ref name="seismogramProcess5"/>
@@ -6213,16 +6225,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time9"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -6246,7 +6258,10 @@
                 </optional>
                 <optional>
                     <element name="fileType">
-                        <data type="string"/>
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
                     </element>
                 </optional>
             </element>
@@ -6858,31 +6873,6 @@
                     </choice>
                 </oneOrMore>
             </element>
-            <element name="phaseSignalToNoiseCalculator">
-                <optional>
-                    <element name="modelName">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-                <element name="shortOffsetBegin">
-                    <ref name="time2"/>
-                </element>
-                <element name="shortOffsetEnd">
-                    <ref name="time2"/>
-                </element>
-                <element name="longOffsetBegin">
-                    <ref name="time2"/>
-                </element>
-                <element name="longOffsetEnd">
-                    <ref name="time2"/>
-                </element>
-                <element name="ratio">
-                    <data type="float"/>
-                </element>
-            </element>
             <element name="channelGroupFork">
                 <zeroOrMore>
                     <ref name="channelGroupSeismogramProcess"/>
@@ -7270,26 +7260,6 @@
         </interleave>
     </define>
     <define name="time8">
-        <interleave>
-            <element name="unit">
-                <choice>
-                    <value>NANOSECOND</value>
-                    <value>MICROSECOND</value>
-                    <value>MILLISECOND</value>
-                    <value>SECOND</value>
-                    <value>MINUTE</value>
-                    <value>HOUR</value>
-                    <value>DAY</value>
-                    <value>WEEK</value>
-                    <value>YEAR</value>
-                </choice>
-            </element>
-            <element name="value">
-                <data type="float"/>
-            </element>
-        </interleave>
-    </define>
-    <define name="time9">
         <interleave>
             <element name="unit">
                 <choice>
