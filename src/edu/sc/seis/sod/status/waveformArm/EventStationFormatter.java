@@ -126,11 +126,13 @@ public class EventStationFormatter extends StationFormatter{
                     Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT),
                     Status.get(Stage.REQUEST_SUBSETTER, Standing.SYSTEM_FAILURE),
                     Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
                     Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.DATA_SUBSETTER, Standing.REJECT),
                     Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE)};
             failed = evStatus.prepareStatement(baseStatement + " AND " + getStatusRequest(failedStatus));
             Status[] retryStatus = new Status[]{
-                Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
+                Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY),
                     Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
                     Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
                     Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE)};
