@@ -452,6 +452,11 @@
                 </element>
             </optional>
             <optional>
+                <element name="putDataInCookieJar">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
                 <element name="fileType">
                     <choice>
                         <value>png</value>
