@@ -12,6 +12,16 @@
                 <name>Download</name>
         </page>
         <page>
+                <source>../xdocs/install.xml</source>
+                <destination>install.html</destination>
+                <name>Install</name>
+        </page>
+        <page>
+                <source>../xdocs/running.xml</source>
+                <destination>running.html</destination>
+                <name>Run</name>
+        </page>
+        <page>
                 <source>../xdocs/walkthrough.xml</source>
                 <destination>walkthrough.html</destination>
                 <name>Walkthrough</name>
