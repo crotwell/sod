@@ -62,7 +62,7 @@ public class CookieJar {
 
     VelocityContext context;
 
-    private static VelocityContext getChannelContext(EventAccessOperations event,
+    public static VelocityContext getChannelContext(EventAccessOperations event,
                                                      Channel channel) {
         VelocityContext siteContext = getSiteContext(event, channel.my_site);
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
@@ -77,7 +77,8 @@ public class CookieJar {
         return (VelocityContext)siteContext.get(chanIdStr);
 
     }
-    private static VelocityContext getSiteContext(EventAccessOperations event,
+
+    public static VelocityContext getSiteContext(EventAccessOperations event,
                                                   Site site) {
         VelocityContext staContext =
             getStationContext(event, site.my_station);
@@ -93,7 +94,7 @@ public class CookieJar {
         return (VelocityContext)staContext.get(siteIdStr);
     }
 
-    private static VelocityContext getStationContext(EventAccessOperations event,
+    public static VelocityContext getStationContext(EventAccessOperations event,
                                                      Station sta) {
         VelocityContext nContext = getNetworkContext(event, sta.my_network.get_id());
         String staIdStr = StationIdUtil.toString(sta.get_id());
@@ -108,7 +109,8 @@ public class CookieJar {
         return (VelocityContext)nContext.get(staIdStr);
 
     }
-    private static VelocityContext getNetworkContext(EventAccessOperations event,
+
+    public static VelocityContext getNetworkContext(EventAccessOperations event,
                                                      NetworkId netId) {
         VelocityContext eContext = getEventContext(event);
         String netIdStr = NetworkIdUtil.toString(netId);
@@ -123,7 +125,7 @@ public class CookieJar {
 
     }
 
-    private static VelocityContext getEventContext(EventAccessOperations event) {
+    public static VelocityContext getEventContext(EventAccessOperations event) {
         if ( ! eventContexts.containsKey(event)) {
             VelocityContext eContext = new VelocityContext(commonContext);
             eContext.put("sod_event", event);
