@@ -126,9 +126,30 @@ public class EditorUtil {
     /** Creates a number spinner with the initial value the Double.parseDouble
      * of the text in the Text node. The min, max and step are also given. */
     public static JSpinner createNumberSpinner(final Text text,
-                                               Comparable min,
-                                               Comparable max,
-                                               Number step){
+                                               Integer min,
+                                               Integer max,
+                                               Integer step){
+        try {
+                final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Integer(text.getNodeValue()),
+                                                                          min, max, step));
+                spin.addChangeListener(new ChangeListener(){
+                            public void stateChanged(ChangeEvent e) {
+                                text.setNodeValue(spin.getValue().toString());
+                            }
+                        });
+                return spin;
+        } catch (RuntimeException e) {
+            logger.warn(text.getNodeValue()+" "+min+" "+max,e);
+            throw e;
+        }
+    }
+
+    /** Creates a number spinner with the initial value the Double.parseDouble
+     * of the text in the Text node. The min, max and step are also given. */
+    public static JSpinner createNumberSpinner(final Text text,
+                                               Double min,
+                                               Double max,
+                                               Double step){
         try {
             final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Double(text.getNodeValue()),
                                                                       min, max, step));
@@ -138,6 +159,7 @@ public class EditorUtil {
                         }
                     });
             return spin;
+
         } catch (RuntimeException e) {
             logger.warn(text.getNodeValue()+" "+min+" "+max,e);
             throw e;
@@ -148,7 +170,7 @@ public class EditorUtil {
         return makeTimeIntervalTwiddler(el, new Integer(1), null);
     }
 
-    public static JComponent makeTimeIntervalTwiddler(Element el, Comparable min, Comparable max) throws TransformerException{
+    public static JComponent makeTimeIntervalTwiddler(Element el, Integer min, Integer max) throws TransformerException{
         Box b = Box.createHorizontalBox();
         Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
         b.add(EditorUtil.createNumberSpinner(t, min, max, new Integer(1)));
