@@ -344,8 +344,31 @@ public class EventArm extends SodExceptionSource implements Runnable{
 			       edu.iris.Fissures.Time givenEndTime) {
 
 	if( (new MicroSecondDate(givenEndTime)).before( new MicroSecondDate(endTime)) ||
-	    (new MicroSecondDate(givenEndTime)).equals( new MicroSecondDate(endTime))) return true;
+	    (new MicroSecondDate(givenEndTime)).equals( new MicroSecondDate(endTime)))  {
+		//return true;	
+		return  passivateEventArm(givenEndTime);
+	}
 	else return false;
+    }
+
+    private boolean passivateEventArm(edu.iris.Fissures.Time endTime) {
+	//if(turn == 1) System.exit(0);
+	TimeInterval timeInterval = new TimeInterval(Start.QUIT_TIME,
+						     UnitImpl.DAY);
+	MicroSecondDate endDate = new MicroSecondDate(endTime);
+	MicroSecondDate quitDate = endDate.add(timeInterval);
+	MicroSecondDate currentDate = new MicroSecondDate();
+	if(quitDate.before(currentDate))  return true;
+	try {
+		System.out.println("NOW the eventArm goes to sleep &&&&&&&&&&&&&&&&&&&&&&&&&&&&");	
+		if(turn != 0)
+		Thread.sleep(Start.REFRESH_INTERVAL * 1000);	
+	} catch(InterruptedException ie) {
+		ie.printStackTrace();
+	}
+	Start.getEventQueue().deleteTimeConfig();
+	turn++;
+	return false;
     }
 
     private int getIncrementValue() {
@@ -359,7 +382,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	}
     }
     
-
+    private static int turn = 0;
     private edu.sc.seis.sod.subsetter.eventArm.EventFinder eventFinderSubsetter;
 
     private edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder eventChannelFinder = null;
