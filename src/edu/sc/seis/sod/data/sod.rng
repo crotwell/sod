@@ -5178,7 +5178,7 @@
                     </interleave>
                 </element>
             </element>
-            <element name="responseGainProcessor">
+            <element name="responseGain">
                 <empty/>
             </element>
             <element name="phaseCut">
@@ -5388,7 +5388,7 @@
                     </interleave>
                 </element>
             </element>
-            <element name="responseGainProcessor">
+            <element name="responseGain">
                 <empty/>
             </element>
             <element name="phaseCut">
@@ -5598,7 +5598,7 @@
                     </interleave>
                 </element>
             </element>
-            <element name="responseGainProcessor">
+            <element name="responseGain">
                 <empty/>
             </element>
             <element name="phaseCut">
@@ -5808,7 +5808,7 @@
                     </interleave>
                 </element>
             </element>
-            <element name="responseGainProcessor">
+            <element name="responseGain">
                 <empty/>
             </element>
             <element name="phaseCut">
@@ -6018,7 +6018,7 @@
                     </interleave>
                 </element>
             </element>
-            <element name="responseGainProcessor">
+            <element name="responseGain">
                 <empty/>
             </element>
             <element name="phaseCut">
