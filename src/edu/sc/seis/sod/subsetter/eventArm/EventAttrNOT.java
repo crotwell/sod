@@ -28,7 +28,9 @@ public class EventAttrNOT
     implements EventAttrSubsetter {
     
     /**
-     * Creates a new <code>EventAttrNOT</code> instance.
+     * returns true if the eventAttr subsetter enclosed in the eventAttr subsetter is false
+     * else returns false. The maximum number of eventAttrSubsetters that can be enclosed 
+     * in an eventAttrNOTSubsetter is 1.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs

@@ -43,7 +43,9 @@ public class EventAttrAND
     }
 
     /**
-     * Describe <code>accept</code> method here.
+     * returns true if all the eventAttr subsetters enclosed in the eventAttrAND subsetter are true.
+     * and returns false if any one of them is false. The range of eventAttrSubsetters that can be 
+     * enclosed in an eventAttrANDSubsetter is 0 to UNLIMITED.
      *
      * @param e an <code>EventAttr</code> value
      * @param cookies a <code>CookieJar</code> value

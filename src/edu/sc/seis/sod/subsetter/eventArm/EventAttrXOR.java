@@ -35,7 +35,9 @@ public class EventAttrXOR
     }
 
     /**
-     * Describe <code>accept</code> method here.
+     * returns true if both of the eventAttr subsetters enclosed in an eventAttrXORSubsetter 
+     * have the same value. i.e., both of them are true or both of them are false.  The range of
+     * eventAttrSubsetters that can be enclosed in an eventAttrXORSubsetter is 2 ... 2
      *
      * @param e an <code>EventAttr</code> value
      * @param cookies a <code>CookieJar</code> value

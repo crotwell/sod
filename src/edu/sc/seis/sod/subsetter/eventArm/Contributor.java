@@ -28,7 +28,8 @@ public class Contributor implements OriginSubsetter{
     }
     
     /**
-     * Describe <code>accept</code> method here.
+     * returns true if the contributor of the origin is same as the corresponding 
+     * contributor specified in the configuration file.
      *
      * @param event an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value
@@ -43,7 +44,7 @@ public class Contributor implements OriginSubsetter{
 
 
     /**
-     * Describe <code>getContributor</code> method here.
+     * returns the contributor.
      *
      * @return a <code>String</code> value
      */

@@ -61,7 +61,8 @@ public class EventArea
     }
 
     /**
-     * Describe <code>accept</code> method here.
+     * returns true if the given origin is within the area specified in the
+     * configuration file else returns false.
      *
      * @param event an <code>EventAccessOperations</code> value
      * @param e an <code>Origin</code> value

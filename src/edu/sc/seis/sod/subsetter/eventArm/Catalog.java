@@ -30,7 +30,8 @@ public class Catalog implements OriginSubsetter{
     }
     
     /**
-     * Describe <code>accept</code> method here.
+     * returns true if the catalog for the origin passed is same as the 
+     * one specified in the corresponding catalog tag in the configuration file. 
      *
      * @param event an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value

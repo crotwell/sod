@@ -37,6 +37,7 @@ public abstract class TimeRange implements Subsetter{
 	    }
 
 	    logger.debug(node.getNodeName());
+	    
 	}
 	children = childElement.getChildNodes(); 
 	for(int  i = 0; i < children.getLength(); i ++) {

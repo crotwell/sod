@@ -35,7 +35,9 @@ public class EventAttrOR
     implements EventAttrSubsetter {
     
     /**
-     * Creates a new <code>EventAttrOR</code> instance.
+     * returns true if anyone of the enclosed subsetters is true. If all of the enclosed
+     * subsetters are false returns false. The range of subsetters that can be enclosed 
+     * in an eventAttrORSubsetter is 0 .. UNLIMITED.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
