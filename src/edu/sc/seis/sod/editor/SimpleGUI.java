@@ -49,6 +49,8 @@ public class SimpleGUI extends CommandLineEditor {
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(new JScrollPane(panel), BorderLayout.CENTER);
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = gbc.WEST;
+        gbc.fill = gbc.HORIZONTAL;
         panel.setLayout(new GridBagLayout());
         Document doc = start.getDocument();
         addElementToPanel(panel, doc.getDocumentElement(), gbc);
