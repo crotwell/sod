@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  * @version
  */
 
-public class PrintlineChannelProcessor implements NetworkArmProcess {
+public class PrintlineChannelProcessor implements NetworkProcess {
     public PrintlineChannelProcessor (Element config){
         filename = SodUtil.getNestedText(config);
     }
@@ -34,7 +34,7 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
             bwriter.newLine();
             bwriter.close();
         } else {
-            System.out.println(ChannelIdUtil.toString(channel.get_id()));
+            System.out.println("PRINTLINE CHANNEL PROCESSOR"+ChannelIdUtil.toString(channel.get_id()));
         } // end of else
 
     }

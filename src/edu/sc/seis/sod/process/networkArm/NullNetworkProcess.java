@@ -11,7 +11,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
  * @version
  */
 
-public class NullNetworkProcess implements NetworkArmProcess {
+public class NullNetworkProcess implements NetworkProcess {
     public NullNetworkProcess (){}
 
     public void process(NetworkAccess network, Channel channel) {}

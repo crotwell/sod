@@ -13,7 +13,7 @@ import edu.sc.seis.sod.process.Process;
  * @version
  */
 
-public interface NetworkArmProcess extends Process {
+public interface NetworkProcess extends Process {
 
     public void process(NetworkAccess network,Channel chan) throws Exception;
 

@@ -7,7 +7,7 @@ import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.process.networkArm.NetworkArmProcess;
+import edu.sc.seis.sod.process.networkArm.NetworkProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import org.w3c.dom.Element;
 
-public class ResponseWriter implements NetworkArmProcess {
+public class ResponseWriter implements NetworkProcess {
 
     public ResponseWriter (Element config) throws ConfigurationException  {
         String dirName = SodUtil.getNestedText(SodUtil.getElement(config, "directory"));
