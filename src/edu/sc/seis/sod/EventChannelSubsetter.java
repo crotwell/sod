@@ -14,7 +14,7 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface EventChannelSubsetter {
+public interface EventChannelSubsetter  extends Subsetter {
 
     /**
      * Describe <code>accept</code> method here.

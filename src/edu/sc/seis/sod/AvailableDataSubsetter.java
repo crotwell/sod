@@ -16,7 +16,7 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface AvailableDataSubsetter {
+public interface AvailableDataSubsetter extends Subsetter {
 
     /**
      * Describe <code>accept</code> method here.

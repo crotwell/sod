@@ -17,7 +17,7 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public interface MotionVectorSubsetter {
+public interface MotionVectorSubsetter extends Subsetter {
 
     /**
      * Describe <code>accept</code> method here.
