@@ -10,6 +10,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.seismogramDC.*;
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 import java.io.*;
 
