@@ -51,6 +51,11 @@ public class NetworkArm {
 	    node = children.item(i);
 	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
+		if (((Element)node).getTagName().equals("description")) {
+		    // skip description element
+		    continue;
+		}
+
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.networkArm");
 		if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)  networkFinderSubsetter = (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
 		else if(sodElement instanceof NetworkIdSubsetter) { 

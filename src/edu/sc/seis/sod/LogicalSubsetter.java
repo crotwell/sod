@@ -43,6 +43,11 @@ public abstract class LogicalSubsetter implements Subsetter {
 	    node = children.item(i);
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
+		if (subElement.getTagName().equals("description")) {
+		    // skip description element
+		    continue;
+		}
+		
 		Object obj = SodUtil.load(subElement, getPackageName());
 		if (obj instanceof Subsetter) {
 		    System.out.println("adding the $$$ to the filterList");
