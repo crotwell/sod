@@ -12,7 +12,7 @@
 #set ( $station = $sod_channel.getSite().getStation() )
 #set ( $origin = $sod_event.get_preferred_origin() )
 <title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
-$velocity_date.format($stdDateFormatStr, $sod_event.get_preferred_origin().getTime())</title>
+$velocity_date.format($stdDateFormatStr, $origin.getTime())</title>
 <style media="all">@import "../../../main.css";</style>
 <script language="JavaScript">
 function flipImage(imgName,imgSrc,parentImgSrc) {
