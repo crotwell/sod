@@ -45,6 +45,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         getPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         getForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
         getEventForStatus = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE status = ? AND eventid = ?");
+        getStationEventForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE status = ? AND eventid = ? AND eventchannelstatus.channelid = channel.chan_id AND channel.site_id = site.site_id AND site.sta_id = ?");
     }
 
     public int put(EventChannelPair ecp) throws SQLException{
@@ -79,7 +80,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return extractECPs(getForEvent.executeQuery());
     }
 
-    public EventChannelPair[] getAll(CacheEvent ev)throws SQLException, NotFound{
+    public EventChannelPair[] getAll(EventAccessOperations ev)throws SQLException, NotFound{
         return getAll(eventTable.getDBId(ev));
     }
 
@@ -88,6 +89,16 @@ public class JDBCEventChannelStatus extends SodJDBC{
         getEventForStatus.setInt(1, status.getAsShort());
         getEventForStatus.setInt(2, evId);
         return extractECPs(getEventForStatus.executeQuery());
+    }
+
+    public int getNum(EventAccessOperations ev, Status status, int stationDbId) throws NotFound, SQLException {
+        int evId = eventTable.getDBId(ev);
+        getStationEventForStatus.setInt(1, status.getAsShort());
+        getStationEventForStatus.setInt(2, evId);
+        getStationEventForStatus.setInt(3, stationDbId);
+        ResultSet rs = getStationEventForStatus.executeQuery();
+        rs.next();
+        return rs.getInt(1);
     }
 
     private EventChannelPair[] extractECPs(ResultSet rs) throws SQLException{
@@ -100,7 +111,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                               e);
             }
         }
-        return (EventChannelPair[])pairs.toArray(new EventChannelPair[0]);
+        return (EventChannelPair[])pairs.toArray(new EventChannelPair[pairs.size()]);
     }
 
     public EventChannelPair get(int pairId, WaveformArm owner)throws NotFound,
@@ -159,7 +170,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
     }
 
     private PreparedStatement insert, setStatus, getPairId, getAll, getForEvent,
-        getPair, getForStatus, getEventForStatus;
+        getPair, getForStatus, getEventForStatus, getStationEventForStatus;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
