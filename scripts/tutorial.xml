@@ -100,7 +100,7 @@
       <bandCode>L</bandCode>
       <channelNOT>
         <!-- to prevent LOG channels -->
-        <gainCode>G</gainCode>
+        <gainCode>O</gainCode>
       </channelNOT>
       <channelEffectiveTimeOverlap>
           <effectiveTimeOverlap>
