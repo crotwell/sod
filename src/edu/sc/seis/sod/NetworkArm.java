@@ -337,7 +337,6 @@ public class NetworkArm {
      */
     public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject, SiteDbObject siteDbObject) {
         if(siteDbObject.channelDbObjects != null) {
-            logger.debug("returning from the cache");
             return siteDbObject.channelDbObjects;
         }
         ArrayList arrayList = new ArrayList();
@@ -366,8 +365,7 @@ public class NetworkArm {
         ChannelDbObject[] values = new ChannelDbObject[arrayList.size()];
         values = (ChannelDbObject[]) arrayList.toArray(values);
         siteDbObject.channelDbObjects = values;
-        logger.debug("******* The elenght of the successful channels is "+values.length);
-        //  if(siteDbObject.getDbId() == 5) System.exit(0);
+        logger.debug("got "+values.length+" channels");
         return values;
     }
     
