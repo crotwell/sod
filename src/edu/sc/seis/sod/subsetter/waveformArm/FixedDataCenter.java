@@ -30,7 +30,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement{
 	    
 	    dns = getDNSName();
 	    objectName = getSourceName();
-
+        dataCenter = fissuresNamingService.getSeismogramDC(dns, objectName);	
     }
 
     /**
@@ -39,8 +39,10 @@ public class FixedDataCenter extends AbstractSource implements SodElement{
      * @return a <code>DataCenter</code> value
      */
     public DataCenter getSeismogramDC() throws Exception{
-	return fissuresNamingService.getSeismogramDC(dns, objectName);	
+        return dataCenter;
     }
+
+    private DataCenter dataCenter;
 
    private FissuresNamingServiceImpl fissuresNamingService = null;
 
