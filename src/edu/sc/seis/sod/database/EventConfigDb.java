@@ -102,6 +102,7 @@ public class EventConfigDb {
 	edu.iris.Fissures.Time time = getTime();
 	MicroSecondDate microSecondDate = new MicroSecondDate(time);
 	Calendar calendar = Calendar.getInstance();
+	calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
 	calendar.setTime(microSecondDate);
 	calendar.add(Calendar.DAY_OF_YEAR, days);
 	microSecondDate = new MicroSecondDate(calendar.getTime());
