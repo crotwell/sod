@@ -259,7 +259,7 @@ public class EventArm implements Runnable{
     }
 
     private void handle(CacheEvent event) throws Exception{
-        change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
+        change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                  Standing.IN_PROG));
         EventAttr attr = event.get_attributes();
         Origin origin = event.get_preferred_origin();
