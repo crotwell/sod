@@ -117,7 +117,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         loadTutorial.addActionListener(tutorialLoader);
         fileMenu.add(loadTutorial);
         JMenuItem loadWeed = new JMenuItem("Open WEED");
-        loadWeed.addActionListener(new FileLoader("weed.xml"));
+        loadWeed.addActionListener(new FileLoader(configFileBase + "weed.xml"));
         fileMenu.add(loadWeed);
         fileMenu.addSeparator();
         JMenuItem quit = new JMenuItem("Quit");
@@ -240,7 +240,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
         if (comp != null) { box.add(comp); }
 
         NamedNodeMap attrList = element.getAttributes();
-
         NodeList list = element.getChildNodes();
         // simple case of only 1 child Text node and no attributes
         if (list.getLength() == 1 && list.item(0) instanceof Text && attrList.getLength() == 0) {
@@ -329,7 +328,8 @@ public class SimpleGUIEditor extends CommandLineEditor {
         System.out.println("Done editing.");
     }
 
-    private FileLoader tutorialLoader = new FileLoader("tutorial.xml");
+    private FileLoader tutorialLoader = new FileLoader(configFileBase + "tutorial.xml");
+    private static final String configFileBase = "jar:edu/sc/seis/sod/data/configFiles/";
     protected String frameName = "Simple XML Editor GUI";
     private boolean tabs = false;
     private JFrame frame;
