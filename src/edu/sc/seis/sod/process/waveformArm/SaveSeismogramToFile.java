@@ -125,18 +125,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         }
     }
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
-     */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
@@ -148,7 +136,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                         " for event in "+
                         regions.getRegionName(event.get_attributes().region)+
                         " at "+event.get_preferred_origin().origin_time.date_time);
-
         if (seismograms.length == 0) { return seismograms; }
         synchronized(masterDataSetElement) {
             saveInDataSet(event, channel, seismograms, fileType);
@@ -231,10 +218,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 seismograms[i].channel_id = channel.get_id();
 
                 File seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
-                                                       dataDirectory,
-                                                       channel,
-                                                       event,
-                                                       fileType);
+                                                            dataDirectory,
+                                                            channel,
+                                                            event,
+                                                            fileType);
                 seisURLStr[i] = getRelativeURLString(lastDataSetFile, seisFile);
                 seisURL[i] = seisFile.toURI().toURL();
                 seisFileTypeArray[i] = seisFileType;  // all are the same
