@@ -8,8 +8,10 @@ package edu.sc.seis.sod.status;
 
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.AllTypeTemplate;
 import java.util.Iterator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class MenuTemplate extends Template implements GenericTemplate{
 
@@ -26,12 +28,17 @@ public class MenuTemplate extends Template implements GenericTemplate{
         if (tag.equals("relativePath")){
             return new AllTypeTemplate(){
                 public String getResult(){
-                    String absPathTo = fileDir + '/' + el.getFirstChild().getNodeValue();
+                    Node firstChild = el.getFirstChild();
+                    String absPathTo = fileDir + '/' + firstChild.getNodeValue();
+                    if(el.getFirstChild() instanceof Element){
+                        Element el = (Element)firstChild;
+                        absPathTo = ((AllTypeTemplate)getCommonTemplate(el.getNodeName(),
+                                                                        el)).getResult();
+                    }
                     return SodUtil.getRelativePath(pathFrom, absPathTo, "/");
                 }
             };
         }
-
         return getCommonTemplate(tag, el);
     }
 
