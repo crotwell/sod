@@ -70,7 +70,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     private void  restoreDb()  throws InvalidDatabaseStateException{
         Object connection = Start.getWaveformQueue().getConnection();
         synchronized(connection) {
-            int[] ids = Start.getWaveformQueue().getIds();
+            long[] ids = Start.getWaveformQueue().getIds();
 
             for(int counter = 0; counter < ids.length; counter++) {
                 int eventid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
@@ -236,7 +236,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                 //set the status of the event to be AWAITING_FINAL_STATUS implying that
                 //that all the network information for this particular event is inserted 
                 //in the waveformDatabase.
-                Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+                Start.getEventQueue().setFinalStatus(eventAccess, 
                                                      Status.AWAITING_FINAL_STATUS);
                 //	Start.getWaveformQueue().endTransaction();
                 //get the next event.
@@ -490,7 +490,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    //   Start.getWaveformQueue().deleteInfo(eventid);
         Status status = Start.getEventQueue().getStatus(eventid);
         if(status.getId() != Status.AWAITING_FINAL_STATUS.getId()) return;
-        Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+        Start.getEventQueue().setFinalStatus((CacheEvent)eventAccess, 
                                              Status.COMPLETE_SUCCESS);
         //        if(Start.getEventQueue().getLength() == 0) //waveformStatusProcess.closeProcessing();
 	
@@ -625,11 +625,11 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         public synchronized Runnable getWork() {
 
 	    	    
-            int waveformid = Start.getWaveformQueue().pop();
+            long waveformid = Start.getWaveformQueue().pop();
             if(waveformid == -1) return null;
             int eventid = Start.getWaveformQueue().getWaveformEventId(waveformid);
             int channelid = Start.getWaveformQueue().getWaveformChannelId(waveformid);
-	 
+            
             Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
                                                Status.PROCESSING, "just after being popped");
 
@@ -637,10 +637,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             EventDbObject eventDbObject = null;
             ChannelDbObject channelDbObject = null;
             try {
+                logger.debug("BEFORE get event access");
 	
                 //EventAccessOperations 
                 eventAccess =
                     Start.getEventQueue().getEventAccess(eventid);
+                logger.debug("AFTER get evemt access");
                 Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
                                                    Status.PROCESSING, "got eventAccess");
 
@@ -661,12 +663,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             }
             //  setFinalStatus(eventDbObject, channelDbObject,
             // 	    Status.PROCESSING, "still didnot even form the waveformThread Runnable");
-            if(eventid == 11 && channelid == 27) {
-                logger.debug("got the needed one");
-                logger.debug("The eventid is "+eventDbObject.getDbId());
-                logger.debug("The channelid is "+channelDbObject.getDbId());
-
-            }
             //networkArm.getChannel(networkid);
             NetworkAccess networkAccess = null;
             NetworkDbObject networkDbObject = null;
