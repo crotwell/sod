@@ -141,6 +141,7 @@ def buildExternalDist(proj, name):
               ('scripts/weed.xml', 'examples/weed.xml'),
               ('scripts/legacyExecute.xml', 'examples/legacyExecute.xml'),
               ('scripts/legacyVectorExecute.xml', 'examples/legacyVectorExecute.xml'),
+              ('scripts/vector.xml', 'examples/vector.xml'),
               ('scripts/realtime.xml', 'examples/realtime.xml'),
               ('scripts/breqfast.xml', 'examples/breqfast.xml'),
               ('site/generatedSite', 'docs')]
