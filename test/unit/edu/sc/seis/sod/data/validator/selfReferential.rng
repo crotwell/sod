@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="baseElement">
+            <ref name="selfRef"/>
+        </element>
+    </start>
+    <define name="selfRef">
+            <element name="internalEl"><empty/></element>
+            <optional>
+                <ref name="selfRef"/>
+            </optional>
+    </define>
+</grammar>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="mustHaveThisElement">
+            <text/>
+            <value type="float">2.1</value>
+            <data type="double"/>
+            <data type="string">
+                <param name="maxLength">test</param>
+            </data>
+        </element>
+    </start>
+    <define name="internalEl">
+            <element name="withThisElementInsideOfIt"><empty/></element>
+    </define>
+</grammar>
