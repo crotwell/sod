@@ -4,6 +4,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.Template;
 import java.text.DecimalFormat;
 import java.util.Iterator;
@@ -123,6 +124,13 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("status") && cgt != null){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
+                    return cgt.getStatus(chan);
+                }
+            };
+        }else if(tag.equals("standing") && cgt != null){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+					Status status = (Status)cgt.channelMap.get(chan);
                     return cgt.getStatus(chan);
                 }
             };

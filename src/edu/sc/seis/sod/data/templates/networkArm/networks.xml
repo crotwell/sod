@@ -26,7 +26,7 @@ Networks
 <tr><network>
 <td><networkCode/></td>
 <td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
-<td><attribute name="id"><status/></attribute><status/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
 </network></tr>
 </networks>
 </table>

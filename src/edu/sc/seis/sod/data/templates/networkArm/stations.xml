@@ -49,7 +49,7 @@
 <tr>
 <td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/channels.html</attribute><networkCode/>.<stationCode/></a></td>
 <td><name/></td>
-<td><attribute name="id"><status/></attribute><status/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
 </tr>
 </station>
 </stations>

@@ -116,14 +116,14 @@ body>#Menu {width:150px;}
     padding: 0 0 0 10px;
 }
 
-#Passed {
+#success {
 color: green;
 }
 
-#Failed {
+#rejected {
 color: red;
 }
 
-#New {
+#new {
 color: blue;
 }

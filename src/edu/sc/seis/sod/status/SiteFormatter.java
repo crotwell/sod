@@ -9,6 +9,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -103,6 +104,14 @@ public class SiteFormatter extends Template implements SiteTemplate {
             return new SiteTemplate(){
                 public String getResult(Site site){
                     return sgt.siteMap.get(site).toString();
+                }
+            };
+        }
+        else if (tag.equals("standing") && sgt != null){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+					Status status = (Status)sgt.siteMap.get(site);
+                    return status.getStanding().toString();
                 }
             };
         }

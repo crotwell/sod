@@ -10,6 +10,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -165,7 +166,14 @@ public class StationFormatter extends Template implements StationTemplate{
                 }
             };
         }
-
+        else if (tag.equals("standing") && sgt != null){
+            return new StationTemplate(){
+                public String getResult(Station sta){
+					Status status = (Status)sgt.stationMap.get(sta);
+                    return status.getStanding().toString();
+                }
+            };
+        }
         return getCommonTemplate(tag, el);
     }
 

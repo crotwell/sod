@@ -9,6 +9,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.w3c.dom.Element;
@@ -127,6 +128,14 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
                     return ngt.networkMap.get(net).toString();
+                }
+            };
+        }
+        else if (tag.equals("standing") && ngt != null){
+            return new NetworkTemplate(){
+                public String getResult(NetworkAccess net){
+					Status status = (Status)ngt.networkMap.get(net);
+                    return status.getStanding().toString();
                 }
             };
         }

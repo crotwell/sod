@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import java.lang.reflect.Field;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
-    private Map channelMap = new HashMap();
+    Map channelMap = new HashMap();
 
     public ChannelGroupTemplate(Element el) throws ConfigurationException {
         parse(el);
