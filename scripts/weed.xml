@@ -3,7 +3,7 @@
         <properties>
         <runName>WEED Emulator</runName>
             <statusBase>status</statusBase>
-                <reopenEvents/>
+                <reopenEvents>TRUE</reopenEvents>
             <eventQueryIncrement>
         <unit>WEEK</unit>
         <value>1</value>
