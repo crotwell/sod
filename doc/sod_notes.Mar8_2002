@@ -1,0 +1,136 @@
+Global Decisions:
+-----------------
+1. no attributes, use elements.
+2. design for computer generated XML.
+3. general classes for units/quantity/unitRange.
+4. builtin subsetters for common stuff.
+5. external subsetters.
+
+NOTE 1: preferred (or) all origins ???
+NOTE 2: waveform Arm: Which to consider EventChannel or EventChannelGroup.
+
+I)EVENT ARM::::
+
+
+	queryEvents  		EventChannel
+	    |			     |
+	    |			     |
+	    |			     |
+	    --------------------------
+			|
+			|
+			|
+		EventAttrSubsetter
+			|
+			|
+			|
+		OriginSubsetter
+			|
+			|
+			|
+		     Process
+
+
+
+ II)NETWORK ARM::::
+			NetworkDC
+			    |
+			    |
+			    |
+			networkID
+			    |
+			    |
+			    |
+			networkAttr
+  			    |
+			    |
+			    |
+			stationID
+			    |
+			    |
+			    |
+			 Station
+			    |
+			    |
+			    |
+			 siteID
+			    |
+			    |
+			    |
+			  Site
+			    |
+			    |
+			    |
+			ChannelID
+			    |
+			    |
+			    |
+			 Channel
+			    |
+			    |
+			    |
+			 Process
+
+
+III) WAVEFORM ARM:
+
+ 
+	EVENT ARM				NETWORKARM
+	   |					     |
+	   |					     |
+	   |					     |
+	   |					     |
+	   -------------------------------------------
+				|
+				|
+				|
+			EventSelection   accept(Event, Channel)
+			        |
+				|
+			EventChannel or EventChannelGroup
+				|
+				|
+			TimeWindowGeneration TimeRange[] generate(Event,
+			Channel)
+				|
+				|
+			DatCenterChooser DatCenter generate(Event,
+			Channel)
+			(getAvailableData)
+				|
+				|
+			availableDataSubsetter accept(Event, Channel,
+			ReqFilter[] inreq, ReqFilter outreq[])
+			(getSeismograms)
+				|
+				|
+			WaveFromSubsetter
+				|
+				|
+			Process or sequence or processes
+
+
+Example of an EventArm:
+-----------------------
+
+<EventArm>
+	<eventfinder ......\>
+	<eventChannel .....\>
+	<flinnengdahlregion num = 7 \>
+	<originOR>
+		<magnitude>
+			<type>mb</type>
+			<min>5.5</min>
+		</magnitude>
+		<originAND>
+			<magnitude>
+				<type>mb</type>
+				<min>5.0</min>
+			</magnitude>
+			<depth>
+				<unit>kilometer</unit>
+				<min>100</min>
+			</depth>
+		</originAND>
+	</originOR>
+</EventArm>
