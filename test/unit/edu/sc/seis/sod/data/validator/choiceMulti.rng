@@ -7,9 +7,11 @@
         </element>
     </start>
     <define name="twoChild">
-            <choice>
-                <element name="internalEl1"><empty/></element>
-                <element name="internalEl2"><empty/></element>
-            </choice>
+            <oneOrMore>
+            	<choice>
+               		<element name="internalEl1"><empty/></element>
+	                <element name="internalEl2"><empty/></element>
+    	        </choice>
+            </oneOrMore>
     </define>
 </grammar>
