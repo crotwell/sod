@@ -27,6 +27,9 @@
                                 waveform processors perform various transformations on the data in
                                 sequence. So several processors can be stacked up to filter the
                                 data, remove the mean, and any other conceivable action. </p>
+                        <p class="about">Please read the <a href="walkthrough.html">walkthrough</a>
+                                document for an simple tutorial using SOD to get SAC data from the
+                                IRIS DMC.</p>
                 </section>
                 <section name="News">
                         <table id="entry">
