@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<template>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Networks</title>
+<style media="all">@import "../main.css";</style>
+</head>
+<body>
+<div id="Header">
+Networks
+</div>
+<div id="Content">
+<h1>Networks</h1>
+<h2>Status:</h2>
+<p><status/></p>
+<h2>Networks:</h2>
+<table>
+<tr id="title">
+<td>Code</td>
+<td>Name</td>
+<td>Status</td>
+</tr>
+<networks>
+<tr><network>
+<td><code/></td>
+<td><name/></td>
+<td><status/></td>
+</network></tr>
+</networks>
+</table>
+</div>
+</body>
+</html>
+</template>
