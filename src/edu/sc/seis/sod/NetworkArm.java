@@ -264,23 +264,23 @@ public class NetworkArm {
 
     }
 
-    public Channel getChannel(int dbid) {
+    public synchronized  Channel getChannel(int dbid) {
 	return networkDatabase.getChannel(dbid);
     }
 
-    public NetworkAccess getNetworkAccess(int dbid) {
+    public synchronized NetworkAccess getNetworkAccess(int dbid) {
 	return networkDatabase.getNetworkAccess(dbid);
     }
 
-    public int getSiteDbId(int channelid) {
+    public synchronized int getSiteDbId(int channelid) {
 	return networkDatabase.getSiteDbId(channelid);
     }
 
-    public int getStationDbId(int siteid) {
+    public synchronized int getStationDbId(int siteid) {
 	return networkDatabase.getStationDbId(siteid);	
     }
 
-    public int getNetworkDbId(int stationid) {
+    public synchronized int getNetworkDbId(int stationid) {
 	return networkDatabase.getNetworkDbId(stationid);
     }
 
@@ -479,6 +479,7 @@ public class NetworkArm {
 	values = (ChannelDbObject[]) arrayList.toArray(values);
 	siteDbObject.channelDbObjects = values;
 	System.out.println("******* The elenght of the successful channels is "+values.length);
+	//	if(siteDbObject.getDbId() == 5) System.exit(0);
 	return values;
     }
 
