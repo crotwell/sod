@@ -8,7 +8,7 @@
     <include href="../base/include/quantity.rng"></include>
     <define name="channel">
         <choice>
-	    	<ref name="channelCode"/>
+            <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
             <ref name="orientationCode"/>
@@ -21,6 +21,7 @@
             <ref name="OR"/>
             <ref name="XOR"/>
             <ref name="NOT"/>
+            <ref name="PASS"/>
         </choice>
     </define>
     <define name="channelCodeUtil">
@@ -28,7 +29,7 @@
             <param name="pattern">[A-Z]{1}</param>
         </data>
     </define>
-    
+
     <define name="channelCodeType">
         <data type="string">
             <param name="pattern">[A-Z]{3}</param>
@@ -342,4 +343,20 @@
             </element>
         </element>
     </define>
+    <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passChannel/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passChannel">
+                        <zeroOrMore>
+                                <ref name="channel"/>
+                        </zeroOrMore>
+                </element>
+        </define>
 </grammar>
