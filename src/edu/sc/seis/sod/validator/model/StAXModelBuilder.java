@@ -107,10 +107,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
         }
         Definition def = new Definition(name, combo);
         reader.nextTag();
-        Annotation note = null;
-        if(reader.getLocalName().equals("annotation")){ note = handleAnn(); }
         def.set(handleAll());
-        if(note != null){ def.getForm().setAnnotation(note); }
         return def;
     }
 
@@ -133,12 +130,19 @@ public class StAXModelBuilder implements XMLStreamConstants{
             else if(tag.equals("ref")){ kids.add(handleRef()); }
             else if(tag.equals("externalRef")){ kids.add(handleExtRef()); }
             else if(isData(tag)){ kids.add(handleData()); }
-            else if(tag.equals("annotation")){ handleAnn(); }
+            else if(tag.equals("annotation")){
+                note = handleAnn();
+                continue;
+            }
             else{
                 System.out.println("SHIT!!  Unknown tag!" + tag + " " + definedGrammar);
                 System.exit(0);
 
                 break;
+            }
+            if(note != null){
+                ((FormProvider)kids.get(kids.size() - 1)).setAnnotation(note);
+                note = null;
             }
         }
         if(kids.size() == 1){ return (FormProvider)kids.get(0); }

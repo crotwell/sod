@@ -19,23 +19,11 @@ public class Attribute extends AbstractGenitorForm{
     public FormProvider copyWithNewParent(Form newParent) {
         Attribute attr = new Attribute(getMin(), getMax(), getName(), newParent);
         copyChildToNewParent(attr);
+        attr.setAnnotation(getAnnotation());
         return attr;
     }
 
     public String getName(){ return name; }
-
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Attribute){
-            return ((Attribute)o).getName().equals(getName()) &&
-                super.equals(o);
-        }
-        return false;
-    }
-
-    public int hashCode(){
-        return super.hashCode() * 37 + getName().hashCode() * 37;
-    }
 
     public void accept(FormVisitor v) {
         v.visit(this);

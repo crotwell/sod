@@ -18,7 +18,11 @@ public class Ref implements FormProvider{
     }
 
     public FormProvider copyWithNewParent(Form newParent) {
-        return new Ref(owner, name, newParent);
+        Ref copy = new Ref(owner, name, newParent);
+        copy.setMin(min);
+        copy.setMax(max);
+        if(ann != null){ copy.setAnnotation(ann); }
+        return copy;
     }
 
     public Form getForm(){
@@ -27,6 +31,7 @@ public class Ref implements FormProvider{
         Form derefedForm = refedForm.deref(parent, def);
         derefedForm.setMin(getMin());
         derefedForm.setMax(getMax());
+        if(ann != null){ derefedForm.setAnnotation(ann); }
         return derefedForm;
     }
 
@@ -46,6 +51,11 @@ public class Ref implements FormProvider{
 
     public int getMax() { return max; }
 
+    public void setAnnotation(Annotation ann) {
+        this.ann = ann;
+    }
+
+
     public void setMax(int max) { this.max = max; }
 
     public int hashCode(){
@@ -59,4 +69,5 @@ public class Ref implements FormProvider{
     private Grammar owner;
     private String name;
     private Form parent;
+    private Annotation ann;
 }

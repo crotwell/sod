@@ -13,5 +13,7 @@ public interface MultigenitorForm extends Form{
     public Form[] getChildren();
 
     public NamedElement[] getElementalChildren();
+
+    public Attribute[] getAttributes();
 }
 

@@ -14,7 +14,11 @@ public class FormPrinter implements FormVisitor{
     }
 
     public void visit(Attribute attr) {
-        printAndIncreaseDepth("@" + attr.getName() + " " + getCardinality(attr));
+        String print = "@" + attr.getName() + " " + getCardinality(attr);
+        if(attr.getAnnotation() != null){
+            print += " " + attr.getAnnotation().getSummary();
+        }
+        printAndIncreaseDepth(print);
     }
 
     public void visit(Choice choice) {

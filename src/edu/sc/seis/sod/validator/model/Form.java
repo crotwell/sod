@@ -7,7 +7,9 @@
 package edu.sc.seis.sod.validator.model;
 
 public interface Form extends FormProvider{
-    public void setAnnotation(Annotation ann);
+    public String getXPath();
+
+    public Annotation getAnnotation();
 
     /**
      * @return   the Form containing this Form.  Every Form has a parent except

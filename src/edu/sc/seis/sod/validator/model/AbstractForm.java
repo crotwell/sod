@@ -55,6 +55,8 @@ public abstract class AbstractForm implements Form {
 
     public Annotation getAnnotation(){ return ann; }
 
+    public String getXPath(){ return getParent().getXPath(); }
+
     private Definition def;
     private int min, max;
     private Form parent;

@@ -24,5 +24,7 @@ public interface FormProvider{
     public void setMax(int max);
 
     public FormProvider copyWithNewParent(Form newParent);
+
+    public void setAnnotation(Annotation ann);
 }
 

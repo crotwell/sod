@@ -26,21 +26,8 @@ public abstract class AbstractGenitorForm extends AbstractForm implements Genito
 
     public Form getChild() { return child.getForm(); }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof AbstractGenitorForm){
-            return ((AbstractGenitorForm)o).getChild().equals(child) &&
-                super.equals(o);
-        }
-        return false;
-    }
-
     void copyChildToNewParent(AbstractGenitorForm newParent){
         newParent.setChild(child.copyWithNewParent(newParent));
-    }
-
-    public int hashCode(){
-        return super.hashCode() * 37 + getChild().hashCode() * 37;
     }
 
     public void accept(FormVisitor visitor){

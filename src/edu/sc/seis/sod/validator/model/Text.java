@@ -23,5 +23,7 @@ public class Text extends Empty{
         return false;
     }
 
+    public String toString(){ return "Any Text"; }
+
     public void accept(FormVisitor v) { v.visit(this);}
 }
