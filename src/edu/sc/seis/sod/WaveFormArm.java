@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import java.util.*;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
@@ -49,7 +50,7 @@ public class WaveFormArm implements Runnable {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {}
-                retryIfAvailable();
+                retryIfNeededAndAvailable();
             }
             logger.info("Waveform arm done.");
         } catch(Throwable e) {
@@ -63,7 +64,7 @@ public class WaveFormArm implements Runnable {
     private void populateEventChannelDb()throws Exception{
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()){
             EventEffectiveTimeOverlap overlap =
-                new EventEffectiveTimeOverlap(ev.getGetEvent());
+                new EventEffectiveTimeOverlap(ev.getEvent());
             
             NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             logger.debug("got " + networks.length + " networks from getSuccessfulNetworks()");
@@ -73,7 +74,7 @@ public class WaveFormArm implements Runnable {
             //set the status of the event to be SUCCESS implying that
             //that all the network information for this particular event is inserted
             //in the waveformDatabase.
-            eventStatus.setStatus(ev.getGetEvent(),EventCondition.SUCCESS);
+            eventStatus.setStatus(ev.getEvent(),EventCondition.SUCCESS);
         }
     }
     
@@ -172,6 +173,10 @@ public class WaveFormArm implements Runnable {
         }
     }
     
+    /**
+     * This method blocks until there is space in the pool for wu to run, then
+     * starts its execution.
+     */
     private void invokeLaterAsCapacityAllows(WaveformWorkUnit wu){
         while(pool.getNumWaiting() > poolLineCapacity){
             try {
@@ -215,7 +220,7 @@ public class WaveFormArm implements Runnable {
                     addStatusMonitor((WaveFormStatus)sodElement);
                 }else {
                     System.err.println("Unknown tag "+((Element)node).getTagName()+" found in config file");
-					throw new IllegalArgumentException("The waveformArm does not know about tag " + ((Element)node).getTagName());
+                    throw new IllegalArgumentException("The waveformArm does not know about tag " + ((Element)node).getTagName());
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
@@ -226,24 +231,13 @@ public class WaveFormArm implements Runnable {
         statusMonitors.add(monitor);
     }
     
-    public synchronized void signalWaveFormArm()  {
-        notifyAll();
-    }
-    
-    
-    /**
-     * sets the finalStatus of the event. For infomation about the status see
-     * the class Status in the package edu.sc.seis.sod.database.
-     */
-    
     public synchronized void setStatus(EventChannelPair ecp){
         synchronized(evChanStatus){
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
-                if(ecp.getStatus().equals(EventChannelCondition.FAILURE) ||
-                   ecp.getStatus().equals(EventChannelCondition.SUBSETTER_FAILED) ||
-                   ecp.getStatus().equals(EventChannelCondition.PROCESSOR_FAILED)){
-                    eventRetryTable.failed(ecp.getPairId(), EventChannelCondition.FAILURE);
+                if(ecp.getStatus().equals(EventChannelCondition.CORBA_FAILURE) ||
+                   ecp.getStatus().equals(EventChannelCondition.NO_AVAILABLE_DATA)){
+                    eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
                 }
             } catch (SQLException e) {
                 CommonAccess.handleException("Trouble setting the status on an event channel pair",
@@ -300,6 +294,11 @@ public class WaveFormArm implements Runnable {
         }
         
         public void run(){
+            EventChannelPair ecp = extractEventChannelPair();
+            process(ecp);
+        }
+        
+        private EventChannelPair extractEventChannelPair(){
             int[] evAndChanIds = null;
             try {
                 synchronized(evChanStatus){
@@ -326,11 +325,39 @@ public class WaveFormArm implements Runnable {
             int networkid = networkArm.getNetworkDbId(stationid);
             NetworkAccess networkAccess  = networkArm.getNetworkAccess(networkid);
             NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
-            WaveFormArmProcessor processor = new WaveFormArmProcessor(getEvent(eventId), eventStationSubsetter,
-                                                                      localSeismogramArm, networkDbObject,
-                                                                      channelDbObject, WaveFormArm.this,
-                                                                      pairId);
-            processor.run();
+            return new EventChannelPair(networkDbObject, getEvent(eventId),
+                                        channelDbObject,WaveFormArm.this,
+                                        pairId);
+        }
+        
+        private void process(EventChannelPair ecp){
+            try {
+                ecp.update("Subsetting Started", EventChannelCondition.SUBSETTING);
+                boolean passedESS;
+                synchronized(eventStationSubsetter) {
+                    Station station = ecp.getChannel().my_site.my_station;
+                    passedESS = eventStationSubsetter.accept(ecp.getEvent(),
+                                                             ecp.getNet(),
+                                                             station,
+                                                             null);
+                    if(!passedESS) {
+                        ecp.update("Event Station Subsetter Failed",
+                                   EventChannelCondition.SUBSETTER_FAILED);
+                    }else{
+                        try {
+                            localSeismogramArm.processLocalSeismogramArm(ecp);
+                        } catch (org.omg.CORBA.SystemException e) {
+                            ecp.update(e,
+                                       "Corba failure in the local seismogram arm",
+                                       EventChannelCondition.CORBA_FAILURE);
+                        }
+                    }
+                }
+            } catch(Throwable e) {
+                ecp.update("System failure", EventChannelCondition.FAILURE);
+                CommonAccess.handleException(e,
+                                             "Waveform processing thread dies unexpectantly.");
+            }
         }
         
         private int pairId;
