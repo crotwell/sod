@@ -27,7 +27,7 @@ ooc.orb.oa.thread_pool=10
 # You should put your own choices for host.domain and port
 #
 #ooc.orb.service.NameService=corbaloc:iiop:piglet.seis.sc.edu:7771/NameService
-ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:7371/NameService
+ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
 edu.sc.seis.sod.configuration =./xml/sceppevents.xml
 edu.sc.seis.sod.waveformarm.threads =4
 edu.sc.seis.sod.TaupModel=prem

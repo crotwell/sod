@@ -48,7 +48,7 @@
 		<description>take any global 6.5 or better EQ</description>
 		<magnitudeRange>
 			<magType>mb</magType>
-			<min>6.5</min>
+			<min>4.5</min>
 		</magnitudeRange>
 		<eventArea>
                    <globalArea/>
@@ -166,45 +166,15 @@
     </networkArm>
 
     <waveFormArm>
-	<eventStationOR>
-		<eventStationAND>
-			<eventStationDistance>
-				<distanceRange>
-					<unit>DEGREE</unit>
-					<min>30</min>
-				</distanceRange>
-			</eventStationDistance>
-			<embeddedOriginSubsetter>
-				<magnitudeRange>
-					<description>describes magnitude</description>
-					<magType>mb</magType>
-					<min>5.5</min>
-				</magnitudeRange>
-			</embeddedOriginSubsetter>
-		</eventStationAND>
-		<eventStationAND>
-			<eventStationDistance>
-				<distanceRange>
-					<unit>DEGREE</unit>
-					<min>60</min>
-					<max>90</max>
-				</distanceRange>
-			</eventStationDistance>
-			<embeddedOriginSubsetter>
-				<magnitudeRange>
-					<magType>mb</magType>
-					<min>6.0</min>
-				</magnitudeRange>
-			</embeddedOriginSubsetter>
-		</eventStationAND>
+	<eventStationAND>
 		<phaseExists>
 			<modelName>prem</modelName>
 			<phaseName>P</phaseName>
 		</phaseExists>
 		<phaseInteraction>
 			<modelName>prem</modelName>
-			<phaseName>P</phaseName>
-			<interactionStyle>TOPSIDE REFLECTION</interactionStyle>
+			<phaseName>PcP</phaseName>
+			<interactionStyle>PATH</interactionStyle>
 			<interactionNumber>1</interactionNumber>
 			<relative>
 				<reference>EVENT</reference>
@@ -215,9 +185,14 @@
 						<max>1000</max>
 					</unitRange>
 				</depthRange>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>60</min>
+					<max>70</max>
+				</distanceRange>
 			</relative>
 		</phaseInteraction>
-	</eventStationOR>
+	</eventStationAND>
 
 	<fixedDataCenter>
 		<name>SCEPPSeismogramDC</name>
