@@ -4,6 +4,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.validator.Validator;
@@ -26,11 +27,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class Start{
-
     static {
         GlobalExceptionHandler.registerWithAWTThread();
     }
@@ -198,7 +196,7 @@ public class Start{
                 }
             }
         }
-        indexTemplate.registerMapWithEventArm();
+        indexTemplate.performRegistration();
     }
 
     public static Properties getProperties() {return props; }
