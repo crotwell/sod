@@ -16,6 +16,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.Location;
+import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
@@ -23,18 +24,32 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
+import java.util.Calendar;
+import java.util.TimeZone;
 import org.easymock.MockControl;
+import java.util.Date;
 
 public class MockFissuresCreator{
     public static EventAccessOperations createEvent(){
+        return createEvent(createOrigin(), createEventAttr());
+    }
+    
+    public static EventAccessOperations createFallEvent(){
+        return createEvent(createWallFallOrigin(), createWallFallAttr());
+    }
+    
+    public static EventAccessOperations createEvent(Origin origin, EventAttr attr){
         MockControl eventController = MockControl.createControl(EventAccessOperations.class);
         EventAccessOperations mockEvent = (EventAccessOperations) eventController.getMock();
         mockEvent.get_attributes();
-        eventController.setReturnValue(createEventAttr(), 3);
+        eventController.setReturnValue(attr, MockControl.ZERO_OR_MORE);
         try {
             mockEvent.get_preferred_origin();
         } catch (NoPreferredOrigin e) {}
-        eventController.setReturnValue(createOrigin(), 3);
+        eventController.setReturnValue(origin, MockControl.ZERO_OR_MORE);
+        mockEvent.get_origins();
+        Origin[] origins = { origin};
+        eventController.setReturnValue(origins, MockControl.ZERO_OR_MORE);
         eventController.replay();
         return mockEvent;
     }
@@ -61,16 +76,49 @@ public class MockFissuresCreator{
     }
     
     public static Origin createOrigin(){
-        return new OriginImpl(null, null, null, time.getFissuresTime(), loc, mags, null);
+        return new OriginImpl("Epoch in Central Alaska", "Test Data", "Charlie Groves", time.getFissuresTime(), loc, mags, null);
+    }
+    
+    public static Origin createWallFallOrigin(){
+        return new OriginImpl("Fall of the Berlin Wall", "Test Data", "Charlie Groves", getFallOfBerlinWall().getFissuresTime(), berlin, mags, null);
     }
     
     public static EventAttr createEventAttr(){
         return new EventAttrImpl("Test Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), 1));
     }
     
+    public static EventAttr createWallFallAttr(){
+        return new EventAttrImpl("Fall of the Berlin Wall Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), 543));
+    }
+    
+    public static MicroSecondDate getFallOfBerlinWall(){
+        //the berlin wall fell on the 13th of June, 1990
+        if(wallFall == null){
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, 1990);
+            cal.set(Calendar.MONTH, Calendar.JUNE);
+            cal.set(Calendar.DATE, 13);
+            cal.set(Calendar.HOUR, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+            wallFall = new MicroSecondDate(cal.getTime());
+        }
+        return wallFall;
+    }
+    
     private static MicroSecondDate time = new MicroSecondDate(0);
+    
+    private static MicroSecondDate wallFall;
     
     private static Magnitude[] mags = { new Magnitude(null, 5, null) };
     
-    private static Location loc = new Location(0, 0, null, new QuantityImpl(0, UnitImpl.KILOMETER), null);
+    private static Quantity zeroK = new QuantityImpl(0, UnitImpl.KILOMETER);
+    
+    private static Quantity tenK = new QuantityImpl(10, UnitImpl.KILOMETER);
+    
+    private static Location loc = new Location(0, 0, zeroK, zeroK, null);
+    
+    private static Location berlin = new Location(52.31f, 13.24f, tenK, tenK, null);
 }
