@@ -46,7 +46,7 @@ public class CommonAccess {
      */
     public FissuresNamingServiceImpl getFissuresNamingService() throws Exception{
 
-	FissuresNamingServiceImpl fissuresNamingService = new FissuresNamingServiceImpl(orb);
+	FissuresNamingServiceImpl fissuresNamingService = new FissuresNamingServiceImpl(getORB());
 	return fissuresNamingService;
 
     }
