@@ -20,12 +20,22 @@
                         </element>
                         <element name="waveformEventTemplateGenerator">
                                 <optional>
-                                	<element name="fileDir">
+                                    <element name="fileDir">
                                         <data type="string"/>
-                                	</element>
+                                    </element>
                                 </optional>
                                 <element name="waveformConfig">
                                         <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+                                </element>
+                        </element>
+                        <element name="waveformNetworkStatus">
+                                <optional>
+                                    <element name="fileDir">
+                                        <data type="string"/>
+                                    </element>
+                                </optional>
+                                <element name="networkTemplate">
+                                        <data type="string"/>
                                 </element>
                         </element>
                 </choice>

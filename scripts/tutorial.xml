@@ -148,6 +148,9 @@
                 <waveformEventTemplateGenerator>
                         <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
+                <waveformNetworkStatus>
+                    <networkTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkTemplate>
+                </waveformNetworkStatus>
         </waveformArm>
 </sod>
 
