@@ -35,7 +35,25 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      * @param config an <code>Element</code> value
      * @param networkArm a <code>NetworkArm</code> value
      */
-    public WaveFormArm(Element config, NetworkArm networkArm, SodExceptionListener sodExceptionListener) throws Exception {
+    public WaveFormArm(Element config, 
+		       NetworkArm networkArm, 
+		       SodExceptionListener sodExceptionListener) 
+	throws Exception 
+    {
+	this(config, networkArm, sodExceptionListener, 5);
+    }
+
+    /**
+     * Creates a new <code>WaveFormArm</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @param networkArm a <code>NetworkArm</code> value
+     */
+    public WaveFormArm(Element config, 
+		       NetworkArm networkArm, 
+		       SodExceptionListener sodExceptionListener,
+		       int threadPoolSize) 
+	throws Exception {
 	logger.debug("IN the constructor of WAVEFORMARM THREAD");
 	if ( ! config.getTagName().equals("waveFormArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a waveFormArm tag");
@@ -47,7 +65,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	this.networkArm = networkArm;
 	addSodExceptionListener(sodExceptionListener);
 	this.sodExceptionListener = sodExceptionListener;
-	pool = new ThreadPool(5, this);
+	pool = new ThreadPool(threadPoolSize, this);
     }
 
     private void restoreDb() {

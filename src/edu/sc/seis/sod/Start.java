@@ -79,7 +79,13 @@ public class Start implements SodExceptionListener {
 		    
    		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
-		    waveFormArm = new WaveFormArm(subElement, networkArm, this);
+		    int threadPoolSize = 
+			Integer.parseInt(getProperties().getProperty("edu.sc.seis.sod.waveformarm.threads", 
+							     "5"));
+		    waveFormArm = new WaveFormArm(subElement, 
+						  networkArm, 
+						  this, 
+						  threadPoolSize);
 		    waveFormArmThread = new Thread(waveFormArm);
 		    waveFormArmThread.setName("waveFormArm Thread");
 		    // Thread.sleep(100000);
@@ -178,9 +184,6 @@ public class Start implements SodExceptionListener {
 		}
 	    } // end of if (commandlineProps)
 
-	    Start.props = props;
-	    eventQueue = new HSqlDbQueue(props);
-	    waveformQueue = new WaveformDbQueue(props);
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -191,8 +194,11 @@ public class Start implements SodExceptionListener {
 		logger.warn("Unable to get configuration properties!",
 			    preloggingException); 
 	    } // end of else
-	    
             logger.info("Logging configured");
+	    
+	    Start.props = props;
+	    eventQueue = new HSqlDbQueue(props);
+	    waveformQueue = new WaveformDbQueue(props);
 
 
 	    String filename 
