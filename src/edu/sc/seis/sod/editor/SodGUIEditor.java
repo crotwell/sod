@@ -35,7 +35,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
     }
 
     JComponent getCompForElement(Element element) {
-        System.out.println("getCompForElement("+element.getTagName());
         try {
             String tag = element.getTagName();
             if (editors.containsKey(tag)){
@@ -128,19 +127,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
             }
         }
 
-        for (int i = 0; i < switchTypes.length; i++) {
-            Switcher originSwitcher = new Switcher(switchTypes[i], this);
-            List subTypes = originSwitcher.getSubTypes();
-            Iterator it = subTypes.iterator();
-            while(it.hasNext()) {
-                String tagName = (String)it.next();
-                if (editors.containsKey(tagName)) {
-                    // save original with _tagChooser appended
-                    editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
-                }
-                editors.put(tagName, originSwitcher);
-            }
-        }
 
 
         String[] wrapperTypes = { "AvailableDataWrapper", "RequestSubsetterWrapper", "WaveformProcessWrapper", "EventChannelWrapper" };
@@ -150,6 +136,35 @@ public class SodGUIEditor extends SimpleGUIEditor {
                 editors.put(wrapperLogicals[j]+wrapperTypes[i], bool);
             }
         }
+
+
+        // this puts "switchers" in place of the editors, which are stored with the suffix
+        // the switchers contian the origins, plus a popup menu for the types that could
+        // go in this place
+        for (int i = 0; i < switchTypes.length; i++) {
+            Switcher originSwitcher = new Switcher(switchTypes[i], this);
+            List subTypes = originSwitcher.getSubTypes();
+            Iterator it = subTypes.iterator();
+            while(it.hasNext()) {
+                String tagName = (String)it.next();
+                if (editors.containsKey(tagName)) {
+                    // save original with _tagChooser appended
+                    if (editors.containsKey(tagName+TagChooser.PLUGIN_SUFFIX)) {
+                        // already visited this editor plugin
+                    } else {
+                        if ( ! (editors.get(tagName) instanceof Switcher)) {
+                            // only add switch if current plugin isn't a switcher
+                            editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
+                            editors.put(tagName, originSwitcher);
+                        }
+                    }
+                } else {
+                    // no custom editor
+                    editors.put(tagName, originSwitcher);
+                }
+            }
+        }
+
     }
 
     protected HashMap editors = new HashMap();
