@@ -60,6 +60,7 @@ public class SodUtil {
 	    constructorArgs[0] = config;
 	    Object obj = 
 		constructor.newInstance(constructorArgs);
+	    if(tagName.equals("NetworkFinder")) return obj;
 	    return (SodElement)obj;
 	} catch (InvocationTargetException e) {
 	    // occurs if the constructor throws an exception
@@ -76,6 +77,7 @@ public class SodUtil {
 		throw (java.lang.Error)subException;
 	    } // end of else
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new ConfigurationException("Problem understanding "+
 					     config.getTagName(), e);
 	} // end of try-catch
@@ -146,7 +148,7 @@ public class SodUtil {
 
     /** returns the first text child within the node.
      */
-    protected static String getText(Element config) {
+    public static String getText(Element config) {
 	NodeList children = config.getChildNodes();
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {

@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import edu.sc.seis.fissuresUtil.namingService.*;
 
+
 /**
  * Source.java
  *
@@ -13,5 +14,9 @@ import edu.sc.seis.fissuresUtil.namingService.*;
  */
 
 public interface Source {
+
+    public String getDNSName();
+
+    public String getSourceName();
 
  }// Source

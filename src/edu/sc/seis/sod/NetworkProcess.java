@@ -14,6 +14,6 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public interface NetworkProcess extends Process {
 
-    public void process(NetworkAccessOperations network);
+    public void process(NetworkAccess network);
     
 }// NetworkProcess

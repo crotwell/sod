@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import org.w3c.dom.*;
+
 /**
  * AbstractSource.java
  *
@@ -11,12 +13,46 @@ package edu.sc.seis.sod;
  */
 
 public abstract class AbstractSource implements Source{
-    public AbstractSource (){
+    public AbstractSource (Element config){
+	this.config = config;
+    }
 
-	
-	
-	
+    public String getDNSName() {
+
+	NodeList children = config.getChildNodes();
+	Node node;
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    if (node instanceof Element) {
+		String tagName  = ((Element)node).getTagName();
+		if(tagName.equals("dns")) {
+
+		    return SodUtil.getText((Element)node);
+
+		}
+	    } // end of if (node instanceof Element)
+	} // end of for (int i=0; i<children.getSize(); i++)
+	return null;
+    }
+
+    public String getSourceName() {
+		NodeList children = config.getChildNodes();
+	Node node;
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    if (node instanceof Element) {
+		String tagName  = ((Element)node).getTagName();
+		if(tagName.equals("name")) {
+
+		    return SodUtil.getText((Element)node);
+
+		}
+	    } // end of if (node instanceof Element)
+	} // end of for (int i=0; i<children.getSize(); i++)
+	return null;
+
     }
   
+    private Element config;
    
 }// AbstractSource

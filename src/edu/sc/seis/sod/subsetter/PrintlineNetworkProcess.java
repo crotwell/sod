@@ -19,7 +19,7 @@ public class PrintlineNetworkProcess implements NetworkProcess {
 	
     }
 
-    public void process(NetworkAccessOperations network) {
+    public void process(NetworkAccess network) {
 	System.out.println(network.get_attributes().name);
     }
 }// PrintlineNetworkProcess
