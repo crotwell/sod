@@ -309,6 +309,11 @@
                     <data type="string"/>
                 </element>
             </optional>
+            <optional>
+                <element name="fileType">
+                    <data type="string"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>

@@ -5299,6 +5299,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="fileType">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="seismogramAND">
                 <oneOrMore>
@@ -5501,6 +5506,11 @@
                 </element>
                 <optional>
                     <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -5709,6 +5719,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="fileType">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="seismogramAND">
                 <oneOrMore>
@@ -5914,6 +5929,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="fileType">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="seismogramAND">
                 <oneOrMore>
@@ -6116,6 +6136,11 @@
                 </element>
                 <optional>
                     <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
                         <data type="string"/>
                     </element>
                 </optional>

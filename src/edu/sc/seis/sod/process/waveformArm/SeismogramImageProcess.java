@@ -79,6 +79,8 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 modelName = SodUtil.getNestedText((Element)n);
             } else if(n.getNodeName().equals("prefix")) {
                 prefix = SodUtil.getNestedText((Element)n);
+            } else if(n.getNodeName().equals("fileType")) {
+                fileType = SodUtil.getNestedText((Element)n);
             }
         }
         if (fileDir == null){
@@ -135,16 +137,21 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         }
 
         final String picFileName = FissuresFormatter.filize(fileDir + '/'
-            + eventFormatter.getResult(event) + '/'
-            + stationFormatter.getResult(channel.my_site.my_station) + '/'
-            + prefix
-            + chanFormatter.getResult(channel));
-
+                                                                + eventFormatter.getResult(event) + '/'
+                                                                + stationFormatter.getResult(channel.my_site.my_station) + '/'
+                                                                + prefix
+                                                                + chanFormatter.getResult(channel)
+                                                                +"."+fileType);
         SwingUtilities.invokeAndWait(new Runnable(){
                     public void run(){
                         logger.debug("writing " + picFileName);
                         try {
-                            bsd.outputToPNG(new File(picFileName), dimension);
+                            if (fileType.equals(PDF)) {
+
+                                bsd.outputToPDF(new File(picFileName));
+                            } else {
+                                bsd.outputToPNG(new File(picFileName), dimension);
+                            }
                         } catch (Throwable e) {
                             GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
                         }
@@ -159,6 +166,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
     private static String[] phases = {"P", "S"};
     private String modelName = "iasp91";
     private String prefix = "";
+    private String fileType = PNG;
+    public static final String PDF = "pdf";
+    public static final String PNG = "png";
 }
 
 
