@@ -6,42 +6,34 @@
 
 package edu.sc.seis.sod.editor;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.xml.transform.TransformerException;
+import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 public class BoxAreaEditor  implements EditorPlugin {
 
-    public JComponent getGUI(Element element) throws TransformerException {
+    public BoxAreaEditor(SodGUIEditor editor){
+        this.editor = editor;
+    }
+
+    public JComponent getGUI(Element element) throws Exception {
+
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3,3));
-        panel.add(new JLabel("Area"));
-        panel.add(new JLabel("Min"));
-        panel.add(new JLabel("Max"));
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(new TitledBorder("Area"));
 
-        panel.add(new JLabel("Latitude"));
-        Node node = XPathAPI.selectSingleNode(element, "latitudeRange/min/text()");
-        Text text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
-        node = XPathAPI.selectSingleNode(element, "latitudeRange/max/text()");
-        text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        Element el = (Element)XPathAPI.selectSingleNode(element, "latitudeRange");
+        panel.add(editor.getCompForElement(el), BorderLayout.NORTH);
 
-        panel.add(new JLabel("Longitude"));
-        node = XPathAPI.selectSingleNode(element, "longitudeRange/min/text()");
-        text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
-        node = XPathAPI.selectSingleNode(element, "longitudeRange/max/text()");
-        text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        el = (Element)XPathAPI.selectSingleNode(element, "longitudeRange");
+        panel.add(editor.getCompForElement(el), BorderLayout.SOUTH);
 
         return panel;
     }
+
+    private SodGUIEditor editor;
 }
 

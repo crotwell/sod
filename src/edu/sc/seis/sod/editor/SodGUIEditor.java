@@ -128,11 +128,11 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("bandCode", netCodeEdit);
         editors.put("gainCode", netCodeEdit);
         editors.put("orientationCode", netCodeEdit);
+        editors.put("boxArea", new BoxAreaEditor(this));
         EffectiveTimeEditor effTime = new EffectiveTimeEditor();
         editors.put("stationEffectiveTimeOverlap", effTime);
         editors.put("siteEffectiveTimeOverlap", effTime);
         editors.put("channelEffectiveTimeOverlap", effTime);
-        editors.put("boxArea", new BoxAreaEditor());
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
@@ -143,6 +143,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("catalog", new CatalogEditor());
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
+        editors.put("latitudeRange", new LatitudeRangeEditor());
+        editors.put("longitudeRange", new LongitudeRangeEditor());
 
         TagChooser originTC = new TagChooser("origin", this);
         List subTypes = originTC.getSubTypes();
@@ -170,7 +172,3 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
-
-
-
-
