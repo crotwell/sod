@@ -111,12 +111,7 @@ public class PhaseRequest implements RequestGenerator{
         } // end of else
 
 
-        Properties props = Start.getProperties();
-        String tauPModel = new String();
-        tauPModel = props.getProperty("edu.sc.seis.sod.TaupModel");
-        if(tauPModel == null) tauPModel = "prem";
-
-
+        String tauPModel = Start.getRunProps().getTauPModel();
         String phaseNames= "";
         if ( ! beginPhase.equals(ORIGIN)) {
             phaseNames += " "+beginPhase;
