@@ -36,7 +36,8 @@ We will save the data in SAC format in directories by event.
 </p>
 <p>
 The main structure of our xml strategy file will look like this. We will fill in
-each section with the details later.
+each section with the details later. There should a a completed copy of this
+within the examples directory of the SOD distribution.
 </p>
 <source>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
