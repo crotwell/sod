@@ -20,7 +20,7 @@
             <value>16</value>
             <unit>DAY</unit>
         </maxRetryDelay>
-             <removeDatabase/>
+             <removeDatabase>TRUE</removeDatabase>
         </properties>
         <eventArm>
                 <eventFinder>
@@ -56,9 +56,7 @@
                         <catalog>PREF</catalog>
                         <contributor>IRIS</contributor>
                 </eventFinder>
-
                 <printLineEventProcess/>
-
                 <eventStatusTemplate>
             <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
         </eventStatusTemplate>
