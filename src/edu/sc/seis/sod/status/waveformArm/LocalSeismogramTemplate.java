@@ -69,12 +69,12 @@ public class LocalSeismogramTemplate extends Template{
                 }
             }
             for (int i = 0; i < jars.length; i++) {
-                FileWritingTemplate.write(fileLocs[i], getResult(jars[i], fileLocs[i]));
+                FileWritingTemplate.write(fileLocs[i], getResult(jars[i]));
             }
         }
     }
 
-    public String getResult(CookieJar cj, String outputLocation) {
+    public String getResult(CookieJar cj) {
         StringBuffer buf = new StringBuffer();
         Iterator e = templates.iterator();
         while(e.hasNext()) {
