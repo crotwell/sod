@@ -44,14 +44,12 @@ import org.w3c.dom.Element;
  */
 
 
-public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implements OriginSubsetter {
-    public EventTimeRange (Element config){ super(config); }
+public class OriginTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implements OriginSubsetter {
+    public OriginTimeRange (Element config){ super(config); }
 
     public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         MicroSecondDate actualDate = new MicroSecondDate(origin.origin_time);
-        MicroSecondDate startDate = new MicroSecondDate(getStartTime());
-        MicroSecondDate endDate = new MicroSecondDate(getEndTime());
-        if( actualDate.after(startDate) && actualDate.before(endDate)) return true;
+        if( getMSTR().intersects(actualDate)) return true;
         else return false;
     }
 }// EventTimeRange

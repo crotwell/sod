@@ -97,7 +97,7 @@ public class EventFinder extends AbstractSource implements SodElement {
                     if(tagName.equals("originDepthRange")) {
                         depthRange = ((OriginDepthRange)object);
                     }else if(tagName.equals("eventTimeRange")) {
-                        eventTimeRange = ((EventTimeRange)object);
+                        eventTimeRange = ((OriginTimeRange)object);
                     }else if(tagName.equals("magnitudeRange")) {
                         magnitudeRange = (MagnitudeRange)object;
                     }else if(object instanceof edu.iris.Fissures.Area){
@@ -131,7 +131,7 @@ public class EventFinder extends AbstractSource implements SodElement {
 
     public edu.iris.Fissures.Area getArea() { return area; }
 
-    public EventTimeRange getEventTimeRange() {  return eventTimeRange; }
+    public OriginTimeRange getEventTimeRange() {  return eventTimeRange; }
 
     public String[] getCatalogs() {
         return  (String[]) catalogs.toArray(new String[catalogs.size()]);
@@ -153,7 +153,7 @@ public class EventFinder extends AbstractSource implements SodElement {
 
     private MagnitudeRange magnitudeRange;
 
-    private EventTimeRange eventTimeRange;
+    private OriginTimeRange eventTimeRange;
 
     private edu.iris.Fissures.Area area;
 

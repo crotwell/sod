@@ -95,7 +95,7 @@ public class EventArm implements Runnable{
         String server = eventFinderSubsetter.getSourceName();
         String dns =  eventFinderSubsetter.getDNSName();
         logger.debug("DNS for events is " + dns + " source is " + server);
-        EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
+        OriginTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
         while(!done){
             waitForProcessing();
             MicroSecondDate queryStart = getQueryStart(reqTimeRange, server, dns);
@@ -177,7 +177,7 @@ public class EventArm implements Runnable{
         }
     }
 
-    private MicroSecondDate getQueryStart(EventTimeRange reqTimeRange, String source, String dns) {
+    private MicroSecondDate getQueryStart(OriginTimeRange reqTimeRange, String source, String dns) {
         MicroSecondDate queryStart = reqTimeRange.getStartMSD();
         try {
             if(queryTimes.getQuery(source, dns) != null) {//If the database has a end time, use the database's end time
