@@ -53,6 +53,7 @@ public class Status{
     public static Status get(int stage, int type){
         if(type >= TYPE_STRINGS.length || stage >= STAGE_STRINGS.length){
             String msg = "You passed in a type byte of " + type +
+                        " and a stage byte of "+stage+
                 " but the allowable type range is from 0 to " +
                 TYPE_STRINGS.length + " and the allowable stage range is 0 to "
                 + STAGE_STRINGS.length;
