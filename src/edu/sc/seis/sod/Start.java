@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.database.*;
+
 import edu.iris.Fissures.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
@@ -7,7 +9,6 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
-import edu.sc.seis.fissuresUtil.cache.*;
 import org.apache.log4j.*;
 import java.io.*;
 import java.util.*;
@@ -65,20 +66,21 @@ public class Start implements SodExceptionListener {
 		if (subElement.getTagName().equals("description")) {
 		    logger.info(subElement.getTagName());
 		} else if (subElement.getTagName().equals("eventArm")) {
+		    System.out.println("Starting the EVent Arm");
 		    logger.info(subElement.getTagName());
 		    eventArm = new EventArm(subElement, this);
 		    Thread eventArmThread = new Thread(eventArm);
 		    eventArmThread.start();
+			    System.out.println("******************* EVENT ARM THREAD JOINED SO CAN EXIT");
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
 		    networkArm = new NetworkArm(subElement);
-		    
-		} else if (subElement.getTagName().equals("waveFormArm")) {
+   		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
 		    waveFormArm = new WaveFormArm(subElement, networkArm, this);
 		    Thread waveFormArmThread = new Thread(waveFormArm);
 		    waveFormArmThread.start();
-		    
+		 	   System.out.println("EXITRING AS THE WAEFORM ARM THREAD RETURNED");
 		} else {
 		logger.debug("process "+subElement.getTagName());
 		    
@@ -92,7 +94,7 @@ public class Start implements SodExceptionListener {
      *
      * @return an <code>EventQueue</code> value
      */
-    public static EventQueue getEventQueue() {
+    public static Queue getEventQueue() {
 
 	return eventQueue;
 
@@ -143,7 +145,7 @@ public class Start implements SodExceptionListener {
 	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
 	    commonAccess.init(args);
 	    commonAccess.initORB();
-	    
+	    // eventQueue = new HSqlDbQueue(commonAccess.getORB());
 
 	    boolean defaultPropLoadOK = false;
 	    boolean commandlinePropLoadOK = false;
@@ -183,6 +185,7 @@ public class Start implements SodExceptionListener {
 
 	    String filename 
 		= props.getProperty("edu.sc.seis.sod.configuration");
+	 System.out.println("The file name is "+filename);
 	    if (filename == null) {
 		logger.fatal("No configuration file given, quiting....");
 		return;
@@ -238,21 +241,22 @@ public class Start implements SodExceptionListener {
     protected Document initParser(InputStream xmlFile) 
 	throws ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	factory.setValidating(false);
+	//factory.setValidating(false);
 	//factory.set
-	factory.setNamespaceAware(true);
+//	factory.setNamespaceAware(true);
 
 	DocumentBuilder docBuilder = factory.newDocumentBuilder();
-	SimpleErrorHandler errorHandler = new SimpleErrorHandler();
-	docBuilder.setErrorHandler(errorHandler);
+	//SimpleErrorHandler errorHandler = new SimpleErrorHandler();
+	//docBuilder.setErrorHandler(errorHandler);
 	Document document =  docBuilder.parse(xmlFile, schemaURL.toString());
-	if(errorHandler.isValid()) return document;
+	/*(if(errorHandler.isValid()) return document;
 	else {
 	    logger.fatal("The xml Configuration file contains errors.");
 	    System.out.println("The xml Configuration file contains errors.");
 	    System.exit(0);
 	    return null;
-	}
+	}*/
+	return document;
     }
 
 
@@ -274,7 +278,7 @@ public class Start implements SodExceptionListener {
 
     EventArm eventArm;
 
-    private static EventQueue eventQueue = new EventQueue();
+    private static Queue eventQueue = new HSqlDbQueue();
     
     NetworkArm networkArm;
 

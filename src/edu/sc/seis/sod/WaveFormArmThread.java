@@ -4,6 +4,7 @@ import edu.sc.seis.sod.subsetter.*;
 import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
 import edu.sc.seis.fissuresUtil.cache.*;
+import edu.sc.seis.sod.database.*;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
@@ -80,6 +81,8 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	    }
 	}
 	
+	Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+				     Status.COMPLETE_SUCCESS);
 	parent.signalWaveFormArm();
     }
 

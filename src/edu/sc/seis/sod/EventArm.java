@@ -9,6 +9,8 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.*;
 
+import java.util.*;
+
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
@@ -113,6 +115,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	}
 
 	if(eventFinderSubsetter == null) return;
+	System.out.println("Event Finder Subsetrter is not null");
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
 	String[] searchTypes;
@@ -150,36 +153,78 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
 	}
 	    
-	logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
+	System.out.println("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
 	for (int i=0; i<searchTypes.length; i++) {
-        logger.debug("magnitudes "+searchTypes[i]);
+        System.out.println("magnitudes "+searchTypes[i]);
 	} // end of for (int i=0; i<searchTypes.length; i++)
-	logger.debug("mag "+minMagnitude+" "+maxMagnitude);
+	System.out.println("mag "+minMagnitude+" "+maxMagnitude);
 
-	EventAccess[] eventAccessOrig = 
-        finder.query_events(eventFinderSubsetter.getArea(),
-							minDepth,
-							maxDepth,
-							eventFinderSubsetter.getEventTimeRange().getTimeRange(),
-							searchTypes,
-							minMagnitude,
-							maxMagnitude,
-							eventFinderSubsetter.getCatalogs(),
-							eventFinderSubsetter.getContributors(),
-							10,
-							eventSeqIterHolder
-							);
-	
-	logger.info("The number of events returned are "+eventAccessOrig.length);
-	EventAccessOperations[] eventAccess = 
-        new EventAccessOperations[eventAccessOrig.length];
-	for(int counter = 0; counter < eventAccess.length; counter++) {
-
-        eventAccess[counter] = new CacheEvent(eventAccessOrig[counter]);
-	    EventAttr attr = eventAccess[counter].get_attributes();
-	    handleEventAttrSubsetter(eventAccess[counter], attr);
-	    
+	String[] catalogs = eventFinderSubsetter.getCatalogs();
+	String[] contributors = eventFinderSubsetter.getContributors();
+	for(int counter = 0;  counter < catalogs.length; counter++) {
+	    System.out.println("catalog = "+catalogs[counter]);
 	}
+
+	for(int counter = 0; counter < contributors.length; counter++) {
+	    System.out.println("contributor = "+contributors[counter]);
+	}
+
+	EventConfigDb eventConfigDb = new EventConfigDb();
+	edu.iris.Fissures.Time startTime = eventConfigDb.getTime();
+	if(startTime == null) {
+	    System.out.println("time is not stored in the database so store it");
+	    startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
+	    eventConfigDb.setTime(startTime);
+	}
+
+	
+	edu.iris.Fissures.Time endTime = calculateEndTime(startTime, 
+							  eventFinderSubsetter.getEventTimeRange().getEndTime());
+	while(!isFinished(endTime, eventFinderSubsetter.getEventTimeRange().getEndTime())) {
+	    
+	    edu.iris.Fissures.TimeRange timeRange = new edu.iris.Fissures.TimeRange(startTime, endTime);
+	    System.out.println("The start time is "+new MicroSecondDate(startTime));
+	    System.out.println("The end Time is "+new MicroSecondDate(endTime));
+	    eventConfigDb.incrementTime(1);
+
+	    
+	    EventAccess[] eventAccessOrig = 
+		finder.query_events(eventFinderSubsetter.getArea(),
+				    minDepth,
+				    maxDepth,
+				    timeRange,
+				    searchTypes,
+				    minMagnitude,
+				    maxMagnitude,
+				    eventFinderSubsetter.getCatalogs(),
+				    eventFinderSubsetter.getContributors(),
+				    10,
+				    eventSeqIterHolder
+				    );
+	    
+	    System.out.println("The number of events returned are "+eventAccessOrig.length);
+	    EventAccessOperations[] eventAccess = 
+		new EventAccessOperations[eventAccessOrig.length];
+	    for(int counter = 0; counter < eventAccess.length; counter++) {
+		
+		eventAccess[counter] = new CacheEvent(eventAccessOrig[counter]);
+		EventAttr attr = eventAccess[counter].get_attributes();
+		handleEventAttrSubsetter(eventAccess[counter], attr);
+		
+	    }
+	    startTime = eventConfigDb.getTime();
+	    if(startTime == null) {
+		System.out.println("time is not stored in the database so store it");
+		startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
+		eventConfigDb.setTime(startTime);
+	    }
+	    
+	
+	    endTime = calculateEndTime(startTime, 
+				       eventFinderSubsetter.getEventTimeRange().getEndTime());
+	    Start.getEventQueue().waitForProcessing();
+	    
+	}// end of while loop where checking for isFinished.
 
     }
 
@@ -191,7 +236,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * @exception Exception if an error occurs
      */
     public void handleEventAttrSubsetter(EventAccessOperations eventAccess, EventAttr eventAttr) throws Exception {
-
+	
 	if(eventAttrSubsetter == null || eventAttrSubsetter.accept(eventAttr, null)) {
 	    try {	 
 		handleOriginSubsetter(eventAccess, eventAccess.get_preferred_origin());
@@ -224,10 +269,38 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * @exception Exception if an error occurs
      */
     public void handleEventArmProcess(EventAccessOperations eventAccess, Origin origin) throws Exception{
-	Start.getEventQueue().push(eventAccess);
+	System.out.println("PUSHING the event to the queue");
+	Start.getEventQueue().push(eventFinderSubsetter.getDNSName(),
+				   eventFinderSubsetter.getSourceName(), 
+				   (EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+				   origin);
 	eventArmProcess.process(eventAccess, null);
 
     }
+
+    private edu.iris.Fissures.Time calculateEndTime(edu.iris.Fissures.Time startTime,
+						    edu.iris.Fissures.Time givenEndTime) {
+	
+	MicroSecondDate microSecondDate = new MicroSecondDate(startTime);
+	Calendar calendar = Calendar.getInstance();
+	calendar.setTime(microSecondDate);
+	calendar.roll(Calendar.DAY_OF_MONTH, 1);
+	microSecondDate = new MicroSecondDate(calendar.getTime());
+	MicroSecondDate endDate = new MicroSecondDate(givenEndTime);
+	if(endDate.before(microSecondDate)) return givenEndTime;
+	return microSecondDate.getFissuresTime();
+
+    }
+
+
+    private boolean isFinished(edu.iris.Fissures.Time endTime,
+			       edu.iris.Fissures.Time givenEndTime) {
+
+	if( (new MicroSecondDate(givenEndTime)).before( new MicroSecondDate(endTime)) ||
+	    (new MicroSecondDate(givenEndTime)).equals( new MicroSecondDate(endTime))) return true;
+	else return false;
+    }
+    
 
     private edu.sc.seis.sod.subsetter.eventArm.EventFinder eventFinderSubsetter;
 
