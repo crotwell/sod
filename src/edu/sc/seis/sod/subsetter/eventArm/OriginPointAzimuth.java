@@ -15,15 +15,10 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSubsetter{
-
-
-    /**
-     * Creates a new <code>OriginPointDistance</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public OriginPointAzimuth (Element config) throws Exception{
         super(config);
+        min = getMin().convertTo(UnitImpl.DEGREE).get_value();
+        max = getMax().convertTo(UnitImpl.DEGREE).get_value();
     }
 
     /**
@@ -35,14 +30,16 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value()  <= distaz.getAz() % 360 &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value()  >= distaz.getAz() % 360 ) {
-            return true;
-        } else {
-            logger.debug("reject azimuth "+origin+" az="+distaz.getAz()+"  "+(getMin().getValue() % 360)+" "+(getMax().getValue() % 360));
+        double az = distaz.getAz();
+        az = (az - min)%360 + min;
+        if (min  <= az && max >= az) { return true;}
+        else {
+            logger.debug("reject azimuth az="+distaz.getAz()+"  "+ min +" "+ max);
             return false;
         }
     }
+
+    private double min, max;
 
     private static final Logger logger = Logger.getLogger(OriginPointAzimuth.class);
 

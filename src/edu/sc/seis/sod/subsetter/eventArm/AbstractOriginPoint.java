@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 
+import edu.iris.Fissures.Location;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

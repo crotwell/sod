@@ -15,35 +15,26 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class OriginPointBackAzimuth extends AbstractOriginPoint implements OriginSubsetter{
-
-
-    /**
-     * Creates a new <code>OriginPointDistance</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public OriginPointBackAzimuth (Element config) throws Exception{
         super(config);
+        min = getMin().convertTo(UnitImpl.DEGREE).get_value();
+        max = getMax().convertTo(UnitImpl.DEGREE).get_value();
     }
 
-    /**
-     * Accepts an origin only if it lies within the geven distance range of the
-     * given lat and lon.
-     *
-     */
     public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value()  <= distaz.getBaz() % 360 &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value()  >= distaz.getBaz() % 360) {
-            return true;
-        } else {
-            logger.debug("reject back azimuth "+origin+" baz="+distaz.getBaz());
+        double baz = distaz.getBaz();
+        baz = (baz - min)%360 + min;
+        if (min  <= baz && max >= baz) { return true;}
+        else {
+            logger.debug("reject back azimuth baz="+distaz.getBaz()+"  "+ min +" "+ max);
             return false;
         }
     }
 
+    private double min, max;
     private static final Logger logger = Logger.getLogger(OriginPointBackAzimuth.class);
 
 }
