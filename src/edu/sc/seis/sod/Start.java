@@ -343,7 +343,7 @@ public class Start {
 
     private void checkConfig(InputSource is) {
         try {
-            String configString = JDBCConfig.getConfigString(is);
+            String configString = JDBCConfig.extractConfigString(is);
             JDBCConfig dbConfig = new JDBCConfig(configString);
             if(!dbConfig.isSameConfig(configString)) {
                 allHopeAbandon("Your config file has changed since your last run.  "
