@@ -1,7 +1,7 @@
 properties=Properties
 eventArm=Event
 networkArm=Network
-waveformArm=WaveForm
+waveformArm=Waveform
 latitude=Latitude
 longitude=Longitude
 magnitudeRange=Magnitude
@@ -33,4 +33,8 @@ siteCode=Site Code
 stationCode=Station Code
 networkCode=Network Code
 channelCode=Channel Code
+edu/iris/dmc/IRIS_NetworkDC=IRIS
+edu/sc/seis/SCEPPNetworkDC=SCEPP
+edu/berkeley/geo/quake/NCEDC_NetworkDC=Berkeley
+networkFinder=Query to network server
 

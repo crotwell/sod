@@ -142,6 +142,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("originPointBackAzimuth", new OriginPointBackAzimuthEditor());
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
         editors.put("eventFinder", new EventFinderEditor(this));
+        editors.put("networkFinder", new NetworkFinderEditor(this));
         editors.put("catalog", new CatalogEditor());
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
@@ -174,3 +175,4 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
+
