@@ -7,16 +7,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
-/**
- * eventAttrXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
- * the max value of the sequence is 2.
- *<pre>
- *  &lt;availableDataXOR&gt;
- *      &lt;nogaps/&gt;
- *      &lt;fullCoverage/&gt;
- *  &lt;/availableDataXOR&gt;
- *</pre>
- */
 public final class AvailableDataXOR extends  WaveformLogicalSubsetter
     implements AvailableDataSubsetter {
 
@@ -30,7 +20,5 @@ public final class AvailableDataXOR extends  WaveformLogicalSubsetter
         AvailableDataSubsetter filterA = (AvailableDataSubsetter)filterList.get(0);
         AvailableDataSubsetter filterB = (AvailableDataSubsetter)filterList.get(1);
         return ( filterA.accept(event, channel, original, available, cookieJar) != filterB.accept(event, channel, original, available, cookieJar));
-
     }
-
 }// AvailableDataXOR
