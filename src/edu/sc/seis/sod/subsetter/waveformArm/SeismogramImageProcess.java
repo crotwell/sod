@@ -109,32 +109,11 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
             + eventFormatter.getResult(event) + '/'
             + stationFormatter.getResult(channel.my_site.my_station) + '/'
             + chanFormatter.getResult(channel);
-        logger.debug("scheduling " + picFileName);
-        t.schedule(new ScheduledProcessor(bsd, picFileName), 90000);
+        logger.debug("writing " + picFileName);
+        bsd.outputToPNG(picFileName);
 
         return seismograms;
     }
-
-    private class ScheduledProcessor extends TimerTask {
-
-        private BasicSeismogramDisplay bsd;
-        private String name;
-
-        public ScheduledProcessor(BasicSeismogramDisplay display, String filename){
-            bsd = display;
-            name = filename;
-        }
-
-        public void run(){
-            try {
-                logger.debug("writing " + name);
-                bsd.outputToPNG(name);
-            } catch (IOException e) {
-                CommonAccess.handleException(e, "trouble writing file " + name);
-            }
-        }
-
-    }
-
 }
+
 
