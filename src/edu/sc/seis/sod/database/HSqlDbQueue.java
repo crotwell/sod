@@ -5,7 +5,9 @@ import edu.sc.seis.sod.*;
 import edu.sc.seis.fissuresUtil.cache.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
 import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.model.*;
 
+import java.util.HashMap;
 import java.util.Properties;
 import java.sql.*;
 import org.hsqldb.*;
@@ -314,20 +316,41 @@ public class HSqlDbQueue implements Queue {
     }
 
     public EventAccessOperations getEventAccess(int dbid) {
-	org.omg.CORBA.ORB orb = null;
-	try {
-	    orb = CommonAccess.getCommonAccess().getORB();
-	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
-	    cfe.printStackTrace();
-	}
-	String ior = eventDatabase.getObject(dbid);
-	if(ior == null)  {
-		return null;
-	}
-	org.omg.CORBA.Object obj = orb.string_to_object(ior);
-	obj = reValidate(dbid, obj);
-	EventAccess eventAccess = EventAccessHelper.narrow(obj);
-	return new CacheEvent(eventAccess);
+        CacheEventHolder holder;
+        if ((holder = (CacheEventHolder)cacheEventMap.get(""+dbid)) != null &&
+            holder.createTime.after(new MicroSecondDate().subtract(cacheTime))) {
+            return holder.event;
+        }
+
+        org.omg.CORBA.ORB orb = null;
+        try {
+            orb = CommonAccess.getCommonAccess().getORB();
+        } catch(edu.sc.seis.sod.ConfigurationException cfe) {
+            cfe.printStackTrace();
+        }
+        String ior = eventDatabase.getObject(dbid);
+        if(ior == null)  {
+            return null;
+        }
+        org.omg.CORBA.Object obj = orb.string_to_object(ior);
+        obj = reValidate(dbid, obj);
+        EventAccess eventAccess = EventAccessHelper.narrow(obj);
+        holder = new CacheEventHolder(dbid, 
+                                      new CacheEvent(eventAccess));
+        cacheEventMap.put(""+dbid, holder);
+        return holder.event;
+    }
+
+    HashMap cacheEventMap = new HashMap();
+    TimeInterval cacheTime = new TimeInterval(10, UnitImpl.MINUTE);
+    class CacheEventHolder {
+        CacheEventHolder(int dbid, CacheEvent event) {
+            this.dbid = dbid;
+            this.event = event;
+        }
+        int dbid = -1;
+        CacheEvent event = null;
+        MicroSecondDate createTime = new MicroSecondDate();
     }
 
     public Status getStatus(int eventid) {
