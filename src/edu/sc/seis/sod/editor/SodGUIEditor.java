@@ -77,8 +77,9 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     JComponent getCompForElement(Element element) {
         try {
-            if (editors.containsKey(element.getTagName())) {
-                return ((EditorPlugin)editors.get(element.getTagName())).getGUI(element);
+            String tag = element.getTagName();
+            if (editors.containsKey(tag)){
+                return ((EditorPlugin)editors.get(tag)).getGUI(element);
             } else {
                 return super.getCompForElement(element);
             }
@@ -103,6 +104,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("endTime", dateEdit);
         TimeRangeEditor timeRangeEdit = new TimeRangeEditor();
         editors.put("effectiveTimeOverlap", timeRangeEdit);
+        editors.put("eventTimeRange", new EventTimeRangeEditor());
         NetCodeEditor netCodeEdit = new NetCodeEditor();
         editors.put("networkCode", netCodeEdit);
         editors.put("stationCode", netCodeEdit);
@@ -112,6 +114,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("gainCode", netCodeEdit);
         editors.put("orientationCode", netCodeEdit);
         editors.put("boxArea", new BoxAreaEditor());
+        editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
         editors.put("sacFileProcessor", new SacFileEditor(this));
@@ -128,7 +131,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
             }
             editors.put(tagName, originTC);
         }
-
     }
 
     protected HashMap editors = new HashMap();
@@ -140,9 +142,4 @@ public class SodGUIEditor extends SimpleGUIEditor {
         SodGUIEditor gui = new SodGUIEditor(args);
         gui.start();
     }
-
 }
-
-
-
-
