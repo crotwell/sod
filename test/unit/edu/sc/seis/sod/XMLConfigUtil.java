@@ -16,13 +16,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 
 
-public class XMLConfigUtil
-{
-
-    public static Element parse(String xmlData) throws SAXException, IOException, ParserConfigurationException, SAXException, IOException {
+public class XMLConfigUtil{
+    public static Element parse(String xmlData) throws SAXException, IOException, ParserConfigurationException{
         Document doc = XMLDataSet.getDocumentBuilder().parse(new StringBufferInputStream(xmlData));
         return doc.getDocumentElement();
     }
-
 }
 
