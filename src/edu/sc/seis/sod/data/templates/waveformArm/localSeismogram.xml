@@ -102,7 +102,7 @@ $fissures.formatMagnitude($m),
 #set ( $channel = $chanContext.get("sod_channel") )
 <tr>
 <td><b>$fissures.formatChannel($channel.get_id())</b><br/>
-$!chanContext.sod_phaseStoN_ttp.value<br/>
+$!chanContext.sod_phaseStoN_ttp.value $!chanContext.sod_phaseStoN_PKIKP.value<br/>
 $!chanContext.sod_phaseStoN_ttp.when</td>
 <td>
 #if ($chanContext.status.Standing.equals($chanContext.status.Standing.getForName("SUCCESS")) || $chanContext.status.Standing.equals($chanContext.status.Standing.getForName("IN_PROG")))

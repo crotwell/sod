@@ -3656,6 +3656,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -4086,6 +4091,11 @@
                 <optional>
                     <element name="id">
                         <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
                     </element>
                 </optional>
             </element>
@@ -4520,6 +4530,11 @@
                         <data type="string"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -4950,6 +4965,11 @@
                 <optional>
                     <element name="id">
                         <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
                     </element>
                 </optional>
             </element>
