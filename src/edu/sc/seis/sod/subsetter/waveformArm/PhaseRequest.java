@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.Location;
 import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 
@@ -73,7 +74,6 @@ public class PhaseRequest implements RequestGenerator{
 			  Channel channel, 
 			  CookieJar cookies) throws Exception{
 	Origin origin = null;
-	double originDepth;
 	double arrivalStartTime = -100.0;
 	double arrivalEndTime = -100.0;
 	origin = event.get_preferred_origin();
@@ -87,44 +87,51 @@ public class PhaseRequest implements RequestGenerator{
 	    tauPModel = "prem";
 	}
 	
-	TauP_Time tauPTime = new TauP_Time(tauPModel);
-	tauPTime.clearPhaseNames();
-	tauPTime.parsePhaseList(beginPhase.getPhase()+" "+endPhase.getPhase());
-	UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-	originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
-	
-	tauPTime.setSourceDepth(originDepth);
-	tauPTime.calculate(SphericalCoords.distance(origin.my_location.latitude, 
-						    origin.my_location.longitude,
-						    channel.my_site.my_station.my_location.latitude,
-						    channel.my_site.my_station.my_location.longitude));
-			   
-	Arrival[] arrivals = tauPTime.getArrivals();
+
+
+	Arrival[] arrivals = calculateArrivals(tauPModel, 
+					       beginPhase.getPhase()+" "+endPhase.getPhase(), 
+					       origin.my_location, 
+					       channel.my_site.my_location);
+
 	for(int counter = 0; counter < arrivals.length; counter++) {
 	    String arrivalName = arrivals[counter].getName();
 	    if(beginPhase.getPhase().startsWith("tt")) {
 		if(beginPhase.getPhase().equals("tts") && arrivalName.toUpperCase().startsWith("S")) {
-		    if(arrivalStartTime == -100.0) arrivalStartTime = arrivals[counter].getTime();
+		    arrivalStartTime = arrivals[counter].getTime();
+		    break;
 		} else if(beginPhase.getPhase().equals("ttp") && arrivalName.toUpperCase().startsWith("P")) {
-		    if(arrivalStartTime == -100.0) arrivalStartTime = arrivals[counter].getTime();
+		    arrivalStartTime = arrivals[counter].getTime();
+		    break;
 		} 
 	    } else if(beginPhase.getPhase().equals(arrivalName)) {
-		if(arrivalStartTime == -100.0) arrivalStartTime = arrivals[counter].getTime();
+		arrivalStartTime = arrivals[counter].getTime();
+		break;
 	    }
+	}
 	    
+	for(int counter = 0; counter < arrivals.length; counter++) {
+	    String arrivalName = arrivals[counter].getName();
 	    if(endPhase.getPhase().startsWith("tt")) {
 		if(endPhase.getPhase().equals("tts") && arrivalName.toUpperCase().startsWith("S")) {
-		    if(arrivalEndTime == -100.0) arrivalEndTime = arrivals[counter].getTime();
+		    arrivalEndTime = arrivals[counter].getTime();
+		    break;
 		} else if(endPhase.getPhase().equals("ttp") && arrivalName.toUpperCase().startsWith("P")) {
-		    if(arrivalEndTime == -100.0) arrivalEndTime = arrivals[counter].getTime();
+		    arrivalEndTime = arrivals[counter].getTime();
+		    break;
 		} 
 	    } else if(endPhase.getPhase().equals(arrivalName)) {
-		if(arrivalEndTime == -100.0) arrivalEndTime = arrivals[counter].getTime();
+		arrivalEndTime = arrivals[counter].getTime();
+		break;
 	    }
-	    
-	    if(arrivalStartTime != -100.0 && arrivalEndTime != -100.0) break; 
-
 	}
+	    
+
+	if(arrivalStartTime == -100.0 || arrivalEndTime == -100.0) {
+	    // no arrivals found, return zero length request filters
+	    return new RequestFilter[0];
+	} 
+
 	/*System.out.println("originDpeth "+originDepth);
 	System.out.println("distance "+SphericalCoords.distance(origin.my_location.latitude, 
 		 				    origin.my_location.longitude,
@@ -132,10 +139,19 @@ public class PhaseRequest implements RequestGenerator{
 				 			       channel.my_site.my_station.my_location.longitude));
 	System.out.println("arrivalStartTime = "+arrivalStartTime);
 	System.out.println("arrivalEndTime = "+arrivalEndTime);*/
+
+	// round to milliseconds
+	arrivalStartTime = Math.rint(1000*arrivalStartTime)/1000;
+	arrivalEndTime = Math.rint(1000*arrivalEndTime)/1000;
+
 	edu.iris.Fissures.Time originTime = origin.origin_time;
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
-	TimeInterval bInterval = new TimeInterval(beginOffset.getValue()+arrivalStartTime, UnitImpl.SECOND);
-	TimeInterval eInterval = new TimeInterval(endOffset.getValue()+arrivalEndTime, UnitImpl.SECOND);
+	TimeInterval bInterval = 
+	    new TimeInterval(beginOffset.getValue()+arrivalStartTime, 
+			     UnitImpl.SECOND);
+	TimeInterval eInterval = 
+	    new TimeInterval(endOffset.getValue()+arrivalEndTime, 
+			     UnitImpl.SECOND);
 	MicroSecondDate bDate = originDate.add(bInterval);
 	MicroSecondDate eDate = originDate.add(eInterval);
 	RequestFilter[] filters;
@@ -149,7 +165,32 @@ public class PhaseRequest implements RequestGenerator{
 	return filters;
 
     }
-   
+
+    protected static TauP_Time tauPTime = new TauP_Time();
+
+    protected synchronized static Arrival[] calculateArrivals(
+                                              String tauPModelName, 
+					      String phases, 
+					      Location originLoc, 
+					      Location channelLoc)
+	throws java.io.IOException, TauModelException {
+	if (tauPTime.getTauModelName() != tauPModelName) {
+	    tauPTime.loadTauModel(tauPModelName);
+	}
+	tauPTime.clearPhaseNames();
+	tauPTime.parsePhaseList(phases);
+
+	double originDepth =
+	   ((QuantityImpl)originLoc.depth).convertTo(UnitImpl.KILOMETER).value;
+	tauPTime.setSourceDepth(originDepth);
+	tauPTime.calculate(SphericalCoords.distance(originLoc.latitude, 
+						    originLoc.longitude,
+						    channelLoc.latitude,
+						    channelLoc.longitude));
+			   
+	return tauPTime.getArrivals();
+    }
+
    private BeginOffset beginOffset;
 
    private BeginPhase beginPhase;
