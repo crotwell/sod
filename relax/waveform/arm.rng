@@ -2,14 +2,16 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
+        <ref name="waveformArms"/>
+    </start>
+    <define name="waveformArms">
         <choice>
             <xsd:annotation>
-                <summary>Operates on the networks and events returned by the
-                    network and event arms</summary>
+                <summary>Operates on the networks and events returned by the network and event arms</summary>
                 <description>The waveform arm takes the </description>
             </xsd:annotation>
             <externalRef href="localSeismogram.rng"/>
             <externalRef href="motionVector.rng"/>
         </choice>
-    </start>
+    </define>
 </grammar>
