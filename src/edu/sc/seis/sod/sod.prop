@@ -1,7 +1,8 @@
 #
 # for Log4J
 #
-log4j.rootCategory=debug, R, C, E
+#log4j.rootCategory=debug, R, C, E
+log4j.rootCategory=info, R, C, E
 log4j.appender.R=org.apache.log4j.RollingFileAppender
 log4j.appender.R.File=Sod.log
 log4j.appender.R.MaxFileSize=10000KB
