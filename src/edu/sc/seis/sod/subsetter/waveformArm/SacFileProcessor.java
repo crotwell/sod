@@ -110,41 +110,20 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         NoPreferredOrigin {
         
         File eventDirectory = getEventDirectory(event);
-        SacTimeSeries sac;
-        String seisFilename = "";
-        URL[] seisURL = new URL[seismograms.length];
-        for (int i=0; i<seismograms.length; i++) {
-            seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
-            seisFilename.replace(' ', '.'); // check for space-space site
-            File seisFile = new File(eventDirectory, seisFilename);
-            int n =0;
-            while (seisFile.exists()) {
-                n++;
-                
-                seisFilename =
-                    ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n;
-                seisFilename.replace(' ', '.'); // check for space-space site
-                seisFile = new File(eventDirectory, seisFilename);
-            } // end of while (seisFile.exists())
-            LocalSeismogramImpl lseis =
-                (LocalSeismogramImpl)seismograms[i];
-            sac = FissuresToSac.getSAC(lseis,
-                                       channel,
-                                       event.get_preferred_origin());
-            sac.write(seisFile);
-            seisURL[i] = seisFile.toURL();
+        LocalSeismogramImpl[] lseis = new LocalSeismogramImpl[seismograms.length];
+        for (int i = 0; i < lseis.length; i++) {
+            lseis[i] = (LocalSeismogramImpl)seismograms[i];
         }
-        URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
-                                                               SeismogramFileTypes.SAC,
-                                                               dataset);
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
                                  "seismogram loaded via sod.");
-        dataset.addDataSetSeismogram(urlDSS,
-                                     audit);
-        dataset.addParameter(DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
-                             channel,
-                             audit);
+        URLDataSetSeismogram urlDSS = URLDataSetSeismogram.saveLocally(dataset,
+                                                                       eventDirectory,
+                                                                       lseis,
+                                                                       channel,
+                                                                       event,
+                                                                       audit);
+        
         
         return urlDSS;
     }
