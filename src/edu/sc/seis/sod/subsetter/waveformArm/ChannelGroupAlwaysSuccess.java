@@ -39,10 +39,10 @@ public class ChannelGroupAlwaysSuccess implements ChannelGroupLocalSeismogramPro
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveformArm");
-                if(sodElement instanceof LocalSeismogramProcess) {
+                if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
                     channelGroupLocalSeisProcess = (ChannelGroupLocalSeismogramProcess)sodElement;
                 } else {
-                    logger.warn("Unknown tag in AlwaysSuccess config. " +sodElement);
+                    logger.warn("Unknown tag in ChannelGroupAlwaysSuccess config. " +sodElement);
                 }
             }
         }
