@@ -85,6 +85,19 @@ public class PhaseRequest implements RequestGenerator{
 	double arrivalStartTime = -100.0;
 	double arrivalEndTime = -100.0;
 	origin = event.get_preferred_origin();
+
+    if ( prevRequestFilter != null &&
+         origin.my_location.equals(prevOriginLoc) &&
+         channel.my_site.my_location.equals(prevSiteLoc) ) {
+        // don't need to do any work
+        return prevRequestFilter;
+    } else {
+        prevOriginLoc = origin.my_location;
+        prevSiteLoc = channel.my_site.my_location;
+        prevRequestFilter = null;
+    } // end of else
+    
+
 	Properties props = Start.getProperties();
 	String tauPModel = new String();
 	try {
@@ -155,7 +168,8 @@ public class PhaseRequest implements RequestGenerator{
 
 	if(arrivalStartTime == -100.0 || arrivalEndTime == -100.0) {
 	    // no arrivals found, return zero length request filters
-	    return new RequestFilter[0];
+        prevRequestFilter = new RequestFilter[0];
+	    return prevRequestFilter;
 	} 
 
 	// round to milliseconds
@@ -180,6 +194,7 @@ public class PhaseRequest implements RequestGenerator{
 			      eDate.getFissuresTime()
                               );
 	
+        prevRequestFilter = filters;
 	return filters;
 
     }
@@ -216,6 +231,10 @@ public class PhaseRequest implements RequestGenerator{
     private EndOffset endOffset;
 
     private String endPhase;
+
+    private RequestFilter[] prevRequestFilter = null;
+    private Location prevOriginLoc = null;
+    protected Location prevSiteLoc = null;
 
     private static final String ORIGIN = "origin";
     
