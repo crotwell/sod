@@ -78,10 +78,6 @@ public class XMLWritingTourist implements Tourist {
     }
 
     private String getCurIndent() {
-        return getIndent(depth);
-    }
-
-    private String getIndent(int depth) {
         StringBuffer indent = new StringBuffer();
         if(result.length() > 0 && result.charAt(result.length() - 1) == '\n') {
             for(int i = 0; i < depth; i++) {
