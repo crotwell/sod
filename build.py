@@ -36,6 +36,15 @@ class kill(sodScriptParameters):
         for mod in mods: self.update(mod)
         self.mainclass='edu.sc.seis.sod.SodKiller'
         self.name='killSod'
+        
+class schemaDocs(sodScriptParameters):
+    homeloc = '.'
+    def __init__(self, mods):
+        scriptBuilder.jacorbParameters.__init__(self)
+        for mod in mods: self.update(mod)
+        self.name = 'schemaDocumenter'
+        self.mainclass = 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter'
+        self.xOptions['mx']='mx512m'
 
 
 def buildAllScripts(proj):
@@ -80,6 +89,13 @@ def buildKillScripts(proj):
     scripts.append(scriptBuilder.build(kill([scriptBuilder.windowsParameters()]), proj))
     return scripts
 
+def buildSchemaDocScripts(proj):
+    scriptBuilder.setVarSh()
+    scripts = [scriptBuilder.build(schemaDocs([]), proj)]
+    scriptBuilder.setVarWindows()
+    scripts.append(scriptBuilder.build(schemaDocs([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
 def buildJars(sodProj, clean=False):
     curdir = os.path.abspath('.')
     os.chdir(sodProj.path)
@@ -88,8 +104,12 @@ def buildJars(sodProj, clean=False):
                sodProj]
     if clean:
         for proj in allProj: mavenExecutor.mavenExecutor(proj).clean()
-    for proj in allProj: mavenExecutor.mavenExecutor(proj).jarinst()
+    compiled = False
+    for proj in allProj:
+        if mavenExecutor.mavenExecutor(proj).jarinst():
+            compiled = True
     os.chdir(curdir)
+    return compiled
 
 def buildInternalDist(proj, name):
     buildJars(proj)
