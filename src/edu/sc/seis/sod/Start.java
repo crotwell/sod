@@ -264,7 +264,9 @@ public class Start{
             if (dbDir.exists()){
                 try {
                     JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
-                    evChanStatusTable.updateEventChannelStates(runProps.getEventChannelPairProcessing());
+                    if (runProps.getEventChannelPairProcessing().equals(RunProperties.AT_LEAST_ONCE)){
+                        suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
+                    }
                 } catch (Exception e) {
                     GlobalExceptionHandler.handle("Trouble updating status of "
                                                       + "existing event-channel pairs",
@@ -392,6 +394,8 @@ public class Start{
     private static String configFileName;
 
     private static MicroSecondDate startTime;
+
+    protected static int[] suspendedPairs = new int[0];
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
