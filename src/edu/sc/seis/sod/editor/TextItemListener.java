@@ -21,6 +21,6 @@ public class TextItemListener implements ItemListener {
 
     public void itemStateChanged(ItemEvent e) {
         Object item = ((JComboBox)e.getSource()).getSelectedItem();
-        text.setNodeValue((String)item);
+        text.setNodeValue(item.toString());
     }
 }
