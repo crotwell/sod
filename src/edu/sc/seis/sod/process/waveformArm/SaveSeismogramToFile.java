@@ -57,7 +57,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
      */
     public SaveSeismogramToFile (Element config) throws ConfigurationException {
         this.config = config;
-        regions = ParseRegions.getInstance();
         String fileTypeStr =
             SodUtil.getText(SodUtil.getElement(config, "fileType"));
 
@@ -78,6 +77,12 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 throw new ConfigurationException("Unable to create directory."+dataDirectory);
             } // end of if (!)
 
+        } // end of if (dataDirectory.exits())
+
+        String dssPrefix =
+            SodUtil.getText(SodUtil.getElement(config, "seismogramPrefix"));
+        if ( dssPrefix != null && dssPrefix.length() != 0) {
+            prefix = dssPrefix;
         } // end of if (dataDirectory.exits())
 
         AuditInfo[] audit = new AuditInfo[1];
@@ -202,6 +207,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
                                                                seisFileTypeArray,
                                                                lastDataSet);
+        if (prefix != null && prefix.length() != 0) {
+            urlDSS.setName(prefix+urlDSS.getName());
+        }
         for (int i = 0; i < seisURL.length; i++) {
             urlDSS.addToCache(seisURL[i], seisFileType, seismograms[i]);
         }
@@ -359,13 +367,15 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
     EventFormatter nameGenerator = null;
 
-    ParseRegions regions;
+    static ParseRegions regions = ParseRegions.getInstance();
 
     Element config;
 
     File dataDirectory;
 
     SeismogramFileTypes fileType;
+
+    String prefix;
 
     private static final Logger logger =
         Logger.getLogger(SaveSeismogramToFile.class);

@@ -564,6 +564,11 @@
                 <element name="fileType">
                     <data type="string"/>
                 </element>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <element name="dataDirectory">
                     <data type="string"/>
                 </element>
