@@ -195,7 +195,7 @@
           <directory>test/unit/edu/sc/seis/sod/data</directory>
           <targetPath>edu/sc/seis/sod/data</targetPath>
           <includes>
-            <include>*</include>
+            <include>**/*</include>
           </includes>
         </resource>
       </resources>
@@ -212,10 +212,17 @@
         </includes>
       </resource>
       <resource>
+        <directory>src/edu/sc/seis/sod/editor</directory>
+        <targetPath>edu/sc/seis/sod/editor</targetPath>
+        <includes>
+          <include>names.prop</include>
+        </includes>
+      </resource>
+      <resource>
         <directory>src/edu/sc/seis/sod/data</directory>
         <targetPath>edu/sc/seis/sod/data</targetPath>
         <includes>
-          <include>*.xsd</include>
+          <include>**/*</include>
         </includes>
       </resource>
     </resources>
