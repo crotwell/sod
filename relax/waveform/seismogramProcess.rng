@@ -18,6 +18,7 @@
             <ref name="externalSeismogramProcess"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
+            <ref name="forkProcess"/>
         </choice>
     </define>
     <define name="phaseCut">
@@ -141,6 +142,13 @@
             <element name="seismogramConfig">
                 <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
             </element>
+        </element>
+    </define>
+    <define name="forkProcess">
+        <element name="forkProcess">
+            <zeroOrMore>
+                <ref name="seismogramProcess"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>
