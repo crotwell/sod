@@ -9,7 +9,7 @@
     <define name="availableData">
         <choice>
             <xsd:annotation>
-                <summary>Insert summary here</summary>
+                <summary>Tactics for selecting data</summary>
             </xsd:annotation>
             <ref name="postEventWait"/>
             <ref name="noGaps"/>
@@ -103,8 +103,12 @@
     <define name="postEventWait">
         <element name="postEventWait">
             <xsd:annotation>
-                <summary>Insert summary here</summary>
-                <description>Insert description here.</description>
+                <summary>Ensure good data after a fresh event</summary>
+                <description>When running SOD in realtime mode, this tells it how long to wait after a fresh event
+                before trying to get data.  This allows for data that isn't immediately available to be submitted to
+                the seismogram servers.  For more information look at the <a href="../../../realtime.html">Realtime
+                Run Considerations</a> for more details on how to use this subsetter in conjunction with the other
+                availableData subsetters.</description>
             </xsd:annotation>
             <ref name="time"/>
         </element>

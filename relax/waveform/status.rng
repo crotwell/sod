@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="waveformStatus"/>
     </start>
     <define name="waveformStatus">
         <choice>
+            <xsd:annotation>
+                <summary>The status reporters of the Waveform Arm</summary>
+            </xsd:annotation>
             <ref name="waveformEvent"/>
             <ref name="waveformNetwork"/>
             <ref name="waveformStation"/>
@@ -15,30 +18,65 @@
     </define>
     <define name="waveformEvent">
         <element name="waveformEventTemplateGenerator">
+            <xsd:annotation>
+                <summary>Generate HTML waveform status pages per event</summary>
+            </xsd:annotation>
             <element name="template">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </element>
     </define>
     <define name="waveformNetwork">
         <element name="waveformNetworkStatus">
+            <xsd:annotation>
+                <summary>Generate HTML waveform status pages per network</summary>
+            </xsd:annotation>
             <element name="template">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="networkListTemplate">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </element>
     </define>
     <define name="waveformStation">
         <element name="waveformStationStatus">
+            <xsd:annotation>
+                <summary>Generate HTML waveform status pages per station</summary>
+            </xsd:annotation>
             <element name="template">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </element>
     </define>
     <define name="external">
         <element name="externalWaveformMonitor">
+            <xsd:annotation>
+                <summary>Monitor wavforms via a class external to SOD</summary>
+                <description>Use an external class that implements the WaveformMonitor interface. SOD will attempt to
+                    load the class specified by classname and then call update() on it for each event-channel pair.</description>
+                <example>
+                    <externalWaveformMonitor>
+                        <classname>edu.somewhere.seis.sodExt.status.waveformArm.MyWaveformMonitor</classname>
+                    </externalWaveformMonitor>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

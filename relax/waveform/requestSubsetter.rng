@@ -7,6 +7,9 @@
     <include href="../base/include/eventLabel.rng"/>
     <define name="request">
         <choice>
+            <xsd:annotation>
+                <summary>Tactics for handling seismogram data requests</summary>
+            </xsd:annotation>
             <ref name="requestAND"/>
             <ref name="requestOR"/>
             <ref name="requestNOT"/>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="waveformVectorProcess"/>
@@ -9,16 +8,17 @@
     <include href="../base/include/quantity.rng"/>
     <define name="waveformVectorProcess">
         <choice>
+            <xsd:annotation>
+                <summary>Tactics for processing waveform groups</summary>
+            </xsd:annotation>
             <ref name="threeComponentData"/>
             <ref name="ANDWaveformProcessWrapper"/>
             <ref name="ORWaveformProcessWrapper"/>
-            <ref name="externalWaveformVectorProcess"/>
             <ref name="legacyVectorExecute"/>
             <ref name="waveformVectorFork"/>
             <ref name="waveformVectorAND"/>
             <ref name="waveformVectorOR"/>
             <ref name="waveformVectorNOT"/>
-            <ref name="waveformVectorXOR"/>
             <ref name="waveformVectorAlwaysSuccess"/>
             <!-- local seismogramProcesses directly in the motion vector arm
               are treaded as if they are in a ANDWaveformProcessWrapper -->
@@ -29,11 +29,9 @@
     <define name="threeComponentData">
         <element name="threeComponentData">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Checks for data in all three components. </summary>
-                    <description> If there is some data in all three components, then this returns
-                        true, if any are empty, then false. </description>
-                </xsd:documentation>
+                <summary>Checks for data in all three components</summary>
+                <description>If there is some data in all three components, then this returns true, if any are empty,
+                    then false.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -41,13 +39,10 @@
     <define name="ANDWaveformProcessWrapper">
         <element name="ANDWaveformProcessWrapper">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
-                    <description>Each of the components of the waveformVector are processed
-                    independently by the waveformProcess and the results are ANDed together.
-                    This operation short circuits, so no waveforms after the first
-                    failure are processed.</description>
-                </xsd:documentation>
+                <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    waveformProcess and the results are ANDed together. This operation short circuits, so no waveforms
+                    after the first failure are processed.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
@@ -57,44 +52,28 @@
     <define name="ORWaveformProcessWrapper">
         <element name="ORWaveformProcessWrapper">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
-                    <description>Each of the components of the waveformVector are processed
-                    independently by the waveformProcess and the results are ORed together.
-                    This operation short circuits, so no waveforms after the first
-                    success are processed.</description>
-                </xsd:documentation>
+                <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
+                <description>Each of the components of the waveformVector are processed independently by the
+                    waveformProcess and the results are ORed together. This operation short circuits, so no waveforms
+                    after the first success are processed.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
             </zeroOrMore>
         </element>
     </define>
-    <define name="externalWaveformVectorProcess">
-        <element name="externalWaveformVectorProcess">
-            <element name="classname">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
-        </element>
-    </define>
     <define name="legacyVectorExecute">
         <element name="legacyVectorExecute">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Executes an external program.</summary>
-                    <description>The legacyVectorExecute processor is capable of running
-                        existing command line programs. It does this by passing the filenames of the
-                        seismograms saved by a earlier SaveSeismogramToFile processor to a program
-                        started with Runtime.exec(). </description>
-                    <example>
-                        <legacyVectorExecute>
-                            <command>echo</command>
-                        </legacyVectorExecute>
-                    </example>
-                </xsd:documentation>
+                <summary>Executes an external program</summary>
+                <description>The legacyVectorExecute processor is capable of running existing command line programs. It
+                    does this by passing the filenames of the seismograms saved by a earlier SaveSeismogramToFile
+                    processor to a program started with Runtime.exec().</description>
+                <example>
+                    <legacyVectorExecute>
+                        <command>echo</command>
+                    </legacyVectorExecute>
+                </example>
             </xsd:annotation>
             <optional>
                 <element name="prefix">
@@ -114,23 +93,20 @@
     <define name="waveformVectorFork">
         <element name="waveformVectorFork">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Forks the processing for vector waveform data. </summary>
-                    <description>The seismograms are copied and sent through the fork allowing
-                        independent processing of the same data. The return value is true if all of
-                        the sub processors complete successfully, false otherwise. </description>
-                    <example>
-                        <waveformVectorFork>
-                            <rMean/>
-                            <saveSeismogramToFile>
-                                <fileType>sac</fileType>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                </eventDirLabel>
-                            </saveSeismogramToFile>
-                        </waveformVectorFork>
-                    </example>
-                </xsd:documentation>
+                <summary>Forks the processing for vector waveform data</summary>
+                <description>The seismograms are copied and sent through the fork allowing independent processing of the
+                    same data. The return value is true if all of the sub processors complete successfully, false otherwise.</description>
+                <example>
+                    <waveformVectorFork>
+                        <rMean/>
+                        <saveSeismogramToFile>
+                            <fileType>sac</fileType>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            </eventDirLabel>
+                        </saveSeismogramToFile>
+                    </waveformVectorFork>
+                </example>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="waveformVectorProcess"/>
@@ -140,26 +116,24 @@
     <define name="waveformVectorAND">
         <element name="waveformVectorAND">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between waveformVector subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated.
-                        The seismic data passed down the chain is the data passed in, seismogram
-                        results of the contained processors are ignored.</description>
-                    <example>
-                        <waveformVectorAND>
-                            <waveformVectorNOT>
-                                <rMean/>
-                            </waveformVectorNOT>
-                            <saveSeismogramToFile>
-                                <fileType>sac</fileType>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                </eventDirLabel>
-                            </saveSeismogramToFile>
-                        </waveformVectorAND>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches all included waveformVector processors</summary>
+                <description>The output is the logical AND of the outputs of all included waveformVector processors.
+                    This means that it will evaluate to true only if all of the included processors evaluate to true.
+                    The subsetters after the first false outputted are not evaluated. The seismic data passed down the
+                    chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <waveformVectorAND>
+                        <waveformVectorNOT>
+                            <rMean/>
+                        </waveformVectorNOT>
+                        <saveSeismogramToFile>
+                            <fileType>sac</fileType>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            </eventDirLabel>
+                        </saveSeismogramToFile>
+                    </waveformVectorAND>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="waveformVectorProcess"/>
@@ -169,73 +143,43 @@
     <define name="waveformVectorOR">
         <element name="waveformVectorOR">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between waveformVector subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputted are not evaluated.
-                        The seismic data passed down the chain is the data passed in, seismogram
-                        results of the contained processors are ignored. </description>
-                    <example>
-                        <waveformVectorOR>
-                            <waveformVectorNOT>
-                                <rMean/>
-                            </waveformVectorNOT>
-                            <saveSeismogramToFile>
-                                <fileType>sac</fileType>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                </eventDirLabel>
-                            </saveSeismogramToFile>
-                        </waveformVectorOR>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches at least one of the included waveformVector processors</summary>
+                <description>The output is the logical OR of the outputs of all included waveformVector processors. This
+                    means that it will evaluate to true as long as one of the included waveformVector processors
+                    evaluate to true. The processors after the first true outputted are not evaluated. The seismic data
+                    passed down the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <waveformVectorOR>
+                        <waveformVectorNOT>
+                            <rMean/>
+                        </waveformVectorNOT>
+                        <saveSeismogramToFile>
+                            <fileType>sac</fileType>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            </eventDirLabel>
+                        </saveSeismogramToFile>
+                    </waveformVectorOR>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="waveformVectorProcess"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="waveformVectorXOR">
-        <element name="waveformVectorXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between waveformVector subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of all included
-                        subsetters. The seismic data passed down the chain is the data passed in,
-                        seismogram results of the contained processors are ignored. </description>
-                    <example>
-                        <waveformVectorXOR>
-                            <waveformVectorNOT>
-                                <rMean/>
-                            </waveformVectorNOT>
-                            <saveSeismogramToFile>
-                                <fileType>sac</fileType>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                </eventDirLabel>
-                            </saveSeismogramToFile>
-                        </waveformVectorXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="waveformVectorProcess"/>
-            <ref name="waveformVectorProcess"/>
-        </element>
-    </define>
     <define name="waveformVectorNOT">
         <element name="waveformVectorNOT">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an waveformVector subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetters. The seismic data passed down the chain is the data passed in,
-                        seismogram results of the contained processors are ignored.</description>
-                    <example>
-                        <waveformVectorNOT>
-                            <rMean/>
-                        </waveformVectorNOT>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches the negated output of the included waveformVector processor</summary>
+                <description>The output is the logical NOT of the output of the included waveformVector processors. This
+                    means that it will evaluate to true if the included processor evaluates to false, and vice versa.
+                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
+                    processors are ignored.</description>
+                <example>
+                    <waveformVectorNOT>
+                        <rMean/>
+                    </waveformVectorNOT>
+                </example>
             </xsd:annotation>
             <ref name="waveformVectorProcess"/>
         </element>
@@ -243,30 +187,37 @@
     <define name="waveformVectorAlwaysSuccess">
         <element name="waveformVectorAlwaysSuccess">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Executes a subprocessor, but always returns true.</summary>
-                    <description>This executes the enclosed processor, but always returns a success
-                        regardless of whether the enclosed processor succeeded or failed. </description>
-                    <example>
-                        <waveformVectorAlwaysSuccess>
-                            <waveformVectorFork>
-                                <rMean/>
-                                <saveSeismogramToFile>
-                                    <fileType>sac</fileType>
-                                    <dataDirectory>POND_II</dataDirectory>
-                                    <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                                    </eventDirLabel>
-                                </saveSeismogramToFile>
-                            </waveformVectorFork>
-                        </waveformVectorAlwaysSuccess>
-                    </example>
-                </xsd:documentation>
+                <summary>Executes a subprocessor, but always returns true.</summary>
+                <description>This executes the enclosed processor, but always returns a success regardless of whether
+                    the enclosed processor succeeded or failed. </description>
+                <example>
+                    <waveformVectorAlwaysSuccess>
+                        <waveformVectorFork>
+                            <rMean/>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>POND_II</dataDirectory>
+                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
+                        </waveformVectorFork>
+                    </waveformVectorAlwaysSuccess>
+                </example>
             </xsd:annotation>
             <ref name="waveformVectorProcess"/>
         </element>
     </define>
     <define name="external">
         <element name="externalWaveformVectorProcess">
+            <xsd:annotation>
+                <summary>Use a WaveformVectorProcess external to SOD</summary>
+                <description>This allows you to use a WaveformVectorProcess external to SOD. SOD attempts to load the
+                    class named in classname, and, provided the class implements the WavformVectorProcess interface, it
+                    attempt to call the process() method for every waveform group.</description>
+                <example>
+                    <classname>edu.somewhere.seis.sodExt.process.waveformVector.MyWaveformVectorProcess</classname>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

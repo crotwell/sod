@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
-        <ref name="eventChannel"/>
+        <ref name="eventVector"/>
     </start>
-    <define name="eventChannel">
+    <define name="eventVector">
         <choice>
+            <xsd:annotation>
+                <summary>Tactics for selecting channel groups for events</summary>
+            </xsd:annotation>
             <ref name="ANDEventChannelWrapper"/>
             <ref name="OREventChannelWrapper"/>
             <ref name="eventVectorAND"/>
             <ref name="eventVectorOR"/>
-            <ref name="eventVectorXOR"/>
             <ref name="eventVectorNOT"/>
             <ref name="PASS"/>
             <ref name="external"/>
@@ -20,20 +21,17 @@
     <define name="ANDEventChannelWrapper">
         <element name="ANDEventChannelWrapper">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event vector
-                        subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
-                        channelgroup subsetter. The result is the AND of result of all the
-                        individual channels. The is most often used within the motion vector arm. </description>
-                    <example>
-                        <ANDEventChannelWrapper>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </ANDEventChannelWrapper>
-                    </example>
-                </xsd:documentation>
+                <summary>Allows an event channel subsetter to be embedded within a event vector subsetter</summary>
+                <description>Allows an event channel subsetter to be embedded within a event channelgroup subsetter. The
+                    result is the AND of result of all the individual channels. The is most often used within the motion
+                    vector arm.</description>
+                <example>
+                    <ANDEventChannelWrapper>
+                        <embeddedChannel>
+                            <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </ANDEventChannelWrapper>
+                </example>
             </xsd:annotation>
             <externalRef href="eventChannel.rng"/>
         </element>
@@ -41,20 +39,17 @@
     <define name="OREventChannelWrapper">
         <element name="OREventChannelWrapper">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event vector
-                        subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
-                        channelgroup subsetter. The result is the OR of result of all the individual
-                        channels. The is most often used within the motion vector arm. </description>
-                    <example>
-                        <OREventChannelWrapper>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </OREventChannelWrapper>
-                    </example>
-                </xsd:documentation>
+                <summary>Allows an event channel subsetter to be embedded within a event vector subsetter</summary>
+                <description>Allows an event channel subsetter to be embedded within a event channelgroup subsetter. The
+                    result is the OR of result of all the individual channels. The is most often used within the motion
+                    vector arm.</description>
+                <example>
+                    <OREventChannelWrapper>
+                        <embeddedChannel>
+                            <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </OREventChannelWrapper>
+                </example>
             </xsd:annotation>
             <externalRef href="eventChannel.rng"/>
         </element>
@@ -62,71 +57,63 @@
     <define name="eventVectorAND">
         <element name="eventVectorAND">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between EventVector subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
-                </xsd:documentation>
+                <summary>Matches all included EventVector subsetters</summary>
+                <description>The output is the logical AND of the outputs of all included EventVector subsetters. This
+                    means that it will evaluate to true only if all the included subsetters evaluate to true. The
+                    subsetters after the first false outputted are not evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventVector"/>
             </oneOrMore>
         </element>
     </define>
     <define name="eventVectorOR">
         <element name="eventVectorOR">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between EventVector subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputted are not evaluated. </description>
-                </xsd:documentation>
+                <summary>Matches at least one of included EventVector subsetters</summary>
+                <description>The output is the logical OR of the outputs of all included EventVector subsetters. This
+                    means that at least one included subsetter must evaluate to true for this subsetter to evaluate to
+                    true. The subsetters after the first true outputted are not evaluated.</description>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventVector"/>
             </oneOrMore>
-        </element>
-    </define>
-    <define name="eventVectorXOR">
-        <element name="eventVectorXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between EventVector subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of included
-                        subsetters. </description>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="eventChannel"/>
-            <ref name="eventChannel"/>
         </element>
     </define>
     <define name="eventVectorNOT">
         <element name="eventVectorNOT">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an EventVector subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetter. </description>
-                </xsd:documentation>
+                <summary>Matches the negated output of the included EventVector subsetter</summary>
+                <description>The output is the logical NOT of the output of the included subsetter. This means that the
+                    included subsetter must evaluate to false for this subsetter to evaluate to true, and vice versa.</description>
             </xsd:annotation>
-            <ref name="eventChannel"/>
+            <ref name="eventVector"/>
         </element>
     </define>
     <define name="PASS">
         <element name="passEventChannel">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Always returns true. </summary>
-                    <description> Simple subsetter that always returns true, useful for testing. </description>
-                </xsd:documentation>
+                <summary>Accepts any channel group</summary>
+                <description>This is a simple subsetter that always returns true, which is particularly useful for testing.</description>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventVector"/>
             </zeroOrMore>
         </element>
     </define>
     <define name="external">
         <element name="externalEventVectorSubsetter">
+            <xsd:annotation>
+                <summary>Use an EventVector subsetter external to SOD</summary>
+                <description>This tag allows you to use an EventVector subsetter external to SOD. SOD attempts to load
+                    the class named by classname and then, provided it implements the EventVectorSubsetter interface,
+                    calls the accept() method for each event and channel group.</description>
+                <example>
+                    <externalEventVectorSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyEventVectorSubsetter</classname>
+                    </externalEventVectorSubsetter>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>
