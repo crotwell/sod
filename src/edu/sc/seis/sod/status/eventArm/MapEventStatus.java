@@ -5,8 +5,8 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventStatus;
-import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.database.event.EventCondition;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +24,15 @@ public class MapEventStatus implements SodElement, EventStatus{
     protected String fileLoc;
     
     public MapEventStatus(Element element){
+        this(element, false);
+    }
+    
+    /**
+     * Creates a MapEventStatus that outputs to the location in the attribute
+     * xlink:href of the passed in element, and if addToEventArm is true, it
+     * adds itself to the EventArm's status listeners
+     */
+    public MapEventStatus(Element element, boolean addToEventArm){
         fileLoc = element.getAttribute("xlink:href");
         synchronized(maps){
             Iterator it = maps.iterator();
@@ -38,6 +47,7 @@ public class MapEventStatus implements SodElement, EventStatus{
             events = new EventLayer(map.getMapBean());
             map.setEventLayer(events);
         }
+        if(addToEventArm)Start.getEventArm().add(this);
     }
     
     public void change(EventAccessOperations event, EventCondition status){
@@ -52,6 +62,8 @@ public class MapEventStatus implements SodElement, EventStatus{
             
         }
     }
+    
+    public String getLocation(){ return fileLoc; }
     
     public boolean isDuplicateForLocation(){
         return isDuplicate;
