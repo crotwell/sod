@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			Schema for the EventArm of SOD
+		</xsd:documentation>
+	</xsd:annotation>
+	
+	<!-- mainly used in the NetworkARm EFFECTIVE TIME OVERLAP TYPE -->
+	<xsd:complexType name="effectiveTimeOverlapType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<!-- PARAMS TYPE -->
+	<xsd:complexType name="paramsType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- PROCESS TYPE -->
+	<xsd:complexType name="processType" abstract="true">
+		<xsd:sequence>
+			<xsd:element name="class" type="xsd:string"/>
+			<xsd:element name="params" type="paramsType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<!-- UNIT  TYPE -->
+	<xsd:simpleType name="unitType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="KILOMETER"/>
+			<xsd:enumeration value="METER"/>
+			<xsd:enumeration value="SECOND"/>
+			<xsd:enumeration value="AMPERE"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- QUANTITY TYPE -->
+	<xsd:complexType name="quantityType">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:integer"/>
+			<xsd:element name="quantity" type="unitType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<!-- UNIT RANGE TYPE -->
+	<xsd:complexType name="unitRangeType">
+		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
+			<xsd:element name="min" type="xsd:double"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:double"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- TIME INTERVAL TYPE -->
+	<xsd:complexType name="timeIntervalType">
+		<xsd:complexContent>
+			<xsd:extension base="quantityType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- LENGTH TYPE -->
+	<xsd:complexType name="lengthType">
+		<xsd:complexContent>
+			<xsd:extension base="quantityType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- DISTANCE TYPE -->
+	<xsd:complexType name="distanceType">
+		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
+			<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	
+</xsd:schema>
+
+
+
+
