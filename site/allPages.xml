@@ -26,14 +26,19 @@
                 <destination>walkthrough.html</destination>
                 <name>Walkthrough</name>
         </page>
-		<page>
-				<source>../xdocs/tutorial.xml</source>
-				<destination>tutorial.html</destination>
-				<name>XML-based Tutorial</name>
-		</page>
-		<page>
-				<source>include/ES_JulAug_2004_preprint.pdf</source>
-				<destination>ES_JulAug_2004_preprint.pdf</destination>
-				<name>SOD Paper(PDF)</name>
-		</page>
+        <page>
+                <source>../xdocs/tutorial.xml</source>
+                <destination>tutorial.html</destination>
+                <name>XML-based Tutorial</name>
+        </page>
+        <page>
+                <source>../xdocs/realtime.xml</source>
+                <destination>realtime.html</destination>
+                <name>Realtime Run Considerations</name>
+        </page>
+        <page>
+                <source>include/ES_JulAug_2004_preprint.pdf</source>
+                <destination>ES_JulAug_2004_preprint.pdf</destination>
+                <name>SOD Paper(PDF)</name>
+        </page>
 </pages>
