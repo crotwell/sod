@@ -12,8 +12,8 @@ import edu.iris.Fissures.IfNetwork.*;
  * @version
  */
 
-public interface NetworkProcess extends Process {
+public interface NetworkArmProcess extends Process {
 
-    public void process(NetworkAccess network);
+    public void process(NetworkAccess network, Channel chan, CookieJar cookieJar);
     
 }// NetworkProcess
