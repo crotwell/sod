@@ -38,6 +38,16 @@
                         <xsl:apply-templates select="*" mode="sub"/>
                 </div>
         </xsl:template>
+        <xsl:template match="source">
+                <pre>
+                <xsl:copy-of select="text()"/>
+                </pre>
+        </xsl:template>
+        <xsl:template match="source" mode="sub">
+                <pre>
+                <xsl:copy-of select="text()"/>
+                </pre>
+        </xsl:template>
         <xsl:template match="*">
                 <xsl:copy-of select="."/>
         </xsl:template>
