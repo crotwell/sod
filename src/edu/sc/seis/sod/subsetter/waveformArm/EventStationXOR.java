@@ -10,23 +10,23 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 
-public class EventStationAND 
+public class EventStationXOR 
     extends  NetworkLogicalSubsetter 
     implements EventStationSubsetter {
     
-    public EventStationAND (Element config) throws ConfigurationException {
+    public EventStationXOR (Element config) throws ConfigurationException {
 	super(config);
     }
 
     public boolean accept(EventAccessOperations o, Station station,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
+	while(it.hasNext()) {
 	    EventStationSubsetter filter = (EventStationSubsetter)it.next();
-	    if (!filter.accept(o, station, cookies)) {
+	    if ( filter.accept(o, station, cookies)) {
 		return false;
 	    }
 	}
-	return true;
+	return false;
     }
 
-}// EventStationAND
+}// EventStationXOR
