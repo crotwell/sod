@@ -5,12 +5,18 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.Template;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
 public class ChannelFormatter extends Template implements ChannelTemplate{
-    public ChannelFormatter(Element el){ parse(el); }
+    public ChannelFormatter(Element el){ this(el, null); }
+    
+    public ChannelFormatter(Element el, ChannelGroupTemplate cgt){
+        this.cgt = cgt;
+        parse(el);
+    }
     
     protected Object textTemplate(final String text) {
         return new ChannelTemplate(){
@@ -49,13 +55,13 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         else if(tag.equals("dip")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return Float.toString(chan.an_orientation.dip);
+                    return format(chan.an_orientation.dip);
                 }
             };
         }else if(tag.equals("azimuth")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return Float.toString(chan.an_orientation.azimuth);
+                    return format(chan.an_orientation.azimuth);
                 }
             };
         }else if(tag.equals("name")){
@@ -64,8 +70,37 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                     return chan.name;
                 }
             };
+        }else if(tag.equals("lat")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    return format(chan.my_site.my_location.latitude);
+                }
+            };
+        }else if(tag.equals("lon")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    return format(chan.my_site.my_location.longitude);
+                }
+            };
+        }else if(tag.equals("lon")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    return format(chan.my_site.my_location.longitude);
+                }
+            };
+        }else if(tag.equals("status") && cgt != null){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+                    return cgt.channelMap.get(chan).toString();
+                }
+            };
         }
         return null;
+    }
+    
+    private static String format(double d){
+        DecimalFormat formatter = new DecimalFormat("#.#");
+        return formatter.format(d);
     }
     
     private class BeginTimeTemplate implements ChannelTemplate{
@@ -89,4 +124,6 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }
         return buf.toString();
     }
+    
+    ChannelGroupTemplate cgt;
 }
