@@ -20,7 +20,9 @@ import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,7 +35,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
     private Element waveformSeismogramConfig;
     private EventFormatter eventFormatter;
     private StationFormatter stationFormatter;
-    private Logger logger = Logger.getLogger(LocalSeismogramTemplateGenerator.class);
+    private static Logger logger = Logger.getLogger(LocalSeismogramTemplateGenerator.class);
 
     public LocalSeismogramTemplateGenerator(Element el) throws Exception{
         NodeList nl = el.getChildNodes();
@@ -76,7 +78,24 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         if (fileDir == null || waveformSeismogramConfig == null || eventFormatter == null || stationFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
         }
+
+        synchronized(getClass()) {
+            if (velocity == null) {
+                velocity = new VelocityEngine();
+                Properties props = new Properties();
+                props.put("resource.loader", "class");
+                props.put("class.resource.loader.description", "Velocity Classpath Resource Loader");
+                props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+                velocity.init(props);
+            }
+        }
     }
+
+    public static VelocityEngine getVelocity() {
+        return velocity;
+    }
+
+    static VelocityEngine velocity = null;
 
     /**
      * Processes localSeismograms, possibly modifying them.
@@ -94,7 +113,8 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
 
         if (seismoImageProcess != null){
@@ -105,7 +125,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         }
 
         if (fileName != null){
-            getTemplate(event, channel);
+            getTemplate(event, channel, cookieJar);
         }
         else {
             logger.debug("There was no fileName in config. I am not generating html pages.");
@@ -114,7 +134,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         return seismograms;
     }
 
-    public LocalSeismogramTemplate getTemplate(EventAccessOperations event, Channel chan) throws Exception{
+    public LocalSeismogramTemplate getTemplate(EventAccessOperations event, Channel chan, CookieJar cookieJar) throws Exception{
         String eventStationString = eventFormatter.getResult(event)
             + stationFormatter.getResult(chan.my_site.my_station);
         LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
@@ -122,10 +142,10 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             String outputLocation = eventFormatter.getResult(event) + '/'
                 + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
             template = new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
-                                                   event, chan.my_site.my_station);
+                                                   event, chan.my_site.my_station, cookieJar);
             templates.put(eventStationString, template);
         }
-        template.update(chan);
+        template.update(chan, cookieJar);
         return template;
     }
 
