@@ -125,11 +125,20 @@
     
     <!-- This is the base abstract Type -->
     <xsd:complexType name="eventAttrType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                Superclass for all subsetters that act on EventAttr objects. 
-            </xsd:documentation>
-        </xsd:annotation>
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all EventAttr subsetters.
+            </summary>
+            <description>
+                This is a place holder for EventAttr subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -349,13 +358,20 @@
     <!-- BEGIN Origin -->    
     
     <xsd:complexType name="originType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Superclass for all subsetters that act on Origin objects.
-                </summary>
-            </xsd:documentation>
-        </xsd:annotation>
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all Origin subsetters.
+            </summary>
+            <description>
+                This is a place holder for Origin subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -457,6 +473,17 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>	
+    
+    <!-- EVENT AREA TYPE -->
+    <xsd:complexType name="eventAreaType">
+        <xsd:complexContent>
+            <xsd:extension base="originType">
+                <xsd:sequence>
+                    <xsd:element ref="area"/>
+                </xsd:sequence>	
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
     
     
     <!-- ORIGIN AND TYPE -->
@@ -657,18 +684,6 @@
     
     <!-- element representing depth Range-->
     <xsd:element name="originDepthRange" type="originDepthRangeType" substitutionGroup="origin"/>	
-    
-    <!-- EVENT AREA TYPE -->
-    <xsd:complexType name="eventAreaType">
-        <xsd:complexContent>
-            <xsd:extension base="originType">
-                <xsd:sequence>
-                    <xsd:element ref="area"/>
-                </xsd:sequence>	
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
     
     <!-- element representing eventArea -->
     <xsd:element name="eventArea" type="eventAreaType" substitutionGroup="origin"/>
