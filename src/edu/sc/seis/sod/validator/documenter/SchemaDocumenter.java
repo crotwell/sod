@@ -17,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.jacorb.idl.lexer;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.validator.ModelWalker;
 import edu.sc.seis.sod.validator.model.Definition;
@@ -28,9 +29,11 @@ import edu.sc.seis.sod.validator.tour.HTMLOutlineTourist;
 public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
-        StAXModelBuilder handler = new StAXModelBuilder("../../relax/sod.rng");
+        base = args[0];
+        StAXModelBuilder handler = new StAXModelBuilder(base + "relax/sod.rng");
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
+        ve.setProperty("file.resource.loader.path", base + "site\\schemaDocs");
         ve.init();
         VelocityContext c = new VelocityContext();
         c.put("root", handler.getRoot());
@@ -40,15 +43,16 @@ public class SchemaDocumenter {
         c.put("doc", new SchemaDocumenter());
         //Setup xsl transforms
         TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer transformer = tFactory.newTransformer(new StreamSource("../pageGenerator.xsl"));
+        Transformer transformer = tFactory.newTransformer(new StreamSource(base
+                + "site/pageGenerator.xsl"));
         //Run velocity then xsl on all definitions
         Collection defs = StAXModelBuilder.getAllDefinitions();
         Iterator it = defs.iterator();
         while(it.hasNext()) {
             Definition cur = (Definition)it.next();
             //if(makePath(cur).startsWith("network/station")) {
-                render(c, ve, cur, transformer);
-                System.out.print(".");
+            render(c, ve, cur, transformer);
+            System.out.print(".");
             //}
         }
     }
@@ -60,7 +64,7 @@ public class SchemaDocumenter {
                               Definition def,
                               Transformer t) throws Exception {
         String path = makePath(def);
-        File xmlFile = new File("xml/" + path + ".xml");
+        File xmlFile = new File(base + "site/schemaDocs/xml/" + path + ".xml");
         xmlFile.getParentFile().mkdirs();
         FileWriter fw = new FileWriter(xmlFile);
         c.put("def", def);
@@ -70,19 +74,24 @@ public class SchemaDocumenter {
         c.put("contained", tourist.getResult());
         ve.mergeTemplate("elementPage.vm", new VelocityContext(c), fw);
         fw.close();
-        String outputLoc = "../generatedSite/tagDocs/" + path + ".html";
+        String outputLoc = base + "site/generatedSite/tagDocs/" + path
+                + ".html";
         File htmlFile = new File(outputLoc);
         htmlFile.getParentFile().mkdirs();
-        String relPath = SodUtil.getRelativePath(outputLoc,
-                                                 "../generatedSite/",
-                                                 "/");
-        relPath = relPath.substring(0, relPath.length()
-                - "../generatedSite".length());
+        String relPath = "../";
+        int numDirs = 0;
+        for(int i = 0; i < path.length(); i++) {
+            if(path.charAt(i) == '/' | path.charAt(i) == '\\') {
+                numDirs++;
+            }
+        }
+        for(int j = 0; j < numDirs; j++) {
+            relPath += "../";
+        }
         t.setParameter("base", relPath);
         t.setParameter("menu", "Reference");
         t.setParameter("page", "tagDocs/" + path + ".html");
-        t.transform(new StreamSource("xml/" + path + ".xml"),
-                    new StreamResult(htmlFile));
+        t.transform(new StreamSource(xmlFile), new StreamResult(htmlFile));
     }
 
     public static Definition getNearestDef(Form f) {
@@ -96,7 +105,8 @@ public class SchemaDocumenter {
 
     public static String makePath(Definition def) {
         String rngLoc = def.getGrammar().getLoc();
-        String path = rngLoc.substring(rngLoc.indexOf("relax") + 6, rngLoc.length() - 4);
+        String path = rngLoc.substring(rngLoc.indexOf("relax") + 6,
+                                       rngLoc.length() - 4);
         path += "/" + def.getName();
         if(def.getName().equals("")) {
             path += "start";
@@ -104,7 +114,7 @@ public class SchemaDocumenter {
         return path;
     }
 
-    static Set writtenFiles = new HashSet();
+    static String base;
 
-    static File base = new File("html/");
+    static Set writtenFiles = new HashSet();
 }
