@@ -150,17 +150,26 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 NodeList list = doc.getDocumentElement().getChildNodes();
                 for (int j = 0; j < list.getLength(); j++) {
                     if (list.item(j) instanceof Element) {
-                        Box box = Box.createVerticalBox();
-                        NodeList sublist = ((Element)list.item(j)).getChildNodes();
-                        JComponent[] subComponents = getCompsForNodeList(sublist);
-                        for (int i = 0; i < subComponents.length; i++) {
-                            box.add(subComponents[i]);
-                            box.add(Box.createVerticalStrut(10));
+                        Element el = (Element)list.item(j);
+                        JComponent panel = null;
+                        if(el.getTagName().equals("properties")){
+                            try {
+                                panel = propEditor.getGUI(el);
+                            } catch (TransformerException e) {
+                                GlobalExceptionHandler.handle(e);
+                            }
+                        }else{
+                            panel = new JPanel(new BorderLayout());
+                            Box box = Box.createVerticalBox();
+                            NodeList sublist = ((Element)list.item(j)).getChildNodes();
+                            JComponent[] subComponents = getCompsForNodeList(sublist);
+                            for (int i = 0; i < subComponents.length; i++) {
+                                box.add(subComponents[i]);
+                                box.add(Box.createVerticalStrut(10));
+                            }
+                            panel.add(box, BorderLayout.NORTH);
                         }
-                        JPanel panel = new JPanel();
-                        panel.setLayout(new BorderLayout());
-                        panel.add(box, BorderLayout.NORTH);
-                        String tabName = getDisplayName(((Element)list.item(j)).getTagName());
+                        String tabName = getDisplayName(el.getTagName());
                         tabPane.add(EditorUtil.capFirstLetter(tabName),
                                     new JScrollPane(panel,
                                                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -295,6 +304,8 @@ public class SimpleGUIEditor extends CommandLineEditor {
         botRow.add(Box.createGlue());
         return box;
     }
+
+    private PropertyEditor propEditor = new PropertyEditor();
 
     public void setTabbed(boolean tabbed){ this.tabs = tabbed; }
 

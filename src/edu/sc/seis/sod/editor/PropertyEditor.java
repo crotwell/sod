@@ -16,75 +16,83 @@ import java.util.Properties;
 import java.io.IOException;
 import java.awt.event.*;
 
-
-
 public class PropertyEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
-        JPanel panel = new JPanel();
-        if (element.getTagName().equals("property")) {
-            panel.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx=0;
-            gbc.gridy=0;
-            gbc.fill = gbc.HORIZONTAL;
-            gbc.weightx = 1;
-            gbc.weighty = 1;
-            Node node = XPathAPI.selectSingleNode(element, "name/text()");
-            Text text = (Text)node;
-            JLabel label;
-            String labeltext = null;
-            StringTokenizer st = new StringTokenizer(text.getNodeValue(),".");
-            while(st.hasMoreTokens()) {
-                labeltext = st.nextToken();
+        JPanel panel = new JPanel(new GridBagLayout());
+        int gridy = 0;
+        NodeList nl = element.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            if(nl.item(i) instanceof Element){
+                Element childEl = (Element)nl.item(i);
+                addLabel(EditorUtil.getLabel(childEl.getTagName()), panel, gridy);
+                addTwiddler(makeTwiddler(childEl), panel, gridy++);
+                addSpacer(panel, gridy++, false);
             }
-            label = EditorUtil.getLabel(labeltext);
-
-            label.setHorizontalTextPosition(SwingConstants.RIGHT);
-            panel.add(label, gbc);
-            gbc.gridx++;
-            JComboBox combo = null;
-
-            if(labeltext.equals("getNewEvents")) {
-                combo = initComboBox(element,flags);
-
-            } else if ( labeltext.equals("daystoincrement")) {
-                //for(int j=1;j<=100;j++)
-                //vals[j]= (new Integer(j)).toString();
-                combo = initComboBox(element,numVals);
-            } else {
-                combo = initComboBox(element,defaultVals);
-            }
-            panel.add(combo, gbc);
-            gbc.gridx--;
-
         }
+        addSpacer(panel, gridy++, true);
         return panel;
     }
-    public JComboBox initComboBox(Element element, String[] vals) throws TransformerException {
-        Node node = XPathAPI.selectSingleNode(element, "value/text()");
-        Text text = (Text)node;
-        JComboBox combo = new JComboBox(vals);
-        combo.addItem(text.getNodeValue());
-        combo.setSelectedItem(text.getNodeValue());
-        combo.addItemListener(new TextItemListener(text));
-        return combo;
-    }
-    class TextItemListener implements ItemListener {
-        TextItemListener(Text text) {
-            this.text = text;
-        }
-        Text text;
-        public void itemStateChanged(ItemEvent e) {
-            Object item = ((JComboBox)e.getSource()).getSelectedItem();
-            text.setNodeValue((String)item);
-        }
+
+    private void addLabel(JComponent label, JComponent recipient, int gridy){
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = gridy;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        recipient.add(label, gbc);
     }
 
-    String[] flags = {"true","false"};
-    String[] vals;
-    String[] numVals = {"1","2"};
-    String[] defaultVals = {" "};
+    private void addTwiddler(JComponent twiddler, JComponent recipient, int gridy){
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = gridy;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1;
+        Dimension minSize = twiddler.getMinimumSize();
+        if(minSize.width < 300){ gbc.ipadx = (300 - minSize.width)/2; }
+        recipient.add(twiddler, gbc);
+    }
+
+    private void addSpacer(JComponent recipient, int gridy, boolean finalSpacer){
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1;
+        gbc.gridy = gridy;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridheight = 1;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        if(finalSpacer){ gbc.weighty = 1; }
+        recipient.add(new JPanel(), gbc);
+    }
+
+    private JComponent makeTwiddler(Element el) throws TransformerException{
+        for (int i = 0; i < timeQuantityEls.length; i++) {
+            if(timeQuantityEls[i].equals(el.getTagName())){
+                return makeTimeIntervalTwiddler(el);
+            }
+        }
+        Text t = (Text)XPathAPI.selectSingleNode(el, "text()");
+        return EditorUtil.getTextField(t);
+    }
+
+    private JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
+        Box b = Box.createHorizontalBox();
+        Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
+        b.add(EditorUtil.createNumberSpinner(t, 1, 50, 1));
+        Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
+        b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
+        b.add(Box.createHorizontalGlue());
+        return b;
+    }
+
+    private String[] timeQuantityEls = { "eventLag", "eventQueryIncrement",
+            "eventRefreshInterval", "maxRetryDelay" };
 }
 
 

@@ -55,3 +55,10 @@ backAzimuthRange=Back Azimuth
 unitRange=Range
 distanceRange=Distance
 
+eventLag=Event Lag
+eventQueryIncrement=Event Query Increment
+eventRefreshInterval=Event Refresh Interval
+maxRetryDelay=Max Retry Delay
+runName=Run Name
+statusBase=Status Directory
+waveformWorkerThreads=Waveform Arm Threads

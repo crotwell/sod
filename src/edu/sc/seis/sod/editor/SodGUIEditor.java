@@ -99,7 +99,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
     }
 
     protected void initEditors() {
-        editors.put("property", new PropertyEditor());
         //editors.put("networkArm", new NetworkArmEditor(this));
         DateEditor dateEdit = new DateEditor();
         editors.put("startTime", dateEdit);
@@ -142,6 +141,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("backAzimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
 
+
         BooleanEditor bool = new BooleanEditor(this);
         String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "seismogramSubsetter"};
         String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
@@ -170,9 +170,13 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     protected Start start;
 
-    private static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
+    public static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
 
-    private static final UnitImpl[] ANGLE_UNITS = { UnitImpl.DEGREE };
+    public static final UnitImpl[] ANGLE_UNITS = { UnitImpl.DEGREE };
+
+    public static final UnitImpl[] TIME_UNITS = { UnitImpl.SECOND, UnitImpl.MINUTE,
+            UnitImpl.HOUR, UnitImpl.DAY, UnitImpl.WEEK, };
+
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
