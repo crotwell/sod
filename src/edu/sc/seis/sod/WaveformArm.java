@@ -1,6 +1,5 @@
 package edu.sc.seis.sod;
-import java.util.*;
-
+import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -21,6 +20,10 @@ import edu.sc.seis.sod.subsetter.waveformArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.NullEventStationSubsetter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,7 +40,6 @@ public class WaveformArm implements Runnable {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         eventRetryTable = new JDBCEventChannelRetry();
-        netTable = new JDBCNetworkUnifier();
         processConfig(config);
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
@@ -130,13 +132,12 @@ public class WaveformArm implements Runnable {
             logger.debug("The channel effective time does not overlap the event time");
             return;
         } // end of if ()
-        int chanId = chan.getDbId();
         //cache the channelInformation.
-        channelDbCache.put( new Integer(chanId), chan);
         int pairId;
         synchronized(evChanStatus){
-            pairId = evChanStatus.put(ev.getDbId(), chanId,
-                                      Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
+            pairId = evChanStatus.put(ev.getDbId(), chan.getDbId(),
+                                      Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                 Standing.INIT));
         }
         invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
         retryIfNeededAndAvailable();
@@ -293,15 +294,8 @@ public class WaveformArm implements Runnable {
     private EventDbObject getEvent(int eventDbId){
         synchronized(eventStatus){
             try {
-                Integer key = new Integer(eventDbId);
-                //TODO - empty cache as it grows
-                if(eventDbCache.containsKey(key)){
-                    return (EventDbObject)eventDbCache.get(key);
-                }
-                EventDbObject e = new EventDbObject(eventDbId,
-                                                    eventStatus.getEvent(eventDbId));
-                eventDbCache.put(key, e);
-                return e;
+                return new EventDbObject(eventDbId,
+                                         eventStatus.getEvent(eventDbId));
             } catch (Exception e) {
                 throw new RuntimeException("Trouble with event db", e);
             }
@@ -321,8 +315,8 @@ public class WaveformArm implements Runnable {
                 boolean accepted = false;
                 try {
                     Station evStation = ecp.getChannel().my_site.my_station;
-                    accepted  = eventStationSubsetter.accept(ecp.getEvent(),
-                                                             evStation);
+                    accepted = eventStationSubsetter.accept(ecp.getEvent(),
+                                                            evStation);
                 } catch (Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
@@ -344,33 +338,15 @@ public class WaveformArm implements Runnable {
         }
 
         private EventChannelPair extractEventChannelPair() throws Exception{
-            int[] evAndChanIds = null;
             try {
                 synchronized(evChanStatus){
-                    evAndChanIds= evChanStatus.getEventAndChanIds(pairId);
+                    return evChanStatus.get(pairId, WaveformArm.this);
                 }
             } catch (NotFound e) {
                 throw new RuntimeException("Not found getting the event and channel ids from the event channel status db for a just gotten pair id.  This shouldn't happen.", e);
             } catch (SQLException e) {
                 throw new RuntimeException("SQL Exception getting the event and channel ids from the event channel status db", e);
             }
-            int eventId = evAndChanIds[0];
-            int chanId = evAndChanIds[1];
-            ChannelDbObject chanDbObject = null;
-            NetworkDbObject netDbObject = null;
-            Integer key = new Integer(chanId);
-            //TODO - empty cache
-            if( channelDbCache.containsKey(key)) {
-                chanDbObject = (ChannelDbObject)channelDbCache.get(key);
-            } else {
-                chanDbObject = netTable.getChannel(chanId);
-                channelDbCache.put(key, chanDbObject);
-            }
-            netDbObject = netTable.getNet(chanDbObject, networkArm.getFinder());
-
-            return new EventChannelPair(getEvent(eventId), chanDbObject,
-                                        WaveformArm.this, pairId);
-
         }
         private int pairId;
     }
@@ -383,13 +359,9 @@ public class WaveformArm implements Runnable {
 
     private NetworkArm networkArm = null;
 
-    private Map channelDbCache = new HashMap();
-
-    private Map eventDbCache = new HashMap();
     private JDBCEventStatus eventStatus;
     private JDBCEventChannelStatus evChanStatus;
     private JDBCEventChannelRetry eventRetryTable;
-    private JDBCNetworkUnifier netTable;
 
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible
@@ -399,4 +371,6 @@ public class WaveformArm implements Runnable {
     private int poolLineCapacity = 100, retryNum;
     private Object retryNumLock = new Object();
 }
+
+
 
