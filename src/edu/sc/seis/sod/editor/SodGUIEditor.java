@@ -115,6 +115,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("bandCode", netCodeEdit);
         editors.put("gainCode", netCodeEdit);
         editors.put("orientationCode", netCodeEdit);
+        EffectiveTimeEditor effTime = new EffectiveTimeEditor();
+        editors.put("stationEffectiveTimeOverlap", effTime);
+        editors.put("siteEffectiveTimeOverlap", effTime);
+        editors.put("channelEffectiveTimeOverlap", effTime);
         editors.put("boxArea", new BoxAreaEditor());
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new DistanceRangeEditor());

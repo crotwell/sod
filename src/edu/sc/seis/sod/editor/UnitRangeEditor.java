@@ -34,12 +34,12 @@ public class UnitRangeEditor implements EditorPlugin {
         b.add(minSpinner);
         b.add(new JLabel("  to  "));
         b.add(maxSpinner);
-        b.add(new JLabel("  in  "));
         if(units.length > 1) {
             JComboBox box = new JComboBox(units);
             b.add(box);
         }else{
             JLabel unitLabel = new JLabel(UnitDisplayUtil.getNameForUnit(units[0]));
+            b.add(Box.createHorizontalStrut(10));
             b.add(unitLabel);
         }
         b.add(Box.createHorizontalGlue());

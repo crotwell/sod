@@ -22,3 +22,6 @@ originXOR=Event Logical XOr
 originNOT=Event Logical Not
 originPointDistance=Distance from Event
 originDepthRange=Event depth
+stationEffectiveTimeOverlap=Station Activity Time
+siteEffectiveTimeOverlap=Site Activity Time
+channelEffectiveTimeOverlap=Channel Activity Time

@@ -18,7 +18,6 @@ import org.w3c.dom.Text;
 public class TimeRangeEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
-        DateEditor dateE = new DateEditor();
         Box box = Box.createHorizontalBox();
         box.add(new JLabel("Start:"));
         Node node = XPathAPI.selectSingleNode(element, "min");
@@ -39,5 +38,7 @@ public class TimeRangeEditor implements EditorPlugin {
         box.add(Box.createHorizontalGlue());
         return box;
     }
+
+    private DateEditor dateE = new DateEditor();
 }
 
