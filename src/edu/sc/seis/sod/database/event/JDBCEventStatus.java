@@ -24,7 +24,7 @@ import java.util.List;
 public class JDBCEventStatus extends SodJDBC{
     public JDBCEventStatus() throws SQLException{
         Connection conn = ConnMgr.getConnection();
-        this.ea = new JDBCEventAccess(conn);
+        ea = new JDBCEventAccess(conn);
         if(!DBUtil.tableExists("eventstatus", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
