@@ -106,7 +106,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("status") && cgt != null){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return cgt.channelMap.get(chan).toString();
+                    return cgt.getStatus(chan);
                 }
             };
         }
