@@ -20,6 +20,7 @@
                         <ref name="midPoint"/>
                         <ref name="phaseExists"/>
                         <ref name="phaseInteraction"/>
+                        <ref name="PASS"/>
                 </choice>
         </define>
         <define name="distanceRange">
@@ -354,5 +355,21 @@
                                 <ref name="range"/>
                         </element>
                 </zeroOrMore>
+        </define>
+        <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passEventStation/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passEventStation">
+                        <zeroOrMore>
+                                <ref name="eventStation"/>
+                        </zeroOrMore>
+                </element>
         </define>
 </grammar>
