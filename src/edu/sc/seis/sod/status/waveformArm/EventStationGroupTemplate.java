@@ -56,15 +56,11 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
     }
 
     public String getResult(EventAccessOperations ev) {
-        Status status = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
         try {
             Station[] stations;
             synchronized(evStatus){
-                if(success){
-                    stations = evStatus.getOfStatus(status, ev);
-                }else{
-                    stations = evStatus.getNotOfStatus(status, ev);
-                }
+                if(success){ stations = evStatus.getOfStatus(status, ev); }
+                else{ stations = evStatus.getNotOfStatus(status, ev); }
             }
             StringBuffer buf = new StringBuffer();
             for (int i = 0; i < stations.length; i++) {
@@ -86,6 +82,8 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
 
     private EventAccessOperations ev;
     private boolean success = false;
+    private static final Status status = Status.get(Stage.PROCESSOR,
+                                                    Standing.SUCCESS);
 
     private static JDBCEventChannelStatus evStatus;
 
