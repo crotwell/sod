@@ -1,12 +1,12 @@
 package edu.sc.seis.sod.status.eventArm;
-import edu.sc.seis.sod.subsetter.eventArm.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.sod.status.eventArm.EventStatus;
-import edu.sc.seis.sod.database.event.EventCondition;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.event.ConditionEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.Template;
+import edu.sc.seis.sod.subsetter.eventArm.EventSorter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,10 +14,11 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Element;
 
-public class EventGroupTemplate extends Template implements GenericTemplate, EventStatus{
-    protected EventGroupTemplate(){sorter = new EventSorter();}
+public class EventGroupTemplate extends Template implements GenericTemplate{
+    protected EventGroupTemplate(){ sorter = new EventSorter(); }
 
     public EventGroupTemplate(Element config) {
+        this();
         parse(config);
     }
 
@@ -55,45 +56,26 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
         };
     }
 
-    public void change(EventAccessOperations event, EventCondition status) {
-        if(eventToMonitors.containsKey(event)){
-            ((MonitoredEvent)eventToMonitors.get(event)).status = status;
-        }else{
-            MonitoredEvent e = new MonitoredEvent(event, status);
-            eventToMonitors.put(event, e);
-            events.add(e);
-            sorter.add(event);
-        }
-    }
-
     public String getResult(){
         StringBuffer output = new StringBuffer();
-        List sorted = sorter.getSortedEvents();
-        synchronized(sorted){
-            Iterator it = sorted.iterator();
-            while(it.hasNext()){
-                MonitoredEvent curEv = (MonitoredEvent)eventToMonitors.get(it.next());
+        try {
+            ConditionEvent[] events = sorter.getSortedEvents();
+            for (int i = 0; i < events.length; i++) {
+                ConditionEvent curEv = events[i];
                 Iterator e = templates.iterator();
                 while(e.hasNext()){
                     Object cur = e.next();
-                    if(cur instanceof EventTemplate)
-                        output.append(((EventTemplate)cur).getResult((curEv.event)));
-                    else
+                    if(cur instanceof EventTemplate){
+                        output.append(((EventTemplate)cur).getResult(curEv));
+                    }else{
                         output.append(cur);
+                    }
                 }
             }
+        } catch (SQLException e) {
+            GlobalExceptionHandler.handle("Sorting the events threw this", e);
         }
         return output.substring(0, output.length());//don't include last newline
-    }
-
-    private class MonitoredEvent{
-        public MonitoredEvent(EventAccessOperations event, EventCondition status){
-            this.event = event;
-            this.status = status;
-        }
-
-        public EventAccessOperations event;
-        public EventCondition status;
     }
 
     public void setArmStatus(String status) {
