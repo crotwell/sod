@@ -5,7 +5,7 @@ import edu.sc.seis.sod.subsetter.*;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
-
+import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
@@ -163,7 +163,10 @@ public class LocalSeismogramArm implements Subsetter{
 		 
 	    } // end of for (int i=0; i<outFilters.length; i++)
 	    
+	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(outfilters);
+	    MicroSecondDate after = new MicroSecondDate();
+	    logger.debug("After getting seismograms "+after.subtract(before));
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
 	}
     }
