@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStatus{
-    public WaveformEventTemplateGenerator(Element el){
+    public WaveformEventTemplateGenerator(Element el) throws IOException {
         if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -21,40 +21,36 @@ public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStat
             if(n.getNodeName().equals("fileLoc")){
                 formatter = new EventFormatter((Element)n);
             }else if(n.getNodeName().equals("externalConfig")){
-                try {
-                    config = TemplateFileLoader.getTemplate((Element)n);
-                } catch (IOException e) {
-                    CommonAccess.handleException(e, "trouble getting config template");
-                }
+                config = TemplateFileLoader.getTemplate((Element)n);
             }
         }
         if(formatter == null  || config == null)
             throw new IllegalArgumentException("The configuration element must contain a fileLoc and a externalConfig");
     }
-    
+
     public void change(EventAccessOperations event, RunStatus status) {
         getTemplate(event);
     }
-    
+
     public WaveformEventTemplate getTemplate(EventAccessOperations ev){
         if(!eventTemplates.containsKey(ev)){
             eventTemplates.put(ev, new WaveformEventTemplate(config, formatter.getResult(ev), ev));
         }
         return (WaveformEventTemplate)eventTemplates.get(ev);
     }
-    
+
     public boolean contains(EventAccessOperations ev){
         return eventTemplates.containsKey(ev);
     }
-    
+
     public void setArmStatus(String status) {}
-    
+
     public void update(EventChannelPair ecp) {}
-    
-    
+
+
     private Element config;
-    
+
     private EventFormatter formatter;
-    
+
     private Map eventTemplates = new HashMap();
 }

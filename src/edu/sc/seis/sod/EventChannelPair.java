@@ -30,7 +30,7 @@ public class EventChannelPair{
             FissuresException fe = (FissuresException)e;
             info = info+" FissuresException: code="+fe.the_error.error_code+" "+fe.the_error.error_description;
         }
-        logger.error(info, e);
+        CommonAccess.handleException(info, e);
         update(info, status);
     }
 

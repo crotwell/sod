@@ -24,7 +24,7 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
         this.parent = parent;
         addSodExceptionListener(sodExceptionListener);
     }
-    
+
     public void run() {
         try {
             EventAccessOperations eventAccess = eventDbObject.getEventAccess();
@@ -52,7 +52,7 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
                             } catch (Exception e) {
                                 cur.update(e,
                                            "System failure in the local seismogram arm processor",
-                                          Status.SOD_FAILURE);
+                                           Status.SOD_FAILURE);
                             }
                         }//end of if
                     } catch (Exception e) {
@@ -60,29 +60,29 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
                                    "System failure in event station subsetter",
                                    Status.SOD_FAILURE);
                     }
-                    
+
                 }
             }//end of for
         } catch(Throwable ce) {
-            logger.error("Waveform processing thread dies unexpectantly.",
-                         ce);
+            CommonAccess.handleException(ce,
+                                         "Waveform processing thread dies unexpectantly.");
         }
-        
+
     }
-    
+
     private EventDbObject eventDbObject;
-    
+
     private NetworkDbObject networkAccess;
-    
+
     private EventStationSubsetter eventStationSubsetter;
-    
+
     private LocalSeismogramArm localSeismogramArm;
-    
+
     private NetworkArm networkArm;
-    
+
     private ChannelDbObject[] successfulChannels;
-    
+
     private WaveFormArm parent;
-    
+
     private static Logger logger = Logger.getLogger(WaveFormArmProcessor.class);
 }// WaveFormArmThread

@@ -9,56 +9,48 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 public abstract class FileWritingTemplate extends Template implements GenericTemplate{
-    public FileWritingTemplate(String loc){
+    public FileWritingTemplate(String loc) throws IOException {
         this.outputLocation = testOutputLoc(loc);
     }
-    
-    private static String testOutputLoc(String loc){
+
+    private static String testOutputLoc(String loc) throws IOException {
         File outFile = new File(loc);
-        try {
-            outFile.getCanonicalFile().getParentFile().mkdirs();
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "Trouble making directories for output location for an external file template");
-        }
+        outFile.getCanonicalFile().getParentFile().mkdirs();
         return loc;
     }
-    
-    public void write(){
-        try {
-            File loc = new File(outputLocation);
-            File temp = File.createTempFile(loc.getName(), null);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
-            writer.write(getResult());
-            writer.close();
-            loc.delete();
-            temp.renameTo(loc);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public void write() throws IOException {
+        File loc = new File(outputLocation);
+        File temp = File.createTempFile(loc.getName(), null);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
+        writer.write(getResult());
+        writer.close();
+        loc.delete();
+        temp.renameTo(loc);
     }
-    
+
     public String getResult(){
         StringBuffer buf = new StringBuffer();
         Iterator e = templates.iterator();
         while(e.hasNext()) buf.append(((GenericTemplate)e.next()).getResult());
         return buf.toString();
     }
-    
+
     protected Object textTemplate(final String text){
         return new GenericTemplate(){
             public String getResult() { return text; }
         };
     }
-    
+
     public String getFilename() {
         return new File(outputLocation).getName();
     }
-    
+
     protected File getOutputDirectory(){
         return new File(outputLocation).getParentFile();
     }
-    
+
     private String outputLocation;
-    
+
     private static Logger logger = Logger.getLogger(FileWritingTemplate.class);
 }

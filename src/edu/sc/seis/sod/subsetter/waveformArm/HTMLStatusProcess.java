@@ -39,51 +39,47 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
         //  }
     }
 
-    private void writeHeader() {
+    private void writeHeader() throws IOException {
         String header = "<html><head><title>sodReport</title></head><body bgcolor='#ffffff'>";
         write(header);
         //  newLine();
-    
+
     }
 
-    private void writeTail() {
+    private void writeTail() throws IOException {
         String str = "</body></html>";
         write(str);
     }
 
-    private void startTable() {
+    private void startTable() throws IOException {
         String str = new String("<table border='1' width='90%'>");
         write(str);
         //bw.newLine();
     }
 
-    private void endTable() {
+    private void endTable() throws IOException {
         String str = new String("</table>");
         write(str);
         //bw.newLine();
     }
 
-    private void write(String str) {
-        try {
-            if (bw == null) {
-                bw = new BufferedWriter(new FileWriter(fileName, true));
-            } // end of if ()
-        
-            bw.write(str);
-            bw.write("<br><br>");
-            bw.newLine();
-            bw.flush();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    private void write(String str) throws IOException {
+        if (bw == null) {
+            bw = new BufferedWriter(new FileWriter(fileName, true));
+        } // end of if ()
+
+        bw.write(str);
+        bw.write("<br><br>");
+        bw.newLine();
+        bw.flush();
     }
-    public void begin(EventAccessOperations eventAccess) {
+    public void begin(EventAccessOperations eventAccess) throws IOException {
         totalEvents++;
         EventAttr eventAttr = eventAccess.get_attributes();
         startTable();
         write("<tr> Processing Event "+eventAttr.name+"</tr>");
     }
-    public void begin(EventAccessOperations eventAccess, NetworkAccess networkAccess) {
+    public void begin(EventAccessOperations eventAccess, NetworkAccess networkAccess) throws IOException {
         NetworkAttr networkAttr = networkAccess.get_attributes();
         write("<tr> Processing Network "+networkAttr.name+"</tr>");
         //bw.newLine();
@@ -92,41 +88,41 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     public void begin(EventAccessOperations eventAccess, Station station) {
         //  write("<tr> Processing Station "+station.get_code()+"</tr>");
     }
-    
+
     public void begin(EventAccessOperations eventAccess, Site site) {
         //  write("<tr> Processing Site "+site.get_code()+"</tr>");
     }
-    
-    public void begin(EventAccessOperations eventAccess, Channel channel) {
+
+    public void begin(EventAccessOperations eventAccess, Channel channel) throws IOException {
         write("<tr> Processing Channel "+ChannelIdUtil.toString(channel.get_id())+"</tr>");
     }
 
-    public void end(EventAccessOperations eventAccess, Channel channel, Status status, String reason) {
+    public void end(EventAccessOperations eventAccess, Channel channel, Status status, String reason) throws IOException {
         write("<tr> Done with Channel "+ChannelIdUtil.toString(channel.get_id())+" Status: "+status.toString()+
-              "Reason: "+reason+" </tr>");
+                  "Reason: "+reason+" </tr>");
     }
-    
+
     public void end(EventAccessOperations eventAccess, Site site) {
         //  write("<tr> Done with Site "+site.get_code()+"</tr>");
     }
-    
+
     public void end(EventAccessOperations eventAccess, Station station) {
         //  write("<tr> Done with Station "+station.get_code()+"</tr>");
     }
 
-    public void end(EventAccessOperations eventAccess, NetworkAccess networkAccess) {
+    public void end(EventAccessOperations eventAccess, NetworkAccess networkAccess) throws IOException {
         //  write("<tr> Processing Station "+station.get_code()+"</tr>");
         NetworkAttr networkAttr = networkAccess.get_attributes();
         write("<tr> Done with Network "+networkAttr.name+"</tr>");
     }
 
-    public void end(EventAccessOperations eventAccess) {
+    public void end(EventAccessOperations eventAccess) throws IOException {
         EventAttr eventAttr = eventAccess.get_attributes();
         write("<tr> Done with Event "+eventAttr.name+"</tr>");
         endTable();
     }
 
-    public void closeProcessing() {
+    public void closeProcessing() throws IOException {
         write("<h1> Total number of events processed are "+totalEvents+"</h1>");
         writeTail();
         try {
@@ -135,11 +131,11 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
         } catch (IOException e) {
             e.printStackTrace();
         } // end of try-catch
-        
+
     }
 
     private String fileName = new String("status.html");
     private int totalEvents = 0;
     BufferedWriter bw;
-  
+
 }// WaveformStatusProcess

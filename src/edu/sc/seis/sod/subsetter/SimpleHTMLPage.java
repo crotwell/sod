@@ -19,7 +19,7 @@ public class SimpleHTMLPage{
     public SimpleHTMLPage(String title, File location){
         this(title, location, true);
     }
-    
+
     public SimpleHTMLPage(String title, File location, boolean inAllLinks){
         this.title = title;
         this.location = location;
@@ -27,11 +27,11 @@ public class SimpleHTMLPage{
         this.inAllLinks = inAllLinks;
         if(inAllLinks) allInterlinkedPages.add(this);
     }
-    
+
     public void append(String sectionName, String text){
         append(sectionName, text, -1);
     }
-    
+
     public void append(String sectionName, String text, int pos){
         PageSection sec = getSection(sectionName);
         if(sec == null){
@@ -43,15 +43,15 @@ public class SimpleHTMLPage{
             sec.append(text + "<br>\n");
         }
     }
-    
+
     public void add(PageSection sec){
         sections.add(sec);
     }
-    
+
     public void clear(String section){
         if(getSection(section) != null) getSection(section).clear();
     }
-    
+
     public PageSection getSection(String name){
         Iterator it = sections.iterator();
         while(it.hasNext()){
@@ -62,33 +62,24 @@ public class SimpleHTMLPage{
         }
         return null;
     }
-    
+
     public String getTitle(){ return title; }
-    
-    public File write(){
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write(generatePage());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public File write() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(location));
+        writer.write(generatePage());
+        writer.close();
         return location;
     }
-    
+
     public String toString(){
         return location.getName();
     }
-    
-    public File getDirectory(){
-        try{
-            return location.getCanonicalFile().getParentFile();
-        }catch(IOException e){
-            e.printStackTrace();
-            return null;
-        }
+
+    public File getDirectory() throws IOException {
+        return location.getCanonicalFile().getParentFile();
     }
-    
+
     public String relativePathTo(SimpleHTMLPage otherPage) {
         try {
             File otherDir = otherPage.getDirectory();
@@ -101,11 +92,11 @@ public class SimpleHTMLPage{
             throw new IllegalArgumentException("Unable to get canonical representation of passed in file, so pathing is impossible");
         }
     }
-    
+
     public String dotsToCommonBase(SimpleHTMLPage p){
         return dotsToCommonBase(getCommonBaseDistance(p.getDirectory()));
     }
-    
+
     public String dotsToCommonBase(int layersAbove){
         String dots = "";
         for (int i = layersAbove;  i > 0; i--){
@@ -113,7 +104,7 @@ public class SimpleHTMLPage{
         }
         return dots;
     }
-    
+
     public static String path(int layers, File location){
         String path = "";
         for (int i = 0; i < layers; i++) {
@@ -122,7 +113,7 @@ public class SimpleHTMLPage{
         }
         return path;
     }
-    
+
     public int getCommonBaseDistance(File location) {
         try {
             File[] locHierarchy = getHierarchy(location.getCanonicalFile());
@@ -139,18 +130,18 @@ public class SimpleHTMLPage{
             throw new IllegalArgumentException("Unable to get canonical files to traverse directory hierarchy");
         }
     }
-    
+
     private static File[] getHierarchy(File f){
         List hierarchy = getHierarchy(f, new ArrayList());
         return (File[])hierarchy.toArray(new File[hierarchy.size()]);
     }
-    
+
     private static List getHierarchy(File f, List l){
         if(f.getParent() != null) getHierarchy(f.getParentFile(), l);
         l.add(f);
         return l;
     }
-    
+
     public String generatePage(){
         String header = "<html>\n<header><title>" + title + "</title></header>\n";
         StringBuffer body = new StringBuffer("<body>\n");
@@ -158,7 +149,7 @@ public class SimpleHTMLPage{
         body.append("</body>\n</html>");
         return header + body;
     }
-    
+
     private String constructSections(){
         Iterator it = sections.iterator();
         StringBuffer contents = new StringBuffer("");
@@ -168,17 +159,17 @@ public class SimpleHTMLPage{
         if(inAllLinks) contents.append(interlinkedPages.getSection());
         return contents.toString();
     }
-    
+
     private static List allInterlinkedPages = Collections.synchronizedList(new ArrayList());
-    
+
     private PageSection interlinkedPages = new LinkSection(this, "Links", allInterlinkedPages);
-    
+
     protected List sections = new ArrayList();
-    
+
     private File location;
-    
+
     private String title;
-    
+
     private boolean inAllLinks;
 }
 

@@ -19,9 +19,9 @@ public class PrintlineNetworkStatus {
     public PrintlineNetworkStatus(Element config) {
         filename = SodUtil.getNestedText(config);
     } // PrintlineNetworkStatus constructor
-    
+
     public void networkId(boolean success,
-                          NetworkId networkId, 
+                          NetworkId networkId,
                           CookieJar cookies) {
         print(success, "networkId - "+NetworkIdUtil.toString(networkId));
     }
@@ -52,8 +52,8 @@ public class PrintlineNetworkStatus {
     }
 
     public void site(boolean success,
-                     NetworkAccess network, 
-                     Site site, 
+                     NetworkAccess network,
+                     Site site,
                      CookieJar cookies) {
         print(success, "site - "+SiteIdUtil.toString(site.get_id()));
     }
@@ -65,37 +65,33 @@ public class PrintlineNetworkStatus {
     }
 
     public void channel(boolean success,
-                        NetworkAccess network, 
-                        Channel channel, 
+                        NetworkAccess network,
+                        Channel channel,
                         CookieJar cookies) {
         print(success, "channel - "+ChannelIdUtil.toString(channel.get_id()));
     }
 
-    void print(boolean success, String msg) {
-        try {
-            if ( bwriter == null) {
-                if (filename != null && filename.length() != 0) {
-                    FileWriter fwriter = new FileWriter(filename, true);
-                    bwriter = new BufferedWriter(fwriter);
-                } else {
-                    bwriter = new BufferedWriter(new OutputStreamWriter(System.out));
-                } // end of else
-            } // end of if ()
-
-            if ( success ) {
-                bwriter.write("Success: ");
+    void print(boolean success, String msg) throws IOException {
+        if ( bwriter == null) {
+            if (filename != null && filename.length() != 0) {
+                FileWriter fwriter = new FileWriter(filename, true);
+                bwriter = new BufferedWriter(fwriter);
             } else {
-                bwriter.write("FAIL   : ");
-            } // end of if ()
-            bwriter.write(msg);
-            bwriter.newLine();
-            bwriter.flush();
-        } catch(Exception e) {
-            
-        }
-        
+                bwriter = new BufferedWriter(new OutputStreamWriter(System.out));
+            } // end of else
+        } // end of if ()
+
+        if ( success ) {
+            bwriter.write("Success: ");
+        } else {
+            bwriter.write("FAIL   : ");
+        } // end of if ()
+        bwriter.write(msg);
+        bwriter.newLine();
+        bwriter.flush();
+
     }
-    
+
     BufferedWriter bwriter = null;
     String filename = null;
 

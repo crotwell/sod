@@ -36,8 +36,7 @@ public class Start implements SodExceptionListener {
         try {
             document = createDoc(createInputSource(confFilename));
         } catch (Exception e) {
-            System.out.println("Trouble creating xml document");
-            e.printStackTrace();
+            CommonAccess.handleException(e, "Trouble creating xml document");
         }
         try {
             if(!Validator.validate(createInputSource(confFilename))){
@@ -53,8 +52,7 @@ public class Start implements SodExceptionListener {
                 logger.info("Valid config file");
             }
         } catch (Exception e) {
-            logger.debug("Problem configuring schema validator");
-            e.printStackTrace();
+            CommonAccess.handleException(e, "Problem configuring schema validator");
             System.exit(0);
         }
     }
@@ -197,11 +195,7 @@ public class Start implements SodExceptionListener {
             logger.debug("Did not track the Thread bug Yet. so using System.exit()");
             System.exit(1);
         } catch(Exception e) {
-            e.printStackTrace();
-            if (e instanceof WrappedException) {
-                logger.error("Problem, wrapped is ", ((WrappedException)e).getCausalException());
-            } // end of if (e instanceof WrappedException)
-            logger.error("Problem... ", e);
+            CommonAccess.handleException(e, "Problem in main");
         }
         logger.info("Done.");
     } // end of main ()
@@ -218,8 +212,8 @@ public class Start implements SodExceptionListener {
     }
 
     public void sodExceptionHandler(SodException sodException) {
-        logger.fatal("Caught Exception in start because of the Listener",
-                     sodException.getThrowable());
+        CommonAccess.handleException(sodException.getThrowable(),
+                                     "Caught Exception in start because of the Listener");
     }
 
     private static  void checkRestartOptions() {

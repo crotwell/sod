@@ -19,13 +19,16 @@ import java.io.IOException;
 
 public class CommonAccess {
     private CommonAccess (){}
-    
+
     public static void handleException(Throwable t, String reason) {
+        handleException(reason, t);
+    }
+    public static void handleException(String reason, Throwable t) {
         logger.error(reason, t);
     }
-    
+
     public static CommonAccess getCommonAccess() { return commonAccess; }
-    
+
     public FissuresNamingService getFissuresNamingService() throws ConfigurationException {
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingService(getORB());
@@ -34,11 +37,11 @@ public class CommonAccess {
                 fissuresNamingService.setNameServiceCorbaLoc((String)props.get(NAME_SERVICE_PROP));
             } // end of if ()
         } // end of if (fissuresNamingService == null)
-        
+
         return fissuresNamingService;
-        
+
     }
-    
+
     protected void initORB(String[] args, java.util.Properties props) {
         if (orb == null) {
             // Initialize the ORB.
@@ -49,33 +52,33 @@ public class CommonAccess {
             vt.register(orb);
         }
     }
-    
+
     public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
         if (orb == null) {
             initORB(null, null);
         } // end of if (orb == null)
         return orb;
     }
-    
+
     public LogMonitorAdapter getLF5Adapter(){
         if(adapter == null){
             adapter = LogMonitorAdapter.newInstance(RunStatus.getLogLevels());
         }
         return adapter;
     }
-    
+
     private static CommonAccess commonAccess = new CommonAccess();
-    
+
     private LogMonitorAdapter adapter;
-    
+
     private org.omg.CORBA_2_3.ORB orb = null;
-    
+
     FissuresNamingService fissuresNamingService;
-    
+
     static final String NAME_SERVICE_PROP =
         "edu.sc.seis.sod.nameServiceCorbaLoc";
-    
+
     private static Logger logger = Logger.getLogger(CommonAccess.class);
-    
+
 }// CommonAccess
 

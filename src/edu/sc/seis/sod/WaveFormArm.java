@@ -194,10 +194,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             restoreDb();
 
         } catch(InvalidDatabaseStateException idse) {
-            logger.fatal("Invalid database StateException", idse);
+            CommonAccess.handleException("Invalid database StateException", idse);
             notifyListeners(this, idse);
         } catch(Throwable e) {
-            logger.fatal("Problem running waveform arm", e);
+            CommonAccess.handleException("Problem running waveform arm", e);
             notifyListeners(this, e);
         }
     }
@@ -564,7 +564,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                     ThreadWorker worker = ((ThreadWorker)it.next());
                     logger.debug("****** JOINING THE thread "+worker.getName());
                     worker.join();
-                } catch(Exception e) {}
+                } catch(Exception e) {
+                    CommonAccess.handleException("Problem in the join method of the WaveformArm ThreadPool", e);
+                }
             }
             logger.debug("RETURNING FROM THE JOIN METHOD OF THE POOL ");
         }

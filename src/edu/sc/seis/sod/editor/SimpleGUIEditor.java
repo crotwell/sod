@@ -12,7 +12,7 @@ import org.w3c.dom.*;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
-import java.util.*;
+import edu.sc.seis.sod.CommonAccess;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
@@ -59,7 +60,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         try {
                             save(configFile);
                         } catch (IOException ex) {
-                            GlobalExceptionHandler.handle("Unable to save "+configFile, ex);
+                            CommonAccess.handleException("Unable to save "+configFile, ex);
                         }
                     }
                 });
@@ -76,7 +77,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         try {
                             save(outfile);
                         } catch (IOException ex) {
-                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                            CommonAccess.handleException("Unable to save to "+outfile, ex);
                         }
                     }
                     }
@@ -96,7 +97,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream(NAME_PROPS ));
             }catch(IOException e)
             {
-                GlobalExceptionHandler.handle("Error in loading names Prop file",e);
+                CommonAccess.handleException("Error in loading names Prop file",e);
             }
             JTabbedPane tabs = new JTabbedPane();
             frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);

@@ -6,12 +6,12 @@
 
 package edu.sc.seis.sod.editor;
 
+import edu.sc.seis.sod.CommonAccess;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Text;
 import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
 public class TextListener implements DocumentListener {
@@ -29,9 +29,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in changedUpdate", ex);
         } catch (BadLocationException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in changedUpdate", ex);
         }
     }
 
@@ -45,9 +45,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in insertUpdate", ex);
         } catch (BadLocationException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in insertUpdate", ex);
         }
     }
 
@@ -62,9 +62,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in removeUpdate", ex);
         } catch (BadLocationException ex) {
-            logger.error(ex);
+            CommonAccess.handleException("Problem in removeUpdate", ex);
         }
     }
 

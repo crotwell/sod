@@ -56,13 +56,12 @@ public class SodUtil {
                 throw (java.lang.Error)subException;
             } // end of else
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ConfigurationException("Problem understanding "+
                                                  config.getTagName(), e);
         } // end of try-catch
-        
+
     }
-    
+
     public static File makeOutputDirectory(Element config) throws ConfigurationException{
         String outputDirName = "html";
         if(config != null){
@@ -81,18 +80,18 @@ public class SodUtil {
         }
         return htmlDir;
     }
-    
+
     public static synchronized Object load(Element config, String packageName)
         throws ConfigurationException {
         try {
             Class[] argTypes = {Element.class};
             String tagName = config.getTagName();
-            
+
             // make sure first letter is upper case
             String firstLetter = tagName.substring(0,1);
             firstLetter = firstLetter.toUpperCase();
             tagName = firstLetter+tagName.substring(1);
-            
+
             // first check for things that are not SodElements
             if (tagName.equals("Unit")) {
                 return loadUnit(config);
@@ -109,7 +108,7 @@ public class SodUtil {
             } else if (tagName.equals("FlinnEngdahlArea")) {
                 return loadFEArea(config);
             }
-            
+
             // not a known non-sodElement type, so load via reflection
             Class subsetter = Class.forName(packageName+"."+ tagName);
             Constructor constructor = subsetter.getConstructor(argTypes);
@@ -131,12 +130,11 @@ public class SodUtil {
                 throw (java.lang.Error)subException;
             } // end of else
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ConfigurationException("Problem understanding "+
                                                  config.getTagName(), e);
         } // end of try-catch
     }
-    
+
     public static edu.iris.Fissures.model.UnitImpl loadUnit(Element config) throws ConfigurationException {
         String unitName = null;
         NodeList children = config.getChildNodes();
@@ -149,16 +147,15 @@ public class SodUtil {
                 edu.iris.Fissures.model.UnitImpl.class.getField(unitName);
             return (edu.iris.Fissures.model.UnitImpl)field.get(edu.iris.Fissures.model.UnitImpl.SECOND);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ConfigurationException("Can't find unit "+unitName, e);
         } // end of try-catch
     }
-    
+
     public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config)  throws ConfigurationException {
         Unit unit = null;
         double min = Double.MIN_VALUE;
         double max = Double.MAX_VALUE;
-        
+
         NodeList children = config.getChildNodes();
         Node node;
         for (int i=0; i < children.getLength(); i++) {
@@ -173,13 +170,13 @@ public class SodUtil {
                 } else if (tagName.equals("max")) {
                     max = Double.parseDouble(getText(subElement));
                 }
-                
+
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
         UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
         return unitRange;
     }
-    
+
     public static edu.iris.Fissures.TimeRange loadTimeRange(Element config)
         throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -201,11 +198,11 @@ public class SodUtil {
         } // end of for (int i=0; i<children.getSize(); i++)
         return new TimeRange(begin, end);
     }
-    
+
     public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config)  throws ConfigurationException {
         return new GlobalAreaImpl();
     }
-    
+
     public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)  throws ConfigurationException {
         NodeList children = config.getChildNodes();
         Node node;
@@ -225,42 +222,42 @@ public class SodUtil {
                     maxLongitude = ((LongitudeRange)obj).getMaxValue();
                 }
             }
-            
+
         }
         return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
-    
+
     public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)  throws ConfigurationException {
         return null;
     }
-    
+
     public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config)  throws ConfigurationException {
         return null;
     }
-    
+
     /** returns the element with the given name
      */
-    
+
     public static Element getElement(Element config, String elementName) {
-        
+
         NodeList children = config.getChildNodes();
         Node node;
-        
+
         for(int counter = 0; counter < children.getLength(); counter++ ) {
-            
+
             node = children.item(counter);
             if(node instanceof Element ) {
-                
+
                 if(((Element)node).getTagName().equals(elementName)) {
                     //logger.debug("in sodUtil getElement, the element name is "+((Element)node).getTagName());
                     return ((Element)node);
                 }
             }
-            
+
         }
         return null;
     }
-    
+
     /** returns the first text child within the node.
      */
     public static String getText(Element config) {
@@ -275,17 +272,17 @@ public class SodUtil {
         //nothing found, return null
         return null;
     }
-    
+
     /** returns the nested text in the tag **/
     public static String getNestedText(Element config) {
         //logger.debug("The element name in sod util is "+config.getTagName());
         String rtnValue = null;
         NodeList children = config.getChildNodes();
         Node node;
-        
+
         //logger.debug("The length of the children is "+children.getLength());
         for(int i = 0; i < children.getLength(); i++) {
-            
+
             node = children.item(i);
             if (node instanceof Text){
                 //logger.debug("In sodUtil textnode value is  "+node.getNodeValue());
@@ -300,7 +297,7 @@ public class SodUtil {
         }
         return rtnValue;
     }
-    
+
     public static void loadProperties(Element config, Properties props) {
         NodeList children = config.getChildNodes();
         Node node;
@@ -317,5 +314,5 @@ public class SodUtil {
         }
     }
     private static Logger logger = Logger.getLogger(SodUtil.class);
-    
+
 }// SubsetterUtil

@@ -21,36 +21,36 @@ import edu.sc.seis.sod.database.Status;
 
 public interface WaveformStatusProcess extends Subsetter{
 
-    public void begin(EventAccessOperations eventAccess);
+    public void begin(EventAccessOperations eventAccess) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              NetworkAccess networkAccess);
+              NetworkAccess networkAccess) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              Station station);
-    
+              Station station) throws Exception;
+
     public void begin(EventAccessOperations eventAccess,
-              Site site);
-    
+              Site site) throws Exception;
+
     public void begin(EventAccessOperations eventAccess,
-              Channel channel);
+              Channel channel) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
             Channel channel,
             Status status,
-            String reason);
-    
-    public void end(EventAccessOperations eventAccess,
-            Site site);
-    
-    public void end(EventAccessOperations eventAccess,
-            Station station);
+            String reason) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
-            NetworkAccess networkAccess);
+            Site site) throws Exception;
 
-    public void end(EventAccessOperations eventAccess);
+    public void end(EventAccessOperations eventAccess,
+            Station station) throws Exception;
 
-    public void closeProcessing();
+    public void end(EventAccessOperations eventAccess,
+            NetworkAccess networkAccess) throws Exception;
+
+    public void end(EventAccessOperations eventAccess) throws Exception;
+
+    public void closeProcessing() throws Exception;
 
 }// WaveformStatusProcess

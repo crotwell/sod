@@ -20,7 +20,7 @@ public class Interval implements Subsetter{
      * @param config an <code>Element</code> value
      */
     public Interval(Element config) {
-		this.config = config;		
+        this.config = config;
     }
 
     /**
@@ -29,8 +29,8 @@ public class Interval implements Subsetter{
      * @return a <code>String</code> value
      */
     public UnitImpl getUnit() throws ConfigurationException{
-	Element element = SodUtil.getElement(config, "unit");
-	return (UnitImpl)SodUtil.load(element,"edu.sc.seis.sod.subsetter");//here the second parameter doesnot matter.
+        Element element = SodUtil.getElement(config, "unit");
+        return (UnitImpl)SodUtil.load(element,"edu.sc.seis.sod.subsetter");//here the second parameter doesnot matter.
     }
 
     /**
@@ -39,20 +39,16 @@ public class Interval implements Subsetter{
      * @return a <code>String</code> value
      */
     public double getValue() {
-	try {
-	    return Double.parseDouble(SodUtil.getNestedText(SodUtil.getElement(config,"value")));
-	} catch(Exception e) {
-	    return 0.0;
-	}
+        return Double.parseDouble(SodUtil.getNestedText(SodUtil.getElement(config,"value")));
     }
 
     public QuantityImpl getQuantity() throws ConfigurationException{
-	return new QuantityImpl(getValue(), getUnit());
+        return new QuantityImpl(getValue(), getUnit());
     }
-    
+
     public TimeInterval getTimeInterval() throws ConfigurationException {
-	return new TimeInterval(getQuantity());
+        return new TimeInterval(getQuantity());
     }
-    
+
     private Element config;
 }//Interval

@@ -20,11 +20,11 @@ import org.w3c.dom.Element;
 
 public class EventSorter{
     public EventSorter(){ this(null); }
-    
+
     public EventSorter(Element config){
         setSorting(config);
     }
-    
+
     public void setSorting(Element config){
         if(config == null || config.getChildNodes().getLength() == 0){
             sorter = new Sorter();
@@ -50,26 +50,26 @@ public class EventSorter{
             while(it.hasNext()) sort((EventAccessOperations)it.next());
         }
     }
-    
+
     public List getSortedEvents() {
         return sorted;
     }
-    
+
     public void add(EventAccessOperations event) {
         additionOrdered.add(event);
         sort(event);
     }
-    
+
     private void sort(EventAccessOperations event){
         sorted.add(sorter.getPosition(event), event);
     }
-    
+
     private class Sorter{
         public int getPosition(EventAccessOperations event){
             return sorted.size();
         }
     }
-    
+
     private class DateSorter extends Sorter{
         public int getPosition(EventAccessOperations event) {
             int i = 0;
@@ -84,7 +84,7 @@ public class EventSorter{
             return i;
         }
     }
-    
+
     private class MagnitudeSorter extends Sorter{
         public int getPosition(EventAccessOperations event){
             int i = 0;
@@ -99,7 +99,7 @@ public class EventSorter{
             return i;
         }
     }
-    
+
     private class DepthSorter extends Sorter{
         public int getPosition(EventAccessOperations event){
             int i = 0;
@@ -114,7 +114,7 @@ public class EventSorter{
             return i;
         }
     }
-    
+
     private class LocationSorter extends Sorter{
         public int getPosition(EventAccessOperations event){
             int i = 0;
@@ -129,30 +129,30 @@ public class EventSorter{
             return i;
         }
     }
-    
+
     private class ReverseSorter extends Sorter{
         public ReverseSorter(Sorter reversedSorter){
             this.reversedSorter = reversedSorter;
         }
-        
+
         public int getPosition(EventAccessOperations event){
             return sorted.size() - reversedSorter.getPosition(event);
         }
-        
+
         private Sorter reversedSorter;
     }
-    
+
     private Origin getOrigin(EventAccessOperations event){
-        Origin o = event.get_origins()[0];
+        // this code is bad
         try {
-            o = event.get_preferred_origin();
+            return event.get_preferred_origin();
         } catch (NoPreferredOrigin e) {}
-        return o;
+        return null;
     }
-    
+
     private Sorter sorter;
-    
+
     private List sorted = Collections.synchronizedList(new ArrayList());
-    
+
     private List additionOrdered = Collections.synchronizedList(new ArrayList());
 }

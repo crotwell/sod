@@ -13,23 +13,21 @@ import org.xml.sax.SAXException;
 
 public class TemplateFileLoader{
     public static Element getTemplate(Element el) throws MalformedURLException,
-        IOException{
+        IOException, SAXException, ParserConfigurationException {
         Attr attr =  (Attr)el.getAttributes().getNamedItem("xlink:href");
-        if(attr == null || attr.getValue().equals(""))
+        if(attr == null || attr.getValue().equals("")) {
             throw new IllegalArgumentException("Expected the passed in element " + el.getNodeName() + " to have a xlink:href attribute, but none found");
-        URL loc = null;
-        if(attr.getValue().startsWith("jar:")){
-            loc = el.getClass().getClassLoader().getResource(attr.getValue().substring(4));
-        }else loc = new URL(attr.getValue());
-        try {
-            Document doc = Start.createDoc(new InputSource(loc.openStream()));
-            return (Element)doc.getFirstChild();
-        } catch (SAXException e){   throw new RuntimeException(getError(el), e);
-        }catch (ParserConfigurationException e) {
-            throw new RuntimeException(getError(el), e);
         }
+        URL loc = null;
+        if(attr.getValue().startsWith("jar:")) {
+            loc = el.getClass().getClassLoader().getResource(attr.getValue().substring(4));
+        } else {
+            loc = new URL(attr.getValue());
+        }
+        Document doc = Start.createDoc(new InputSource(loc.openStream()));
+        return (Element)doc.getFirstChild();
     }
-    
+
     private static String getError(Element el){
         return "Trouble loading template file from element " + el.getNodeName();
     }

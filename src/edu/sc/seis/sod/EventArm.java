@@ -51,7 +51,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
         try {
             getEvents();
         } catch(Exception e) {
-            logger.error("Exception caught while processing the EventArm", e);
+            CommonAccess.getCommonAccess().handleException(e, "Exception caught while processing the EventArm");
+
             //notify Exception listeners in case of an exception
             notifyListeners(this, e);
         }
@@ -250,7 +251,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
             if(value != null){
                 try {
                     val = Integer.parseInt(value);
-                } catch(NumberFormatException nfe) {}
+                } catch(NumberFormatException nfe) {
+                    CommonAccess.getCommonAccess().handleException(nfe, "The daystoincrement property does not appear to be a number: "+value);
+                }
             }
             increment = new TimeInterval(val, UnitImpl.DAY);
         }
@@ -318,9 +321,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 
     private List processors = new ArrayList();
-    
+
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
-    
+
     private Properties props;
 
     private static Logger logger = Logger.getLogger(EventArm.class);

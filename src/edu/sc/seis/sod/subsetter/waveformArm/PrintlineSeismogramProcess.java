@@ -50,42 +50,31 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                                      RequestFilter[] original,
                                      RequestFilter[] available,
                                      LocalSeismogram[] seismograms,
-                                     CookieJar cookies) {
+                                     CookieJar cookies) throws IOException, NoPreferredOrigin {
         if (filename != null && filename.length() != 0) {
-            try {
-                FileWriter fwriter = new FileWriter(filename, true);
-                BufferedWriter bwriter = new BufferedWriter(fwriter);
-                String debugStr = "Got "+seismograms.length+" seismograms for "+
-                    ChannelIdUtil.toString(channel.get_id())+
-                    " for event in "+
-                    regions.getRegionName(event.get_attributes().region)+
-                    " at "+event.get_preferred_origin().origin_time.date_time;
-                bwriter.write(debugStr, 0, debugStr.length());
-                bwriter.newLine();
-                bwriter.close();
-            } catch(Exception e) {
-
-                logger.warn("Exception caught while writing to file.", e);
-            }
+            FileWriter fwriter = new FileWriter(filename, true);
+            BufferedWriter bwriter = new BufferedWriter(fwriter);
+            String debugStr = "Got "+seismograms.length+" seismograms for "+
+                ChannelIdUtil.toString(channel.get_id())+
+                " for event in "+
+                regions.getRegionName(event.get_attributes().region)+
+                " at "+event.get_preferred_origin().origin_time.date_time;
+            bwriter.write(debugStr, 0, debugStr.length());
+            bwriter.newLine();
+            bwriter.close();
         } else {
-            try {
-                System.out.println(new java.util.Date()+" "+
-                                       edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils.getMemoryUsage()+" "+
-                                       " Got "+seismograms.length+" seismograms for "+
-                                       ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                       " for event in "+
-                                       regions.getRegionName(event.get_attributes().region)+
-                                       " at "+event.get_preferred_origin().origin_time.date_time);
-                logger.debug("Got "+seismograms.length+" seismograms for "+
-                                 ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                 " for event in "+
-                                 regions.getRegionName(event.get_attributes().region)+
-                                 " at "+event.get_preferred_origin().origin_time.date_time);
-            } catch (NoPreferredOrigin e) {
-                logger.debug("Got "+seismograms.length+" seismograms for "+
-                                 ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                 " for event without a preferred origin");
-            } // end of try-catch
+            System.out.println(new java.util.Date()+" "+
+                                   edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils.getMemoryUsage()+" "+
+                                   " Got "+seismograms.length+" seismograms for "+
+                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                   " for event in "+
+                                   regions.getRegionName(event.get_attributes().region)+
+                                   " at "+event.get_preferred_origin().origin_time.date_time);
+            logger.debug("Got "+seismograms.length+" seismograms for "+
+                             ChannelIdUtil.toStringNoDates(channel.get_id())+
+                             " for event in "+
+                             regions.getRegionName(event.get_attributes().region)+
+                             " at "+event.get_preferred_origin().origin_time.date_time);
         } // end of else
 
         return seismograms;

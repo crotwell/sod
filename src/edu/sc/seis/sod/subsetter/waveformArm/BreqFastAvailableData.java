@@ -36,50 +36,44 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
         this.dataDirectory = new File(datadirName);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-    
+
     public boolean accept(EventAccessOperations event,
                           NetworkAccess network,
                           Channel channel,
                           RequestFilter[] request,
                           RequestFilter[] available,
-                          CookieJar cookies) {
-        try {
-            writeToBFEmail(event, network, channel, request, cookies);
-        } catch (IOException e) {
-        } catch (ConfigurationException e) {
-            logger.error("Problem writting to breqfast file",e);
-        } // end of try-catch
-        
+                          CookieJar cookies) throws IOException, ConfigurationException {
+        writeToBFEmail(event, network, channel, request, cookies);
         // don't care if yes or no
         return true;
     }
-    
+
     protected String getConfig(String name) {
         return SodUtil.getText(SodUtil.getElement(config, name));
     }
-    
+
     protected synchronized void writeToBFEmail(EventAccessOperations event,
                                                NetworkAccess networkAccess,
                                                Channel channel,
                                                RequestFilter[] request,
                                                CookieJar cookies)
-        throws IOException, ConfigurationException {
-        
+        throws IOException, ConfigurationException, NoPreferredOrigin {
+
         if ( out != null && event != lastEvent) {
             out.close();
             out = null;
             lastEvent = event;
         }
-        
+
         if (out == null ) {
             logger.debug("opening file");
             if ( ! dataDirectory.exists()) {
                 if ( ! dataDirectory.mkdirs()) {
                     throw new ConfigurationException("Unable to create directory."+dataDirectory);
                 } // end of if (!)
-                
+
             } // end of if (dataDirectory.exits())
-            
+
             File bfFile = new File(dataDirectory, getFileName(event));
             if (bfFile.exists()) {
                 fileExists = true;
@@ -89,7 +83,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
             out = new BufferedWriter(new FileWriter(bfFile.getAbsolutePath(),
                                                     true));
         }
-        
+
         if ( ! fileExists) {
             fileExists = true;
             // first tme to this event, insert headers
@@ -102,49 +96,45 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
             out.write(".MEDIA "+getConfig("media")+nl);
             out.write(".ALTERNATE MEDIA "+getConfig("altmedia1")+nl);
             out.write(".ALTERNATE MEDIA "+getConfig("altmedia2")+nl);
-            try {
-                Origin o = event.get_preferred_origin();
-                out.write(".SOURCE "
-                              +"~"+o.catalog
-                              +" "+o.contributor
-                              +"~unknown~unknown~"+nl);
-                MicroSecondDate oTime = new MicroSecondDate(o.origin_time);
-                out.write(".HYPO "
-                              +"~"+format.format(oTime)
-                              +tenths.format(oTime)
-                              +"~"
-                              +o.my_location.latitude
-                              +"~"
-                              +o.my_location.longitude
-                              +"~"
-                              +((QuantityImpl)o.my_location.depth).convertTo(UnitImpl.KILOMETER).getValue()
-                              +"~"
-                              +"0"
-                              +"~"
-                              +event.get_attributes().region.number
-                              +"~"
-                              +regions.getRegionName(event.get_attributes().region)
-                              +"~"
-                              +nl);
-                for (int j=0; j<o.magnitudes.length; j++) {
-                    out.write(".MAGNITUDE ~"+o.magnitudes[j].type+"~"+o.magnitudes[j].value+"~"+nl);
-                } // end of for (int j=0; j<o.magnitude.length; j++)
-                
-            } catch (NoPreferredOrigin e) {
-                
-            } // end of try-catch
-            
+            Origin o = event.get_preferred_origin();
+            out.write(".SOURCE "
+                          +"~"+o.catalog
+                          +" "+o.contributor
+                          +"~unknown~unknown~"+nl);
+            MicroSecondDate oTime = new MicroSecondDate(o.origin_time);
+            out.write(".HYPO "
+                          +"~"+format.format(oTime)
+                          +tenths.format(oTime)
+                          +"~"
+                          +o.my_location.latitude
+                          +"~"
+                          +o.my_location.longitude
+                          +"~"
+                          +((QuantityImpl)o.my_location.depth).convertTo(UnitImpl.KILOMETER).getValue()
+                          +"~"
+                          +"0"
+                          +"~"
+                          +event.get_attributes().region.number
+                          +"~"
+                          +regions.getRegionName(event.get_attributes().region)
+                          +"~"
+                          +nl);
+            for (int j=0; j<o.magnitudes.length; j++) {
+                out.write(".MAGNITUDE ~"+o.magnitudes[j].type+"~"+o.magnitudes[j].value+"~"+nl);
+            } // end of for (int j=0; j<o.magnitude.length; j++)
+
+
             out.write(".QUALITY "+getConfig("quality")+nl);
             out.write(".LABEL "+getLabel(event)+nl);
             out.write(".END"+nl);
             out.write(nl);
         } // end of if ( ! fileExists)
-        
+
         MicroSecondDate start, end;
         for (int i=0; i<request.length; i++) {
             start = new MicroSecondDate(request[i].start_time);
             end = new MicroSecondDate(request[i].end_time);
-            
+
             out.write(channel.my_site.my_station.get_code()
                           +" "+
                           channel.my_site.my_station.my_network.get_code()
@@ -157,22 +147,22 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
                           +" "+
                           channel.my_site.get_code()
                           +nl);
-            
+
         } // end of for (int i=0; i<request.length; i++)
     }
-    
+
     protected String getFileName(EventAccessOperations event) {
         return getLabel(event)+".breqfast";
     }
-    
+
     protected String getLabel(EventAccessOperations event) {
         if (nameGenerator == null) {
             nameGenerator = new EventFormatter(SodUtil.getElement(config,
-                                                                 "label"));
+                                                                  "label"));
         }
         return nameGenerator.getFilizedName(event);
     }
-    
+
     public void finalize() {
         if (out != null) {
             try {
@@ -182,27 +172,27 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
             } catch (IOException e) {
                 // oh well...
             } // end of try-catch
-            
+
         } // end of if ()
     }
-    
+
     static final String nl = "\n";
-    
+
     SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH mm ss.");
     SimpleDateFormat tenths = new SimpleDateFormat("SSS");
-    
+
     ParseRegions regions;
     EventFormatter nameGenerator = null;
-    
+
     Element config;
-    
+
     File dataDirectory;
     boolean fileExists;
-    
+
     BufferedWriter out = null;
     EventAccessOperations lastEvent = null;
-    
-    static Category logger =
+
+    private static Category logger =
         Category.getInstance(BreqFastAvailableData.class.getName());
-    
+
 }// BreqFastEventChannelSubsetter

@@ -27,20 +27,20 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class MapWaveFormStatus implements WaveFormStatus {
-    
+
     private String fileLoc;
     private List events = new ArrayList();
     private Map channelMap = new HashMap();
     private MapPool pool;
-    
+
     public MapWaveFormStatus(Element element) {
         this(element.getAttribute("xlink:href"));
     }
-    
+
     public MapWaveFormStatus(String fileLoc){
         this(fileLoc, new MapPool(1));
     }
-    
+
     public MapWaveFormStatus(String fileLoc, MapPool pool){
         this.fileLoc = fileLoc;
         this.pool = pool;
@@ -84,11 +84,11 @@ public class MapWaveFormStatus implements WaveFormStatus {
                             el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
                         }
                     }
-                    
+
                     try{
                         map.writeMapToPNG(fileLoc);
                     } catch (IOException e) {
-                        logger.error("unable to save map to "+fileLoc, e);
+                        CommonAccess.handleException("unable to save map to "+fileLoc, e);
                     }
                     pool.returnMap(map);
                     scheduled = new Boolean(false);
@@ -98,11 +98,11 @@ public class MapWaveFormStatus implements WaveFormStatus {
             }
         }
     }
-    
+
     private static Timer t = new Timer();
-    
+
     private Boolean scheduled = new Boolean(false);
-    
+
     public void write(){
         synchronized(scheduled){
             if(scheduled.equals(Boolean.FALSE)){
@@ -111,7 +111,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
             }
         }
     }
-    
+
     public void update(EventChannelPair ecp) {
         if(add(ecp.getEvent())){
             add(ecp.getChannel(), ecp.getStatus());
@@ -119,14 +119,14 @@ public class MapWaveFormStatus implements WaveFormStatus {
         }else if(add(ecp.getChannel(), ecp.getStatus()))
             write();
     }
-    
+
     public boolean add(Channel chan, Status status){
         synchronized(channelMap){
             if(channelMap.put(chan, status) != status) return true;
         }
         return false;
     }
-    
+
     public boolean add(EventAccessOperations ev){
         if (events.contains(ev)) return false;
         synchronized(events){
@@ -134,15 +134,15 @@ public class MapWaveFormStatus implements WaveFormStatus {
         }
         return true;
     }
-    
+
     public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
-    
+
     public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
-    
+
     public boolean contains(EventAccessOperations ev) {
         return events.contains(ev);
     }
-    
+
     private static Logger logger = Logger.getLogger(MapWaveFormStatus.class);
 }
 
