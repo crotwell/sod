@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.eventArm.EventTemplate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,11 +19,18 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class NameGenerator {
-    public NameGenerator(){ this(null); }
+public class NameGenerator implements EventTemplate{
+    public NameGenerator(){ this(null, false); }
+    
+    public NameGenerator(boolean filize){ this(null, filize); }
     
     public NameGenerator(Element config) {
+        this(config, false);
+    }
+    
+    public NameGenerator(Element config, boolean filize){
         parse(config);
+        filizeResults = filize;
     }
     
     private void parse(Element conf){
@@ -76,6 +84,11 @@ public class NameGenerator {
             result += "=\"" + attr.item(i).getNodeValue() + "\"";
         }
         return result;
+    }
+    
+    public String getResult(EventAccessOperations ev){
+        if(filizeResults) return filize(getName(ev));
+        return getName(ev);
     }
     
     public String getName(EventAccessOperations event) {
@@ -188,6 +201,8 @@ public class NameGenerator {
     public static String getRegionName(EventAccessOperations event){
         return regions.getRegionName(event.get_attributes().region);
     }
+    
+    private boolean filizeResults;
     
     private List builder = new ArrayList();
     
