@@ -1,8 +1,14 @@
 // from http://www.kryogenix.org/code/browser/sorttable/
 
-addEvent(window, "load", sortables_init);
+//addEvent(window, "load", sortables_init);
 
 var SORT_COLUMN_INDEX;
+var img_dir = "";
+
+function set_img_dir(new_img_dir){
+    img_dir = new_img_dir;
+    sortables_init();
+}
 
 function sortables_init() {
     // Find all tables with class sortable and make them sortable
@@ -22,34 +28,34 @@ function ts_makeSortable(table) {
         var firstRow = table.rows[0];
     }
     if (!firstRow) return;
-    
+
     // We have a first row: assume it's the header, and make its contents clickable links
     for (var i=0;i<firstRow.cells.length;i++) {
         var cell = firstRow.cells[i];
         var txt = ts_getInnerText(cell);
-        cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a>';
+        cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow"><img src="'+img_dir+'none.gif"/></span></a>';
     }
 }
 
 function ts_getInnerText(el) {
-	if (typeof el == "string") return el;
-	if (typeof el == "undefined") { return el };
-	if (el.innerText) return el.innerText;	//Not needed but it is faster
-	var str = "";
-	
-	var cs = el.childNodes;
-	var l = cs.length;
-	for (var i = 0; i < l; i++) {
-		switch (cs[i].nodeType) {
-			case 1: //ELEMENT_NODE
-				str += ts_getInnerText(cs[i]);
-				break;
-			case 3:	//TEXT_NODE
-				str += cs[i].nodeValue;
-				break;
-		}
-	}
-	return str;
+    if (typeof el == "string") return el;
+    if (typeof el == "undefined") { return el };
+    if (el.innerText) return el.innerText;  //Not needed but it is faster
+    var str = "";
+
+    var cs = el.childNodes;
+    var l = cs.length;
+    for (var i = 0; i < l; i++) {
+        switch (cs[i].nodeType) {
+            case 1: //ELEMENT_NODE
+                str += ts_getInnerText(cs[i]);
+                break;
+            case 3: //TEXT_NODE
+                str += cs[i].nodeValue;
+                break;
+        }
+    }
+    return str;
 }
 
 function ts_resortTable(lnk) {
@@ -62,7 +68,7 @@ function ts_resortTable(lnk) {
     var td = lnk.parentNode;
     var column = td.cellIndex;
     var table = getParent(td,'TABLE');
-    
+
     // Work out a type for the column
     if (table.rows.length <= 1) return;
     var itm = ts_getInnerText(table.rows[1].cells[column]);
@@ -80,20 +86,20 @@ function ts_resortTable(lnk) {
     newRows.sort(sortfn);
 
     if (span.getAttribute("sortdir") == 'down') {
-        ARROW = '&nbsp;&nbsp;&uarr;';
+        ARROW = '<img src="'+img_dir+'down.gif"/>';
         newRows.reverse();
         span.setAttribute('sortdir','up');
     } else {
-        ARROW = '&nbsp;&nbsp;&darr;';
+        ARROW = '<img src="'+img_dir+'up.gif"/>';
         span.setAttribute('sortdir','down');
     }
-    
+
     // We appendChild rows that already exist to the tbody, so it moves them rather than creating new ones
     // don't do sortbottom rows
     for (i=0;i<newRows.length;i++) { if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) table.tBodies[0].appendChild(newRows[i]);}
     // do sortbottom rows only
     for (i=0;i<newRows.length;i++) { if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) table.tBodies[0].appendChild(newRows[i]);}
-    
+
     // Delete any other arrows there may be showing
     var allspans = document.getElementsByTagName("span");
     for (var ci=0;ci<allspans.length;ci++) {
@@ -103,16 +109,16 @@ function ts_resortTable(lnk) {
             }
         }
     }
-        
+
     span.innerHTML = ARROW;
 }
 
 function getParent(el, pTagName) {
-	if (el == null) return null;
-	else if (el.nodeType == 1 && el.tagName.toLowerCase() == pTagName.toLowerCase())	// Gecko bug, supposed to be uppercase
-		return el;
-	else
-		return getParent(el.parentNode, pTagName);
+    if (el == null) return null;
+    else if (el.nodeType == 1 && el.tagName.toLowerCase() == pTagName.toLowerCase())    // Gecko bug, supposed to be uppercase
+        return el;
+    else
+        return getParent(el.parentNode, pTagName);
 }
 function ts_sort_date(a,b) {
     // y2k notes: two digit years less than 50 are treated as 20XX, greater than 50 are treated as 19XX
@@ -137,16 +143,16 @@ function ts_sort_date(a,b) {
     return 1;
 }
 
-function ts_sort_currency(a,b) { 
+function ts_sort_currency(a,b) {
     aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
     bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
     return parseFloat(aa) - parseFloat(bb);
 }
 
-function ts_sort_numeric(a,b) { 
+function ts_sort_numeric(a,b) {
     aa = parseFloat(ts_getInnerText(a.cells[SORT_COLUMN_INDEX]));
     if (isNaN(aa)) aa = 0;
-    bb = parseFloat(ts_getInnerText(b.cells[SORT_COLUMN_INDEX])); 
+    bb = parseFloat(ts_getInnerText(b.cells[SORT_COLUMN_INDEX]));
     if (isNaN(bb)) bb = 0;
     return aa-bb;
 }
@@ -182,4 +188,4 @@ function addEvent(elm, evType, fn, useCapture)
   } else {
     alert("Handler could not be removed");
   }
-} 
+}
