@@ -47,11 +47,10 @@ public class PrintLineEventProcess implements EventArmProcess {
 		bwriter.close();
 	    } catch(Exception e) {
 	    
-		System.out.println("Exception caught while writing to file in PrintLineChannelProcess");
+		//ntln("Exception caught while writing to file in PrintLineChannelProcess");
 	    }
 	} else {
 
-	    System.out.println(eventStr);
 	} // end of else
 	
     }
