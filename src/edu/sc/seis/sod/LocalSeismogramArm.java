@@ -85,6 +85,30 @@ public class LocalSeismogramArm implements Subsetter{
 
     }
 
+    public EventChannelSubsetter getEventChannelSubsetter() {
+        return eventChannel;
+    }
+
+    public RequestGenerator getRequestGenerator() {
+        return requestGenerator;
+    }
+
+    public RequestSubsetter getRequestSubsetter() {
+        return request;
+    }
+
+    public AvailableDataSubsetter getAvailableDataSubsetter() {
+        return availData;
+    }
+
+    public SeismogramDCLocator getSeismogramDCLocator() {
+        return dcLocator;
+    }
+
+    public LocalSeismogramProcess[] getProcesses() {
+        return (LocalSeismogramProcess[])processes.toArray(new LocalSeismogramProcess[0]);
+    }
+
     public void processLocalSeismogramArm(EventChannelPair ecp){
         boolean passed;
         EventAccessOperations eventAccess = ecp.getEvent();

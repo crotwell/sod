@@ -61,6 +61,18 @@ public class WaveformArm implements Runnable {
         }
     }
 
+    public LocalSeismogramArm getLocalSeismogramArm() {
+        return localSeismogramArm;
+    }
+
+    public EventStationSubsetter getEventStationSubsetter() {
+        return eventStationSubsetter;
+    }
+
+    public WaveformArmMonitor[] getWaveformArmMonitors() {
+        return (WaveformArmMonitor[])statusMonitors.toArray(new WaveformArmMonitor[0]);
+    }
+
     //fills the eventchannel db with all available events and starts
     //WaveformWorkerUnits on all inserted event channel pairs
     //If there are no waiting events, this just returns
