@@ -77,6 +77,9 @@ public class PropertyEditor implements EditorPlugin {
                 return EditorUtil.makeTimeIntervalTwiddler(el);
             }
         }
+        for (int i = 0; i < checkBoxEls.length; i++) {
+            if(checkBoxEls[i].equals(el.getTagName())){ return new JPanel(); }
+        }
         Text t = (Text)XPathAPI.selectSingleNode(el, "text()");
         if(el.getTagName().equals("waveformWorkerThreads")){
             return EditorUtil.createNumberSpinner(t, 1, 5, 1);
@@ -87,6 +90,8 @@ public class PropertyEditor implements EditorPlugin {
 
     private String[] timeQuantityEls = { "eventLag", "eventQueryIncrement",
             "eventRefreshInterval", "maxRetryDelay" };
+
+    private String[] checkBoxEls = { "removeDb", "reopenEvents" };
 }
 
 
