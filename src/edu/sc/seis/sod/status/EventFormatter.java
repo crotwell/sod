@@ -179,8 +179,7 @@ public class EventFormatter extends Template implements EventTemplate{
             try{
                 return sdf.format(new MicroSecondDate(getOrigin(ev).origin_time));
             }catch(NumberFormatException e){
-                System.out.println("Offending date_time: " + getOrigin(ev).origin_time.date_time);
-                throw e;
+                throw new RuntimeException("Offending date_time: " + getOrigin(ev).origin_time.date_time, e);
             }
         }
 

@@ -325,7 +325,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
         BasicConfigurator.configure();
         SimpleGUIEditor gui = new SimpleGUIEditor(args);
         gui.start();
-        System.out.println("Done editing.");
     }
 
     private FileLoader tutorialLoader = new FileLoader(configFileBase + "tutorial.xml");
@@ -345,6 +344,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
 }
+
 
 
 

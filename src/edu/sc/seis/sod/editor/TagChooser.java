@@ -69,12 +69,9 @@ public abstract class TagChooser implements EditorPlugin {
                     }
                     private void maybeShowPopup(MouseEvent e) {
                         if (e.isPopupTrigger()) {
-                            System.out.println("Show popup");
                             popup.show(e.getComponent(),
                                        e.getX(),
                                        e.getY());
-                        } else {
-                            System.out.println("No show popup");
                         }
                     }
                 });

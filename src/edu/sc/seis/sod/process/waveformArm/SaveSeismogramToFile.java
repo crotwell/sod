@@ -270,7 +270,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         Runtime runtime = Runtime.getRuntime();
         String s = "Memory usage: "+
             edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils.getMemoryUsage();
-        System.out.println(s);
+        logger.debug(s);
         return outFile;
     }
 
