@@ -7,7 +7,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
+import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
@@ -199,7 +199,7 @@ public class NetworkArm {
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
         for(int i = 0; i < allNets.length; i++) {
             try {
-                allNets[i] = BulletproofNetworkAccessFactory.vest(allNets[i],
+                allNets[i] = BulletproofVestFactory.networkAccessVest(allNets[i],
                                                                   new RetryNetworkDC(new NSNetworkDC(finder.getDNSName(),
                                                                                   finder.getSourceName(),
                                                                                   finder.getFissuresNamingService()), 3));
