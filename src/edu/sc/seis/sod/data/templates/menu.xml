@@ -12,7 +12,7 @@
 <li><a><attribute name="href"><relativePath>event.html</relativePath></attribute>Events</a></li>
 <li><a><attribute name="href"><relativePath>networks.html</relativePath></attribute>Networks</a></li>
 <li><a><attribute name="href"><relativePath>waveformStations/waveformNetworks.html</relativePath></attribute>Waveforms by Station</a></li>
-<li><a><attribute name="href"><relativePath>statusInfo.html</relativePath></attribute>About</a></li>
+<li><a><attribute name="href">http://seis.sc.edu/SOD</attribute>About</a></li>
 <li><a><attribute name="href"><relativePath>Errors/index.html</relativePath></attribute>Errors</a></li>
 <li><a href="http://piglet.seis.sc.edu:8080/wily/Check">Wily</a></li>
 </ul>
