@@ -56,20 +56,7 @@
                         <catalog>PREF</catalog>
                         <contributor>IRIS</contributor>
                 </eventFinder>
-                <removeEventDuplicate>
-                    <timeVariance>
-                        <unit>SECOND</unit>
-                        <value>10</value>
-                    </timeVariance>
-                    <distanceVariance>
-                        <unit>DEGREE</unit>
-                        <value>0.5</value>
-                    </distanceVariance>
-                    <depthVariance>
-                        <unit>KILOMETER</unit>
-                        <value>100</value>
-                    </depthVariance>
-                </removeEventDuplicate>
+                <removeEventDuplicate/>
                 <printLineEventProcess/>
                 <eventStatusTemplate>
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
@@ -140,7 +127,7 @@
                                 <name>IRIS_PondDataCenter</name>
                                 <dns>edu/iris/dmc</dns>
                         </fixedDataCenter>
-                        <someCoverage/>
+        	            <someCoverage/>
                         <printlineSeismogramProcess/>
 
                         <saveSeismogramToFile>
