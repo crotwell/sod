@@ -16,6 +16,35 @@ window.onload=function(){
 Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())
 </div>
 <div id="Content">
+<h2>Station Info</h2>
+<table>
+<tr>
+<td><b>Id</b></td>
+<td>$station.get_code()</td>
+</tr>
+<tr>
+<td><b>Name</b></td>
+<td>$station.Name</td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td>$fissures.getLatitude($station.location)</td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td>$fissures.getLongitude($station.location)</td>
+</tr>
+<tr>
+<td><b>Begin Time</b></td>
+<td>$fissures.getEffectiveBegin($station)</td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td>$fissures.getEffectiveEnd($station)</td>
+</tr>
+</table>
+<br/>
+<br/>
 <table class="sortable ruler" id="eventTable">
 <tr class="title">
 <th><b>Region</b></th>
@@ -34,14 +63,14 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 #set ( $origin = $event.get_preferred_origin() )
 #set ( $eventDir = $fissures.formatDateForFile($origin) )
 <td><a href="../../$eventDir/$fissures.formatStation($station.get_id())/seismograms.html">$FERegion.getRegionName(${event.get_attributes().region})</a></td>
-<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $event.get_preferred_origin().getTime())</td>
+<td>$fissures.formatDate( $event.get_preferred_origin().getTime() )</td>
 <td>
 #foreach ($m in $origin.Magnitudes)
 $fissures.formatMagnitude($m),
 #end</td>
-<td>$fissures.formatQuantity($fissures.getDepth($origin.location))</td>
-<td>$fissures.getLatitude($origin.location)</td>
-<td>$fissures.getLongitude($origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getDepth($origin))</td>
+<td>$fissures.getLatitude($origin)</td>
+<td>$fissures.getLongitude($origin)</td>
 <td>$fissures.formatQuantity($fissures.getDistance($station.location, $origin.location))</td>
 <td>$fissures.formatQuantity($fissures.getAzimuth($station.location, $origin.location))</td>
 <td>$fissures.formatQuantity($fissures.getBackAzimuth($station.location, $origin.location))</td>
