@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.networkArm;
 
 import edu.iris.Fissures.IfNetwork.*;
 
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
@@ -13,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class ResponseWriter implements NetworkArmProcess {
 
@@ -43,9 +43,9 @@ public class ResponseWriter implements NetworkArmProcess {
             printWriter.print(response);
             printWriter.close();
         }catch(ChannelNotFound ex) {
-            GlobalExceptionHandler.handle("Channel not found",ex);
+            GlobalExceptionHandler.handle("Channel not found: " + ChannelIdUtil.toString(chan.get_id()),ex);
         }catch(FileNotFoundException fe) {
-            GlobalExceptionHandler.handle("Error while response file",fe);
+            GlobalExceptionHandler.handle("Error while response file for " + ChannelIdUtil.toString(chan.get_id()),fe);
         }
     }
 
