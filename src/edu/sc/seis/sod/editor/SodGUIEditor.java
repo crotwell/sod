@@ -11,7 +11,7 @@ import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.subsetter.EventFormatter;
+import edu.sc.seis.sod.status.EventFormatter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

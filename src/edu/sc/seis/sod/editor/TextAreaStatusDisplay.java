@@ -12,7 +12,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.event.EventCondition;
-import edu.sc.seis.sod.subsetter.EventFormatter;
+import edu.sc.seis.sod.status.EventFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.JTextArea;
