@@ -39,7 +39,7 @@
                                 src="helpmark.png"/> icons to see what the data near them indicates. </p>
                 </section>
                 <section name="Cleaning up after SOD">
-                        <img class="right" src="graytractor100.jpg"/>
+                        <img class="right" src="images/half-sodlogo-y100.gif"/>
                         <section name="Generated files">
                                 <p>SOD runs generate a ton of files, and if those files still exist
                                         for subsequent runs it can cause problems. For example the
