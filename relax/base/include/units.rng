@@ -4,7 +4,7 @@
     <start combine="choice">
         <notAllowed/>
     </start>
-    <define name="unit">
+    <define name="unit" combine="choice">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -68,7 +68,7 @@
             </choice>
         </element>
     </define>
-    <define name="lengthUnit">
+    <define name="lengthUnit" combine="choice">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -87,7 +87,7 @@
             </choice>
         </element>
     </define>
-    <define name="timeUnit">
+    <define name="timeUnit" combine="choice">
         <element name="unit">
             <choice>
                 <value>NANOSECOND</value>
