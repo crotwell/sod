@@ -1,40 +1,41 @@
 package edu.sc.seis.sod.process.waveform;
 
-import edu.sc.seis.fissuresUtil.xml.DataSet;
+import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.*;
-import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import org.w3c.dom.Element;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
-import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodUtil;
-import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import org.w3c.dom.Element;
-import edu.sc.seis.sod.status.StringTreeLeaf;
-import java.awt.Dimension;
-import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.fissuresUtil.xml.DataSet;
+import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.database.waveform.JDBCEventRecordSection;
 import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess {
 
-    public RecordSectionDisplayGenerator(Element config)
-            throws ConfigurationException, SQLException {
+    public RecordSectionDisplayGenerator(Element config) throws SQLException {
         this.id = SodUtil.getText(SodUtil.getElement(config, "id"));
         this.displayOption = SodUtil.getText(SodUtil.getElement(config,
                                                                 "displayOption"));
@@ -54,9 +55,14 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public SaveSeismogramToFile getSaveSeismogramToFile()
             throws ConfigurationException {
-        WaveformProcess[] waveformProcesses = Start.getWaveformArm()
-                .getLocalSeismogramArm()
-                .getProcesses();
+        WaveformArm waveform = Start.getWaveformArm();
+        WaveformProcess[] waveformProcesses = null;
+        if(waveform.getLocalSeismogramArm() != null) {
+            waveformProcesses = waveform.getLocalSeismogramArm().getProcesses();
+        } else {
+            MotionVectorArm moVec = waveform.getMotionVectorArm();
+            waveformProcesses = moVec.getWaveformProcesses();
+        }
         for(int i = 0; i < waveformProcesses.length; i++) {
             if(waveformProcesses[i] instanceof SaveSeismogramToFile) {
                 SaveSeismogramToFile saveSeis = (SaveSeismogramToFile)waveformProcesses[i];
@@ -67,7 +73,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     }
 
     public WaveformResult process(EventAccessOperations event,
-                                  Channel channel,
+                                  Channel chan,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
@@ -158,10 +164,6 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             SQLException {
         int recSecId = -1;
         int eventId = eventAccess.getDBId(event);
-        boolean isBest = false;
-        if(displayOption.equals("BEST")) {
-            isBest = true;
-        }
         if(!eventRecordSection.imageExists(eventId, fileName)) {
             recSecId = eventRecordSection.insert(eventId, fileName);
         } else {
