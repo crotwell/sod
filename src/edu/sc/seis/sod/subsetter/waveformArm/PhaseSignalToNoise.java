@@ -45,7 +45,7 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 Element element = (Element)node;
-                if(element.getTagName().equals("phase")) {
+                if(element.getTagName().equals("phaseName")) {
                     phaseName = SodUtil.getNestedText(element);
                 } else if(element.getTagName().equals("modelName")) {
                     modelName = SodUtil.getNestedText(element);
