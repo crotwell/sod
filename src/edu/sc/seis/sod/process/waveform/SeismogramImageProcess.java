@@ -91,7 +91,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     private void initTaup() throws TauModelException {
-        tauP = new TauPUtil(modelName);
+        tauP = TauPUtil.getTauPUtil(modelName);
         if(tauptime == null) {
             tauptime = new TauP_Time("iasp91");
             tauptime.clearPhaseNames();

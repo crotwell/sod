@@ -37,7 +37,7 @@ public class PhaseExists implements EventStationSubsetter {
             throw new ConfigurationException("Phase name not in configuration");
         }
         try {
-            tauPTime = new TauPUtil(modelName);
+            tauPTime = TauPUtil.getTauPUtil(modelName);
         } catch(TauModelException e) {
             throw new ConfigurationException("Cannot initize TauP travel time calculator",
                                              e);

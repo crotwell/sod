@@ -62,11 +62,7 @@ public class PhaseSignalToNoise  implements WaveformProcess {
                 }
             }
         }
-        try {
-            taupUtil = new TauPUtil(modelName);
-        } catch (TauModelException e) {
-            throw new ConfigurationException("Couldn't initialize travel time calculator", e);
-        }
+        taupUtil = TauPUtil.getTauPUtil(modelName);
 
         phaseStoN = new SimplePhaseStoN(phaseName,
                                         shortOffsetBegin,
