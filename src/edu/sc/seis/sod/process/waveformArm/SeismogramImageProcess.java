@@ -200,18 +200,15 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                         logger.debug("writing " + picFileName);
                         try {
                             if (fileType.equals(PDF)) {
-                                logger.debug("NOAMP before pdf"+picFileName);
                                 bsd.outputToPDF(new File(picFileName));
-                                logger.debug("NOAMP after pdf"+picFileName);
                             } else {
                                 bsd.outputToPNG(new File(picFileName), dimension);
                             }
                         } catch (Throwable e) {
-                            GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
+                            GlobalExceptionHandler.handle("unable to save seismogram image to "+ picFileName, e);
                         }
                     }
                 });
-
 
         return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
