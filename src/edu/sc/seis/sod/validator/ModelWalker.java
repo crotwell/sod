@@ -94,9 +94,13 @@ public class ModelWalker {
         }
         return null;
     }
+    
+    public static boolean isSelfReferential(Form f){
+        return isSelfReferential(f, null);
+    }
 
-    public static boolean isSelfReferential(Form f) {
-        if(f.isFromDef()) { return lineageContainsRefTo(f, f.getDef()); }
+    public static boolean isSelfReferential(Form f, Form root) {
+        if(f.isFromDef() && !f.equals(root)) { return lineageContainsRefTo(f, f.getDef(), root); }
         return false;
     }
 
@@ -164,10 +168,43 @@ public class ModelWalker {
     public static boolean isTowards(Form parent, Form result) {
         //System.out.println("isTowards called");
         //System.out.println("PARENT=" + ModelUtil.toString(parent));
-        //System.out.println("RESULT=" + ModelUtil.toString(result));
-        boolean b = parent.isAncestorOf(result) || parent.equals(result);
+       // System.out.println("RESULT=" + ModelUtil.toString(result));
+        boolean b = parent.isAncestorOf(result, parent) || parent.equals(result);
         //System.out.println("isTowards: " + b);
         return b;
+    }
+
+    public static int getDistance(Form base, Form result) {
+        return getDistance(base, base, result);
+    }
+
+    private static int getDistance(Form initialBase, Form base, Form result) {
+        if(result == null) { return -1; }
+        if(result.equals(base)) { return 0; }
+        if(base.isFromDef() && base != initialBase) {
+            Form[] lineageToInitial = getLineage(base.getParent(), initialBase);
+            for(int i = 0; i < lineageToInitial.length; i++) {
+                Form cur = lineageToInitial[i];
+                if(cur.isFromDef() && cur.getDef().equals(base.getDef())) { return -1; }
+            }
+        }
+        if(base instanceof MultigenitorForm) {
+            MultigenitorForm mgf = (MultigenitorForm)base;
+            int minDist = Integer.MAX_VALUE;
+            for(int i = 0; i < mgf.getChildren().length; i++) {
+                Form cur = mgf.getChildren()[i];
+                int curDist = getDistance(initialBase, cur, result);
+                if(curDist < minDist && curDist > -1) {
+                    minDist = curDist;
+                }
+            }
+            if(minDist < Integer.MAX_VALUE) { return minDist; }
+        } else if(base instanceof GenitorForm) {
+            GenitorForm gf = (GenitorForm)base;
+            int subDist = getDistance(initialBase, gf.getChild(), result);
+            if(subDist > -1) { return subDist + 1; }
+        }
+        return -1;
     }
 
     public static NamedElement[] getSiblings(NamedElement brother) {
@@ -180,12 +217,16 @@ public class ModelWalker {
     }
 
     public static Form[] getLineage(Form f) {
+        return getLineage(f, null);
+    }
+
+    public static Form[] getLineage(Form child, Form parent) {
         List lineageList = new ArrayList();
-        Form temp = f;
-        do {
+        Form temp = child;
+        while(temp != parent) {
             lineageList.add(temp);
             temp = temp.getParent();
-        } while(temp != null);
+        }
         return (Form[])lineageList.toArray(new Form[0]);
     }
 
@@ -206,5 +247,4 @@ public class ModelWalker {
         } while(temp != null && ns == null);
         return ns;
     }
-    
 }
