@@ -8,6 +8,9 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
+import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -122,7 +125,7 @@ public class NetworkArm {
         }
     }
 
-    public NetworkDCOperations getNetworkDC() {
+    public ProxyNetworkDC getNetworkDC() {
         return finder.getNetworkDC();
     }
 
@@ -173,7 +176,7 @@ public class NetworkArm {
     public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
         if(!needsRefresh()) {
             if (netDbs == null) {
-                netDbs = netTable.getAllNets(finder.getNetworkDC());
+                netDbs = netTable.getAllNets(getNetworkDC());
                 for (int i = 0; i < netDbs.length; i++) {
                     // this is for the side effect of creating networkInfoTemplate stuff
                     // avoids a null ptr later
@@ -196,8 +199,10 @@ public class NetworkArm {
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
         for(int i = 0; i < allNets.length; i++) {
             try {
-                NetworkId id = allNets[i].get_attributes().get_id();
-                allNets[i] = BulletproofNetworkAccessFactory.vest(allNets[i], netDC);
+                allNets[i] = BulletproofNetworkAccessFactory.vest(allNets[i],
+                                                                  new RetryNetworkDC(new NSNetworkDC(finder.getDNSName(),
+                                                                                  finder.getSourceName(),
+                                                                                  finder.getFissuresNamingService()), 3));
                 if(attrSubsetter.accept(allNets[i].get_attributes())){
                     int dbid;
                     synchronized(netTable){

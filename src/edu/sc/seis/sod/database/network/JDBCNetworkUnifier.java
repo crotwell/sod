@@ -10,7 +10,7 @@ package edu.sc.seis.sod.database.network;
 import edu.iris.Fissures.IfNetwork.*;
 
 import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
-import edu.sc.seis.fissuresUtil.cache.SynchronizedNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.JDBCLocation;
 import edu.sc.seis.fissuresUtil.database.JDBCQuantity;
@@ -65,7 +65,7 @@ public class JDBCNetworkUnifier{
         return netDb.get(netDbId);
     }
 
-    public NetworkDbObject getNet(int netDbId, NetworkDCOperations ndc) throws NetworkNotFound, NotFound, SQLException{
+    public NetworkDbObject getNet(int netDbId, ProxyNetworkDC ndc) throws NetworkNotFound, NotFound, SQLException{
         NetworkId id = netDb.get(netDbId).get_id();
         NetworkAccess na;
         synchronized(ndc){
@@ -75,16 +75,11 @@ public class JDBCNetworkUnifier{
         return new NetworkDbObject(netDbId, na);
     }
 
-    public NetworkDbObject getNet(ChannelDbObject chan, NetworkFinder nf) throws NotFound, SQLException, NetworkNotFound{
-        int netDbId = netDb.getDBId(chan.getChannel().get_id().network_id);
-        return new NetworkDbObject(netDbId, nf.retrieve_by_id(chan.getChannel().get_id().network_id));
-    }
-
     public int put(NetworkAttr net) throws SQLException{
         return netDb.put(net);
     }
 
-    public NetworkDbObject[] getAllNets(NetworkDCOperations ndc) throws SQLException, NotFound, NetworkNotFound {
+    public NetworkDbObject[] getAllNets(ProxyNetworkDC ndc) throws SQLException, NotFound, NetworkNotFound {
         int[] netIds = netDb.getAllNetworkDBIds();
         NetworkDbObject[] out = new NetworkDbObject[netIds.length];
         for (int i = 0; i < netIds.length; i++) {

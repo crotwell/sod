@@ -1,9 +1,9 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
@@ -40,7 +40,7 @@ public class NetworkFinder extends AbstractSource{
     public NetworkFinder (Element element) throws Exception{
         super(element);
         CommonAccess commonAccess = CommonAccess.getCommonAccess();
-        FissuresNamingService fns = commonAccess.getFissuresNamingService();
+        fns = commonAccess.getFissuresNamingService();
 
         String dns = getDNSName();
         String objectName = getSourceName();
@@ -51,7 +51,7 @@ public class NetworkFinder extends AbstractSource{
         netDC = new RetryNetworkDC(new NSNetworkDC(dns, objectName, fns), 2);
     }
 
-    public NetworkDCOperations getNetworkDC() {
+    public ProxyNetworkDC getNetworkDC() {
         return netDC;
     }
 
@@ -59,7 +59,13 @@ public class NetworkFinder extends AbstractSource{
         return this.refreshInterval;
     }
 
-    private NetworkDCOperations netDC;
+    public FissuresNamingService getFissuresNamingService() {
+        return fns;
+    }
+
+    private FissuresNamingService fns;
+
+    private ProxyNetworkDC netDC;
 
     private TimeInterval refreshInterval;
 
