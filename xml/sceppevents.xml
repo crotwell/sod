@@ -9,7 +9,7 @@
 	   <eventFinder>
 
 <!-- The EventDC will have a name that it is registered under in the naming service. -->
-		<name>AHINGAEVENTDC</name>
+		<name>ANHINGAEVENTDC</name>
 
 <!-- The EventDC will also be registered under a subdirectory according to its reversed DNS. -->
 		<dns>edu/sc/seis</dns>
