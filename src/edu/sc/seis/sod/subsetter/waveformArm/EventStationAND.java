@@ -6,7 +6,6 @@ import org.w3c.dom.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 
