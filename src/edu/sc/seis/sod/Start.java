@@ -94,7 +94,7 @@ public class Start {
         }
         initDocument(args);
     }
-    
+
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
         System.err.println("You told SOD to use "
@@ -154,8 +154,8 @@ public class Start {
         } else {
             logger.debug("No properties specified in the configuration file");
         }
-        if(props.containsKey("sod.dburl")) {
-            ConnMgr.setURL((String)props.get("sod.dburl"));
+        if(props.containsKey(DBURL_KEY)) {
+            ConnMgr.setURL(props.getProperty(DBURL_KEY));
         }
         //Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
@@ -450,6 +450,8 @@ public class Start {
     private static MicroSecondDate startTime;
 
     private static String DATABASE_DIR = "SodDb";
+
+    public static final String DBURL_KEY = "sod.dburl";
 
     public static boolean RUN_ARMS = true;
 
