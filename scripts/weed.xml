@@ -3,7 +3,7 @@
         <properties>
         <property>
             <name>sod.start.RunName</name>
-            <value>Tutorial Test Run</value>
+            <value>WEED Emulator</value>
         </property>
         <property>
             <name>sod.start.StatusBaseDirectory</name>
