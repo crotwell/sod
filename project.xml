@@ -161,8 +161,12 @@
   </dependencies>
   <build>
     <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
-    <unitTestSourceDirectory>test</unitTestSourceDirectory>
+    <unitTestSourceDirectory>test/unit</unitTestSourceDirectory>
     <sourceDirectory>src</sourceDirectory>
+    <unitTest>
+        <includes><include name="**/*Test.java" /></includes>
+        <excludes><exclude name="**/XMLConfigUtil.java"/></excludes>
+    </unitTest>
     <resources>
       <resource>
         <directory>src/edu/sc/seis/sod</directory>
