@@ -3,10 +3,10 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodElement;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.apache.log4j.Logger;
@@ -40,10 +40,10 @@ public class MapEventStatus implements SodElement, EventStatus{
         public void run() {
             try {
                 map.writeMapToPNG(fileLoc);
-            } catch (IOException e) {
-                logger.error("unable to save map to file "+fileLoc, e);
+                scheduled = new Boolean(false);
+            } catch (Exception e) {
+                CommonAccess.handleException(e, "unable to save map to file "+fileLoc);
             }
-            scheduled = new Boolean(false);
         }
     }
     
