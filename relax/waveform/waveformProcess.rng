@@ -309,7 +309,7 @@
                                 <min>0</min>
                                 <max>180</max>
                             </distanceRange>
-                            <individualSeisHeight>40</individualSeisHeight>
+                           <percentSeisHeight>10</percentSeisHeight>
                             <recordSectionSize>
                                 <width>500</width>
                                 <height>500</height>
@@ -324,14 +324,14 @@
                                 <min>10</min>
                                 <max>150</max>
                             </distanceRange>
-                            <individualSeisHeight>40</individualSeisHeight>
+                            <percentSeisHeight>10</percentSeisHeight>
                             <minimumSpacing>15</minimumSpacing>
                             <recordSectionSize>
                                 <width>400</width>
                                 <height>400</height>
                             </recordSectionSize>
                         </recordSectionGrouping>
-                        <individualSeisHeight>40</individualSeisHeight>
+                        <percentSeisHeight>10</percentSeisHeight>
                         <minimumSpacing>10</minimumSpacing>
                         <recordSectionSize>
                             <width>400</width>
@@ -366,21 +366,10 @@
                 <ref name="recordSectionGrouping"/>
             </zeroOrMore>
             <optional>
-                <element name="individualSeisHeight">
-                    <xsd:annotation>
-                        <description>Height of the seismogram in pixels</description>
-                    </xsd:annotation>
-                    <data type="integer"/>
-                </element>
+                <ref name="percentSeisHeight"/>
             </optional>
             <optional>
-                <element name="minimumSpacing">
-                    <xsd:annotation>
-                        <description>Minimum spacing in degrees between seismograms in the
-                            recordsection</description>
-                    </xsd:annotation>
-                    <data type="double"/>
-                </element>
+               <ref name="minimumSpacing"/>
             </optional>
             <optional>
                 <ref name="recordSectionSize"/>
@@ -412,6 +401,23 @@
             </element>
         </element>
     </define>
+    <define name="percentSeisHeight">
+    	<element name="percentSeisHeight">
+    		 <xsd:annotation>
+                        <description>Height of the seismogram as a percentage of recordsection height</description>
+              </xsd:annotation>
+              <data type="double"/>
+        </element>
+    </define>
+    <define name="minimumSpacing">
+	   <element name="minimumSpacing">
+                    <xsd:annotation>
+                        <description>Minimum spacing in degrees between seismograms in the
+                            recordsection</description>
+                    </xsd:annotation>
+                    <data type="double"/>
+      </element>
+     </define>
     <define name="recordSectionGrouping">
         <element name="recordSectionGrouping">
             <xsd:annotation>
@@ -431,7 +437,7 @@
                             <max>180</max>
                         </distanceRange>
                         <minimumSpacing>10</minimumSpacing>
-                        <individualSeisHeight>40</individualSeisHeight>
+                        <percentSeisHeight>10</percentSeisHeight>
                         <recordSectionSize>
                             <width>500</width>
                             <height>500</height>
@@ -444,21 +450,10 @@
                 <ref name="degreeRange"/>
             </element>
             <optional>
-                <element name="individualSeisHeight">
-                    <xsd:annotation>
-                        <description>Height of the seismograms in pixels</description>
-                    </xsd:annotation>
-                    <data type="integer"/>
-                </element>
+                <ref name="percentSeisHeight"/>
             </optional>
             <optional>
-                <element name="minimumSpacing">
-                    <xsd:annotation>
-                        <description>Minimum spacing in degrees between seismograms in the
-                            recordsection</description>
-                    </xsd:annotation>
-                    <data type="double"/>
-                </element>
+                <ref name="minimumSpacing"/>
             </optional>
             <optional>
                 <ref name="recordSectionSize"/>
