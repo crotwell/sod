@@ -32,7 +32,7 @@ public class Start implements SodExceptionListener {
      * @param configFile an <code>InputStream</code> value pointing to a SOD xml
      * config file
      */
-    public Start (String confFilename) throws IOException{
+    public Start (String confFilename, String[] args) throws Exception{
         try {
             document = createDoc(createInputSource(confFilename));
         } catch (Exception e) {
@@ -55,6 +55,56 @@ public class Start implements SodExceptionListener {
             CommonAccess.handleException(e, "Problem configuring schema validator");
             System.exit(0);
         }
+        initDocument(args);
+    }
+
+    public Start(Document document) throws Exception {
+        this(document, new String[0]);
+    }
+
+    public Start(Document document, String[] args) throws Exception {
+        this.document = document;
+        initDocument(args);
+    }
+
+    protected void initDocument(String[] args) throws Exception {
+        // get some defaults
+        loadProps((Start.class).getClassLoader().getResourceAsStream(DEFAULT_PROPS));
+
+        for (int i=0; i<args.length-1; i++) {
+            if (args[i].equals("-props")) {
+                // override with values in local directory,
+                // but still load defaults with original name
+                loadProps(new FileInputStream(args[i+1]));
+                System.out.println("loaded file props from "+args[i+1]+"  log4j.rootCategory="+props.getProperty("log4j.rootCategory"));
+            }
+        }
+
+        PropertyConfigurator.configure(props);
+        logger.info("logging configured");
+
+        //now override the properties with the properties specified
+        // in the configuration file.
+        Element docElement = getDocument().getDocumentElement();
+        Element propertiesElement = SodUtil.getElement(docElement, "properties");
+        if(propertiesElement != null) {
+            //load the properties fromt the configurationfile.
+            SodUtil.loadProperties(propertiesElement, props);
+        } else {
+            logger.debug("No properties specified in the configuration file");
+        }
+
+        //here the orb must be initialized ..
+        //configure commonAccess
+        CommonAccess.getCommonAccess().initORB(args, props);
+
+        checkRestartOptions();
+
+        //configure the eventQueue and waveformQueue.
+        eventQueue = new HSqlDbQueue(props);
+        eventQueue.clean();
+        waveformQueue = new WaveformDbQueue(props);
+        waveformQueue.clean();
     }
 
     private InputSource createInputSource(String loc) throws IOException{
@@ -92,7 +142,7 @@ public class Start implements SodExceptionListener {
         return doc;
     }
 
-    public void createArms() throws Exception {
+    public void start() throws Exception {
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
         NodeList children = docElement.getChildNodes();
@@ -139,55 +189,24 @@ public class Start implements SodExceptionListener {
 
     public static void main (String[] args) {
         try {
-            Start.props  = System.getProperties();
-            // get some defaults
-            loadProps((Start.class).getClassLoader().getResourceAsStream(DEFAULT_PROPS));
+
             String confFilename = null;
 
             for (int i=0; i<args.length-1; i++) {
-                if (args[i].equals("-props")) {
-                    // override with values in local directory,
-                    // but still load defaults with original name
-                    loadProps(new FileInputStream(args[i+1]));
-                    System.out.println("loaded file props from "+args[i+1]+"  log4j.rootCategory="+props.getProperty("log4j.rootCategory"));
-                } if(args[i].equals("-conf") || args[i].equals("-f")) {
+                if(args[i].equals("-conf") || args[i].equals("-f")) {
                     confFilename = args[i+1];
                 }
             }
-            PropertyConfigurator.configure(props);
-            logger.info("logging configured");
 
             if (confFilename == null) {
                 System.err.println("No configuration file given, quiting....");
                 return;
             }
-            Start start = new Start(confFilename);
-
-            //now override the properties with the properties specified
-            // in the configuration file.
-            Element docElement = start.getDocument().getDocumentElement();
-            Element propertiesElement = SodUtil.getElement(docElement, "properties");
-            if(propertiesElement != null) {
-                //load the properties fromt the configurationfile.
-                SodUtil.loadProperties(propertiesElement, props);
-            } else {
-                logger.debug("No properties specified in the configuration file");
-            }
-
-            //here the orb must be initialized ..
-            //configure commonAccess
-            CommonAccess.getCommonAccess().initORB(args, props);
-
-            checkRestartOptions();
-
-            //configure the eventQueue and waveformQueue.
-            eventQueue = new HSqlDbQueue(props);
-            eventQueue.clean();
-            waveformQueue = new WaveformDbQueue(props);
-            waveformQueue.clean();
+            Start start = new Start(confFilename, args);
 
             logger.info("Start start()");
-            start.createArms();
+            start.start();
+
             eventArmThread.join();
             waveFormArmThread.join();
 
@@ -282,7 +301,7 @@ public class Start implements SodExceptionListener {
 
     public static int REFRESH_INTERVAL = 600;
 
-    private static Properties props = null;
+    private static Properties props = System.getProperties();;
 
     private Document document;
 
