@@ -83,7 +83,7 @@ public class Relative extends PhaseInteractionType {
 		element = SodUtil.getElement(config, "depthRange");
 		if(element != null) depthRange = (edu.sc.seis.sod.subsetter.DepthRange) SodUtil.load(element, "edu.sc.seis.sod.subsetter");
 		element = SodUtil.getElement(config, "distanceRange");
-		if(element != null) distanceRange = (DistanceRange) SodUtil.load(element, "edu.sc.seis.sod.subsetter");
+		if(element != null) distanceRange = (DistanceRangeSubsetter) SodUtil.load(element, "edu.sc.seis.sod.subsetter");
 	}
 
 	public String getReference() {
@@ -95,12 +95,12 @@ public class Relative extends PhaseInteractionType {
 		return this.depthRange;
 	}
 
-	public DistanceRange getDistanceRange() {
+	public DistanceRangeSubsetter getDistanceRange() {
 		return this.distanceRange;
 	}
 	private String reference;
 
-	private DistanceRange distanceRange = null;
+	private DistanceRangeSubsetter distanceRange = null;
 
 	private edu.sc.seis.sod.subsetter.DepthRange depthRange = null;
 

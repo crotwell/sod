@@ -31,7 +31,7 @@ import org.w3c.dom.*;
  *</pre>
  */
 
-public class LinearDistanceMagnitudeRange extends DistanceRange implements EventStationSubsetter {
+public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter implements EventStationSubsetter {
     /**
      * Creates a new <code>LinearDistanceMagnitudeRange</code> instance.
      *
