@@ -172,6 +172,7 @@ public class MotionVectorArm implements Subsetter{
                 if ( ! found) {
                     logger.info("FAIL no request generated");
                     ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+                    return;
                 }
             } catch (Throwable e) {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
