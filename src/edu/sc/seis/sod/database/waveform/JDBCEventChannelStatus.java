@@ -102,10 +102,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
         CacheEvent event = eventTable.getEvent(eventId);
         int chanId = rs.getInt("channelid");
         NetworkArm na = Start.getNetworkArm();
-        Channel chan = na.getChannel(chanId);
-        if(chan == null){
-            chan = chanTable.get(chanId);
-        }
+
+        Channel chan = null;
+        if(na != null){ chan = na.getChannel(chanId); }
+        if(chan == null){ chan = chanTable.get(chanId); }
         EventChannelPair cur = new EventChannelPair(new EventDbObject(eventId, event),
                                                     new ChannelDbObject(chanId, chan),
                                                     owner,
