@@ -54,6 +54,19 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 			       " status int, "+
 			       " numretrys int, "+
 			       " reason VARCHAR)");
+
+        stmt.executeUpdate(" CREATE INDEX waveformchannelindex ON waveformchanneldb "+
+                           " (waveformeventid, waveformchannelid)");
+
+        stmt.executeUpdate(" CREATE INDEX waveformstationindex ON waveformstationdb "+
+                           " (waveformeventid, waveformstationid)");
+        
+        
+        stmt.executeUpdate(" CREATE INDEX waveformnetworkindex ON waveformnetworkdb "+
+                           " (waveformeventid, waveformnetworkid)");            
+
+        stmt.executeUpdate(" CREATE INDEX waveformsiteindex ON waveformsitedb "+
+                           " (waveformeventid, waveformsiteid)");
 	  
 
 	    
