@@ -33,8 +33,6 @@ public class LocalSeismogramTemplateTest extends TestCase {
         EventChannelPair ecp = new EventChannelPair(edb, cdb, null, 11, Status.get(Stage.DATA_SUBSETTER, Standing.SUCCESS));
 
         CookieJar cookieJar = new CookieJar(ecp);
-        cookieJar.getContext().put("A", new A());
-        cookieJar.getContext().put("B", "Test B");
         BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
         //BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/simplevelocity.xml")));
         String inString = "";
@@ -50,20 +48,6 @@ public class LocalSeismogramTemplateTest extends TestCase {
         sw.close();
     }
 
-    public class A {
-        public A() {
-            b = new B();
-        }
-        public B getB() {return b;}
-        public B b;
-    }
-    public class B {
-        public B() {
-            c = "Test";
-        }
-        public String getC() {return c;}
-        public String c;
-    }
 }
 
 
