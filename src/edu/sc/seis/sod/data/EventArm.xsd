@@ -77,7 +77,7 @@
                 <xsd:sequence>
                     <xsd:element ref="area"  minOccurs="1" maxOccurs="1"/>
                     <xsd:element ref="originDepthRange"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="eventTimeRange"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="originTimeRange"  minOccurs="1" maxOccurs="1"/>
                     <xsd:element ref="magnitudeRange"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="catalog" minOccurs="0" maxOccurs="unbounded"/>
                     <xsd:element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
@@ -725,7 +725,7 @@
     <xsd:element name="eventChannelFinder" type="eventChannelFinderType" substitutionGroup="eventSource"/>
     
     <!-- element representing the process -->
-    <xsd:element name="eventProcess" type="processType" abstract="true"/>
+    <xsd:element name="eventProcess" type="eventProcessType" abstract="true"/>
     <xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
     <xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
     

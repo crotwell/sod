@@ -99,7 +99,28 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+       
+    <!-- ABSTRACT TYPE Seismogram-->
+    <xsd:complexType name="seismogramType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all Seismogram subsetters.
+            </summary>
+            <description>
+                This is a place holder for Seismogram subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+  
     <!-- ABSTRACT TYPE WAVE FORM-->
     <xsd:complexType name="seismogramProcessType" abstract="true">
         <xsd:complexContent>
@@ -482,7 +503,7 @@
     <!-- EMBEDDED CHANNELID TYPE -->
     <xsd:complexType name="embeddedChannelIDType">
         <xsd:complexContent>
-            <xsd:extension base="eventChannelIDType">
+            <xsd:extension base="eventChannelType">
                 <xsd:sequence>
                     <xsd:element ref="channelID" />
                 </xsd:sequence>
@@ -671,28 +692,32 @@
     
     <!-- ABSTRACT TYPE ChoicePartType-->
     <xsd:complexType name="choicePartType" abstract="true">
-        <xsd:complexContent>
-            <xsd:all>
-               <xsd:element ref="requestGeneratorType" />
-            </xsd:all>
-        </xsd:complexContent>
+            <xsd:sequence>
+               <xsd:element ref="requestGenerator" />
+            </xsd:sequence>
     </xsd:complexType>
+    
+    <xsd:element name="choicePart" type="choicePartType" abstract="true" />
 
-    <xsd:element name="eventStationChoice" >
+    <xsd:element name="eventStationChoice" substitutionGroup="choicePart" >
         <xsd:complexType>
           <xsd:complexContent>
               <xsd:extension base="choicePartType">
-                 <xsd:element ref="eventStationType" />
+                 <xsd:sequence>
+                 <xsd:element ref="eventStation" />
+                 </xsd:sequence>
               </xsd:extension >
           </xsd:complexContent>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="eventChannelChoice" >
+    <xsd:element name="eventChannelChoice" substitutionGroup="choicePart" >
         <xsd:complexType>
         <xsd:complexContent>
             <xsd:extension base="choicePartType">
-               <xsd:element ref="eventChannelType" />
+<xsd:sequence>
+               <xsd:element ref="eventChannel" />
+ </xsd:sequence>
             </xsd:extension >
         </xsd:complexContent>
     </xsd:complexType>
@@ -705,11 +730,9 @@
                     <xsd:element ref="choicePart" minOccurs="0" maxOccurs="unbounded"/>
                     <xsd:element name="otherwise" minOccurs="0">
                        <xsd:complexType>
-                          <xsd:complexContent>
                              <xsd:sequence>
-                                <xsd:element ref="requestGeneratorType" />
+                                <xsd:element ref="requestGenerator" />
                              </xsd:sequence>
-                          </xsd:complexContent>
                        </xsd:complexType>
                     </xsd:element>
                 </xsd:sequence>
@@ -862,17 +885,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    
-    <!-- TYPE DECLARATIONS FOR THE SeismogramProcess -->
-    
-    <!--LOCAL SEISMOGRAM TYPE-->
-    <xsd:complexType name="seismogramProcessType">
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType">
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
     <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
     
     <xsd:complexType name="externalSeismogramProcessType">
@@ -897,7 +909,7 @@
     
     <xsd:complexType name="sacSeismogramProcessType"> 
         <xsd:complexContent>
-            <xsd:extension base="seismogramProcessorType">
+            <xsd:extension base="seismogramProcessType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
                 </xsd:sequence>
@@ -906,14 +918,15 @@
     </xsd:complexType>
 
 
-    <xsd:complexType name="statusProcessType">
+    <xsd:complexType name="statusProcessType" abstract="true" >
         <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
 
     <xsd:complexType name="HTMLStatusProcessType">
         <xsd:complexContent>
-            <xsd:extension base="statusProcessorType">
+            <xsd:extension base="statusProcessType">
                 <xsd:sequence>
                     <xsd:element name="filename" type="xsd:string"/>
                 </xsd:sequence>
@@ -923,7 +936,7 @@
 
 
     
-    <xsd:complexType name="breqfastLabelType" content="mixed" >
+    <xsd:complexType name="breqfastLabelType" mixed="true" >
         <xsd:all>
            <xsd:element name="separator" type="xsd:string" minOccurs="0" />
            <xsd:element name="feRegionName" >
@@ -1020,6 +1033,9 @@
     <xsd:element name="availableDataXOR" type="availableDataXORType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataNOT" type="availableDataNOTType" substitutionGroup="availableData"/>
     <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="availableData"/>
+
+    <!-- ELEMENT DECLARATIONS FOR SEISMOGRAM TYPE -->
+    <xsd:element name="seismogram" type="seismogramType" abstract="true"/>
     
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
     <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
@@ -1027,7 +1043,7 @@
     <!-- element representing the process -->waw
     <xsd:element name="printlineSeismogramProcess" type="printLineSeismogramProcessorType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="sacFileProcessor" type="sacSeismogramProcessType" substitutionGroup="seismogramProcess"/>
-    <xsd:element name="responseGainProcessor" type="responseGainProcessType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="responseGainProcessor" type="seismogramProcessType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
@@ -1041,6 +1057,7 @@
                     <xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
                     <!--xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/-->
                     <xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="seismogram" minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="seismogramProcess" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
@@ -1056,7 +1073,7 @@
                     <xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="localSeismogramArm"/>
 
-                    <xsd:element ref="statusProcess" minOccurs="0" maxOccures="unbounded"/>
+                    <xsd:element ref="statusProcess" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
