@@ -8,6 +8,7 @@
 <title>Channels</title>
 <style media="all">@import "../../../main.css";</style>
 <script type="text/javascript" src="../../../tableRuler.js"> </script>
+<script type="text/javascript" src="../../../sorttable.js"> </script>
 <script type="text/javascript">
         window.onload=function(){tableruler();}
 </script>
@@ -50,7 +51,7 @@
 </station>
 </table>
 <h2>Channels:</h2>
-<table class="ruler">
+<table class="ruler sortable" id="channels">
 <tr class="title">
 <td>Id</td>
 <td>Begin Time (GMT)</td>
@@ -81,7 +82,7 @@
 </channels>
 </table>
 <h2>Sites:</h2>
-<table class="ruler">
+<table class="ruler sortable" id="sites">
 <tr class="title">
 <td>Id</td>
 <td>Begin Time (GMT)</td>
