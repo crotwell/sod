@@ -78,12 +78,17 @@ public class CommonAccess {
     
     private String[] args;
     
-    public LogMonitorAdapter getLF5Adapter(){ return adapter; }
+    public LogMonitorAdapter getLF5Adapter(){
+        if(adapter == null){
+            adapter = LogMonitorAdapter.newInstance(LogMonitorAdapter.LOG4J_LOG_LEVELS);
+        }
+        return adapter;
+    }
     
     private static CommonAccess commonAccess = new CommonAccess();
     
+    private LogMonitorAdapter adapter;
     
-    private LogMonitorAdapter adapter = LogMonitorAdapter.newInstance(LogMonitorAdapter.LOG4J_LOG_LEVELS);
     private org.omg.CORBA_2_3.ORB orb = null;
     
     FissuresNamingServiceImpl fissuresNamingService;
