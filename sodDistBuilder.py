@@ -1,15 +1,17 @@
-import sys, os
+import sys, os, time
 sys.path.append("../devTools/maven")
 sys.path.append("./scripts")
 import distBuilder, sodScriptBuilder, ProjectParser
 
-def buildDist(proj):
+def buildDist(proj, name=None):
+    if not os.path.exists('scripts/logs'): os.mkdir('scripts/logs')
     extras = [('scripts/yjpagent.dll', 'yjpagent.dll'),
               ('scripts/revtest.xml', 'revtest.xml'),
               ('scripts/cwg.prop', 'cwg.prop'),
               ('scripts/logs', 'logs', False)]
     scripts = sodScriptBuilder.buildSodScripts(proj)
-    distBuilder.buildDist(proj, True, extras, scripts)
+    if name is None: name = proj.name + '-' + time.strftime('%m%d%y')
+    distBuilder.buildDist(proj, True, extras, scripts, name)
 
 if __name__ == "__main__":
     buildDist(ProjectParser.ProjectParser('./project.xml'))
