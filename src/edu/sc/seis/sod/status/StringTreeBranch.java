@@ -22,6 +22,8 @@ public class StringTreeBranch extends StringTree {
         for (int i = 0; i < branches.length; i++) {
             if (branches[i] != null) {
                 s += branches[i].toString();
+            } else {
+                s += "null";
             }
             if (i != branches.length-1) {
                 s += ", ";
