@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+
+<!-- The event arm decides which events are interesting. This is based purely on the event itself, not the relationship to a particular station, etc. -->
+     <eventArm>
+
+<!-- The event finder is one way of finding out about events. It is for events that have already been stored in a database somewhere, and so could be considered historical in some sense. The event channel is the other method, and it listens for new events. -->
+	   <eventFinder>
+
+<!-- The EventDC will have a name that it is registered under in the naming service. -->
+		<name>ANHINGAEVENTDC</name>
+
+<!-- The EventDC will also be registered under a subdirectory according to its reversed DNS. -->
+		<dns>edu/sc/seis</dns>
+
+<!-- We will take events from anywhere -->
+		<globalArea/>
+                <!-- Only take events from 1999 and 2003 -->
+		<eventTimeRange>
+			<timeRange>
+				<startTime>1999-01-01T00:00:00Z</startTime>
+				<endTime>2003-01-01T00:00:00Z</endTime>
+			</timeRange>
+		</eventTimeRange>
+		<magnitudeRange>
+			<magType>mb</magType>
+			<min>6.0</min>
+		</magnitudeRange>
+            </eventFinder>
+	    <originAND>
+			<description>take any global 6.5 or better EQ</description>
+			<magnitudeRange>
+				<magType>mb</magType>
+				<min>6.5</min>
+			</magnitudeRange>
+			<eventArea>
+         	          	<globalArea/>
+	                </eventArea>
+			<originDepthRange>	
+				<unitRange>
+					<unit>METER</unit>
+					<max>60000</max>
+				</unitRange>
+			</originDepthRange>
+            </originAND>
+       </eventArm>
+       <networkArm>
+           <networkFinder>
+		<description>Connect to the SCEPP networkDC</description>
+		<name>SCEPPNetworkDC</name>
+		<dns>edu/sc/seis</dns>
+	   </networkFinder>   
+           <networkIDOR>
+		<networkCode><value>SP</value></networkCode>
+		<networkCode><value>II</value></networkCode>
+	   </networkIDOR>
+	   <networkeffectiveTimeOverlap>
+		<description>Make sure the network was up during the time range we are interested in. Somewhat redundant since we are only getting one network.</description>
+		<effectiveTimeOverlap>
+			<min>1999-01-01T00:00:00Z</min>
+			<max>2003-01-01T00:00:00Z</max>
+		</effectiveTimeOverlap>
+	   </networkeffectiveTimeOverlap>
+	   <stationAND>	
+	
+		<stationNOT>
+			<stationArea>
+				<boxArea>
+					<latitudeRange>
+						<min>0</min>
+						<max>10</max>
+					</latitudeRange>
+					<longitudeRange>
+						<min>-84</min>
+						<max>-78</max>
+					</longitudeRange>
+				</boxArea>
+			</stationArea>
+		</stationNOT>
+		
+		<stationOR>
+			<stationeffectiveTimeOverlap>
+				<effectiveTimeOverlap>
+					<min>1995-01-01T00:00:00Z</min>
+					<max>2003-01-01T00:00:00Z</max>
+				</effectiveTimeOverlap>
+	  		 </stationeffectiveTimeOverlap>
+			 <stationDepthRange>
+				<unitRange>
+					<unit>KILOMETER</unit>
+					<min>0</min>
+					<max>1000</max>
+				</unitRange>
+		    	  </stationDepthRange>
+			
+		</stationOR>
+	     </stationAND>
+	   
+	    
+      </networkArm>
+
+
+      <waveFormArm>
+           <fixedDataCenter>
+		<name>SCEPPSeismogramDC</name>
+		<dns>edu/sc/seis</dns>
+	   </fixedDataCenter>		   
+	   <localSeismogramArm>
+	         <phaseRequest>
+		        <beginPhase>ttp</beginPhase>
+		        <beginOffset>
+			      <unit>SECOND</unit>
+			      <value>-120</value>
+		        </beginOffset>
+		        <endPhase>tts</endPhase>
+		        <endOffset>
+			      <unit>SECOND</unit>
+			      <value>600</value>
+		        </endOffset>
+	         </phaseRequest>
+                 <sacFileProcessor>
+		        <dataDirectory>SceppEvents</dataDirectory>
+	         </sacFileProcessor>
+           </localSeismogramArm>
+           
+      </waveFormArm>
+</sod>
