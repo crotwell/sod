@@ -103,7 +103,7 @@
 -->
     <dependency>
       <id>fissuresUtil</id>
-      <version>1.0.1beta</version>
+      <version>1.0.2beta</version>
       <url>http://www.seis.sc.edu/software/fissuresUtil</url>
     </dependency>
     <dependency>
