@@ -2,14 +2,14 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Status;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import java.util.LinkedList;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     private Map channelMap = new HashMap();
@@ -22,7 +22,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
             Iterator it = channelMap.keySet().iterator();
             while(it.hasNext()){
                 Channel curChan = (Channel)it.next();
-                RunStatus status = (RunStatus)channelMap.get(curChan);
+                Status status = (Status)channelMap.get(curChan);
                 if ((useStatus.size()==0 && ! notUseStatus.contains(status)) || useStatus.contains(status) ) {
                     Iterator templateIt = templates.iterator();
                     while(templateIt.hasNext()){
@@ -40,7 +40,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
         };
     }
 
-    public void change(Channel chan, RunStatus status){
+    public void change(Channel chan, Status status){
         synchronized(channelMap) {
             channelMap.put(chan, status);
         }
@@ -59,9 +59,9 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
                 if (nl.item(i) instanceof Element) {
                     Element child = (Element)nl.item(i);
                     if (child.getTagName().equals("status")) {
-                        useStatus.add(RunStatus.getStatus(SodUtil.getNestedText(child)));
+                        useStatus.add(Status.get(SodUtil.getNestedText(child)));
                     } else if (child.getTagName().equals("notStatus")) {
-                        notUseStatus.add(RunStatus.getStatus(SodUtil.getNestedText(child)));
+                        notUseStatus.add(Status.get(SodUtil.getNestedText(child)));
                     }
                 }
             }

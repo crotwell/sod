@@ -8,7 +8,7 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.Status;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,13 +17,13 @@ import org.w3c.dom.Element;
 
 
 public class NetworkGroupTemplate extends Template implements GenericTemplate {
-    
+
     Map networkMap = new HashMap();
-    
+
     public NetworkGroupTemplate(Element el){
         parse(el);
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -33,7 +33,7 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
         }
         return super.getTemplate(tag, el);
     }
-    
+
     /**
      *returns an object of the template type that this class uses, and returns
      * the passed in text when the getResult method of that template type is
@@ -46,7 +46,7 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
             }
         };
     }
-    
+
     public String getResult() {
         StringBuffer buf = new StringBuffer();
         Iterator it = networkMap.keySet().iterator();
@@ -61,12 +61,12 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
         }
         return buf.toString();
     }
-    
-    public void change(NetworkAccess net, RunStatus status){
+
+    public void change(NetworkAccess net, Status status){
         synchronized(networkMap){
             networkMap.put(net, status);
         }
     }
-    
+
 }
 
