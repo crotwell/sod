@@ -64,12 +64,16 @@ function ts_resortTable(lnk) {
     var spantext = ts_getInnerText(span);
     var td = lnk.parentNode;
     var table = getParent(td,'TABLE');
-
     var tr = getParent(td, 'TR');
-    var column = td.cellIndex;
-    //Actually traverse the nodes to find the column to fix Safari
-    for (i=0; i<tr.childNodes.length;i++){
-        if(tr.childNodes[i] == td){ column = i; }
+
+    /* Safari 1.2 seems to be broken and doesn't understand cellIndex
+    so we're traversing the cells to find the right one.  If you run across this
+    in the future you should check http://www.quirksmode.org/dom/w3c_html.html
+    to see if Safari has fixed its support for cellIndex to simplify this */
+    var column;// = td.cellIndex;
+    var kids = tr.cells;
+    for (i=0; i<kids.length; i++){
+        if(kids[i] == td){ column = i; }
     }
 
     // Work out a type for the column
@@ -112,6 +116,7 @@ function ts_resortTable(lnk) {
             }
         }
     }
+
 
     span.innerHTML = ARROW;
 }
