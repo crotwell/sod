@@ -1,0 +1,32 @@
+#
+# for Log4J
+#
+log4j.rootCategory=debug, R
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.File=Sod.log
+log4j.appender.R.MaxFileSize=100KB
+log4j.appender.R.MaxBackupIndex=3
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+# use the Orbacus ORB
+#
+org.omg.CORBA.ORBClass=com.ooc.CORBA.ORB
+org.omg.CORBA.ORBSingletonClass=com.ooc.CORBA.ORBSingleton
+#
+# Orbacus specific configuration
+#
+ooc.orb.server_timeout=900
+ooc.orb.oa.conc_model=thread_pool
+ooc.orb.oa.thread_pool=10
+
+#
+# get the name serivce
+# The format for a corbaloc for a naming service is
+#    corbaloc:iiop:host.domain:port/NameService
+# You should put your own choices for host.domain and port
+#
+#ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+ooc.orb.service.NameService=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
+edu.sc.seis.sod.configuration =dmc_test1.xml
+edu.sc.seis.sod.waveformarm.threads =4
