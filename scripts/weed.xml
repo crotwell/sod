@@ -17,7 +17,7 @@
 		<unit>MINUTE</unit>
 	     </eventRefreshInterval>
              <waveformWorkerThreads>1</waveformWorkerThreads>
-             <removeDb/>
+             <removeDatabase/>
         </properties>
         <eventArm>
                 <eventFinder>

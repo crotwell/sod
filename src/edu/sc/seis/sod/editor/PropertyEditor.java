@@ -91,7 +91,7 @@ public class PropertyEditor implements EditorPlugin {
     private String[] timeQuantityEls = { "eventLag", "eventQueryIncrement",
             "eventRefreshInterval", "maxRetryDelay" };
 
-    private String[] checkBoxEls = { "removeDb", "reopenEvents" };
+    private String[] checkBoxEls = { "removeDatabase", "reopenEvents" };
 }
 
 
