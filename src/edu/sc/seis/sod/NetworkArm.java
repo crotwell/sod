@@ -84,10 +84,13 @@ public class NetworkArm {
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
-    public static final String[] PACKAGES = {"networkArm","channel","site","station","network"};
+    public static final String[] PACKAGES = {"networkArm",
+                                             "channel",
+                                             "site",
+                                             "station",
+                                             "network"};
 
-    private void loadConfigElement(Object sodElement)
-            throws ConfigurationException {
+    private void loadConfigElement(Object sodElement) {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.network.NetworkFinder) {
             finder = (edu.sc.seis.sod.subsetter.network.NetworkFinder)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
