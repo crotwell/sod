@@ -32,8 +32,8 @@ public class OriginXORTest
     public edu.sc.seis.sod.subsetter.eventArm.OriginXOR createInstance() throws Exception {
         // JUnitDoclet begin method testcase.createInstance
         Element xor = XMLConfigUtil.parse("<originXOR>"+
-                                              "<nullOriginSubsetter/>"+
-                                              "<originNOT><nullOriginSubsetter/></originNOT>"+
+                                              "<passOrigin/>"+
+                                              "<originNOT><passOrigin/></originNOT>"+
                                               "</originXOR>");
         return new edu.sc.seis.sod.subsetter.eventArm.OriginXOR(xor);
         // JUnitDoclet end method testcase.createInstance
