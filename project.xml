@@ -9,7 +9,7 @@
     <url>http://www.seis.sc.edu</url>
     <logo>http://www.seis.sc.edu/images/header.gif</logo>
   </organization>
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>1.0Beta</currentVersion>
   <inceptionYear>2002</inceptionYear>
 
   <package>edu.sc.seis.sod</package>
@@ -95,7 +95,7 @@ oot:${pom.id}</connection>
     </dependency>
     <dependency>
       <id>fissuresUtil</id>
-      <version>1.0</version>
+      <version>1.0Beta</version>
     </dependency>
     <dependency>
       <id>fissuresImpl</id>
