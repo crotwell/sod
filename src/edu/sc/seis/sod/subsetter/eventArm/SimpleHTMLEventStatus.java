@@ -12,6 +12,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import edu.sc.seis.sod.subsetter.TabularSection;
 import java.io.File;
@@ -34,10 +35,10 @@ public class SimpleHTMLEventStatus implements EventStatus{
         page.write();
     }
 
-    public void change(EventAccessOperations event, RunStatus status) throws IOException {
-        if(status == RunStatus.FAILED){
+    public void change(EventAccessOperations event, EventCondition status) throws IOException {
+        if(status == EventCondition.FAILURE){
             failures.append(CacheEvent.getEventInfo(event), parse(event));
-        }else if(status == RunStatus.PASSED){
+        }else if(status == EventCondition.SUCCESS){
             successes.append(CacheEvent.getEventInfo(event), parse(event));
         }
         page.write();

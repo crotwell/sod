@@ -11,6 +11,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.database.event.EventCondition;
 import org.apache.log4j.lf5.LogLevel;
 import org.w3c.dom.Element;
 
@@ -18,10 +19,10 @@ public class LogFactor5EventStatus implements EventStatus{
     public LogFactor5EventStatus(Element config){}
     
     public void setArmStatus(String status) {
-        log("Event Arm", RunStatus.GENERIC_STATUS.getLogLevel(), status);
+        log("Event Arm", RunStatus.GENERIC.getLogLevel(), status);
     }
     
-    public void change(EventAccessOperations event, RunStatus status) {
+    public void change(EventAccessOperations event, EventCondition status) {
         log("Event Arm.Events", status.getLogLevel(), status + ": " + CacheEvent.getEventInfo(event));
     }
     

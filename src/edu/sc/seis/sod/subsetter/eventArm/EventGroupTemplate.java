@@ -2,7 +2,7 @@ package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventStatus;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.Template;
@@ -54,7 +54,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
         };
     }
 
-    public void change(EventAccessOperations event, RunStatus status) {
+    public void change(EventAccessOperations event, EventCondition status) {
         if(eventToMonitors.containsKey(event)){
             ((MonitoredEvent)eventToMonitors.get(event)).status = status;
         }else{
@@ -86,13 +86,13 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
     }
 
     private class MonitoredEvent{
-        public MonitoredEvent(EventAccessOperations event, RunStatus status){
+        public MonitoredEvent(EventAccessOperations event, EventCondition status){
             this.event = event;
             this.status = status;
         }
 
         public EventAccessOperations event;
-        public RunStatus status;
+        public EventCondition status;
     }
 
     public void setArmStatus(String status) {
