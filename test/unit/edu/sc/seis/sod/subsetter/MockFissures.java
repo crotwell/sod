@@ -15,6 +15,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.Location;
+import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
@@ -57,7 +58,7 @@ public class MockFissures{
     }
     
     private static Channel createChannel(ChannelId id, String info){
-        return new ChannelImpl(id, info, null, null, null, null);
+        return new ChannelImpl(id, info, new Orientation(0,0), null, null, null);
     }
     
     public static ChannelId createChanID(){ return createChanId("BHZ"); }
