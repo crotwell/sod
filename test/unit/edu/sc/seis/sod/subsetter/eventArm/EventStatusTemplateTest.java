@@ -32,24 +32,24 @@ public class EventStatusTemplateTest extends TestCase{
     
     public void testHTMLTemplate(){
         init("<eventStatusTemplate xlink:link=\"jar:edu/sc/seis/sod/data/htmlEventTemplate.xml\" outputLocation=\"test.txt\"/>");
-        assertEquals(plainHTMLOutput, temp.toString());
+        assertEquals(plainHTMLOutput, temp.getResult());
     }
     
     public void testNothingAdded(){
-        assertEquals(plainOutput, temp.toString());
+        assertEquals(plainOutput, temp.getResult());
     }
     
     public void testAddEvent(){
         temp.change(epochEvent, RunStatus.NEW);
-        assertEquals(singleEvent, temp.toString());
+        assertEquals(singleEvent, temp.getResult());
         temp.change(fallEvent, RunStatus.NEW);
-        assertEquals(twoEvents, temp.toString());
+        assertEquals(twoEvents, temp.getResult());
     }
     
     public void testUpdate(){
         temp.change(epochEvent, RunStatus.NEW);
         temp.change(epochEvent, RunStatus.PASSED);
-        assertEquals(updatedEvent, temp.toString());
+        assertEquals(updatedEvent, temp.getResult());
     }
     
     private EventAccessOperations epochEvent = MockFissures.createEvent();
@@ -68,7 +68,9 @@ public class EventStatusTemplateTest extends TestCase{
     
     private String plainHTMLOutput = "<html><header><title font=\"testAttr\">Event Arm</title></header><body>Event Arm Status:Setting up\n" +
         "These are the events I'm watching:\n\n" +
-        "aren't they grand?</body></html>";
+        "aren't they grand?<br/>\n"+
+        "And here's a link to a map <img src=\"eventMap.png\" alt=\"Setting up\"/>\n"+
+        "</body></html>";
     
     private String alaska = "CENTRAL ALASKA19700101T00:00:00.000";
     
