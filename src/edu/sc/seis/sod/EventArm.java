@@ -26,6 +26,7 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.fissuresUtil.database.NotFound;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
@@ -252,21 +253,31 @@ public class EventArm implements Runnable{
     }
 
     private void handle(CacheEvent event) throws Exception{
-        change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                 Standing.IN_PROG));
-        EventAttr attr = event.get_attributes();
-        Origin origin = event.get_preferred_origin();
-        if(originSubsetter.accept(event, attr, origin)) {
-            change(event, Status.get(Stage.PROCESSOR,
-                                     Standing.IN_PROG));
-            process(event);
-            change(event, Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                     Standing.IN_PROG));
-        }else{
+        if(!hasAlreadyPassed(event)){
             change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                     Standing.REJECT));
+                                     Standing.IN_PROG));
+            EventAttr attr = event.get_attributes();
+            Origin origin = event.get_preferred_origin();
+            if(originSubsetter.accept(event, attr, origin)) {
+                change(event, Status.get(Stage.PROCESSOR,
+                                         Standing.IN_PROG));
+                process(event);
+                change(event, IN_PROG);
+            }else{
+                change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                         Standing.REJECT));
+            }
+            lastEvent = event;
         }
-        lastEvent = event;
+    }
+
+    private boolean hasAlreadyPassed(CacheEvent event) throws SQLException, edu.sc.seis.fissuresUtil.database.NotFound{
+        int dbId = eventStatus.getDbId(event);
+        if(dbId != -1){
+            Status status = eventStatus.getStatus(dbId);
+            if(status == IN_PROG ||status == SUCCESS){ return true; }
+        }
+        return false;
     }
 
     public void change(EventAccessOperations event, Status status) throws Exception{
@@ -421,6 +432,10 @@ public class EventArm implements Runnable{
         private int sequenceMaximum = 100;
         private EventSeqIterHolder holder = new EventSeqIterHolder();
     }
+    private static final Status IN_PROG = Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                     Standing.IN_PROG);
+    private static final  Status SUCCESS =  Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                       Standing.SUCCESS);
 
     private TimeInterval increment, lag, refreshInterval;
 
@@ -431,8 +446,6 @@ public class EventArm implements Runnable{
     private List processors = new ArrayList();
 
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
-
-    private Properties props;
 
     private JDBCEventStatus eventStatus;
 
