@@ -63,10 +63,10 @@
             </element>
             <element name="siteEffectiveTimeOverlap">
                 <element name="startTime">
-                    <data type="string"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="endTime">
-                    <data type="string"/>
+                    <ref name="time2"/>
                 </element>
             </element>
             <element name="siteArea">
@@ -74,21 +74,7 @@
                     <element name="boxArea">
                         <element name="latitudeRange">
                             <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
+                                <value>DEGREE</value>
                             </element>
                             <optional>
                                 <element name="min">
@@ -103,21 +89,7 @@
                         </element>
                         <element name="longitudeRange">
                             <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
+                                <value>DEGREE</value>
                             </element>
                             <optional>
                                 <element name="min">
@@ -130,41 +102,6 @@
                                 </element>
                             </optional>
                         </element>
-                    </element>
-                    <element name="pointArea">
-                        <element name="latitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="longitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="unit">
-                            <choice>
-                                <value>KILOMETER</value>
-                                <value>METER</value>
-                                <value>CENTIMETER</value>
-                                <value>NANOMETER</value>
-                                <value>MICROMETER</value>
-                                <value>MICRON</value>
-                                <value>MILLIMETER</value>
-                                <value>PICOMETER</value>
-                                <value>INCH</value>
-                                <value>FOOT</value>
-                                <value>MILE</value>
-                                <value>DEGREE</value>
-                                <value>RADIAN</value>
-                            </choice>
-                        </element>
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
                     </element>
                     <element name="globalArea">
                         <empty/>
@@ -211,10 +148,10 @@
             </element>
             <element name="stationEffectiveTimeOverlap">
                 <element name="startTime">
-                    <data type="string"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="endTime">
-                    <data type="string"/>
+                    <ref name="time3"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -222,21 +159,7 @@
                     <element name="boxArea">
                         <element name="latitudeRange">
                             <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
+                                <value>DEGREE</value>
                             </element>
                             <optional>
                                 <element name="min">
@@ -251,21 +174,7 @@
                         </element>
                         <element name="longitudeRange">
                             <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
+                                <value>DEGREE</value>
                             </element>
                             <optional>
                                 <element name="min">
@@ -278,41 +187,6 @@
                                 </element>
                             </optional>
                         </element>
-                    </element>
-                    <element name="pointArea">
-                        <element name="latitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="longitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="unit">
-                            <choice>
-                                <value>KILOMETER</value>
-                                <value>METER</value>
-                                <value>CENTIMETER</value>
-                                <value>NANOMETER</value>
-                                <value>MICROMETER</value>
-                                <value>MICRON</value>
-                                <value>MILLIMETER</value>
-                                <value>PICOMETER</value>
-                                <value>INCH</value>
-                                <value>FOOT</value>
-                                <value>MILE</value>
-                                <value>DEGREE</value>
-                                <value>RADIAN</value>
-                            </choice>
-                        </element>
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
                     </element>
                     <element name="globalArea">
                         <empty/>
@@ -370,6 +244,38 @@
             </element>
         </choice>
     </define>
+    <define name="time3">
+        <data type="string"/>
+    </define>
+    <define name="time">
+        <choice>
+            <data type="string"/>
+            <interleave>
+                <element name="unit">
+                    <choice>
+                        <value>HOUR</value>
+                        <value>NANOSECOND</value>
+                        <value>MICROSECOND</value>
+                        <value>MILLISECOND</value>
+                        <value>SECOND</value>
+                        <value>MINUTE</value>
+                        <value>DAY</value>
+                        <value>WEEK</value>
+                        <value>FORTNIGHT</value>
+                    </choice>
+                </element>
+                <element name="value">
+                    <data type="float"/>
+                </element>
+            </interleave>
+        </choice>
+    </define>
+    <define name="time4">
+        <data type="string"/>
+    </define>
+    <define name="time2">
+        <data type="string"/>
+    </define>
     <define name="channel">
         <choice>
             <element name="channelCode">
@@ -398,32 +304,15 @@
                     </element>
                 </optional>
                 <element name="interval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>HOUR</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
+                    <ref name="time"/>
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
                 <element name="startTime">
-                    <data type="string"/>
+                    <ref name="time"/>
                 </element>
                 <element name="endTime">
-                    <data type="string"/>
+                    <ref name="time"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -524,10 +413,10 @@
             </element>
             <element name="networkEffectiveTimeOverlap">
                 <element name="startTime">
-                    <data type="string"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="endTime">
-                    <data type="string"/>
+                    <ref name="time4"/>
                 </element>
             </element>
             <element name="networkAND">
