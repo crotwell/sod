@@ -88,7 +88,7 @@ public class EventArm implements Runnable{
         alive = false;
     }
 
-    public void add(EventStatus monitor){ statusMonitors.add(monitor); }
+    public void add(EventArmMonitor monitor){ statusMonitors.add(monitor); }
 
     private void processConfig(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -106,8 +106,8 @@ public class EventArm implements Runnable{
                     originSubsetter = (OriginSubsetter)sodElement;
                 } else if(sodElement instanceof EventArmProcess) {
                     processors.add(sodElement);
-                }else if(sodElement instanceof EventStatus) {
-                    add((EventStatus)sodElement);
+                }else if(sodElement instanceof EventArmMonitor) {
+                    add((EventArmMonitor)sodElement);
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
@@ -286,7 +286,7 @@ public class EventArm implements Runnable{
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
-                ((EventStatus)it.next()).change(event, status);
+                ((EventArmMonitor)it.next()).change(event, status);
             }
         }
     }
@@ -295,7 +295,7 @@ public class EventArm implements Runnable{
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
-                ((EventStatus)it.next()).setArmStatus(status);
+                ((EventArmMonitor)it.next()).setArmStatus(status);
             }
         }
     }
