@@ -48,7 +48,7 @@ public class EventSorterTest extends TestCase{
     }
     
     public void testDateSorted(){
-        setSorting("<sorting><date/></sorting>");
+        setSorting("<sorting><time/></sorting>");
         EventAccessOperations[] correctOrder = { epochEvent, incEvents[0], incEvents[1], incEvents[2], fallEvent};
         checkOrdering(correctOrder);
     }
