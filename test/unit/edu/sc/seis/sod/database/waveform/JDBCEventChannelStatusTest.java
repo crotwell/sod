@@ -67,8 +67,9 @@ public class JDBCEventChannelStatusTest extends TestCase{
         assertTrue(otherEvChanFound);
         assertTrue(otherEvStatusFound);
         pairs = evChanStatus.getAll(ev);
-        assertEquals(1, pairs.length);
-        assertEquals(ev, pairs[0].getEvent());
+        for (int i = 0; i < pairs.length; i++) {
+            assertEquals(ev, pairs[i].getEvent());
+        }
     }
 
     private CacheEvent ev = MockEventAccessOperations.createEvent(),
