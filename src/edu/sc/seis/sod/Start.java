@@ -213,32 +213,30 @@ public class Start implements SodExceptionListener {
             //= props.getProperty("edu.sc.seis.sod.configuration");
 
             if (confFilename == null) {
+                System.err.println("No configuration file given, quiting....");
                 logger.fatal("No configuration file given, quiting....");
                 return;
             } // end of if (filename == null)
 
             InputStream in;
-            if (confFilename.startsWith("http:") || confFilename.startsWith("ftp:")) {
-                java.net.URL url = new java.net.URL(confFilename);
-                java.net.URLConnection conn = url.openConnection();
-                in = new BufferedInputStream(conn.getInputStream());
-            } else {
-                in = new BufferedInputStream(new FileInputStream(confFilename));
-            } // end of else
 
-            if (in == null) {
-                logger.fatal("Unable to load configuration file "+confFilename+", quiting...");
-                return;
-            } // end of if (in == null)
-
-
-
-            String schemaFilename = "edu/sc/seis/sod/data/";
+            String schemaFilename = "edu/sc/seis/sod/data/sod.xsd";
             schemaURL =
                 (Start.class).getClassLoader().getResource(schemaFilename);
             logger.debug(schemaFilename+"->"+schemaURL.toString());
+            if (schemaURL == null) {
+                logger.fatal("Can't find the sod.xsd xschema file, this may indicate a corrupt installation of sod! Cowardly quitting at this point.");
+                return;
+            }
 
-            Start.validate(new InputStreamReader(in));
+            boolean b = Validator.validate(confFilename);
+            if (b) {
+                System.err.println("The configuration file did not validate against the xschema for sod.");
+                logger.fatal("The configuration file did not validate against the xschema for sod.");
+                System.err.println("Please see the log file for more information.");
+                return;
+            }
+
             if (confFilename.startsWith("http:") || confFilename.startsWith("ftp:")) {
                 java.net.URL url = new java.net.URL(confFilename);
                 java.net.URLConnection conn = url.openConnection();
@@ -302,7 +300,7 @@ public class Start implements SodExceptionListener {
     /** use sax vlidation as there seems to be a problem telling the
      xerces impl built into java1.4 to validate. This is just slower to use
      a separate step, but probably worth it. */
-    public static void validate(Reader xmlFile)
+    public static void validate2(Reader xmlFile)
         throws ConfigurationException  {
         try {
             XMLReader parser = XMLReaderFactory.createXMLReader(DEFAULT_PARSER_NAME);
@@ -386,7 +384,7 @@ public class Start implements SodExceptionListener {
     protected Document initParser(InputStream xmlFile)
         throws ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
+        //factory.setValidating(true);
         //factory.set
         factory.setNamespaceAware(true);
         //    factory.setAttribute("http://xml.org/sax/features/validation", "TRUE" );
@@ -507,8 +505,7 @@ public class Start implements SodExceptionListener {
 
     private WaveFormArm waveFormArm;
 
-    static Category logger =
-        Category.getInstance(Start.class.getName());
+    static Logger logger = Logger.getLogger(Start.class);
 
     static Thread waveFormArmThread;
 
