@@ -218,12 +218,18 @@
             <groupId>rngconv</groupId>
             <artifactId>rngconv</artifactId>
             <version>20030225</version>
+            <properties>
+                <relaxBuilder/>
+            </properties>
             <url>http://wwws.sun.com/software/xml/developers/relaxngconverter</url>
         </dependency>
         <dependency>
             <groupId>msv</groupId>
             <artifactId>msv</artifactId>
             <version>20030807</version>
+            <properties>
+                <relaxBuilder/>
+            </properties>
             <url>http://wwws.sun.com/software/xml/developers/multischema/</url>
         </dependency>
         <dependency>
@@ -231,17 +237,26 @@
             <artifactId>isorelax</artifactId>
             <version>20030807</version>
             <url>http://iso-relax.sourceforge.net/</url>
+            <properties>
+                <relaxBuilder/>
+            </properties>
         </dependency>
         <dependency>
             <groupId>msv</groupId>
             <artifactId>relaxngDatatype</artifactId>
             <version>20030807</version>
             <url>http://www.thaiopensource.com/relaxng/jing.html</url>
+            <properties>
+                <relaxBuilder/>
+            </properties>
         </dependency>
         <dependency>
             <groupId>msv</groupId>
             <artifactId>xsdlib</artifactId>
             <version>20030807</version>
+            <properties>
+                <relaxBuilder/>
+            </properties>
             <url>http://wwws.sun.com/software/xml/developers/multischema/</url>
         </dependency>
         <dependency>
