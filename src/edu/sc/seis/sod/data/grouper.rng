@@ -27,111 +27,6 @@
             </zeroOrMore>
         </element>
     </start>
-    <define name="site">
-        <choice>
-            <element name="siteCode">
-                <data type="string"/>
-            </element>
-            <element name="siteDepthRange">
-                <element name="unit">
-                    <choice>
-                        <value>KILOMETER</value>
-                        <value>METER</value>
-                        <value>CENTIMETER</value>
-                        <value>NANOMETER</value>
-                        <value>MICROMETER</value>
-                        <value>MICRON</value>
-                        <value>MILLIMETER</value>
-                        <value>PICOMETER</value>
-                        <value>INCH</value>
-                        <value>FOOT</value>
-                        <value>MILE</value>
-                        <value>DEGREE</value>
-                        <value>RADIAN</value>
-                    </choice>
-                </element>
-                <optional>
-                    <element name="min">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="double"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="siteEffectiveTimeOverlap">
-                <element name="startTime">
-                    <ref name="time2"/>
-                </element>
-                <element name="endTime">
-                    <ref name="time2"/>
-                </element>
-            </element>
-            <element name="siteArea">
-                <choice>
-                    <element name="boxArea">
-                        <element name="latitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                        <element name="longitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </element>
-                    <element name="globalArea">
-                        <empty/>
-                    </element>
-                </choice>
-            </element>
-            <element name="siteAND">
-                <oneOrMore>
-                    <ref name="site"/>
-                </oneOrMore>
-            </element>
-            <element name="siteOR">
-                <oneOrMore>
-                    <ref name="site"/>
-                </oneOrMore>
-            </element>
-            <element name="siteXOR">
-                <ref name="site"/>
-                <ref name="site"/>
-            </element>
-            <element name="siteNOT">
-                <ref name="site"/>
-            </element>
-            <element name="passSite">
-                <zeroOrMore>
-                    <ref name="site"/>
-                </zeroOrMore>
-            </element>
-        </choice>
-    </define>
     <define name="station">
         <choice>
             <element name="stationCode">
@@ -148,10 +43,10 @@
             </element>
             <element name="stationEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time3"/>
+                    <ref name="time2"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -242,12 +137,235 @@
                     <ref name="station"/>
                 </zeroOrMore>
             </element>
+            <element name="externalStationSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml3"/>
+                    </choice>
+                </oneOrMore>
+            </element>
         </choice>
+    </define>
+    <define name="channelCodeChar">
+        <data type="string">
+            <param name="pattern">[A-Z0-9]{1}</param>
+        </data>
+    </define>
+    <define name="range">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+    <define name="xml2">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml2"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml3">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml3"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml4">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml4"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="site">
+        <choice>
+            <element name="siteCode">
+                <data type="string"/>
+            </element>
+            <element name="siteDepthRange">
+                <element name="unit">
+                    <choice>
+                        <value>KILOMETER</value>
+                        <value>METER</value>
+                        <value>CENTIMETER</value>
+                        <value>NANOMETER</value>
+                        <value>MICROMETER</value>
+                        <value>MICRON</value>
+                        <value>MILLIMETER</value>
+                        <value>PICOMETER</value>
+                        <value>INCH</value>
+                        <value>FOOT</value>
+                        <value>MILE</value>
+                        <value>DEGREE</value>
+                        <value>RADIAN</value>
+                    </choice>
+                </element>
+                <optional>
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="siteEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time3"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time3"/>
+                </element>
+            </element>
+            <element name="siteArea">
+                <choice>
+                    <element name="boxArea">
+                        <element name="latitudeRange">
+                            <element name="unit">
+                                <value>DEGREE</value>
+                            </element>
+                            <optional>
+                                <element name="min">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="max">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                        </element>
+                        <element name="longitudeRange">
+                            <element name="unit">
+                                <value>DEGREE</value>
+                            </element>
+                            <optional>
+                                <element name="min">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="max">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                        </element>
+                    </element>
+                    <element name="globalArea">
+                        <empty/>
+                    </element>
+                </choice>
+            </element>
+            <element name="siteAND">
+                <oneOrMore>
+                    <ref name="site"/>
+                </oneOrMore>
+            </element>
+            <element name="siteOR">
+                <oneOrMore>
+                    <ref name="site"/>
+                </oneOrMore>
+            </element>
+            <element name="siteXOR">
+                <ref name="site"/>
+                <ref name="site"/>
+            </element>
+            <element name="siteNOT">
+                <ref name="site"/>
+            </element>
+            <element name="passSite">
+                <zeroOrMore>
+                    <ref name="site"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalSiteSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml4"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="time2">
+        <data type="string"/>
+    </define>
+    <define name="time">
+        <data type="string"/>
     </define>
     <define name="time3">
         <data type="string"/>
     </define>
-    <define name="time">
+    <define name="time4">
         <choice>
             <data type="string"/>
             <interleave>
@@ -269,12 +387,6 @@
                 </element>
             </interleave>
         </choice>
-    </define>
-    <define name="time4">
-        <data type="string"/>
-    </define>
-    <define name="time2">
-        <data type="string"/>
     </define>
     <define name="channel">
         <choice>
@@ -304,15 +416,15 @@
                     </element>
                 </optional>
                 <element name="interval">
-                    <ref name="time"/>
+                    <ref name="time4"/>
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time"/>
+                    <ref name="time4"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -364,41 +476,18 @@
                     <ref name="channel"/>
                 </zeroOrMore>
             </element>
+            <element name="externalChannelSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml"/>
+                    </choice>
+                </oneOrMore>
+            </element>
         </choice>
-    </define>
-    <define name="channelCodeChar">
-        <data type="string">
-            <param name="pattern">[A-Z0-9]{1}</param>
-        </data>
-    </define>
-    <define name="range">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
     </define>
     <define name="network">
         <choice>
@@ -413,10 +502,10 @@
             </element>
             <element name="networkEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time4"/>
+                    <ref name="time"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time4"/>
+                    <ref name="time"/>
                 </element>
             </element>
             <element name="networkAND">
@@ -440,6 +529,17 @@
                 <zeroOrMore>
                     <ref name="network"/>
                 </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml2"/>
+                    </choice>
+                </oneOrMore>
             </element>
         </choice>
     </define>
