@@ -34,6 +34,25 @@
             </a>
         </li>
     </xsl:template>
+    <xsl:template match="pages" mode="menuGeneration">
+        <xsl:param name="currentPage"/>
+        <xsl:param name="base"/>
+        <li>
+            <xsl:for-each select="page">
+                <a>
+                    <xsl:if test="$currentPage = destination/text()">
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="'selected'"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="concat($base, destination/text())"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="name/text()"/>
+                </a>
+            </xsl:for-each>
+        </li>
+    </xsl:template>
     <xsl:template match="submenu" mode="menuGeneration">
         <xsl:param name="currentPage"/>
         <xsl:param name="base"/>

@@ -32,7 +32,7 @@ body {
 #footer p {}
 
 #content {
-	margin: 125px 20px 20px 200px;
+	margin: 125px 20px 20px 220px;
 	padding: 5px;
 }
 
@@ -63,7 +63,7 @@ a:hover{
   font-size:13px;
 	top: 150px;
 	left: 20px;
-	width: 150px;
+	width: 170px;
 	padding: 5px;
 	border: 1px solid;
 }

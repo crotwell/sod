@@ -154,27 +154,82 @@
                     <name>Status</name>
                 </page>
             </submenu>
-            <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/waveform/arm/start.html</destination>
-                <name>waveformArm</name>
-            </page>
+            <pages>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/waveform/localSeismogram/start.html</destination>
+                    <name>waveformArm</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/waveform/waveformVectorArm/start.html</destination>
+                    <name>(V)</name>
+                </page>
+            </pages>
             <submenu>
                 <page>
                     <source>SchemaDoc</source>
                     <destination>tagDocs/waveform/eventStation/eventStation.html</destination>
                     <name>Event Station</name>
                 </page>
+                <pages>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/eventChannel/eventChannel.html</destination>
+                        <name>Event Channel</name>
+                    </page>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/eventVector/eventVector.html</destination>
+                        <name>(V)</name>
+                    </page>
+                </pages>
                 <page>
                     <source>SchemaDoc</source>
-                    <destination>tagDocs/waveform/localSeismogram/start.html</destination>
-                    <name>Local Seismogram</name>
+                    <destination>tagDocs/waveform/requestGenerator/requestGenerator.html</destination>
+                    <name>Request Generator</name>
                 </page>
+                <pages>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/requestSubsetter/request.html</destination>
+                        <name>Request</name>
+                    </page>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/vectorRequestSubsetter/vectorRequest.html</destination>
+                        <name>(V)</name>
+                    </page>
+                </pages>
                 <page>
                     <source>SchemaDoc</source>
-                    <destination>tagDocs/waveform/motionVector/start.html</destination>
-                    <name>Motion Vector</name>
+                    <destination>tagDocs/waveform/dataCenter/start.html</destination>
+                    <name>Data Center</name>
                 </page>
+                <pages>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/availableData/availableData.html</destination>
+                        <name>Available Data</name>
+                    </page>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/vectorAvailableData/vectorAvailableData.html</destination>
+                        <name>(V)</name>
+                    </page>
+                </pages>
+                <pages>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/waveformProcess/seismogramProcess.html</destination>
+                        <name>Process</name>
+                    </page>
+                    <page>
+                        <source>SchemaDoc</source>
+                        <destination>tagDocs/waveform/waveformVectorProcess/waveformVectorProcess.html</destination>
+                        <name>(V)</name>
+                    </page>
+                </pages>
                 <page>
                     <source>SchemaDoc</source>
                     <destination>tagDocs/waveform/status/waveformStatus.html</destination>
