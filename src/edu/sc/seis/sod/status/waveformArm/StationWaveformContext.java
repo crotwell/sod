@@ -84,7 +84,10 @@ public class StationWaveformContext  extends WaveformArmContext {
     }
 
     public boolean internalContainsKey(Object key) {
-        if (key.equals(ALL_EVENTS) ) {
+        if (key.equals(ALL_EVENTS)
+            || key.equals(SUCCESS_EVENTS_KEY)
+            || key.equals(SUCCESS_ECPS_KEY)
+            || key.equals(SUCCESS_ECGROUP_KEY)) {
             return true;
         } else {
             return super.internalContainsKey(key);
