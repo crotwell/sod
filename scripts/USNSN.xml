@@ -107,6 +107,7 @@
 		<bandCode><value>L</value></bandCode>
 	</channelIDOR>
 
+        <channelAND>
         <channelEffectiveTimeOverlap>
 		<effectiveTimeOverlap>
 			<min>20020701T00:00:00.001Z</min>
@@ -122,6 +123,7 @@
 			<value>1</value>
 		</interval>
 	</sampling>
+        </channelAND>
 
 	<printlineChannelProcessor/>
 	
