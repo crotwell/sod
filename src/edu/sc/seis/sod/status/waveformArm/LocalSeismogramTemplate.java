@@ -36,7 +36,6 @@ public class LocalSeismogramTemplate extends Template{
 
     public void update(String outputLocation, CookieJar cj){
         String loc = baseDir + outputLocation;
-        System.out.println("GOT AN UPDATE FOR LOC " + loc);
         synchronized(toBeRendered){
             if (!toBeRendered.containsKey(loc)){
                 toBeRendered.put(loc, cj);
@@ -53,7 +52,6 @@ public class LocalSeismogramTemplate extends Template{
 
     public class Writer extends PeriodicAction{
         public void act() {
-            System.out.println("WRITING");
             CookieJar[] jars = new CookieJar[0];
             String[] fileLocs = new String[0];
             synchronized(toBeRendered){
@@ -71,7 +69,6 @@ public class LocalSeismogramTemplate extends Template{
                 }
             }
             for (int i = 0; i < jars.length; i++) {
-                System.out.println("WRITING TO " + fileLocs[i]);
                 FileWritingTemplate.write(fileLocs[i], getResult(jars[i], fileLocs[i]));
             }
         }
