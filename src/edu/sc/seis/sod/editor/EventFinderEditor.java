@@ -61,7 +61,7 @@ public class EventFinderEditor extends ServerEditor implements EditorPlugin{
                         }
                     }
                 }else if(el.getTagName().equals("originDepthRange")){
-                    JComponent unitRangeComp = getOwner().getCompForElement((Element)XPathAPI.selectSingleNode(el, "unitRange"));
+                    JComponent unitRangeComp = getOwner().getCompForElement(el);
                     unitRangeComp.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(el.getTagName())));
                     b.add(unitRangeComp);
                     continue;
