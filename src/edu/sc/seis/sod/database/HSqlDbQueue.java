@@ -44,10 +44,11 @@ public class HSqlDbQueue implements Queue {
     public void updateEventDatabase() {
 	if(getPersistanceType(props) == 0) {
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
-	    delete(Status.COMPLETE_SUCCESS);
+	    //delete(Status.COMPLETE_SUCCESS);
 	} else {
-	    delete(Status.COMPLETE_SUCCESS);
-	    delete(Status.PROCESSING);
+	    //   delete(Status.COMPLETE_SUCCESS);
+	    //delete(Status.PROCESSING);
+	    eventDatabase.updateStatus(Status.PROCESSING, Status.COMPLETE_REJECT);
 	}
     }
 
@@ -297,7 +298,11 @@ public class HSqlDbQueue implements Queue {
 	    cfe.printStackTrace();
 	}
 	String ior = eventDatabase.getObject(dbid);
-	if(ior == null) return null;
+	if(ior == null)  {
+		System.out.println("As the IOR is null returning NULL "+dbid);
+		System.exit(0);
+		return null;
+	}
 	org.omg.CORBA.Object obj = orb.string_to_object(ior);
 	obj = reValidate(dbid, obj);
 	EventAccess eventAccess = EventAccessHelper.narrow(obj);
