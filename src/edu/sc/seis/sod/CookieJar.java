@@ -187,7 +187,7 @@ public class CookieJar {
         return commonContext;
     }
 
-    private static int MAX_EVENTS = 10;
+    private static int MAX_EVENTS = 3;
 
     private static LinkedList eventOrder = new LinkedList();
 
