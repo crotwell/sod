@@ -431,11 +431,13 @@ public class SodUtil {
         return dotBuf.toString() + pathBuf.toString();
     }
 
-    public static String getAbsolutePath(String baseLoc, String relativeLoc) {
-        String noFileBase = removeFileName(baseLoc);
+    public static String getAbsolutePath(String baseLoc, String relativeLoc) throws IOException {
+        String base = new File(baseLoc).getCanonicalFile().getParent();
         int numDirUp = countDots(relativeLoc);
-        String relBase = stripDirs(noFileBase, numDirUp);
-        return relBase + stripRelativeBits(relativeLoc);
+        for(int i = 0; i < numDirUp; i++) {
+            base = new File(base).getParent();
+        }
+        return base + '/' + stripRelativeBits(relativeLoc);
     }
 
     private static String stripRelativeBits(String relativeLoc) {
@@ -449,17 +451,6 @@ public class SodUtil {
             relativeLoc = relativeLoc.substring(1);
         }
         return relativeLoc;
-    }
-
-    private static String stripDirs(String base, int numDirUp) {
-        for(int i = 0; i < numDirUp; i++) {
-            base = base.substring(0, base.lastIndexOf("/"));
-        }
-        return base + '/';
-    }
-
-    private static String removeFileName(String base) {
-        return base.substring(0, base.lastIndexOf("/"));
     }
 
     private static int countDots(String relativeLocation) {
