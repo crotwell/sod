@@ -48,7 +48,7 @@ public class HSqlDatabase extends AbstractDatabase{
 					" eventAccess VARCHAR)");
 			} catch(SQLException sqle) {
 				
-				System.out.println("Table eventconfig is already created");
+				//("Table eventconfig is already created");
 			}
 			
 			
