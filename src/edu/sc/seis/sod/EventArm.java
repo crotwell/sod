@@ -19,7 +19,6 @@ import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.EventSeqIter;
 import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -215,7 +214,6 @@ public class EventArm implements Runnable {
                 }
                 if(numEvents < 10) { return; }
                 try {
-                    logger.debug("EventArm waitForProcessing: sleeping 5 seconds");
                     Thread.sleep(5000);
                 } catch(InterruptedException e) {}
             }
