@@ -1,6 +1,9 @@
 buildSite.sh
-cd generatedSite
+cd schemaDocs
+buildSchemaDocs.py
+cd ..
+tar cjvf site.tar generatedSite/*
 echo 'copying site to pooh'
-scp -r * sac@pooh:/seis/raid1/Apache/htdocs/SOD
+scp -r site.tar sac@pooh:/seis/raid1/Apache/htdocs/SOD
 echo done
 
