@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+  	<start>
+  		 <ref name="rules"/>
+  	</start>
+  	<define name="rules">
+	  	<element name="rules">
+  			<zeroOrMore>
+	  			<ref name="rule"/>
+  			</zeroOrMore>
+  		</element>
+  	</define>
+  	<define name="threeCharacterRule">
+  	 <element name="threeCharacterRule">
+            <data type="string">
+            	<param name="length">3</param>
+            </data>
+    	</element>
+   	</define>
+            	
+   <define name="rule">
+   	<element name ="rule">
+  		<optional>
+          	    <externalRef href="network.rng"/>
+       		</optional>
+       		<optional>
+	            <externalRef href="station.rng"/>
+       		</optional>
+       		<optional>
+	            <externalRef href="site.rng"/>
+       		</optional>
+       		<optional>
+	            <externalRef href="channel.rng"/>
+       		</optional>
+        	<zeroOrMore>
+ 	 	    <ref name="threeCharacterRule"/>
+   		</zeroOrMore>
+  	 </element>
+  </define>
+</grammar>
+
