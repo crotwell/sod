@@ -1,11 +1,12 @@
 package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
+import edu.sc.seis.sod.status.waveformArm.NumSuccessfulECPTemplate;
+import edu.sc.seis.sod.status.waveformArm.SacDataWrittenTemplate;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import java.sql.SQLException;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
@@ -64,9 +66,18 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
             } catch (Exception e) {
                 GlobalExceptionHandler.handle("Problem getting template for Menu", e);
             }
+        }else if(tag.equals("sacDataWritten")){
+            return new SacDataWrittenTemplate();
+        }else if(tag.equals("lastEvent")){
+            return new LastEventTemplate();
+        }else if(tag.equals("numSuccessfulECP")){
+            try {
+                return new NumSuccessfulECPTemplate();
+            } catch (SQLException e) {
+                GlobalExceptionHandler.handle(e);
+            }
         }
-
-        return getCommonTemplate(tag, el);
+        return super.getTemplate(tag, el);
     }
 
     private class Writer extends PeriodicAction{
