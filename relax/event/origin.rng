@@ -123,7 +123,7 @@
                     <summary>Matches all enclosed Origin subsetters</summary>
                     <description>The output is the logical AND of the outputs of all included Origin subsetters. This
                         means that it will evaluate to true only if all the enclosed Origin subsetters evaluate to true.
-                        The subsetters after the first false outputted are not evaluated. </description>
+                        The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <originAND>
                             <catalog>FINGER</catalog>
@@ -144,7 +144,7 @@
                     <summary>Matches at least one enclosed Origin subsetter</summary>
                     <description>The output is the logical OR of the outputs of all included Origin subsetters. This
                         means that it will evaluate to true if at least one of the enclosed Origin subsetters evaluate
-                        to true. The subsetters after the first true outputted are not evaluated. </description>
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
                     <example>
                         <originOR>
                             <catalog>FINGER</catalog>
@@ -300,8 +300,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Accepts any origin</summary>
-                    <description>This is a simple subsetter that always returns true, which is useful for testing
-                        purposes. </description>
+                    <description>This is a simple subsetter that always returns true for any origin, which is useful for
+                        testing purposes.</description>
                     <example>
                         <passOrigin/>
                     </example>
@@ -315,9 +315,9 @@
     <define name="externalOriginSubsetter">
         <element name="externalOriginSubsetter">
             <xsd:annotation>
-                <summary>Configure an external Origin subsetter</summary>
-                <description>This tag allows you to configure an Origin subsetter developed outside of SOD. Any class
-                    that implements the OriginSubsetter interface will work.</description>
+                <summary>Use an Origin subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements OriginSubsetter, SOD
+                    calls accept() on the class for every event.</description>
                 <example>
                     <externalOriginSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.origin.MyOriginSubsetter</classname>

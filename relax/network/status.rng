@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="status"/>
@@ -12,25 +13,50 @@
     </define>
     <define name="networkStatusTemplate">
         <element name="networkInfoTemplateGenerator">
+            <xsd:annotation>
+                <summary>Writes HTML pages for networks</summary>
+            </xsd:annotation>
             <element name="netConfig">
                 <element name="template">
-                    <data type="string"/>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml</example>
+                        </xsd:annotation>
+                    </data>
                 </element>
             </element>
             <element name="stationConfig">
                 <element name="template">
-                    <data type="string"/>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml</example>
+                        </xsd:annotation>
+                    </data>
                 </element>
             </element>
             <element name="channelConfig">
                 <element name="template">
-                    <data type="string"/>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml</example>
+                        </xsd:annotation>
+                    </data>
                 </element>
             </element>
         </element>
     </define>
     <define name="externalNetworkMonitor">
         <element name="externalNetworkMonitor">
+            <xsd:annotation>
+                <summary>Use a network subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements NetworkMonitor, SOD
+                    calls setArmStatus() and change() on the class for every network.</description>
+                <example>
+                    <externalNetworkMonitor>
+                        <classname>edu.somewhere.seis.sodExt.status.network.MyNetworkMonitor</classname>
+                    </externalNetworkMonitor>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

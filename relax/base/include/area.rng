@@ -7,6 +7,9 @@
     </start>
     <define name="area">
         <choice>
+            <xsd:annotation>
+                <summary>Accepts events that occur within a particular area</summary>
+            </xsd:annotation>            
             <ref name="boxArea"/>
             <ref name="globalArea"/>
         </choice>

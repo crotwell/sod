@@ -8,7 +8,7 @@
     <define name="process">
         <choice>
             <xsd:annotation>
-                <description>Items that execute on every successful channel</description>
+                <summary>Items that execute on every successful channel</summary>
             </xsd:annotation>
             <ref name="printline"/>
             <ref name="external"/>
@@ -17,6 +17,9 @@
     </define>
     <define name="responseWriter">
         <element name="responseWriter">
+            <xsd:annotation>
+                <summmary>Prints channel responses to file</summmary>
+            </xsd:annotation>
             <element name="directory">
                 <data type="string">
                     <xsd:annotation>
@@ -32,13 +35,23 @@
     <define name="printline">
         <element name="printlineChannelProcessor">
             <xsd:annotation>
-                <description>Prints every successful channel to the console</description>
+                <summary>Prints every successful channel to the console</summary>
             </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="external">
         <element name="externalNetworkProcess">
+            <xsd:annotation>
+                <summary>Use a network processor external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements NetworkProcess, SOD calls
+                    process() on the class for every event.</description>
+                <example>
+                    <externalEventProcess>
+                        <classname>edu.somewhere.seis.sodExt.process.network.MyNetworkProcess</classname>
+                    </externalEventProcess>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

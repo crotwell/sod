@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0"
-    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="status"/>
     </start>
     <define name="status">
         <choice>
             <xsd:annotation>
-                <description>Inserting these items in the eventArm outputs information about events status in the event arm</description>
+                <summary>Outputs information about events and their status</summary>
+                <description>Inserting these items in the eventArm outputs information about events status in the event arm.</description>
             </xsd:annotation>
             <ref name="externalEventStatus"/>
             <ref name="eventStatusTemplate"/>
@@ -20,6 +20,11 @@
                 <summary>Writes maps with all events on them to a specified location</summary>
                 <description>Writes maps with all events on them to the file specified in the outputLoc element. The
                     output location is relative to statusBase in the properties.</description>
+                <example>
+                    <mapEventStatus>
+                        <outputLoc>events/eventMap.png</outputLoc>
+                    </mapEventStatus>
+                </example>
             </xsd:annotation>
             <element name="outputLoc">
                 <text/>
@@ -44,6 +49,16 @@
     </define>
     <define name="externalEventStatus">
         <element name="externalEventMonitor">
+            <xsd:annotation>
+                <summary>Use an Origin subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements EventMonitor, SOD calls
+                    setArmStatus() and change() on the class for every event.</description>
+                <example>
+                    <externalEventMonitor>
+                        <classname>edu.somewhere.seis.sodExt.status.event.MyEventMonitor</classname>
+                    </externalEventMonitor>
+                </example>
+            </xsd:annotation>
             <element name="classname">
                 <data type="string"/>
             </element>

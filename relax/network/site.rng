@@ -20,7 +20,6 @@
             <ref name="area"/>
             <ref name="AND"/>
             <ref name="OR"/>
-            <ref name="XOR"/>
             <ref name="NOT"/>
             <ref name="PASS"/>
             <ref name="externalSiteSubsetter"/>
@@ -89,9 +88,10 @@
         <element name="siteAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Logical AND between site subsetters</summary>
-                    <description>The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated.</description>
+                    <summary>Matches all enclosed Site subsetters</summary>
+                    <description>The output is the logical AND of the outputs of all included Site subsetters. This
+                        means that it will evaluate to true only if all the enclosed Site subsetters evaluate to
+                        true. The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <siteAND>
                             <siteDepthRange>
@@ -116,9 +116,10 @@
         <element name="siteOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Logical OR between site subsetters</summary>
-                    <description>The output is the logical OR of the outputs of all included
-                        subsetters. If the first subsetters returns true then the second is not evaluated.</description>
+                    <summary>Matches at least one enclosed Site subsetter</summary>
+                    <description>The output is the logical OR of the outputs of all included Site subsetters. This
+                        means that it will evaluate to true if at least one of the enclosed Site subsetters evaluate
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
                 </xsd:documentation>
                 <example>
                     <siteOR>
@@ -139,37 +140,14 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="XOR">
-        <element name="siteXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Logical XOR between site subsetters</summary>
-                    <description>The output is the logical XOR of the outputs of the 2 included subsetters.</description>
-                    <example>
-                        <siteXOR>
-                            <siteDepthRange>
-                                <unit>METER</unit>
-                                <min>100</min>
-                                <max>200</max>
-                            </siteDepthRange>
-                            <siteEffectiveTimeOverlap>
-                                <startTime>20020701T00:00:00.001Z</startTime>
-                                <endTime>20021030T00:00:00.001Z</endTime>
-                            </siteEffectiveTimeOverlap>
-                        </siteXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="site"/>
-            <ref name="site"/>
-        </element>
-    </define>
     <define name="NOT">
         <element name="siteNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Logical NOT of an site subsetter</summary>
-                    <description>The output is the logical NOT of the output of the included subsetter.</description>
+                    <summary>Matches the negated output of the enclosed Site subsetter</summary>
+                    <description>The output is the logical NOT of the output of the enclosed Site subsetter. This
+                        means that it will evaluate to false if the enclosed Site subsetter evaluates to true, and
+                        vice versa.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="site"/>
@@ -179,8 +157,9 @@
         <element name="passSite">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Always returns true</summary>
-                    <description>Simple subsetter that always returns true, useful for testing.</description>
+                    <summary>Accepts any site</summary>
+                    <description>This is a simple subsetter that always returns true for any Site, which is useful
+                        for testing purposes.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
@@ -190,6 +169,16 @@
     </define>
     <define name="externalSiteSubsetter">
         <element name="externalSiteSubsetter">
+            <xsd:annotation>
+                <summary>Use a site subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements SiteSubsetter, SOD
+                    calls accept() on the class for every site.</description>
+                <example>
+                    <externalSiteSubsetter>
+                        <className>edu.somewhere.seis.sodExt.subsetter.site.MySiteSubsetter</className>
+                    </externalSiteSubsetter>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>
