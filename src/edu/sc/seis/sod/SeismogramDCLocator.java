@@ -1,6 +1,9 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfSeismogramDC.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfEvent.*;
 
 /**
  * SeismogramDCLocator.java
@@ -14,6 +17,9 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 
 public interface SeismogramDCLocator {
     
-    public DataCenter getSeismogramDC() throws Exception;
+    public DataCenter getSeismogramDC(EventAccessOperations event, 
+                                      NetworkAccess network, 
+                                      Station station, 
+                                      CookieJar cookies) throws Exception;
 
 }// SeismogramDCLocator

@@ -3,6 +3,9 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 import edu.sc.seis.sod.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfEvent.*;
 
 
 import org.w3c.dom.*;
@@ -42,7 +45,10 @@ public class FixedDataCenter
      *
      * @return a <code>DataCenter</code> value
      */
-    public DataCenter getSeismogramDC() throws Exception{
+    public DataCenter getSeismogramDC(EventAccessOperations event, 
+                                      NetworkAccess network, 
+                                      Station station, 
+                                      CookieJar cookies) throws Exception{
         return dataCenter;
     }
 
