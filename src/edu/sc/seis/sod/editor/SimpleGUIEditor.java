@@ -26,6 +26,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Attr;
 
 
 
@@ -112,8 +114,30 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JLabel label = new JLabel(element.getTagName());
         panel.add(label, gbc);
         gbc.gridx++;
+        addAttributesToPanel(panel, element, gbc);
         addChildrenToPanel(panel, element, gbc);
         gbc.gridx--;
+    }
+
+    void addAttributesToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
+        NamedNodeMap list = element.getAttributes();
+        for (int i = 0; i < list.getLength() && i<3; i++) {
+            if (list.item(i) instanceof Attr) {
+                Attr attr = (Attr)list.item(i);
+                //JLabel label = new JLabel(attr.getName());
+                JLabel label = new JLabel(""+i);
+                //panel.add(label, gbc);
+//                gbc.gridx++;
+//                JTextField textField = new JTextField();
+//                textField.setText(attr.getNodeValue());
+//                TextListener textListen = new TextListener(attr);
+//                textField.getDocument().addDocumentListener(textListen);
+//                panel.add(textField, gbc);
+//                gbc.gridx--;
+ //               gbc.gridy++;
+            }
+        }
+        gbc.gridy++;
     }
 
     void addChildrenToPanel(JPanel panel, Element element, GridBagConstraints gbc) {

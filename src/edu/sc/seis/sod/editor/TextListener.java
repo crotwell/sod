@@ -12,12 +12,13 @@ import javax.swing.text.BadLocationException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Text;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
 
 public class TextListener implements DocumentListener {
-    Text text;
+    Node node;
 
-    TextListener(Text text) {
-        this.text = text;
+    TextListener(Node text) {
+        this.node = text;
     }
     /**
      * Gives notification that an attribute or set of attributes changed.
@@ -26,7 +27,7 @@ public class TextListener implements DocumentListener {
      */
     public void changedUpdate(DocumentEvent e) {
         try {
-            text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
+            node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
             logger.error(ex);
         } catch (BadLocationException ex) {
@@ -42,7 +43,7 @@ public class TextListener implements DocumentListener {
      */
     public void insertUpdate(DocumentEvent e) {
         try {
-            text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
+            node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
             logger.error(ex);
         } catch (BadLocationException ex) {
@@ -59,7 +60,7 @@ public class TextListener implements DocumentListener {
      */
     public void removeUpdate(DocumentEvent e) {
         try {
-            text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
+            node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
             logger.error(ex);
         } catch (BadLocationException ex) {
