@@ -1,42 +1,36 @@
 <?xml version="1.0"?>
 <document>
-        <properties>
-                <title>SOD - Standing Order for Data</title>
-        </properties>
-        <body>
-                <section name="About SOD">
-                        <p class="about">
-                        <b>sod</b> <i>n.</i><br/>
-<ol>
-<li>A section of grass-covered surface soil held together by matted roots; turf.</li>
-<li>The ground, especially when covered with grass.</li>
-<li>A software application that automates tedious data selection, downloading, and routine processing tasks in seismology, shortening the time between idea and science. </li>
-</ol>
-<i>[Middle English, from Middle Low German, or Middle Dutch<tt> sode</tt>.]</i>
-</p>
-
-                        <p class="about">
-                        There are two parts to using SOD. The first
-                        is the creation of a strategy file. The strategy file contains
-                        the definition of the types of data that are of interest. This
-                        file is written in <a href="http://www.w3c.org/XML">XML</a>,
-                        and can be edited with any text editor. Because editing XML
-                        by hand is prone to error, there is also a
-                        GUI editor included with SOD for creating these files.</p>
-                        <p>
-                        The second part to using SOD is actually running it with the strategy file. SOD is
-                        meant to be a long running background program, so it is run
-                        from the command line and does not
-                        have a GUI.
-                        </p>
-                        <p class="about">
-                        Please read the <a href="walkthrough.html">walkthrough</a>
-                                document for an simple tutorial using SOD to get SAC data from the
-                                IRIS DMC. Also, to see the status pages for a live SOD run at USC,
-                                please see our <a href="sodcam.html">Live SOD-cam.</a></p>
-                        <p class="about">Send any comments, good or bad, to
-                        <script type="text/javascript">
-                        //<![CDATA[
+    <properties>
+        <title>SOD - Standing Order for Data</title>
+    </properties>
+    <body>
+        <section name="About SOD">
+            <p class="about">
+                <b>sod</b>
+                <i>n.</i>
+                <br/>
+                <ol>
+                    <li>A section of grass-covered surface soil held together by matted roots; turf.</li>
+                    <li>The ground, especially when covered with grass.</li>
+                    <li>A software application that automates tedious data selection, downloading,
+                        and routine processing tasks in seismology, shortening the time between idea
+                        and science. </li>
+                </ol>
+                <i>[Middle English, from Middle Low German, or Middle Dutch<tt> sode</tt>.]</i>
+            </p>
+            <p class="about"> There are two parts to using SOD. The first is the creation of a
+                strategy file. The strategy file contains the definition of the types of data that
+                are of interest. This file is written in <a href="http://www.w3c.org/XML">XML</a>,
+                and can be edited with any text editor. Because editing XML by hand is prone to
+                error, there is also a GUI editor included with SOD for creating these files.</p>
+            <p> The second part to using SOD is actually running it with the strategy file. SOD is
+                meant to be a long running background program, so it is run from the command line
+                and does not have a GUI. </p>
+            <p class="about"> Please read the <a href="walkthrough.html">walkthrough</a> document
+                for an simple tutorial using SOD to get SAC data from the IRIS DMC. Also, to see the
+                status pages for a live SOD run at USC, please see our <a href="sodcam.html">Live SOD-cam.</a>
+            </p>
+            <p class="about">Send any comments, good or bad, to <script type="text/javascript"> //<![CDATA[
                         function hiveware_enkoder(){var i,j,x,y,x=
                         "x=\"783d2235466e647e6c3b39683578783d5c2232483d7571387474782a366b6e6573372a" +
                         "3d5c5c5c227a32386361706b2e393f24323b3f65287834352b7a39393235293b3f382b3735" +
@@ -63,86 +57,116 @@
                         "28692c35293b7d793d792e737562737472286a293b\";y='';for(i=0;i<x.length;i+=2)" +
                         "{y+=unescape('%'+x.substr(i,2));}y";
                         while(x=eval(x));}hiveware_enkoder();
-                        //]]>
-                        </script>
-                        </p>
-                </section>
-                <section name="News">
-                <table id="entry">
+                        //]]></script>
+            </p>
+        </section>
+        <section name="News">
+            <table id="entry">
+                <th>29 September 2004</th>
+                <tr>
+                    <td>
+                        <p>We've just put the first release candidate for Sod 2.0 up on the site!
+                            You can download it <a href="download.html">here</a>. If we haven't
+                            found any problems with it by this time next week, it'll become SOD 2.0.
+                            In between this version and beta 8 we've added an ETOPO layer to the
+                            maps, substantially fleshed out the strategy docs, fixed numerous bugs,
+                            and added error handling for common misconfigurations. Enjoy!</p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
                 <th>11 August 2004</th>
                 <tr>
-                        <td>
-                                <p>The zip download from Sod 2.0 beta 8
-                                had an error on extraction. The tar was
-                                not affected and a new zip file is available
-                                in the download section. </p>
-                        </td>
+                    <td>
+                        <p>The zip download from Sod 2.0 beta 8 had an error on extraction. The tar
+                            was not affected and a new zip file is available in the download
+                            section. </p>
+                    </td>
                 </tr>
-                </table>
-                <table id="entry">
+            </table>
+            <table id="entry">
                 <th>29 July 2004</th>
                 <tr>
-                        <td>
-                                <p>Sod 2.0 beta 8 is out the door.  You can download it <a href="download.html">here</a>. We're getting pretty close to the actual release of 2.0.  This release adds connection stability enhancements for the event and seismogram servers like the ones added for the network server in the previous beta.  It also marks the debut of the <a href="tagDocs/sod/start.html">strategy file reference</a>.  There will be some major tweaking to the format and content of these files, but you can now use them as your one stop shop for information on the contents of SOD strategy files.</p>
-                        </td>
+                    <td>
+                        <p>Sod 2.0 beta 8 is out the door. You can download it <a
+                            href="download.html">here</a>. We're getting pretty close to the actual
+                            release of 2.0. This release adds connection stability enhancements for
+                            the event and seismogram servers like the ones added for the network
+                            server in the previous beta. It also marks the debut of the <a
+                                href="tagDocs/sod/start.html">strategy file reference</a>. There
+                            will be some major tweaking to the format and content of these files,
+                            but you can now use them as your one stop shop for information on the
+                            contents of SOD strategy files.</p>
+                    </td>
                 </tr>
-        </table>
-                <table id="entry">
+            </table>
+            <table id="entry">
                 <th>9 July 2004</th>
                 <tr>
-                        <td>
-                                <p>We're releasing another beta along the road to Sod 2.0 today.  It's available <a href="download.html">here</a>.  This one adds a new processor and a new subsetter in additional to the usual bug fixes.</p>
-                        </td>
+                    <td>
+                        <p>We're releasing another beta along the road to Sod 2.0 today. It's
+                            available <a href="download.html">here</a>. This one adds a new
+                            processor and a new subsetter in additional to the usual bug fixes.</p>
+                    </td>
                 </tr>
-        </table>
-                <table id="entry">
+            </table>
+            <table id="entry">
                 <th>15 June 2004</th>
                 <tr>
-                        <td>
-                                <p>SOD 2.0 Beta 6 has been released.  It fixes some minor bugs in the scripts on Solaris and editor behaviour.  As always, it's available <a href="download.html">here.</a></p>
-                        </td>
+                    <td>
+                        <p>SOD 2.0 Beta 6 has been released. It fixes some minor bugs in the scripts
+                            on Solaris and editor behaviour. As always, it's available <a href="download.html">here.</a>
+                        </p>
+                    </td>
                 </tr>
-        </table>
-        <table id="entry">
-                        <th>10 June 2004</th>
-                        <tr>
-                                <td>
-                                        <p>SOD 2.0 Beta 5 is now available.  Get it <a href="download.html">here.</a></p>
-                                </td>
-                        </tr>
-                </table>
-                <table id="entry">
-                        <th>09 June 2004</th>
-                        <tr>
-                                <td>
-                                        <p>SOD 2.0 Beta 4 is now available.  You can get it <a href="download.html">here.</a></p>
-                                </td>
-                        </tr>
-                </table>
-                 <table id="entry">
-                       <th>31 May 2004</th>
-                       <tr>
-                               <td>
-                                       <p>The third beta of SOD 2.0.  It's available <a href="download.html">here.</a>  To see a long running SOD run in action, checkout the <a href="sodcam.html">live SOD-cam</a>!</p>
-                               </td>
-                       </tr>
-               </table>
-               <table id="entry">
-                                <th>24 May 2004</th>
-                                <tr>
-                                        <td>
-                                                <p>We've released a second beta of SOD 2.0.  You can get it <a href="download.html">here.</a>  Tune in next week for another exciting beta release!</p>
-                                        </td>
-                                </tr>
-                        </table>
-                        <table id="entry">
-                                <th>13 May 2004</th>
-                                <tr>
-                                        <td>
-                                                <p>The first beta of SOD 2.0 is available <a href="download.html">here.</a>  More beta releases should follow in the coming weeks.</p>
-                                        </td>
-                                </tr>
-                        </table>
-                </section>
-        </body>
+            </table>
+            <table id="entry">
+                <th>10 June 2004</th>
+                <tr>
+                    <td>
+                        <p>SOD 2.0 Beta 5 is now available. Get it <a href="download.html">here.</a>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
+                <th>09 June 2004</th>
+                <tr>
+                    <td>
+                        <p>SOD 2.0 Beta 4 is now available. You can get it <a href="download.html">here.</a>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
+                <th>31 May 2004</th>
+                <tr>
+                    <td>
+                        <p>The third beta of SOD 2.0. It's available <a
+                            href="download.html">here.</a> To see a long running SOD run in action,
+                            checkout the <a href="sodcam.html">live SOD-cam</a>!</p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
+                <th>24 May 2004</th>
+                <tr>
+                    <td>
+                        <p>We've released a second beta of SOD 2.0. You can get it <a
+                            href="download.html">here.</a> Tune in next week for another exciting
+                            beta release!</p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
+                <th>13 May 2004</th>
+                <tr>
+                    <td>
+                        <p>The first beta of SOD 2.0 is available <a href="download.html">here.</a>
+                            More beta releases should follow in the coming weeks.</p>
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </body>
 </document>

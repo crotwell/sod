@@ -10,7 +10,21 @@
                 convenient for you. See the <a href="install.html">INSTALL</a> document for an
                 explanation of the contents. </p>
             <p>
-                <b>Current Release:</b> Sod 2.0 Beta 8 <a class="download" href="beta8/sod-2.0beta8_3.tar">TAR</a>
+                <b>Current Release:</b> Sod 2.0 RC1 <a class="download" href="rc1/sod-2.0rc1.tar">TAR</a>
+                <a class="download" href="rc1/sod-2.0rc1.zip">ZIP</a>
+            </p>
+            <p>Released 29 September 2004</p>
+            <p>Changes in 2.0 RC1:</p>
+            <ul>
+                <li>ETOPO information on map</li>
+                <li>Detail in strategy file documentation</li>
+                <li>removeDatabase property works properly</li>
+                <li>Several new editor widgets</li>
+                <li>Several bug fixes</li>
+            </ul>
+        </section>
+        <section name="Previous Releases">
+        <p>Sod 2.0 Beta 8 <a class="download" href="beta8/sod-2.0beta8_3.tar">TAR</a>
                 <a class="download" href="beta8/sod-2.0beta8_2.zip">ZIP</a>
             </p>
             <p>Released 29 July 2004</p>
@@ -20,8 +34,6 @@
                 <li>Safeguards for minor hiccups from the seismogram server</li>
                 <li>New strategy file reference</li>
             </ul>
-        </section>
-        <section name="Previous Releases">
             <p>Sod 2.0 Beta 7 <a class="download" href="beta7/sod-beta7.tar">TAR</a>
                 <a class="download" href="beta7/sod-beta7.zip">ZIP</a>
             </p>
