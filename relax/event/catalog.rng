@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
-    <start>
-        <element name="catalog">
-                <data type="string"/>
-        </element>
-    </start>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+	<start>
+		<element name="catalog">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<example>
+						<catalog>FINGER</catalog>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<data type="string"/>
+		</element>
+	</start>
 </grammar>

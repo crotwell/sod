@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-    <start>
-        <ref name="eventProcess"/>
-    </start>
-    <define name="eventProcess">
-        <choice>
-            <ref name="printLine"/>
-            <ref name="external"/>
-        </choice>
-    </define>
-    <define name="printLine">
-        <element name="printLineEventProcess">
-            <optional>
-                <element name="filename"><text/></element>
-            </optional>
-            <optional>
-                <element name="eventFormat">
-                    <externalRef href="../base/externalRef/anyXML.rng"/>
-                </element>
-            </optional>
-        </element>
-    </define>
-    <define name="external">
-        <element name="externalEventProcess">
-            <element name="classname">
-                <data type="string"/>
-            </element>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+	<start>
+		<ref name="eventProcess"/>
+	</start>
+	<define name="eventProcess">
+		<choice>
+			<ref name="printLine"/>
+			<ref name="external"/>
+		</choice>
+	</define>
+	<define name="printLine">
+		<element name="printLineEventProcess">
+			<optional>
+				<element name="filename">
+					<text/>
+				</element>
+			</optional>
+			<optional>
+				<element name="eventFormat">
+					<externalRef href="../base/externalRef/anyXML.rng"/>
+				</element>
+			</optional>
+		</element>
+	</define>
+	<define name="external">
+		<element name="externalEventProcess">
+			<element name="classname">
+				<data type="string"/>
+			</element>
             <!-- Allows zero or more well formed xml documents -->
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
-        </element>
-    </define>
+			<zeroOrMore>
+				<externalRef href="../base/externalRef/anyXML.rng"/>
+			</zeroOrMore>
+		</element>
+	</define>
 </grammar>
