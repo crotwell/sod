@@ -7,17 +7,16 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
-import edu.sc.seis.sod.database.NetworkDbObject;
 import org.apache.log4j.Logger;
 
 public class EventChannelPair{
-    public EventChannelPair(EventDbObject event,
-                            ChannelDbObject chan,WaveformArm owner, int pairId){
+    public EventChannelPair(EventDbObject event, ChannelDbObject chan,
+                            WaveformArm owner, int pairId){
         this.event = event;
         this.chan = chan;
         this.owner = owner;
@@ -27,13 +26,24 @@ public class EventChannelPair{
     public int getPairId(){ return pairId; }
 
     public void update(Throwable e, Status status) {
-        CommonAccess.handleException(toString(), e);
+        GlobalExceptionHandler.handle(toString(), e);
         update(status);
     }
 
+    /**
+     * sets the status on this event channel pair to be status and notifies its
+     * parent
+     */
     public void update(Status status){
+        setStatus(status);
+        owner.setStatus(this);
+    }
+
+    /**
+     * sets the status on this event channel pair to be status
+     */
+    public void setStatus(Status status){
         this.status = status;
-        if(owner != null)owner.setStatus(this);
     }
 
     public boolean equals(Object o){
