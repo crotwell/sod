@@ -12,14 +12,14 @@ import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.MapPool;
-import edu.sc.seis.sod.status.PeriodicAction;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-public class MapEventStatus extends PeriodicAction implements SodElement, EventArmMonitor{
+public class MapEventStatus implements SodElement, EventArmMonitor, Runnable{
     protected String fileLoc;
 
     public MapEventStatus(Element element){
@@ -39,16 +39,16 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventA
         }
         fileLoc = FileWritingTemplate.getBaseDirectoryName() + '/' + element.getAttribute("xlink:href");
         if(addToEventArm){Start.getEventArm().add(this);}
-        actIfPeriodElapsed();
+        run();
     }
 
     public void change(EventAccessOperations event, Status status){
-        actIfPeriodElapsed();
+        OutputScheduler.DEFAULT.schedule(this);
     }
 
     public String getLocation(){ return fileLoc; }
 
-    public void act() {
+    public void run() {
         OpenMap map = pool.getMap();
         try {
             try {
