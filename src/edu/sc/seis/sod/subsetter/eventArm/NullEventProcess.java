@@ -7,17 +7,14 @@ import org.w3c.dom.*;
 import java.io.*;
 
 /**
- * &lt;printLineEventProcess/&gt;
  */
 
 
 public class NullEventProcess implements EventArmProcess {
     /**
      * Creates a new <code>NullEventProcess</code> instance.
-     *
-     * @param config an <code>Element</code> value
      */
-    public NullEventProcess (Element config){
+    public NullEventProcess (){
 	
     }
 

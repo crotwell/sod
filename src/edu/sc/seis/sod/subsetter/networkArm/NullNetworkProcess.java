@@ -18,10 +18,8 @@ import java.io.*;
 public class NullNetworkProcess implements NetworkArmProcess {
     /**
      * Creates a new <code>NullNetworkProcess</code> instance.
-     *
-     * @param config an <code>Element</code> value
      */
-    public NullNetworkProcess (Element config){
+    public NullNetworkProcess (){
 	    
     }
 

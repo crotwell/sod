@@ -21,10 +21,8 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
     /**
      * Creates a new <code>NullWaveformProcess</code> instance.
      *
-     * @param config an <code>Element</code> value
      */
-    public NullWaveformProcess (Element config){
-	regions = new ParseRegions();
+    public NullWaveformProcess (){
     }
 
     /**
@@ -48,6 +46,5 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
 	
     }
    
-    ParseRegions regions;
 
 }// NullWaveformProcess
