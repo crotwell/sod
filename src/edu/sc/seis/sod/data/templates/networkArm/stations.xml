@@ -4,11 +4,11 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Stations</title>
-<style media="all">@import "../../main.css";</style>
+<style media="all">@import "../../../main.css";</style>
 </head>
 <body>
 <div id="Header">
-<a href="../networks.html"> Networks</a>
+<a href="../../networks.html"> Networks</a>
 <network>
 >
 <networkCode/>
@@ -47,10 +47,10 @@
 <div id="Menu">
 <ul>
 <li>
-<a href="../location.html">Events</a>
+<a href="../../location.html">Events</a>
 </li>
 <li>
-<a href="../networks.html">Networks</a>
+<a href="../../networks.html">Networks</a>
 </li>
 </ul>
 </div>

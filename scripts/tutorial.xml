@@ -109,7 +109,7 @@
                 <networkInfoTemplateGenerator>
                     <fileDir>status</fileDir>
                     <netsOutputFileName>networks.html</netsOutputFileName>
-                    <netDir><networkCode/>-<firstWord/></netDir>
+                    <netDir>networks/<networkCode/>-<firstWord/></netDir>
                     <stationsOutputFileName>stations.html</stationsOutputFileName>
                     <stationDir><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime></stationDir>
                     <channelsOutputFileName>channels.html</channelsOutputFileName>
