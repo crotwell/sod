@@ -7,7 +7,7 @@
     <include href="../base/include/eventLabel.rng"/>
     <define name="availableData">
         <choice>
-            <ref name="nogaps"/>
+            <ref name="noGaps"/>
             <ref name="fullCoverage"/>
             <ref name="someCoverage"/>
             <ref name="availableDataAND"/>
@@ -25,7 +25,7 @@
                     subsetters. The subsetters after the first false outputed are not evaluated. </description>
                 <example>
                     <availableDataAND>
-                        <nogaps/>
+                        <noGaps/>
                         <fullCoverage/>
                     </availableDataAND>
                 </example>
@@ -45,7 +45,7 @@
                     subsetters. The subsetters after the first true outputed are not evaluated. </description>
                 <example>
                     <availableDataOR>
-                        <nogaps/>
+                        <noGaps/>
                         <fullCoverage/>
                     </availableDataOR>
                 </example>
@@ -65,7 +65,7 @@
                     subsetters. </description>
                 <example>
                     <availableDataXOR>
-                        <nogaps/>
+                        <noGaps/>
                         <fullCoverage/>
                     </availableDataXOR>
                 </example>
@@ -84,7 +84,7 @@
                     subsetters. </description>
                 <example>
                     <availableDataNOT>
-                        <nogaps/>
+                        <noGaps/>
                     </availableDataNOT>
                 </example>
             </xsd:documentation>
@@ -93,7 +93,7 @@
             <ref name="availableData"/>
         </element>
     </define>
-    <define name="nogaps">
+    <define name="noGaps">
         <element name="noGaps">
             <empty/>
         </element>
