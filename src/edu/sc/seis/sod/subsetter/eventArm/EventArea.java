@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
+import edu.iris.Fissures.GlobalArea;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -59,7 +60,7 @@ public class EventArea implements OriginSubsetter,SodElement {
      * returns true if the given origin is within the area specified in the
      * configuration file else returns false.
      */
-    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception {
         if(area instanceof edu.iris.Fissures.BoxArea) {
             edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
 
@@ -70,8 +71,10 @@ public class EventArea implements OriginSubsetter,SodElement {
                 return true;
             } else return false;
 
+        } else if (area instanceof GlobalArea) {
+            return true;
         }
-        return true;
+        throw new Exception("Unknown Area, class="+area.getClass());
 
     }
 
