@@ -6,11 +6,11 @@
 
 package edu.sc.seis.sod.editor;
 
+import javax.swing.*;
+
 import java.awt.Dimension;
-import javax.swing.Box;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
@@ -60,8 +60,8 @@ public class EditorUtil {
     public static JComboBox getComboBox(Element element, Object[] vals) throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
         if (node != null) {
-        Text text = (Text)node;
-        return getComboBox(element, vals, text.getNodeValue());
+            Text text = (Text)node;
+            return getComboBox(element, vals, text.getNodeValue());
         } else {
             logger.warn("No text node inside node "+element.getTagName());
             return getComboBox(element, vals, "");
@@ -86,6 +86,22 @@ public class EditorUtil {
         combo.setSelectedItem(selected);
         combo.addItemListener(new TextItemListener(text));
         return combo;
+    }
+
+    /** Creates a number spinner with the initial value the Double.parseDouble
+     * of the text in the Text node. The min, max and step are also given. */
+    public static JSpinner createNumberSpinner(final Text text,
+                                               double min,
+                                               double max,
+                                               double step){
+        final JSpinner spin = new JSpinner(new SpinnerNumberModel(Double.parseDouble(text.getNodeValue()),
+                                                                  min, max, step));
+        spin.addChangeListener(new ChangeListener(){
+                    public void stateChanged(ChangeEvent e) {
+                        text.setNodeValue(spin.getValue().toString());
+                    }
+                });
+        return spin;
     }
 
     private static Logger logger = Logger.getLogger(EditorUtil.class);
