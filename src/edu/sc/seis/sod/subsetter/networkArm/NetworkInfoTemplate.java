@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class NetworkInfoTemplate extends FileWritingTemplate{
@@ -25,6 +26,7 @@ public class NetworkInfoTemplate extends FileWritingTemplate{
     private NetworkAccess network;
     private RunStatus status;
     private List stationListeners = new ArrayList();
+    private Logger logger = Logger.getLogger(NetworkInfoTemplate.class);
 
     public NetworkInfoTemplate(Element el, NetworkAccess net) throws IOException{
         this(TemplateFileLoader.getTemplate(el),
@@ -55,6 +57,7 @@ public class NetworkInfoTemplate extends FileWritingTemplate{
     }
 
     public void change(Station station, RunStatus status){
+        logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
         Iterator it = stationListeners.iterator();
         while (it.hasNext()){
             ((StationGroupTemplate)it.next()).change(station, status);
@@ -65,6 +68,11 @@ public class NetworkInfoTemplate extends FileWritingTemplate{
     public void changeStatus(RunStatus status){
         this.status = status;
         write();
+    }
+    
+    public void write(){
+        logger.debug("writing " + getOutputDirectory() + "/" + getFilename());
+        super.write();
     }
 
     private class MyNetworkTemplate implements GenericTemplate{
