@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
-     <eventArm>
+    <eventArm>
 	   <eventFinder>
 		<name>ANHINGAEVENTDC</name>
 		<dns>edu/sc/seis</dns>
@@ -49,45 +49,8 @@
 			</eventAttrNOT>
 		</eventAttrOR>
 	   </eventAttrAND>
-	   <originOR>
-		<magnitudeRange>
-			<magType>mb</magType>
-			<min>5</min>
-			<max>10</max>
-		</magnitudeRange>
-		<originDepthRange>
-			<unitRange>
-				<unit>KILOMETER</unit>
-				<min>10</min>
-				<max>100</max>
-			</unitRange>
-		</originDepthRange>
-		<eventTimeRange>
-		<timeRange>
-			<startTime>2001-01-01T00:00:00Z</startTime>
-			<endTime>2002-01-01T00:00:00Z</endTime>
-		</timeRange>
-		</eventTimeRange>
-		<eventArea>
-		<boxArea>
-			<latitudeRange>
-				<min>38</min>
-				<max>120</max>
-			</latitudeRange>
-			<longitudeRange>
-				<min>-90</min>
-				<max>90</max>
-			</longitudeRange>
-		</boxArea>
-		</eventArea>
+	   <originAND>
 		<originAND>
-			<originNOT>
-				<magnitudeRange>
-					<magType>mb</magType>
-					<min>7</min>
-					<max>10</max>
-				</magnitudeRange>
-			</originNOT>
                         <catalog><value>BIGQUAKE</value></catalog>
                         <catalog><value>BIGQUAKE</value></catalog>
                         <catalog><value>BIGQUAKE</value></catalog>
@@ -102,16 +65,20 @@
 			</originNOT>
                  </originArrayAND>
 
-	</originOR>
+	</originAND>
     
 	<printLineEventProcess/>
    
    </eventArm>
- <networkArm>
+   <networkArm>
 	<networkFinder>
 		<description> this describes the networkFinder</description>
 		<name>SCEPPNetworkDC</name>
 		<dns>edu/sc/seis</dns>
+                <refreshInterval>
+                        <unit>MINUTE</unit>
+                        <value>30</value>
+                </refreshInterval>
 	</networkFinder>
 	<networkIDOR>
 		<networkCode><value>II</value></networkCode>
