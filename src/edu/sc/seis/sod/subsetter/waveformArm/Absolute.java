@@ -50,7 +50,7 @@ import org.w3c.dom.*;
  *                      &lt;max&gt;100&lt;/max&gt;
  *              &lt;/longitudeRange&gt;
  *      &lt;/boxArea&gt;
- * &lt;/absolute&gt
+ * &lt;/absolute&gt;
  *
  *                      (or)
  *
@@ -62,7 +62,7 @@ import org.w3c.dom.*;
  *			&lt;max&gt;1000&lt;/max&gt;
  *		&lt;/unitRange&gt;
  *	&lt;/depthRange&gt;
- * &lt;/absolute&gt
+ * &lt;/absolute&gt;
  *</pre>
  */
 
