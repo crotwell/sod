@@ -196,7 +196,7 @@ public class LocalSeismogramArm implements Subsetter {
                                           infilters,
                                           SortTool.byBeginTimeAscending(outfilters));
         } else {
-            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
             failLogger.info(ecp);
         }
     }
