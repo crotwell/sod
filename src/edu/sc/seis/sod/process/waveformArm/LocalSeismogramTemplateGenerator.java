@@ -32,9 +32,10 @@ import org.w3c.dom.NodeList;
 
 public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
 
+    private LocalSeismogramTemplate template;
     private SeismogramImageProcess seismoImageProcess;
     private Map templates = new HashMap();
-    private String fileDir, fileName;
+    private String fileDir = FileWritingTemplate.getBaseDirectoryName(), fileName;
     private Element waveformSeismogramConfig;
     private EventFormatter eventFormatter;
     private StationFormatter stationFormatter;
@@ -47,9 +48,6 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             if (n.getNodeName().equals("fileDir")){
                 fileDir = n.getFirstChild().getNodeValue();
             }
-        }
-        if (fileDir == null){
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
@@ -80,6 +78,9 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         }
         if (fileDir == null || waveformSeismogramConfig == null || eventFormatter == null || stationFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
+        }
+        if (fileName != null){
+            template = new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir + "/");
         }
     }
 
@@ -136,28 +137,13 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         }
 
         if (fileName != null){
-            getTemplate(event, channel, cookieJar);
+            template.update(getOutputLocation(event, channel), cookieJar);
         }
         else {
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
 
         return seismograms;
-    }
-
-    public LocalSeismogramTemplate getTemplate(EventAccessOperations event, Channel chan, CookieJar cookieJar) throws Exception{
-        String eventStationString = eventFormatter.getResult(event)
-            + stationFormatter.getResult(chan.my_site.my_station);
-        if ( ! templates.containsKey(eventStationString)) {
-            String outputLocation = getOutputLocation(event, chan);
-            LocalSeismogramTemplate template =
-                new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
-                                            event, chan.my_site.my_station, cookieJar);
-            templates.put(eventStationString, template);
-        }
-        LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
-        template.update(chan, cookieJar);
-        return template;
     }
 
     public File getOutputFile(EventAccessOperations event, Channel chan) {
@@ -167,12 +153,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
     /** this is relative to the status directory */
     public String getOutputLocation(EventAccessOperations event, Channel chan) {
         return eventFormatter.getResult(event) + '/'
-                + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
+            + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
     }
-
-    public SeismogramImageProcess getSeismogramImageProcess() {
-        return seismoImageProcess;
-    }
-
 }
 
