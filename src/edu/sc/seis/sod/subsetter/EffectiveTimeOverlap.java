@@ -17,26 +17,57 @@ import edu.iris.Fissures.*;
  */
 
 public abstract class EffectiveTimeOverlap { 
+
+    public EffectiveTimeOverlap() {
+
+    }
     public EffectiveTimeOverlap (Element config){
+	Element childElement = null;
 	NodeList children = config.getChildNodes();
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
+	    if(node instanceof Element) {
+		String tagName = ((Element)node).getTagName();
+		if(tagName.equals("effectiveTimeOverlap") ){
+			childElement =(Element)node;
+		}
+	    }
+
 	    logger.debug(node.getNodeName());
 	}
+	children = childElement.getChildNodes(); 
+	for(int  i = 0; i < children.getLength(); i ++) {
+		node = children.item(i); 
+		if(node instanceof Element) {
+			String tagName = ((Element)node).getTagName();
+			if(tagName.equals("min")) minElement = (Element)node;
+			else if(tagName.equals("max")) maxElement = (Element)node;
+		}
+	}
+	if(minElement == null || maxElement == null) System.out.println("one of the min or max ELements is null");
     }
 
     public edu.iris.Fissures.Time getMinEffectiveTime() {
-
-	return null;
-
+	if(minElement == null) return null;
+	String effectiveTime = SodUtil.getNestedText(minElement);
+	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
+	System.out.println("The min time is "+effectiveTime);
+	return rtnTime;
     }
 
     public edu.iris.Fissures.Time getMaxEffectiveTime() {
-
-	return null;
+	if(maxElement == null) return null;
+	String effectiveTime = SodUtil.getNestedText(maxElement);
+	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime, 0);
+	System.out.println("The max time is "+effectiveTime);
+	return rtnTime;
 
     }
+
+    Element minElement = null;
+
+    Element maxElement = null;
 
     static Category logger = 
         Category.getInstance(EffectiveTimeOverlap.class.getName());
