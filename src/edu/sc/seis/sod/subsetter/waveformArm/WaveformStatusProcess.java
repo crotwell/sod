@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.database.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.Subsetter;
+import edu.sc.seis.sod.database.Status;
 
 
 /**
@@ -24,31 +23,31 @@ public interface WaveformStatusProcess extends Subsetter{
 
     public void begin(EventAccessOperations eventAccess);
 
-    public void begin(EventAccessOperations eventAccess, 
-		      NetworkAccess networkAccess);
+    public void begin(EventAccessOperations eventAccess,
+              NetworkAccess networkAccess);
 
-    public void begin(EventAccessOperations eventAccess, 
-		      Station station);
+    public void begin(EventAccessOperations eventAccess,
+              Station station);
     
-    public void begin(EventAccessOperations eventAccess, 
-		      Site site);
+    public void begin(EventAccessOperations eventAccess,
+              Site site);
     
-    public void begin(EventAccessOperations eventAccess, 
-		      Channel channel);
+    public void begin(EventAccessOperations eventAccess,
+              Channel channel);
 
-    public void end(EventAccessOperations eventAccess, 
-		    Channel channel, 
-		    Status status, 
-		    String reason);
+    public void end(EventAccessOperations eventAccess,
+            Channel channel,
+            Status status,
+            String reason);
     
-    public void end(EventAccessOperations eventAccess, 
-		    Site site);
+    public void end(EventAccessOperations eventAccess,
+            Site site);
     
-    public void end(EventAccessOperations eventAccess, 
-		    Station station);
+    public void end(EventAccessOperations eventAccess,
+            Station station);
 
-    public void end(EventAccessOperations eventAccess, 
-		    NetworkAccess networkAccess);
+    public void end(EventAccessOperations eventAccess,
+            NetworkAccess networkAccess);
 
     public void end(EventAccessOperations eventAccess);
 

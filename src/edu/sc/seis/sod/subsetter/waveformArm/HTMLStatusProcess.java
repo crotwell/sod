@@ -1,14 +1,19 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.database.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import org.w3c.dom.*;
-import java.io.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.database.Status;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.w3c.dom.Element;
 
 
 /**
@@ -25,20 +30,20 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     public HTMLStatusProcess (Element config){
         fileName = SodUtil.getNestedText(config);
 
-        // 	try {
-        // 	    FileWriter fw = new FileWriter(fileName);
-        // 	    bw = new BufferedWriter(fw);
-        // 	    writeHeader();
-        // 	} catch(Exception e) {
-        // 	    e.printStackTrace();
-        // 	}
+        //  try {
+        //      FileWriter fw = new FileWriter(fileName);
+        //      bw = new BufferedWriter(fw);
+        //      writeHeader();
+        //  } catch(Exception e) {
+        //      e.printStackTrace();
+        //  }
     }
 
     private void writeHeader() {
         String header = "<html><head><title>sodReport</title></head><body bgcolor='#ffffff'>";
         write(header);
-        //	newLine();
-	
+        //  newLine();
+    
     }
 
     private void writeTail() {
@@ -85,11 +90,11 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     }
 
     public void begin(EventAccessOperations eventAccess, Station station) {
-        // 	write("<tr> Processing Station "+station.get_code()+"</tr>");
+        //  write("<tr> Processing Station "+station.get_code()+"</tr>");
     }
     
     public void begin(EventAccessOperations eventAccess, Site site) {
-        // 	write("<tr> Processing Site "+site.get_code()+"</tr>");
+        //  write("<tr> Processing Site "+site.get_code()+"</tr>");
     }
     
     public void begin(EventAccessOperations eventAccess, Channel channel) {
@@ -102,15 +107,15 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     }
     
     public void end(EventAccessOperations eventAccess, Site site) {
-        // 	write("<tr> Done with Site "+site.get_code()+"</tr>");
+        //  write("<tr> Done with Site "+site.get_code()+"</tr>");
     }
     
     public void end(EventAccessOperations eventAccess, Station station) {
-        //	write("<tr> Done with Station "+station.get_code()+"</tr>");
+        //  write("<tr> Done with Station "+station.get_code()+"</tr>");
     }
 
     public void end(EventAccessOperations eventAccess, NetworkAccess networkAccess) {
-        //	write("<tr> Processing Station "+station.get_code()+"</tr>");
+        //  write("<tr> Processing Station "+station.get_code()+"</tr>");
         NetworkAttr networkAttr = networkAccess.get_attributes();
         write("<tr> Done with Network "+networkAttr.name+"</tr>");
     }
