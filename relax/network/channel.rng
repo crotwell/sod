@@ -8,6 +8,7 @@
     <include href="../base/include/quantity.rng"></include>
     <define name="channel">
         <choice>
+	    <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
             <ref name="orientationCode"/>
