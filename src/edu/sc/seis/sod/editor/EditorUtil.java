@@ -134,8 +134,19 @@ public class EditorUtil {
         return spin;
     }
 
+    public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
+        Box b = Box.createHorizontalBox();
+        Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
+        b.add(EditorUtil.createNumberSpinner(t, 1, 50, 1));
+        Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
+        b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
+        b.add(Box.createHorizontalGlue());
+        return b;
+    }
+
     private static Logger logger = Logger.getLogger(EditorUtil.class);
 
 }
+
 
 
