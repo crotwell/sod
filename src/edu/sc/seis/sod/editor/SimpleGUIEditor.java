@@ -9,12 +9,18 @@ import java.io.*;
 import javax.swing.*;
 import org.w3c.dom.*;
 
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfTemplate;
+import com.lowagie.text.pdf.PdfWriter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -27,10 +33,32 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
+import java.beans.PropertyChangeListener;
 
 
 
 public class SimpleGUIEditor extends CommandLineEditor {
+    private static int leftMargin = 50, rightMargin = 50,
+        topMargin = 50, bottomMargin = 50;
+
+    public void printPane(JComponent comp, String name) throws FileNotFoundException, DocumentException{
+        System.out.println("WRITING TO "+name + ".pdf");
+        com.lowagie.text.Document document = new com.lowagie.text.Document(PageSize.LETTER);
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(name + ".pdf"));
+        document.open();
+        int pageW = (int)PageSize.LETTER.width();
+        int pageH = (int)PageSize.LETTER.height();
+        PdfContentByte cb = writer.getDirectContent();
+        // layer for SeismogramDisplay
+        PdfTemplate template = cb.createTemplate(pageW, pageH);
+        Graphics2D compGraphics = template.createGraphics(pageW, pageH);
+        compGraphics.translate(rightMargin, topMargin);
+        comp.print(compGraphics);
+        cb.addTemplate(template, 0, 0);
+        compGraphics.dispose();
+        document.newPage();
+        document.close();
+    }
 
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
@@ -107,10 +135,25 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         box.add(subComponents[i]);
                         box.add(Box.createVerticalStrut(10));
                     }
-                    JPanel panel = new JPanel();
+                    final JPanel panel = new JPanel();
                     panel.setLayout(new BorderLayout());
                     panel.add(box, BorderLayout.NORTH);
                     String tabName = getDisplayName(((Element)list.item(j)).getTagName());
+                    try {
+                        printPane(panel, EditorUtil.capFirstLetter(tabName));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    fileMenu.add(new JMenuItem(new AbstractAction(tabName){
+                                             public void actionPerformed(ActionEvent e) {
+                                                 try {
+                                                     printPane(panel, (String)getValue(Action.NAME));
+                                                 } catch (Exception ex) {
+                                                     ex.printStackTrace();
+                                                 }
+                                             }
+
+                                         }));
                     tabPane.add(EditorUtil.capFirstLetter(tabName),
                                 new JScrollPane(panel,
                                                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
