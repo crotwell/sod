@@ -1,14 +1,8 @@
-/**
- * MapWaveFormStatus.java
- *
- * @author Created by Omnicore CodeGuide
- */
-
 package edu.sc.seis.sod.status.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.AvailableStationDataEvent;
 import edu.sc.seis.fissuresUtil.chooser.StationDataEvent;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
@@ -20,79 +14,82 @@ import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
-public class MapWaveformStatus extends PeriodicAction implements WaveformArmMonitor {
-
-    private String fileLoc;
-    private List events = new ArrayList();
-    private Map channelMap = new HashMap();
-    private MapPool pool;
-
-    public MapWaveformStatus(Element element) {
-        this(element.getAttribute("xlink:href"));
+public class MapWaveformStatus extends PeriodicAction {
+    public MapWaveformStatus() throws SQLException{
+        this(new MapPool(1, new DefaultEventColorizer()));
     }
 
-    public MapWaveformStatus(String fileLoc){
-        this(fileLoc, new MapPool(1, new DefaultEventColorizer()));
-    }
-
-    public MapWaveformStatus(String fileLoc, MapPool pool){
-        this.fileLoc = fileLoc;
+    public MapWaveformStatus(MapPool pool) throws SQLException{
         this.pool = pool;
-        write();
+        evChanStatusTable = new JDBCEventChannelStatus();
     }
     public void act() {
+        int numEventsWaiting = 0;
+        CacheEvent[] events = new CacheEvent[0];
+        String[] fileLocs = new String[0];
+        synchronized(eventsToBeRendered){
+            numEventsWaiting = eventsToBeRendered.size();
+            if(eventsToBeRendered.size()>0){
+                events = new CacheEvent[eventsToBeRendered.size()];
+                fileLocs = new String[eventsToBeRendered.size()];
+                Iterator it = eventsToBeRendered.keySet().iterator();
+                while(it.hasNext()){
+                    CacheEvent cur = (CacheEvent)it.next();
+                    events[--numEventsWaiting] = cur;
+                    fileLocs[numEventsWaiting] = (String)eventsToBeRendered.get(cur);
+                }
+                eventsToBeRendered.clear();
+            }
+        }
+        final OpenMap map = pool.getMap();
         try{
-            synchronized(channelMap){
-                final OpenMap map = pool.getMap();
+            for (int i = 0; i < events.length; i++) {
                 StationLayer sl = map.getStationLayer();
                 sl.honorRepaint(false);
-                Iterator it = channelMap.keySet().iterator();
-                while(it.hasNext()){
-                    Channel cur = (Channel)it.next();
-                    sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
-                    Status status = (Status)channelMap.get(cur);
+                EventChannelPair[] ecps = evChanStatusTable.getAll(events[i]);
+                for (int j = 0; j < ecps.length; j++) {
+                    Station station = ecps[j].getChannel().my_site.my_station;
+                    Station[] stations = {station};
+                    sl.stationDataChanged(new StationDataEvent(this, stations));
+                    AvailableStationDataEvent availability = null;
+                    Status status = ecps[j].getStatus();
                     if (status.getStanding() == Standing.REJECT||
                         status.getStanding() == Standing.CORBA_FAILURE||
                         status.getStanding() == Standing.SYSTEM_FAILURE){
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.DOWN));
+                        availability = new AvailableStationDataEvent(this,
+                                                                     station,
+                                                                     AvailableStationDataEvent.DOWN);
+                    }else if (status.getStanding() == Standing.SUCCESS||
+                              status.getStanding() == Standing.IN_PROG||
+                              status.getStanding() == Standing.RETRY){
+                        availability = new AvailableStationDataEvent(this,
+                                                                     station,
+                                                                     AvailableStationDataEvent.UP);
+                    }else{
+                        availability = new AvailableStationDataEvent(this,
+                                                                     station,
+                                                                     AvailableStationDataEvent.UNKNOWN);
                     }
-                    else if (status.getStanding() == Standing.SUCCESS||
-                             status.getStanding() == Standing.IN_PROG||
-                             status.getStanding() == Standing.RETRY){
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.UP));
-                    }
-                    else{
-                        sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                   cur.my_site.my_station,
-                                                                                   AvailableStationDataEvent.UNKNOWN));
-                    }
+                    sl.stationAvailabiltyChanged(availability);
                 }
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
-                synchronized(events){
-                    it = events.iterator();
-                    while(it.hasNext()){
-                        EventAccessOperations ev = (EventAccessOperations)it.next();
-                        el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
-                    }
-                }
+                EQDataEvent eqEvent = new EQDataEvent(this,
+                                                      new EventAccessOperations[]{events[i]});
+                el.eventDataChanged(eqEvent);
+                final String fileLoc = fileLocs[i];
                 SwingUtilities.invokeAndWait(new Runnable(){
                             public void run(){
                                 try{
@@ -102,48 +99,28 @@ public class MapWaveformStatus extends PeriodicAction implements WaveformArmMoni
                                 }
                             }
                         });
-
-                pool.returnMap(map);
+                sl.stationDataCleared();
+                el.eventDataCleared();
             }
         }catch(Throwable t){
             GlobalExceptionHandler.handle("Waveform map updater had a problem", t);
         }
+        pool.returnMap(map);
     }
-
 
     public void write(){ actIfPeriodElapsed();  }
 
-    public void update(EventChannelPair ecp) {
-        if(add(ecp.getEvent())){
-            add(ecp.getChannel(), ecp.getStatus());
+    public boolean add(EventAccessOperations ev, String outputLoc){
+        synchronized(eventsToBeRendered){
+            if (eventsToBeRendered.containsKey(ev)){ return false; }
+            eventsToBeRendered.put(ev, outputLoc);
             write();
-        }else if(add(ecp.getChannel(), ecp.getStatus()))
-            write();
-    }
-
-    public boolean add(Channel chan, Status status){
-        synchronized(channelMap){
-            if(channelMap.put(chan, status) != status) return true;
+            return true;
         }
-        return false;
     }
 
-    public boolean add(EventAccessOperations ev){
-        if (events.contains(ev)) return false;
-        synchronized(events){
-            events.add(ev);
-        }
-        return true;
-    }
-
-    public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
-
-    public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
-
-    public boolean contains(EventAccessOperations ev) {
-        return events.contains(ev);
-    }
-
+    private Map eventsToBeRendered = Collections.synchronizedMap(new HashMap());
+    private MapPool pool;
+    private JDBCEventChannelStatus evChanStatusTable;
     private static Logger logger = Logger.getLogger(MapWaveformStatus.class);
 }
-
