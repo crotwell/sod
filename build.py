@@ -171,8 +171,8 @@ if __name__ == "__main__":
                       default=True,
                       action="store_true")
     options = parser.parse_args()[0]
-    if options.external : buildExternal(proj, options.name)
-    elif options.internal: buildInternal(proj, options.name)
+    if options.external : buildExternalDist(proj, options.name)
+    elif options.internal: buildInternalDist(proj, options.name)
     else :
         buildJars(proj)
         os.chdir('scripts')
