@@ -32,7 +32,7 @@ def signal_handler(signal, frame):
 def main(argv):
     signal.signal(signal.SIGINT, signal_handler)
     startdir = os.path.abspath('.')
-    command = 'profile.bat'
+    command = 'schemaDocumenter.bat'
     proj = ProjectParser.ProjectParser('../../project.xml')
     buildSod.build(proj)
     buildScripts(proj)
