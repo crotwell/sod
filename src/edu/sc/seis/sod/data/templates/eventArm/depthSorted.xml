@@ -8,16 +8,12 @@
 </head>
 <body>
 <div id="Header">
-<a href="../mainSite.html">SOD</a>
-<a href="location.html">> Event Arm</a>
-<a href="depth.html">> Sorted by Depth</a>
+Events (sorted by depth)
 </div>
 <div id="Content">
 <h1>Events</h1>
 <h2>Status:</h2>
 <status/><br/>
-<h2>Map:</h2>
-<img src="eventMap.png"/>
 <h2>Successful events sorted by depth:</h2>
 <table>
 <tr id="title">
@@ -27,18 +23,20 @@
 <td id="selected">Depth</td>
 </tr>
 <events><eventLabel><tr>
-<td><feRegionName/></td>
+<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td id="selected"><depth/></td>
 </tr>
 </eventLabel><sorting><depth/></sorting></events>
 </table>
+<h2>Map:</h2>
+<img src="eventMap.png"/>
 </div>
 <div id="Menu">
 <ul>
 <li>
-<a href="eventArm/locSorted.html">Event Arm</a><br />
+<a href="location.html">Events</a><br />
 <ul>
 <li><a href="location.html">Location</a></li>
 <li><a href="time.html">Time</a></li>
