@@ -75,15 +75,7 @@ public class Start {
         try {
             document = createDoc(createInputSource(cl, confFilename));
         } catch(IOException io) {
-            File configFile = new File(confFilename);
-            System.err.println("You told SOD to use "
-                    + configFile.getAbsolutePath() + " as its strategy file");
-            if(configFile.exists()) {
-                System.err.println("SOD was unable to open it.  Make sure the file is readable.");
-            } else {
-                System.err.println("SOD could find no such file.  Make sure the file exists");
-            }
-            System.exit(0);
+            informUserOfBadFileAndExit(confFilename);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
@@ -101,6 +93,18 @@ public class Start {
             System.exit(0);
         }
         initDocument(args);
+    }
+    
+    private static void informUserOfBadFileAndExit(String confFilename){
+        File configFile = new File(confFilename);
+        System.err.println("You told SOD to use "
+                + configFile.getAbsolutePath() + " as its strategy file");
+        if(configFile.exists()) {
+            System.err.println("SOD was unable to open it.  Make sure the file is readable.");
+        } else {
+            System.err.println("SOD could find no such file.  Make sure the file exists");
+        }
+        System.exit(0);
     }
 
     public Start(Document document) throws Exception {
