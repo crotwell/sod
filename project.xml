@@ -127,6 +127,12 @@
       <url>http://www.seis.sc.edu/software/TauP</url>
     </dependency>
     <dependency>
+      <id>junit-addons</id>
+      <version>1.3</version>
+      <type>test</type>
+      <url>http://junit.org/</url>
+    </dependency>
+    <dependency>
       <id>junit</id>
       <version>3.8.1</version>
       <type>test</type>
