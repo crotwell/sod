@@ -104,8 +104,8 @@
        <stationLatLonBox>
            <minLat>20</minLat>
            <maxLat>40</maxLat>
-           <minLon>20</minLon>
-           <maxLon>40</maxLon>
+           <minLon>-100</minLon>
+           <maxLon>-80</maxLon>
        </stationLatLonBox>
        <effectiveTimeOverlap>
    	   <min>1999-01-01T00:00:00Z</min>
