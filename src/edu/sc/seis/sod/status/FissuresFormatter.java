@@ -9,12 +9,13 @@ package edu.sc.seis.sod.status;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 
 /** this class largely exists as an access for various utility methods for
@@ -54,6 +55,21 @@ public class FissuresFormatter {
 
     public static MicroSecondDate getRangeEnd(TimeRange range) {
         return new MicroSecondDate(range.end_time);
+    }
+
+    public static QuantityImpl getDistance(Location from, Location to) {
+        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
+        return new QuantityImpl(d.delta, UnitImpl.DEGREE);
+    }
+
+    public static QuantityImpl getAz(Location from, Location to) {
+        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
+        return new QuantityImpl(d.az, UnitImpl.DEGREE);
+    }
+
+    public static QuantityImpl getBaz(Location from, Location to) {
+        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
+        return new QuantityImpl(d.baz, UnitImpl.DEGREE);
     }
 
 }
