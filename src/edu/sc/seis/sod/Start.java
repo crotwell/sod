@@ -189,7 +189,7 @@ public class Start{
                 }
             }
         }
-        new IndexTemplate(props.getProperty("sod.start.IndexPageDirectory",
+        new IndexTemplate(props.getProperty("sod.start.StatusBaseDirectory",
                                             "status"));
     }
 

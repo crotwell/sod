@@ -13,9 +13,11 @@ import org.w3c.dom.Element;
 public class MenuTemplate extends Template implements GenericTemplate{
 	
 	private String pathFrom;
+	private String fileDir;
 	
-	public MenuTemplate(Element el, String pathFrom){
+	public MenuTemplate(Element el, String pathFrom, String fileDir){
 		this.pathFrom = pathFrom;
+		this.fileDir = fileDir;
 		parse(el);
 	}
 	
@@ -23,7 +25,7 @@ public class MenuTemplate extends Template implements GenericTemplate{
 		if (tag.equals("relativePath")){
 			return new AllTypeTemplate(){
 				public String getResult(){
-					String absPathTo = el.getAttribute("xlink:href");
+					String absPathTo = fileDir + '/' + el.getFirstChild().getNodeValue();
 					return SodUtil.getRelativePath(pathFrom, absPathTo, "/");
 				}
 			};

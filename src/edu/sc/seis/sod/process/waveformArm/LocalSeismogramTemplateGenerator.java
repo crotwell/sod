@@ -5,24 +5,20 @@
  */
 
 package edu.sc.seis.sod.process.waveFormArm;
-import edu.sc.seis.sod.status.waveFormArm.*;
-
-
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import java.io.IOException;
+import edu.sc.seis.sod.status.waveFormArm.LocalSeismogramTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -47,7 +43,13 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             if (n.getNodeName().equals("fileDir")){
                 fileDir = n.getFirstChild().getNodeValue();
             }
-            else if (n.getNodeName().equals("seismogramConfig")){
+		}
+		if (fileDir == null){
+			fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+		}
+		for (int i = 0; i < nl.getLength(); i++) {
+            Node n = nl.item(i);
+            if (n.getNodeName().equals("seismogramConfig")){
                 waveformSeismogramConfig = TemplateFileLoader.getTemplate((Element)n);
                 
                 Node tmpEl = SodUtil.getElement(waveformSeismogramConfig, "outputLocation");
@@ -72,7 +74,6 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
                 }
             }
         }
-        
         if (fileDir == null || waveformSeismogramConfig == null || eventFormatter == null || stationFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
         }
@@ -117,9 +118,9 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             + stationFormatter.getResult(chan.my_site.my_station);
         LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
         if (template == null){
-            String outputLocation = fileDir + '/' + eventFormatter.getResult(event) + '/'
+            String outputLocation = eventFormatter.getResult(event) + '/'
                 + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
-            template = new LocalSeismogramTemplate(waveformSeismogramConfig, outputLocation,
+            template = new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
                                                      event, chan.my_site.my_station);
             templates.put(eventStationString, template);
         }

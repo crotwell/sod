@@ -24,8 +24,8 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     private List networkListeners = new ArrayList();
     private Logger logger = Logger.getLogger(NetworkStatusTemplate.class);
     
-    public NetworkStatusTemplate(Element el, String outputLocation) throws IOException{
-        super(outputLocation);
+    public NetworkStatusTemplate(Element el, String baseDir, String outputLocation) throws IOException{
+        super(baseDir, outputLocation);
         parse(el);
         write();
     }

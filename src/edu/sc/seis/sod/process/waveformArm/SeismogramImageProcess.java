@@ -18,12 +18,12 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import java.io.IOException;
 import java.util.Timer;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
@@ -71,6 +71,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 seismogramImageConfig.removeChild(tmpEl);
             }
         }
+		if (fileDir == null){
+			fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+		}
         if (fileDir == null || eventFormatter == null || stationFormatter == null || chanFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
         }

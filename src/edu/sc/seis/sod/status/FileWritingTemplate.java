@@ -14,8 +14,10 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
-    protected FileWritingTemplate(String loc) throws IOException  {
-		this.outputLocation = testOutputLoc(loc);
+    protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
+		this.baseDir = baseDir;
+		this.outputLocation = loc;
+		testOutputLoc(baseDir + '/' + loc);
     }
 	
     private static String testOutputLoc(String loc) throws IOException  {
@@ -46,20 +48,20 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
 		};
     }
 	
-    public String getOutputLocation(){ return outputLocation; }
+    public String getOutputLocation(){ return baseDir + '/' + outputLocation; }
 	
     public String getFilename()  {
-		return new File(outputLocation).getName();
+		return new File(getOutputLocation()).getName();
     }
 	
     protected File getOutputDirectory() {
-		return new File(outputLocation).getParentFile();
+		return new File(getOutputLocation()).getParentFile();
     }
 	
 	protected Object getTemplate(String tag, Element el){
 		if (tag.equals("menu")){
 			try {
-				return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation());
+				return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
 			} catch (Exception e) {
 				CommonAccess.handleException("Problem getting template for Menu", e);
 			}
@@ -70,8 +72,8 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
 	
     private class Writer extends PeriodicAction{
 		public void act(){
-			logger.debug("writing " + outputLocation);
-			File loc = new File(outputLocation);
+			logger.debug("writing " + getOutputLocation());
+			File loc = new File(getOutputLocation());
 			try {
 				File temp = File.createTempFile(loc.getName(), null);
 				BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
@@ -83,6 +85,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
 		}
     }
 	
+	private String baseDir;
     private Writer w = new Writer();
     private String outputLocation;
     private static Logger logger = Logger.getLogger(FileWritingTemplate.class);

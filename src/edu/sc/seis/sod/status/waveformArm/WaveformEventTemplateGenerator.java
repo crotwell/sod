@@ -40,6 +40,9 @@ public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStat
                 config.removeChild(tmp);
             }
         }
+		if (fileDir == null){
+			fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+		}
         if(formatter == null  || config == null) {
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformConfig");
         }
@@ -51,7 +54,7 @@ public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStat
 
     public WaveformEventTemplate getTemplate(EventAccessOperations ev) throws IOException {
         if(!eventTemplates.containsKey(ev)){
-            eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir + '/' + formatter.getResult(ev) + '/' + filename, ev));
+            eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir, formatter.getResult(ev) + '/' + filename, ev));
         }
         return (WaveformEventTemplate)eventTemplates.get(ev);
     }

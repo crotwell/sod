@@ -28,8 +28,8 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
     
-    public ChannelsInSiteTemplate(Element el, String outputLocation, Site site) throws IOException{
-        super(outputLocation);
+    public ChannelsInSiteTemplate(Element el, String baseDir, String outputLocation, Site site) throws IOException{
+        super(baseDir, outputLocation);
         this.site = site;
         parse(el);
         write();

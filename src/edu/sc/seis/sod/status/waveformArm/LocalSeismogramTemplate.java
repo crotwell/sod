@@ -27,9 +27,9 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     //I have every intention of getting rid of this as soon as possible
     private List channelListeners = new ArrayList();
     
-    public LocalSeismogramTemplate(Element el, String outputLocation, EventAccessOperations event, Station sta)
+    public LocalSeismogramTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event, Station sta)
         throws IOException{
-        super(outputLocation);
+        super(baseDir, outputLocation);
         this.event = event;
         station = sta;
         parse(el);

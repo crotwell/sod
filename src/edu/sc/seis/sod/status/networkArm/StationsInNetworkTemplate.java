@@ -28,8 +28,8 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
     private List stationListeners = new ArrayList();
     private Logger logger = Logger.getLogger(StationsInNetworkTemplate.class);
 
-    public StationsInNetworkTemplate(Element el, String outputLocation, NetworkAccess net) throws IOException{
-        super(outputLocation);
+    public StationsInNetworkTemplate(Element el, String baseDir, String outputLocation, NetworkAccess net) throws IOException{
+        super(baseDir, outputLocation);
         network = net;
         parse(el);
         write();

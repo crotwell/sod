@@ -26,8 +26,8 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInStationTemplate.class);
     
-    public ChannelsInStationTemplate(Element el, String outputLocation, Station sta) throws IOException{
-        super(outputLocation);
+    public ChannelsInStationTemplate(Element el, String baseDir, String outputLocation, Station sta) throws IOException{
+        super(baseDir, outputLocation);
         station = sta;
         parse(el);
         write();

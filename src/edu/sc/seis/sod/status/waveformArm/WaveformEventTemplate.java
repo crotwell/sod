@@ -18,12 +18,13 @@ import org.xml.sax.SAXException;
 public class WaveformEventTemplate extends FileWritingTemplate implements WaveFormStatus{
     public WaveformEventTemplate(Element el, EventAccessOperations event) throws Exception {
         this(TemplateFileLoader.getTemplate(el),
+			 el.getAttribute("fileDir"),
              el.getAttribute("outputLocation"),
              event);
     }
 
-    public WaveformEventTemplate(Element el, String outputLocation, EventAccessOperations event) throws IOException {
-        super(outputLocation);
+    public WaveformEventTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event) throws IOException {
+        super(baseDir, outputLocation);
         this.event = event;
         parse(el);
         if(Start.getWaveformArm() != null) Start.getWaveformArm().addStatusMonitor(this);

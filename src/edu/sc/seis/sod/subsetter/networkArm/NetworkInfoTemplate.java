@@ -20,8 +20,8 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
     private Logger logger = Logger.getLogger(NetworkInfoTemplate.class);
 
 
-    public NetworkInfoTemplate(String outputLocation) throws IOException{
-        super(outputLocation);
+    public NetworkInfoTemplate(String baseDir, String outputLocation) throws IOException{
+        super(baseDir, outputLocation);
     }
 
     public void changeStatus(RunStatus status) throws IOException {

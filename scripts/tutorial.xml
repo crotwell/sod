@@ -6,6 +6,10 @@
 			<value>Tutorial Test Run</value>
 		</property>
 		<property>
+			<name>sod.start.StatusBaseDirectory</name>
+			<value>status</value>
+		</property>
+		<property>
         		<name>sod.start.ReopenEvents</name>
 		        <value>true</value>
 		</property>
@@ -80,19 +84,19 @@
                         <contributor>NEIC</contributor>
                 </eventFinder>
                 <eventStatusTemplate>
-			<fileDir>status</fileDir>
+			<!--<fileDir>status</fileDir>-->
 			<eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
 		</eventStatusTemplate>
                 <eventStatusTemplate>
-			<fileDir>status</fileDir>
+			<!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
 		</eventStatusTemplate>
                 <eventStatusTemplate>
-			<fileDir>status</fileDir>
+			<!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
 		</eventStatusTemplate>
                 <eventStatusTemplate>
-			<fileDir>status</fileDir>
+			<!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
 		</eventStatusTemplate>
         </eventArm>
@@ -139,7 +143,7 @@
                         </channelEffectiveTimeOverlap>
                 </channelAND>
                 <networkInfoTemplateGenerator>
-                    <fileDir>status</fileDir>
+                    <!--<fileDir>status</fileDir>-->
                     <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
                     <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
@@ -178,12 +182,12 @@
                                 </eventDirLabel>
                         </saveSeismogramToFile>
                 		<localSeismogramTemplateGenerator>
-                				<fileDir>status</fileDir>
+                				<!--<fileDir>status</fileDir>-->
                 				<seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
                 		</localSeismogramTemplateGenerator>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
-                		<fileDir>status</fileDir>
+                		<!--<fileDir>status</fileDir>-->
                 		<waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
         </waveFormArm>

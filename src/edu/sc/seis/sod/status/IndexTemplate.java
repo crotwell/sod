@@ -13,7 +13,7 @@ import java.io.File;
 
 public class IndexTemplate extends FileWritingTemplate{
     public IndexTemplate(String dirName) throws IOException{
-        super(dirName + "/index.html");
+        super(dirName, "index.html");
         try {
             initExceptionHandler();
             Element template = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
