@@ -1,4 +1,12 @@
 #!/bin/sh
+
+echo *******************************************************************
+echo * 
+echo *  This uses the java built in Orb. Please use JacORB instead.
+echo *
+echo *******************************************************************
+sleep 5
+
 MAVEN=~/.maven
 
 SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta.jar
