@@ -27,7 +27,6 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
@@ -36,8 +35,6 @@ import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
-import edu.sc.seis.fissuresUtil.display.registrar.PhaseAlignedTimeConfig;
-import edu.sc.seis.fissuresUtil.display.registrar.TimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
@@ -54,7 +51,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     public SeismogramImageProcess(SeismogramImageOutputLocator locator)
             throws TauModelException {
         this.locator = locator;
-        initTaup();
+        tauP = TauPUtil.getTauPUtil();
         putDataInCookieJar = true;
     }
 
@@ -87,16 +84,7 @@ public class SeismogramImageProcess implements WaveformProcess {
             }
         }
         locator = new SeismogramImageOutputLocator(el);
-        initTaup();
-    }
-
-    private void initTaup() throws TauModelException {
         tauP = TauPUtil.getTauPUtil(modelName);
-        if(tauptime == null) {
-            tauptime = new TauP_Time("iasp91");
-            tauptime.clearPhaseNames();
-            tauptime.appendPhaseName("P");
-        }
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -143,7 +131,6 @@ public class SeismogramImageProcess implements WaveformProcess {
                        seismograms,
                        fileType,
                        phases,
-                       relativeTime,
                        cookieJar);
     }
 
@@ -173,16 +160,6 @@ public class SeismogramImageProcess implements WaveformProcess {
             memDSS.add(seismograms[i]);
         }
         return memDSS;
-    }
-
-    protected TimeConfig getTimeConfig(boolean relTime) {
-        if(relTime) {
-            PhaseAlignedTimeConfig phaseTime = new PhaseAlignedTimeConfig();
-            phaseTime.setTauP(tauptime);
-            return phaseTime;
-        } else {
-            return new BasicTimeConfig();
-        }
     }
 
     protected Arrival[] getArrivals(Channel chan, Origin o, String[] phases)
@@ -223,7 +200,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
         SeismogramDisplay bsd = sdc.createDisplay();
-        bsd.setTimeConfig(getTimeConfig(relTime));
+        bsd.setTimeConfig(new BasicTimeConfig());
         MemoryDataSetSeismogram memDSS = createSeis(seismograms,
                                                     original,
                                                     phaseWindow,
@@ -322,13 +299,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private String modelName = "iasp91";
 
-    private boolean relativeTime = false;
-
     protected String[] phaseFlagNames = DEFAULT_PHASES;
 
     protected Dimension dims = DEFAULT_DIMENSION;
-
-    private static TauP_Time tauptime = null;
 
     public static final String PDF = "pdf";
 
