@@ -15,7 +15,7 @@ public class EventGroupTemplateTest extends TestCase{
     public EventGroupTemplateTest(String name){ super(name); }
     
     public void setUp(){
-        egt = new EventGroupTemplate();
+        egt = EventGroupTemplate.createDefaultTemplate();
         epochEvent = MockFissures.createEvent();
         berlinEvent = MockFissures.createFallEvent();
     }
