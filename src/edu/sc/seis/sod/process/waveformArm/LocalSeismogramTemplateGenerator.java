@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -78,17 +80,6 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         if (fileDir == null || waveformSeismogramConfig == null || eventFormatter == null || stationFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
         }
-
-        synchronized(getClass()) {
-            if (velocity == null) {
-                velocity = new VelocityEngine();
-                Properties props = new Properties();
-                props.put("resource.loader", "class");
-                props.put("class.resource.loader.description", "Velocity Classpath Resource Loader");
-                props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-                velocity.init(props);
-            }
-        }
     }
 
     public static VelocityEngine getVelocity() {
@@ -96,6 +87,25 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
     }
 
     static VelocityEngine velocity = null;
+
+    static {
+        try {
+            velocity = new VelocityEngine();
+            String loggerName = "Velocity";
+            Logger velocityLogger = Logger.getLogger(loggerName);
+            Properties props = new Properties();
+            props.put("resource.loader", "class");
+            props.put("class.resource.loader.description", "Velocity Classpath Resource Loader");
+            props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            props.put( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+                      "org.apache.velocity.runtime.log.SimpleLog4JLogSystem" );
+
+            props.put("runtime.log.logsystem.log4j.category", loggerName);
+            velocity.init(props);
+        } catch(Throwable t) {
+            GlobalExceptionHandler.handle("Problem initializing Velocity", t);
+        }
+    }
 
     /**
      * Processes localSeismograms, possibly modifying them.
@@ -137,14 +147,15 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
     public LocalSeismogramTemplate getTemplate(EventAccessOperations event, Channel chan, CookieJar cookieJar) throws Exception{
         String eventStationString = eventFormatter.getResult(event)
             + stationFormatter.getResult(chan.my_site.my_station);
-        LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
-        if (template == null){
+        if ( ! templates.containsKey(eventStationString)) {
             String outputLocation = eventFormatter.getResult(event) + '/'
                 + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
-            template = new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
-                                                   event, chan.my_site.my_station, cookieJar);
+            LocalSeismogramTemplate template =
+                new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
+                                            event, chan.my_site.my_station, cookieJar);
             templates.put(eventStationString, template);
         }
+        LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
         template.update(chan, cookieJar);
         return template;
     }
