@@ -28,9 +28,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     public SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
-
         UpdateChecker check = new UpdateChecker(true);
-
         frameName = "SOD Editor";
         setTabbed(true);
         initEditors();
@@ -135,8 +133,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     protected HashMap editors = new HashMap();
 
-    protected Start start;
-
     public static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
 
     public static final UnitImpl[] ANGLE_UNITS = { UnitImpl.DEGREE };
@@ -151,11 +147,5 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 
-
     private static final Logger logger = Logger.getLogger(SodGUIEditor.class);
-
-
 }
-
-
-
