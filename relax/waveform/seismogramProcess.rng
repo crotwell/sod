@@ -73,9 +73,9 @@
             <element name="classname">
                 <data type="string"/>
             </element>
-            <optional>
+            <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
-            </optional>
+            </zeroOrMore>
         </element>
     </define>
     <define name="printlineSeismogramProcess">
