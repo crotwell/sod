@@ -294,19 +294,10 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 			   int numchannels,
 			   MicroSecondDate date) {
 	try {
-	   //  if(siteid == 5){  System.out.println("siteid is 5");
-// 	    // System.exit(0);
-// 	    }
-	    System.out.println("IN the database putSiteInfo entered");
 	  
 	    if(isSiteInfoInserted(waveformeventid,
 				  siteid)) return 0;
-	  //   if(siteid == 5){  System.out.println("siteid is 5 after ischeck");
-// 	    System.exit(0);
-// 	    }
 
-	    System.out.println("In the database putSiteInfo after isSiteInfoInserted");
-	    //if(siteid == 2) System.exit(0);			       
 	    insert(putSiteInfoStmt,
 		   1,
 		   waveformeventid, 
@@ -314,9 +305,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		   stationid, 
 		   numchannels,
 		   date);
-	    System.out.println("Before executeupdate in putSiteInfo");
 	    putSiteInfoStmt.executeUpdate();
-	    System.out.println("After executeupdate in putSiteInfo");
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
@@ -425,11 +414,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		insertForIncrDecr(channelCountStmt, 
 				  1, -1, waveformeventid, siteid);
 		int count = getChannelCount(waveformeventid, siteid);
-		logger.debug(".......... channel count before is "+count);
 		channelCountStmt.executeUpdate();
 		
-		System.out.println("The channel count after decrement is "+
-				   getChannelCount(waveformeventid, siteid));
 		//}
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -532,12 +518,6 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 		getChannelCountStmt.setInt(2, siteid);
 		ResultSet rs = getChannelCountStmt.executeQuery();
 		if(rs.next()) return rs.getInt(1);
-		else {
-		    System.out.println("The channel is not in the database");
-		    System.out.println(" the siteid is "+siteid);
-		    System.out.println(" the eventid is "+waveformeventid);
-		    System.exit(0);
-		}	
 	} catch(SQLException sqle) {
 		sqle.printStackTrace();
 	}
@@ -830,7 +810,6 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	int[] eventids = getUnfinishedEvents();
 	int[] rtnValues = new  int[0];
 	for(int counter = 0; counter < eventids.length; counter++) {
-		System.out.println("THE EVENT ID THAT IS OBTAINED IS "+eventids[counter]);
 		int[] ids = getIds(eventids[counter]);
 		int[] tmp = new int[rtnValues.length + ids.length];
 		System.arraycopy(rtnValues, 0, tmp, 0, rtnValues.length);
