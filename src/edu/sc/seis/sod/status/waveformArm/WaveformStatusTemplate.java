@@ -28,7 +28,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements WaveF
             eventTemplates.add(ect);
             return ect;
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
 
     public void update(EventChannelPair ecp) throws Exception{

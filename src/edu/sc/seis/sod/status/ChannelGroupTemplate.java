@@ -46,7 +46,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
     
     public Object getTemplate(String tag, Element element){
         if(tag.equals("channel")) return new ChannelFormatter(element, this);
-        return null;
+        return super.getTemplate(tag, element);
     }
 }
 

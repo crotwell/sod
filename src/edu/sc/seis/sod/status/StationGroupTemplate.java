@@ -27,7 +27,7 @@ public class StationGroupTemplate extends Template implements GenericTemplate{
      */
     protected Object getTemplate(String tag, Element el) {
         if (tag.equals("station")) return new StationFormatter(el, this);
-        return null;
+        return super.getTemplate(tag, el);
     }
     
     /**

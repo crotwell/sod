@@ -125,7 +125,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                 }
             };
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
     
     private String format(double d){

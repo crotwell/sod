@@ -166,7 +166,7 @@ public class StationFormatter extends Template implements StationTemplate{
             };
         }
         
-        return null;
+        return super.getTemplate(tag, el);
     }
 
 }

@@ -80,7 +80,7 @@ public class EventFormatter extends Template implements EventTemplate{
         } else if(tag.equals("originTime")) {
             return new Time(SodUtil.getText((el)));
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
 
     private String format(double d){

@@ -31,7 +31,7 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
         if (tag.equals("network")){
             return new NetworkFormatter(el, this);
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
     
     /**

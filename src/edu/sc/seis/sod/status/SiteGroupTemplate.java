@@ -27,7 +27,7 @@ public class SiteGroupTemplate extends Template implements GenericTemplate {
      */
     protected Object getTemplate(String tag, Element el) {
         if (tag.equals("site")) return new SiteFormatter(el, this);
-        return null;
+        return super.getTemplate(tag, el);
     }
     
     /**

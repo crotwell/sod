@@ -55,7 +55,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
             }
             return mapStatus;
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
     
 

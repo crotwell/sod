@@ -148,7 +148,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
                 }
             };
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
     
     public static String formatSiteCode(String siteCode){

@@ -57,7 +57,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             };
         }
         if(tag.equals("event")){  return new EventTemplate(el); }
-        return null;
+        return super.getTemplate(tag, el);
     }
 
     private class EventTemplate implements GenericTemplate{

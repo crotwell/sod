@@ -63,7 +63,6 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, final Element el) {
-        
         if (tag.equals("networkCode")){
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
@@ -131,7 +130,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                 }
             };
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
 }
 

@@ -61,7 +61,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         if (tag.equals("station")){
             return new MyStationTemplate(el);
         }
-        return null;
+        return super.getTemplate(tag,el);
     }
     
     private class EventTemplate implements GenericTemplate{

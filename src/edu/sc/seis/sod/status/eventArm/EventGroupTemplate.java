@@ -46,7 +46,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
             sorter = new EventSorter(el);
             return textTemplate("");
         }
-        return null;
+        return super.getTemplate(tag, el);
     }
 
     public Object textTemplate(final String text){
