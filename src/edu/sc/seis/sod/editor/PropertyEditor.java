@@ -18,14 +18,11 @@ import java.awt.event.*;
 
 
 
-public class PropertyEditor implements EditorPlugin
-{
+public class PropertyEditor implements EditorPlugin {
 
-    public JComponent getGUI(Element element) throws TransformerException
-    {
+    public JComponent getGUI(Element element) throws TransformerException {
         JPanel panel = new JPanel();
-        if (element.getTagName().equals("property"))
-        {
+        if (element.getTagName().equals("property")) {
             panel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx=0;
@@ -38,27 +35,26 @@ public class PropertyEditor implements EditorPlugin
             JLabel label;
             String labeltext = null;
             StringTokenizer st = new StringTokenizer(text.getNodeValue(),".");
-            while(st.hasMoreTokens())
+            while(st.hasMoreTokens()) {
                 labeltext = st.nextToken();
-
-            label = new JLabel(labeltext+" ");
+            }
+            label = EditorUtil.getLabel(labeltext);
 
             label.setHorizontalTextPosition(SwingConstants.RIGHT);
             panel.add(label, gbc);
             gbc.gridx++;
             JComboBox combo = null;
 
-            if(labeltext.equals("getNewEvents"))
-            combo = initComboBox(element,flags);
+            if(labeltext.equals("getNewEvents")) {
+                combo = initComboBox(element,flags);
 
-            else if ( labeltext.equals("daystoincrement"))
-            {
+            } else if ( labeltext.equals("daystoincrement")) {
                 //for(int j=1;j<=100;j++)
-                    //vals[j]= (new Integer(j)).toString();
+                //vals[j]= (new Integer(j)).toString();
                 combo = initComboBox(element,numVals);
-            }
-            else
+            } else {
                 combo = initComboBox(element,defaultVals);
+            }
             panel.add(combo, gbc);
             gbc.gridx--;
 
