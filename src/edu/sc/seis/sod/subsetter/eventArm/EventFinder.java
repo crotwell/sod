@@ -15,68 +15,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * This subsetter specifies the source of eventDC and the parameters required to query for events.
- *<pre>
- *  &lt;eventFinder&gt;
- *      &lt;name&gt;ANHINGAEVENTDC&lt;/name&gt;
- *      &lt;dns&gt;edu/sc/seis&lt;/dns&gt;
- *      &lt;globalArea/&gt;
- *      &lt;originDepthRange&gt;
- *          &lt;unitRange&gt;
- *              &lt;unit&gt;KILOMETER&lt;/unit&gt;
- *              &lt;min&gt;0&lt;/min&gt;
- *              &lt;max&gt;1000&lt;/max&gt;
- *          &lt;/unitRange&gt;
- *      &lt;/originDepthRange&gt;
- *      &lt;eventTimeRange&gt;
- *      &lt;timeRange&gt;
- *          &lt;startTime&gt;1999-01-01T00:00:00Z&lt;/startTime&gt;
- *          &lt;endTime&gt;2003-01-01T00:00:00Z&lt;/endTime&gt;
- *      &lt;/timeRange&gt;
- *      &lt;/eventTimeRange&gt;
- *      &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
- *      &lt;contributor&gt;&lt;value&gt;NEIC&lt;/value&gt;&lt;/contributor&gt;
- * &lt;/eventFinder&gt;
- *
- *                      (or)
- *
- *  &lt;eventFinder&gt;
- *      &lt;name&gt;ANHINGAEVENTDC&lt;/name&gt;
- *      &lt;dns&gt;edu/sc/seis&lt;/dns&gt;
- *      &lt;globalArea/&gt;
- *      &lt;eventTimeRange&gt;
- *      &lt;timeRange&gt;
- *          &lt;startTime&gt;1999-01-01T00:00:00Z&lt;/startTime&gt;
- *          &lt;endTime&gt;2003-01-01T00:00:00Z&lt;/endTime&gt;
- *      &lt;/timeRange&gt;
- *      &lt;/eventTimeRange&gt;
- *      &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
- *      &lt;contributor&gt;&lt;value&gt;NEIC&lt;/value&gt;&lt;/contributor&gt;
- *  &lt;/eventFinder&gt;
- *
- *                                  (or)
- *
- *  &lt;eventFinder&gt;
- *      &lt;name&gt;ANHINGAEVENTDC&lt;/name&gt;
- *      &lt;dns&gt;edu/sc/seis&lt;/dns&gt;
- *      &lt;globalArea/&gt;
- *      &lt;originDepthRange&gt;
- *          &lt;unitRange&gt;
- *              &lt;unit&gt;KILOMETER&lt;/unit&gt;
- *              &lt;min&gt;0&lt;/min&gt;
- *              &lt;max&gt;1000&lt;/max&gt;
- *          &lt;/unitRange&gt;
- *      &lt;/originDepthRange&gt;
- *      &lt;eventTimeRange&gt;
- *      &lt;timeRange&gt;
- *          &lt;startTime&gt;1999-01-01T00:00:00Z&lt;/startTime&gt;
- *          &lt;endTime&gt;2003-01-01T00:00:00Z&lt;/endTime&gt;
- *      &lt;/timeRange&gt;
- *      &lt;/eventTimeRange&gt;
- *  &lt;/eventFinder&gt;
- *</pre>
- */
 
 public class EventFinder extends AbstractSource implements SodElement {
     public EventFinder (Element config) throws Exception{

@@ -13,40 +13,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- *<pre>
- * This subsetter specifies the MagnitudeRange
- * &lt;magnitudeRange&gt;
- *   &lt;magType&gt;mb&lt;/magType&gt;
- *   &lt;magType&gt;MS&lt;/magType&gt;
- *   &lt;min&gt;3.5&lt;/min&gt;
- *       &lt;max&gt;8.0&lt;/max&gt;
- *  &lt;/magnitudeRange&gt;
- *
- *         (or)
- *
- * &lt;magnitudeRange&gt;
- *   &lt;magType&gt;mb&lt;/magType&gt;
- *   &lt;magType&gt;MS&lt;/magType&gt;
- *       &lt;max&gt;8.0&lt;/max&gt;
- *  &lt;/magnitudeRange&gt;
- *
- *         (or)
- *
- * &lt;magnitudeRange&gt;
- *   &lt;magType&gt;mb&lt;/magType&gt;
- *   &lt;magType&gt;MS&lt;/magType&gt;
- *   &lt;min&gt;3.5&lt;/min&gt;
- *  &lt;/magnitudeRange&gt;
- *
- *          (or)
- *
- * &lt;magnitudeRange&gt;
- *   &lt;magType&gt;mb&lt;/magType&gt;
- *   &lt;magType&gt;MS&lt;/magType&gt;
- *  &lt;/magnitudeRange&gt;
- *</pre>
- */
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     /**
