@@ -51,7 +51,7 @@ public class EventPageTest extends TestCase{
         "<header><title>Test Title</title></header>\n" +
         "<body>\n" +
         "<b>Channels for " + EVENT_OUTPUT + ":</b><br>\n" +
-        "COMPLETE_SUCCESS " + CHANNEL_STRING + "<br>\n" +
+        "Success " + CHANNEL_STRING + "<br>\n" +
         "</body>\n" +
         "</html>";
 }

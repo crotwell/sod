@@ -57,7 +57,7 @@ public class WaveformEventGroupTest extends TestCase{
     
     public void testRejectMonitor() throws Exception {
         try{
-            ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount><COMPLETE_REJECT/><COMPLETE_SUCCESS/></channelCount>\n</events>"));
+            ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount><FAILURE/><SUCCESS/></channelCount>\n</events>"));
         } catch (SAXException e) {} catch (ParserConfigurationException e) {} catch (IOException e) {}
         ect.update(rejectify(MockECP.getECP(MockChannel.createChannel())));
         ect.update(simpleECP);
