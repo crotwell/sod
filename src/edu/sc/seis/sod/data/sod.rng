@@ -201,7 +201,7 @@
                                     <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml32"/>
+                                    <ref name="xml42"/>
                                     </choice>
                                     </oneOrMore>
                                 </element>
@@ -214,7 +214,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml31"/>
+                                    <ref name="xml41"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -234,7 +234,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml30"/>
+                                    <ref name="xml40"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -309,7 +309,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml28"/>
+                                    <ref name="xml38"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -321,7 +321,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml27"/>
+                                    <ref name="xml37"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -354,7 +354,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml26"/>
+                                    <ref name="xml36"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -364,7 +364,7 @@
             <choice>
                 <element name="waveformArm">
                     <optional>
-                        <ref name="eventStation3"/>
+                        <ref name="eventStation4"/>
                     </optional>
                     <optional>
                         <ref name="eventChannel3"/>
@@ -457,7 +457,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml45"/>
+                                    <ref name="xml58"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -466,7 +466,7 @@
                 </element>
                 <element name="waveformVectorArm">
                     <optional>
-                        <ref name="eventStation5"/>
+                        <ref name="eventStation3"/>
                     </optional>
                     <optional>
                         <ref name="eventVector"/>
@@ -604,7 +604,7 @@
     <define name="eventChannel3">
         <choice>
             <element name="embeddedEventStation">
-                <ref name="eventStation4"/>
+                <ref name="eventStation5"/>
             </element>
             <element name="embeddedChannel">
                 <ref name="channel4"/>
@@ -634,7 +634,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml41"/>
+                        <ref name="xml51"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -673,7 +673,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml12"/>
+                        <ref name="xml21"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -712,7 +712,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml13"/>
+                        <ref name="xml22"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -751,7 +751,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml18"/>
+                        <ref name="xml27"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -857,7 +857,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml36"/>
+                        <ref name="xml46"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -972,7 +972,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml34"/>
+                        <ref name="xml44"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1011,7 +1011,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml6"/>
+                        <ref name="xml15"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1073,7 +1073,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml43"/>
+                        <ref name="xml53"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1135,7 +1135,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml8"/>
+                        <ref name="xml17"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1197,7 +1197,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml7"/>
+                        <ref name="xml16"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1332,19 +1332,19 @@
     <define name="eventStation5">
         <choice>
             <element name="distanceRange">
-                <ref name="range11"/>
+                <ref name="range9"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin6"/>
+                <ref name="origin5"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station6"/>
+                <ref name="station5"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range11"/>
+                <ref name="range9"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range11"/>
+                <ref name="range9"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1364,7 +1364,7 @@
                         </element>
                     </optional>
                 </element>
-                <ref name="range11"/>
+                <ref name="range9"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1429,7 +1429,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml48"/>
+                        <ref name="xml49"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1540,7 +1540,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml20"/>
+                        <ref name="xml29"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1651,7 +1651,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml15"/>
+                        <ref name="xml24"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1665,19 +1665,19 @@
     <define name="eventStation4">
         <choice>
             <element name="distanceRange">
-                <ref name="range9"/>
+                <ref name="range5"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin5"/>
+                <ref name="origin3"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station5"/>
+                <ref name="station3"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range9"/>
+                <ref name="range5"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range9"/>
+                <ref name="range5"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1697,7 +1697,7 @@
                         </element>
                     </optional>
                 </element>
-                <ref name="range9"/>
+                <ref name="range5"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1762,7 +1762,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml39"/>
+                        <ref name="xml33"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1776,19 +1776,19 @@
     <define name="eventStation3">
         <choice>
             <element name="distanceRange">
-                <ref name="range5"/>
+                <ref name="range11"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin3"/>
+                <ref name="origin6"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station3"/>
+                <ref name="station6"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range5"/>
+                <ref name="range11"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range5"/>
+                <ref name="range11"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1808,7 +1808,7 @@
                         </element>
                     </optional>
                 </element>
-                <ref name="range5"/>
+                <ref name="range11"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1873,7 +1873,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml23"/>
+                        <ref name="xml32"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1929,12 +1929,12 @@
                 </optional>
                 <optional>
                     <element name="depthVariance">
-                        <ref name="length6"/>
+                        <ref name="length2"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="distanceVariance">
-                        <ref name="length6"/>
+                        <ref name="length2"/>
                     </element>
                 </optional>
             </element>
@@ -2108,7 +2108,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml22"/>
+                        <ref name="xml31"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2338,7 +2338,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml17"/>
+                        <ref name="xml26"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2389,12 +2389,12 @@
                 </optional>
                 <optional>
                     <element name="depthVariance">
-                        <ref name="length3"/>
+                        <ref name="length4"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="distanceVariance">
-                        <ref name="length3"/>
+                        <ref name="length4"/>
                     </element>
                 </optional>
             </element>
@@ -2568,7 +2568,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml25"/>
+                        <ref name="xml35"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2619,12 +2619,12 @@
                 </optional>
                 <optional>
                     <element name="depthVariance">
-                        <ref name="length5"/>
+                        <ref name="length6"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="distanceVariance">
-                        <ref name="length5"/>
+                        <ref name="length6"/>
                     </element>
                 </optional>
             </element>
@@ -2798,7 +2798,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml46"/>
+                        <ref name="xml59"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2849,12 +2849,12 @@
                 </optional>
                 <optional>
                     <element name="depthVariance">
-                        <ref name="length2"/>
+                        <ref name="length3"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="distanceVariance">
-                        <ref name="length2"/>
+                        <ref name="length3"/>
                     </element>
                 </optional>
             </element>
@@ -3028,7 +3028,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml37"/>
+                        <ref name="xml47"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3079,12 +3079,12 @@
                 </optional>
                 <optional>
                     <element name="depthVariance">
-                        <ref name="length4"/>
+                        <ref name="length5"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="distanceVariance">
-                        <ref name="length4"/>
+                        <ref name="length5"/>
                     </element>
                 </optional>
             </element>
@@ -3258,7 +3258,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml33"/>
+                        <ref name="xml43"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3359,7 +3359,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml16"/>
+                        <ref name="xml25"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3460,7 +3460,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml35"/>
+                        <ref name="xml45"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3561,7 +3561,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml38"/>
+                        <ref name="xml48"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3662,7 +3662,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml21"/>
+                        <ref name="xml30"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3763,7 +3763,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml47"/>
+                        <ref name="xml60"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3864,7 +3864,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml24"/>
+                        <ref name="xml34"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4205,7 +4205,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml11"/>
+                        <ref name="xml20"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4318,7 +4318,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml10"/>
+                        <ref name="xml19"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4431,7 +4431,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml42"/>
+                        <ref name="xml52"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4557,7 +4557,7 @@
             </element>
         </choice>
     </define>
-    <define name="timeUnit">
+    <define name="timeUnit6">
         <choice>
             <element name="unit">
                 <choice>
@@ -4587,7 +4587,7 @@
             </element>
         </choice>
     </define>
-    <define name="timeUnit6">
+    <define name="timeUnit">
         <choice>
             <element name="unit">
                 <choice>
@@ -4708,7 +4708,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml29"/>
+                        <ref name="xml39"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4805,7 +4805,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml19"/>
+                        <ref name="xml28"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4902,7 +4902,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml14"/>
+                        <ref name="xml23"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4999,7 +4999,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml40"/>
+                        <ref name="xml50"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5199,7 +5199,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml5"/>
+                        <ref name="xml14"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5271,11 +5271,39 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="seismogramConfig">
-                        <element name="template">
-                            <data type="string"/>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
                         </element>
-                    </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml13"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml12"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml11"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
                     <element name="prefix">
@@ -5453,7 +5481,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml3"/>
+                        <ref name="xml6"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5525,11 +5553,39 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="seismogramConfig">
-                        <element name="template">
-                            <data type="string"/>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
                         </element>
-                    </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml5"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml4"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml3"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
                     <element name="prefix">
@@ -5577,260 +5633,6 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess"/>
-            </element>
-            <element name="someDataCoverage">
-                <empty/>
-            </element>
-            <element name="noDataGaps">
-                <empty/>
-            </element>
-            <element name="fullDataCoverage">
-                <empty/>
-            </element>
-        </choice>
-    </define>
-    <define name="seismogramProcess4">
-        <choice>
-            <element name="printlineSeismogramProcess">
-                <empty/>
-            </element>
-            <element name="saveSeismogramToFile">
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <element name="eventDirLabel">
-                    <interleave>
-                        <text/>
-                        <optional>
-                            <element name="feRegionName">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="feRegionNumber">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="depth">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="magnitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="latitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="longitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="originTime">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                    </interleave>
-                </element>
-                <optional>
-                    <element name="id">
-                        <data type="string"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="recordSectionDisplayGenerator">
-                <element name="id">
-                    <data type="string"/>
-                </element>
-                <element name="displayOption">
-                    <choice>
-                        <value>BEST</value>
-                        <value>ALL</value>
-                    </choice>
-                </element>
-                <element name="fileNameBase">
-                    <data type="string"/>
-                </element>
-                <element name="numSeisPerRecordSection">
-                    <data type="integer"/>
-                </element>
-            </element>
-            <element name="responseGain">
-                <empty/>
-            </element>
-            <element name="phaseCut">
-                <ref name="phaseWindow4"/>
-            </element>
-            <element name="rMean">
-                <empty/>
-            </element>
-            <element name="rTrend">
-                <empty/>
-            </element>
-            <element name="taper">
-                <optional>
-                    <element name="width">
-                        <data type="float"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="type">
-                        <choice>
-                            <value>HANNING</value>
-                            <value>HAMMING</value>
-                            <value>COSINE</value>
-                        </choice>
-                    </element>
-                </optional>
-            </element>
-            <element name="externalWaveformProcess">
-                <element name="classname">
-                    <data type="string"/>
-                </element>
-                <oneOrMore>
-                    <choice>
-                        <text/>
-                        <ref name="xml44"/>
-                    </choice>
-                </oneOrMore>
-            </element>
-            <element name="localSeismogramTemplateGenerator">
-                <element name="template">
-                    <data type="string"/>
-                </element>
-            </element>
-            <element name="filter">
-                <element name="lowFreqCorner">
-                    <ref name="cornerSetting4"/>
-                </element>
-                <element name="highFreqCorner">
-                    <ref name="cornerSetting4"/>
-                </element>
-                <element name="numPoles">
-                    <data type="integer"/>
-                </element>
-                <element name="filterType">
-                    <choice>
-                        <value>NONCAUSAL</value>
-                        <value>CAUSAL</value>
-                        <value>TWOPASS</value>
-                    </choice>
-                </element>
-            </element>
-            <element name="forkProcess">
-                <oneOrMore>
-                    <ref name="seismogramProcess4"/>
-                </oneOrMore>
-            </element>
-            <element name="alwaysSuccess">
-                <ref name="seismogramProcess4"/>
-            </element>
-            <element name="phaseSignalToNoise">
-                <optional>
-                    <element name="modelName">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-                <element name="shortOffsetBegin">
-                    <ref name="time24"/>
-                </element>
-                <element name="shortOffsetEnd">
-                    <ref name="time24"/>
-                </element>
-                <element name="longOffsetBegin">
-                    <ref name="time24"/>
-                </element>
-                <element name="longOffsetEnd">
-                    <ref name="time24"/>
-                </element>
-                <element name="ratio">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="seismogramImageProcess">
-                <optional>
-                    <element name="phaseWindow">
-                        <ref name="phaseWindow4"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="fileDir">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="seismogramConfig">
-                        <element name="template">
-                            <data type="string"/>
-                        </element>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="putDataInCookieJar">
-                        <empty/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="fileType">
-                        <choice>
-                            <value>png</value>
-                            <value>pdf</value>
-                        </choice>
-                    </element>
-                </optional>
-            </element>
-            <element name="legacyExecute">
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="command">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="seismogramAND">
-                <oneOrMore>
-                    <ref name="seismogramProcess4"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramOR">
-                <oneOrMore>
-                    <ref name="seismogramProcess4"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramNOT">
-                <ref name="seismogramProcess4"/>
             </element>
             <element name="someDataCoverage">
                 <empty/>
@@ -5961,7 +5763,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml4"/>
+                        <ref name="xml10"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -6033,11 +5835,39 @@
                     </element>
                 </optional>
                 <optional>
-                    <element name="seismogramConfig">
-                        <element name="template">
-                            <data type="string"/>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
                         </element>
-                    </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml9"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml8"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml7"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
                     <element name="prefix">
@@ -6085,6 +5915,288 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess2"/>
+            </element>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="seismogramProcess4">
+        <choice>
+            <element name="printlineSeismogramProcess">
+                <empty/>
+            </element>
+            <element name="saveSeismogramToFile">
+                <element name="fileType">
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
+                </element>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="dataDirectory">
+                    <data type="string"/>
+                </element>
+                <element name="eventDirLabel">
+                    <interleave>
+                        <text/>
+                        <optional>
+                            <element name="feRegionName">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="feRegionNumber">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="depth">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="magnitude">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="latitude">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="longitude">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="originTime">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                    </interleave>
+                </element>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <element name="id">
+                    <data type="string"/>
+                </element>
+                <element name="displayOption">
+                    <choice>
+                        <value>BEST</value>
+                        <value>ALL</value>
+                    </choice>
+                </element>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+                <element name="numSeisPerRecordSection">
+                    <data type="integer"/>
+                </element>
+            </element>
+            <element name="responseGain">
+                <empty/>
+            </element>
+            <element name="phaseCut">
+                <ref name="phaseWindow4"/>
+            </element>
+            <element name="rMean">
+                <empty/>
+            </element>
+            <element name="rTrend">
+                <empty/>
+            </element>
+            <element name="taper">
+                <optional>
+                    <element name="width">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="externalWaveformProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml54"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="localSeismogramTemplateGenerator">
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="filter">
+                <element name="lowFreqCorner">
+                    <ref name="cornerSetting4"/>
+                </element>
+                <element name="highFreqCorner">
+                    <ref name="cornerSetting4"/>
+                </element>
+                <element name="numPoles">
+                    <data type="integer"/>
+                </element>
+                <element name="filterType">
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="forkProcess">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess4"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time24"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time24"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time24"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time24"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow4"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
+                        </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml55"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml56"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml57"/>
+                                    </choice>
+                                </oneOrMore>
+                            </element>
+                        </element>
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="putDataInCookieJar">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramNOT">
+                <ref name="seismogramProcess4"/>
             </element>
             <element name="someDataCoverage">
                 <empty/>
@@ -6175,7 +6287,7 @@
     </define>
     <define name="length3">
         <interleave>
-            <ref name="lengthUnit4"/>
+            <ref name="lengthUnit3"/>
             <element name="value">
                 <data type="float"/>
             </element>
@@ -6183,7 +6295,7 @@
     </define>
     <define name="length5">
         <interleave>
-            <ref name="lengthUnit6"/>
+            <ref name="lengthUnit5"/>
             <element name="value">
                 <data type="float"/>
             </element>
@@ -6191,7 +6303,7 @@
     </define>
     <define name="length2">
         <interleave>
-            <ref name="lengthUnit3"/>
+            <ref name="lengthUnit2"/>
             <element name="value">
                 <data type="float"/>
             </element>
@@ -6207,7 +6319,7 @@
     </define>
     <define name="length4">
         <interleave>
-            <ref name="lengthUnit5"/>
+            <ref name="lengthUnit4"/>
             <element name="value">
                 <data type="float"/>
             </element>
@@ -6215,7 +6327,7 @@
     </define>
     <define name="length6">
         <interleave>
-            <ref name="lengthUnit2"/>
+            <ref name="lengthUnit6"/>
             <element name="value">
                 <data type="float"/>
             </element>
@@ -6644,6 +6756,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml58">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml58"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml14">
         <element>
             <anyName/>
@@ -6654,6 +6780,20 @@
                     </attribute>
                     <text/>
                     <ref name="xml14"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml57">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml57"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -6770,6 +6910,34 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml56">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml56"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml59">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml59"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml34">
         <element>
             <anyName/>
@@ -6798,6 +6966,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml60">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml60"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml32">
         <element>
             <anyName/>
@@ -6822,6 +7004,34 @@
                     </attribute>
                     <text/>
                     <ref name="xml10"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml49">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml49"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml55">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml55"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -6868,6 +7078,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml53">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml53"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml46">
         <element>
             <anyName/>
@@ -6892,6 +7116,34 @@
                     </attribute>
                     <text/>
                     <ref name="xml24"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml51">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml51"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml52">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml52"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -7050,6 +7302,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml50">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml50"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml12">
         <element>
             <anyName/>
@@ -7186,6 +7452,20 @@
                     </attribute>
                     <text/>
                     <ref name="xml42"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml54">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml54"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -7594,7 +7874,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml9"/>
+                        <ref name="xml18"/>
                     </choice>
                 </oneOrMore>
             </element>
