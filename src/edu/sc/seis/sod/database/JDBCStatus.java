@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.database;
 
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Status;
 import java.sql.Connection;
@@ -18,7 +19,9 @@ public class JDBCStatus{
         try {
             Connection conn = ConnMgr.createConnection();
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("CREATE TABLE status ( id int, name varchar )");
+            if(!DBUtil.tableExists("status", conn)){
+                stmt.executeUpdate("CREATE TABLE status ( id int, name varchar )");
+            }
             Status[][] all = Status.ALL;
             for (int i = 0; i < all.length; i++) {
                 for (int j = 0; j < all[i].length; j++) {
