@@ -19,6 +19,14 @@ import edu.iris.Fissures.model.*;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{ 
 
+    public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
+        minDate = 
+            new MicroSecondDate(range.start_time);
+        maxDate = 
+            new MicroSecondDate(range.end_time);
+
+    }
+
     /**
      * Creates a new <code>EffectiveTimeOverlap</code> instance.
      *
