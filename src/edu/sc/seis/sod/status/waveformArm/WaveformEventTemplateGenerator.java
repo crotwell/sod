@@ -76,15 +76,12 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
         }
     }
 
-    public WaveformEventTemplate getTemplate(EventAccessOperations ev) throws IOException, ConfigurationException {
-        if(!eventTemplates.containsKey(ev)){
+    private synchronized WaveformEventTemplate getTemplate(EventAccessOperations ev) throws IOException, ConfigurationException {
+        if( ! eventTemplates.containsKey(ev)){
+            logger.debug("creating new template for "+ev+"  WaveformEventTemplateGenerator.hashCode="+this.hashCode());
             eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir, formatter.getResult(ev) + '/' + filename, ev));
         }
         return (WaveformEventTemplate)eventTemplates.get(ev);
-    }
-
-    public boolean contains(EventAccessOperations ev){
-        return eventTemplates.containsKey(ev);
     }
 
     public void setArmStatus(String status) {}
