@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import edu.sc.seis.sod.database.*;
+import java.util.*;
 
 import edu.iris.Fissures.IfEvent.EventAccess;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -10,11 +11,6 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -270,9 +266,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         int channelid = ecp.getChannelDbId();
         Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
                                            ecp.getStatus(), ecp.getInfo());
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()){
-            ((WaveFormStatus)it.next()).update(ecp);
+        
+        synchronized(statusMonitors){
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()){
+                ((WaveFormStatus)it.next()).update(ecp);
+            }
         }
         if(ecp.getStatus().getId() == Status.PROCESSING.getId()) return;
         updateChannelCount(eventid, channelid, eventAccess);
@@ -608,5 +607,5 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     
     private static Logger logger = Logger.getLogger(WaveFormArm.class);
     
-    private List statusMonitors = new ArrayList();
+    private List statusMonitors = Collections.synchronizedList(new ArrayList());
 }
