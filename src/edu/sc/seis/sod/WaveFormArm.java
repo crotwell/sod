@@ -145,7 +145,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    
 	}
 
-	private LinkedList pool;
+	private LinkedList pool = new LinkedList();
 
 	private Runnable work = null;
 
