@@ -14,6 +14,7 @@
             <ref name="waveformEvent"/>
             <ref name="waveformNetwork"/>
             <ref name="waveformStation"/>
+            <ref name="waveformCount"/>
             <ref name="external"/>
         </choice>
     </define>
@@ -68,6 +69,15 @@
                     </xsd:annotation>
                 </data>
             </element>
+        </element>
+    </define>
+    <define name="waveformCount">
+        <element name="waveformCountProcessor">
+            <xsd:annotation>
+                <summary>Outputs a file waveforms.txt in the current directory with a count of the
+                    number of successful waveforms</summary>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
     <define name="external">
