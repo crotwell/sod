@@ -113,7 +113,7 @@ public class LocalSeismogramArm implements Subsetter {
                 return;
             }
         }
-        processRequestSubsetter(ecp, SortTool.sortByDate(infilters));
+        processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
     }
 
     public void processRequestSubsetter(EventChannelPair ecp,
@@ -195,7 +195,7 @@ public class LocalSeismogramArm implements Subsetter {
             processAvailableDataSubsetter(ecp,
                                           dataCenter,
                                           infilters,
-                                          SortTool.sortByDate(outfilters));
+                                          SortTool.byBeginTimeAscending(outfilters));
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
             failLogger.info(ecp);
@@ -339,7 +339,7 @@ public class LocalSeismogramArm implements Subsetter {
             processSeismograms(ecp,
                                infilters,
                                outfilters,
-                               SortTool.sortByDate(tempLocalSeismograms));
+                               SortTool.byBeginTimeAscending(tempLocalSeismograms));
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.RETRY));
