@@ -31,13 +31,14 @@ public class WaveFormArmThread implements Runnable{
 			      EventStationSubsetter eventStationSubsetter,
 			      FixedDataCenter fixedDataCenterSubsetter, 
 			      LocalSeismogramArm localSeismogramArm,
-			      Channel[] successfulChannels){
+			      Channel[] successfulChannels, WaveFormArm parent){
 	this.eventAccess = eventAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
 	this.fixedDataCenterSubsetter = fixedDataCenterSubsetter;
 	this.localSeismogramArm = localSeismogramArm;
 	this.networkArm = networkArm;
 	this.successfulChannels = successfulChannels;
+	this.parent = parent;
     }
 
     public void run() {
@@ -65,6 +66,7 @@ public class WaveFormArmThread implements Runnable{
 		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter], dataCenter);  
 	    }
 	}
+	parent.signalWaveFormArm();
 	
     }
 
@@ -79,6 +81,8 @@ public class WaveFormArmThread implements Runnable{
     private NetworkArm networkArm;
 
     private Channel[] successfulChannels;
+    
+    private WaveFormArm parent;
 
     static Category logger = 
 	Category.getInstance(WaveFormArmThread.class.getName());

@@ -247,7 +247,8 @@ public class NetworkArm {
 		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
 		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
 		TimeInterval timeInterval = currentTime.difference(lastTime);
-		int minutes = (int)timeInterval.value / (100*1000);
+		timeInterval = (TimeInterval)timeInterval.convertTo(UnitImpl.MINUTE);
+		int minutes = (int)timeInterval.value;
 		//System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
 		if(minutes >= refreshInterval.getValue()) {
 		    processNetworkArm();

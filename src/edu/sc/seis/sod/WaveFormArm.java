@@ -54,12 +54,15 @@ public class WaveFormArm implements Runnable {
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    if(eventAccess != null) {
-		Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
-							     eventStationSubsetter,
-								fixedDataCenterSubsetter,
-								 localSeismogramArm,
-								 successfulChannels));
-		thread.start();
+		System.out.println("The number of Wave Form Threads are -------->  "+Thread.activeCount());
+		if(createNewThread()) {
+		    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
+								     eventStationSubsetter,
+								     fixedDataCenterSubsetter,
+								     localSeismogramArm,
+								     successfulChannels, this));
+		    thread.start();
+		}
 	    }
 	    
 	    
@@ -100,9 +103,23 @@ public class WaveFormArm implements Runnable {
     }
 
    
+    public synchronized boolean createNewThread() throws Exception{
+	
+	while(Thread.activeCount() > 6 ) {
+	    
+	    wait();
+	   
+	}
+	return true;
+    }
 
-   
 
+    public synchronized void signalWaveFormArm()  {
+	
+	notifyAll();
+    }
+
+  
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
     private LocalSeismogramArm localSeismogramArm = null;

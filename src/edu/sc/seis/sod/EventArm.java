@@ -142,6 +142,7 @@ public class EventArm implements Runnable{
 							eventSeqIterHolder
 							);
 	
+	System.out.println("The number of events returned are "+eventAccess.length);
 	for(int counter = 0; counter < eventAccess.length; counter++) {
 
 
