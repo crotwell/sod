@@ -91,7 +91,7 @@ public class MapWaveformStatus implements Runnable {
                     public void run() {
                         try {
                             map.writeMapToPNG(fileLoc);
-                            map.getStationLayer().printStationLocs();
+                            //map.getStationLayer().printStationLocs();
                             StationLoc[] stationLocs = map.getStationLayer()
                                     .getStationLocs();
                             StringBuffer curStations = new StringBuffer();
