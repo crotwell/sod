@@ -6,7 +6,7 @@
         <body>
                 <section name="About SOD">
                         <p class="about">SOD (Standing Order for Data) automates tedious data
-                                selection, downloading and routine processing tasks in seismology
+                                selection, downloading and routine processing tasks in seismology,
                                 shortening the time between idea and science. </p>
                         <p class="about">Users first configure SOD with various subsetters that
                                 narrow down the torrent of seismic data available. For example,
