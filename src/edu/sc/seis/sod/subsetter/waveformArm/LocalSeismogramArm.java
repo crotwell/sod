@@ -167,12 +167,12 @@ public class LocalSeismogramArm implements Subsetter{
 					 infilters, 
 					 outfilters, 
 					 null)) {
-	    //  logger.debug("Using infilters, fix this when DMC fixes server");
+	    logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms;
 	    if (outfilters.length != 0) {
-		localSeismograms = dataCenter.retrieve_seismograms(outfilters);
+		localSeismograms = dataCenter.retrieve_seismograms(infilters);
 	    } else {
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
@@ -199,6 +199,7 @@ public class LocalSeismogramArm implements Subsetter{
 	(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
 
 	waveFormArmProcessSubsetter.process(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null);
+    logger.debug("finished with "+ChannelIdUtil.toStringNoDates(channel.get_id()));
     }
 
 
