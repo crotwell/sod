@@ -615,7 +615,7 @@ public class NetworkArm {
         ArrayList arrayList = new ArrayList();
         try {
             CookieJar cookieJar = 
-                cookieJarCache.get(networkDbObject.getNetworkAccess());
+                (CookieJar)cookieJarCache.get(networkDbObject.getNetworkAccess());
             Station[] stations = networkDbObject.getNetworkAccess().retrieve_stations();
             for(int subCounter = 0; subCounter < stations.length; subCounter++) {
                 //	    handleStationIdSubsetter(networkAccess, stations[subCounter]);
