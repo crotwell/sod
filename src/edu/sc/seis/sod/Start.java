@@ -5,6 +5,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.JDBCConfig;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
@@ -64,9 +65,13 @@ public class Start{
      * config file
      */
     public Start (String confFilename, String[] args) throws Exception{
+
+        configFileName = confFilename;
+        File configFile = new File(configFileName);
+        checkConfig(configFile);
+
         try {
             document = createDoc(createInputSource(confFilename));
-            configFile = confFilename;
         } catch (Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
@@ -129,7 +134,7 @@ public class Start{
         return ClockUtil.now().subtract(startTime);
     }
 
-    public static String getConfigFileName(){ return configFile; }
+    public static String getConfigFileName(){ return configFileName; }
 
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
@@ -274,6 +279,19 @@ public class Start{
         }
     }
 
+    private void checkConfig(File configFile) throws IOException{
+        try{
+            String configString = JDBCConfig.getConfigString(configFile);
+            JDBCConfig dbConfig = new JDBCConfig(configString);
+            if (!dbConfig.isSameConfig(configString)){
+                System.err.println("Your config file has changed since your last run.  "
+                                       + "It may not be advisable to continue this SOD run.");
+            }
+        } catch (Exception e){
+            GlobalExceptionHandler.handle("Trouble checking stored config file", e);
+        }
+    }
+
     public Document getDocument(){ return document; }
 
     public static void main (String[] args) {
@@ -342,7 +360,7 @@ public class Start{
 
     private static NetworkArm network;
 
-    private static String configFile;
+    private static String configFileName;
 
     private static MicroSecondDate startTime;
 
