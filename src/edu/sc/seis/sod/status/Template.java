@@ -36,8 +36,10 @@ public abstract class Template{
         if(tag.equals("runName")){ return new RunNameTemplate(); }
         else if(tag.equals("startTime")){ return new StartTimeTemplate(); }
         else if(tag.equals("now")){  return new NowTemplate();}
-        else if(tag.equals("configFileName")){
+        else if(tag.equals("configFileLoc")){
             return textTemplate(Start.getConfigFileName());
+        }else if(tag.equals("htmlConfigFileLoc")){
+            return textTemplate(IndexTemplate.getHtmlConfigFileName());
         }
         return null;
     }
