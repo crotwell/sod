@@ -88,11 +88,13 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
 	    SacTimeSeries sac;
 	    for (int i=0; i<seismograms.length; i++) {
-		File seisFile = new File(ChannelIdUtil.toStringNoDates(seismograms[i].channel_id));
+		File seisFile = new File(eventDirectory, 
+					 ChannelIdUtil.toStringNoDates(seismograms[i].channel_id));
 		int n =0;
 		while (seisFile.exists()) {
 		    n++;
-		    seisFile = new File(ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n);
+		    seisFile = new File(eventDirectory,
+					ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n);
 		} // end of while (seisFile.exists())
 		
 		sac = FissuresToSac.getSAC((LocalSeismogramImpl)seismograms[i],
