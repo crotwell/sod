@@ -15,9 +15,17 @@ class queryTimer(sodScriptParameters):
         self.mainclass='edu.sc.seis.sod.QueryTimer'
         self.name='queryTimer'
 
+class editor(sodScriptParameters):
+    def __init__(self, mods):
+        sodScriptParameters.__init__(self, [])
+        for mod in mods: self.update(mod)
+        self.mainclass='edu.sc.seis.sod.editor.SodGUIEditor'
+        self.name='editor'
+
 def buildAll(proj):
     scripts = buildSodScripts(proj)
     scripts.extend(buildQueryTimerScripts(proj))
+    scripts.extend(buildEditorScripts(proj))
     return scripts
 
 def buildSodScripts(proj):
@@ -35,6 +43,13 @@ def buildQueryTimerScripts(proj):
     scripts = [scriptBuilder.build(queryTimer([]), proj)]
     scriptBuilder.setVarWindows()
     scripts.append(scriptBuilder.build(queryTimer([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
+def buildEditorScripts(proj):
+    scriptBuilder.setVarSh()
+    scripts = [scriptBuilder.build(editor([]), proj)]
+    scriptBuilder.setVarWindows()
+    scripts.append(scriptBuilder.build(editor([scriptBuilder.windowsParameters()]), proj))
     return scripts
 
 if __name__ == "__main__":
