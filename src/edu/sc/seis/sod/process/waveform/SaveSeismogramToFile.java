@@ -95,6 +95,13 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 prefix = dssPrefix;
             } // end of if (dataDirectory.exits())
         }
+        Element idElement = SodUtil.getElement(config, "id");
+        if (idElement != null) {
+            String identifier = SodUtil.getText(idElement);
+            if ( identifier != null && identifier.length() != 0) {
+                id = identifier;
+            } 
+        }
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                               "eventDirLabel"));
         createMasterDS();
@@ -151,6 +158,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return COOKIE_PREFIX + prefix + ChannelIdUtil.toString(channel) + "_"
                 + i;
     }
+    
+    public String getId() {
+        return id;
+    }   
 
     protected void createMasterDS() throws ConfigurationException {
         AuditInfo[] audit = new AuditInfo[1];
@@ -349,7 +360,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         // baseUp is not a direct ancestor of ref, fall back to absolute?
         return ref.getPath();
     }
-
+   
     protected DataSet prepareDataset(EventAccessOperations event)
             throws IOException, UnsupportedFileTypeException,
             IncomprehensibleDSMLException, ParserConfigurationException,
@@ -459,6 +470,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
     String subDS = "";
 
     String prefix = "";
+    
+    String id = "";
 
     public static final String COOKIE_PREFIX = "SeisFile_";
 
