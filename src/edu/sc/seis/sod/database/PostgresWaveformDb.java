@@ -73,8 +73,6 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 
     public void beginTransaction() {
 	try {
-	    System.out.println("BEGINNING TRANSACTION IN POSTGRES ................................................");
-	    // System.exit(0);
 	    beginTransStmt.executeUpdate();
 	    // serializableLevelStmt.executeUpdate();
 	} catch(SQLException sqle) {
