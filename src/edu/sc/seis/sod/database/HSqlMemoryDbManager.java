@@ -22,5 +22,12 @@ public class HSqlMemoryDbManager extends HSqlDbManager{
     public String getDatabaseName() {
         return ".";
     }
+
+    public WaveformDatabase getWaveformDatabase() {
+        if(waveformDatabase == null) {
+            waveformDatabase = new MemoryWaveformDatabase();
+        }
+        return waveformDatabase;
+    }
     
 }// HSQLMemoryDbManager
