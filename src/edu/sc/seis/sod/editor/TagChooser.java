@@ -23,7 +23,7 @@ public abstract class TagChooser implements EditorPlugin {
 
     public TagChooser(String ssType, SodGUIEditor editor) {
         this.editor = editor;
-        this.subsetterType = ssType+"NOT";
+        String subsetterType = ssType+"NOT";
         ElementNode node = editor.getGrammar().getNode(subsetterType);
         if (node == null) {
             throw new NullPointerException("Couldn't get ElementNode for "+subsetterType);
@@ -32,6 +32,12 @@ public abstract class TagChooser implements EditorPlugin {
         while (it.hasNext()) {
             subTypes.add(((ElementNode)it.next()).getName());
         }
+        Collections.sort(subTypes);
+    }
+
+    public TagChooser(List subTypes, SodGUIEditor editor) {
+        this.editor = editor;
+        this.subTypes = subTypes;
         Collections.sort(subTypes);
     }
 
@@ -74,9 +80,7 @@ public abstract class TagChooser implements EditorPlugin {
 
     protected SodGUIEditor editor;
 
-    private String subsetterType;
-
-    private LinkedList subTypes = new LinkedList();
+    private List subTypes = new LinkedList();
 
     class ComboElementReset implements ListSelectionListener {
 
@@ -92,5 +96,6 @@ public abstract class TagChooser implements EditorPlugin {
         Element current;
     }
 }
+
 
 
