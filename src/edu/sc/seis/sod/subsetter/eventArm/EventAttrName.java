@@ -9,20 +9,24 @@ import org.w3c.dom.Element;
 
 /**
  * This tag is used to specify the name of the EventAttr.
- *<pre>
- * &lt;eventAttrName&gt;&lt;value&gt;somename&lt;/value&gt;&lt;/eventAttrName&gt;
- *</pre>
+ * 
+ * <pre>
+ * 
+ *  &lt;eventAttrName&gt;&lt;value&gt;somename&lt;/value&gt;&lt;/eventAttrName&gt;
+ * 
+ * </pre>
  */
-
 public class EventAttrName implements OriginSubsetter {
-    public EventAttrName (Element config) throws ConfigurationException {
-    name = SodUtil.getNestedText(config);
+
+    public EventAttrName(Element config) throws ConfigurationException {
+        name = SodUtil.getNestedText(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin) {
+    public boolean accept(EventAccessOperations eventAccess,
+                          EventAttr eventAttr,
+                          Origin preferred_origin) {
         return name.equals(eventAttr);
     }
 
     String name;
-
 }// EventAttrName
