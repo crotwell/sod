@@ -13,7 +13,8 @@
     <package>edu.sc.seis.sod</package>
     <description>SOD automates the most tedious data selection,
         downloading and routine processing tasks, shortening the time
-        between idea and science.
+        between idea and science. Please also check out the user site
+        at <a href="http://www.seis.sc.edu/sod">http://www.seis.sc.edu/sod</a>.
     </description>
     <shortDescription>Standing Order for Data.</shortDescription>
     <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
