@@ -35,11 +35,11 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value() % 360 <= distaz.getAz() % 360 &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value() % 360 >= distaz.getAz() % 360 ) {
+        if (getMin().convertTo(UnitImpl.DEGREE).get_value()  <= distaz.getAz() % 360 &&
+            getMax().convertTo(UnitImpl.DEGREE).get_value()  >= distaz.getAz() % 360 ) {
             return true;
         } else {
-            logger.debug("reject azimuth "+origin+" az="+distaz.getAz());
+            logger.debug("reject azimuth "+origin+" az="+distaz.getAz()+"  "+(getMin().getValue() % 360)+" "+(getMax().getValue() % 360));
             return false;
         }
     }

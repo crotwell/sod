@@ -35,8 +35,8 @@ public class OriginPointBackAzimuth extends AbstractOriginPoint implements Origi
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value() % 360 <= distaz.getBaz() % 360 &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value() % 360 >= distaz.getBaz() % 360) {
+        if (getMin().convertTo(UnitImpl.DEGREE).get_value()  <= distaz.getBaz() % 360 &&
+            getMax().convertTo(UnitImpl.DEGREE).get_value()  >= distaz.getBaz() % 360) {
             return true;
         } else {
             logger.debug("reject back azimuth "+origin+" baz="+distaz.getBaz());
