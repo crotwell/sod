@@ -43,7 +43,6 @@ public class PushConsumer_impl extends PushConsumerPOA
 	{
 	    //Extract EventNotify from ANY
 	    EventNotify eventNotify = EventNotifyHelper.extract(any);
-	    System.out.println("THe name of the event is ");
 	    eventArm.handleEventAttrSubsetter(eventNotify.the_event, eventNotify.the_event.get_attributes());
 	    //Start.getEventQueue().push(eventNotify.the_event);
 
