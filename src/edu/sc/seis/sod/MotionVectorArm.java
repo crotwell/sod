@@ -18,6 +18,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -247,6 +248,7 @@ public class MotionVectorArm implements Subsetter {
                 .getChannels().length][0];
             LocalSeismogramImpl[][] tempLocalSeismograms = new LocalSeismogramImpl[ecp.getChannelGroup()
                 .getChannels().length][0];
+            NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(outfilters[i].length != 0) {
                     int retries = 0;
@@ -255,7 +257,32 @@ public class MotionVectorArm implements Subsetter {
                         try {
                             logger.debug("before retrieve_seismograms");
                             try {
-                                localSeismograms[i] = dataCenter.retrieve_seismograms(infilters[i]);
+                                if(nsDC.getServerDNS().equals("edu/iris/dmc")
+                                        && nsDC.getServerName().equals("IRIS_ArchiveDataCenter")) {
+                                         synchronized(this) {
+                                             //Archive doesn't support retrieve_seismograms
+                                             //so try using the queue set of retrieve calls
+                                             try {
+                                                 String id = dataCenter.queue_seismograms(infilters[i]);
+                                                 logger.info("request id: " + id);
+                                                 String status = dataCenter.request_status(id);
+                                                 while(status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
+                                                     try {
+                                                         Thread.sleep(60 * 1000);
+                                                     } catch(InterruptedException ex) {}
+                                                     status = dataCenter.request_status(id);
+                                                 }
+                                                 if(status.equals(LocalSeismogramArm.DATA_RETRIEVED)) {
+                                                     localSeismograms[i] = dataCenter.retrieve_queue(id);
+                                                 }
+                                             } catch(FissuresException ex) {
+                                                 handle(ecp, Stage.DATA_SUBSETTER, ex);
+                                                 return;
+                                             }
+                                         }
+                                     } else {
+                                         localSeismograms[i] = dataCenter.retrieve_seismograms(infilters[i]);
+                                     }
                                 for(int j = 0; j < localSeismograms[i].length; j++) {
                                     if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit)
                                        .equals(COUNT_SQR)) {
