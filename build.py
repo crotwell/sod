@@ -1,18 +1,29 @@
 #!/usr/bin/python -O
 import sys, os, time, zipfile, tarfile
+from optparse import OptionParser
+startdir = os.getcwd()
+buildPyDir = os.path.realpath(os.path.dirname(sys.argv[0]))
+os.chdir(buildPyDir)
 sys.path.append("../devTools/maven")
 import ProjectParser, mavenExecutor, scriptBuilder, depCopy, distBuilder
-from optparse import OptionParser
+os.chdir(startdir)
 
 class sodScriptParameters(scriptBuilder.jacorbParameters):
     homeloc = '.'
-    def __init__(self, mods, mainclass='edu.sc.seis.sod.Start', name='sod'):
+    def __init__(self, mods, proj, mainclass='edu.sc.seis.sod.Start', name='sod', mavenRepoStructure=False):
         scriptBuilder.jacorbParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = name
         homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1, True)
         libvar = self.getVar('LIB', 'initial')
-        libvar.setValue(homevar.interp+'/lib')
+        if mavenRepoStructure:
+            if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
+                stdin, stdout = os.popen2('cygpath -w ' + proj.repo)
+                libvar.setValue(stdout.read())
+            else:
+                libvar.setValue(proj.repo)    
+        else:
+            libvar.setValue(homevar.interp+'/lib')    
         self.mainclass = mainclass
         self.xOptions['mx']='mx256m'
 
@@ -21,33 +32,35 @@ genericScripts = {'sod':'edu.sc.seis.sod.Start',
                   'sodeditor':'edu.sc.seis.sod.editor.SodGUIEditor',
                   'killSod':'edu.sc.seis.sod.SodKiller'}
 
-def buildAllScripts(proj):
-    scripts = buildManyScripts(proj, genericScripts.keys())
-    scripts.extend(buildProfileScripts(proj))
+def buildAllScripts(proj, useMavenJars=False):
+    scripts = buildManyScripts(proj, genericScripts.keys(), useMavenJars)
+    scripts.extend(buildProfileScripts(proj, useMavenJars))
     return scripts
 
-def buildProfileScripts(proj):
+def buildProfileScripts(proj, useMavenJars=False):
     scriptBuilder.setVarSh()
-    profileParams = sodScriptParameters([scriptBuilder.sharkParameters()])
+    profileParams = sodScriptParameters([scriptBuilder.sharkParameters()], proj, mavenRepoStructure=useMavenJars)
     profileParams.name='profile'
     scripts = [scriptBuilder.build(profileParams, proj)]
     scriptBuilder.setVarWindows()
-    profileParams = sodScriptParameters([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()])
+    profileParams = sodScriptParameters([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()], proj, mavenRepoStructure=useMavenJars)
     profileParams.name='profile'
     scripts.append(scriptBuilder.build(profileParams, proj))
     return scripts
 
-def buildManyScripts(proj, names):
+def buildManyScripts(proj, names, useMavenJars=False):
     scripts = []
-    for name in names: scripts.extend(buildScripts(proj, name))
+    for name in names: scripts.extend(buildScripts(proj, name, mavenRepoStructure=useMavenJars))
     return scripts
 
-def buildScripts(proj, name, main=''):
+def buildScripts(proj, name, main='', mavenRepoStructure=False):
     if main == '':main = genericScripts[name]
     scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(sodScriptParameters([], main, name), proj)]
+    params = sodScriptParameters([], proj, main, name, mavenRepoStructure)
+    scripts = [scriptBuilder.build(params , proj, useMavenJars=mavenRepoStructure)]
     scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(sodScriptParameters([scriptBuilder.windowsParameters()], main, name), proj))
+    params = sodScriptParameters([scriptBuilder.windowsParameters()], proj, main, name, mavenRepoStructure)
+    scripts.append(scriptBuilder.build(params, proj, useMavenJars=mavenRepoStructure))
     return scripts
 
 def buildJars(sodProj, clean=False):
@@ -70,21 +83,22 @@ def buildInternalDist(proj, name):
     if name == buildName(proj): name = "internal" + name
     scripts = buildAllScripts(proj)
     configs = []
-    for item in os.listdir('scripts'):
+    scriptDir = buildPyDir + os.sep + 'scripts' + os.sep
+    for item in os.listdir(scriptDir):
         if item.endswith('.xml'): configs.append(item)
-    extras = [('scripts/' + item, 'examples/' + item) for item in configs]
-    extras.extend([('scripts/yjpagent.dll', 'yjpagent.dll'),
-              ('scripts/cwg.prop', 'cwg.prop'),
-              ('scripts/logs', 'logs', False)])
+    extras = [(scriptDir + item, 'examples/' + item) for item in configs]
+    extras.extend([(scriptDir + 'yjpagent.dll', 'yjpagent.dll'),
+              (scriptDir + 'cwg.prop', 'cwg.prop'),
+              (scriptDir + 'logs', 'logs', False)])
     buildDist(proj, scripts, name, extras)
 
 def buildExternalDist(proj, name):
     buildJars(proj, True)
     scripts = buildManyScripts(proj, ['sod', 'sodeditor'])
-    os.chdir('site')
+    os.chdir(buildPyDir + os.sep + 'site')
     print 'building docs'
     os.spawnlp(os.P_WAIT, 'buildSite.sh', 'sh', 'buildSite.sh')
-    os.chdir('..')
+    os.chdir(startdir)
     extras = [('scripts/tutorial.xml', 'examples/tutorial.xml'),
               ('scripts/weed.xml', 'examples/weed.xml'),
               ('scripts/legacyExecute.xml', 'examples/legacyExecute.xml'),
@@ -93,12 +107,13 @@ def buildExternalDist(proj, name):
               ('scripts/realtime.xml', 'examples/realtime.xml'),
               ('scripts/breqfast.xml', 'examples/breqfast.xml'),
               ('site/generatedSite', 'docs')]
+    extras = [ (buildPyDir + os.sep + local, dist) for local, dist in extras ]    
     zip = zipfile.ZipFile(name + ".zip", 'w')
     tar = tarfile.open(name + '.tar', 'w')
     buildDist(proj, scripts, name, extras, [tar, zip])
 
 def buildDist(proj, scripts, name=None, extras=[], archives=[]):
-    if not os.path.exists('scripts/logs'): os.mkdir('scripts/logs')
+    if not os.path.exists(buildPyDir + os.sep + 'scripts/logs'): os.mkdir(buildPyDir + os.sep + 'scripts/logs')
     extras.extend([(script, 'bin/'+script) for script in scripts])
     if name is None: name = buildName(proj)
     distBuilder.buildDist(proj, extras, name, True, archives)
@@ -107,7 +122,7 @@ def buildDist(proj, scripts, name=None, extras=[], archives=[]):
 def buildName(proj): return proj.name + '-' + time.strftime('%y%m%d')
 
 if __name__ == "__main__":
-    proj = ProjectParser.ProjectParser('./project.xml')
+    proj = ProjectParser.ProjectParser(buildPyDir + os.sep + 'project.xml')
     parser = OptionParser()
     parser.add_option("-d", "--dist", dest="external",
                       help="build dist for release containing example configs and docs",
@@ -124,12 +139,15 @@ if __name__ == "__main__":
                       help="compile sod and build run scripts(default option)",
                       default=True,
                       action="store_true")
+    parser.add_option("-c", "--copyjars", dest="copy",
+                      help="copy the jars locally for use in the scripts",
+                      default=False,
+                      action="store_true")
     options = parser.parse_args()[0]
     if options.external : buildExternalDist(proj, options.name)
     elif options.internal: buildInternalDist(proj, options.name)
     else :
         buildJars(proj)
-        os.chdir('scripts')
-        buildAllScripts(proj)
-        depCopy.copy(proj)
-
+        buildAllScripts(proj, not options.copy)
+        if options.copy:
+            depCopy.copy(proj)
