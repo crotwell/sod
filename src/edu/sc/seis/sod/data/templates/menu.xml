@@ -3,7 +3,7 @@
 <div id="Menu">
 <ul>
 <li><a><attribute name="href"><relativePath>index.html</relativePath></attribute><runName/></a></li>
-<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
+<li><a><attribute name="href"><relativePath><configFileName/></relativePath></attribute>Configuration</a></li>
 <li><a><attribute name="href"><relativePath>time.html</relativePath></attribute>Events</a></li>
 <li><a><attribute name="href"><relativePath>networks.html</relativePath></attribute>Networks</a></li>
 <li><a><attribute name="href"><relativePath>statusInfo.html</relativePath></attribute>About</a></li>
