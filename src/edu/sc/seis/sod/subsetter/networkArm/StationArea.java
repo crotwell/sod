@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
  * sample xml representation of StationArea are
  *
  *
-  *              &lt;stationArea&gt;
+ *              &lt;stationArea&gt;
  *                           &lt;boxArea&gt;
  *                                    &lt;latitudeRange&gt;
  *                                                   &lt;min&gt;30&lt;/min&gt;

@@ -50,13 +50,13 @@ public class NetworkAttrNOT
      */
     public boolean accept(NetworkAttr e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	if(it.hasNext()) {
 	    NetworkAttrSubsetter filter = (NetworkAttrSubsetter)it.next();
 	    if ( filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// NetworkAttrNOT

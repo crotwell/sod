@@ -56,7 +56,7 @@ public class SiteNOT
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// SiteNOT

@@ -62,10 +62,10 @@ public class StationOR
      */
     public boolean accept(NetworkAccess  network,  Station e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	while(it.hasNext()) {
 	    StationSubsetter filter = (StationSubsetter)it.next();
 	    if ( filter.accept(network, e, cookies)) {
-		return false;
+		return true;
 	    }
 	}
 	return false;

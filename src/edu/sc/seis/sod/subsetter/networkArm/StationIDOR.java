@@ -42,10 +42,10 @@ public class StationIDOR
      */
     public boolean accept(StationId e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	while(it.hasNext()) {
 	    StationIdSubsetter filter = (StationIdSubsetter)it.next();
 	    if ( filter.accept(e, cookies)) {
-		return false;
+		return true;
 	    }
 	}
 	return false;

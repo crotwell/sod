@@ -40,13 +40,13 @@ public class SiteIDAND
      */
     public boolean accept(SiteId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	while (it.hasNext()) {
 	    SiteIdSubsetter filter = (SiteIdSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if ( !filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// SiteIDAND

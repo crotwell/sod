@@ -45,13 +45,13 @@ public class NetworkIDNOT
      */
     public boolean accept(NetworkId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	if(it.hasNext()) {
 	    NetworkIdSubsetter filter = (NetworkIdSubsetter)it.next();
 	    if ( filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// NetworkIDNOT

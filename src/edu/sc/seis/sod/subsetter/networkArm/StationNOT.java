@@ -62,7 +62,7 @@ public class StationNOT
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// StationNOT

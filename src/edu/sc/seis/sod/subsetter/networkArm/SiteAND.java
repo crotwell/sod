@@ -43,13 +43,13 @@ public class SiteAND
      */
     public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	while(it.hasNext()) {
 	    SiteSubsetter filter = (SiteSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
+	    if ( !filter.accept(network, e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// SiteAND

@@ -47,13 +47,13 @@ public class NetworkIDAND
      */
     public boolean accept(NetworkId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
+	while(it.hasNext()) {
 	    NetworkIdSubsetter filter = (NetworkIdSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if ( !filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// NetworkIDAND

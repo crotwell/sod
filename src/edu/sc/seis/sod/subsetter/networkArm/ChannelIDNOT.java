@@ -51,7 +51,7 @@ public class ChannelIDNOT
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// ChannelIDNOT
