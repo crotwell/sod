@@ -20,9 +20,9 @@ public class SimpleErrorHandler implements ErrorHandler {
 
     public void fatalError(SAXParseException ex) {
         System.err.println("SOD had trouble loading the strategy file " + filename);
-        System.err.println("It appears there's something wrong on line "
+        System.err.println("There appears to be something wrong on line "
                 + ex.getLineNumber());
-        System.err.println("SOD requires well formed XML files which means among other things that every start tag must be matched by an end tag, and that there can be only one root element.  To find out more about what could be wrong with this file, go to xmlIntro.html in the docs in the SOD distribution");
+        System.err.println("SOD requires well-formed XML files.  This means, among other things, that every start tag must be matched by an end tag, and that there can be only one root element.  To find out more about what could be wrong with this file, go to xmlIntro.html in the docs in the SOD distribution");
         System.err.println(ex.getLocalizedMessage());
         System.exit(1);
     }

@@ -96,8 +96,8 @@ public class Validator {
         }
 
         private void handle(SAXParseException ex) {
-            errorMessage = "The strategy file is invalid.  SOD requires strategy files that conform to a set structure.  See the tactic guide in the docs that came with SOD for help with this.\n\n";
-            errorMessage += "It appears there's something wrong on line "
+            errorMessage = "The strategy file is invalid.  SOD requires strategy files that conform to a set structure.  See the tactic reference in the docs that came with SOD for help with this.\n\n";
+            errorMessage += "There appears to be something wrong on line "
                     + ex.getLineNumber();
             errorMessage += "The validator says '"
                     + ex.getLocalizedMessage() + "'\n\n";
