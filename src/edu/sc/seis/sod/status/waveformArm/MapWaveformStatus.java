@@ -59,10 +59,10 @@ public class MapWaveformStatus implements Runnable{
             for (int i = 0; i < events.length; i++) {
                 StationLayer sl = map.getStationLayer();
                 sl.honorRepaint(false);
-                Station[] successful = evChanStatusTable.getOfStatus(success, events[i]);
-                addStations(sl, successful, AvailableStationDataEvent.UP);
                 Station[] unsuccessful = evChanStatusTable.getNotOfStatus(success, events[i]);
                 addStations(sl, unsuccessful, AvailableStationDataEvent.DOWN);
+                Station[] successful = evChanStatusTable.getOfStatus(success, events[i]);
+                addStations(sl, successful, AvailableStationDataEvent.UP);
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
                 EQDataEvent eqEvent = new EQDataEvent(this,
@@ -73,8 +73,8 @@ public class MapWaveformStatus implements Runnable{
                             public void run(){
                                 try{
                                     map.writeMapToPNG(fileLoc);
-                                } catch (IOException e) {
-                                    GlobalExceptionHandler.handle("unable to save map to "+fileLoc, e);
+                                } catch (Throwable e) {
+                                    GlobalExceptionHandler.handle("problem writing map", e);
                                 }
                             }
                         });
