@@ -27,49 +27,41 @@ import org.w3c.dom.Element;
 
 
 public class WaveformNetworkStatus extends AbstractVelocityStatus implements WaveformArmMonitor, NetworkArmMonitor {
-
     public WaveformNetworkStatus(Element config) throws SQLException, MalformedURLException, IOException {
         super(config);
-        Element element = SodUtil.getElement(config, "networkListTemplate");
-        if (element != null){
-            networkListTemplateName = SodUtil.getNestedText(element);
-        }
-
-        networkListTemplate = loadTemplate(networkListTemplateName);
-        if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
+        String networkListLoc = getNestedTextForElement("networkListTemplate",
+                                                        config);
+        networkListTemplate = loadTemplate(networkListLoc);
+        if(Start.getNetworkArm() != null) {Start.getNetworkArm().add(this);}
     }
+
+    public int getNumDirDeep() { return 1; }
 
     public void update(EventChannelPair ecp) {
         // do nothing, just want to be a WaveformArmMonitor for loading
     }
 
-    public void setArmStatus(String status) throws Exception {
+    public void setArmStatus(String status) throws Exception {}
 
-    }
+    public void change(Station station, Status s) {}
 
-    public void change(Station station, Status s) {
-    }
-
-    public void change(Channel channel, Status s) {
-    }
+    public void change(Channel channel, Status s) {}
 
     public void change(NetworkAccess networkAccess, Status s) {
         if (s.getStanding().equals(Standing.SUCCESS)) {
             // update the index list
-            scheduleOutput("waveformNetworks.html", networkArmContext, networkListTemplate);
-
+            scheduleOutput("waveformStations/waveformNetworks.html",
+                           networkArmContext,
+                           networkListTemplate);
             VelocityContext context = new VelocityContext(networkArmContext);
             context.put("network", networkAccess);
             context.put("stations", new VelocityStationGetter(networkAccess));
-            scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id())+".html",
-                           context);
+            String id = NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id());
+            scheduleOutput("waveformStations/"+ id +".html", context);
         }
     }
 
-    public void change(Site site, Status s) {
-    }
-
-    protected String networkListTemplateName;
+    public void change(Site site, Status s) {}
 
     protected String networkListTemplate;
 }
