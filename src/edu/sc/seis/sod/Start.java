@@ -243,7 +243,6 @@ public class Start{
 
     private void handleStartupRunProperties() {
         if(runProps.removeDatabase()){
-            System.out.println("REMOVING DATABASE!!!!!!!!!111");
             File dbDir = new File("SodDb");
             if(dbDir.exists()){
                 File[] dbFiles = dbDir.listFiles();
@@ -251,7 +250,6 @@ public class Start{
                     dbFiles[i].delete();
                 }
                 dbDir.delete();
-                System.out.println("DONE REMOVING DATABASE!!!!!!!!!111");
             }
         }else if(runProps.reopenEvents()){
             try {
