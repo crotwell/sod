@@ -67,13 +67,19 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
      */
     public String getResult() {
         String s = super.getResult();
-        StringWriter out = new StringWriter();
+
+        s = getVelocityResult(s, cookieJar);
+        return s;
+    }
+
+    public static String getVelocityResult(String template, CookieJar cookieJar) {
         try {
+            StringWriter out = new StringWriter();
             LocalSeismogramTemplateGenerator.getVelocity().evaluate(cookieJar.getContext(),
                                                                     out,
                                                                     "localSeismogramTemplate",
-                                                                    s);
-            s = out.toString();
+                                                                    template);
+            template = out.toString();
         } catch (ParseErrorException e) {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
         } catch (MethodInvocationException e) {
@@ -84,8 +90,9 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
         }
 
-        return s;
+        return template;
     }
+
 
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
