@@ -192,7 +192,6 @@ public class StAXModelBuilder implements XMLStreamConstants {
 
     private Annotation handleAnn() throws XMLStreamException {
         Annotation note = new Annotation();
-        boolean hasExample = false;
         if(isAnn(reader.getLocalName())) {
             while(reader.next() != END_ELEMENT
                     || !reader.getLocalName().equals("annotation")) {
@@ -207,7 +206,6 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         reader.next();
                         note.setInclude(true);
                     } else if(reader.getLocalName().equals("example")) {
-                        hasExample = true;
                         reader.next();
                         StringBuffer buf = new StringBuffer();
                         int prevEventType = -1;
@@ -244,9 +242,6 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 }
             }
             reader.nextTag();
-            if(hasExample) {
-                annotations.add(note);
-            }
         }
         return note;
     }
@@ -482,10 +477,6 @@ public class StAXModelBuilder implements XMLStreamConstants {
         return (Grammar)parsedGrammars.get(loc);
     }
 
-    public Annotation[] getAnnotations() {
-        return (Annotation[])annotations.toArray(new Annotation[0]);
-    }
-
     public static Collection getAllDefinitions() {
         Set defs = new HashSet();
         Iterator it = parsedGrammars.values().iterator();
@@ -503,6 +494,4 @@ public class StAXModelBuilder implements XMLStreamConstants {
     private Grammar definedGrammar;
 
     private static Map parsedGrammars = new HashMap();
-
-    private static List annotations = new ArrayList();
 }
