@@ -128,48 +128,19 @@ a.download {
   font-weight:600;
 }
 
-#tree div{
-  margin-left:15px;
-  padding:5px;
+#contained div{
+  margin-left:20px;
+  padding:2px;
   margin-bottom:5px;
 }
 
-.one{
-  border-left:4px solid black;
+div #group{
+border-left:1px solid black;
+  margin-left:5px;
 }
 
-.oneToMany{
-  border-left:4px double black;
+div #choice{
+border-left:1px dashed black;
+  margin-left:5px;
 }
 
-.zeroToMany{
-  border-left:2px dashed black;
-}
-
-.zeroToOne{
-  border-left:dotted 2px black;
-}
-
-.oneToManyChoice{
-  border-left:4px double blue;
-}
-
-.zeroToManyChoice{
-  border-left:2px dashed blue;
-}
-
-.zeroToOneChoice{
-  border-left:dotted 2px blue;
-}
-
-.oneToManyInterleave{
-  border-left:4px double red;
-}
-
-.zeroToManyInterleave{
-  border-left:2px dashed red;
-}
-
-.zeroToOneInterleave{
-  border-left:dotted 2px red;
-}
