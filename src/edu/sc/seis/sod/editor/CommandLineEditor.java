@@ -35,12 +35,12 @@ import edu.sc.seis.fissuresUtil.xml.Writer;
 
 
 public class CommandLineEditor {
-    
+
     public CommandLineEditor(String[] args) throws ParserConfigurationException, IOException, SAXException, ParserConfigurationException, SAXException, DOMException, IOException, TransformerException {
         this.args = args;
         processArgs();
     }
-    
+
     void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, TransformerException {
         boolean help = false;
         for (int i = 0; i < args.length; i++) {
@@ -51,7 +51,7 @@ public class CommandLineEditor {
                 help = true;
             }
         }
-        
+
         if (help) {
             printOptions(new DataOutputStream(System.out));
         } else {
@@ -64,7 +64,7 @@ public class CommandLineEditor {
             testXPath(args);
         }
     }
-    
+
     Document doReplacements(String[] args) throws ParserConfigurationException, TransformerException {
         Document doc = start.getDocument();
         for (int i = 0; i < args.length; i++) {
@@ -94,7 +94,7 @@ public class CommandLineEditor {
         }
         return doc;
     }
-    
+
     void testXPath(String[] args) throws ParserConfigurationException, TransformerException {
         Document doc = start.getDocument();
         for (int i = 0; i < args.length; i++) {
@@ -105,31 +105,41 @@ public class CommandLineEditor {
             } else {
                 logger.debug("Processing "+args[i]);
                 String expr = args[i];
-                Node node = XPathAPI.selectSingleNode(doc, expr);
-                if (node instanceof Text) {
-                    System.out.println(expr+"  "+((Text)node).getData());
-                } else if (node == null) {
-                    System.out.println("Expr gave NULL "+expr);
-                } else if (node instanceof Element) {
-                    Element e = (Element)node;
-                    System.out.println(expr+
-                                           " element ="+e.getNodeName()
-                                      +e.getPrefix()+" "+e.getLocalName());
-                } else if (node instanceof Document) {
-                    Document e = (Document)node;
-                    System.out.println(expr+
-                                           " document ="+e.getNodeName()
-                                      +e.getPrefix()+" "+e.getLocalName()+
-                                           " nsuri="+e.getNamespaceURI());
-                } else {
-                    System.out.println(expr+
-                                           " node class ="+
-                                           node.getClass()+" "+node.getNodeType());
+                NodeList list = XPathAPI.selectNodeList(doc.getDocumentElement(), expr);
+                System.out.println("node list is length "+list.getLength());
+                for (int j = 0; j < list.getLength(); j++) {
+                    Node node = list.item(j);
+                    System.out.print(j+" ");
+                    if (node instanceof Text) {
+                        System.out.println(expr+"  "+((Text)node).getData());
+                    } else if (node == null) {
+                        System.out.println("Expr gave NULL "+expr);
+                    } else if (node instanceof Element) {
+                        Element e = (Element)node;
+                        System.out.println(expr+
+                                               " element getNodeName="+e.getNodeName()+
+                                               " prefix="+e.getPrefix()+
+                                               " localName="+e.getLocalName()+
+                                               " nsuri="+e.getNamespaceURI()+
+                                               " tagname="+e.getTagName()
+                                          );
+                    } else if (node instanceof Document) {
+                        Document e = (Document)node;
+                        System.out.println(expr+
+                                               " document getNodeName="+e.getNodeName()+
+                                               " prefix="+e.getPrefix()+
+                                               " localName="+e.getLocalName()+
+                                               " nsuri="+e.getNamespaceURI());
+                    } else {
+                        System.out.println(expr+
+                                               " node class ="+
+                                               node.getClass()+" "+node.getNodeType());
+                    }
                 }
             }
         }
     }
-    
+
     void initConfigFile() throws FileNotFoundException, ParserConfigurationException, IOException, SAXException {
         File configFile = new File(configFilename);
         if (configFile.exists()) {
@@ -137,12 +147,12 @@ public class CommandLineEditor {
             this.start = new Start(in, configFile.toURL());
         }
     }
-    
+
     public void printOptions(DataOutputStream out) throws DOMException, IOException {
         Document doc = start.getDocument();
         printOptions(doc.getDocumentElement(), out);
     }
-    
+
     protected void printOptions(Element element, DataOutputStream out) throws DOMException, IOException {
         NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -159,7 +169,7 @@ public class CommandLineEditor {
             }
         }
     }
-    
+
     protected String getFullName(Element e) {
         if (e.getParentNode() != null && e.getParentNode() instanceof Element) {
             return getFullName((Element)e.getParentNode())+"/"+e.getTagName();
@@ -167,7 +177,7 @@ public class CommandLineEditor {
             return "/"+e.getTagName();
         }
     }
-    
+
     /**
      *
      */
@@ -176,14 +186,14 @@ public class CommandLineEditor {
         CommandLineEditor cle = new CommandLineEditor(args);
         System.out.println("Done editing.");
     }
-    
+
     String[] args;
-    
+
     String configFilename;
-    
+
     Start start;
-    
+
     private static Logger logger = Logger.getLogger(CommandLineEditor.class);
-    
+
 }
 
