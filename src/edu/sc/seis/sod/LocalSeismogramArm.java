@@ -15,6 +15,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -109,7 +110,7 @@ public class LocalSeismogramArm implements Subsetter {
                 return;
             }
         }
-        processRequestSubsetter(ecp, infilters);
+        processRequestSubsetter(ecp, DisplayUtils.sortByDate(infilters));
     }
 
     public void processRequestSubsetter(EventChannelPair ecp,
@@ -191,7 +192,7 @@ public class LocalSeismogramArm implements Subsetter {
             processAvailableDataSubsetter(ecp,
                                           dataCenter,
                                           infilters,
-                                          outfilters);
+                                          DisplayUtils.sortByDate(outfilters));
         } else {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
             failLogger.info(ecp);
@@ -333,7 +334,7 @@ public class LocalSeismogramArm implements Subsetter {
                 tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)
             LocalSeismogramImpl[] tempLocalSeismograms = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
-            processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
+            processSeismograms(ecp, infilters, outfilters, DisplayUtils.sortByDate(tempLocalSeismograms));
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.RETRY));
