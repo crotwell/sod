@@ -57,7 +57,7 @@
         <xsl:template name="head">
                 <head>
                         <title>
-                                <xsl:value-of select="document/properties/title/text()"/>
+                                <xsl:value-of select="properties/title/text()"/>
                         </title>
                         <!-- compliance patch for Internet Explorer -->
                         <!--[if lt IE 7]>
