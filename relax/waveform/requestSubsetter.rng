@@ -13,6 +13,7 @@
             <ref name="requestSubsetterNOT"/>
             <ref name="requestPrint"/>
             <ref name="breqFastRequestSubsetter"/>
+            <ref name="PASS"/>
         </choice>
     </define>
     <define name="requestSubsetterAND">
@@ -191,4 +192,20 @@
             </element>
         </element>
     </define>
+    <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passRequest/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passRequest">
+                        <zeroOrMore>
+                                <ref name="requestSubsetter"/>
+                        </zeroOrMore>
+                </element>
+        </define>
 </grammar>
