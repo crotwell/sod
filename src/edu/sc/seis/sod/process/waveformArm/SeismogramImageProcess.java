@@ -15,6 +15,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
@@ -117,11 +118,23 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         return process(event, channel, original, seismograms, fileType);
     }
 
+    /** allows specifying a fileType, png or pdf. */
     public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          LocalSeismogramImpl[] seismograms,
                                          final String fileType
+                                        ) throws Exception {
+        return process(event, channel, original, seismograms, fileType, phases);
+    }
+
+    /** allows specifying a fileType, png or pdf, and a list of phases.*/
+    public LocalSeismogramResult process(EventAccessOperations event,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         LocalSeismogramImpl[] seismograms,
+                                         final String fileType,
+                                         String[] phases
                                         ) throws Exception {
         logger.debug("process() called");
 
@@ -135,6 +148,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
             memDSS.add(seismograms[i]);
         }
         bsd.add(new MemoryDataSetSeismogram[]{memDSS});
+        logger.debug("amp range for "+ChannelIdUtil.toStringNoDates(channel.get_id())+" "+bsd.getAmpConfig().getAmp()+"  minmax="+memDSS.getCache()[0].getMinValue()+", "+memDSS.getCache()[0].getMaxValue());
 
         Origin origin = CacheEvent.extractOrigin(event);
         MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
@@ -179,7 +193,4 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
     public static final String PDF = "pdf";
     public static final String PNG = "png";
 }
-
-
-
 
