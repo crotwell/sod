@@ -53,7 +53,7 @@ public class CommonAccess {
         }
     }
 
-    public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
+    public org.omg.CORBA_2_3.ORB getORB() {
         if (orb == null) {
             initORB(null, null);
         } // end of if (orb == null)
