@@ -251,8 +251,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    } else {
 		//here delete all the events in the queue from the 
 		//previous day that are successful or failed
-		Start.getEventQueue().delete(Status.COMPLETE_SUCCESS);
-		Start.getEventQueue().delete(Status.COMPLETE_REJECT);
+		//Start.getEventQueue().delete(Status.COMPLETE_SUCCESS);
+		//Start.getEventQueue().delete(Status.COMPLETE_REJECT);
 		Start.getEventQueue().incrementTime(eventFinderSubsetter.getSourceName(),
 						    eventFinderSubsetter.getDNSName(),
 						    getIncrementValue());
