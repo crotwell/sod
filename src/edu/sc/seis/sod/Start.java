@@ -5,7 +5,6 @@ import edu.sc.seis.sod.database.HSqlDbQueue;
 import edu.sc.seis.sod.database.Queue;
 import edu.sc.seis.sod.database.WaveformDbQueue;
 import edu.sc.seis.sod.database.WaveformQueue;
-import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,25 +16,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.iso_relax.verifier.Verifier;
-import org.iso_relax.verifier.VerifierConfigurationException;
-import org.kohsuke.validatelet.jarv.JARVVerifierImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-/**
- * Start.java
- *
- *
- * Created: Thu Dec 13 16:06:00 2001
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
- */
 
 public class Start implements SodExceptionListener {
     /**
@@ -64,8 +50,8 @@ public class Start implements SodExceptionListener {
         }
     }
     
-    public boolean validate(Document doc) throws SAXException, VerifierConfigurationException{
-        return true;//following lines removed pending fix to bali
+    public boolean validate(Document doc){
+        return true;//following lines commented out pending fix to bali
         //Verifier v = new JARVVerifierImpl(Validator.schema.createValidatelet());
         //if(v.verify(doc)) return true;
         //return false;
