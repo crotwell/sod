@@ -19,6 +19,7 @@
 </div>
 <div><b>Number waveforms processed: </b><numSuccessfulECP/></div>
 <div><b>Waveforms per hour(WPH): </b><waveformsPerHour/></div>
+<div><b>Error Count: </b><errorCount/></div>
 <div><b>Events to date:</b></div>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
