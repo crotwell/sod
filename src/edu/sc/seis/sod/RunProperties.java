@@ -15,6 +15,7 @@ public class RunProperties{
         Element runNameChild = SodUtil.getElement(el, "runName");
         if(runNameChild != null ){
             runName = SodUtil.getText(runNameChild);
+            CookieJar.getCommonContext().put("runName", runName);
         }
 
         Element statusBaseChild = SodUtil.getElement(el, "statusBase");
