@@ -12,17 +12,16 @@ def signal_handler(signal, frame):
 def main(argv):
     signal.signal(signal.SIGINT, signal_handler)
     startdir = os.path.abspath('.')
-    command = 'schemaDocumenter.bat'
     proj = ProjectParser.ProjectParser('../../project.xml')
     build.buildJars(proj)
     build.buildSchemaDocScripts(proj)
     depCopy.copy(proj)
     os.chdir(startdir)
-    print 'started ' + command
-    if command.endswith('.bat'):
-        os.spawnlp(os.P_WAIT, command, 'cmd', command,)
+    print 'starting schemaDocumenter' 
+    if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
+        os.spawnlp(os.P_WAIT, 'schemaDocumenter.bat', 'cmd', 'schemaDocumenter.bat')
     else:
-        os.spawnlp(os.P_WAIT, command, 'sh', command)
+        os.spawnlp(os.P_WAIT, 'schemaDocumenter.sh', 'sh', 'schemaDocumenter.sh')
     print '\ndone'
 
 if __name__ == "__main__":
