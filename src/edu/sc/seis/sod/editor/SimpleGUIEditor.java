@@ -120,7 +120,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             Box box = Box.createVerticalBox();
             box.add(comp);
             box.add(Box.createGlue());
-            frame.getContentPane().add(new JScrollPane(box), BorderLayout.CENTER);
+            frame.getContentPane().add(new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         }
         frame.pack();
         frame.show();
@@ -287,6 +287,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
 }
+
 
 
 

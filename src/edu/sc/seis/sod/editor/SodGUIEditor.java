@@ -163,8 +163,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("localSeismogramAND", bool);
         editors.put("localSeismogramOR", bool);
         editors.put("midPoint", new MidPointEditor(this));
-        editors.put("latitudeRange", new LatitudeRangeEditor());
-        editors.put("longitudeRange", new LongitudeRangeEditor());
+        editors.put("latitudeRange", new  DegreeRangeEditor(-90, 90));
+        editors.put("longitudeRange", new DegreeRangeEditor(-180, 180));
+        editors.put("azimuthRange", new DegreeRangeEditor(0, 180));
+        editors.put("backAzimuthRange", new DegreeRangeEditor(0, 180));
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
         String[] switchTypes = {"origin", "channel", "station", "site", "network"};
         for (int i = 0; i < switchTypes.length; i++) {
@@ -194,6 +196,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
+
+
 
 
 

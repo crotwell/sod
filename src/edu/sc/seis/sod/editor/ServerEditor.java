@@ -42,6 +42,7 @@ public abstract class ServerEditor {
                                                                                  fisName));
         JComboBox combo = new JComboBox(new Object[] { current});
         serverBox.add(combo);
+        serverBox.add(Box.createHorizontalGlue());
         combo.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent e) {
                         if (e.getStateChange() == e.SELECTED) {

@@ -27,7 +27,6 @@ public class TimeRangeEditor implements EditorPlugin {
         Element minElement = (Element)node;
         box.add(Box.createHorizontalGlue());
         box.add(dateE.getGUI(minElement));
-        box.add(Box.createHorizontalStrut(20));
         box.add(new JLabel("End:"));
         node = XPathAPI.selectSingleNode(element, "max");
         if(node == null){

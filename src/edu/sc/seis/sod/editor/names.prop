@@ -3,7 +3,9 @@ eventArm=Event
 networkArm=Network
 waveformArm=Waveform
 latitude=Latitude
+latitudeRange=Latitude
 longitude=Longitude
+longitudeRange=Longitude
 magnitudeRange=Magnitude
 eventTimeRange=Event Time Range
 magType=Type
@@ -45,4 +47,6 @@ edu/sc/seis/SCEPPNetworkDC=SCEPP
 edu/berkeley/geo/quake/NCEDC_NetworkDC=Berkeley
 networkFinder=Query to network server
 midPoint=Event to Station MidPoint
+azimuthRange=Azimuth
+backAzimuthRange=Back Azimuth
 
