@@ -78,9 +78,10 @@ public class PhaseRequest implements RequestGenerator{
 	    System.out.println("caught Exception no Preferred Origin");
 	}
 	edu.iris.Fissures.Time originTime = origin.origin_time;
+	System.out.println("originTime is "+origin.origin_time.date_time);
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
-	TimeInterval bInterval = new TimeInterval(Integer.parseInt(beginOffset.getValue())*100000, UnitImpl.SECOND);
-	TimeInterval eInterval = new TimeInterval(Integer.parseInt(endOffset.getValue())*100000, UnitImpl.SECOND);
+	TimeInterval bInterval = new TimeInterval(Integer.parseInt(beginOffset.getValue()), UnitImpl.SECOND);
+	TimeInterval eInterval = new TimeInterval(Integer.parseInt(endOffset.getValue()), UnitImpl.SECOND);
 	MicroSecondDate bDate = originDate.add(bInterval);
 	MicroSecondDate eDate = originDate.add(eInterval);
 	RequestFilter[] filters;
@@ -92,7 +93,8 @@ public class PhaseRequest implements RequestGenerator{
                               );
 	
 	
-	
+	System.out.println("beginTime is !!!!!!!!!!!!!!!!! "+bDate.getFissuresTime().date_time);
+	System.out.println("endTime is !!!!!!!!!!!!!!!!!"+eDate.getFissuresTime().date_time);
 	return filters;
 
     }
