@@ -98,10 +98,11 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         return null;
     }
     
-    private static String format(double d){
-        DecimalFormat formatter = new DecimalFormat("#.#");
-        return formatter.format(d);
+    private String format(double d){
+        synchronized(formatter){return formatter.format(d); }
     }
+    
+    private DecimalFormat formatter = new DecimalFormat("#.#");
     
     public String getResult(Channel chan) {
         StringBuffer buf = new StringBuffer();
