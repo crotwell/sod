@@ -348,7 +348,11 @@ public class SimpleGUIEditor extends CommandLineEditor {
     public void setTabbed(boolean tabbed){ this.tabs = tabbed; }
 
     public static String getDisplayName(String tagName) {
-        return nameProps.getProperty(tagName, tagName);
+        if (nameProps.containsKey(tagName)) {
+            return nameProps.getProperty(tagName, tagName);
+        } else {
+            return tagName;
+        }
     }
 
     public static void main(String[] args) throws Exception {
