@@ -49,7 +49,8 @@ public class HTMLOutlineTourist implements Tourist {
         if(d.isFromDef()) {
             result.append(getDefLink(d));
         } else {
-            result.append(d.getDatatype());
+            result.append("<a href=\"" + getDatatypeHREF(d) + "\">"
+                    + d.getDatatype() + "</a>");
         }
     }
 
@@ -123,7 +124,7 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Text t) {
         genericVisit(t);
-        result.append("Any Text");
+        result.append("<a href=\"" + getDatatypeHREF(t) + "\">Any Text</a>");
     }
 
     public void visit(Value v) {
@@ -138,36 +139,55 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     private String getTagDocHelpHREF() {
+        return getBasePath() + "tagDocHelp.html";
+    }
+
+    private String getBasePath() {
         String baseString = "../";
         for(int i = 0; i < curLoc.length(); i++) {
             if(curLoc.charAt(i) == '/') {
                 baseString += "../";
             }
         }
-        baseString += "tagDocHelp.html";
         return baseString;
     }
 
+    private String getDatatypeHREF(Form d) {
+        Class c = d.getClass();
+        //add one to get the final package period
+        if(d instanceof Data) {
+            c = ((Data)d).getDatatype().getClass();
+        }
+        String classname = c.getName().substring(c.getPackage()
+                .getName()
+                .length() + 1);
+        return getBasePath() + "tagDocs/datatypes/" + classname + ".html";
+    }
+
     private String getDefLink(Form f) {
-        if(f.getDef() != null) { return getDefLink(f, f.getDef().getName()); }
+        if(f.getDef() != null) {
+            return getDefLink(f, f.getDef().getName());
+        }
         return "";
     }
 
     private String getDefLink(Form f, String name) {
         String path = SchemaDocumenter.makePath(f.getDef()) + ".html";
         String href = SodUtil.getRelativePath(curLoc, path, "/");
-String title = "";
-        if(f.getAnnotation().hasSummary()){
-            title = "title=\""+f.getAnnotation().getSummary() + "\"";
+        String title = "";
+        if(f.getAnnotation().hasSummary()) {
+            title = "title=\"" + f.getAnnotation().getSummary() + "\"";
         }
-        return "<a href=\"" + href + "\" " + title +">" + name + "</a>\n";
+        return "<a href=\"" + href + "\" " + title + ">" + name + "</a>\n";
     }
 
     private String getCardinality(Form f) {
         String baseString = getTagDocHelpHREF();
         if(f.getMin() == 0) {
-            if(f.getMax() == 1) { return "<i><a href=\"" + baseString
-                    + "#optional\">optional</a></i>"; }
+            if(f.getMax() == 1) {
+                return "<i><a href=\"" + baseString
+                        + "#optional\">optional</a></i>";
+            }
             return "<i><a href=\"" + baseString
                     + "#Any number of times\">Any number of times</a></i>";
         } else if(f.getMax() > 1) {
