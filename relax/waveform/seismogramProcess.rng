@@ -212,6 +212,23 @@
         </element>
     </define>
     <define name="saveSeismogramToFile">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Saves seismograms in files. </summary>
+                <description>The seismograms are written to data files in the
+                given direcctory. Always returns true unless there is an error.
+                </description>
+                <example>
+                    <saveSeismogramToFile>
+                        <fileType>sac</fileType>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <eventDirLabel>
+                            Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                        </eventDirLabel>
+                    </saveSeismogramToFile>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="saveSeismogramToFile">
             <element name="fileType">
                 <data type="string"/>
