@@ -194,31 +194,31 @@
                 </choice>
             </element>
             <element name="stationPointDistance">
+                <ref name="range"/>
                 <element name="latitude">
-                    <data type="double"/>
+                    <data type="float"/>
                 </element>
                 <element name="longitude">
-                    <data type="double"/>
+                    <data type="float"/>
                 </element>
-                <ref name="range"/>
             </element>
             <element name="stationPointAzimuth">
+                <ref name="range"/>
                 <element name="latitude">
                     <data type="double"/>
                 </element>
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range"/>
             </element>
             <element name="stationPointBackAzimuth">
+                <ref name="range"/>
                 <element name="latitude">
                     <data type="double"/>
                 </element>
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range"/>
             </element>
             <element name="stationAND">
                 <oneOrMore>

@@ -106,7 +106,6 @@
             <min>30</min>
             <max>90</max>
         </distanceRange>
-        <localSeismogramArm>
             <phaseRequest>
                 <model>prem</model>
                 <beginPhase>ttp</beginPhase>
@@ -131,7 +130,6 @@
             </legacyExecute>
             <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml">
             </localSeismogramTemplateGenerator>
-        </localSeismogramArm>
         <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>

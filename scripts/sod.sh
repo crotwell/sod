@@ -2,7 +2,7 @@
 
 JAVA=java
 if [ -z "${SOD_HOME}" ] ; then
-SOD_HOME=/Users/crotwell/Development/sod/scripts
+SOD_HOME=.
 fi
 LIB=${SOD_HOME}/lib
 
@@ -19,14 +19,14 @@ AVALON_FRAMEWORK=${LIB}/avalon-framework-4.1.5.jar
 CONCURRENT=${LIB}/concurrent-1.3.2.jar
 LOGKIT=${LIB}/logkit-1.2.jar
 FISSURESUTIL=${LIB}/fissuresUtil-1.0.8beta.jar
-FISSURESIMPL=${LIB}/fissuresImpl-1.1.5.jar
+FISSURESIMPL=${LIB}/fissuresImpl-1.1.6beta.jar
 FISSURESIDL=${LIB}/fissuresIDL-1.0.jar
-SEEDCODEC=${LIB}/SeedCodec-1.0Beta2.jar
-TAUP=${LIB}/TauP-1.1.4.jar
-MOCKFISSURES=${LIB}/mockFissures-0.2.jar
+SEEDCODEC=${LIB}/SeedCodec-1.0beta2.jar
+TAUP=${LIB}/TauP-1.1.5beta.jar
+MOCKFISSURES=${LIB}/mockFissures-0.3.jar
 JUNIT_ADDONS=${LIB}/junit-addons-1.3.jar
 JUNIT=${LIB}/junit-3.8.1.jar
-HSQLDB=${LIB}/hsqldb-1.7.2-rc6d.jar
+HSQLDB=${LIB}/hsqldb-1.7.2.jar
 XERCES=${LIB}/xerces-2.6.2.jar
 XML_APIS=${LIB}/xml-apis-2.6.2.jar
 XALAN=${LIB}/xalan-2.6.0.jar
@@ -43,7 +43,7 @@ JAX_QNAME=${LIB}/jax-qname-1.0.jar
 JSR173_API=${LIB}/jsr173_api-1.0.jar
 JSR173_RI=${LIB}/jsr173_ri-1.0.jar
 NAMESPACE=${LIB}/namespace-1.0.jar
-SOD=${LIB}/sod-1.0Beta.jar
+SOD=${LIB}/sod-2.0beta.jar
 
 CLASSPATH=${ISTI_UTIL}:${ISTI_UTIL_TOPLEVEL}:${JDOM}:${JING}:${OPENMAP}:${JCALENDAR}:${JACORB}:${IDL}:${ANTLR}:${AVALON_FRAMEWORK}:${CONCURRENT}:${LOGKIT}:${FISSURESUTIL}:${FISSURESIMPL}:${FISSURESIDL}:${SEEDCODEC}:${TAUP}:${MOCKFISSURES}:${JUNIT_ADDONS}:${JUNIT}:${HSQLDB}:${XERCES}:${XML_APIS}:${XALAN}:${LOG4J}:${RNGCONV}:${MSV}:${ISORELAX}:${RELAXNGDATATYPE}:${XSDLIB}:${VELOCITY}:${COMMONS_COLLECTIONS}:${VELOCITY_TOOLS_GENERIC}:${JAX_QNAME}:${JSR173_API}:${JSR173_RI}:${NAMESPACE}:${SOD}
 

@@ -99,7 +99,7 @@
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
     </networkArm>
-    <waveformArm>
+    <waveformVectorArm>
         <eventStationOR>
             <eventStationAND>
                 <embeddedOriginSubsetter>
@@ -180,83 +180,81 @@
                 </embeddedOriginSubsetter>
             </eventStationAND>
         </eventStationOR>
-        <motionVectorArm>
-            <requestGeneratorWrapper>
-                <phaseRequest>
-                    <model>prem</model>
-                    <beginPhase>ttp</beginPhase>
-                    <beginOffset>
-                        <unit>SECOND</unit>
-                        <value>-120</value>
-                    </beginOffset>
-                    <endPhase>2.0kmps</endPhase>
-                    <endOffset>
-                        <unit>SECOND</unit>
-                        <value>60</value>
-                    </endOffset>
-                </phaseRequest>
-            </requestGeneratorWrapper>
-            <fixedDataCenter>
-                <name>IRIS_BudDataCenter</name>
-                <dns>edu/iris/dmc</dns>
-            </fixedDataCenter>
-            <ORAvailableDataWrapper>
-                <someCoverage/>
-            </ORAvailableDataWrapper>
-            <ORLocalSeismogramWrapper>
-                <phaseSignalToNoise>
-                    <modelName>prem</modelName>
-                    <phaseName>ttp</phaseName>
-                    <shortOffsetBegin>
-                        <unit>SECOND</unit>
-                        <value>-5</value>
-                    </shortOffsetBegin>
-                    <shortOffsetEnd>
-                        <unit>SECOND</unit>
-                        <value>5</value>
-                    </shortOffsetEnd>
-                    <longOffsetBegin>
-                        <unit>SECOND</unit>
-                        <value>-105</value>
-                    </longOffsetBegin>
-                    <longOffsetEnd>
-                        <unit>SECOND</unit>
-                        <value>-5</value>
-                    </longOffsetEnd>
-                    <ratio>2</ratio>
-                </phaseSignalToNoise>
-            </ORLocalSeismogramWrapper>
-            <alwaysSuccess>
-                <phaseSignalToNoise>
-                    <modelName>prem</modelName>
-                    <phaseName>ttp</phaseName>
-                    <shortOffsetBegin>
-                        <unit>SECOND</unit>
-                        <value>-5</value>
-                    </shortOffsetBegin>
-                    <shortOffsetEnd>
-                        <unit>SECOND</unit>
-                        <value>5</value>
-                    </shortOffsetEnd>
-                    <longOffsetBegin>
-                        <unit>SECOND</unit>
-                        <value>-105</value>
-                    </longOffsetBegin>
-                    <longOffsetEnd>
-                        <unit>SECOND</unit>
-                        <value>-5</value>
-                    </longOffsetEnd>
-                    <ratio>0</ratio>
-                </phaseSignalToNoise>
-            </alwaysSuccess>
-            <saveSeismogramToFile>
-                <fileType>sac</fileType>
-                <dataDirectory>BUD_II</dataDirectory>
-                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                </eventDirLabel>
-            </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-        </motionVectorArm>
+        <requestGeneratorWrapper>
+            <phaseRequest>
+                <model>prem</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-120</value>
+                </beginOffset>
+                <endPhase>2.0kmps</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>60</value>
+                </endOffset>
+            </phaseRequest>
+        </requestGeneratorWrapper>
+        <fixedDataCenter>
+            <name>IRIS_BudDataCenter</name>
+            <dns>edu/iris/dmc</dns>
+        </fixedDataCenter>
+        <ORAvailableDataWrapper>
+            <someCoverage/>
+        </ORAvailableDataWrapper>
+        <ORLocalSeismogramWrapper>
+            <phaseSignalToNoise>
+                <modelName>prem</modelName>
+                <phaseName>ttp</phaseName>
+                <shortOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </shortOffsetBegin>
+                <shortOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>5</value>
+                </shortOffsetEnd>
+                <longOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-105</value>
+                </longOffsetBegin>
+                <longOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </longOffsetEnd>
+                <ratio>2</ratio>
+            </phaseSignalToNoise>
+        </ORLocalSeismogramWrapper>
+        <alwaysSuccess>
+            <phaseSignalToNoise>
+                <modelName>prem</modelName>
+                <phaseName>ttp</phaseName>
+                <shortOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </shortOffsetBegin>
+                <shortOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>5</value>
+                </shortOffsetEnd>
+                <longOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-105</value>
+                </longOffsetBegin>
+                <longOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </longOffsetEnd>
+                <ratio>0</ratio>
+            </phaseSignalToNoise>
+        </alwaysSuccess>
+        <saveSeismogramToFile>
+            <fileType>sac</fileType>
+            <dataDirectory>BUD_II</dataDirectory>
+            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+            </eventDirLabel>
+        </saveSeismogramToFile>
+        <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
@@ -265,5 +263,5 @@
         <waveformStationStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
-    </waveformArm>
+    </waveformVectorArm>
 </sod>

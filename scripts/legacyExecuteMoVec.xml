@@ -100,13 +100,12 @@
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
     </networkArm>
-    <waveformArm>
+    <waveformVectorArm>
         <distanceRange>
             <unit>DEGREE</unit>
             <min>30</min>
             <max>90</max>
         </distanceRange>
-        <motionVectorArm>
             <requestGeneratorWrapper>
                 <phaseRequest>
                     <model>prem</model>
@@ -138,7 +137,6 @@
                 <command>echo</command>
             </channelGroupLegacyExecute>
             <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-        </motionVectorArm>
         <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
@@ -147,5 +145,5 @@
         <waveformStationStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
-    </waveformArm>
+    </waveformVectorArm>
 </sod>

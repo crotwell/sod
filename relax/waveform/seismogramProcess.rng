@@ -35,9 +35,9 @@
         <element name="seismogramAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between seismogram subsetters. </summary>
+                    <summary> Logical AND between seismograph subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated.
+                        subsetters. The subsetters after the first false outputted are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored.</description>
                     <example>
@@ -59,7 +59,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between seismogramSubsetter subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputed are not evaluated.
+                        subsetters. The subsetters after the first true outputted are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored. </description>
                     <example>
@@ -118,7 +118,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Cuts seismograms relative to predicted phase arrival times. </summary>
-                    <description> Cuts seismogras relative to offsets from phase arrival time
+                    <description> Cuts seismograms relative to offsets from phase arrival time
                         predicted by TauP for the model. </description>
                     <example>
                         <phaseCut>
@@ -145,7 +145,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Filter</summary>
-                    <description>Applies a butterworth filter to the seismograms. The filterType can
+                    <description>Applies a Butterworth filter to the seismograms. The filterType can
                         be CAUSAL or NONCAUSAL or TWOPASS, with the last two being equivalent.</description>
                     <example>
                         <filter>
@@ -220,7 +220,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Apply a taper.</summary>
-                    <description>Applys a taper to the seismograms. The type can be one of HANNING,
+                    <description>Applies a taper to the seismograms. The type can be one of HANNING,
                         HAMMIN or COSINE, with HANNING the default. The width is given as a fraction
                         of the seismogram length, and so should be 0.5 as otherwise the begin and
                         end taper will overlap each other. 0.05 is the default.</description>
@@ -306,8 +306,8 @@
         <element name="externalSeismogramProcess">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Runs an externally defined java processor. </summary>
-                    <description>This runs the java processor defined in the given class, which must
+                    <summary>Runs an externally defined Java processor. </summary>
+                    <description>This runs the Java processor defined in the given class, which must
                         implement the edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess
                         interface. </description>
                     <example>

@@ -236,7 +236,7 @@ public class Start{
                     event = new EventArm(el);
                 } else if (el.getTagName().equals("networkArm")) {
                     network = new NetworkArm(el);
-                } else if (el.getTagName().equals("waveformArm")) {
+                } else if (el.getTagName().startsWith("waveform")) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, network, poolSize);
                 }

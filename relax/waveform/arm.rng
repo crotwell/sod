@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
-        <start>
-                <element name="waveformArm">
-                        <optional>
-                                <externalRef href="eventStation.rng"/>
-                        </optional>
-                        <choice>
-                           <externalRef href="localSeismogram.rng"/>
-                           <externalRef href="motionVector.rng"/>
-                        </choice>
-                        <zeroOrMore>
-                                <externalRef href="status.rng"/>
-                        </zeroOrMore>
-                </element>
-        </start>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <choice>
+            <externalRef href="localSeismogram.rng"/>
+            <externalRef href="motionVector.rng"/>
+        </choice>
+        <xsd:annotation>
+            <summary>Operates on the networks and events returned by the network
+                and event arms</summary>
+            <description>The waveform arm takes the </description>
+        </xsd:annotation>
+    </start>
 </grammar>

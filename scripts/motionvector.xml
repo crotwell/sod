@@ -100,44 +100,42 @@
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
     </networkArm>
-    <waveformArm>
+    <waveformVectorArm>
         <distanceRange>
             <unit>DEGREE</unit>
             <min>30</min>
             <max>90</max>
         </distanceRange>
-        <motionVectorArm>
-            <requestGeneratorWrapper>
-                <phaseRequest>
-                    <model>prem</model>
-                    <beginPhase>ttp</beginPhase>
-                    <beginOffset>
-                        <unit>SECOND</unit>
-                        <value>-60</value>
-                    </beginOffset>
-                    <endPhase>tts</endPhase>
-                    <endOffset>
-                        <unit>SECOND</unit>
-                        <value>360</value>
-                    </endOffset>
-                </phaseRequest>
-            </requestGeneratorWrapper>
-            <fixedDataCenter>
-                <name>IRIS_PondDataCenter</name>
-                <dns>edu/iris/dmc</dns>
-            </fixedDataCenter>
-            <ANDAvailableDataWrapper>
-                <someCoverage/>
-            </ANDAvailableDataWrapper>
-            <printlineSeismogramProcess/>
-            <saveSeismogramToFile>
-                <fileType>sac</fileType>
-                <dataDirectory>POND_II</dataDirectory>
-                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                </eventDirLabel>
-            </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-        </motionVectorArm>
+        <requestGeneratorWrapper>
+            <phaseRequest>
+                <model>prem</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-60</value>
+                </beginOffset>
+                <endPhase>tts</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>360</value>
+                </endOffset>
+            </phaseRequest>
+        </requestGeneratorWrapper>
+        <fixedDataCenter>
+            <name>IRIS_PondDataCenter</name>
+            <dns>edu/iris/dmc</dns>
+        </fixedDataCenter>
+        <ANDAvailableDataWrapper>
+            <someCoverage/>
+        </ANDAvailableDataWrapper>
+        <printlineSeismogramProcess/>
+        <saveSeismogramToFile>
+            <fileType>sac</fileType>
+            <dataDirectory>POND_II</dataDirectory>
+            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+            </eventDirLabel>
+        </saveSeismogramToFile>
+        <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
@@ -146,5 +144,5 @@
         <waveformStationStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
-    </waveformArm>
+    </waveformVectorArm>
 </sod>

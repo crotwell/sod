@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
     <start>
-        <element name="motionVectorArm">
+        <element name="waveformVectorArm">
+            <optional>
+                <externalRef href="eventStation.rng"/>
+            </optional>
             <optional>
                 <externalRef href="eventChannelGroup.rng"/>
             </optional>
             <element name="requestGeneratorWrapper">
-            <externalRef href="phaseRequest.rng"/>
+                <externalRef href="phaseRequest.rng"/>
             </element>
             <optional>
                 <externalRef href="channelGroupRequestSubsetter.rng"/>
@@ -17,6 +20,9 @@
             </optional>
             <zeroOrMore>
                 <externalRef href="channelGroupSeismogramProcess.rng"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <externalRef href="status.rng"/>
             </zeroOrMore>
         </element>
     </start>
