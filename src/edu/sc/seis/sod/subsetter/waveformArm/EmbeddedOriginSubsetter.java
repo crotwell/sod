@@ -56,11 +56,10 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) {
+    public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) throws Exception{
 
-	//return originSubsetter.accept(null, cookies);
-	return true;
-
+	return originSubsetter.accept(eventAccess, eventAccess.get_preferred_origin(), cookies);
+	
     }
  
   

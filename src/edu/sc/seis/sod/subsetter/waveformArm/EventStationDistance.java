@@ -57,8 +57,7 @@ public class EventStationDistance extends DistanceRange implements EventStationS
 							 station.my_location.latitude,
 							 station.my_location.longitude);
 	System.out.println("The actual Distance of the Event from the station is "+actualDistance);
-		if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-	    System.out.println("RETURNING TRUE IN EVENT STATION DISTANCE ~~~~~~~~~~~~~~~~~~~~~");
+	if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
 	    return true;
 	} else return false;
     }
