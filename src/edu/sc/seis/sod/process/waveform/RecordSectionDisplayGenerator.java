@@ -152,7 +152,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private int counter;
 
-    public static int fileNameCounter = 1;
+    private int fileNameCounter = 1;
 
     private final static String fileBase = "recordSection";
 
