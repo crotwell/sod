@@ -4,11 +4,14 @@
     <include href="../base/include/phaseWindow.rng"/>
     <include href="../base/include/quantity.rng"/>
     <start combine="choice">
-        <choice>
-        <ref name="phaseRequest"/>
-        <ref name="originOffsetRequest"/>
-        </choice>
+        <ref name="requestGenerator"/>
     </start>
+    <define name="requestGenerator">
+        <choice>
+            <ref name="phaseRequest"/>
+            <ref name="originOffsetRequest"/>
+        </choice>
+    </define>
     <define name="phaseRequest">
         <element name="phaseRequest">
             <ref name="phaseWindow"/>
@@ -20,8 +23,8 @@
                 <ref name="quantity"/>
             </element>
             <element name="endOffset">
-            <ref name="quantity"/>
+                <ref name="quantity"/>
             </element>
-            </element>
-        </define>
+        </element>
+    </define>
 </grammar>
