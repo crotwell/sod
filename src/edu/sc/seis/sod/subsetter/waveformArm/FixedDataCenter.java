@@ -17,7 +17,7 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class FixedDataCenter extends AbstractSource{
+public class FixedDataCenter extends AbstractSource implements SodElement{
     public FixedDataCenter (Element element){
 	super(element);
 	try{

@@ -19,7 +19,7 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class FullCoverage implements AvailableDataSubsetter{
+public class FullCoverage implements AvailableDataSubsetter, SodElement{
     public FullCoverage (Element config){
 	
     }

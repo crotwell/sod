@@ -11,6 +11,8 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
+import edu.iris.Fissures.IfSeismogramDC.*;
+
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
@@ -81,7 +83,9 @@ public class WaveFormArm implements Runnable {
     }
 
     public void processFixedDataCenter() {
-
+	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
+	if(dataCenter == null) System.out.println("Data Center is NULL");
+	else System.out.println("Data Center is NOT NULL");
 	processPhaseRequestSubsetter();
 	
     }
@@ -96,7 +100,7 @@ public class WaveFormArm implements Runnable {
     
     public void processAvailableDataSubsetter() {
 
-	System.out.println("Successfully iterated through the WaveFormArm");
+ 	System.out.println("Successfully iterated through the WaveFormArm");
     }
 
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
