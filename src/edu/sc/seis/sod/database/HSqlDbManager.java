@@ -88,7 +88,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     
     private NetworkDatabase networkDatabase;
 
-    private WaveformDatabase waveformDatabase;
+    protected WaveformDatabase waveformDatabase;
     
     private Connection connection;
 
