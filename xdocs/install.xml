@@ -6,7 +6,7 @@
     </properties>
     <body>
         <section name="Installing SOD">
-            <p> SOD is currently distributed in tar and zip formats, both contain identical content.
+            <p> SOD is currently distributed in tar and zip formats.
                 After <a href="download.html">downloading</a> the most recent version, untaring or
                 unzipping it will result in a directory structure like the following: <ul>
                     <li>
@@ -35,7 +35,7 @@
             <p>To set it in the script, cd into the bin directory. If you're on a Unix-like
                 platform, open up sod.sh in a text editor. On Windows, open up sod.bat for editing.
                 You will also need to edit sodeditor.sh or sodeditor.bat.  Near the beginning of
-                these files is the <b>SOD_HOME</b> variable. It's currently set to '../' so you can
+                these files is the <b>SOD_HOME</b> variable. It's currently set to '.' so you can
                 run SOD from the <tt>sod</tt> directory. Set the value to the path to SOD's
                 directory. For example, if SOD was installed in <tt>/usr/local/sod-2.0</tt>, then
                 you would do this for Unix:<br/>

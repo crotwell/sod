@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>Strategy File via XML</title>
+        <title>SOD - Strategy File via XML</title>
     </properties>
     <body>
         <section name="Introduction">
-            <p> This is a short tutorial designed to show the basics of sod from the point of view
-                of the raw XML strategy file. For an easier introduction that uses a GUI editor to
+            <p> This is a short tutorial designed to show the basics of SOD using a  raw XML strategy file. For an easier introduction that uses a GUI editor to
                 hide the complexities of XML, see the <a href="walkthrough.html">Strategy via
                 Editor</a> document. This tutorial does not exploit all the features of SOD, but is
                 rather simple. Once the basics are understood, it is not difficult to add a little here
@@ -22,11 +21,11 @@
             <p> Sod gets all of the information about what data to retrieve from a XML strategy
                 file. So in order to use SOD, you need to create or modify one. For this example,
                 we will get all data from long period channels from all magnitude 6 or larger
-                earthquakes in January of 2003.  We will use the Iris-Ida network, code II, and pick
+                earthquakes in January of 2003.  We will use the IRIS-Ida network, code II, and pick
                 some stations that have a distance of 30 to 60 degrees from the event. We will save
                 the data in SAC format in directories by event.</p>
             <p> The main structure of our XML strategy file will look like this. We will fill in
-                each section with the details later. There should a completed copy of this within
+                each section with the details later. There should a completed copy of this called tutorial.xml within
                 the examples directory of the SOD distribution.</p>
             <source>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt; 
@@ -34,7 +33,7 @@
    &lt;properties&gt;&lt;/properties&gt;
    &lt;eventArm&gt;&lt;/eventArm&gt;
    &lt;networkArm&gt;&lt;/networkArm&gt;
-   &lt;waveFormArm&gt;&lt;/waveformArm&gt;
+   &lt;waveformArm&gt;&lt;/waveformArm&gt;
 &lt;/sod&gt;</source>
             <p> There are several very important items here so you should make sure that these
                 are correct. The &lt;?xml&gt; line is not really part of the SOD strategy
@@ -56,7 +55,8 @@
                 Setting this can be useful to tell several runs apart. </p>
             <source>&lt;runName&gt;Tutorial Run&lt;/runName&gt;</source>
             <p> Adding this tells SOD that this run is called "Tutorial Run". </p>
-        </section>
+            <p>Both of these items should be added to the file inside of the properties tags</p>
+s        </section>
         <section name="Earthquakes!">
             <p> Now to the fun part: finding earthquakes. We need to get a selection of earthquakes
                 from the server.  This is specified within the &lt;eventArm&gt; section.
@@ -79,11 +79,9 @@
         &lt;/longitudeRange&gt;
     &lt;/boxArea&gt;
     &lt;originDepthRange&gt; 
-        &lt;unitRange&gt;
-            &lt;unit&gt;KILOMETER&lt;/unit&gt;
-            &lt;min&gt;0&lt;/min&gt; 
-            &lt;max&gt;1000&lt;/max&gt;
-        &lt;/unitRange&gt; 
+        &lt;unit&gt;KILOMETER&lt;/unit&gt;
+        &lt;min&gt;0&lt;/min&gt; 
+        &lt;max&gt;1000&lt;/max&gt;
     &lt;/originDepthRange&gt;
     &lt;originTimeRange&gt;
         &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
@@ -96,15 +94,15 @@
     &lt;catalog&gt;PREF&lt;/catalog&gt;
     &lt;contributor&gt;IRIS&lt;/contributor&gt; 
 &lt;/eventFinder&gt;</source>
+<p>This eventFinder sequence should be inserted in between the two eventArm tags</p>
             <p> You will notice that there are quite a lot of extra items here that aren't directly
                 related to our query. They will not eliminate any events and will make modification 
                 easier later. Basically, we are connecting to the IRIS_EventDC server,
-                which is registered under the edu/iris/dmc domain. We are asking for events within
-                January 2003, with a magnitude of 6 or greater, anywhere in the world.</p>
+                which is registered under the edu/iris/dmc domain. We are asking for events in
+                January of 2003 with a magnitude of 6 or greater.</p>
             <p> One subtle point is that a single real earthquake will be in multiple catalogs
-                within the DMC's database. Because there is currently no way to automatically group
-                these related origins into a single event, based on the information to which the DMC
-                has access, these origins each appear in separate events. It is usually wise to
+                within the DMC's database. he DMC doesn't have enough information to group
+                    these origins into a single event. As such, they appear in seperate events. It is usually wise to
                 pick a particular catalog to avoid duplicate processing of events. The default here
                 is the PREF catalog from the DMC. PREF is not a true catalog, but something
                 that the DMC Event server understands as the "best" catalog depending on the time of
@@ -116,8 +114,8 @@
             <p> Now that we have our events locally, we could do some subsetting based on the
                 origin, but we will assume all of these events are fine. Just to make running SOD a
                 little more interesting, we will add an event subsetter and an event processor. The
-                event subsetter, &lt;removeEventDuplicate/&gt; makes sure that we do not get
-                events that are very close in both space and time. It is often the case that there
+                event subsetter, &lt;removeEventDuplicates/&gt; makes sure that we do not get
+                events that are very close in both location and time. It is often the case that there
                 are duplicates even in a single catalog, and this removes them. The processor just
                 prints out a line every time an event arrives. The last item generates the html
                 status pages for events. This finishes the event arm.</p>
@@ -125,9 +123,10 @@
 &lt;removeEventDuplicate/&gt; 
 &lt;printLineEventProcess/&gt;
 &lt;eventStatusTemplate&gt; 
-    &lt;eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/&gt;
+    &lt;template&gt;jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"&lt;/template&gt;
 &lt;/eventStatusTemplate&gt;</source>
         </section>
+        <p>These items should go after the end of the event finder and before the second event arm tag in the file.</p>
         <section name="Networks and Channels">
             <p>Before betting any data, we must choose some channels within the network arm. Here is
                 the network arm that gets long period channels from stations within the II network.</p>
@@ -140,18 +139,20 @@
         &lt;value&gt;2&lt;/value&gt; 
     &lt;/refreshInterval&gt; 
 &lt;/networkFinder&gt;</source>
+<p>Insert this XML inside the networkArm tags</p>
             <p> Here we connect to the IRIS_NetworkDC server within the edu/iris/dmc domain. We will
                 also go back and look for new channels every 2 days. In our current example this
                 will not matter because the entire run will complete in a shorter time. However,
                 for a longer running instance of SOD, and in particular for stations within USArray,
-                there may very well be new stations that come online during a SOD run.</p>
+                there may very well be new stations that come online during a SOD run.  Setting this refreshInterval tells SOD to add new channels to its run as it goes.</p>
             <p> Next we will select the networks that we are interested in. This will select just
                 the II network.</p>
             <source>&lt;networkCode&gt;II&lt;/networkCode&gt;</source>
+            <p>This piece of XML should immediately follow the networkFinder we just added and immediately precede the closing networkArm tag</p>
             <p> If we wished to select more than one network, we could have wrapped several
                 networkCode elements within a &lt;networkOR&gt; to allow them to all match.
                 Care should be taken as you may say, "I want II and IU networks," and be tempted to
-                use a &lt;networkAND&gt;, but sod needs to be told, "The network code can be
+                use a &lt;networkAND&gt;, but SOD needs to be told, "The network code can be
                 II or IU," so &lt;networkOR&gt; is correct. It is important that there be
                 at most one subsetter of a given type. If more than one is needed, then they should
                 be wrapped in a logical, such as AND, OR, NOT, or XOR.</p>
@@ -164,6 +165,7 @@
     &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
     &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt; 
 &lt;/stationEffectiveTimeOverlap&gt;</source>
+<p>Insert this after the networkCode subsetter</p>
             <p> The next level of subsetting is the Site level. Sites in the Fissures/DHI model
                 roughly correspond to location IDs in SEED. In order to avoid getting data from more
                 than one site per station, we will specify that the site must be active during
@@ -180,6 +182,7 @@
         &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
     &lt;/siteEffectiveTimeOverlap&gt; 
 &lt;/siteAND&gt;</source>
+<p>Insert this after the effective time subsetter</p>
             <p> Finally, we will actually select channels. At this point we can eliminate all but
                 the long period channels. We also want to eliminate LOG channels and include an
                 effective time overlap to lessen the amount of data that must be processed. Lastly,
@@ -194,33 +197,29 @@
         &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
         &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
     &lt;/channelEffectiveTimeOverlap&gt; 
-&lt;/channelAnd&gt;
+&lt;/channelAND&gt;
 &lt;printlineChannelProcessor/&gt;</source>
+<p>These are the final items in the networkArm, so they should be inserted right before the closing networkArm tag.</p>
         </section>
         <section name="Waveforms">
             <p> The final section involves the combination of event and network/channel information
                 to produce waveforms. Here we can make use of both the event and station location to
-                do distance calculations. The following begins the waveform arm and uses an event
+                do distance calculations. Insert the following in the waveform arm to use an event
                 station subsetter to limit the distance from the event to the station to between 30 and 60
                 degrees.</p>
             <source>
-&lt;waveFormArm&gt; 
-    &lt;distanceRange&gt;
-        &lt;unit&gt;DEGREE&lt;/unit&gt;
-        &lt;min&gt;30&lt;/min&gt; 
-        &lt;max&gt;60&lt;/max&gt; 
-    &lt;/distanceRange&gt;</source>
-            <p> At this point, we open the local seismogram arm, which processes on a channel by
-                channel basis. SOD also allows a motion vector arm, which will allow the processing
-                to act on the three components simultaneously.</p>
-            <p> The missing item at this point is the time window to ask for data. The usual method
+&lt;distanceRange&gt;
+    &lt;unit&gt;DEGREE&lt;/unit&gt;
+    &lt;min&gt;30&lt;/min&gt; 
+    &lt;max&gt;60&lt;/max&gt; 
+&lt;/distanceRange&gt;</source>
+            <p> The next item the time window to ask for data. The usual method
                 is to use predicted phase arrival times to calculate the request. This uses the TauP
                 Toolkit to calculate the times, so any model and phase from it is acceptable.
                 See the <a href="http://www.seis.sc.edu/software/TauP">TauP Toolkit</a> for more
                 information. We will use 1 minute before the first P arrival to 20 minutes after the
                 first S arrival within the prem model.</p>
             <source>
-&lt;localSeismogramArm&gt; 
     &lt;phaseRequest&gt;
         &lt;model&gt;prem&lt;/model&gt;
         &lt;beginPhase&gt;ttp&lt;/beginPhase&gt; 
@@ -255,18 +254,15 @@
                 build the actual event directories. SOD will create this directory if it does not
                 exist. Next, the eventDirLabel creates the name of each event's subdirectory. We
                 will name the directories with Event_, followed by the time of the event as
-                year_Jday_hour_minute_second. All that remains is to close the local seismogram arm,
-                waveform arm, and sod tags.</p>
+                year_Jday_hour_minute_second.</p>
             <source>
-            &lt;printlineSeismogramProcess/&gt;
-            &lt;saveSeismogramToFile&gt;
-                &lt;fileType&gt;sac&lt;/fileType&gt;
-                &lt;dataDirectory&gt;POND_II&lt;/dataDirectory&gt;
-                &lt;eventDirLabel&gt;Event_&lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;&lt;/eventDirLabel&gt; 
-            &lt;/saveSeismogramToFile&gt;
-        &lt;/localSeismogramArm&gt; 
-    &lt;/waveFormArm&gt; 
-&lt;/sod&gt;</source>
+&lt;printlineSeismogramProcess/&gt;
+&lt;saveSeismogramToFile&gt;
+    &lt;fileType&gt;sac&lt;/fileType&gt;
+    &lt;dataDirectory&gt;POND_II&lt;/dataDirectory&gt;
+    &lt;eventDirLabel&gt;Event_&lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;&lt;/eventDirLabel&gt; 
+&lt;/saveSeismogramToFile&gt;</source>
+<p> If you've inserted all the pieces in the right places, you should have a working SOD strategy file now.  Enjoy!</p>
         </section>
     </body>
 </document>

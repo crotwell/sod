@@ -2,7 +2,7 @@
 <document>
         <properties>
                 <author>Philip Crotwell</author>
-                <title>SOD Installation</title>
+                <title>SOD - Quickstart</title>
         </properties>
         <body>
                 <section name="Quickstart Guide to SOD">
@@ -41,28 +41,27 @@
                         in Seattle. The output should look like this:<br/>
 <pre>
 [roo:sod-2.0] crotwell$ bin/sod.sh -f examples/tutorial.xml
-0 [main] INFO edu.sc.seis.sod.Start  - Valid config file
+16 [main] INFO edu.sc.seis.sod.Start  - Valid config file
 OpenMap(tm) Version 4.6
   Copyright (C) BBNT Solutions LLC.  All rights reserved.
   See http://openmap.bbn.com/ for details.
 
-2004-07-16 14:51:59,905 ERROR main Velocity - ResourceManager : unable to find resource 'VM_global_library.vm' in any resource loader.
 FIJI ISLANDS REGION Lat: -20.6 Lon: -177.7 01/04/2003 05:15:03 6.0 MB 378.0 km
 LUZON, PHILIPPINES Lat: 15.7 Lon: 119.7 01/06/2003 23:43:50 5.5 MB 10.0 km
 CHILE-ARGENTINA BORDER REGION Lat: -33.8 Lon: -70.1 01/07/2003 00:54:51 6.0 MB 110.8 km
-Fri Jul 16 14:52:28 EDT 2004 29/34/304 Mb  Got 1 seismograms for II.COCO.00.LH1 for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
-Fri Jul 16 14:52:30 EDT 2004 23/37/304 Mb  Got 1 seismograms for II.COCO.00.LH2 for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
-Fri Jul 16 14:52:31 EDT 2004 26/37/304 Mb  Got 1 seismograms for II.COCO.00.LHZ for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
-Fri Jul 16 14:52:32 EDT 2004 25/37/304 Mb  Got 1 seismograms for II.ERM.00.LHE for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
-Fri Jul 16 14:52:34 EDT 2004 27/37/304 Mb  Got 1 seismograms for II.ERM.00.LHN for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
-Fri Jul 16 14:52:35 EDT 2004 28/37/304 Mb  Got 1 seismograms for II.ERM.00.LHZ for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.COCO.00.LH1 for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.COCO.00.LH2 for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.COCO.00.LHZ for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.ERM.00.LHE for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.ERM.00.LHN for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
+Got 1 seismograms for II.ERM.00.LHZ for event in FIJI ISLANDS REGION at 2003-01-04T05:15:03.840Z
 ...
 </pre>
                         </p>
                         <p>
                         The <tt>status</tt> directory will contain html files, which will be updated about every 2 minutes
                         or so, showing the events, stations, and seismograms that have
-                        been found. The <tt>POND_II</tt> directory will contain subdirectories for each earthquake retrieved by SOD and each of these subdirectories will contain SAC files corresponding to that earthquake, along with <tt>dsml</tt> files that are readable by <a href="http://www.seis.sc.edu/gee">GEE</a>.
+                        been found. The <tt>POND_II</tt> directory will contain subdirectories for each earthquake retrieved by SOD. Each of these subdirectories will contain SAC files corresponding to that earthquake, along with <tt>dsml</tt> files that are readable by <a href="http://www.seis.sc.edu/gee">GEE</a>.
                         </p>
                 </section>
         </body>
