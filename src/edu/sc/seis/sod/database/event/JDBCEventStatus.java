@@ -42,14 +42,16 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
     public void restartCompletedEvents() throws SQLException {
-        CacheEvent[] events = getAll(EventCondition.SUCCESS);
+        CacheEvent[] events = getAll(Status.get(Status.SPECIAL,
+                                                Status.SUCCESS));
         for (int i = 0; i < events.length; i++) {
-            setStatus(events[i], EventCondition.PROCESSOR_PASSED);
+            setStatus(events[i], Status.get(Status.EVENT_CHANNEL_POPULATION,
+                                            Status.IN_PROG));
         }
     }
 
-    public CacheEvent[] getAll(EventCondition status) throws SQLException {
-        getAllOfEventArmStatus.setInt(1, status.getNumber());
+    public CacheEvent[] getAll(Status status) throws SQLException {
+        getAllOfEventArmStatus.setInt(1, status.getAsByte());
         return extractEvents(getAllOfEventArmStatus);
     }
 
@@ -88,7 +90,7 @@ public class JDBCEventStatus extends SodJDBC{
                 }
             } catch (NotFound e) {
                 GlobalExceptionHandler.handle("this shouldn't happen, the id's in this table are foreign keys from the eventaccess table",
-                                           e);
+                                              e);
             }
         }
         return (StatefulEvent[])evs.toArray(new StatefulEvent[evs.size()]);
@@ -120,18 +122,18 @@ public class JDBCEventStatus extends SodJDBC{
         return ea.getEvent(dbId);
     }
 
-    public int setStatus(EventAccessOperations ev,  EventCondition status)
+    public int setStatus(EventAccessOperations ev,  Status status)
         throws SQLException {
         int id = ea.put(ev, null, null, null);
         setStatus(id, status);
         return id;
     }
 
-    public void setStatus(int eventId, EventCondition status) throws SQLException{
+    public void setStatus(int eventId, Status status) throws SQLException{
         if(tableContains(eventId)){
-            insert(updateStatus, eventId, status.getNumber());
+            insert(updateStatus, eventId, status.getAsByte());
         }else{
-            insert(putEvent, eventId, status.getNumber());
+            insert(putEvent, eventId, status.getAsByte());
         }
     }
 
@@ -150,7 +152,8 @@ public class JDBCEventStatus extends SodJDBC{
 
     public int getNext() throws SQLException{
         Statement stmt = ConnMgr.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " + EventCondition.PROCESSOR_PASSED.getNumber());
+        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " +Status.get(Status.EVENT_CHANNEL_POPULATION,
+                                                                                                         Status.IN_PROG));
         if(rs.next()) return rs.getInt("eventid");
         return -1;
     }
