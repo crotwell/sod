@@ -1,8 +1,13 @@
 package edu.sc.seis.sod;
 
-import java.util.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * An abstract superclass for all of the logical operations, AND,
