@@ -118,30 +118,40 @@ public class EditorUtil {
         return combo;
     }
 
+    public static JSpinner createNumberSpinner(Text el, double min, double max, double step) throws TransformerException{
+        return createNumberSpinner(el, new Double(min), new Double(max), new Double(step));
+    }
+
+
     /** Creates a number spinner with the initial value the Double.parseDouble
      * of the text in the Text node. The min, max and step are also given. */
     public static JSpinner createNumberSpinner(final Text text,
-                                               double min,
-                                               double max,
-                                               double step){
-        final JSpinner spin = new JSpinner(new SpinnerNumberModel(Double.parseDouble(text.getNodeValue()),
-                                                                  min, max, step));
-        spin.addChangeListener(new ChangeListener(){
-                    public void stateChanged(ChangeEvent e) {
-                        text.setNodeValue(spin.getValue().toString());
-                    }
-                });
-        return spin;
-    }
-    
-    public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
-    		return makeTimeIntervalTwiddler(el, 1, 60);
+                                               Comparable min,
+                                               Comparable max,
+                                               Number step){
+        try {
+            final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Double(text.getNodeValue()),
+                                                                      min, max, step));
+            spin.addChangeListener(new ChangeListener(){
+                        public void stateChanged(ChangeEvent e) {
+                            text.setNodeValue(spin.getValue().toString());
+                        }
+                    });
+            return spin;
+        } catch (RuntimeException e) {
+            logger.warn(text.getNodeValue()+" "+min+" "+max,e);
+            throw e;
+        }
     }
 
-    public static JComponent makeTimeIntervalTwiddler(Element el, int min, int max) throws TransformerException{
+    public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
+        return makeTimeIntervalTwiddler(el, new Integer(1), null);
+    }
+
+    public static JComponent makeTimeIntervalTwiddler(Element el, Comparable min, Comparable max) throws TransformerException{
         Box b = Box.createHorizontalBox();
         Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
-        b.add(EditorUtil.createNumberSpinner(t, min, max, 1));
+        b.add(EditorUtil.createNumberSpinner(t, min, max, new Integer(1)));
         Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
         b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
         b.add(Box.createHorizontalGlue());
