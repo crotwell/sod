@@ -58,15 +58,18 @@ public class JDBCEventChannelStatus extends SodJDBC{
         ofPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         ofStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
         eventsOfStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
-        String stationsOfStatusQuery = "SELECT DISTINCT " + JDBCStation.getNeededForStation() + " FROM channel, site, eventchannelstatus, station " +
-                                                     "WHERE channelid = chan_id AND " +
-                                                     "channel.site_id = site.site_id AND " +
-                                                     "site.sta_id = station.sta_id AND " +
-                                                     "eventid = ? AND " +
-                                                     "status = ?";
-        stationsOfStatus = conn.prepareStatement(stationsOfStatusQuery);
-        stationsNotOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() + " FROM station " +
-                                                        "WHERE sta_id NOT IN (" + stationsOfStatusQuery);
+        String stationsOfStatusWhere = "WHERE channelid = chan_id AND " +
+            "channel.site_id = site.site_id AND " +
+            "site.sta_id = station.sta_id AND " +
+            "eventid = ? AND " +
+            "status = ?";
+        stationsOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() +
+                                                     " FROM channel, site, eventchannelstatus, station " +
+                                                     stationsOfStatusWhere);
+        stationsNotOfStatus = conn.prepareStatement("SELECT " + JDBCStation.getNeededForStation() + " FROM station " +
+                                                        "WHERE sta_id NOT IN ("+
+                                                        "SELECT DISTINCT sta_id FROM channel, site, eventchannelstatus " +
+                                                        stationsOfStatusWhere + ")");
         channelsForPair = conn.prepareStatement("SELECT " + JDBCChannel.getNeededForChannel() + " FROM channel, eventchannelstatus " +
                                                     "WHERE pairid = ? AND " +
                                                     "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
