@@ -24,7 +24,7 @@ public class MenuTemplate extends Template implements GenericTemplate{
         parse(el);
     }
 
-    public Object getTemplate(String tag, final Element el){
+    public Object getTemplate(String tag, Element el){
         if (tag.equals("relativePath")){ return new RelativePath(el, pathFrom);}
         return getCommonTemplate(tag, el);
     }
