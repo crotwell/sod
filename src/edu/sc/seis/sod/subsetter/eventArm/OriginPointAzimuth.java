@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.subsetter.AzimuthUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
@@ -30,9 +31,7 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        double az = distaz.getAz();
-        az = (az - min)%360 + min;
-        if (min  <= az && max >= az) { return true;}
+        if (AzimuthUtils.isAzimuthBetween(distaz, min, max)) { return true;}
         else {
             logger.debug("reject azimuth az="+distaz.getAz()+"  "+ min +" "+ max);
             return false;

@@ -5,8 +5,10 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.AzimuthUtils;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 import org.w3c.dom.Element;
 
@@ -14,23 +16,13 @@ import org.w3c.dom.Element;
 public class AzimuthRange extends RangeSubsetter implements EventStationSubsetter {
     public AzimuthRange (Element config) throws ConfigurationException {
         super(config);
+        min = getMinValue();
+        max = getMaxValue();
     }
 
-    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookieJar)
-        throws Exception {
-        float minValue = getMinValue();
-        float maxValue = getMaxValue();
-        if(minValue > 180) minValue = minValue - 360;
-        if(maxValue > 180) maxValue = maxValue - 360;
-        Origin origin = eventAccess.get_preferred_origin();
-        Location originLoc = origin.my_location;
-        Location loc = station.my_location;
-        double azimuth = SphericalCoords.azimuth(originLoc.latitude,
-                                                 originLoc.longitude,
-                                                 loc.latitude,
-                                                 loc.longitude);
-
-        if(azimuth >= minValue && azimuth <= maxValue) return true;
-        else return false;
+    public boolean accept(EventAccessOperations ev, Station sta, CookieJar cookieJar){
+        return AzimuthUtils.isAzimuthBetween(new DistAz(sta, ev), min, max);
     }
+
+    private float min, max;
 }// AzimuthRange

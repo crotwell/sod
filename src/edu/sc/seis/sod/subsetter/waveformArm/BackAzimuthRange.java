@@ -1,39 +1,26 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
-import edu.sc.seis.TauP.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.AzimuthUtils;
+import edu.sc.seis.sod.subsetter.RangeSubsetter;
+import org.w3c.dom.Element;
 
 public class BackAzimuthRange extends RangeSubsetter implements EventStationSubsetter {
     public BackAzimuthRange (Element config) throws ConfigurationException {
         super(config);
+        min = getMinValue();
+        max = getMaxValue();
     }
 
-    public boolean accept(EventAccessOperations eventAccess,  Station station, CookieJar cookieJar)
-        throws Exception{
-        float minValue = getMinValue();
-        float maxValue = getMaxValue();
-        if(minValue > 180) minValue = minValue - 360;
-        if(maxValue > 180) maxValue = maxValue - 360;
-        Origin origin = eventAccess.get_preferred_origin();
-        double azimuth = SphericalCoords.azimuth(station.my_location.latitude,
-                                                 station.my_location.longitude,
-                                                 origin.my_location.latitude,
-                                                 origin.my_location.longitude);
-
-        if(azimuth >= minValue && azimuth <= maxValue) {
-            return true;
-        } else return false;
+    public boolean accept(EventAccessOperations ev,  Station sta, CookieJar cookieJar){
+        return AzimuthUtils.isBackAzimuthBetween(new DistAz(sta, ev), min, max);
     }
 
+    private float min, max;
 }// BackAzimuthRange
