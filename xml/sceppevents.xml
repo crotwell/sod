@@ -34,11 +34,6 @@
 		</timeRange>
 		</eventTimeRange>
 
-<!-- Take a minimum of magnitude 3.5 -->
-		<magnitudeRange>
-			<magType>mb</magType>
-			<min>3.5</min>
-		</magnitudeRange>
 
 <!-- Only events that have a origin from the bigquake catalog. -->
 		<catalog><value>BIGQUAKE</value></catalog>
@@ -111,6 +106,10 @@
 		<description>Connect to the SCEPP networkDC</description>
 		<name>SCEPPNetworkDC</name>
 		<dns>edu/sc/seis</dns>
+		<refreshInterval>
+			<unit>MINUTE</unit>
+			<value>30</value>
+		</refreshInterval>
 	</networkFinder>
 	<networkIDOR>
 		<networkCode><value>SP</value></networkCode>
@@ -206,12 +205,12 @@
 	</fixedDataCenter>
 	<localSeismogramArm>
 	<phaseRequest>
-		<beginPhase>firstP</beginPhase>
+		<beginPhase>ttp</beginPhase>
 		<beginOffset>
 			<unit>SECOND</unit>
 			<value>-120</value>
 		</beginOffset>
-		<endPhase>firstS</endPhase>
+		<endPhase>tts</endPhase>
 		<endOffset>
 			<unit>SECOND</unit>
 			<value>600</value>

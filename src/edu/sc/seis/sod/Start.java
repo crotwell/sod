@@ -97,6 +97,18 @@ public class Start {
 	return eventQueue;
 
     }
+
+    public static void setProperties(Properties props) {
+	
+	props = props;
+
+    }
+
+    public static Properties getProperties() {
+
+	return props;
+
+    }
     
     /**
      * Describe <code>main</code> method here.
@@ -190,6 +202,7 @@ public class Start {
             logger.info("Start init()");
 	    start.init();
             logger.info("Start start()");
+	    setProperties(props);
 	    start.start();
 	} catch(Exception e) {
 	    e.printStackTrace();
@@ -216,6 +229,9 @@ public class Start {
 	DocumentBuilder docBuilder = factory.newDocumentBuilder();
 	return docBuilder.parse(xmlFile);
     }
+
+
+    private static Properties props = null;
 
     InputStream configFile;
 

@@ -41,7 +41,8 @@ public class EventArm implements Runnable{
      *
      */
     public void run() {
-	try {
+	try
+	{
 	    processEventArm();
 	} catch(Exception e) {
 	    
@@ -102,13 +103,39 @@ public class EventArm implements Runnable{
 
 	EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
        
+	Quantity minDepth;
+	Quantity maxDepth;
+	float minMagnitude;
+	float maxMagnitude;
+	if(eventFinderSubsetter.getDepthRange() != null) {
+
+	    minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
+	    maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
+
+	} else {
+	    
+	    minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
+	    maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
+	}
+	
+	if(eventFinderSubsetter.getMagnitudeRange() == null) {
+
+	    minMagnitude = -99.0f;
+	    maxMagnitude = 99.0f;
+
+	} else {
+	    
+	    minMagnitude = eventFinderSubsetter.getMagnitudeRange().getMinMagnitude().value;
+	    maxMagnitude = eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value;
+	}
+	    
 	EventAccess[] eventAccess = finder.query_events(eventFinderSubsetter.getArea(),
-							eventFinderSubsetter.getDepthRange().getMinDepth(),
-							eventFinderSubsetter.getDepthRange().getMaxDepth(),
+							minDepth,
+							maxDepth,
 							eventFinderSubsetter.getEventTimeRange().getTimeRange(),
 							searchTypes,
-							eventFinderSubsetter.getMagnitudeRange().getMinMagnitude().value,
-							eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value,
+							minMagnitude,
+							maxMagnitude,
 							eventFinderSubsetter.getCatalogs(),
 							eventFinderSubsetter.getContributors(),
 							10,
