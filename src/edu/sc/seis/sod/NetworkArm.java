@@ -1,21 +1,22 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.subsetter.*;
-import edu.sc.seis.sod.database.*;
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
-
-import edu.sc.seis.sod.subsetter.networkArm.*;
-import edu.sc.seis.fissuresUtil.chooser.*;
-
 import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.model.*;
+import edu.sc.seis.sod.database.*;
+import edu.sc.seis.sod.subsetter.networkArm.*;
 
-import java.util.*;
-import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
+import edu.iris.Fissures.Time;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.subsetter.RefreshInterval;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Handles the subsetting of the Channels.
@@ -38,20 +39,18 @@ public class NetworkArm {
         if ( ! config.getTagName().equals("networkArm")) {
             throw new IllegalArgumentException("Configuration element must be a NetworkArm tag");
         }
-        this.config = config;
-        processConfig();
-        //  processConfig(config);
+        processConfig(config);
     }
-
+    
     /**
      * Describe <code>processConfig</code> method here.
      *
      * @exception ConfigurationException if an error occurs
      */
-    protected void processConfig()
+    private void processConfig(Element config)
         throws ConfigurationException {
         networkDatabase = DatabaseManager.getDatabaseManager(Start.getProperties(), "postgres").getNetworkDatabase();
-
+        
         NodeList children = config.getChildNodes();
         Node node;
         for (int i=0; i<children.getLength(); i++) {
@@ -61,7 +60,7 @@ public class NetworkArm {
                     // skip description element
                     continue;
                 }
-
+                
                 Object sodElement =
                     SodUtil.load((Element)node,
                                  "edu.sc.seis.sod.subsetter.networkArm");
@@ -69,14 +68,14 @@ public class NetworkArm {
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
-
+    
     void loadConfigElement(Object sodElement) throws ConfigurationException {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {
-            networkFinderSubsetter =
+            finderSubsetter =
                 (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
-            if (networkAttrSubsetter instanceof NullNetworkSubsetter ) {
-                networkAttrSubsetter = (NetworkSubsetter)sodElement;
+            if (attrSubsetter instanceof NullNetworkSubsetter ) {
+                attrSubsetter = (NetworkSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one NetworkAttrSubsetter is in the configuration file: "+sodElement);
             } // end of else
@@ -86,21 +85,21 @@ public class NetworkArm {
             } else {
                 throw new ConfigurationException("More than one StationSubsetter is in the configuration file: "+sodElement);
             } // end of else
-
+            
         } else if(sodElement instanceof SiteSubsetter) {
             if ( siteSubsetter instanceof NullSiteSubsetter ) {
                 siteSubsetter = (SiteSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one SiteSubsetter is in the configuration file: "+sodElement);
             } // end of else
-
+            
         } else if(sodElement instanceof ChannelSubsetter) {
             if ( channelSubsetter instanceof NullChannelSubsetter ) {
                 channelSubsetter = (ChannelSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one ChannelSubsetter is in the configuration file: "+sodElement);
             } // end of else
-
+            
         } else if(sodElement instanceof NetworkArmProcess) {
             if ( networkArmProcess[0] instanceof NullNetworkProcess) {
                 networkArmProcess[0] = (NetworkArmProcess)sodElement;
@@ -125,7 +124,7 @@ public class NetworkArm {
             } // end of else
         }
     }
-
+    
     /**
      * handles the networkArmProcess.
      *
@@ -140,8 +139,8 @@ public class NetworkArm {
             networkArmProcess[i].process(networkAccess, channel, cookieJar);
         } // end of for ()
     }
-
-
+    
+    
     /**
      * returns the Channel corresponding to the databaseid dbid.
      *
@@ -151,7 +150,7 @@ public class NetworkArm {
     public synchronized  Channel getChannel(int dbid) {
         return networkDatabase.getChannel(dbid);
     }
-
+    
     /**
      * returns the ObjectReference of the NetworkAcces corresponding to the databaseid dbid.
      *
@@ -161,7 +160,7 @@ public class NetworkArm {
     public synchronized NetworkAccess getNetworkAccess(int dbid) {
         return networkDatabase.getNetworkAccess(dbid);
     }
-
+    
     /**
      * returns the sitedatabaseid corresponding to the channelid.
      *
@@ -171,7 +170,7 @@ public class NetworkArm {
     public synchronized int getSiteDbId(int channelid) {
         return networkDatabase.getSiteDbId(channelid);
     }
-
+    
     /**
      * returns the stationdatabaseid corresponding to the siteid
      *
@@ -181,7 +180,7 @@ public class NetworkArm {
     public synchronized int getStationDbId(int siteid) {
         return networkDatabase.getStationDbId(siteid);
     }
-
+    
     /**
      * returns the networkid corresponding to the stationid.
      *
@@ -191,40 +190,39 @@ public class NetworkArm {
     public synchronized int getNetworkDbId(int stationid) {
         return networkDatabase.getNetworkDbId(stationid);
     }
-
+    
     /**
-     * checks if the refreshInterval specified inthe property file is still valid at the currentTime.
-     * If the (currenttime  - lasttimeofnetworkquery) is greater than refreshInteval it retuns true.
-     * else returns false.
+     * checks if the refresh interval specified in the configuration of the
+     * NetworkFinder has passed since the last time networks were checked
+     * according to the database.
      *
-     * @return a <code>boolean</code> value
+     * @returns true if the number of minutes se
      */
-    public boolean isRefreshIntervalValid() {
-        RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
-        edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(networkFinderSubsetter.getSourceName(),
-                                                                      networkFinderSubsetter.getDNSName());
-
-
-        //if the networktimeconfig is null or
-        //at every time of restart or startup
-        //get the networks over the net.
-        if(databaseTime == null || lastDate == null) return false;
-        if(refreshInterval == null) return true;
-
-        MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
-        MicroSecondDate currentTime = new MicroSecondDate(databaseTime);
-        TimeInterval timeInterval = currentTime.difference(lastTime);
-        timeInterval = (TimeInterval)timeInterval.convertTo(UnitImpl.MINUTE);
-        int minutes = (int)timeInterval.value;
-        if(minutes <= refreshInterval.getValue()) {
-            return true;
+    private boolean needsRefresh() {
+        RefreshInterval refreshInterval = finderSubsetter.getRefreshInterval();
+        try {
+            logger.debug("checking on the validity of the refresh interval which is " + refreshInterval.getValue() + " " + refreshInterval.getUnit());
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
         }
-
+        Time databaseTime = networkDatabase.getTime(finderSubsetter.getSourceName(),
+                                                    finderSubsetter.getDNSName());
+        logger.debug("the last time the networks were checked was " + new MicroSecondDate(databaseTime));
+        if(refreshInterval == null) return false;
+        MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
+        MicroSecondDate currentTime = ClockUtil.now();
+        TimeInterval timeInterval = currentTime.difference(lastTime);
+        try {
+            timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+            System.out.println("The time interval set in the refreshInterval for the NetworkFinder has an unacceptable unit");
+            System.exit(0);
+        }
+        if(timeInterval.getValue() >= refreshInterval.getValue()) return true;
         return false;
-
     }
-
-
+    
     /**
      * returns an array of SuccessfulNetworks.
      * if the refreshInterval is valid it gets the networks from the database(may be embedded or external).
@@ -236,61 +234,41 @@ public class NetworkArm {
      * @exception Exception if an error occurs
      */
     public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
-        if(isRefreshIntervalValid()) {
-            //get from the database.
-            //if in cache return cache
-            //here check the database time and
-            //decide to see whether to get the network information
-            // over the net or from the database.
-            // if it can be decided that the database contains all the network information
-            // then go ahead and get from the database else get over the net.
-            if(lastDate == null) {
-                //not in the cache..
-                lastDate = Calendar.getInstance().getTime();
-                networkDbObjects = networkDatabase.getNetworks();
-            }
+        if(networksBeenChecked && !needsRefresh()) {
             return networkDbObjects;
         }
-
         //get from Network.
-
-        ArrayList arrayList = new ArrayList();
-
-        NetworkDCOperations netdc =
-            new RetryNetworkDC(networkFinderSubsetter.getNetworkDC(), 2);
-        finder = netdc.a_finder();
-        edu.iris.Fissures.IfNetwork.NetworkAccess[] allNets = finder.retrieve_all();
-        networkIds = new NetworkId[allNets.length];
-        for(int counter = 0; counter < allNets.length; counter++) {
-            if (allNets[counter] != null) {
+        logger.debug("Getting NetworkDBObjects from network");
+        ArrayList networkDBs = new ArrayList();
+        NetworkDCOperations netDC =
+            new RetryNetworkDC(finderSubsetter.getNetworkDC(), 2);
+        NetworkAccess[] allNets = netDC.a_finder().retrieve_all();
+        logger.debug("found " + allNets.length + " network access objects from the network DC finder");
+        for(int i = 0; i < allNets.length; i++) {
+            if (allNets[i] != null) {
                 CookieJar cookieJar = new CookieJar();
-                cookieJarCache.put(allNets[counter], cookieJar);
-                allNets[counter] = new RetryNetworkAccess(allNets[counter], 2);
-
-                NetworkAttr attr = allNets[counter].get_attributes();
-                networkIds[counter] = attr.get_id();
-                if(networkAttrSubsetter.accept(attr, cookieJar)) {
-                    int dbid = networkDatabase.putNetwork(networkFinderSubsetter.getSourceName(),
-                                                          networkFinderSubsetter.getDNSName(),
-                                                          allNets[counter]);
-                    NetworkDbObject networkDbObject = new NetworkDbObject(dbid,
-                                                                          allNets[counter]);
-                    arrayList.add(networkDbObject);
+                cookieJarCache.put(allNets[i], cookieJar);
+                allNets[i] = new RetryNetworkAccess(allNets[i], 2);
+                if(attrSubsetter.accept(allNets[i].get_attributes(),cookieJar)){
+                    int dbid = networkDatabase.putNetwork(finderSubsetter.getSourceName(),
+                                                          finderSubsetter.getDNSName(),
+                                                          allNets[i]);
+                    networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
                 }
-
             } // end of if (allNets[counter] != null)
-
         }
-        lastDate = Calendar.getInstance().getTime();
-        networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
-                                networkFinderSubsetter.getDNSName(),
-                                new MicroSecondDate(lastDate).getFissuresTime());
-
-        networkDbObjects = new NetworkDbObject[arrayList.size()];
-        networkDbObjects = (NetworkDbObject[]) arrayList.toArray(networkDbObjects);
+        //Set the time of the last check to now
+        networkDatabase.setTime(finderSubsetter.getSourceName(),
+                                finderSubsetter.getDNSName(),
+                                ClockUtil.now().getFissuresTime());
+        
+        networkDbObjects = new NetworkDbObject[networkDBs.size()];
+        networkDbObjects = (NetworkDbObject[]) networkDBs.toArray(networkDbObjects);
+        logger.debug("got " + networkDbObjects.length + " networkDBobjects");
+        networksBeenChecked = true;
         return networkDbObjects;
     }
-
+    
     /**
      * Obtains the Stations corresponding to the given networkDbObject, processes them
      * using stationIdSubsetter and stationSubsetters, returns the successful stations as
@@ -315,7 +293,7 @@ public class NetworkArm {
                     arrayList.add(stationDbObject);
                 }
             }
-
+            
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -324,7 +302,7 @@ public class NetworkArm {
         networkDbObject.stationDbObjects = rtnValues;
         return rtnValues;
     }
-
+    
     /**
      * Obtains the Channels corresponding to the stationDbObject, retrievesthe station from each channel
      * and processes the channels using SiteIdSubsetter and SiteSubsetter  and returns an array of
@@ -337,43 +315,33 @@ public class NetworkArm {
         if(stationDbObject.siteDbObjects != null) {
             return stationDbObject.siteDbObjects;
         }
-        ArrayList arrayList = new ArrayList();
+        ArrayList siteDbObjects = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Station station = stationDbObject.getStation();
         try {
             Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
-            for(int subCounter = 0; subCounter < channels.length; subCounter++) {
-                //handleSiteIdSubsetter(networkAccess, channels[subCounter]);
-
-                if(siteSubsetter.accept(networkAccess, channels[subCounter].my_site, null)) {
-                    //  int addFlag = networkDatabase.getSiteDbId(stationDbObject,
-                    //                                channels[subCounter].my_site);
-                    //          if(addFlag != -1) {
-                    //              if(!arrayList.contains
-                    //              continue;
-                    //          }
+            for(int i = 0; i < channels.length; i++) {
+                if(siteSubsetter.accept(networkAccess, channels[i].my_site, null)) {
                     int dbid = networkDatabase.putSite(stationDbObject,
-                                                       channels[subCounter].my_site);
+                                                       channels[i].my_site);
                     SiteDbObject siteDbObject = new SiteDbObject(dbid,
-                                                                 channels[subCounter].my_site);
-                    if(!containsSite(siteDbObject, arrayList)) {
-                        arrayList.add(siteDbObject);
+                                                                 channels[i].my_site);
+                    if(!containsSite(siteDbObject, siteDbObjects)) {
+                        siteDbObjects.add(siteDbObject);
                     }
                 }
-
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-
-        SiteDbObject[] rtnValues = new SiteDbObject[arrayList.size()];
-        rtnValues = (SiteDbObject[]) arrayList.toArray(rtnValues);
+        SiteDbObject[] rtnValues = new SiteDbObject[siteDbObjects.size()];
+        rtnValues = (SiteDbObject[]) siteDbObjects.toArray(rtnValues);
         stationDbObject.siteDbObjects = rtnValues;
         logger.debug(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
         return rtnValues;
-
+        
     }
-
+    
     private boolean containsSite(SiteDbObject siteDbObject, ArrayList arrayList) {
         for(int counter = 0; counter < arrayList.size(); counter++) {
             SiteDbObject tempObject = (SiteDbObject) arrayList.get(counter);
@@ -381,9 +349,9 @@ public class NetworkArm {
         }
         return false;
     }
-
-
-
+    
+    
+    
     /**
      * Obtains the Channels corresponding to the siteDbObject, processes them using the
      * channelIdSubsetter and ChannelSubsetter and returns an array of succesful ChannelDbObjects.
@@ -400,14 +368,14 @@ public class NetworkArm {
         ArrayList arrayList = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         CookieJar cookieJar = (CookieJar)cookieJarCache.get(networkAccess);
-
+        
         Site site = siteDbObject.getSite();
         try {
             Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
-
+            
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
                 if(!isSameSite(site, channels[subCounter].my_site)) continue;
-
+                
                 if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
                     int dbid = networkDatabase.putChannel(siteDbObject,
                                                           channels[subCounter]);
@@ -427,7 +395,7 @@ public class NetworkArm {
         //  if(siteDbObject.getDbId() == 5) System.exit(0);
         return values;
     }
-
+    
     private boolean isSameSite(Site givenSite, Site tempSite) {
         SiteId givenSiteId = givenSite.get_id();
         SiteId tempSiteId = tempSite.get_id();
@@ -438,41 +406,32 @@ public class NetworkArm {
         }
         return false;
     }
-
-
-    private Element config = null;
-
-    private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder networkFinderSubsetter = null;
-    private NetworkSubsetter networkAttrSubsetter = new NullNetworkSubsetter();
+    
+    
+    private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder finderSubsetter = null;
+    private NetworkSubsetter attrSubsetter = new NullNetworkSubsetter();
     private StationSubsetter stationSubsetter = new NullStationSubsetter();
     private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
     private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
     private NetworkArmProcess[] networkArmProcess = {
         new NullNetworkProcess()
     };
-
+    
     private NetworkStatusProcessor[] networkStatusProcess = {
         new NullNetworkStatusProcessor()
     };
-
-    private edu.iris.Fissures.IfNetwork.NetworkFinder finder = null;
-    private NetworkId[] networkIds;
-
-    private ArrayList channelList;
-    private  Channel[] successfulChannels = new Channel[0];
-
+    
+    //Set to true the first time getSuccessfulNetworks is callsed
+    private boolean networksBeenChecked = false;
+    
     private NetworkDbObject[] networkDbObjects;
-
-    private static java.util.Date lastDate = null;
-
+    
+    
     private NetworkDatabase networkDatabase;
-
+    
     private HashMap cookieJarCache = new HashMap();
-
-    private static Logger logger =
-        Logger.getLogger(NetworkArm.class);
-
+    
+    private static Logger logger = Logger.getLogger(NetworkArm.class);
+    
     static Logger failure = Logger.getLogger(NetworkArm.class.getName()+".failure");
-
-
 }// NetworkArm
