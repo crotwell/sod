@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>SOD - Standing Order for Data</title> 
+  </properties>
+
+  <body>
+
+	<section name="About SOD">
+	<p class="about">SOD (Standing Order for Data) automates the most 
+	tedious data selection, downloading and routine processing tasks, 
+	shortening the time between idea and science.  Yes, this information 
+	is a little skimpy.</p>
+	</section>
+
+	<section name="News">
+	<table id="entry">
+		<th>10 May 2004</th>
+		<tr>
+			<td>
+				<p>This is a test of the "entry" thingy.  Do 
+				not be alarmed by the weirdness that shall 
+				ensue.</p>
+			</td>
+		</tr>
+	</table>
+	</section>
+
+  </body>
+</document>

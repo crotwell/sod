@@ -51,9 +51,9 @@
                 </div>
         </xsl:template>
         <xsl:template name="footer">
-                <div id="footer"> SOD is made possible by the <a href="http://www.sc.edu">University
+                <div id="footer"> <p>SOD is made possible by the <a href="http://www.sc.edu">University
                                 of South Carolina's</a>
                         <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> and
-                        the <a href="http://www.iris.edu">IRIS Consortium</a>. </div>
+                        the <a href="http://www.iris.edu">IRIS Consortium</a>.</p> </div>
         </xsl:template>
 </xsl:stylesheet>
