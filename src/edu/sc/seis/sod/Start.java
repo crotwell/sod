@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
@@ -30,7 +31,30 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class Start{
-    static { GlobalExceptionHandler.registerWithAWTThread(); }
+    static {
+        GlobalExceptionHandler.add(new Extractor() {
+                    public boolean canExtract(Throwable throwable) {
+                        return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
+                    }
+                    public String extract(Throwable throwable) {
+                        String out = "";
+                        if (throwable instanceof org.apache.velocity.exception.MethodInvocationException) {
+                            org.apache.velocity.exception.MethodInvocationException mie =
+                                (org.apache.velocity.exception.MethodInvocationException)throwable;
+                            out += "Method Name: "+mie.getMethodName()+"\n";
+                            out += "reference Name: "+mie.getReferenceName()+"\n";
+                        }
+                        return out;
+                    }
+                    public Throwable getSubThrowable(Throwable throwable) {
+                        if (throwable instanceof org.apache.velocity.exception.MethodInvocationException) {
+                            return ((org.apache.velocity.exception.MethodInvocationException)throwable).getWrappedThrowable();
+                        }
+                        return null;
+                    }
+                });
+        GlobalExceptionHandler.registerWithAWTThread();
+    }
 
     /**
      * Creates a new <code>Start</code> instance set to use the XML config file
@@ -235,14 +259,14 @@ public class Start{
                 }
                 else {
                     System.err.println("The structure of the database has not "
-                                      + "changed, so SOD may work if there "
-                                      + "haven't been significant underlying "
-                                      + "changes in SOD. Check "
-                                      + "http://www.seis.sc.edu/SOD/download.html "
-                                      + "to see the differences between your "
-                                      + "running version, " + Version.getVersion()
-                                      + ", and the version that created the "
-                                      + "database, " + dbVersion.getDBVersion());
+                                           + "changed, so SOD may work if there "
+                                           + "haven't been significant underlying "
+                                           + "changes in SOD. Check "
+                                           + "http://www.seis.sc.edu/SOD/download.html "
+                                           + "to see the differences between your "
+                                           + "running version, " + Version.getVersion()
+                                           + ", and the version that created the "
+                                           + "database, " + dbVersion.getDBVersion());
                 }
             }
         } catch (Exception e) {
