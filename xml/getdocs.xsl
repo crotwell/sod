@@ -18,15 +18,26 @@
 
   <xsl:template match="xsd:schema" >
     <p>Doing a schema</p>
+    <xsl:variable name="filelist" >
+      <xsl:apply-templates select="xsd:include" mode="findfiles" >
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:copy-of select="$filelist"/>
+
     <xsl:for-each select="xsd:include" >
-      <p>Found an include <xsl:value-of select="@schemaLocation" /></p>
-      <xsl:apply-templates select="document(@schemaLocation)/xsd:schema" />
+      <xsl:value-of select="@schemaLocation"/><br/>
+    </xsl:for-each>
+    <xsl:for-each select="xsd:include" >
+      <p>Found an include aaa <xsl:value-of select="@schemaLocation" /></p>
+      <xsl:apply-templates select="document(@schemaLocation)/xsd:schema/xsd:complexType|document(@schemaLocation)/xsd:schema/xsd:element" />
     </xsl:for-each>
     <xsl:apply-templates select="xsd:complexType|xsd:element" />
   </xsl:template>
 
+
+
   <xsl:template match="xsd:complexType" >
-    <h3>
+    <h3 id="@name" >
       <xsl:if test="@abstract='true'" >
         <xsl:text>Abstract </xsl:text>    
       </xsl:if>
@@ -76,6 +87,29 @@
         <xsl:value-of select="@name" />
         <xsl:text> </xsl:text>
         <xsl:value-of select="@type" />
+        <xsl:choose>
+        <xsl:when test=" not( @minOccurs) and not( @maxOccurs)">
+          <xsl:text> exactly once</xsl:text>
+        </xsl:when>
+        <xsl:when test="@minOccurs=0">
+          <xsl:text> optional</xsl:text>
+        </xsl:when>
+        <xsl:when test="@minOccurs | @maxOccurs">
+          <xsl:if test="@minOccurs" >
+            <xsl:text> occures at least </xsl:text>
+            <xsl:value-of select="@minOccures"/>
+            <xsl:text> times </xsl:text>
+          </xsl:if>
+          <xsl:if test="@minOccurs" >
+            <xsl:text> and at most </xsl:text>
+            <xsl:value-of select="@minOccures"/>
+            <xsl:text> times</xsl:text>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> optional</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
         <br/>
       </xsl:otherwise>
     </xsl:choose>
