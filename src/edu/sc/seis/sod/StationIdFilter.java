@@ -1,0 +1,17 @@
+package edu.sc.seis.sod;
+
+/**
+ * StationIdFilter.java
+ *
+ *
+ * Created: Thu Dec 13 17:06:22 2001
+ *
+ * @author <a href="mailto:">Philip Crotwell</a>
+ * @version
+ */
+
+public interface StationIdFilter {
+
+    public boolean accept(StationId id, CookieJar cookies);
+    
+}// StationIdFilter

@@ -1,0 +1,28 @@
+
+Things that FISSURES/DHI needs from the DMC:
+
+1) Seismograms: 
+The current seismogram DC implementation only supports the most advanced callback method of delivering data. It is quite important to have the other two mechanisms functional as well, ie the seismograms are the return value or "retrieve_seismograms" and the queue request and check back later or "queue_seismograms". Some thought will need to go into how the other two request types will deal with very large requests, and you may wish to place limits on the volume of data that they can ask for. There are many potential users, of the E&O data explorer in particular, which are behind firewalls that do not permit callbacks, and hence need the alternative mechanisms to be functional.
+
+Currently, as far as I know, the only waveform access is to the new FARM/POND. Thus, data access is limited to only large events for the preset time windows. Eventually, DHI will need access to a wider range of data, including the BUD for near-real-time data and the mass-store for data for events of smaller magnitude and for wider time windows. The easiest mechanism to do this is likely to run several separate seismogramDCs. This has the advantage of clarifying where the data is coming from, and makes it easier to set limits on how the access can occur. For instance, the mass-store seismogramDC may only do callbacks and queue-and-check as your existing request queue will take too long for the retrieve_seismograms style request. Also, the different servers give an indication of the amount of QC that the data has undergone.
+
+In general, the QC level that a waveform has received is an issue that will need to be addressed. Currently, the IDL doesn't have any support for this, other than separate seismogramDCs for the different sources. Once there is some mechanism to identify QC levels, and what those levels are, we can add support for that to the IDL. Clarification of what the levels of QC are and what they mean from the DMC and others is likely important.
+
+The current implementation is multi-threaded, if I remember correctly. If it is not, then it should be modified to be multi-threaded.
+
+The handling of sticky requests also needs addressing at some point. There is support for this in the IDL, and implementing this mainly requires that the existing DMC infrastructure support it. Then support will need to be added to the existing seismogramDC services. I assume that there needs to be support for storing requests in the database, and periodically checking to see if any new data that satisfies them has arrived. Also, sticky requests in FISSURES/DHI have the notion that the server will notify the client when the request is closed, meaning that there will never be any more data sent. Typically, this would happen at the expiration time of the sticky request, but may happen sooner if you are able to tell that no new data will arrive, or if the entire request has been filled.
+
+2) Events:
+The Event services are most of the way there. Adding an implementation of the iterators is the most pressing need. Also, if the implementation is not multi-threaded, then it needs to be made thread safe and run multi-threaded.
+
+The one area where no work has been done, as far as I know, is in the EventChannel part. This is a "notification of new events or origins" service, and allows clients to receive a notification whenever a new origin is entered into your database. This could be implemented as a database trigger, along with some code to create the notification and send it to a CORBA Event service. We are implementing a similar system at USC to listen for "bigquakes" emails, but it would be nice to have a full system operating at the DMC for smaller events or when weekly or ISC locations are added. This functionality is particularly important for the SOD system.
+
+3) Network
+The network services are pretty close as well. The main issues are adding iterators where they are specified but not yet implemented, and checking on the multi-threading and thread-safe issues. Because the network interfaces are so much larger than the other two, there are likely unimplemented methods. Eventually implementing then should be done, but I think that most needed functionality is there in at least one form or another. Some clarification documentation saying what is and is not implemented would be nice.
+
+4) Other services
+Additional services that would be very useful include the Plottable service. This allow a client to get a highly compressed version of an event or whole day of seismic data. This is not suitable for any type of processsing, but is fine for simple displays. This allows a low band width client to still see large time windows of seismic data easily. A method for doing this would be to store the plottable versions of channels for whole days in a cache. Either a file based or internal to the database version are possibilities. The cache would allow a whole day plottable to be retrieved without going through normal, and potentially slow, data request mechanisms.
+
+There may also be other services, or enhancements to existing services, that are needed. Many will likely not be discovered until the are needed by clients. Review of the requests for enhancement, modification of the IDL, and upgrading of the services will have to be done from time to time. 
+
+The priorities for what is needed, and by when, should be a product of the upcoming DHI meeting.
