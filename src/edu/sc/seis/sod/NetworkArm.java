@@ -173,8 +173,6 @@ public class NetworkArm {
      * @throws NotFound
      * @throws SQLException
      * @throws NetworkNotFound
-     * @exception Exception
-     *                if an error occurs
      */
     public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound,
             SQLException, NotFound {
