@@ -22,7 +22,7 @@ changes to sod at seis.sc.edu.
 </p>
 <p>
 On to the tutorial! First, you will need to get and install sod.
-Please see the installation <a href="install.html">instructions</a> to details.
+Please see the installation <a href="install.html">instructions</a> for details.
 </p>
 </section>
 <section name="The Configuration File" >
@@ -65,24 +65,25 @@ may refuse to run if they are not there or wrong.
 </p>
 <p>
 The next section is the properties section. This is actually optional, but
-useful configuration items can be set here. Probably the two most important are
-the edu.sc.seis.sod.database.getNewEvents property and the
-edu.sc.seis.sod.databasename property. The first controls whether or not sod
-goes back to look for new events periodically or not. If you are looking for
-events that are recent, and they may not yet be in the server's database,
-then this should be set to true. On the other hand, if you are looking for
-events from several years ago, there is no point in trying again, and so the
-value should be false. The databasename controls the name of the database,
-and with the default database, this will be a file on disk. If you have more
-than one sod running in a single directory, you will need to change this.
-These can be set like this:
+useful configuration items can be set here. Probably the most important are
+the removeDatabase and runName properties. removeDatabase tells SOD if it should use the information from the database created by a previous SOD run.  If it's true, SOD will only get and process event channel pairs that weren't already done by the previous run
+It can be set like this:
 </p>
 <source>
-&lt;property&gt;
-          &lt;name&gt;edu.sc.seis.sod.database.getNewEvents&lt;/name&gt;
-          &lt;value&gt;false&lt;/value&gt;
-&lt;/property&gt;
+&lt;removeDatabase&gt; TRUE&lt;/removeDatabase&gt;
 </source>
+<p>
+This would tell SOD to remove the database and start like a fresh run.
+</p>
+<p>
+        runName controls the name used by all of the status pages that SOD generates.  Setting this can be useful to tell several runs apart.  
+        </p>
+<source>
+&lt;runName&gt; Tutorial Run &lt;/runName&gt;
+</source>
+<p>
+       Adding this tells SOD that this run is called "Tutorial Run".
+        </p>
 </section>
 <section name="Earthquakes!" >
 <p>
@@ -97,10 +98,12 @@ magnitude to be at least 6. Here is the eventFinder section to accomplish this.
     &lt;dns&gt;edu/iris/dmc&lt;/dns&gt;
     &lt;boxArea&gt;
         &lt;latitudeRange&gt;
+            &lt;unit&gt;DEGREE&lt;/unit&gt;
             &lt;min&gt;-90&lt;/min&gt;
             &lt;max&gt;90&lt;/max&gt;
         &lt;/latitudeRange&gt;
         &lt;longitudeRange&gt;
+            &lt;unit&gt;DEGREE&lt;/unit&gt;
             &lt;min&gt;-180&lt;/min&gt;
             &lt;max&gt;180&lt;/max&gt;
         &lt;/longitudeRange&gt;
@@ -112,17 +115,16 @@ magnitude to be at least 6. Here is the eventFinder section to accomplish this.
             &lt;max&gt;1000&lt;/max&gt;
         &lt;/unitRange&gt;
     &lt;/originDepthRange&gt;
-    &lt;eventTimeRange&gt;
+    &lt;originTimeRange&gt;
         &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
         &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-    &lt;/eventTimeRange&gt;
+    &lt;/originTimeRange&gt;
     &lt;magnitudeRange&gt;
-        &lt;magType&gt;ALL&lt;/magType&gt;
         &lt;min&gt;6.0&lt;/min&gt;
         &lt;max&gt;10.0&lt;/max&gt;
     &lt;/magnitudeRange&gt;
-    &lt;catalog&gt;&lt;value&gt;WHDF&lt;/value&gt;&lt;/catalog&gt;
-    &lt;contributor&gt;NEIC&lt;/contributor&gt;
+    &lt;catalog&gt;&lt;value&gt;PREF&lt;/value&gt;&lt;/catalog&gt;
+    &lt;contributor&gt;IRIS&lt;/contributor&gt;
 &lt;/eventFinder&gt;
 </source>
 <p>
@@ -157,18 +159,17 @@ within the II network.
 <source>
    &lt;networkArm&gt;
     &lt;networkFinder&gt;
-        &lt;description&gt;The IRIS DMC network server.&lt;/description&gt;
         &lt;name&gt;IRIS_NetworkDC&lt;/name&gt;
         &lt;dns&gt;edu/iris/dmc&lt;/dns&gt;
         &lt;refreshInterval&gt;
-            &lt;unit&gt;MINUTE&lt;/unit&gt;
-            &lt;value&gt;3000&lt;/value&gt;
+            &lt;unit&gt;HOUR&lt;/unit&gt;
+            &lt;value&gt;50&lt;/value&gt;
         &lt;/refreshInterval&gt;
     &lt;/networkFinder&gt;
 </source>
 <p>
 Here we connect to the IRIS_NetworkDC server within the edu/iris/dmc domain.
-We will also go back and look for new channels every 3000 minutes. In our
+We will also go back and look for new channels every 50 hours. In our
 current example this will not matter, because the entire run will complete in
 a shorter time. However, for a longer running instance of Sod, and in
 particular for stations within USArray, there may very well be new stations
@@ -211,17 +212,17 @@ during January and that its code must be either space-space or 00. We use
 both a logical site id subsetter as well as a site subsetter.
 </p>
 <source>
-    &lt;siteIDAND&gt;
-      &lt;siteIDOR&gt;
+    &lt;siteAND&gt;
+      &lt;siteOR&gt;
         &lt;siteCode&gt;  &lt;/siteCode&gt;
         &lt;siteCode&gt;00&lt;/siteCode&gt;
-      &lt;/siteIDOR&gt;
+      &lt;/siteOR&gt;
 
       &lt;siteEffectiveTimeOverlap&gt;
               &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
               &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
       &lt;/siteEffectiveTimeOverlap&gt;
-    &lt;/siteIDAND&gt;
+    &lt;/siteAND&gt;
 </source>
 <p>
 Finally, we will actually select channels. At this point we can eliminate all
@@ -229,14 +230,15 @@ but the long period channels. We also include an effective time overlap to
 lessen the amount of data that must be processed. Lastly, we will use a
 printlineChannelProcessor to print out the name of each successful channel.
 </p>
-<source>
-    &lt;bandCode&gt;L&lt;/bandCode&gt;
+<source>   
+     &lt;channelAND&gt;
+        &lt;bandCode&gt;L&lt;/bandCode&gt;
 
-    &lt;channelEffectiveTimeOverlap&gt;
-            &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-            &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-    &lt;/channelEffectiveTimeOverlap&gt;
-
+        &lt;channelEffectiveTimeOverlap&gt;
+             &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+              &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
+        &lt;/channelEffectiveTimeOverlap&gt;
+    &lt;/channelAnd&gt;
     &lt;printlineChannelProcessor/&gt;
 
   &lt;/networkArm&gt;
@@ -273,19 +275,20 @@ it is acceptable. See the <ulink url="http://www.seis.sc.edu/software/TauP"/>
 within the prem model.
 </p>
 <source>
-    &lt;phaseRequest&gt;
-      &lt;model&gt;prem&lt;/model&gt;
-      &lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
-      &lt;beginOffset&gt;
-        &lt;unit&gt;SECOND&lt;/unit&gt;
-        &lt;value&gt;-60&lt;/value&gt;
-      &lt;/beginOffset&gt;
-      &lt;endPhase&gt;tts&lt;/endPhase&gt;
-      &lt;endOffset&gt;
-        &lt;unit&gt;MINUTE&lt;/unit&gt;
-        &lt;value&gt;20&lt;/value&gt;
-      &lt;/endOffset&gt;
-    &lt;/phaseRequest&gt;
+    &lt;localSeismogramArm&gt;
+        &lt;phaseRequest&gt;
+          &lt;model&gt;prem&lt;/model&gt;
+          &lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
+          &lt;beginOffset&gt;
+               &lt;unit&gt;SECOND&lt;/unit&gt;
+               &lt;value&gt;-60&lt;/value&gt;
+             &lt;/beginOffset&gt;
+             &lt;endPhase&gt;tts&lt;/endPhase&gt;
+             &lt;endOffset&gt;
+               &lt;unit&gt;MINUTE&lt;/unit&gt;
+               &lt;value&gt;20&lt;/value&gt;
+             &lt;/endOffset&gt;
+           &lt;/phaseRequest&gt;
 </source>
 </p>
 <p>
@@ -293,8 +296,6 @@ We then choose the particular data center that we wish to get data from, the
 IRIS_PondDataCenter which is again in the edu/iris/dmc domain.
 </p>
 <source>
-    &lt;localSeismogramArm&gt;
-
     &lt;fixedDataCenter&gt;
       &lt;name&gt;IRIS_PondDataCenter&lt;/name&gt;
       &lt;dns&gt;edu/iris/dmc&lt;/dns&gt;
@@ -340,7 +341,5 @@ local seismogram arm, waveform arm, and sod tags.
   &lt;/sod&gt;
 </source>
 </section>
-
-
         </body>
 </document>
