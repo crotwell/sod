@@ -11,22 +11,19 @@ import com.sun.msv.grammar.SimpleNameClass;
 import com.sun.msv.grammar.util.ExpressionWalker;
 import com.sun.msv.reader.util.GrammarLoader;
 import com.sun.msv.reader.util.IgnoreController;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 
 public class SchemaGrammar {
-
-
     public SchemaGrammar() throws Exception {
-
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         saxParserFactory.setNamespaceAware(true);
-
-        InputSource inputSource = new InputSource("relax/sod.rng");
+        InputSource inputSource = new InputSource("sod.rng");
         grammar = GrammarLoader.loadSchema(inputSource, new OutMsvController(), saxParserFactory);
-
         if (grammar == null) {
             throw new Exception("Couldn't load the schema");
         }
@@ -128,6 +125,16 @@ public class SchemaGrammar {
             System.out.println("MSV error: " + errorMessage);
         }
     }
+
+    public static void main(String[] args) throws Exception{
+        new SchemaGrammar();
+        FileOutputStream fos = new FileOutputStream("../src/"+NODE_JAR_LOC);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(visitedMap);
+        oos.close();
+    }
+
+    public static final String NODE_JAR_LOC = "edu/sc/seis/sod/data/elementNodes.ser";
 
     Grammar grammar;
 }
