@@ -93,9 +93,11 @@ public class JDBCEventChannelStatus extends SodJDBC {
                 + "FROM channel, site, eventchannelstatus, station "
                 + "WHERE "
                 + chanJoin + " AND station.sta_id = ?" + " AND status = ?");
+        //Since events come in in time order, sorting on reverse id order gives
+        // us backwards in time
         ofStationStatusInTime = conn.prepareStatement("SELECT DISTINCT eventid FROM eventchannelstatus WHERE status = ? AND "
                 + "channelid IN ( SELECT chan_id FROM channel, site WHERE channel.site_id = site.site_id AND site.sta_id = ?) AND "
-                + "eventid IN (SELECT event_id FROM eventaccess, origin, time WHERE eventaccess.origin_id = origin.origin_id AND origin_time_id = time_id AND time_stamp BETWEEN ?  AND ?)");
+                + "eventid IN (SELECT event_id FROM eventaccess, origin, time WHERE eventaccess.origin_id = origin.origin_id AND origin_time_id = time_id AND time_stamp BETWEEN ?  AND ?) ORDER BY eventid DESC");
     }
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException {
@@ -421,7 +423,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
         }
         //return new int[0];
     }
-    
+
     public JDBCChannel getChannelTable() {
         return chanTable;
     }
