@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="file:/C:/cygwin/home/groves/sod/relax/sod.rng" type="xml"?>
-<sod>
+<sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
                 <property>
                         <name>edu.sc.seis.sod.databasetype</name>
@@ -56,21 +56,21 @@
                         <contributor>NEIC</contributor>
                 </eventFinder>
                 <simpleHTMLEventStatus>
-                        <outputDirectory>tutorialRun1/</outputDirectory>
+                        <outputDirectory>status/</outputDirectory>
                 </simpleHTMLEventStatus>
 
-                <mapEventStatus xlink:link="tutorialStatus/eventMap.png"/>
+                <mapEventStatus xlink:link="status/eventMap.png"/>
                 <eventStatusTemplate
-                       outputLocation="tutorialStatus/time.html"
+                       outputLocation="status/time.html"
                        xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
                <eventStatusTemplate
-                       outputLocation="tutorialStatus/depth.html"
+                       outputLocation="status/depth.html"
                        xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
                <eventStatusTemplate
-                       outputLocation="tutorialStatus/location.html"
+                       outputLocation="status/location.html"
                        xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
                <eventStatusTemplate
-                       outputLocation="tutorialStatus/mag.html"
+                       outputLocation="status/mag.html"
                        xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
         </eventArm>
         <networkArm>
@@ -116,7 +116,7 @@
                         </channelEffectiveTimeOverlap>
                 </channelAND>
                 <simpleHTMLNetworkStatus>
-                        <outputDirectory>tutorialRun1/</outputDirectory>
+                        <outputDirectory>status/</outputDirectory>
                 </simpleHTMLNetworkStatus>
         </networkArm>
         <waveFormArm>
@@ -152,7 +152,8 @@
                         </sacFileProcessor>
                 </localSeismogramArm>
                 <simpleHTMLWaveformStatus>
-                        <outputDirectory>tutorialRun1/</outputDirectory>
+                        <outputDirectory>status/</outputDirectory>
                 </simpleHTMLWaveformStatus>
         </waveFormArm>
 </sod>
+
