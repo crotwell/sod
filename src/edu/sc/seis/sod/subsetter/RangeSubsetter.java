@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter;
-import edu.sc.seis.sod.*;
-
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
