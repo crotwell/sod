@@ -289,7 +289,11 @@ public class NetworkArm {
 	edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(networkFinderSubsetter.getSourceName(),
 								      networkFinderSubsetter.getDNSName());
 
-	if(databaseTime == null) return false;
+
+       //if the networktimeconfig is null or
+       //at every time of restart or startup 
+       //get the networks over the net.
+	if(databaseTime == null || lastDate == null) return false;
 	if(refreshInterval == null) return true;
 	
 	Date currentDate = Calendar.getInstance().getTime();
@@ -311,6 +315,11 @@ public class NetworkArm {
 	if(isRefreshIntervalValid()) {
 	    //get from the database.
 	    //if in cache return cache
+	    //here check the database time and 
+	    //decide to see whether to get the network information 
+	    // over the net or from the database.
+	    // if it can be decided that the database contains all the network information
+	    // then go ahead and get from the database else get over the net. 
 	    if(lastDate == null) {
 		//not in the cache.. 
 		lastDate = Calendar.getInstance().getTime();
@@ -401,14 +410,17 @@ public class NetworkArm {
 		
 		if(siteIdSubsetter.accept(channels[subCounter].my_site.get_id(), null)) {
 		    if(siteSubsetter.accept(networkAccess, channels[subCounter].my_site, null)) {
-			int addFlag = networkDatabase.getSiteDbId(stationDbObject,
-								  channels[subCounter].my_site);
-			if(addFlag != -1) continue;
+		// 	int addFlag = networkDatabase.getSiteDbId(stationDbObject,
+// 								  channels[subCounter].my_site);
+// 			if(addFlag != -1) {
+// 			    if(!arrayList.contains
+// 			    continue;
+// 			}
 			int dbid = networkDatabase.putSite(stationDbObject,
 							   channels[subCounter].my_site);
 			SiteDbObject siteDbObject = new SiteDbObject(dbid,
 								     channels[subCounter].my_site);
-			if(addFlag == -1) {
+			if(!containsSite(siteDbObject, arrayList)) {
 			    arrayList.add(siteDbObject);
 			}
 		    }
@@ -417,6 +429,7 @@ public class NetworkArm {
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}
+
 	SiteDbObject[] rtnValues = new SiteDbObject[arrayList.size()];
 	rtnValues = (SiteDbObject[]) arrayList.toArray(rtnValues);
 	stationDbObject.siteDbObjects = rtnValues;
@@ -424,6 +437,16 @@ public class NetworkArm {
 	return rtnValues;
 
     }
+
+    private boolean containsSite(SiteDbObject siteDbObject, ArrayList arrayList) {
+	for(int counter = 0; counter < arrayList.size(); counter++) {
+	    SiteDbObject tempObject = (SiteDbObject) arrayList.get(counter);
+	    if(tempObject.getDbId() == siteDbObject.getDbId()) return true;
+	}
+	return false;
+    }
+    
+
 
     public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject, SiteDbObject siteDbObject) {
 	if(siteDbObject.channelDbObjects != null) {
