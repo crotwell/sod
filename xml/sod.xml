@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+     <eventArm>
+	   <eventFinder>
+		<name>finder</name>
+		<dns>edu/sc/seis</dns>
+		<globalArea/>
+		<depth>
+			<unit>KILOMETER</unit>
+			<min>10</min>
+			<max>100</max>
+		</depth>
+		<timeRange>
+			<startTime>1999-01-01T00:00:00Z</startTime>
+			<endTime>2000-01-01T00:00:00Z</endTime>
+		</timeRange>
+		<magnitude>
+			<type>mb</type>
+			<min>5</min>
+			<max>10</max>
+		</magnitude>
+		<catalog>unknown</catalog>
+		<contributor>NEIC</contributor>
+	   </eventFinder>
+
+	   <eventAttrAND>
+	   	<seismicRegion><value>10</value></seismicRegion>
+		<geographicalRegion><value>10 20 30 40 50</value></geographicalRegion>
+		<eventAttrOR>
+			<eventAttrNOT>
+				<seismicRegion><value>70 80 100</value></seismicRegion>
+			</eventAttrNOT>
+			<eventAttrXOR>
+				<geographicalRegion><value>10 20 30</value></geographicalRegion>
+				<seismicRegion><value>10 20</value></seismicRegion>
+			</eventAttrXOR>
+		</eventAttrOR>
+		<eventAttrNOT>
+			<eventAttrName>
+				<value>testing</value>
+			</eventAttrName>
+		</eventAttrNOT>
+	   </eventAttrAND>
+	   <originOR>
+		<description>this describes the originOR</description>
+		<magnitude>
+			<type>mb</type>
+			<min>5</min>
+			<max>10</max>
+		</magnitude>
+		<depth>
+			<unit>KILOMETER</unit>
+			<min>10</min>
+			<max>100</max>
+		</depth>
+		<timeRange>
+			<startTime>2001-01-01T00:00:00Z</startTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
+		</timeRange>
+		<boxArea>
+			<latitude>
+				<min>38</min>
+				<max>120</max>
+			</latitude>
+			<longitude>
+				<min>-90</min>
+				<max>90</max>
+			</longitude>
+		</boxArea>
+		<originAND>
+			<originNOT>
+				<description>this describes the originNOT</description>
+				<magnitude>
+					<description>this describes the magnitude</description>
+					<type>mb</type>
+					<min>7</min>
+					<max>10</max>
+				</magnitude>
+			</originNOT>
+		</originAND>
+	</originOR>
+
+	<externalEventProcess>
+		<class>edu.sc.seis.sod.Test</class>
+		<params>
+			<name>paramone</name>
+			<value>one</value>
+		</params>
+		<params>
+			<name>paramtwo</name>
+			<value>two</value>
+		</params>
+	</externalEventProcess>
+   
+   </eventArm>
+
+   <networkArm>
+	<networkFinder>
+		<description> this describes the networkFinder</description>
+		<name>SCEPPNetworkDC</name>
+		<dns>edu/sc/seis</dns>
+	</networkFinder>
+	<networkIDOR>
+		<networkCode><value>II</value></networkCode>
+		<networkCode><value>IU</value></networkCode>
+		<networkCode><value>SP</value></networkCode>
+	</networkIDOR>
+
+	<networkeffectiveTimeOverlap>
+		<effectiveTimeOverlap>
+			<min>1999-01-01T00:00:00Z</min>
+			<max>2000-01-01T00:00:00Z</max>
+		</effectiveTimeOverlap>
+	</networkeffectiveTimeOverlap>
+
+	<stationAND>
+		<stationLatLonBox>
+			<latitude>
+				<min>20</min>
+				<max>40</max>
+			</latitude>
+			<longitude>
+				<min>-100</min>
+				<max>-80</max>
+			</longitude>
+		</stationLatLonBox>
+		<stationeffectiveTimeOverlap>
+			<effectiveTimeOverlap>
+				<min>1999-01-01T00:00:00Z</min>
+				<max>2000-01-01T00:00:00Z</max>
+			</effectiveTimeOverlap>
+		</stationeffectiveTimeOverlap>
+	</stationAND>
+
+	<siteCode><value>00</value></siteCode>
+
+	<channelIDOR>
+		<broadband/>
+		<longPeriod/>
+	</channelIDOR>
+
+	<sampling>
+		<min>1</min>
+		<max>40</max>
+		<interval>
+			<unit>SECOND</unit>
+			<value>1</value>
+		</interval>
+	</sampling>
+
+	<printlineChannelProcessor>
+		<class>edu.sc.seis.sod.NotKnown</class>
+	</printlineChannelProcessor>
+	
+    </networkArm>
+
+    <waveFormArm>
+	<eventStationOR>
+		<eventStationAND>
+			<eventStationDistance>
+				<distance>
+					<unit>DEGREE</unit>
+					<min>30</min>
+				</distance>
+			</eventStationDistance>
+			<eventStationMagnitude>
+				<magnitude>
+					<description>describes magnitude</description>
+					<type>mb</type>
+					<min>5.5</min>
+				</magnitude>
+			</eventStationMagnitude>
+		</eventStationAND>
+		<eventStationAND>
+			<eventStationDistance>
+				<distance>
+					<unit>DEGREE</unit>
+					<min>60</min>
+					<max>90</max>
+				</distance>
+			</eventStationDistance>
+			<eventStationMagnitude>
+				<magnitude>
+					<type>mb</type>
+					<min>6.0</min>
+				</magnitude>
+			</eventStationMagnitude>
+		</eventStationAND>
+	</eventStationOR>
+
+	<fixedDataCenter>
+		<name>SCEPPdatacenter</name>
+		<dns>edu/sc/seis</dns>
+	</fixedDataCenter>
+
+	<phaseRequest>
+		<beginPhase>firstP</beginPhase>
+		<beginOffset>
+			<unit>SECOND</unit>
+			<value>-120</value>
+		</beginOffset>
+		<endPhase>firstS</endPhase>
+		<endOffset>
+			<unit>SECOND</unit>
+			<value>600</value>
+		</endOffset>
+	</phaseRequest>
+
+	<availableDataAND>
+		<nogaps/>
+		<fullCoverage/>
+	</availableDataAND>
+
+	<printlineWaveformProcessor>
+		<class>edu.sc.seis.sod.NotKnown</class>
+	</printlineWaveformProcessor>
+
+   </waveFormArm>
+</sod>
