@@ -103,7 +103,7 @@ public class EventConfigDb {
 	MicroSecondDate microSecondDate = new MicroSecondDate(time);
 	Calendar calendar = Calendar.getInstance();
 	calendar.setTime(microSecondDate);
-	calendar.roll(Calendar.DAY_OF_MONTH, 1);
+	calendar.roll(Calendar.DAY_OF_YEAR, days);
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	time = microSecondDate.getFissuresTime();
 	updateTime(time);
