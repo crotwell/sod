@@ -69,7 +69,6 @@ public class Start{
     public Start (String confFilename, String[] args) throws Exception{
         configFileName = confFilename;
         ClassLoader cl = getClass().getClassLoader();
-        checkConfig(createInputSource(cl, confFilename));
         try {
             document = createDoc(createInputSource(cl, confFilename));
         } catch (Exception e) {
@@ -181,6 +180,8 @@ public class Start{
         UpdateChecker check = new UpdateChecker(false);
         handleStartupRunProperties();
         checkDBVersion();
+        ClassLoader cl = getClass().getClassLoader();
+        checkConfig(createInputSource(cl, configFileName));
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
         startArms(docElement.getChildNodes());
@@ -242,6 +243,7 @@ public class Start{
 
     private void handleStartupRunProperties() {
         if(runProps.removeDatabase()){
+            System.out.println("REMOVING DATABASE!!!!!!!!!111");
             File dbDir = new File("SodDb");
             if(dbDir.exists()){
                 File[] dbFiles = dbDir.listFiles();
@@ -249,6 +251,7 @@ public class Start{
                     dbFiles[i].delete();
                 }
                 dbDir.delete();
+                System.out.println("DONE REMOVING DATABASE!!!!!!!!!111");
             }
         }else if(runProps.reopenEvents()){
             try {
