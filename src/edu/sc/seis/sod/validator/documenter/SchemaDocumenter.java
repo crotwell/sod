@@ -47,10 +47,10 @@ public class SchemaDocumenter {
         Iterator it = defs.iterator();
         while(it.hasNext()) {
             Definition cur = (Definition)it.next();
-            //if(makePath(cur).startsWith("base/include/timeRange/t")){
-            render(c, ve, cur, transformer);
+            //if(makePath(cur).startsWith("waveform/requestSubsetter/breqFastRequest")) {
+                render(c, ve, cur, transformer);
+                System.out.print(".");
             //}
-            System.out.print(".");
         }
     }
 
