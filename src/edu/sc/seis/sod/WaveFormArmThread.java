@@ -1,22 +1,12 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.subsetter.*;
-import edu.sc.seis.sod.database.*;
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
-
-import edu.sc.seis.fissuresUtil.cache.*;
-import edu.sc.seis.sod.database.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import edu.iris.Fissures.IfSeismogramDC.*;
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.database.ChannelDbObject;
+import edu.sc.seis.sod.database.EventDbObject;
+import edu.sc.seis.sod.database.NetworkDbObject;
+import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
+import org.apache.log4j.Category;
 
 /**
  * WaveFormArmThread.java

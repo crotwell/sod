@@ -1,13 +1,17 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.database.*;
-
 import edu.iris.Fissures.IfEvent.EventAccess;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.database.ChannelDbObject;
+import edu.sc.seis.sod.database.EventDbObject;
+import edu.sc.seis.sod.database.NetworkDbObject;
+import edu.sc.seis.sod.database.SiteDbObject;
+import edu.sc.seis.sod.database.StationDbObject;
+import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
