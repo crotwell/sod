@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			Schema for the EventArm of SOD
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<!-- MAIN ABSTRACT BASE TYPE FOR SOD -->
+	<xsd:complexType name="sodItemType" abstract="true">
+		<xsd:sequence>
+			<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- ABSTRACT TYPE FOR SOURCE -->
+	<xsd:complexType name="sourceType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="dns" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	
+	<!-- ABSTRACT TYPE FOR ARMS -->	
+	<xsd:complexType name="armType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- ABSTRACT TYPE FOR SUBSETTER -->
+	<xsd:complexType name="subsetterType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<!-- mainly used in the NetworkARm EFFECTIVE TIME OVERLAP TYPE -->
+	<xsd:complexType name="effectiveTimeOverlapType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	
+	<!-- PARAMS TYPE -->
+	<xsd:complexType name="paramsType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- PROCESS TYPE -->
+	<xsd:complexType name="processType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EXTERNAL PROCESS TYPE -->
+	<xsd:complexType name="externalProcessType" abstract="true">		
+		<xsd:complexContent>
+			<xsd:extension base="processType">
+				<xsd:sequence>
+					<xsd:element name="classname" type="xsd:string"/>
+					<xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- INTERNAL PROCESS TYPE -->
+	<xsd:complexType name="internalProcessType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="processType">
+				<xsd:sequence>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	
+	<!-- UNIT  TYPE -->
+	<xsd:simpleType name="unitType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="KILOMETER"/>
+			<xsd:enumeration value="METER"/>
+			<xsd:enumeration value="CENTIMETER"/>	
+			<xsd:enumeration value="NANOMETER"/>
+			<xsd:enumeration value="MICROMETER"/>
+			<xsd:enumeration value="MICRON"/>
+			<xsd:enumeration value="MILLIMETER"/>
+			<xsd:enumeration value="PICOMETER"/>
+			<xsd:enumeration value="INCH"/>
+			<xsd:enumeration value="FOOT"/>	
+			<xsd:enumeration value="MILE"/>
+			<xsd:enumeration value="HERTZ"/>
+			<xsd:enumeration value="NANOSECOND"/>
+			<xsd:enumeration value="MICROSECOND"/>
+			<xsd:enumeration value="MILLISECOND"/>
+			<xsd:enumeration value="SECOND"/>
+			<xsd:enumeration value="MINUTE"/>
+			<xsd:enumeration value="HOUR"/>
+			<xsd:enumeration value="DAY"/>
+			<xsd:enumeration value="YEAR"/>
+			<xsd:enumeration value="AMPERE"/>
+			<xsd:enumeration value="COULOMB"/>
+			<xsd:enumeration value="VOLT"/>
+			<xsd:enumeration value="DEGREE"/>
+			<xsd:enumeration value="RADIAN"/>
+			<xsd:enumeration value="COUNT"/>
+			<xsd:enumeration value="RADIAN_PER_SECOND"/>
+			<xsd:enumeration value="SQUARE_METER"/>
+			<xsd:enumeration value="SQUARE_CENTIMETER"/>
+			<xsd:enumeration value="CUBIC_METER"/>
+			<xsd:enumeration value="CUBIC_CENTIMETER"/>
+			<xsd:enumeration value="LITER"/>
+			<xsd:enumeration value="GRAM"/>
+			<xsd:enumeration value="KILOGRAM"/>
+			<xsd:enumeration value="DENSITY"/>
+			<xsd:enumeration value="GRAM_PER_CUBIC_CENTIMETER"/>
+			<xsd:enumeration value="KILOGRAM_PER_CUBIC_METER"/>
+			<xsd:enumeration value="VELOCITY"/>
+			<xsd:enumeration value="METER_PER_SECOND"/>
+			<xsd:enumeration value="CENTIMETER_PER_SECOND"/>
+			<xsd:enumeration value="KILOMETER_PER_SECOND"/>
+			<xsd:enumeration value="MILLIMETER_PER_SECOND"/>
+			<xsd:enumeration value="MICROMETER_PER_SECOND"/>
+			<xsd:enumeration value="MICRON_PER_SECOND"/>
+			<xsd:enumeration value="NANOMETER_PER_SECOND"/>
+			<xsd:enumeration value="ACCELERATION"/>
+			<xsd:enumeration value="METER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="CENTIMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="KILOMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MILLIMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MICROMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MICRON_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="NANOMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="FORCE"/>
+			<xsd:enumeration value="NEWTON"/>
+			<xsd:enumeration value="JOULE"/>
+			<xsd:enumeration value="DYNE"/>
+			<xsd:enumeration value="ENERGY"/>
+					
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- QUANTITY TYPE -->
+	<xsd:complexType name="quantityType">
+		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
+			<xsd:element name="value" type="xsd:integer"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+
+	<!-- UNIT RANGE TYPE -->
+	<xsd:complexType name="unitRangeType">
+		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
+			<xsd:element name="min" type="xsd:double"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:double"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- TIME INTERVAL TYPE -->
+	<xsd:complexType name="timeIntervalType">
+		<xsd:complexContent>
+			<xsd:extension base="quantityType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- REFRESH INTERVAL TYPE -->
+	<xsd:complexType name="refreshIntervalType">
+		<xsd:complexContent>
+			<xsd:extension base="timeIntervalType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- LENGTH TYPE -->
+	<xsd:complexType name="lengthType">
+		<xsd:complexContent>
+			<xsd:extension base="quantityType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- DISTANCE RANGE TYPE -->
+	<xsd:complexType name="distanceRangeType">
+		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
+			<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- AREA TYPE is abstract -->
+	<xsd:complexType name="areaType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- BOX AREA TYPE -->
+	<xsd:complexType name="boxAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+					<xsd:element ref="latitudeRange"/>
+					<xsd:element ref="longitudeRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+	<!-- POINT AREA TYPE -->
+	<xsd:complexType name="pointAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+					<xsd:element name="latitude" type="xsd:float"/>
+					<xsd:element name="longitude" type="xsd:float"/>
+					<xsd:element ref="distanceRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+
+	<!-- LATITUDE TYPE -->
+	<xsd:complexType name="latitudeLongitudeRangeType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<!-- GLOBAL AREA TYPE -->
+	<xsd:complexType name="globalAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	
+
+	<!-- TIME  RANGE TYPE -->
+	<xsd:complexType name="timeRangeType">
+		<xsd:sequence>
+			<xsd:element name="startTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="endTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	 <!-- abstract element areaType -->
+	 <xsd:element name="area" type="areaType" abstract="true"/>
+
+	 <!-- element representing boxArea -->
+	 <xsd:element name="boxArea" type="boxAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing globalArea -->
+	 <xsd:element name="globalArea" type="globalAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing pointArea -->
+	 <xsd:element name="pointArea" type="pointAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing latitude -->
+	 <xsd:element name="latitudeRange" type="latitudeLongitudeRangeType"/>
+
+	 <!-- element representing longitude -->
+	 <xsd:element name="longitudeRange" type="latitudeLongitudeRangeType"/>
+
+	<!-- distanceRange element -->
+	<xsd:element name="distanceRange" type="distanceRangeType"/>
+
+	<!-- timeRangeType element -->
+	<xsd:element name="timeRange" type="timeRangeType"/>
+
+	<!-- REFRESH INTERVAL element -->
+	<xsd:element name="refreshInterval" type="refreshIntervalType"/>
+
+	<xsd:simpleType name="channelCodeUtilType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{1}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	
+
+		
+</xsd:schema>
