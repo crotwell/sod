@@ -8,7 +8,7 @@
     <define name="request">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for handling seismogram data requests</summary>
+                <summary>Tactics that work based on the generated request</summary>
             </xsd:annotation>
             <ref name="requestAND"/>
             <ref name="requestOR"/>
@@ -88,7 +88,7 @@
                     servers. Of course the network information must be available to SOD. As this subsetter always
                     returns true, processing will continue past this point. In most cases, the whole reason to generate
                     breqfast requests is that it is the only way to get the data, and so there is not much point in
-                    proceeding down the waveform arm. So you will generally want to wrap the breqFastRequest in a
+                    proceeding down the waveform arm. You will generally want to wrap the breqFastRequest in a
                     requestNOT so that the return value is false. This will allow SOD to proceed to the next piece of
                     work and avoid the wasted time in going to the server to get data.</description>
             </xsd:annotation>

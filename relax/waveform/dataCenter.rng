@@ -4,7 +4,7 @@
         <element name="fixedDataCenter">
             <xsd:annotation>
                 <summary>Pick a central data repository</summary>
-                <description>Use this to restrict retrieved data to only one central seismogram server.</description>
+                <description>This specifies the data center to use.</description>
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>

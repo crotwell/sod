@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="seismogramProcess"/>
     </start>
@@ -10,6 +11,15 @@
         <choice>
             <xsd:annotation>
                 <summary>All of the items that process seismograms</summary>
+                <description>At this point in the waveform arm, data has been retrieved. Therefore,
+                    these items all work on the received data. Some of them like rMean and rTrend
+                    perform manipulations on the data. Others like saveSeismogramToFile and
+                    seismogramImageProcess write out information based on the data. Some like
+                    fullDataCoverage and phaseSignalToNoise subset the items based on the data's
+                    properties. If several items are used, the data from each step feeds into the
+                    next. So if a seismogramImageProcessor follows a phaseCut the image drawn will
+                    be of the data after the cut. If you don't want a processor's work to effect
+                    later steps use the forkProcess to isolate it.</description>
                 <include/>
             </xsd:annotation>
             <ref name="printlineSeismogramProcess"/>
@@ -40,10 +50,11 @@
         <element name="seismogramAND">
             <xsd:annotation>
                 <summary>Matches all included seismogram processors</summary>
-                <description>The output is the logical AND of the outputs of all included seismogram processors. This
-                    means that it will evaluate to true only if all of the included processors evaluate to true. The
-                    subsetters after the first false outputted are not evaluated. The seismic data passed down the chain
-                    is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical AND of the outputs of all included seismogram
+                    processors. This means that it will evaluate to true only if all of the included
+                    processors evaluate to true. The subsetters after the first false outputted are
+                    not evaluated. The seismic data passed down the chain is the data passed in.
+                    Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <seismogramAND>
                         <noDataGaps/>
@@ -60,10 +71,11 @@
         <element name="seismogramOR">
             <xsd:annotation>
                 <summary>Matches at least one of the included seismogram processors</summary>
-                <description>The output is the logical OR of the outputs of all included seismogram processors. This
-                    means that it will evaluate to true as long as one of the included seismogram processors evaluate to
-                    true. The processors after the first true outputted are not evaluated. The seismic data passed down
-                    the chain is the data passed in. Seismogram results of the contained processors are ignored.</description>
+                <description>The output is the logical OR of the outputs of all included seismogram
+                    processors. This means that it will evaluate to true as long as one of the
+                    included seismogram processors evaluate to true. The processors after the first
+                    true outputted are not evaluated. The seismic data passed down the chain is the
+                    data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <seismogramOR>
                         <noDataGaps/>
@@ -80,10 +92,10 @@
         <element name="seismogramNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the included seismogram processor</summary>
-                <description>The output is the logical NOT of the output of the included seismogram processor. This
-                    means that it will evaluate to true if the included processor evaluates to false, and vice versa.
-                    The seismic data passed down the chain is the data passed in. Seismogram results of the contained
-                    processors are ignored.</description>
+                <description>The output is the logical NOT of the output of the included seismogram
+                    processor. This means that it will evaluate to true if the included processor
+                    evaluates to false, and vice versa. The seismic data passed down the chain is
+                    the data passed in. Seismogram results of the contained processors are ignored.</description>
                 <example>
                     <seismogramNOT>
                         <someDataCoverage/>
@@ -97,7 +109,8 @@
         <element name="phaseCut">
             <xsd:annotation>
                 <summary>Cuts seismograms relative to predicted phase arrival times</summary>
-                <description>Cuts seismograms relative to offsets from phase arrival time predicted by TauP for the model.</description>
+                <description>Cuts seismograms relative to offsets from phase arrival time predicted
+                    by TauP for the model.</description>
                 <example>
                     <phaseCut>
                         <model>prem</model>
@@ -121,31 +134,37 @@
         <element name="filter">
             <xsd:annotation>
                 <summary>Apply a Butterworth filter</summary>
-                <description>Applies a Butterworth filter to the seismograms. The filterType can be CAUSAL or NONCAUSAL
-                    or TWOPASS, with the last two being equivalent.</description>
-                <example>
-                    <filter>
+                <description>Applies a Butterworth filter to the seismograms. The filterType can be
+                    CAUSAL or NONCAUSAL or TWOPASS, with the last two being equivalent.</description>
+            </xsd:annotation>
+            <element name="lowFreqCorner">
+                <xsd:annotation>
+                    <example>
                         <lowFreqCorner>
                             <value>50</value>
                             <unit>SECOND</unit>
                         </lowFreqCorner>
+                    </example>
+                </xsd:annotation>
+                <ref name="cornerSetting"/>
+            </element>
+            <element name="highFreqCorner">
+                <xsd:annotation>
+                    <example>
                         <highFreqCorner>
                             <value>5</value>
                             <unit>HERTZ</unit>
                         </highFreqCorner>
-                        <numPoles>2</numPoles>
-                        <filterType>NONCAUSAL</filterType>
-                    </filter>
-                </example>
-            </xsd:annotation>
-            <element name="lowFreqCorner">
-                <ref name="cornerSetting"/>
-            </element>
-            <element name="highFreqCorner">
+                    </example>
+                </xsd:annotation>
                 <ref name="cornerSetting"/>
             </element>
             <element name="numPoles">
-                <data type="int"/>
+                <data type="integer">
+                    <xsd:annotation>
+                        <example>2</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="filterType">
                 <choice>
@@ -187,9 +206,10 @@
         <element name="taper">
             <xsd:annotation>
                 <summary>Apply a taper</summary>
-                <description>Applies a taper to the seismograms. The type can be one of HANNING, HAMMING or COSINE, with
-                    HANNING the default. The width is given as a fraction of the seismogram length, and so should be 0.5
-                    as otherwise the begin and end taper will overlap each other. 0.05 is the default.</description>
+                <description>Applies a taper to the seismograms. The type can be one of HANNING,
+                    HAMMING or COSINE, with HANNING the default. The width is given as a fraction of
+                    the seismogram length, and so should be 0.5 as otherwise the begin and end taper
+                    will overlap each other. 0.05 is the default.</description>
                 <example>
                     <taper>
                         <width>.05</width>
@@ -217,9 +237,9 @@
         <element name="responseGain">
             <xsd:annotation>
                 <summary>Response Gain Correction</summary>
-                <description>Applies a overall sensitivity from the response to the seismograms. This will convert int
-                    or short seismograms into floats to avoid rounding errors that could result in the output
-                    seismograms being all zeros. There is no configuration.</description>
+                <description>Applies a overall sensitivity from the response to the seismograms.
+                    This will convert int or short seismograms into floats to avoid rounding errors
+                    that could result in the output seismograms being all zeros. There is no configuration.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -228,9 +248,9 @@
         <element name="saveSeismogramToFile">
             <xsd:annotation>
                 <summary>Saves seismograms in files</summary>
-                <description>The seismograms are written to data files in the given directory. Also writes out a dsml
-                    file for use in GEE and other fissures tools that support datasets. Always returns true unless there
-                    is an error.</description>
+                <description>The seismograms are written to data files in the given directory. Also
+                    writes out a dsml file for use in GEE and other fissures tools that support
+                    datasets. Always returns true unless there is an error.</description>
                 <example>
                     <saveSeismogramToFile>
                         <fileType>sac</fileType>
@@ -263,8 +283,8 @@
         <element name="externalWaveformProcess">
             <xsd:annotation>
                 <summary>Runs an externally defined Java processor</summary>
-                <description>This runs the Java processor defined in the given class, which must implement the
-                    edu.sc.seis.sod.process.waveformArm.process.WaveformProcess interface.</description>
+                <description>This runs the Java processor defined in the given class, which must
+                    implement the edu.sc.seis.sod.process.waveformArm.process.WaveformProcess interface.</description>
                 <example>
                     <externalWaveformProcess>
                         <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>
@@ -285,8 +305,8 @@
         <element name="printlineSeismogramProcess">
             <xsd:annotation>
                 <summary>Prints a line to std out for each seismogram processed</summary>
-                <description>This simply prints a line to standard out for each seismogram to be processed. It can be
-                    used as a simple status monitor.</description>
+                <description>This simply prints a line to standard out for each seismogram to be
+                    processed. It can be used as a simple status monitor.</description>
                 <include/>
             </xsd:annotation>
             <empty/>
@@ -298,7 +318,11 @@
                 <summary>Generate HTML status pages about the processed seismograms</summary>
             </xsd:annotation>
             <element name="template">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </element>
     </define>
@@ -306,9 +330,11 @@
         <element name="forkProcess">
             <xsd:annotation>
                 <summary>Forks the processing of seismograms</summary>
-                <description>This forks the processing of the seismograms so that more than one sequence of processing
-                    steps can be applied to the data independently. The fork processor returns the original input
-                    seismograms, but the success boolean of the enclosed processors.</description>
+                <description>This forks the processing of the seismograms so that more than one
+                    sequence of processing steps can be applied to the data independently. If
+                    another processor follows the fork it gets the seismograms as they went into the
+                    fork, but only executes if the items in the fork passed. If you want to execute
+                    the items past the fork no matter what, enclose it in an alwaysSuccess tag.</description>
                 <example>
                     <forkProcess>
                         <rTrend/>
@@ -330,8 +356,8 @@
         <element name="alwaysSuccess">
             <xsd:annotation>
                 <summary>Executes a subprocessor, but always returns true</summary>
-                <description>This executes the enclosed processor, but always returns a success regardless of whether
-                    the enclosed processor succeeded or failed.</description>
+                <description>This executes the enclosed processor, but always returns a success
+                    regardless of whether the enclosed processor succeeded or failed.</description>
                 <example>
                     <alwaysSuccess>
                         <printlineSeismogramProcess/>
@@ -345,8 +371,9 @@
         <element name="phaseSignalToNoise">
             <xsd:annotation>
                 <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
-                <description>This calculates the signal to noise ratio in the time window described by the offsets
-                    around the given phases and passes if the ratio is less than the given ratio.</description>
+                <description>This calculates the signal to noise ratio in the time window described
+                    by the offsets around the given phases and passes if the ratio is less than the
+                    given ratio.</description>
                 <example>
                     <phaseSignalToNoise>
                         <phaseName>ttp</phaseName>
@@ -412,7 +439,11 @@
             </optional>
             <element name="seismogramConfig">
                 <element name="template">
-                    <data type="string"/>
+                    <data type="string">
+                        <xsd:annotation>
+                            <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
+                        </xsd:annotation>
+                    </data>
                 </element>
             </element>
             <optional>
@@ -434,9 +465,9 @@
         <element name="legacyExecute">
             <xsd:annotation>
                 <summary>Executes an external program.</summary>
-                <description>The legacyExecute processor is capable of running existing command line programs. It does
-                    this by passing the filename of the seismograms saved by a earlier SaveSeismogramToFile processor to
-                    a program started with Runtime.exec(). </description>
+                <description>The legacyExecute processor is capable of running existing command line
+                    programs. It does this by passing the filename of the seismograms saved by a
+                    earlier SaveSeismogramToFile processor to a program started with Runtime.exec(). </description>
                 <example>
                     <legacyExecute>
                         <command>echo</command>
@@ -470,10 +501,11 @@
         <element name="noDataGaps">
             <xsd:annotation>
                 <summary>Only allows seismograms with gapless data through</summary>
-                <description>This processor checks the data returned from the dataCenter for gaps larger than the sample
-                    period. If from the begin time of the earliest piece to the end time of the latest piece there are
-                    no gaps in time larger than the sample period, this process passes the data onto the next item in
-                    the line.</description>
+                <description>This processor checks the data returned from the dataCenter for gaps
+                    larger than the sample period of the instrument. If from the begin time of the
+                    earliest piece to the end time of the latest piece there are no gaps in time
+                    larger than the sample period, this process passes the data onto the next item
+                    in the line.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -482,9 +514,10 @@
         <element name="someDataCoverage">
             <xsd:annotation>
                 <summary>Only allows seismograms with data overlapping the original request through</summary>
-                <description>This processor checks the data returned from the dataCenter against the request generated
-                    by the request generator. If at least one piece of data exists during the time specified by the
-                    request generator, this processor passes the data onto the next step.</description>
+                <description>This processor checks the data returned from the dataCenter against the
+                    request generated by the request generator. If at least one piece of data exists
+                    during the time specified by the request generator, this processor passes the
+                    data onto the next step.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -493,11 +526,12 @@
         <element name="fullDataCoverage">
             <xsd:annotation>
                 <summary>Only allows seismograms with data covering the entire original request through</summary>
-                <description>This processor checks the data returned from the dataCenter for complete coverage of the
-                    original request. If from the begin time of the earliest piece is before the start of the request,
-                    and the end time of the latest piece is past the end of the request, the data passes. This does not
-                    guarantee that there are no gaps in the middle of the request though. To ensure that, combine this
-                    processor with a noDataGaps processor in a seismogramAND.</description>
+                <description>This processor checks the data returned from the dataCenter for
+                    complete coverage of the original request. If from the begin time of the
+                    earliest piece is before the start of the request, and the end time of the
+                    latest piece is past the end of the request, the data passes. This does not
+                    guarantee that there are no gaps in the middle of the request though. To ensure
+                    that, combine this processor with a noDataGaps processor in a seismogramAND.</description>
             </xsd:annotation>
             <empty/>
         </element>

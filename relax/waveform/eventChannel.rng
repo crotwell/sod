@@ -8,7 +8,7 @@
     <define name="eventChannel">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for selecting channels for events</summary>
+                <summary>Tactics for selecting combinations of channels and events</summary>
             </xsd:annotation>
             <ref name="embeddedEventStation"/>
             <ref name="embeddedChannel"/>

@@ -9,7 +9,7 @@
     <define name="requestGenerator">
         <choice>
             <xsd:annotation>
-                <summary>Tactics for generating requests to the seismogram servers</summary>
+                <summary>Tactics that generating requests to the seismogram servers</summary>
             </xsd:annotation>
             <ref name="phaseRequest"/>
             <ref name="originOffsetRequest"/>
@@ -27,14 +27,27 @@
     <define name="originOffsetRequest">
         <element name="originOffsetRequest">
             <xsd:annotation>
-                <summary>Generates requests based on distance from origin</summary>
-                <description>This generates requests based on how far the stations are from the origin of an event.</description>
+                <summary>Generates a request for a time window around the origin</summary>
+                <description>This generates requests for a certain window around the time the
+                    event occured.</description>
+                <example>
+                    <originOffsetRequest>
+                        <beginOffset>
+                            <unit>MINUTE</unit>
+                            <value>-20</value>
+                        </beginOffset>
+                        <endOffset>
+                            <unit>HOUR</unit>
+                            <value>1</value>
+                        </endOffset>
+                    </originOffsetRequest>
+                </example>
             </xsd:annotation>
             <element name="beginOffset">
-                <ref name="quantity"/>
+                <ref name="time"/>
             </element>
             <element name="endOffset">
-                <ref name="quantity"/>
+                <ref name="time"/>
             </element>
         </element>
     </define>

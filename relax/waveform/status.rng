@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0"
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0"
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
@@ -8,7 +9,7 @@
     <define name="waveformStatus">
         <choice>
             <xsd:annotation>
-                <summary>The status reporters of the Waveform Arm</summary>
+                <summary>Items that report on the status of the Waveform Arm</summary>
             </xsd:annotation>
             <ref name="waveformEvent"/>
             <ref name="waveformNetwork"/>
@@ -34,6 +35,8 @@
         <element name="waveformNetworkStatus">
             <xsd:annotation>
                 <summary>Generate HTML waveform status pages per network</summary>
+                <description>Generate HTML waveform status pages per network based on the templates
+                    in the template tags. The example shows this using the templates built into SOD.</description>
             </xsd:annotation>
             <element name="template">
                 <data type="string">
@@ -55,6 +58,8 @@
         <element name="waveformStationStatus">
             <xsd:annotation>
                 <summary>Generate HTML waveform status pages per station</summary>
+                <description>Generate HTML waveform status pages per station based on the template
+                    in the template tag. The example shows this using the template built into SOD.</description>
             </xsd:annotation>
             <element name="template">
                 <data type="string">
@@ -69,8 +74,9 @@
         <element name="externalWaveformMonitor">
             <xsd:annotation>
                 <summary>Monitor wavforms via a class external to SOD</summary>
-                <description>Use an external class that implements the WaveformMonitor interface. SOD will attempt to
-                    load the class specified by classname and then call update() on it for each event-channel pair.</description>
+                <description>Use an external class that implements the WaveformMonitor interface.
+                    SOD will attempt to load the class specified by classname and then call update()
+                    on it for each event-channel pair.</description>
                 <example>
                     <externalWaveformMonitor>
                         <classname>edu.somewhere.seis.sodExt.status.waveformArm.MyWaveformMonitor</classname>
