@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="eventArm">
+            <xsd:annotation>
+                <description> The event arm gathers events from the server
+                    specified in the event finder. If there are any origin
+                    subsetters present, the event arm then runs those over the
+                    events returned by the finder. The events that pass through
+                    the subsetters are then run through any event processors
+                    present. After this point, the events are marked as accepted
+                    and the waveform arm begins to work on them. If there are
+                    any event status items present, they generate status
+                    information about the events as they step through the
+                    process described above. </description>
+                <summary>Selects and processes events</summary>
+            </xsd:annotation>
             <externalRef href="source.rng"/>
             <optional>
                 <externalRef href="origin.rng"/>
