@@ -8,7 +8,7 @@ class sodScriptParameters(scriptBuilder.jacorbParameters):
         scriptBuilder.jacorbParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = 'sod'
-        homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1)
+        homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1, True)
         libvar = self.getVar('LIB', 'initial')
         libvar.setValue(homevar.interp+'/lib')
         self.mainclass = 'edu.sc.seis.sod.Start'
