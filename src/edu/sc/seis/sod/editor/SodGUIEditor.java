@@ -148,6 +148,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
         editors.put("latitudeRange", new LatitudeRangeEditor());
         editors.put("longitudeRange", new LongitudeRangeEditor());
+        editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
 
         TagChooser originTC = new TagChooser("origin", this);
         List subTypes = originTC.getSubTypes();
