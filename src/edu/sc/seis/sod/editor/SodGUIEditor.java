@@ -45,36 +45,33 @@ public class SodGUIEditor extends SimpleGUIEditor {
         // silently eat CommFailure
         ignoreList.add(COMM_FAILURE.class);
         GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
-
         grammar = new SchemaGrammar();
         frameName = "SOD Editor";
-        tabs = true;
+        setTabbed(true);
         initEditors();
-        JPanel sodPanel = new JPanel();
-        sodPanel.setName("Sod");
-        getTabPane().add(sodPanel);
-        sodPanel.setLayout(new BorderLayout());
-        final JButton go = new JButton("GO!");
-        sodPanel.add(go, BorderLayout.SOUTH);
-        final TextAreaStatusDisplay statusDisp = new TextAreaStatusDisplay();
-        sodPanel.add(new JScrollPane(statusDisp.getTextArea()), BorderLayout.CENTER);
-        go.addActionListener(new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            go.setText("Going...");
-                            start = new Start(getDocument());
-                            start.start();
-
-                            start.getEventArm().add(statusDisp);
-                            start.getWaveformArm().addStatusMonitor(statusDisp);
-                        } catch (Throwable t) {
-                            GlobalExceptionHandler.handle("Problem starting SOD", t);
-                            go.setText("Gone.  :(");
-                        }
-                    }
-                });
-
+        //JPanel sodPanel = new JPanel();
+        //sodPanel.setName("Sod");
+        //getTabPane().add(sodPanel);
+        //sodPanel.setLayout(new BorderLayout());
+        //final JButton go = new JButton("GO!");
+        //sodPanel.add(go, BorderLayout.SOUTH);
+        //final TextAreaStatusDisplay statusDisp = new TextAreaStatusDisplay();
+        //sodPanel.add(new JScrollPane(statusDisp.getTextArea()), BorderLayout.CENTER);
+        //go.addActionListener(new ActionListener() {
+        //                  public void actionPerformed(ActionEvent e) {
+        //                    try {
+        //                      go.setText("Going...");
+        //                    start = new Start(getDocument());
+        //                  start.start();
+        //                start.getEventArm().add(statusDisp);
+        //              start.getWaveformArm().addStatusMonitor(statusDisp);
+        //        } catch (Throwable t) {
+        //          GlobalExceptionHandler.handle("Problem starting SOD", t);
+        //        go.setText("Gone.  :(");
+        //  }
+        //}
+        //});
+        //
     }
 
     public SchemaGrammar getGrammar() {  return grammar; }
