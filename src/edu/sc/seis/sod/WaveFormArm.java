@@ -53,12 +53,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      */
     public void run() {
 	EventAccessOperations eventAccess = null;  
-	try {
+	//ThreadPool pool = new ThreadPool(5);
+	//getThreadGroup().list();
+		try {
 	    System.out.println("IN The waveform Arm Thread before POPPING");
 	    int i = 0;
 	    eventAccess = (EventAccessOperations)Start.getEventQueue().pop();
-	    System.out.println("THE DBID OBTAINED IS @#############@#@#@@#@#@#@#@#@#@#@#@# #@#@#@# "+i);
-	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
+	     logger.debug("The queue is size "+Start.getEventQueue().getLength());
 	    // if(Start.getEventQueue().getLength() < 4) notifyAll();
 	    while(eventAccess != null) {
 		logger.debug("The name of the event is "+eventAccess.get_attributes().name);
@@ -72,7 +73,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 						      successfulChannels, 
 						      this,
 						      sodExceptionListener);
-			    
+	
+		
+		    
 		pool.doWork(work);
 		
 		eventAccess = 
@@ -80,8 +83,11 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    }   
 	    logger.debug("CALLING THE FINISHED METHOD OF THE POOL");
 	    pool.finished();
-	    //   pool.join(); 
-	    // logger.debug("The active count is "+Thread.activeCount());
+	     pool.join(); 
+	    logger.debug("The active count is "+Thread.activeCount());
+	    System.out.println("Before exiting the wave form arm ");
+	    //getThreadGroup().list();
+	    //Thread.sleep(10000);
 	    //logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!MUST EXIT THE RUN METHOD THE WAVEFORMARMTHREAD NOW");
  	}  catch(Exception e) {
 	    logger.fatal("Problem running waveform arm", e);
@@ -140,16 +146,19 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
 	public void run() {
 	    Runnable work = pool.getWork();
+	    logger.debug("In the run method of the worker before the while loop");
 	    while ( ! finished) {
 		logger.debug("Starting the Worker Thread");
 		work.run();
 		logger.debug("THe active count of thread is ");
-		getThreadGroup().list();
+		///getThreadGroup().list();
 		logger.debug("GO AND GET NEW WORK");
 		work = pool.getWork();
 		logger.debug("AFTER GETTING WOEK");
 	    } // end of while ( ! finished)
+	    //getThreadGroup().list();
 	    logger.debug("EXITING THE RUN METHOD OF WORKER");
+
 	}
     }
 
@@ -160,7 +169,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	ThreadPool(int n) {
 	    for (int i=0; i<n; i++) {
 		Thread t = new ThreadWorker(this);
-		t.setName("mythread"+i);
+		t.setName("waveFormArm Worker Thread"+i);
 		pool.add(t);
 		t.start();
 	    } // end of for (int i=0; i<n; i++)
@@ -176,7 +185,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		try {
 		      logger.debug("waiting in doWork method The queue is size "+Start.getEventQueue().getLength());
 		      //System.exit(0);
-		    wait();
+		      System.out.println("Before Wait in do Work of ThreadPool");
+		      wait();
+		      System.out.println("After Wait in do work of ThreadPool");
 		} catch (InterruptedException e) { }
 	    }
 	    work = workUnit;
@@ -188,7 +199,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    while (work == null && ! finished) {
 		try {
 		    logger.debug("Waiting in the getWork METHOD");
+		    System.out.println("Before Wait in getWork of ThreadPool");
 		    wait();
+		    System.out.println("After Wait in getWork of ThreadPool");
 		} catch (InterruptedException e) { }
 	    }
 	    if (finished) {
@@ -221,7 +234,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    while (work != null) {
 		try {
 		    logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Waiting in the finished method of pool");
-		    wait(10);
+		    System.out.println("Before Wait in finished of Thread Pool");
+		    wait();
+		    System.out.println("After Wait in finished of Thread Pool");
 		} catch (InterruptedException e) { }
 	    }
 	    logger.debug("Need not wait in the finished method of the pool");
@@ -231,11 +246,11 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		((ThreadWorker)it.next()).finish();
 	    } // end of while (it.hasNext())
 	    logger.debug("Finished the calling finish method of each Thread Worker");
-	 //    it = pool.iterator();
-// 	    while (it.hasNext()) {
-// 		notifyAll();
-// 		it.next();
-// 	    }
+	    it = pool.iterator();
+	    while (it.hasNext()) {
+		notifyAll();
+		it.next();
+	    }
 	    logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Returning from the finished method");
 	    //System.exit(0);
 	}

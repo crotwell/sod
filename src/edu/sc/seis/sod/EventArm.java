@@ -55,8 +55,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    logger.error("Exception caught while processing the EventArm", e);
 	    notifyListeners(this, e);
 	}
+	System.out.println("Before setting the source Alive to be false");
+	//	getThreadGroup().list();
 	if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
-	logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "
+	System.out.println("After setting the source Alive to be false");
+	//getThreadGroup().list();
+	logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "	
 			   +Start.getEventQueue().getLength());
 	
     }
@@ -69,6 +73,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      */
     protected void processConfig(Element config) 
 	throws ConfigurationException {
+;
 	Start.getEventQueue().setSourceAlive(true);
 	NodeList children = config.getChildNodes();
 	Node node;
@@ -110,6 +115,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	if(eventChannelFinder != null) {
 	    eventChannelFinder.setEventArm(this);
 	    Thread thread = new Thread(eventChannelFinder);
+	    thread.setName("EventChannelFinder");
 	    thread.start();
 	} else {
 
@@ -170,9 +176,15 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	for(int counter = 0; counter < contributors.length; counter++) {
 	    logger.debug("contributor = "+contributors[counter]);
 	}
+	
+	System.out.println("At the start of the process eventArm");
+	//getThreadGroup().list();
 
 	EventConfigDb eventConfigDb = new EventConfigDb();
 	edu.iris.Fissures.Time startTime = eventConfigDb.getTime();
+	System.out.println("At the start of the process eventArm after instantiaing eventConfigDb");
+	//getThreadGroup().list();
+
 // 	if(startTime == null) {
 // 	    logger.debug("time is not stored in the database so store it");
 // 	    startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
@@ -208,8 +220,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
 				    );
 	    
 	    logger.debug("The number of events returned are "+eventAccessOrig.length);
-	    Thread.sleep(5000);
-	    EventAccessOperations[] eventAccess = 
+	    Thread.sleep(10000);
+		EventAccessOperations[] eventAccess = 
 		new EventAccessOperations[eventAccessOrig.length];
 	    for(int counter = 0; counter < eventAccess.length; counter++) {
 		
@@ -240,7 +252,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    Start.getEventQueue().waitForProcessing();
 	    
 	}// end of while loop where checking for isFinished.
-	Start.getEventQueue().setSourceAlive(false);
+	//	Start.getEventQueue().setSourceAlive(false);
+	System.out.println("At the end of the Process Event Arm");
+	//getThreadGroup().list();
+	eventConfigDb.close();
+	System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$exiting as evetnArm is finished");
+	//System.exit(0);
 
     }
 

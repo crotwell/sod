@@ -51,7 +51,7 @@ public class Start implements SodExceptionListener {
      *
      * @exception ConfigurationException if an error occurs
      */
-    public void start() throws Exception {
+    public void startA() throws Exception {
 	Element docElement = document.getDocumentElement();
 	logger.info("start "+docElement.getTagName());
 	NodeList children = docElement.getChildNodes();
@@ -69,18 +69,22 @@ public class Start implements SodExceptionListener {
 		    System.out.println("Starting the EVent Arm");
 		    logger.info(subElement.getTagName());
 		    eventArm = new EventArm(subElement, this, this.props);
-		    Thread eventArmThread = new Thread(eventArm);
+		    eventArmThread = new Thread(eventArm);
+		    eventArmThread.setName("eventArm Thread");
 		     eventArmThread.start();
 			    System.out.println("******************* EVENT ARM THREAD JOINED SO CAN EXIT");
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
 		    networkArm = new NetworkArm(subElement);
+		    
    		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
 		    waveFormArm = new WaveFormArm(subElement, networkArm, this);
-		    Thread waveFormArmThread = new Thread(waveFormArm);
+		    waveFormArmThread = new Thread(waveFormArm);
+		    waveFormArmThread.setName("waveFormArm Thread");
+		    // Thread.sleep(100000);
 		    waveFormArmThread.start();
-		 	   System.out.println("EXITRING AS THE WAEFORM ARM THREAD RETURNED");
+		    //   System.out.println("EXITRING AS THE WAEFORM ARM THREAD RETURNED");
 		} else {
 		logger.debug("process "+subElement.getTagName());
 		    
@@ -220,7 +224,19 @@ public class Start implements SodExceptionListener {
 	    start.init();
             logger.info("Start start()");
 	    setProperties(props);
-	    start.start();
+	    start.startA();
+	    eventArmThread.join();
+	    waveFormArmThread.join();
+	    getEventQueue().closeDatabase();
+	    System.out.println("After closing the database of eventQueue");
+	    //Start starta = new Start(null);
+	    //starta.getThreadGroup().list();
+	    //System.out.println("ACTIVE COUNT AFTER EVERYTHING IS CLOSED "+Thread.activeCount());
+	    //Thread.sleep(10000);
+	    // starta.getThreadGroup().list();
+	    System.out.println("ACTIVE COUNT AFTER sleep EVERYTHING IS CLOSED "+Thread.activeCount());
+	    System.out.println("Did not track the thread bug yet. so using System.exit(0)");
+	    System.exit(0);
 	} catch(Exception e) {
 	    e.printStackTrace();
 	    if (e instanceof WrappedException) {
@@ -288,5 +304,9 @@ public class Start implements SodExceptionListener {
 
     static Category logger = 
         Category.getInstance(Start.class.getName());
+
+    static Thread waveFormArmThread;
+    
+    static Thread eventArmThread;
 
 }// Start
