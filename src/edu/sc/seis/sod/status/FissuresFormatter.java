@@ -5,6 +5,7 @@
  */
 package edu.sc.seis.sod.status;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.display.ChoiceDecimalFormat;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 
@@ -70,8 +72,7 @@ public class FissuresFormatter {
     }
 
     public static String formatNetworkYear(NetworkId id) {
-        return id.network_code
-                + formatYear(new MicroSecondDate(id.begin_time));
+        return id.network_code + formatYear(new MicroSecondDate(id.begin_time));
     }
 
     public static String networkName(NetworkAccess net) {
@@ -189,7 +190,7 @@ public class FissuresFormatter {
 
     public static String formatDate(Date d) {
         synchronized(longFormat) {
-        return longFormat.format(d);
+            return longFormat.format(d);
         }
     }
 
@@ -199,7 +200,7 @@ public class FissuresFormatter {
 
     public static String formatDateForFile(Date d) {
         synchronized(longFileFormat) {
-        return longFileFormat.format(d);
+            return longFileFormat.format(d);
         }
     }
 
@@ -213,16 +214,16 @@ public class FissuresFormatter {
 
     public static String fancyFormat(Date d) {
         synchronized(fancyFormat) {
-        return fancyFormat.format(d);
+            return fancyFormat.format(d);
         }
     }
-    
+
     public static String formatYear(Date d) {
         synchronized(yearDateFormat) {
             return yearDateFormat.format(d);
         }
     }
-    
+
     public static String formatYMD(Date d) {
         synchronized(ymdDateFormat) {
             return ymdDateFormat.format(d);
@@ -247,7 +248,7 @@ public class FissuresFormatter {
     }
 
     public static SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    
+
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 
     public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
@@ -264,4 +265,20 @@ public class FissuresFormatter {
     }
 
     public static ParseRegions pr = ParseRegions.getInstance();
+
+    public static String formatDistance(QuantityImpl impl) {
+        synchronized(distFormat) {
+            return UnitDisplayUtil.formatQuantityImpl(impl, distFormat);
+        }
+    }
+
+    public static String formatDepth(QuantityImpl impl) {
+        synchronized(depthFormat) {
+            return UnitDisplayUtil.formatQuantityImpl(impl, depthFormat);
+        }
+    }
+
+    private static NumberFormat distFormat = ChoiceDecimalFormat.createTomStyleA();
+
+    private static NumberFormat depthFormat = ChoiceDecimalFormat.createTomStyleB();
 }
