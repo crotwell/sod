@@ -13,6 +13,8 @@ import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
@@ -69,16 +71,28 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
 
 
 
-    private class MapImgSrc extends MapEventStatus implements GenericTemplate{
-
+    private class MapImgSrc implements GenericTemplate{
         public MapImgSrc(Element el){
-            super(el);
+            String mapFileLoc = MapEventStatus.getLocation(el);
+            synchronized(elementsToMaps){
+                if(elementsToMaps.containsKey(mapFileLoc)){
+                    map = (MapEventStatus)elementsToMaps.get(mapFileLoc);
+                }else{
+                    map = new MapEventStatus(el);
+                    elementsToMaps.put(mapFileLoc, map);
+                }
+            }
         }
 
         public String getResult(){
-            return SodUtil.getRelativePath(getOutputDirectory().toString() + '/' + getFilename(), fileLoc, "/");
+            String myloc = getOutputDirectory().toString() + '/' + getFilename();
+            return SodUtil.getRelativePath(myloc, map.getLocation(), "/");
         }
+
+        private MapEventStatus map;
     }
+
+    private static Map elementsToMaps = new HashMap();
 
     public void update(EventChannelPair ecp) {
         write();
