@@ -11,7 +11,7 @@ import edu.iris.Fissures.*;
 
 
 public class EventStationNOT 
-    extends  NetworkLogicalSubsetter 
+    extends  WaveFormLogicalSubsetter 
     implements EventStationSubsetter {
     
     public EventStationNOT (Element config) throws ConfigurationException {
