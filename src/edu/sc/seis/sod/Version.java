@@ -46,8 +46,8 @@ public class Version{
 
     public static String getCVSVersion() { return cvsversion; }
 
-    private static String cvsversion = "$Revision: 9198 $";
-    private static String datetime = "$Date: 2004-06-16 17:01:06 -0400 (Wed, 16 Jun 2004) $";
+    private static String cvsversion = "$Revision: 9199 $";
+    private static String datetime = "$Date: 2004-06-16 17:17:03 -0400 (Wed, 16 Jun 2004) $";
     private static String state = "$State$";
 
     //versionsToDate stores all of the versions that have been released,
@@ -60,12 +60,14 @@ public class Version{
       {"2.0beta3", "true"},
       {"2.0beta4", "true"},  //suspended pairs, new channels
       {"2.0beta5", "false"},  //small bugfixes
-      {"2.0beta6", "false"}   //even smaller bugfixes
+      {"2.0beta6", "false"},   //even smaller bugfixes
+      {"2.0beta7", "false"}   //current internal version
     };
 
 //    public static String[][] versionsToDate = {
 //        {"2.0beta1", "true"}
 //    };
 }
+
 
 
