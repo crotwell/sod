@@ -12,43 +12,69 @@
          <name>edu.sc.seis.sod.waveformarm.threads</name>
          <value>4</value>
 </property>
+
+<!-- default is sodDatabase -->
 <property>
           <name>edu.sc.seis.sod.databasename</name>
           <value>finaltest</value>
 </property>
+
+<!-- needed only for postgres,
+  default is sod -->
 <property>
           <name>edu.sc.seis.sod.username</name>
           <value>telukutl</value>
 </property>
+
+<!-- postgres or hsqldb
+          <value>edu.sc.seis.sod.database.PostgresDbManager</value>
+          <value>edu.sc.seis.sod.database.HSQLDbManager</value>
+-->
 <property>
           <name>edu.sc.seis.sod.databasetype</name>
           <value>edu.sc.seis.sod.database.PostgresDbManager</value>
 </property>
+
+<!-- atleastonce or atmostonce -->
 <property>
           <name>edu.sc.seis.sod.persistencetype</name>
           <value>atleastonce</value>
 </property>
 
+<!-- number of days to get events per request to eventFinder -->
 <property>
           <name>edu.sc.seis.sod.daystoincrement</name>
           <value>1</value>
 </property>
+
+<!-- removes database, both hsql and postgres, if it exists at startup -->
 <property>
           <name>edu.sc.seis.sod.database.remove</name>
           <value>false</value>
 </property>
+
+<!-- how frequently sod updates its list of networks/channels, units are ??? -->
 <property> 
           <name>edu.sc.seis.sod.database.eventRefreshInterval</name>
           <value>100000</value>
 </property>
+
+<!-- only at startup, if events exist in database, successful or failed, 
+whether to try and reprocess. For example if require origin in a 
+particular catalog, may need to wait until it exists in server. -->
 <property>
           <name>edu.sc.seis.sod.database.reopenEvents</name>
           <value>false</value>
 </property>
+
+<!-- ??? -->
 <property>
           <name>edu.sc.seis.sod.database.quitTime</name>
           <value>-1</value>
 </property>
+
+<!-- go back and reask server for events that may have appeared in server
+after this was first run. -->
 <property>
           <name>edu.sc.seis.sod.database.getNewEvents</name>
           <value>true</value>
