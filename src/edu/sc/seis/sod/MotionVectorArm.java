@@ -413,15 +413,15 @@ public class MotionVectorArm implements Subsetter{
         }
     }
 
-    private EventChannelGroupSubsetter eventChannelGroup = new NullEventChannelSubsetter();
+    private EventChannelGroupSubsetter eventChannelGroup = new PassEventChannel();
 
     private ChannelGroupRequestGenerator requestGenerator;
 
-    private ChannelGroupRequestSubsetter request = new NullRequestSubsetter();
+    private ChannelGroupRequestSubsetter request = new PassRequest();
 
     private SeismogramDCLocator dcLocator;
 
-    private ChannelGroupAvailableDataSubsetter availData = new NullAvailableDataSubsetter();
+    private ChannelGroupAvailableDataSubsetter availData = new PassAvailableData();
 
     private LinkedList processes = new LinkedList();
 
