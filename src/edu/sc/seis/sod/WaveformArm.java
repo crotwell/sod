@@ -183,7 +183,7 @@ public class WaveformArm implements Runnable {
                 channels[i] = chans[i].getChannel();
             }
             LinkedList failures = new LinkedList();
-            ChannelGroup[] chanGroups = ChannelGroup.group(channels, failures);
+            ChannelGroup[] chanGroups = channelGrouper.group(channels, failures);
             Iterator it = failures.iterator();
             while(it.hasNext()) {
                 Channel failchan = (Channel)it.next();
@@ -266,7 +266,7 @@ public class WaveformArm implements Runnable {
     public EventChannelGroupPair getEventChannelGroupPair(EventChannelPair ecp) {
         try {
             Channel[] chans = evChanStatus.getAllChansForSite(ecp.getPairId());
-            ChannelGroup[] groups = ChannelGroup.group(chans, new ArrayList());
+            ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
             for (int i = 0; i < groups.length; i++) {
                 if(groups[i].contains(ecp.getChannel())){
@@ -688,6 +688,7 @@ public class WaveformArm implements Runnable {
     private JDBCEventChannelStatus evChanStatus;
     private JDBCEventChannelRetry eventRetryTable;
 
+	private ChannelGrouper channelGrouper = new ChannelGrouper();
     private List usedPairGroups = new ArrayList();
 
     private double retryPercentage = .02;//2 percent of the pool will be
