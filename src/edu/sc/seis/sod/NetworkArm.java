@@ -61,24 +61,85 @@ public class NetworkArm {
 		    continue;
 		}
 
-		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.networkArm");
-		if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)  networkFinderSubsetter = (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
-		else if(sodElement instanceof NetworkIdSubsetter) { 
-		    networkIdSubsetter = (edu.sc.seis.sod.NetworkIdSubsetter)sodElement;
-		} else if(sodElement instanceof NetworkAttrSubsetter) {
-
-		    networkAttrSubsetter = (NetworkAttrSubsetter)sodElement;
-		} else if(sodElement instanceof StationIdSubsetter)stationIdSubsetter = (StationIdSubsetter)sodElement;
-		else if(sodElement instanceof StationSubsetter) stationSubsetter = (StationSubsetter)sodElement;
-		else if(sodElement instanceof SiteIdSubsetter) siteIdSubsetter = (SiteIdSubsetter)sodElement;
-		else if(sodElement instanceof SiteSubsetter) siteSubsetter = (SiteSubsetter)sodElement;
-		else if(sodElement instanceof ChannelIdSubsetter) channelIdSubsetter = (ChannelIdSubsetter)sodElement;
-		else if(sodElement instanceof ChannelSubsetter) channelSubsetter = (ChannelSubsetter)sodElement;
-		else if(sodElement instanceof NetworkArmProcess) networkArmProcess = (NetworkArmProcess)sodElement;
-
+		Object sodElement = 
+		    SodUtil.load((Element)node,
+				 "edu.sc.seis.sod.subsetter.networkArm");
+		loadConfigElement(sodElement);
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
+    }
 
+    void loadConfigElement(Object sodElement) throws ConfigurationException {
+	if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {
+	    networkFinderSubsetter = 
+		(edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
+	} else if(sodElement instanceof NetworkIdSubsetter) { 
+	    if (networkIdSubsetter instanceof NullNetworkIdSubsetter ) {
+		networkIdSubsetter = (NetworkIdSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one NetworkIdSubsetter is in the configuration file: "+sodElement);
+	    } // end of else
+	} else if(sodElement instanceof NetworkAttrSubsetter) {
+	    if (networkAttrSubsetter instanceof NullNetworkAttrSubsetter ) {
+		networkAttrSubsetter = (NetworkAttrSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one NetworkAttrSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+	    
+	} else if (sodElement instanceof StationIdSubsetter) {
+	    if ( stationIdSubsetter instanceof NullStationIdSubsetter ) {
+		stationIdSubsetter = (StationIdSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one StationIdSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+	    
+	} else if(sodElement instanceof StationSubsetter) {
+	    if ( stationSubsetter instanceof NullStationSubsetter ) {
+		stationSubsetter = (StationSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one StationSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+
+	} else if(sodElement instanceof SiteIdSubsetter) {
+	    if ( siteIdSubsetter instanceof NullSiteIdSubsetter ) {
+		siteIdSubsetter = (SiteIdSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one SiteIdSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+
+	} else if(sodElement instanceof SiteSubsetter) {
+	    if ( siteSubsetter instanceof NullSiteSubsetter ) {
+		siteSubsetter = (SiteSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one SiteSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+
+	} else if(sodElement instanceof ChannelIdSubsetter) {
+	    if ( channelIdSubsetter instanceof NullChannelIdSubsetter ) {
+		channelIdSubsetter = (ChannelIdSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one ChannelIdSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+
+	} else if(sodElement instanceof ChannelSubsetter) {
+	    if ( channelSubsetter instanceof NullChannelSubsetter ) {
+		channelSubsetter = (ChannelSubsetter)sodElement;
+	    } else {
+		throw new ConfigurationException("More than one ChannelSubsetter is in the configuration file: "+sodElement);			
+	    } // end of else
+
+	} else if(sodElement instanceof NetworkArmProcess) {
+	    if ( networkArmProcess[0] instanceof NullNetworkProcess) {
+		networkArmProcess[0] = (NetworkArmProcess)sodElement;
+	    } else {
+		// must already be a process, add to array
+		NetworkArmProcess[] tmp = 
+		    new NetworkArmProcess[networkArmProcess.length+1];
+		System.arraycopy(networkArmProcess, 0, tmp, 0, networkArmProcess.length);
+		tmp[tmp.length-1] = (NetworkArmProcess)sodElement;
+		networkArmProcess = tmp;
+	    } // end of else
+	}
     }
 
     /*
@@ -103,14 +164,14 @@ public class NetworkArm {
 	    if (allNets[counter] != null) {
 		 
 	    
-	    NetworkAttr attr = allNets[counter].get_attributes();
-	    networkIds[counter] = attr.get_id();
-	    if(networkIdSubsetter.accept(networkIds[counter], null)) {
-		handleNetworkAttrSubsetter(allNets[counter], attr);
+		NetworkAttr attr = allNets[counter].get_attributes();
+		networkIds[counter] = attr.get_id();
+		if(networkIdSubsetter.accept(networkIds[counter], null)) {
+		    handleNetworkAttrSubsetter(allNets[counter], attr);
 	
-	    } else {
-		failure.info("Fail "+attr.get_code());
-	    } // end of else
+		} else {
+		    failure.info("Fail "+attr.get_code());
+		} // end of else
 
 	    } // end of if (allNets[counter] != null)
 	    
@@ -155,9 +216,9 @@ public class NetworkArm {
     public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station) throws Exception{
 	try {
 	     
-	if(stationIdSubsetter.accept(station.get_id(), null)) {
-	    handleStationSubsetter(networkAccess, station); 
-	} else {
+	    if(stationIdSubsetter.accept(station.get_id(), null)) {
+		handleStationSubsetter(networkAccess, station); 
+	    } else {
 		failure.info("Fail StationId"+station.get_code());
 	    }
 	} catch (org.omg.CORBA.UNKNOWN e) {
@@ -177,14 +238,14 @@ public class NetworkArm {
     public void handleStationSubsetter(NetworkAccess networkAccess, Station station) throws Exception{
 	
 	if(stationSubsetter.accept(networkAccess, station, null)) {
-        Channel[] channels = null;
-        try {
-            channels = 
-                networkAccess.retrieve_for_station(station.get_id());
-        } catch (org.omg.CORBA.UNKNOWN e) {
-            logger.warn("Caught an UNKNOWN station id ="+StationIdUtil.toString(station.get_id()), e);
-            throw e;
-        } // end of try-catch
+	    Channel[] channels = null;
+	    try {
+		channels = 
+		    networkAccess.retrieve_for_station(station.get_id());
+	    } catch (org.omg.CORBA.UNKNOWN e) {
+		logger.warn("Caught an UNKNOWN station id ="+StationIdUtil.toString(station.get_id()), e);
+		throw e;
+	    } // end of try-catch
         
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
 		handleSiteIdSubsetter(networkAccess, channels[subCounter]);
@@ -192,8 +253,8 @@ public class NetworkArm {
 
 	    }
 	} else {
-		failure.info("Fail Station"+station.get_code());
-	    }
+	    failure.info("Fail Station"+station.get_code());
+	}
     }
 				       
     /**
@@ -208,8 +269,8 @@ public class NetworkArm {
 	if(siteIdSubsetter.accept(channel.my_site.get_id(), null)) {
 	    handleSiteSubsetter(networkAccess, channel);
 	} else {
-		failure.info("Fail SiteId "+SiteIdUtil.toString(channel.my_site.get_id()));
-	    }
+	    failure.info("Fail SiteId "+SiteIdUtil.toString(channel.my_site.get_id()));
+	}
     }
 
     /**
@@ -224,8 +285,8 @@ public class NetworkArm {
 	if(siteSubsetter.accept(networkAccess, channel.my_site, null)) {
 	    handleChannelIdSubsetter(networkAccess, channel);
 	} else {
-		failure.info("Fail Site "+SiteIdUtil.toString(channel.my_site.get_id()));
-	    }
+	    failure.info("Fail Site "+SiteIdUtil.toString(channel.my_site.get_id()));
+	}
     }
 
     /**
@@ -240,8 +301,8 @@ public class NetworkArm {
 	if(channelIdSubsetter.accept(channel.get_id(), null)) {
 	    handleChannelSubsetter(networkAccess, channel);
 	} else {
-		failure.info("Fail ChannelId"+ChannelIdUtil.toStringNoDates(channel.get_id()));
-	    }
+	    failure.info("Fail ChannelId"+ChannelIdUtil.toStringNoDates(channel.get_id()));
+	}
        
     }
     
@@ -257,8 +318,8 @@ public class NetworkArm {
 	if(channelSubsetter.accept(networkAccess, channel, null)) {
 	    handleNetworkArmProcess(networkAccess, channel);
 	} else {
-		failure.info("Fail Channel "+ChannelIdUtil.toStringNoDates(channel.get_id()));
-	    }
+	    failure.info("Fail Channel "+ChannelIdUtil.toStringNoDates(channel.get_id()));
+	}
     }
 
     /**
@@ -268,9 +329,11 @@ public class NetworkArm {
      * @param channel a <code>Channel</code> value
      * @exception Exception if an error occurs
      */
-    public void handleNetworkArmProcess(NetworkAccess networkAccess, Channel channel) throws Exception{
-	networkArmProcess.process(networkAccess, channel, null);
-
+    public void handleNetworkArmProcess(NetworkAccess networkAccess, 
+					Channel channel) throws Exception{
+	for ( int i=0; i<networkArmProcess.length; i++) {
+	    networkArmProcess[i].process(networkAccess, channel, null);
+	} // end of for ()
     }
 
     
@@ -337,9 +400,9 @@ public class NetworkArm {
 								      networkFinderSubsetter.getDNSName());
 
 
-       //if the networktimeconfig is null or
-       //at every time of restart or startup 
-       //get the networks over the net.
+	//if the networktimeconfig is null or
+	//at every time of restart or startup 
+	//get the networks over the net.
 	if(databaseTime == null || lastDate == null) return false;
 	if(refreshInterval == null) return true;
 	
@@ -483,12 +546,12 @@ public class NetworkArm {
 		
 		if(siteIdSubsetter.accept(channels[subCounter].my_site.get_id(), null)) {
 		    if(siteSubsetter.accept(networkAccess, channels[subCounter].my_site, null)) {
-		// 	int addFlag = networkDatabase.getSiteDbId(stationDbObject,
-// 								  channels[subCounter].my_site);
-// 			if(addFlag != -1) {
-// 			    if(!arrayList.contains
-// 			    continue;
-// 			}
+			// 	int addFlag = networkDatabase.getSiteDbId(stationDbObject,
+			// 								  channels[subCounter].my_site);
+			// 			if(addFlag != -1) {
+			// 			    if(!arrayList.contains
+			// 			    continue;
+			// 			}
 			int dbid = networkDatabase.putSite(stationDbObject,
 							   channels[subCounter].my_site);
 			SiteDbObject siteDbObject = new SiteDbObject(dbid,
@@ -587,7 +650,9 @@ public class NetworkArm {
     private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
     private ChannelIdSubsetter channelIdSubsetter = new NullChannelIdSubsetter();
     private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
-    private NetworkArmProcess networkArmProcess = new NullNetworkProcess();
+    private NetworkArmProcess[] networkArmProcess = {
+	new NullNetworkProcess() 
+    };
 
     private edu.iris.Fissures.IfNetwork.NetworkFinder finder = null;
     private NetworkId[] networkIds; 
@@ -607,4 +672,4 @@ public class NetworkArm {
     static Category failure = Category.getInstance(NetworkArm.class.getName()+".failure");
     
     
-    }// NetworkArm
+}// NetworkArm
