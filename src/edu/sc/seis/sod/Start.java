@@ -284,7 +284,7 @@ public class Start implements SodExceptionListener {
 
     public static boolean GET_NEW_EVENTS = false;
 
-    public static int REFRESH_INTERVAL = 30;
+    public static int REFRESH_INTERVAL = 600;
 
     private static Properties props = null;
 
