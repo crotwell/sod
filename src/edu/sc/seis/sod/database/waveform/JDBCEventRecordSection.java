@@ -22,13 +22,12 @@ public class JDBCEventRecordSection extends SodJDBC {
         String createStmt = "CREATE TABLE "
                 + tableName
                 + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
-        String insertStmt = "INSERT INTO "
-                + tableName
+        String insertStmt = "INSERT INTO " + tableName
                 + "(recSecId, eventid, imageName) VALUES (?, ?, ?)";
         String getRecSecIdStmt = "SELECT recSecId FROM " + tableName
                 + " WHERE eventid=? AND imageName=?";
-        String getBestImageforEventStmt = "SELECT imageName FROM " + tableName
-                + " WHERE eventid=?";
+        String getImageForEventStmt = "SELECT imageName, recSecId FROM "
+                + tableName + " WHERE eventid=?";
         String getImageforEventChannelStmt = "SELECT imageName FROM "
                 + tableName + " eventRecSec," + recChannelTableName
                 + " recSecChannel"
@@ -42,14 +41,13 @@ public class JDBCEventRecordSection extends SodJDBC {
         }
         insert = conn.prepareStatement(insertStmt);
         getRecSecId = conn.prepareStatement(getRecSecIdStmt);
-        getBestImageforEvent = conn.prepareStatement(getBestImageforEventStmt);
+        getImageForEvent = conn.prepareStatement(getImageForEventStmt);
         getImageforEventChannel = conn.prepareStatement(getImageforEventChannelStmt);
         imageNameExists = conn.prepareStatement(imageNameExistsStmt);
         seq = new JDBCSequence(conn, "RecordSectionSeq");
     }
 
-    public int insert(int eventid, String imageName)
-            throws SQLException {
+    public int insert(int eventid, String imageName) throws SQLException {
         int recSecId = seq.next();
         insert.setInt(1, recSecId);
         insert.setInt(2, eventid);
@@ -58,62 +56,50 @@ public class JDBCEventRecordSection extends SodJDBC {
         return recSecId;
     }
 
-    public String getBestImageforEvent(int eventid) throws SQLException {
-        getBestImageforEvent.setInt(1, eventid);
-        try {
-            ResultSet rs = getBestImageforEvent.executeQuery();
-            rs.next();
-            return rs.getString(1);
-        } catch(SQLException e) {
-            throw new RuntimeException("Running the SQL statement"
-                    + getBestImageforEvent.toString(), e);
-        }
+    public String getImageForEvent(int eventid) throws SQLException {
+        return executeGetImageQuery(eventid).getString("imageName");
+    }
+
+    public int getRecSecId(int eventId) throws SQLException {
+        return executeGetImageQuery(eventId).getInt("recSecId");
+    }
+
+    public ResultSet executeGetImageQuery(int eventid) throws SQLException {
+        getImageForEvent.setInt(1, eventid);
+        ResultSet rs = getImageForEvent.executeQuery();
+        rs.next();
+        return rs;
     }
 
     public String getImageforEventChannel(int eventid, int channelid)
             throws SQLException {
         getImageforEventChannel.setInt(1, eventid);
         getImageforEventChannel.setInt(2, channelid);
-        try {
-            ResultSet rs = getImageforEventChannel.executeQuery();
-            rs.next();
-            return rs.getString(1);
-        } catch(SQLException e) {
-            throw new RuntimeException("Running the SQL statement "
-                    + getImageforEventChannel.toString(), e);
-        }
+        ResultSet rs = getImageforEventChannel.executeQuery();
+        rs.next();
+        return rs.getString(1);
     }
 
     public int getRecSecId(int eventid, String fileName) throws SQLException {
         getRecSecId.setInt(1, eventid);
         getRecSecId.setString(2, fileName);
-        try {
-            ResultSet rs = getRecSecId.executeQuery();
-            rs.next();
-            return rs.getInt(1);
-        } catch(SQLException e) {
-            throw new RuntimeException("Running the SQL statement"
-                    + getRecSecId.toString(), e);
-        }
+        ResultSet rs = getRecSecId.executeQuery();
+        rs.next();
+        return rs.getInt(1);
     }
 
     public boolean imageExists(int eventid, String imageName)
             throws SQLException {
         imageNameExists.setInt(1, eventid);
         imageNameExists.setString(2, imageName);
-        try {
-            ResultSet rs = imageNameExists.executeQuery();
-            rs.next();
-            int count = rs.getInt(1);
-            if(count != 0) { return true; }
-        } catch(SQLException e) {
-            throw new RuntimeException("Running the SQL statement "
-                    + imageNameExists.toString(), e);
-        }
+        ResultSet rs = imageNameExists.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+        if(count != 0) { return true; }
         return false;
     }
 
-    private PreparedStatement getBestImageforEvent, insert,
+    private PreparedStatement getImageForEvent, insert,
             getImageforEventChannel, imageNameExists, getRecSecId;
 
     private JDBCSequence seq;
