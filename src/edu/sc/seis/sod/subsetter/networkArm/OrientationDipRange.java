@@ -9,7 +9,7 @@ import edu.iris.Fissures.*;
 
 
 public class OrientationDipRange 
-        implements ChannelSubsetter {
+    extends RangeSubsetter implements ChannelSubsetter {
     
     /**
      * Creates a new <code>OrientationDipRange</code> instance.
@@ -18,6 +18,7 @@ public class OrientationDipRange
      * @exception ConfigurationException if an error occurs
      */
     public OrientationDipRange (Element config) throws ConfigurationException {
+	super(config);
     }
 
     /**
@@ -30,8 +31,9 @@ public class OrientationDipRange
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAccess network, Channel e,  CookieJar cookies) throws Exception{
-
-	return false;
+	if(e.an_orientation.dip >= getMinValue() && e.an_orientation.dip <= getMaxValue()) {
+	    return true;
+	} else return false;
     }
 
 }// OrientationDipRange

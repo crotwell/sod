@@ -26,6 +26,7 @@ public class StationName implements StationSubsetter {
      * @exception ConfigurationException if an error occurs
      */
     public StationName (Element config) throws ConfigurationException {
+	this.config = config;
     }
 
     /**
@@ -36,8 +37,9 @@ public class StationName implements StationSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
-
-	return true;
+	if(e.name.equals(SodUtil.getNestedText(config))) return true;
+	else return false;
     }
+    Element config;
 
 }// StationName

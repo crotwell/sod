@@ -5,6 +5,7 @@ import edu.sc.seis.sod.subsetter.*;
 
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
@@ -33,7 +34,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
      *
      * @param config an <code>Element</code> value
      */
-    public Sampling(Element config) {
+    public Sampling(Element config) throws ConfigurationException{
 
 		super(config);
 		NodeList children  = config.getChildNodes();
@@ -66,13 +67,22 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) {
+    public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) throws Exception{
 
 		System.out.println("The min Value is "+getMinValue());
 		System.out.println("The max Value is "+getMaxValue());
 		System.out.println("The unit of the interval is "+interval.getUnit());
-		System.out.println("The value of the interval is "+interval.getValue());	
-		return true;
+		System.out.println("The value of the interval is "+interval.getValue());
+		
+		SamplingImpl channelSampling = (SamplingImpl)channel.sampling_info;
+		SamplingImpl minSampling = new SamplingImpl((int)getMinValue(), interval.getTimeInterval());
+		SamplingImpl maxSampling = new SamplingImpl((int)getMaxValue(), interval.getTimeInterval());
+		
+		if(channelSampling.getFrequency().greaterThanEqual(minSampling.getFrequency()) &&
+		   channelSampling.getFrequency().lessThanEqual(maxSampling.getFrequency())) {
+		    return true;
+		} else return false;
+		    
 	}
 
 	Interval interval = null;

@@ -9,7 +9,7 @@ import edu.iris.Fissures.*;
 
 
 public class OrientationAzimuthRange 
-        implements ChannelSubsetter {
+    extends RangeSubsetter implements ChannelSubsetter {
     
     /**
      * Creates a new <code>OrientationAzimuthRange</code> instance.
@@ -17,7 +17,8 @@ public class OrientationAzimuthRange
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public OrientationAzimuthRange (Element config) throws ConfigurationException {
+    public OrientationAzimuthRange(Element config) throws ConfigurationException {
+	super(config);
     }
 
     /**
@@ -30,8 +31,15 @@ public class OrientationAzimuthRange
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAccess network, Channel e,  CookieJar cookies) throws Exception{
+	float minValue = getMinValue();
+	float maxValue = getMaxValue();
+	if(minValue > 180) minValue = minValue - 360;
+	if(maxValue > 180) maxValue = maxValue - 360;
 
-	return false;
+	if(e.an_orientation.azimuth >= minValue && e.an_orientation.azimuth <= maxValue) {
+	    return true;
+	} else return false;
+
     }
 
 }// OrientationAzimuthRange

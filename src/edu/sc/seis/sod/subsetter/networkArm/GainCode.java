@@ -21,9 +21,9 @@ public class GainCode implements ChannelIdSubsetter {
      * @param config an <code>Element</code> value
      */
     public GainCode(Element config) {
-
-		System.out.println("GainCode must be considered");
-	}
+	this.config = config;
+	System.out.println("GainCode must be considered");
+    }
 
     /**
      * Describe <code>accept</code> method here.
@@ -34,9 +34,10 @@ public class GainCode implements ChannelIdSubsetter {
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
 
-		return true;
+       	if(channelId.channel_code.charAt(1) == SodUtil.getNestedText(config).charAt(1)) return true;
+	else return false;
+	
+    }
 
-	}
-
-
+    private Element config;
 }//GainCode

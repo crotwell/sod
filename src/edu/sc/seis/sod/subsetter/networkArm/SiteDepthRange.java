@@ -20,7 +20,7 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class SiteDepthRange extends edu.sc.seis.sod.subsetter.UnitRange implements SiteSubsetter{
+public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange implements SiteSubsetter{
     /**
      * Creates a new <code>SiteDepthRange</code> instance.
      *
@@ -40,31 +40,12 @@ public class SiteDepthRange extends edu.sc.seis.sod.subsetter.UnitRange implemen
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Site site, CookieJar cookies) {
-	double actualDepth = site.my_location.depth.value;
-	if(actualDepth >= getMinDepth().value && actualDepth <= getMaxDepth().value) {
+	QuantityImpl actualDepth = (QuantityImpl)site.my_location.depth;
+	if(actualDepth.greaterThanEqual((QuantityImpl)getMinDepth()) && actualDepth.lessThanEqual((QuantityImpl)getMaxDepth())) {
 	    return true;
 	} else return false;
-
     }
 
-    /**
-     * Describe <code>getMinDepth</code> method here.
-     *
-     * @return a <code>Quantity</code> value
-     */
-    public Quantity getMinDepth() {
-	System.out.println("minimum depth is "+getUnitRange().min_value);
-	return new QuantityImpl(getUnitRange().min_value, getUnitRange().the_units);
-    }
-
-    /**
-     * Describe <code>getMaxDepth</code> method here.
-     *
-     * @return a <code>Quantity</code> value
-     */
-    public Quantity getMaxDepth() {
-	System.out.println("maximum depth is "+getUnitRange().max_value);
-	return new QuantityImpl(getUnitRange().max_value, getUnitRange().the_units);
-    }
+  
   
 }// SiteDepthRange

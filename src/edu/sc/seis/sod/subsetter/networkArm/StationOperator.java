@@ -26,6 +26,7 @@ public class StationOperator implements StationSubsetter {
      * @exception ConfigurationException if an error occurs
      */
     public StationOperator (Element config) throws ConfigurationException {
+	this.config = config;
     }
 
     /**
@@ -36,8 +37,11 @@ public class StationOperator implements StationSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
-
-	return true;
+	if(e.operator.equals(SodUtil.getNestedText(config))) return true;
+	else return false;
     }
 
+    Element config;
+
 }// StationOperator
+

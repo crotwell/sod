@@ -26,6 +26,7 @@ public class NetworkAttrName implements NetworkAttrSubsetter {
      * @exception ConfigurationException if an error occurs
      */
     public NetworkAttrName (Element config) throws ConfigurationException {
+	this.config = config;
     }
 
     /**
@@ -36,8 +37,9 @@ public class NetworkAttrName implements NetworkAttrSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAttr e,  CookieJar cookies) {
-
-	return true;
+	if(e.name.equals(SodUtil.getNestedText(config))) return true;
+	else return false;
     }
 
+    private Element config;
 }// NetworkAttrName

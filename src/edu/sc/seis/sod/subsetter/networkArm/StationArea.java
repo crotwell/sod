@@ -83,7 +83,7 @@ public class StationArea
 		    return true;
 		} else return false;
 	
-	}
+	} else if(area instanceof GlobalArea) return true;
 	else System.out.println("The area is null");
 	return true;
 	

@@ -21,9 +21,9 @@ public class BandCode implements ChannelIdSubsetter {
      * @param config an <code>Element</code> value
      */
     public BandCode(Element config) {
-
-		System.out.println("BandCode must be considered");
-	}
+	this.config = config;
+	System.out.println("BandCode must be considered");
+    }
 
     /**
      * Describe <code>accept</code> method here.
@@ -34,9 +34,11 @@ public class BandCode implements ChannelIdSubsetter {
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
 
-		return true;
+	if(channelId.channel_code.charAt(0) == SodUtil.getNestedText(config).charAt(0)) return true;
+	else return false;
 
-	}
-
+    }
+    
+    private Element config;
 
 }//BandCode
