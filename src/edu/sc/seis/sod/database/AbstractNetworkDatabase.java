@@ -155,8 +155,6 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	    int dbid = getNetworkDbId(networkAccess);
 	    if(dbid != -1) return dbid;
 	    NetworkId networkId = networkAccess.get_attributes().get_id();
-	    if(netPutStmt == null) System.out.println("netPUtStmt is null");
-	    else System.out.println("NetputStmt is not NULLL");
 	    netPutStmt.setString(1, serverName);
 	    netPutStmt.setString(2, serverDNS);
 	    netPutStmt.setString(3, networkId.network_code);
@@ -295,7 +293,6 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	try {
 	    int dbid = getChannelDbId(siteDbObject,
 				      channel);
-	    System.out.println("**** INSETING CHANNEL INTO DATABASE "+dbid);
 	    if(dbid != -1) return dbid;
 	    channelPutStmt.setInt(1, siteDbObject.getDbId());
 	    ChannelId channelId = channel.get_id();
@@ -383,7 +380,6 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	    ResultSet rs = getNetStmt.executeQuery();
 	    if(rs.next()) {
 		String ior = rs.getString("networkAccessIOR");
-		//System.out.println("ChannelId that is obtained is "+ior);
 		org.omg.CORBA.ORB orb = CommonAccess.getCommonAccess().getORB();
 		org.omg.CORBA.Object obj = orb.string_to_object(ior);
 		NetworkAccess networkAccess = NetworkAccessHelper.narrow(obj);
