@@ -195,7 +195,7 @@
 	</eventStationAND>
 
 	<fixedDataCenter>
-		<name>SCEPPeismogramDC</name>
+		<name>SCEPPSeismogramDC</name>
 		<dns>edu/sc/seis</dns>
 	</fixedDataCenter>
 	<localSeismogramArm>
@@ -217,9 +217,14 @@
 		<fullCoverage/>
 	</availableDataAND>
 
-	<sacFileProcessor>
+	<externalSeismogramProcess>
+		<classname>edu.sc.seis.sod.subsetter.waveFormArm.SacFileProcessor</classname>
 		<dataDirectory>SceppEvents</dataDirectory>
-	</sacFileProcessor>
+		<param1>param1</param1>
+		<param2>param2</param2>
+		<param3>param3</param3>
+		<param4>param4</param4>
+	</externalSeismogramProcess>
 	</localSeismogramArm>
    </waveFormArm>
 </sod>

@@ -72,8 +72,8 @@
 		<xsd:complexContent>
 			<xsd:extension base="processType">
 				<xsd:sequence>
-					<xsd:element name="class" type="xsd:string"/>
-					<xsd:any minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="classname" type="xsd:string"/>
+					<xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

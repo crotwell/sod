@@ -572,6 +572,9 @@
 	<xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
+	<xsd:element name="externalSeismogramProcess"
+	type="externalWaveformProcessType"
+	substitutionGroup="waveFormProcess"/>
 
 	<xsd:complexType name="localSeismogramArmType">
 		<xsd:complexContent>
