@@ -277,20 +277,29 @@
             <element name="eventDirLabel">
                 <ref name="eventLabel"/>
             </element>
+             <optional>
+            	<element name="id">
+            		<data type="string"/>
+            	</element>
+            </optional>
         </element>
     </define>
-    <define name="recordSectionDisplayGenerator">
-        <element name="recordSectionDisplayGenerator">
+   <define name="recordSectionDisplayGenerator">
+         <element name="recordSectionDisplayGenerator">
             <xsd:annotation>
                 <summary>Generates the recordsection display for each event</summary>
-                <description>Reads the dsml file created by the saveSeismogramToFile processor and
-                    generates the recordsection image file</description>
+                <description>Reads the dsml file created by the saveSeismogramToFile processor
+                and generates the recordsection image file</description>
                 <example>
-                    <recordSectionDisplayGenerator/>
+                    <recordSectionDisplayGenerator>
+                    	<id>RecordSection_</id>
+                    </recordSectionDisplayGenerator>
                 </example>
             </xsd:annotation>
-            <empty/>
-        </element>
+            <element name="id">
+            	<data type="string"/>
+            </element>
+         </element>
     </define>
     <define name="externalWaveformProcess">
         <element name="externalWaveformProcess">
