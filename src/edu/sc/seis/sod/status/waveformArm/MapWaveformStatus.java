@@ -88,10 +88,9 @@ public class MapWaveformStatus extends PeriodicAction {
     }
 
     private static void addStations(StationLayer sl, Station[] stations, int status){
-        sl.stationDataChanged(new StationDataEvent(null, stations));
+        sl.stationDataChanged(new StationDataEvent(stations));
         for (int j = 0; j < stations.length; j++) {
-            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(null,
-                                                                       stations[j],
+            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(stations[j],
                                                                        status));
         }
     }
