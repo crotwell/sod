@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//Norman Walsh//DTD DocBk XML V3.1.4//EN"
+                         "http://nwalsh.com/docbook/xml/3.1.4/db3xml.dtd">
+
+<book>
+<bookinfo>
+<title>The SOD Manual</title>
+<author><firstname>Philip</firstname><surname>Crotwell</surname></author>
+<copyright>
+<year>2002</year>
+<holder>University of South Carolina</holder>
+</copyright>
+</bookinfo>
+
+<chapter><title>Introduction</title>
+<para>Welcome to Sod, the Standing Order for Data. Sod aims to automate the
+process of selecting, subsetting, retrieving and processing of event based
+seismic data. It is based on the DHI subset of the Fissures framework. 
+Fissures itself is based on Corba, and almost all implementation work to date
+has been done in Java.</para>
+<para>Sod is currently event based. This assumption that requests will only
+be for data
+that is associated in some sense to a particular seismic event certainly does
+not cover all of seismology, but is without a doubt the largest catagory. A
+future version of Sod may allow non-event based requests.
+</para>
+<para>
+It is also not a GUI based application. The intention is that Sod will be a 
+long running, background process that assembles and does initial processing
+of seismic data that may be of interest. Certainly GUIs may be created that
+work with Sod, but Sod itself will not provide these GUI tools.
+</para>
+<para>
+The design of Sod breaks the definition of interesting data into three stages
+or arms. The first is the event arm, which deals solely with selecting events.
+Common criteria used to decide whether and event is interesting include
+magnitude, depth, and location. Note however that items such as distance from
+a station are not appropriate as they involve additional information that
+is not contained within the event.
+</para>
+<para>
+The second arm is the network arm. It deals with determining which seismic
+stations are interesting, and which channels at those stations are useful.   
+</chapter>
+
+<chapter><title>
+</book>
