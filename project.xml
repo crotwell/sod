@@ -91,10 +91,6 @@
             <url>http://www.jdom.org</url>
         </dependency>
         <dependency>
-            <id>jing</id>
-            <version>20030619</version>
-        </dependency>
-        <dependency>
             <id>openmap</id>
             <version>4.6</version>
         </dependency>
@@ -228,6 +224,10 @@
             <url>http://wwws.sun.com/software/xml/developers/multischema/</url>
         </dependency>
         <dependency>
+            <id>jing</id>
+            <version>20030619</version>
+        </dependency>
+        <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.4</version>
@@ -281,7 +281,7 @@
             </includes>
             <excludes>
                 <exclude>XMLConfigUtil.java</exclude>
-				<exclude>**/CoverageTestData.java</exclude>
+                <exclude>**/CoverageTestData.java</exclude>
             </excludes>
             <resources>
                 <resource>
