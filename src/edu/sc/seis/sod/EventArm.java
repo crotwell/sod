@@ -258,7 +258,7 @@ public class EventArm implements Runnable{
                                          Status.IN_PROG));
                 process(event);
                 change(event, Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                         Status.SUCCESS));
+                                         Status.IN_PROG));
             }else{
                 change(event, Status.get(Status.EVENT_ORIGIN_SUBSETTER,
                                          Status.REJECT));
