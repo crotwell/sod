@@ -46,10 +46,8 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
 		bwriter.close();
 	    } catch(Exception e) {
 	    
-		System.out.println("Exception caught while writing to file in PrintLineChannelProcess");
 	    }
 	} else {
-	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
 	} // end of else
 	
     }
