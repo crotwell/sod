@@ -177,16 +177,45 @@
         </element>
     </define>
     <define name="rMean">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Remove Mean</summary>
+                <description>Removes the mean of the seismograms.</description>
+                <example>
+                   <rMean/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="rMean">
             <empty/>
         </element>
     </define>
     <define name="rTrend">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Remove Trend</summary>
+                <description>Removes the trend of the seismograms.</description>
+                <example>
+                   <rTrend/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="rTrend">
             <empty/>
         </element>
     </define>
     <define name="taper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Apply a cosine taper.</summary>
+                <description>Applys a taper to the seismograms.</description>
+                <example>
+                   <taper>
+                       <width>.05</width>
+                   </taper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="taper">
             <optional>
                 <element name="width">
