@@ -293,6 +293,9 @@
                 <example>
                     <recordSectionDisplayGenerator>
                     	<id>RecordSection_</id>
+                    	<displayOption>BEST</displayOption>
+                    	<fileNameBase>recordSection</fileNameBase>
+                    	<numSeisPerRecordSection>10</numSeisPerRecordSection>
                     </recordSectionDisplayGenerator>
                 </example>
             </xsd:annotation>
