@@ -22,12 +22,22 @@
 <table>
 <tr id="title">
 <td>Id</td>
+<td>Begin Time</td>
+<td>Latitude</td>
+<td>Longitude</td>
+<td>Elevation</td>
+<td>Depth</td>
 <td>Status</td>
 </tr>
 <sites>
 <site>
 <tr>
 <td><a><attribute name="href"><siteCode/>-<beginTime>yyyyMMddHHmmss</beginTime>/channels.html</attribute><networkCode/>.<stationCode/>.<siteCode/></a></td>
+<td><beginTime/></td>
+<td><lat/></td>
+<td><lon/></td>
+<td><elevation/></td>
+<td><depth/></td>
 <td><status/></td>
 </tr>
 </site>

@@ -24,6 +24,7 @@
 <table>
 <tr id="title">
 <td>Id</td>
+<td>Begin Time</td>
 <td>Latitude</td>
 <td>Longitude</td>
 <td>Azimuth</td>
@@ -34,6 +35,7 @@
 <channel>
 <tr>
 <td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td><beginTime/></td>
 <td><lat/></td>
 <td><lon/></td>
 <td><azimuth/></td>
