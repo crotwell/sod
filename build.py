@@ -140,7 +140,7 @@ def buildExternalDist(proj, name):
     extras = [('scripts/tutorial.xml', 'examples/tutorial.xml'),
               ('scripts/weed.xml', 'examples/weed.xml'),
               ('scripts/legacyExecute.xml', 'examples/legacyExecute.xml'),
-              ('scripts/legacyExecuteMoVec.xml', 'examples/legacyExecuteMoVec.xml'),
+              ('scripts/legacyVectorExecute.xml', 'examples/legacyVectorExecute.xml'),
               ('scripts/realtime.xml', 'examples/realtime.xml'),
               ('scripts/breqfast.xml', 'examples/breqfast.xml'),
               ('site/generatedSite', 'docs')]
