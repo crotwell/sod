@@ -6,12 +6,9 @@
 
 package edu.sc.seis.sod.status;
 
+import edu.iris.Fissures.IfNetwork.*;
+
 import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.SiteId;
-import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.event.MagnitudeUtil;
@@ -50,6 +47,10 @@ public class FissuresFormatter {
         return StationIdUtil.toStringNoDates(id);
     }
 
+    public static String formatNetwork(StationId id) {
+        return NetworkIdUtil.toStringNoDates(id.network_id);
+    }
+
     public static String formatNetwork(NetworkId id) {
         return NetworkIdUtil.toStringNoDates(id);
     }
@@ -58,9 +59,16 @@ public class FissuresFormatter {
     }
 
     public static String networkName(NetworkAccess net) {
-        return net.get_attributes().name;
+        return networkName(net.get_attributes());
     }
 
+    public static String networkName(NetworkAttr net) {
+        return net.name;
+    }
+
+    public static String stationName(Station station) {
+        return station.name;
+    }
     public static String networkCodeYear(NetworkAccess net) {
         return net.get_attributes().get_code()+net.get_attributes().get_id().begin_time.date_time.substring(0, 4);
     }
