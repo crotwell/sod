@@ -179,7 +179,6 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
         dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
         bsd.add(new MemoryDataSetSeismogram[]{memDSS});
-        logger.debug("NOAMP amp range for "+ChannelIdUtil.toStringNoDates(channel.get_id())+" "+bsd.getAmpConfig().getAmp()+" "+bsd.getAmpConfig().getAmp(memDSS)+"  minmax="+memDSS.getCache()[0].getMinValue()+", "+memDSS.getCache()[0].getMaxValue());
 
         Origin origin = CacheEvent.extractOrigin(event);
         MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
