@@ -84,7 +84,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     }
                 });
         JMenuItem loadTutorial = new JMenuItem("Load Tutorial Config");
-        loadTutorial.addActionListener(new FileLoader("tutorial.xml"));
+        loadTutorial.addActionListener(tutorialLoader);
         fileMenu.add(loadTutorial);
         JMenuItem loadWeed = new JMenuItem("Load WEED Config");
         loadWeed.addActionListener(new FileLoader("weed.xml"));
@@ -97,7 +97,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     }
                 });
         frame.getContentPane().setLayout(new BorderLayout());
-        if(getDocument() != null){ loadGUI(); }
+        loadGUI();
     }
 
     private class FileLoader implements ActionListener{
@@ -118,7 +118,9 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     public void loadGUI(){
         Document doc = getDocument();
-        if(doc != null){
+        if(doc == null){
+            tutorialLoader.actionPerformed(null);
+        }else{
             frame.getContentPane().removeAll();
             if (tabs) {
                 JTabbedPane tabPane = new JTabbedPane();
@@ -152,6 +154,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 frame.getContentPane().add(new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
             }
         }
+
         frame.pack();
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
@@ -285,6 +288,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         System.out.println("Done editing.");
     }
 
+    private FileLoader tutorialLoader = new FileLoader("tutorial.xml");
     protected String frameName = "Simple XML Editor GUI";
     private boolean tabs = false;
     private JFrame frame;
