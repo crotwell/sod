@@ -30,8 +30,13 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                subsetter =
-                    (LocalSeismogramProcess) SodUtil.load((Element)node, "waveformArm");
+                Object obj = SodUtil.load((Element)node, "waveformArm");
+                if (obj instanceof LocalSeismogramProcess) {
+                    subsetter =
+                        (LocalSeismogramProcess) obj;
+                } else {
+                    throw new ConfigurationException("Object loaded is not an instance of LocalSeismogramProcess: "+obj.getClass().getName());
+                }
                 break;
             }
         }
