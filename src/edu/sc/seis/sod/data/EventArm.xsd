@@ -124,7 +124,7 @@
     <!-- BEGIN EventAttr -->
     
     <!-- This is the base abstract Type -->
-    <xsd:complexType name="eventAttrSubsetterType" abstract="true">
+    <xsd:complexType name="eventAttrType" abstract="true">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 Superclass for all subsetters that act on EventAttr objects. 
@@ -155,7 +155,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element ref="eventAttr" minOccurs="0" maxOccurs="unbounded">
                     </xsd:element>
@@ -185,7 +185,7 @@
         </xsd:annotation>
         
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element ref="eventAttr" minOccurs="0"
                     maxOccurs="unbounded"/>
@@ -214,7 +214,7 @@
         </xsd:annotation>
         
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element ref="eventAttr" minOccurs="2" maxOccurs="2"/>
                 </xsd:sequence>
@@ -240,7 +240,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element ref="eventAttr" minOccurs="1" maxOccurs="1"/>
                 </xsd:sequence>
@@ -265,7 +265,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
@@ -291,7 +291,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element name="value" type="flinnengdahlNumbers"/>
                 </xsd:sequence>
@@ -317,7 +317,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
-            <xsd:extension base="eventAttrSubsetterType">
+            <xsd:extension base="eventAttrType">
                 <xsd:sequence>
                     <xsd:element name="value" type="flinnengdahlNumbers"/>
                 </xsd:sequence>
@@ -635,7 +635,7 @@
     <xsd:element name="eventAttrName" type="eventAttrNameType" substitutionGroup="eventAttr"/>
     
     <!-- This element eventAttr is the base Abstract element -->
-    <xsd:element name="eventAttr" type="eventAttrSubsetterType" abstract="true"/>
+    <xsd:element name="eventAttr" type="eventAttrType" abstract="true"/>
     
     
     <!-- This element origin is the base Abstract element -->
