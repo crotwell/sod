@@ -19,23 +19,24 @@ public class TimeRangeEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
         DateEditor dateE = new DateEditor();
-        Box box = Box.createVerticalBox();
-        Box minRow = Box.createHorizontalBox();
-        box.add(minRow);
-        Box maxRow = Box.createHorizontalBox();
-        box.add(maxRow);
-
-        minRow.add(new JLabel("Min"));
+        Box box = Box.createHorizontalBox();
+        box.add(new JLabel("Start:"));
         Node node = XPathAPI.selectSingleNode(element, "min");
+        if(node == null){
+            node = XPathAPI.selectSingleNode(element, "startTime");
+        }
         Element minElement = (Element)node;
-        minRow.add(dateE.getGUI(minElement));
-        minRow.add(Box.createHorizontalGlue());
-
-        maxRow.add(new JLabel("Max"));
-        node = XPathAPI.selectSingleNode(element, "min");
+        box.add(Box.createHorizontalGlue());
+        box.add(dateE.getGUI(minElement));
+        box.add(Box.createHorizontalStrut(20));
+        box.add(new JLabel("End:"));
+        node = XPathAPI.selectSingleNode(element, "max");
+        if(node == null){
+            node = XPathAPI.selectSingleNode(element, "endTime");
+        }
         Element maxElement = (Element)node;
-        maxRow.add(dateE.getGUI(maxElement));
-        maxRow.add(Box.createHorizontalGlue());
+        box.add(dateE.getGUI(maxElement));
+        box.add(Box.createHorizontalGlue());
         return box;
     }
 }
