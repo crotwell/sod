@@ -11,8 +11,8 @@ log4j.appender.R.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 
 # use the Orbacus ORB
 #
-org.omg.CORBA.ORBClass=com.ooc.CORBA.ORB
-org.omg.CORBA.ORBSingletonClass=com.ooc.CORBA.ORBSingleton
+#org.omg.CORBA.ORBClass=com.ooc.CORBA.ORB
+#org.omg.CORBA.ORBSingletonClass=com.ooc.CORBA.ORBSingleton
 #
 # Orbacus specific configuration
 #
@@ -29,3 +29,4 @@ ooc.orb.oa.thread_pool=10
 #ooc.orb.service.NameService=corbaloc:iiop:piglet.seis.sc.edu:7771/NameService
 ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
 
+edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
