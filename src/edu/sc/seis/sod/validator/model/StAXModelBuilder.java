@@ -6,7 +6,15 @@
 package edu.sc.seis.sod.validator.model;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -14,7 +22,13 @@ import org.xml.sax.InputSource;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.validator.model.datatype.*;
+import edu.sc.seis.sod.validator.ModelWalker;
+import edu.sc.seis.sod.validator.model.datatype.AnyText;
+import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
+import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
+import edu.sc.seis.sod.validator.model.datatype.IntegerDatatype;
+import edu.sc.seis.sod.validator.model.datatype.NonnegativeIntegerDatatype;
+import edu.sc.seis.sod.validator.model.datatype.Token;
 
 public class StAXModelBuilder implements XMLStreamConstants {
 
@@ -162,13 +176,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 System.exit(0);
             }
         }
-        if(kids.size() == 0) {
-            return null;
-        }//Hopefully an attribute called
+        if(kids.size() == 0) { return null; }//Hopefully an attribute called
         // handleAll
-        if(kids.size() == 1) {
-            return (FormProvider)kids.get(0);
-        }
+        if(kids.size() == 1) { return (FormProvider)kids.get(0); }
         Group g = new Group(1, 1);
         Iterator it = kids.iterator();
         while(it.hasNext()) {
@@ -298,8 +308,13 @@ public class StAXModelBuilder implements XMLStreamConstants {
      */
     private FormProvider handleElement() throws XMLStreamException {
         String name = reader.getAttributeValue(0);
+        String ns = reader.getAttributeValue(null, "ns");
         nextTag();
         NamedElement result = new NamedElement(1, 1, name);
+        if(ns == null) {
+            ns = ModelWalker.getNamespaceFromAncestors(result);
+        }
+        result.setNamespace(ns);
         result.setAnnotation(handleAnn());
         result.setChild(handleAll());
         nextTag();
@@ -308,8 +323,13 @@ public class StAXModelBuilder implements XMLStreamConstants {
 
     private Object handleAttr() throws XMLStreamException {
         String name = reader.getAttributeValue(0);
+        String ns = reader.getAttributeValue(null, "ns");
         nextTag();
         Attribute result = new Attribute(1, 1, name);
+        if(ns == null) {
+            ns = ModelWalker.getNamespaceFromAncestors(result);
+        } //inherit ns from parents if there is no specified ns
+        result.setNamespace(ns);
         result.setAnnotation(handleAnn());
         FormProvider child = handleAll();
         if(child == null) {
@@ -436,9 +456,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new DoubleDatatype();
             } else if(type.equals("integer")) {
                 return new IntegerDatatype();
-            } else if(type.equals("nonNegativeInteger")) {
-                return new NonnegativeIntegerDatatype();
-            }
+            } else if(type.equals("nonNegativeInteger")) { return new NonnegativeIntegerDatatype(); }
             return new Token();
         }
         return null;
@@ -449,7 +467,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         String curLoc = definedGrammar.getLoc();
         return SodUtil.getAbsolutePath(curLoc, href);
     }
-
+    
     public Form getRoot() {
         return definedGrammar.getRoot();
     }

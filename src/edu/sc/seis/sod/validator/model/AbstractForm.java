@@ -1,62 +1,98 @@
 /**
  * AbstractForm.java
- *
+ * 
  * @author Charles Groves
  */
-
 package edu.sc.seis.sod.validator.model;
 
 public abstract class AbstractForm implements Form {
-    public AbstractForm(int min, int max){ this(min, max, null); }
 
-    public AbstractForm(int min, int max, Form parent){
+    public AbstractForm(int min, int max) {
+        this(min, max, null);
+    }
+
+    public AbstractForm(int min, int max, Form parent) {
         this.min = min;
         this.max = max;
         this.parent = parent;
         ann.setFormProvider(this);
     }
 
-    public boolean isAncestorOf(Form f) { return false; }
+    public boolean isAncestorOf(Form f) {
+        return false;
+    }
 
-    public Form getParent() { return parent; }
+    public Form getParent() {
+        return parent;
+    }
 
-    public int getMin() { return min; }
+    public int getMin() {
+        return min;
+    }
 
-    public int getMax() { return max;}
+    public int getMax() {
+        return max;
+    }
 
-    public void setMin(int min) { this.min = min; }
+    public void setMin(int min) {
+        this.min = min;
+    }
 
-    public Form getForm() { return this; }
+    public Form getForm() {
+        return this;
+    }
 
-    public void setMax(int max) { this.max = max; }
+    public void setMax(int max) {
+        this.max = max;
+    }
 
-    public boolean isFromDef() { return getDef() != null;}
+    public boolean isFromDef() {
+        return getDef() != null;
+    }
 
-    public Definition getDef() { return def; }
+    public Definition getDef() {
+        return def;
+    }
 
-    public Form deref(Form newParent, Definition def){
+    public Form deref(Form newParent, Definition def) {
         AbstractForm copy = (AbstractForm)copyWithNewParent(newParent);
         copy.def = def;
         return copy;
     }
 
-    public void setAnnotation(Annotation ann){
+    public void setAnnotation(Annotation ann) {
         this.ann = ann;
         ann.setFormProvider(this);
     }
 
-    public Annotation getAnnotation(){ return ann; }
+    public Annotation getAnnotation() {
+        return ann;
+    }
 
-    public String getXPath(){ return getParent().getXPath(); }
+    public void setNamespace(String ns) {
+        namespace = ns;
+    }
 
-    private Definition def;
-    private int min, max;
-    private Form parent;
-    private Annotation ann = new Annotation();
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public String getXPath() {
+        return getParent().getXPath();
+    }
+
     public void copyGutsOver(AbstractForm copy) {
         copy.setAnnotation(getAnnotation());
         copy.def = getDef();
-        
     }
-}
 
+    private Definition def;
+
+    private int min, max;
+
+    private Form parent;
+
+    private Annotation ann = new Annotation();
+
+    private String namespace;
+}

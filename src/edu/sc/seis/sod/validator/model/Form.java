@@ -33,6 +33,11 @@ public interface Form extends FormProvider{
     public Definition getDef();
 
     /**
+     * @return	the namespace of this form
+     */
+    public String getNamespace();
+    
+    /**
      * @return  true if the passed in Form is directly descended from this Form
      */
     public boolean isAncestorOf(Form f);
