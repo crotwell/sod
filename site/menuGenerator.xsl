@@ -2,12 +2,19 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
         <xsl:template name="menu">
                 <xsl:param name="currentPage"/>
+				<xsl:param name="base"/>
+				<xsl:param name="menu" select="'Tutorials'"/>
                 <div id="menu">
+					<xsl:for-each select="document('allPages.xml')/pages/menu">
+						<xsl:if test="@name = $menu">
                         <ul>
-                                <xsl:apply-templates select="document('allPages.xml')/pages/page" mode="menuGeneration">
+                                <xsl:apply-templates select="*" mode="menuGeneration">
                                         <xsl:with-param name="currentPage" select="$currentPage"/>
+                                        <xsl:with-param name="base" select="$base"/>
                                 </xsl:apply-templates>
                         </ul>
+						</xsl:if>
+					</xsl:for-each>
                 </div>
         </xsl:template>
         <xsl:template match="page" mode="menuGeneration">
@@ -26,5 +33,15 @@
                                 <xsl:value-of select="name/text()"/>
                         </a>
                 </li>
+        </xsl:template>
+        <xsl:template match="submenu" mode="menuGeneration">
+                <xsl:param name="currentPage"/>
+				<xsl:param name="base"/>
+                <ul class="indent">
+                                <xsl:apply-templates select="*" mode="menuGeneration">
+                                        <xsl:with-param name="currentPage" select="$currentPage"/>
+                                        <xsl:with-param name="base" select="$base"/>
+                                </xsl:apply-templates>
+                </ul>
         </xsl:template>
 </xsl:stylesheet>
