@@ -9,18 +9,12 @@ import java.io.*;
 import javax.swing.*;
 import org.w3c.dom.*;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfTemplate;
-import com.lowagie.text.pdf.PdfWriter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -33,7 +27,6 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-import java.beans.PropertyChangeListener;
 
 
 
