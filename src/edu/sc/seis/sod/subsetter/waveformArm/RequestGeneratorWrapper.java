@@ -23,9 +23,7 @@ public class RequestGeneratorWrapper implements ChannelGroupRequestGenerator  {
         for (int i = 0; i < nl.getLength(); i++) {
             if (nl.item(i) instanceof Element) {
                 Element e = (Element)nl.item(i);
-                System.out.println("child element 0 is "+e.getTagName());
                 Object o = SodUtil.load(e, "waveformArm");
-                System.out.println("load class "+o.getClass().getName());
                 this.requestGenerator = (RequestGenerator)o;
                 break;
             }
