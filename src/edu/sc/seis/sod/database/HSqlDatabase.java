@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.*;
 
 import org.hsqldb.*;
+import org.apache.log4j.*;
 import org.omg.CORBA.*;
 import org.omg.CORBA.portable.*;
 /**
@@ -53,7 +54,7 @@ public class HSqlDatabase extends AbstractDatabase{
 			
 		} catch(Exception e) {
 			
-			e.printStackTrace();
+		    logger.debug("table "+getTableName()+" is already created");
 		}
 	}
     public String getTableName() {
@@ -66,4 +67,8 @@ public class HSqlDatabase extends AbstractDatabase{
     
     private ConfigDatabase configDatabase;    
     
+    
+    static Category logger = 
+        Category.getInstance(HSqlDatabase.class.getName());
+
 }// HSqlDatabase

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.database;
 
 import java.sql.*;
 import org.hsqldb.*;
+import org.apache.log4j.*;
 /**
  * HSqlNetworkDb.java
  *
@@ -59,7 +60,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       
 	        
 	} catch(SQLException sqle) {
-	    sqle.printStackTrace();
+	    logger.debug("one or more network database tables are already created");
 	}
 
     }
@@ -68,4 +69,6 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
     }
     private ConfigDatabase configDatabase;
     
+    static Category logger = 
+        Category.getInstance(HSqlNetworkDb.class.getName());
 }// HSqlNetworkDb

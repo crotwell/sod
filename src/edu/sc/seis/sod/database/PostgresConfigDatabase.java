@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.sql.*;
 
-
+import org.apache.log4j.*;
 
 
 /**
@@ -37,7 +37,10 @@ public class PostgresConfigDatabase extends AbstractConfigDatabase{
 		System.out.println("Table timeconfig  is already created");
 	    }
 	} catch(Exception e) {
-	    e.printStackTrace();
+	    logger.debug("table "+tableName+" is already created");
 	}
     }
+
+    static Category logger = 
+        Category.getInstance(PostgresConfigDatabase.class.getName());
 }// PostgresConfigDatabase

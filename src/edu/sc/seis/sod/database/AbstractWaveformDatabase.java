@@ -4,6 +4,9 @@ import edu.iris.Fissures.model.*;
 
 import java.sql.*;
 import java.util.*;
+
+import org.apache.log4j.*;
+
 /**
  * AbstractWaveformDatabase.java
  *
@@ -665,5 +668,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     private PreparedStatement isChannelInfoIns;
 
      private PreparedStatement getIdsStmt; 
+
+    static Category logger = 
+        Category.getInstance(AbstractWaveformDatabase.class.getName());
     
 }// AbstractWaveformDatabase

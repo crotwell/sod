@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.database;
 
 import java.sql.*;
+import org.apache.log4j.*;
 
 /**
  * PostgresNetworkDb.java
@@ -63,7 +64,7 @@ public class PostgresNetworkDb extends AbstractNetworkDatabase{
 			       " status int)");
 			       
 	} catch(SQLException sqle) {
-	    sqle.printStackTrace();
+	    logger.debug("one or more of the network database tables are already created");
 	}
     }    
     
@@ -72,5 +73,7 @@ public class PostgresNetworkDb extends AbstractNetworkDatabase{
     }
     
     private ConfigDatabase configDatabase;
+    static Category logger = 
+        Category.getInstance(PostgresNetworkDb.class.getName());
     
 }// PostgresNetworkDb

@@ -8,7 +8,7 @@ import java.util.*;
 import java.sql.*;
 
 import org.hsqldb.*;
-
+import org.apache.log4j.*;
 
 /**
  * HSqlConfigDatabase.java
@@ -37,10 +37,13 @@ public class HSqlConfigDatabase extends AbstractConfigDatabase{
 		System.out.println("Table timeconfig  is already created");
 	    }
 	} catch(Exception e) {
-	    e.printStackTrace();
+	    logger.debug("table "+tableName+" is already created");
 	}
 	
 	
     }
+
+    static Category logger = 
+        Category.getInstance(HSqlConfigDatabase.class.getName());
  
 }// HSqlConfigDatabase

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.database;
 
 import java.sql.*;
 import org.hsqldb.*;
+import org.apache.log4j.*;
 
 /**
  * HSqlWaveformDb.java
@@ -54,8 +55,11 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 
 	    
 	} catch(SQLException sqle) {
-		sqle.printStackTrace();
+	    logger.debug("one or more tables of waveformdatabase are already created");
 	}
     }
+
+    static Category logger = 
+	Category.getInstance(HSqlWaveformDb.class.getName());
     
 }// HSqlWaveformDb

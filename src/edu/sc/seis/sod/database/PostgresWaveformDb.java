@@ -2,6 +2,8 @@ package edu.sc.seis.sod.database;
 
 import java.sql.*;
 
+import org.apache.log4j.*;
+
 /**
  * PostgresWaveformDb.java
  *
@@ -53,8 +55,11 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 			       " numretrys int, "+
 			       " reason VARCHAR)");
 	} catch(SQLException sqle) {
-	    sqle.printStackTrace();
+	    logger.debug("one or more tables of the waveform database are already created");
 	}
     }
+
+    static Category logger = 
+        Category.getInstance(PostgresWaveformDb.class.getName());
     
 }// PostgresWaveformDb

@@ -8,6 +8,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import java.sql.*;
 import java.util.*;
 import org.omg.CORBA.*;
+import org.apache.log4j.*;
 
 /**
  * AbstractNetworkDatabase.java
@@ -689,4 +690,6 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
     private PreparedStatement stationIdsStmt;
 
     private PreparedStatement siteIdsStmt;
+    static Category logger = 
+        Category.getInstance(AbstractNetworkDatabase.class.getName());
 }// AbstractNetworkDatabase

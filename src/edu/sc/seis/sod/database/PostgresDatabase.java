@@ -4,6 +4,9 @@ import edu.iris.Fissures.*;
 
 import java.util.Properties;
 import java.sql.*;
+import org.apache.log4j.*;
+
+
 
 public class PostgresDatabase extends AbstractDatabase {
     
@@ -33,8 +36,8 @@ public class PostgresDatabase extends AbstractDatabase {
 								   " eventAccess text)");
 				
 			} catch(SQLException sqle) {
-				sqle.printStackTrace();
-				System.out.println("The table "+getTableName()+" is already created ");
+			    
+				logger.debug("The table "+getTableName()+" is already created ");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();		
@@ -52,5 +55,8 @@ public class PostgresDatabase extends AbstractDatabase {
 	
 
 	private ConfigDatabase configDatabase;
+
+    static Category logger = 
+        Category.getInstance(PostgresDatabase.class.getName());
 	
 }
