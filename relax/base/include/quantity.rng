@@ -5,7 +5,7 @@
     <start combine="choice">
         <notAllowed/>
     </start>
-    <define name="quantity">
+    <define name="quantity" combine="choice">
         <interleave>
             <ref name="unit"/>
             <element name="value">
@@ -13,7 +13,7 @@
             </element>
         </interleave>
     </define>
-    <define name="time">
+    <define name="time" combine="choice">
         <interleave>
             <ref name="timeUnit"/>
             <element name="value">
@@ -21,9 +21,17 @@
             </element>
         </interleave>
     </define>
-    <define name="length">
+    <define name="length" combine="choice">
         <interleave>
             <ref name="lengthUnit"/>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
+    </define>
+    <define name="freq" combine="choice">
+        <interleave>
+            <ref name="freqUnit"/>
             <element name="value">
                 <data type="float"/>
             </element>
