@@ -9,16 +9,17 @@ package edu.sc.seis.sod.editor;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.border.TitledBorder;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 public class TimeRangeEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
         Box box = Box.createHorizontalBox();
+        box.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
         box.add(new JLabel("Start:"));
         Node node = XPathAPI.selectSingleNode(element, "min");
         if(node == null){
