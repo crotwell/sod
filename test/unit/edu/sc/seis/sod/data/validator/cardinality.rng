@@ -28,10 +28,10 @@
                     </element>
                 </oneOrMore>
                 <zeroOrMore>
-                    <element name="thisOne">
+                    <element name="thenAnotherOne">
                         <empty/>
                     </element>
-                    <element name="thenThisOne">
+                    <element name="finallyThisOne">
                         <empty/>
                     </element>
                 </zeroOrMore>
