@@ -28,8 +28,8 @@ public class SodFlag extends Flag {
 		int ampBorderWidth = bsd.get(BasicSeismogramDisplay.CENTER_LEFT).getWidth();
 		flagLoc = ampBorderWidth + relFlagLocation + bsd.getInsets().left;
 		int timeBorderHeight = bsd.get(BasicSeismogramDisplay.TOP_CENTER).getHeight();
-		flagY_bottom = bsd.getInsets().bottom;
-		flagY_top = bsd.getHeight()-timeBorderHeight-bsd.getInsets().top;
+		flagY_bottom = bsd.getHeight()-bsd.getInsets().bottom;
+		flagY_top = timeBorderHeight+bsd.getInsets().top;
 		return relFlagLocation;
 	}
 	public FlagData getFlagData() {
