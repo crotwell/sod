@@ -13,7 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -116,9 +117,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("sacFileProcessor", new SacFileEditor(this));
 
         TagChooser originTC = new TagChooser("origin", this);
-        Vector vector = originTC.getSubTypes();
-        for (int i = 0; i < vector.size(); i++) {
-            String tagName = (String)vector.get(i);
+        List subTypes = originTC.getSubTypes();
+        Iterator it = subTypes.iterator();
+        while(it.hasNext()) {
+            String tagName = (String)it.next();
             if (editors.containsKey(tagName)) {
                 // save original with _tagChooser appended
                 editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
