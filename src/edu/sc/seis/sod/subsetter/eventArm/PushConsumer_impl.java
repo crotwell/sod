@@ -24,11 +24,12 @@ public class PushConsumer_impl extends PushConsumerPOA
     private  org.omg.PortableServer.POA poa_; // My POA
     private boolean slow_; // Is this a slow consumer?
 
-    public PushConsumer_impl(org.omg.CORBA_2_3.ORB orb, org.omg.PortableServer.POA poa, boolean slow)
+    public PushConsumer_impl(org.omg.CORBA_2_3.ORB orb, org.omg.PortableServer.POA poa, boolean slow, EventArm eventArm)
     {
 	orb_ = orb;
 	poa_ = poa;
 	slow_ = slow;
+	this.eventArm = eventArm;
     }
 
     // ------------------------------------------------------------------
@@ -43,14 +44,11 @@ public class PushConsumer_impl extends PushConsumerPOA
 	    //Extract EventNotify from ANY
 	    EventNotify eventNotify = EventNotifyHelper.extract(any);
 	    System.out.println("THe name of the event is ");
-	
-	    //get Event Attr. 
-	    EventAttr myEvent = eventNotify.the_event.get_attributes();
-	    //printing the name of the event.
-	      Start.getEventQueue().push(eventNotify.the_event);
+	    eventArm.handleEventAttrSubsetter(eventNotify.the_event, eventNotify.the_event.get_attributes());
+	    //Start.getEventQueue().push(eventNotify.the_event);
 
 	}
-	catch(MARSHAL ex)
+	catch(Exception ex)
 	{
 
 		ex.printStackTrace();
@@ -105,4 +103,5 @@ public class PushConsumer_impl extends PushConsumerPOA
     {
 	return poa_;
     }
+    private EventArm eventArm;
 }

@@ -22,7 +22,7 @@ import org.omg.CosEventComm.*;
 
 public class PushClient
 {
-    public PushClient(EventDC eventDC, String channelName)
+    public PushClient(EventDC eventDC, String channelName, EventArm eventArm)
     {
 	try {
        
@@ -66,7 +66,7 @@ public class PushClient
         //
         // Create the servant
         //
-        PushConsumer_impl impl = new PushConsumer_impl(orb, consumerPOA, true);
+        PushConsumer_impl impl = new PushConsumer_impl(orb, consumerPOA, false, eventArm);
 
         //
         // Connect the supplier to the POA with the same name each

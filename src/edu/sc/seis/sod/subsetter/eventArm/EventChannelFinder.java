@@ -46,8 +46,15 @@ public class EventChannelFinder extends AbstractSource implements SodElement, Ru
     }
 
     public void run() {
-	PushClient pushClient = new PushClient(eventDC, eventChannelName);
+	PushClient pushClient = new PushClient(eventDC, eventChannelName, eventArm);
     }
+
+    public void setEventArm(EventArm eventArm) {
+
+	this.eventArm = eventArm;
+    }
+    
+    private EventArm eventArm;
     
     private EventDC eventDC;
 
