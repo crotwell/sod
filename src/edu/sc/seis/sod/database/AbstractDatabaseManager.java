@@ -17,18 +17,9 @@ public  abstract class AbstractDatabaseManager  {
     this.props = props;
     }
 
-
-
-
     public abstract Connection getConnection();
 
-    public abstract ConfigDatabase getConfigDatabase();
-
-    public abstract EventDatabase getEventDatabase();
-
     public abstract NetworkDatabase getNetworkDatabase();
-
-    public abstract WaveformDatabase getWaveformDatabase();
 
     public void close() {
     try {
