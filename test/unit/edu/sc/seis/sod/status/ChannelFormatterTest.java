@@ -39,7 +39,7 @@ public class ChannelFormatterTest extends TestCase{
     }
 
     public void testName(){
-        assertEquals("Test Channel", create("<name/>").getResult(chan));
+        assertEquals("Vertical Channel", create("<name/>").getResult(chan));
     }
 
     private ChannelFormatter create(String config){
