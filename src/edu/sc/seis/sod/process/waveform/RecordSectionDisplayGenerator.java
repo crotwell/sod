@@ -31,6 +31,7 @@ import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
 import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
+import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
@@ -377,6 +378,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                distRange.getMaxDistance(),
                                                                percentSeisHeight);
         custConfig.setSwapAxes(rsDisplay.getSwapAxes());
+        rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
+        rsDisplay.setTimeConfig(new BasicTimeConfig());
         rsDisplay.setLayout(custConfig);
         rsDisplay.add(dataSeis);
         try {
