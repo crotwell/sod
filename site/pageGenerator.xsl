@@ -47,6 +47,12 @@
                                 <li>
                                         <a href="download.html">Download</a>
                                 </li>
+                                <li>
+                                        <a href="walkthrough.html">Walkthrough</a>
+                                </li>
+                                <li>
+                                        <a href="tutorial.html">Tutorial</a>
+                                </li>
                         </ul>
                 </div>
         </xsl:template>
