@@ -53,8 +53,7 @@
                 <min>3.0</min>
                 <max>10.0</max>
             </magnitudeRange>
-            <catalog>FINGER</catalog>
-            <contributor>NEIC</contributor>
+            <catalog>PREF</catalog>
         </eventFinder>
 		<removeEventDuplicate/>
         <eventStatusTemplate>
