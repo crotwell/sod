@@ -192,7 +192,10 @@ public class NetworkArm {
                     allNets[i] = new SynchronizedDCNetworkAccess(new BulletproofNetworkAccess(allNets[i], netDC,
                                                                                               allNets[i].get_attributes().get_id()), netDC);
                     if(attrSubsetter.accept(allNets[i].get_attributes())){
-                        int dbid = netTable.put(allNets[i].get_attributes());
+                        int dbid;
+                        synchronized(netTable){
+                            dbid = netTable.put(allNets[i].get_attributes());
+                        }
                         networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
@@ -236,7 +239,10 @@ public class NetworkArm {
             logger.debug("after NetworkAccess().retrieve_stations()");
             for(int subCounter = 0; subCounter < stations.length; subCounter++) {
                 if(stationSubsetter.accept(stations[subCounter])) {
-                    int dbid = netTable.put(stations[subCounter]);
+                    int dbid;
+                    synchronized(netTable){
+                        dbid = netTable.put(stations[subCounter]);
+                    }
                     StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
                     arrayList.add(stationDbObject);
                     change(stations[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
@@ -261,7 +267,7 @@ public class NetworkArm {
     /** a bit of a hack, because network status monitors get Stations and not
      * StationDBIds. */
     public int getStationDbId(Station station) throws SQLException {
-        return netTable.put(station);
+        synchronized(netTable){ return netTable.put(station); }
     }
 
     /**
@@ -289,7 +295,10 @@ public class NetworkArm {
                              station.get_id().network_id.network_code+"."+station.get_id().station_code);
             for(int i = 0; i < channels.length; i++) {
                 if(siteSubsetter.accept(channels[i].my_site)) {
-                    int dbid = netTable.put(channels[i].my_site);
+                    int dbid;
+                    synchronized(netTable){
+                        dbid = netTable.put(channels[i].my_site);
+                    }
                     SiteDbObject siteDbObject = new SiteDbObject(dbid,
                                                                  channels[i].my_site);
                     if(!containsSite(siteDbObject, successes)) {
@@ -353,14 +362,16 @@ public class NetworkArm {
                                                         Standing.IN_PROG));
                 if(channelSubsetter.accept(channels[subCounter])) {
                     int dbid;
-                    try{
-                        dbid = netTable.getChannelDb().getDBId(channels[subCounter].get_id(),
-                                                               channels[subCounter].my_site);
-                    }
-                    catch (NotFound e){
-                        dbid = netTable.put(channels[subCounter]);
-                        if (!firstTimeThrough){
-                            newChanTable.put(dbid);
+                    synchronized(netTable){
+                        try{
+                            dbid = netTable.getChannelDb().getDBId(channels[subCounter].get_id(),
+                                                                   channels[subCounter].my_site);
+                        }
+                        catch (NotFound e){
+                            dbid = netTable.put(channels[subCounter]);
+                            if (!firstTimeThrough){
+                                newChanTable.put(dbid);
+                            }
                         }
                     }
 
@@ -484,7 +495,7 @@ public class NetworkArm {
     private JDBCQueryTime queryTimeTable;
     private JDBCNetworkUnifier netTable;
     private JDBCNewChannels newChanTable;
-    //private JDBCNetworkStatus networkStatusTable;
+    //private JDBCNetworkStatus networkStatusTable;w
     private NetworkDbObject[] netDbs;
     private List statusMonitors = new ArrayList();
     private boolean firstTimeThrough = false;
