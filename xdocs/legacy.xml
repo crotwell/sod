@@ -43,7 +43,7 @@
                      same prefix should also be used in the legacyExecute.
                      </p>
                      <p>There is a similar processor for use in the motion vector
-                     arm called channelGroupLegacyExecute. It takes the same parameters
+                     arm called legacyVectorExecute. It takes the same parameters
                      and the only difference is that the file names for all three
                      components are put on the command line.
                      </p>
