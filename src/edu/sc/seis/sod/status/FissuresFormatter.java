@@ -118,7 +118,6 @@ public class FissuresFormatter {
 
     public static boolean isNull(Object obj) {
         if(obj == null) return true;
-        //if(obj == null) throw new NullPointerException();
         return false;
     }
 
@@ -215,10 +214,10 @@ public class FissuresFormatter {
         return fileName.trim();
     }
 
-	public static String filize(String base, String extension) {
-		return filize(base+"."+extension);
-	}
-	
+    public static String filize(String base, String extension) {
+        return filize(base+"."+extension);
+    }
+
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 
     public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
@@ -232,6 +231,7 @@ public class FissuresFormatter {
     }
 
 }
+
 
 
 
