@@ -44,9 +44,8 @@ The main structure of our xml file will look like this. We will fill in
 each section with the details later. 
 </para>
 <programlisting>
-&lt;sod:sod  xmlns:sod="http://www.seis.sc.edu/xschema/sod/1.0"
-    xsi:schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0 http://www.seis.sc.edu/xschema/sod/1.0/sod.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sod   xmlns:xlink="http://www.w3.org/1999/xlink/" &gt;
 
     &lt;properties&gt;
     &lt;/properties&gt;
@@ -56,19 +55,18 @@ each section with the details later.
     &lt;/networkArm&gt;
     &lt;waveFormArm&gt;
     &lt;/waveFromArm&gt;
-&lt;/sod:sod&gt;
+&lt;/sod&gt;
 </programlisting>
 <para>
-There are several very important items here, and so you sound make sure that 
-these are correct. The three attributes of the &lt;sod:sod&gt; tag: 
-xmlns:sod, xsi:schemaLocation, and xmlns:xsi, allow the xml parser to find the
-definition of the sod configuration file structure. First, the xmlns:xsi
-attribute associates the XMLSchema-instance namespace with the shorthand xsi
-prefix. The xsi:schemaLocation attribute gives a hint as to where to find
-the definitions of the sod tags. Lastly, the xmlns:sod attribute says that we are
-using the xml namespace for sod. Understanding how these work is not really
-important, but having them in your configuration file is very important. Sod
-will refuse to run if they are not there or wrong.
+There are several very important items here, and so you should make sure that 
+these are correct. The &lt;?xml&gt; line is not really part of the sod 
+configuration proper, but does signify that this is an xml file the version
+of the xml specification that is used. The &lt;sod&gt; tag surrounds the sod configuration items
+and should be the first tag. The  attribute of the &lt;sod&gt; tag: 
+xmlns:xlink, allows the xml parser to recognize xlinks that are used by several 
+tags. Understanding how these work is not really
+important, but having it in your configuration file is very important. Sod
+may refuse to run if they are not there or wrong.
 </para>
 <para>
 The next section is the properties section. This is actually optional, but
@@ -188,11 +186,14 @@ Next we will select the networks that we are interested in. This will
 select just the II network.
 </para>
 <programlisting>
-&lt;networkCode&gt;&lt;value&gt;II&lt;/value&gt;&lt;/networkCode&gt;
+&lt;networkCode&gt;II&lt;/networkCode&gt;
 </programlisting>
 <para>
 If we wished to select more than one network, we could have wrapped several
-networkCode elements within a networkIDAND to allow them to all match. It is
+networkCode elements within a networkOR to allow them to all match. care 
+should be taken as you may say "I want II and IU networks" and be tempted to
+use a networkAND, but sod needs to be told "the network code can be II or IU"
+and so networkOR is correct. It is
 important that there be at most one subsetter of a given type. If more than
 one is needed, then they should be wrapped in a logical, such as AND, OR, NOT
 or XOR.
@@ -219,17 +220,17 @@ during January and that its code must be either space-space or 00. We use
 both a logical site id subsetter as well as a site subsetter.
 </para>
 <programlisting>
-    &lt;siteIDOR&gt;
-      &lt;siteCode&gt;&lt;value&gt;  &lt;/value&gt;&lt;/siteCode&gt;
-      &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
-    &lt;/siteIDOR&gt;
+    &lt;siteIDAND&gt;
+      &lt;siteIDOR&gt;
+        &lt;siteCode&gt;  &lt;/siteCode&gt;
+        &lt;siteCode&gt;00&lt;/siteCode&gt;
+      &lt;/siteIDOR&gt;
 
-    &lt;siteEffectiveTimeOverlap&gt;
-        &lt;effectiveTimeOverlap&gt;
-            &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
-            &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
-        &lt;/effectiveTimeOverlap&gt;
-    &lt;/siteEffectiveTimeOverlap&gt;
+      &lt;siteEffectiveTimeOverlap&gt;
+              &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
+              &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
+      &lt;/siteEffectiveTimeOverlap&gt;
+    &lt;/siteIDAND&gt;
 </programlisting>
 <para>
 Finally, we will actually select channels. At this point we can eliminate all
@@ -238,13 +239,11 @@ lessen the amount of data that must be processed. Lastly, we will use a
 printlineChannelProcessor to print out the name of each successful channel.
 </para>
 <programlisting>
-    &lt;bandCode&gt;&lt;value&gt;L&lt;/value&gt;&lt;/bandCode&gt;
+    &lt;bandCode&gt;L&lt;/bandCode&gt;
 
     &lt;channelEffectiveTimeOverlap&gt;
-        &lt;effectiveTimeOverlap&gt;
             &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
             &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
-        &lt;/effectiveTimeOverlap&gt;
     &lt;/channelEffectiveTimeOverlap&gt;
 
     &lt;printlineChannelProcessor/&gt;
@@ -271,7 +270,8 @@ event to station distance to be between 30 and 60 degrees.
 <para>
 At this point we open the local seismogram arm, which processes on a channel by
 channel basis. A future version of sod will allow a motion vector arm, which 
-will allow the processing to act on the three components simultaneously. We also choose the particular data center that we wish to get data from, the 
+will allow the processing to act on the three components simultaneously. 
+We also choose the particular data center that we wish to get data from, the 
 IRIS_PondDataCenter which is again in the edu/iris/dmc domain. 
 </para>
 <programlisting>
@@ -334,13 +334,12 @@ local seismogram arm, waveform arm, and sod tags.
 <programlisting>
     &lt;printlineSeismogramProcess/&gt;
 
-    &lt;sacFileProcessor&gt;
+    &lt;saveSeismogramToFile&gt;
+      &lt;fileType&gt;sac&lt;/fileType&gt;
       &lt;dataDirectory&gt;POND_II&lt;/dataDirectory&gt;
-      &lt;eventDirLabel&gt;
-        Event_
-        &lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;
+      &lt;eventDirLabel&gt;Event_&lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;
       &lt;/eventDirLabel&gt;
-    &lt;/sacFileProcessor&gt;
+    &lt;/saveSeismogramToFile&gt;
 
     &lt;/localSeismogramArm&gt;
    &lt;/waveFormArm&gt;
