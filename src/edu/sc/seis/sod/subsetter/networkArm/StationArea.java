@@ -75,7 +75,6 @@ public class StationArea
 		   && e.my_location.latitude <=boxArea.max_latitude
 		   && e.my_location.longitude >= boxArea.min_longitude
 		   && e.my_location.longitude <= boxArea.max_longitude) {
-		    System.out.println("returning true");
 		    return true;
 		} else return false;
 	
