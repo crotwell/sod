@@ -24,10 +24,15 @@ public class OutputScheduler extends TimerTask{
 
     public void schedule(Runnable a){ runnables.add(a); }
 
+    public void scheduleForExit(Runnable a) {
+        onExitRunnables.add(a);
+    }
+
     public void run() {
-        runAll();
+        runAll(runnables);
         if(Start.getWaveformArm() != null && Start.getWaveformArm().isFinished()){
-            runAll();
+            runAll(runnables);
+            runAll(onExitRunnables);
             t.cancel();
             logger.debug("Output Scheduler done.");
 
@@ -43,7 +48,7 @@ public class OutputScheduler extends TimerTask{
         }
     }
 
-    private void runAll(){
+    private void runAll(Set runnables){
         Runnable[] currentRunnables = new Runnable[0];
         synchronized(runnables){
             currentRunnables = (Runnable[])runnables.toArray(currentRunnables);
@@ -70,6 +75,7 @@ public class OutputScheduler extends TimerTask{
     private static OutputScheduler DEFAULT = null;
 
     private Set runnables = Collections.synchronizedSet(new HashSet());
+    private Set onExitRunnables = Collections.synchronizedSet(new HashSet());
     private Timer t = new Timer();
 
     private static final Logger logger = Logger.getLogger(OutputScheduler.class);
