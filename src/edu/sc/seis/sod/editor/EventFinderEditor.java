@@ -8,6 +8,7 @@ package edu.sc.seis.sod.editor;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
+import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,8 +44,14 @@ public class EventFinderEditor implements EditorPlugin{
                         b.add(horiz);
                         continue;
                     }else{ i--; }
+                }else if(el.getTagName().equals("originDepthRange")){
+                    JComponent unitRangeComp = owner.getCompForElement((Element)XPathAPI.selectSingleNode(el, "unitRange"));
+                    unitRangeComp.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(el.getTagName())));
+                    b.add(unitRangeComp);
+                    continue;
                 }
                 b.add(owner.getCompForElement((Element)n));
+                b.add(Box.createVerticalStrut(10));
             }
         }
         return b;
