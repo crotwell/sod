@@ -1,21 +1,15 @@
 package edu.sc.seis.sod;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import java.util.*;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -33,6 +27,10 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
+import java.sql.SQLException;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class WaveformArm implements Runnable {
 
@@ -147,7 +145,8 @@ public class WaveformArm implements Runnable {
         // don't bother with network if effective time does no
         // overlap event time
         if(!overlap.overlaps(net.getNetworkAccess().get_attributes())) {
-            logger.debug("The networks effective time does not overlap the event time");
+            failLogger.info(NetworkIdUtil.toString(net.getNetworkAccess().get_attributes().get_id())+
+                                "  The networks effective time does not overlap the event time.");
             return;
         } // end of if ()
         StationDbObject[] stations = networkArm.getSuccessfulStations(net);
@@ -162,7 +161,8 @@ public class WaveformArm implements Runnable {
                               StationDbObject station,
                               EventDbObject ev) throws Exception {
         if(!overlap.overlaps(station.getStation())) {
-            logger.debug("The stations effective time does not overlap the event time");
+            failLogger.debug(StationIdUtil.toString(station.getStation().get_id())+
+                            "  The stations effective time does not overlap the event time.");
             return;
         } // end of if ()
         SiteDbObject[] sites = networkArm.getSuccessfulSites(net, station);
@@ -177,7 +177,8 @@ public class WaveformArm implements Runnable {
                            SiteDbObject site,
                            EventDbObject ev) throws Exception {
         if(!overlap.overlaps(site.getSite())) {
-            logger.debug("The sites effective time does not overlap the event time");
+            failLogger.debug(SiteIdUtil.toString(site.getSite().get_id())+
+                                 "The sites effective time does not overlap the event time: ");
             return;
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
@@ -207,6 +208,7 @@ public class WaveformArm implements Runnable {
                                              chanDbId,
                                              eventStationReject);
                         }
+                        failLogger.info(ChannelIdUtil.toString(chans[k].getChannel().get_id())+"  Channel not grouped.");
                     }
                 }
             }
@@ -583,6 +585,7 @@ public class WaveformArm implements Runnable {
                 } catch(Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
+                    failLogger.warn(ecp, e);
                     return;
                 }
                 if(accepted) {
@@ -592,6 +595,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
+                    failLogger.info(ecp);
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -677,6 +681,7 @@ public class WaveformArm implements Runnable {
                 } catch(Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
+                    failLogger.warn(ecp, e);
                     return;
                 }
                 if(accepted) {
@@ -686,6 +691,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
+                    failLogger.info(ecp);
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -752,6 +758,8 @@ public class WaveformArm implements Runnable {
     private TimeInterval SERVER_RETRY_DELAY;
 
     private static Logger logger = Logger.getLogger(WaveformArm.class);
+
+    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformArm");
 
     private Set statusMonitors = Collections.synchronizedSet(new HashSet());
 

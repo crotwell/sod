@@ -84,9 +84,9 @@ public class MotionVectorArm implements Subsetter {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
-            logger.info("FAIL event channel");
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                   Standing.REJECT));
+            failLogger.info(ecp);
         }
     }
 
@@ -208,8 +208,8 @@ public class MotionVectorArm implements Subsetter {
                                           infilters,
                                           outfilters);
         } else {
-            logger.info("FAIL request subsetter");
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+            failLogger.info(ecp);
         }
     }
 
@@ -333,9 +333,9 @@ public class MotionVectorArm implements Subsetter {
             }
             processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
         } else {
-            logger.info("FAIL available data");
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.REJECT));
+            failLogger.info(ecp);
         }
     }
 
@@ -375,6 +375,7 @@ public class MotionVectorArm implements Subsetter {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
+            failLogger.info(ecp+" "+result);
         }
     }
 
@@ -386,6 +387,7 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
+        failLogger.warn(ecp, t);
     }
 
     private EventVectorSubsetter eventChannelGroup = new PassEventChannel();
@@ -401,6 +403,8 @@ public class MotionVectorArm implements Subsetter {
     private LinkedList processes = new LinkedList();
 
     private static final Logger logger = Logger.getLogger(MotionVectorArm.class);
+
+    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.WaveformVector");
 
     private static final UnitImpl COUNT_SQR = new UnitImpl(UnitBase.COUNT,
                                                            10,

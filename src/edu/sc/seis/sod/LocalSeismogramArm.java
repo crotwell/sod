@@ -91,9 +91,9 @@ public class LocalSeismogramArm implements Subsetter {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
-            logger.info("FAIL event channel");
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                   Standing.REJECT));
+            failLogger.info(ecp);
         }
     }
 
@@ -193,8 +193,8 @@ public class LocalSeismogramArm implements Subsetter {
                                           infilters,
                                           outfilters);
         } else {
-            logger.info("FAIL request subsetter");
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
+            failLogger.info(ecp);
         }
     }
 
@@ -305,7 +305,7 @@ public class LocalSeismogramArm implements Subsetter {
                     }
                 }
             } else {
-                logger.debug("Failed, retrieve data returned no requestFilters ");
+                failLogger.info(ecp+" retrieve data returned no requestFilters: ");
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
@@ -335,9 +335,9 @@ public class LocalSeismogramArm implements Subsetter {
             LocalSeismogramImpl[] tempLocalSeismograms = (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
             processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
         } else {
-            logger.info("FAIL available data");
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.RETRY));
+            failLogger.info(ecp);
         }
     }
 
@@ -360,9 +360,6 @@ public class LocalSeismogramArm implements Subsetter {
                                                result.getSeismograms(),
                                                ecp.getCookieJar());
                 }
-                if(!result.isSuccess()) {
-                    logger.info("Processor reject: " + result.getReason());
-                }
             } catch(Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
                 return;
@@ -375,6 +372,7 @@ public class LocalSeismogramArm implements Subsetter {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
+            failLogger.info(ecp+" "+result);
         }
     }
 
@@ -384,6 +382,7 @@ public class LocalSeismogramArm implements Subsetter {
         } else {
             ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
+        failLogger.warn(ecp, t);
     }
 
     private EventChannelSubsetter eventChannel = new PassEventChannel();
@@ -411,4 +410,7 @@ public class LocalSeismogramArm implements Subsetter {
                                                            2);
 
     private static final Logger logger = Logger.getLogger(LocalSeismogramArm.class);
+
+    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.Waveform");
+
 }// LocalSeismogramArm
