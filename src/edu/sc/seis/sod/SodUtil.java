@@ -431,13 +431,32 @@ public class SodUtil {
         return dotBuf.toString() + pathBuf.toString();
     }
 
-    public static String getAbsolutePath(String baseLoc, String relativeLoc) throws IOException {
-        String base = new File(baseLoc).getCanonicalFile().getParent();
-        int numDirUp = countDots(relativeLoc);
-        for(int i = 0; i < numDirUp; i++) {
-            base = new File(base).getParent();
+    public static String getAbsolutePath(String baseLoc, String relativeLoc)
+            throws IOException {
+        if(baseLoc.startsWith("jar:")) {
+            String noFileBase = removeFileName(baseLoc);
+            int numDirUp = countDots(relativeLoc);
+            String relBase = stripDirs(noFileBase, numDirUp);
+            return relBase + stripRelativeBits(relativeLoc);
+        } else {
+            String base = new File(baseLoc).getCanonicalFile().getParent();
+            int numDirUp = countDots(relativeLoc);
+            for(int i = 0; i < numDirUp; i++) {
+                base = new File(base).getParent();
+            }
+            return base + '/' + stripRelativeBits(relativeLoc);
         }
-        return base + '/' + stripRelativeBits(relativeLoc);
+    }
+
+    private static String stripDirs(String base, int numDirUp) {
+        for(int i = 0; i < numDirUp; i++) {
+            base = base.substring(0, base.lastIndexOf("/"));
+        }
+        return base + '/';
+    }
+
+    private static String removeFileName(String base) {
+        return base.substring(0, base.lastIndexOf("/"));
     }
 
     private static String stripRelativeBits(String relativeLoc) {
@@ -485,30 +504,31 @@ public class SodUtil {
         return array;
     }
 
-    public static final UnitImpl[] LENGTH_UNITS = { UnitImpl.KILOMETER,
-                                                    UnitImpl.METER,
-                                                    UnitImpl.CENTIMETER,
-                                                    UnitImpl.NANOMETER,
-                                                    UnitImpl.MICROMETER,
-                                                    UnitImpl.MICRON,
-                                                    UnitImpl.MILLIMETER,
-                                                    UnitImpl.PICOMETER,
-                                                    UnitImpl.INCH,
-                                                    UnitImpl.FOOT,
-                                                    UnitImpl.MILE,
-                                                    UnitImpl.DEGREE,
-                                                    UnitImpl.RADIAN };
-    public static final UnitImpl[] TIME_UNITS = { UnitImpl.HOUR,
-                                                  UnitImpl.NANOSECOND,
-                                                  UnitImpl.MICROSECOND,
-                                                  UnitImpl.MILLISECOND,
-                                                  UnitImpl.SECOND,
-                                                  UnitImpl.MINUTE,
-                                                  UnitImpl.DAY,
-                                                  UnitImpl.WEEK,
-                                                  UnitImpl.FORTNIGHT };
-    
-    public static final UnitImpl[] FREQ_UNITS = { UnitImpl.HERTZ };
-    
+    public static final UnitImpl[] LENGTH_UNITS = {UnitImpl.KILOMETER,
+                                                   UnitImpl.METER,
+                                                   UnitImpl.CENTIMETER,
+                                                   UnitImpl.NANOMETER,
+                                                   UnitImpl.MICROMETER,
+                                                   UnitImpl.MICRON,
+                                                   UnitImpl.MILLIMETER,
+                                                   UnitImpl.PICOMETER,
+                                                   UnitImpl.INCH,
+                                                   UnitImpl.FOOT,
+                                                   UnitImpl.MILE,
+                                                   UnitImpl.DEGREE,
+                                                   UnitImpl.RADIAN};
+
+    public static final UnitImpl[] TIME_UNITS = {UnitImpl.HOUR,
+                                                 UnitImpl.NANOSECOND,
+                                                 UnitImpl.MICROSECOND,
+                                                 UnitImpl.MILLISECOND,
+                                                 UnitImpl.SECOND,
+                                                 UnitImpl.MINUTE,
+                                                 UnitImpl.DAY,
+                                                 UnitImpl.WEEK,
+                                                 UnitImpl.FORTNIGHT};
+
+    public static final UnitImpl[] FREQ_UNITS = {UnitImpl.HERTZ};
+
     private static Logger logger = Logger.getLogger(SodUtil.class);
 }// SubsetterUtil
