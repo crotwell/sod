@@ -47,15 +47,13 @@ public final class RequestSubsetterNOT
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event,
-              NetworkAccess network,
               Channel channel,
-              RequestFilter[] original,
-              CookieJar cookies) throws Exception{
+              RequestFilter[] original) throws Exception{
 
     Iterator it = filterList.iterator();
     while (it.hasNext()) {
         RequestSubsetter filter = (RequestSubsetter)it.next();
-        if (filter.accept(event, network, channel, original, cookies)) {
+        if (filter.accept(event, channel, original)) {
         return false;
         }
     }

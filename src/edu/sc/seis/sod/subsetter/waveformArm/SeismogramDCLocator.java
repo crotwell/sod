@@ -19,8 +19,6 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 public interface SeismogramDCLocator {
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
-                                      NetworkAccess network,
-                                      Station station,
-                                      CookieJar cookies) throws Exception;
+                                      Station station) throws Exception;
 
 }// SeismogramDCLocator

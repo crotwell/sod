@@ -20,54 +20,40 @@ public class PrintlineNetworkStatus {
         filename = SodUtil.getNestedText(config);
     } // PrintlineNetworkStatus constructor
 
-    public void networkId(boolean success,
-                          NetworkId networkId,
-                          CookieJar cookies) throws IOException {
+    public void networkId(boolean success,NetworkId networkId)
+        throws IOException {
         print(success, "networkId - "+NetworkIdUtil.toString(networkId));
     }
 
-    public void networkAttr(boolean success,
-                            NetworkAttr networkAttr,
-                            CookieJar cookies) throws IOException {
+    public void networkAttr(boolean success, NetworkAttr networkAttr)
+        throws IOException {
         print(success, "networkAttr - "+NetworkIdUtil.toString(networkAttr.get_id()));
     }
 
-    public void stationId(boolean success,
-                          StationId id,
-                          CookieJar cookies) throws IOException {
+    public void stationId(boolean success,StationId id) throws IOException {
         print(success, "stationId - "+StationIdUtil.toString(id));
     }
 
-    public void station(boolean success,
-                        NetworkAccess network,
-                        Station station,
-                        CookieJar cookies) throws IOException {
+    public void station(boolean success, NetworkAccess network, Station station)
+        throws IOException {
         print(success, "station - "+StationIdUtil.toString(station.get_id()));
     }
 
-    public void siteId(boolean success,
-                       SiteId id,
-                       CookieJar cookies) throws IOException {
+    public void siteId(boolean success, SiteId id) throws IOException {
         print(success, "siteId - "+SiteIdUtil.toString(id));
     }
 
-    public void site(boolean success,
-                     NetworkAccess network,
-                     Site site,
-                     CookieJar cookies) throws IOException {
+    public void site(boolean success, NetworkAccess network, Site site)
+        throws IOException {
         print(success, "site - "+SiteIdUtil.toString(site.get_id()));
     }
 
-    public void channelId(boolean success,
-                          ChannelId id,
-                          CookieJar cookies) throws IOException {
+    public void channelId(boolean success, ChannelId id) throws IOException {
         print(success, "channelId - "+ChannelIdUtil.toString(id));
     }
 
-    public void channel(boolean success,
-                        NetworkAccess network,
-                        Channel channel,
-                        CookieJar cookies) throws IOException {
+    public void channel(boolean success, NetworkAccess network, Channel channel)
+        throws IOException {
         print(success, "channel - "+ChannelIdUtil.toString(channel.get_id()));
     }
 

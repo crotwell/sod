@@ -1,13 +1,8 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Station;
+import org.w3c.dom.Element;
 
 
 /**
@@ -17,22 +12,11 @@ import edu.iris.Fissures.*;
  * @version 1.0
  */
 public class NullEventStationSubsetter implements EventStationSubsetter {
+    public NullEventStationSubsetter() {}
 
-    public NullEventStationSubsetter() {
-    }
-    public NullEventStationSubsetter(Element config) {
-    }
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param o an <code>EventAccessOperations</code> value
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Station station,  CookieJar cookies) {
-    return true;
-    }
+    public NullEventStationSubsetter(Element config) {}
 
+    public boolean accept(EventAccessOperations o,  Station station) {
+        return true;
+    }
 }// NullEventStationSubsetter

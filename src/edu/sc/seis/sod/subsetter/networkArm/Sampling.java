@@ -29,53 +29,28 @@ import org.w3c.dom.*;
  */
 public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
-    /**
-     * Creates a new <code>Sampling</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public Sampling(Element config) throws ConfigurationException{
-
         super(config);
         NodeList children  = config.getChildNodes();
-        Node node;
-
         for(int i = 0; i < children.getLength(); i ++) {
-
-            node = children.item(i);
+            Node node = children.item(i);
             if(node instanceof Element) {
-                
                 String tagName = ((Element)node).getTagName();
                 if(tagName.equals("interval"))  {
                     interval = (Interval)SodUtil.load((Element)node, "");
                 }
-
             }
-
         }
-    
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) throws Exception{
-
-        
+    public boolean accept(Channel channel) throws Exception{
         SamplingImpl channelSampling = (SamplingImpl)channel.sampling_info;
         SamplingImpl minSampling = new SamplingImpl((int)getMinValue(), interval.getTimeInterval());
         SamplingImpl maxSampling = new SamplingImpl((int)getMaxValue(), interval.getTimeInterval());
-        
         if(channelSampling.getFrequency().greaterThanEqual(minSampling.getFrequency()) &&
            channelSampling.getFrequency().lessThanEqual(maxSampling.getFrequency())) {
             return true;
-        } else return false;
-            
+        } else { return false; }
     }
 
     Interval interval = null;

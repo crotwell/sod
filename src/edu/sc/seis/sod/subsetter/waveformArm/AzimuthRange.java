@@ -8,7 +8,6 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 import org.w3c.dom.Element;
 
@@ -28,7 +27,8 @@ public class AzimuthRange extends RangeSubsetter implements EventChannelSubsette
         super(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Channel chan, CookieJar cookies) throws Exception {
+    public boolean accept(EventAccessOperations eventAccess, Channel chan)
+        throws Exception {
         float minValue = getMinValue();
         float maxValue = getMaxValue();
         if(minValue > 180) minValue = minValue - 360;

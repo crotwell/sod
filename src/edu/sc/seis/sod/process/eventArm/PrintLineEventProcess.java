@@ -2,9 +2,9 @@ package edu.sc.seis.sod.process.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.process.eventArm.EventArmProcess;
+import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.process.eventArm.EventArmProcess;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,9 +15,8 @@ public class PrintLineEventProcess implements EventArmProcess {
         filename = SodUtil.getNestedText(config);
     }
 
-    public void process(EventAccessOperations event, CookieJar cookies) throws IOException {
-        String eventStr =
-            regions.getRegionName(event.get_attributes().region);
+    public void process(EventAccessOperations event) throws IOException {
+        String eventStr = regions.getRegionName(event.get_attributes().region);
         try {
             eventStr =event.get_preferred_origin().magnitudes[0].type+" "+
                 event.get_preferred_origin().magnitudes[0].value+" "+eventStr;
@@ -25,8 +24,6 @@ public class PrintLineEventProcess implements EventArmProcess {
         } catch (NoPreferredOrigin e) {
             eventStr+=" No Pref Origin!";
         } // end of try-catch
-
-
         if (filename != null) {
             FileWriter fwriter = new FileWriter("_my_event_temp_", true);
             BufferedWriter bwriter = new BufferedWriter(fwriter);
@@ -36,12 +33,9 @@ public class PrintLineEventProcess implements EventArmProcess {
         } else {
             System.out.println(eventStr);
         } // end of else
-
     }
 
     protected String filename = null;
-
-    protected static edu.sc.seis.fissuresUtil.display.ParseRegions regions
-        = edu.sc.seis.fissuresUtil.display.ParseRegions.getInstance();
+    protected static ParseRegions regions = ParseRegions.getInstance();
 
 }// PrintLineEventProcess

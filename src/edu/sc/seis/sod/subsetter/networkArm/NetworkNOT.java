@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.sc.seis.sod.ConfigurationException;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 /**
  * networkAttrNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
@@ -26,37 +24,19 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class NetworkNOT
-    extends  NetworkLogicalSubsetter
+public final class NetworkNOT extends  NetworkLogicalSubsetter
     implements NetworkSubsetter {
 
-    /**
-     * Creates a new <code>NetworkAttrNOT</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public NetworkNOT (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e a <code>NetworkAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAttr net,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    if(it.hasNext()) {
-        NetworkSubsetter filter = (NetworkSubsetter)it.next();
-        if ( filter.accept(net, cookies)) {
-        return false;
+    public boolean accept(NetworkAttr net) throws Exception{
+        Iterator it = filterList.iterator();
+        if(it.hasNext()) {
+            NetworkSubsetter filter = (NetworkSubsetter)it.next();
+            if ( filter.accept(net)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// NetworkAttrNOT

@@ -1,11 +1,13 @@
 package edu.sc.seis.sod.process.networkArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import org.w3c.dom.*;
-
-import java.io.*;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.sod.SodUtil;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.w3c.dom.Element;
 
 /**
  * PrintlineChannelProcessor.java
@@ -20,23 +22,11 @@ import java.io.*;
  */
 
 public class PrintlineChannelProcessor implements NetworkArmProcess {
-    /**
-     * Creates a new <code>PrintlineChannelProcessor</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public PrintlineChannelProcessor (Element config){
         filename = SodUtil.getNestedText(config);
     }
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     */
-    public void process(NetworkAccess network, Channel channel, CookieJar cookies) throws IOException {
+    public void process(NetworkAccess network, Channel channel) throws IOException {
         if (filename != null && filename.length() != 0) {
             FileWriter fwriter = new FileWriter(filename, true);
             BufferedWriter bwriter = new BufferedWriter(fwriter);
@@ -50,5 +40,4 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
     }
 
     String filename = null;
-
 }// PrintlineChannelProcessor

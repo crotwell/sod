@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 /**
  * StationName.java
@@ -21,28 +19,14 @@ import edu.iris.Fissures.*;
  */
 
 public class StationName implements StationSubsetter {
-    
-    /**
-     * Creates a new <code>StationName</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public StationName (Element config) throws ConfigurationException {
-	this.config = config;
+        this.config = config;
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e an <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
-	if(e.name.equals(SodUtil.getNestedText(config))) return true;
-	else return false;
+    public boolean accept(Station e) {
+        if(e.name.equals(SodUtil.getNestedText(config))) return true;
+        else return false;
     }
+
     Element config;
-
 }// StationName

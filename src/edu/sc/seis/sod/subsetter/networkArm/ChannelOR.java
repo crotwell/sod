@@ -37,38 +37,20 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class ChannelOR
-    extends  NetworkLogicalSubsetter
+public final class ChannelOR extends  NetworkLogicalSubsetter
     implements ChannelSubsetter {
 
-    /**
-     * Creates a new <code>ChannelOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public ChannelOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    while(it.hasNext()) {
-        ChannelSubsetter filter = (ChannelSubsetter)it.next();
-        if ( filter.accept(network, e, cookies)) {
-        return true;
+    public boolean accept(Channel e) throws Exception{
+        Iterator it = filterList.iterator();
+        while(it.hasNext()) {
+            ChannelSubsetter filter = (ChannelSubsetter)it.next();
+            if ( filter.accept(e)) { return true; }
         }
-    }
-    return false;
+        return false;
     }
 
 }// ChannelOR

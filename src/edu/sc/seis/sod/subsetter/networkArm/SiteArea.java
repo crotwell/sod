@@ -1,11 +1,13 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.GlobalArea;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * SiteArea.java
@@ -38,49 +40,30 @@ import edu.iris.Fissures.*;
  */
 
 
-public class SiteArea
-    implements SiteSubsetter,SodElement {
-    
-    /**
-     * Creates a new <code>SiteArea</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
+public class SiteArea implements SiteSubsetter,SodElement {
+
     public SiteArea (Element config) throws ConfigurationException {
-    NodeList children = config.getChildNodes();
-    for(int i = 0; i < children.getLength() ; i++) {
-        Node node = children.item(i);
-        if(node instanceof Element) {
-            area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
-            break;
+        NodeList children = config.getChildNodes();
+        for(int i = 0; i < children.getLength() ; i++) {
+            Node node = children.item(i);
+            if(node instanceof Element) {
+                area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
+                break;
+            }
         }
     }
-    
-    }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Site</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
-    if(area instanceof edu.iris.Fissures.BoxArea) {
-        edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-        
-        if(e.my_location.latitude >= boxArea.min_latitude
-           && e.my_location.latitude <=boxArea.max_latitude
-           && e.my_location.longitude >= boxArea.min_longitude
-           && e.my_location.longitude <= boxArea.max_longitude) {
-            return true;
-        } else return false;
-    
-    } else if(area instanceof GlobalArea) return true;
-    return true;
-    
+    public boolean accept(Site e) {
+        if(area instanceof edu.iris.Fissures.BoxArea) {
+            edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
+            if(e.my_location.latitude >= boxArea.min_latitude
+               && e.my_location.latitude <=boxArea.max_latitude
+               && e.my_location.longitude >= boxArea.min_longitude
+               && e.my_location.longitude <= boxArea.max_longitude) {
+                return true;
+            } else return false;
+        } else if(area instanceof GlobalArea) return true;
+        return true;
     }
 
     private edu.iris.Fissures.Area area = null;

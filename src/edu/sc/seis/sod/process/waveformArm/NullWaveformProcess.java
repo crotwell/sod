@@ -5,7 +5,6 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 /**
@@ -36,12 +35,10 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) {
+                                         LocalSeismogramImpl[] seismograms) {
         return seismograms;
     }
 

@@ -12,7 +12,8 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.database.event.JDBCEventQueryTime;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.process.eventArm.EventArmProcess;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
@@ -50,7 +51,7 @@ public class EventArm implements Runnable{
         }
         try {
             eventStatus = new JDBCEventStatus();
-            queryTimes = new JDBCEventQueryTime();
+            queryTimes = new JDBCQueryTime();
         } catch (SQLException e) {
             throw new RuntimeException("Trouble setting up event status database", e);
         }
@@ -121,7 +122,7 @@ public class EventArm implements Runnable{
                         //back to the server to refresh the events instead of
                         //using the cached copy, should probably start here
                         handle(events);
-                        queryTimes.setTimes(server, dns, queryStart, queryEnd);
+                        queryTimes.setQuery(server, dns, queryEnd);
                         setStatus("Waiting for the wave form queue to process some events before getting more events");
                         needRetry = false;
                     } catch (org.omg.CORBA.SystemException e) {
@@ -147,22 +148,24 @@ public class EventArm implements Runnable{
                     done = true;
                 }else{
                     waitTillRefreshNeeded();
-                    resetQueryTimeForLag(server, dns);
+                    resetQueryTimeForLag(server, dns, reqTimeRange.getStartMSD());
                 }
             }
         }
         logger.debug("Finished processing the event arm.");
     }
 
-    private void resetQueryTimeForLag(String server, String dns) {
+    private void resetQueryTimeForLag(String server, String dns, MicroSecondDate queryStart) {
         try {
-            MicroSecondDate curEnd = new MicroSecondDate(queryTimes.getEnd(server, dns));
+            MicroSecondDate curEnd = new MicroSecondDate(queryTimes.getQuery(server, dns));
             MicroSecondDate newEnd = curEnd.subtract(lag);
-            MicroSecondDate queryStart = new MicroSecondDate(queryTimes.getStart(server, dns));
             if(queryStart.after(newEnd)) newEnd = queryStart;
-            queryTimes.setEnd(server, dns, newEnd);
+            queryTimes.setQuery(server, dns, newEnd);
         } catch (SQLException e) {
-            throw new RuntimeException("This shouldn't happen.  Something nasty is probably happening to the database now", e);
+            GlobalExceptionHandler.handle("The query time table just threw this SQLException.  This shouldn't happen.  Something nasty is probably happening to the database now", e);
+        }catch(edu.sc.seis.fissuresUtil.database.NotFound e){
+            GlobalExceptionHandler.handle("The query times database threw a not found for the event server which is nonsensical as we just inserted it above here.  Something is probably very screwy",
+                                          e);
         }
     }
 
@@ -178,11 +181,13 @@ public class EventArm implements Runnable{
     private MicroSecondDate getQueryStart(EventTimeRange reqTimeRange, String source, String dns) {
         MicroSecondDate queryStart = reqTimeRange.getStartMSD();
         try {
-            if(queryTimes.getEnd(source, dns) != null) {//If the database has a end time, use the database's end time
-                queryStart = new MicroSecondDate(queryTimes.getEnd(source, dns));
+            if(queryTimes.getQuery(source, dns) != null) {//If the database has a end time, use the database's end time
+                queryStart = new MicroSecondDate(queryTimes.getQuery(source, dns));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Trouble with the SQL for getting event server query times!");
+        }catch(edu.sc.seis.fissuresUtil.database.NotFound e){
+            logger.debug("the query times database didn't have an entry for our server/dns combo, just use the time int he config file");
         }
         return queryStart;
     }
@@ -251,9 +256,9 @@ public class EventArm implements Runnable{
         change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
                                  Standing.IN_PROG));
         EventAttr attr = event.get_attributes();
-        if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
+        if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr)) {
             Origin origin = event.get_preferred_origin();
-            if(originSubsetter.accept(event, origin, null)) {
+            if(originSubsetter.accept(event, origin)) {
                 change(event, Status.get(Stage.PROCESSOR,
                                          Standing.IN_PROG));
                 process(event);
@@ -292,7 +297,7 @@ public class EventArm implements Runnable{
     private void process(EventAccessOperations eventAccess) throws Exception {
         Iterator it = processors.iterator();
         while(it.hasNext()){
-            ((EventArmProcess)it.next()).process(eventAccess, null);
+            ((EventArmProcess)it.next()).process(eventAccess);
         }
     }
 
@@ -436,7 +441,7 @@ public class EventArm implements Runnable{
 
     private JDBCEventStatus eventStatus;
 
-    private JDBCEventQueryTime queryTimes;
+    private JDBCQueryTime queryTimes;
 
     private boolean alive;
 

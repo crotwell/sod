@@ -6,7 +6,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
 
@@ -44,38 +43,18 @@ import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
  *</pre>
  */
 
-public final class EventStationXOR
-    extends  WaveformLogicalSubsetter
+public final class EventStationXOR extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
-    /**
-     * Creates a new <code>EventStationXOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventStationXOR (Element config) throws ConfigurationException {
         super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param o an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event,
-                          NetworkAccess network,
-                          Station station,
-                          CookieJar cookies)
+    public boolean accept(EventAccessOperations event, Station station)
         throws Exception {
         EventStationSubsetter filterA = (EventStationSubsetter)filterList.get(0);
         EventStationSubsetter filterB = (EventStationSubsetter)filterList.get(1);
-        return ( filterA.accept(event, network, station, cookies) != filterB.accept(event, network, station, cookies));
+        return ( filterA.accept(event, station) != filterB.accept(event, station));
 
     }
 

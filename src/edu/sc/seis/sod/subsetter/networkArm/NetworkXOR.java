@@ -32,32 +32,17 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class NetworkXOR
-    extends  NetworkLogicalSubsetter
+public final class NetworkXOR extends  NetworkLogicalSubsetter
     implements NetworkSubsetter {
 
-    /**
-     * Creates a new <code>NetworkAttrXOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public NetworkXOR (Element config) throws ConfigurationException {
     super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e a <code>NetworkAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAttr net,  CookieJar cookies) throws Exception{
+    public boolean accept(NetworkAttr net) throws Exception{
         NetworkSubsetter filterA = (NetworkSubsetter)filterList.get(0);
         NetworkSubsetter filterB = (NetworkSubsetter)filterList.get(1);
-        return ( filterA.accept(net, cookies) != filterB.accept(net, cookies));
+        return ( filterA.accept(net) != filterB.accept(net));
 
     }
 

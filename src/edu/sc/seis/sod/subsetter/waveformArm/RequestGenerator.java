@@ -29,8 +29,6 @@ public interface  RequestGenerator extends Subsetter{
      * @exception Exception if an error occurs
      */
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                       NetworkAccess network,
-                       Channel channel,
-                       CookieJar cookies) throws Exception;
-    
+                                           Channel channel) throws Exception;
+
 }// RequestGenerator

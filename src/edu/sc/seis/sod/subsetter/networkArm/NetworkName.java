@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 /**
  * NetworkAttrName.java
@@ -22,26 +20,13 @@ import edu.iris.Fissures.*;
 
 public class NetworkName implements NetworkSubsetter {
 
-    /**
-     * Creates a new <code>NetworkAttrName</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public NetworkName (Element config) throws ConfigurationException {
-    this.config = config;
+        this.config = config;
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e an <code>NetworkAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAttr net,  CookieJar cookies) {
-    if(net.name.equals(SodUtil.getNestedText(config))) return true;
-    else return false;
+    public boolean accept(NetworkAttr net) {
+        if(net.name.equals(SodUtil.getNestedText(config))) return true;
+        else return false;
     }
 
     private Element config;

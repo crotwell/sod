@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.waveformArm.WaveformArmProcess;
 /**
  * LocalSeismogramProcess.java
@@ -31,11 +29,9 @@ public interface LocalSeismogramProcess extends WaveformArmProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                     NetworkAccess network,
                      Channel channel,
                      RequestFilter[] original,
                      RequestFilter[] available,
-                     LocalSeismogramImpl[] seismograms,
-                     CookieJar cookies) throws Exception;
+                     LocalSeismogramImpl[] seismograms) throws Exception;
 
 }// LocalSeismogramProcessor

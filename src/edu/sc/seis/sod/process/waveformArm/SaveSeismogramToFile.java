@@ -15,7 +15,6 @@ import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.EventFormatter;
@@ -137,12 +136,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws Exception {
+                                         LocalSeismogramImpl[] seismograms) throws Exception {
 
         logger.info("Got "+seismograms.length+" seismograms for "+
                         ChannelIdUtil.toString(channel.get_id())+

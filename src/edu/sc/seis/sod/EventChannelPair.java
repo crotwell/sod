@@ -16,12 +16,11 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import org.apache.log4j.Logger;
 
 public class EventChannelPair{
-    public EventChannelPair(NetworkDbObject net, EventDbObject event,
-                            ChannelDbObject chan, WaveformArm owner, int pairId){
+    public EventChannelPair(EventDbObject event,
+                            ChannelDbObject chan,WaveformArm owner, int pairId){
         this.event = event;
         this.chan = chan;
         this.owner = owner;
-        this.net = net;
         this.pairId = pairId;
     }
 
@@ -68,19 +67,10 @@ public class EventChannelPair{
 
     public CacheEvent getEvent(){ return event.getEvent(); }
 
-    public NetworkAccess getNet(){ return net.getNetworkAccess(); }
-
     private Status status;
-
     private EventDbObject event;
-
     private ChannelDbObject chan;
-
     private WaveformArm owner;
-
-    private NetworkDbObject net;
-
     private int pairId;
-
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }

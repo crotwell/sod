@@ -19,37 +19,19 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class SiteAND
-    extends  NetworkLogicalSubsetter
-    implements SiteSubsetter {
+public final class SiteAND extends  NetworkLogicalSubsetter
+    implements SiteSubsetter  {
 
-    /**
-     * Creates a new <code>SiteAND</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public SiteAND (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Site</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
-    Iterator it = filterList.iterator();
-    while(it.hasNext()) {
-        SiteSubsetter filter = (SiteSubsetter)it.next();
-        if ( !filter.accept(network, e, cookies)) {
-        return false;
+    public boolean accept(Site e) {
+        Iterator it = filterList.iterator();
+        while(it.hasNext()) {
+            SiteSubsetter filter = (SiteSubsetter)it.next();
+            if ( !filter.accept(e)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// SiteAND

@@ -1,11 +1,7 @@
 package edu.sc.seis.sod.process.networkArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import org.w3c.dom.*;
-
-import java.io.*;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 
 /**
  * NullNetworkProcess.java
@@ -16,21 +12,7 @@ import java.io.*;
  */
 
 public class NullNetworkProcess implements NetworkArmProcess {
-    /**
-     * Creates a new <code>NullNetworkProcess</code> instance.
-     */
-    public NullNetworkProcess (){
-	    
-    }
+    public NullNetworkProcess (){}
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     */
-    public void process(NetworkAccess network, Channel channel, CookieJar cookies) {
-    }
-   
+    public void process(NetworkAccess network, Channel channel) {}
 }// NullNetworkProcess

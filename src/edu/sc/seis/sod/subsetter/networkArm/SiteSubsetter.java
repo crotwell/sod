@@ -1,9 +1,6 @@
 package edu.sc.seis.sod.subsetter.networkArm;
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * SiteSubsetter.java
@@ -17,16 +14,6 @@ import edu.iris.Fissures.network.*;
 
 public interface SiteSubsetter extends Subsetter{
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Site</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network,
-              Site site,
-              CookieJar cookies);
+    public boolean accept(Site site);
 
 }// SiteSubsetter

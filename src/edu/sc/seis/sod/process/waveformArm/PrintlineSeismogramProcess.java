@@ -8,7 +8,6 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -26,34 +25,18 @@ import org.w3c.dom.Element;
  */
 
 public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
-    /**
-     * Creates a new <code>PrintlineWaveformProcessor</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
+
     public PrintlineSeismogramProcess (Element config){
         filename = SodUtil.getNestedText(config);
         regions = ParseRegions.getInstance();
     }
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws IOException, NoPreferredOrigin {
+                                         LocalSeismogramImpl[] seismograms)
+        throws IOException, NoPreferredOrigin {
         if (filename != null && filename.length() != 0) {
             FileWriter fwriter = new FileWriter(filename, true);
             BufferedWriter bwriter = new BufferedWriter(fwriter);
@@ -79,7 +62,6 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                              regions.getRegionName(event.get_attributes().region)+
                              " at "+event.get_preferred_origin().origin_time.date_time);
         } // end of else
-
         return seismograms;
     }
 

@@ -1,7 +1,6 @@
 package edu.sc.seis.sod;
 import java.util.*;
 
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
@@ -13,6 +12,7 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
@@ -36,6 +36,7 @@ public class WaveformArm implements Runnable {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         eventRetryTable = new JDBCEventChannelRetry();
+        netTable = new JDBCNetworkUnifier();
         processConfig(config);
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
@@ -317,9 +318,8 @@ public class WaveformArm implements Runnable {
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
                 try {
-                    eventStationSubsetter.accept(ecp.getEvent(), ecp.getNet(),
-                                                 ecp.getChannel().my_site.my_station,
-                                                 null);
+                    eventStationSubsetter.accept(ecp.getEvent(),
+                                                 ecp.getChannel().my_site.my_station);
                 } catch (Exception e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
@@ -333,7 +333,7 @@ public class WaveformArm implements Runnable {
             }
         }
 
-        private EventChannelPair extractEventChannelPair(){
+        private EventChannelPair extractEventChannelPair() throws Exception{
             int[] evAndChanIds = null;
             try {
                 synchronized(evChanStatus){
@@ -346,23 +346,21 @@ public class WaveformArm implements Runnable {
             }
             int eventId = evAndChanIds[0];
             int chanId = evAndChanIds[1];
-            ChannelDbObject channelDbObject = null;
+            ChannelDbObject chanDbObject = null;
+            NetworkDbObject netDbObject = null;
             Integer key = new Integer(chanId);
             //TODO - empty cache
             if( channelDbCache.containsKey(key)) {
-                channelDbObject = (ChannelDbObject)channelDbCache.get(key);
+                chanDbObject = (ChannelDbObject)channelDbCache.get(key);
             } else {
-                channelDbObject = new ChannelDbObject(chanId, networkArm.getChannel(chanId));
-                channelDbCache.put(key, channelDbObject);
+                chanDbObject = netTable.getChannel(chanId);
+                channelDbCache.put(key, chanDbObject);
             }
-            int siteid = networkArm.getSiteDbId(chanId);
-            int stationid = networkArm.getStationDbId(siteid);
-            int networkid = networkArm.getNetworkDbId(stationid);
-            NetworkAccess networkAccess  = networkArm.getNetworkAccess(networkid);
-            NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
-            return new EventChannelPair(networkDbObject, getEvent(eventId),
-                                        channelDbObject,WaveformArm.this,
-                                        pairId);
+            netDbObject = netTable.getNet(chanDbObject, networkArm.getFinder());
+
+            return new EventChannelPair(getEvent(eventId), chanDbObject,
+                                        WaveformArm.this, pairId);
+
         }
         private int pairId;
     }
@@ -378,12 +376,10 @@ public class WaveformArm implements Runnable {
     private Map channelDbCache = new HashMap();
 
     private Map eventDbCache = new HashMap();
-
     private JDBCEventStatus eventStatus;
-
     private JDBCEventChannelStatus evChanStatus;
-
     private JDBCEventChannelRetry eventRetryTable;
+    private JDBCNetworkUnifier netTable;
 
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible

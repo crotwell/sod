@@ -3,7 +3,6 @@ package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
@@ -56,31 +55,26 @@ public class EventArea implements OriginSubsetter,SodElement {
             }
         }
     }
-    
+
     /**
      * returns true if the given origin is within the area specified in the
      * configuration file else returns false.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param e an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin e) {
         if(area instanceof edu.iris.Fissures.BoxArea) {
             edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-            
+
             if(e.my_location.latitude >= boxArea.min_latitude
                && e.my_location.latitude <=boxArea.max_latitude
                && e.my_location.longitude >= boxArea.min_longitude
                && e.my_location.longitude <= boxArea.max_longitude) {
                 return true;
             } else return false;
-            
+
         }
         return true;
-        
+
     }
-    
+
     private edu.iris.Fissures.Area area = null;
 }// EventArea

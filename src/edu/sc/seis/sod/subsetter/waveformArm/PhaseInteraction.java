@@ -41,13 +41,8 @@ import org.w3c.dom.*;
  */
 
 public class PhaseInteraction implements EventStationSubsetter {
-    /**
-     * Creates a new <code>PhaseInteraction</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
-    public PhaseInteraction (Element config) throws ConfigurationException{
 
+    public PhaseInteraction (Element config) throws ConfigurationException{
         Element element = SodUtil.getElement(config,"modelName");
         if(element != null) modelName = SodUtil.getNestedText(element);
         element = SodUtil.getElement(config,"phaseName");
@@ -64,22 +59,14 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param eventAccess an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(EventAccessOperations event,  NetworkAccess network,Station station, CookieJar cookies) throws Exception{
-        if(interactionStyle.equals("PATH")) return acceptPathInteraction(event, network, station, cookies);
-        else return acceptPierceInteraction(event, network, station, cookies);
+    public boolean accept(EventAccessOperations event,  Station station)
+        throws Exception{
+        if(interactionStyle.equals("PATH")) return acceptPathInteraction(event, station);
+        else return acceptPierceInteraction(event, station);
 
     }
 
-    public boolean acceptPathInteraction(EventAccessOperations event,  NetworkAccess network,Station station, CookieJar cookies) throws Exception{
+    public boolean acceptPathInteraction(EventAccessOperations event,  Station station) throws Exception{
         Origin origin = null;
         double originDepth;
         double eventStationDistance;
@@ -114,11 +101,11 @@ public class PhaseInteraction implements EventStationSubsetter {
 
 
 
-    public boolean acceptPierceInteraction(EventAccessOperations event,  NetworkAccess network,Station station, CookieJar cookies) throws Exception{
-        Origin origin = null;
+    public boolean acceptPierceInteraction(EventAccessOperations event,
+                                           Station station) throws Exception{
         double originDepth;
         double eventStationDistance;
-        origin = event.get_preferred_origin();
+        Origin origin = event.get_preferred_origin();
         TauP_Pierce tauPPierce = new TauP_Pierce(modelName);
         tauPPierce.clearPhaseNames();
         tauPPierce.parsePhaseList(phaseName);

@@ -14,64 +14,48 @@ import edu.iris.Fissures.*;
 /**
  * specifies the ChannelEffectiveTimeOverlap
  * <pre>
- *	&lt;siteEffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
- *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteEffectiveTimeOverlap&gt;
+ *  &lt;siteEffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *          &lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
+ *      &lt;/effectiveTimeOverlap&gt;
+ *  &lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *      &lt;siteEffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
- *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteEffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
+ *      &lt;/effectiveTimeOverlap&gt;
+ *  &lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;siteEffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteEffectiveTimeOverlap&gt;
+ *  &lt;siteEffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *      &lt;/effectiveTimeOverlap&gt;
+ *  &lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;siteEffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteEffectiveTimeOverlap&gt;
+ *  &lt;siteEffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *      &lt;/effectiveTimeOverlap&gt;
+ *  &lt;/siteEffectiveTimeOverlap&gt;
  * </pre>
  */
 
 
 public class SiteEffectiveTimeOverlap extends
-EffectiveTimeOverlap implements SiteSubsetter {
-    /**
-     * Creates a new <code>SiteEffectiveTimeOverlap</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
+    EffectiveTimeOverlap implements SiteSubsetter {
     public SiteEffectiveTimeOverlap (Element config){
-	super(config);
-
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Site</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Site site,  CookieJar cookies) {
-	return overlaps(site.effective_time);
-
+    public boolean accept(Site site) {
+        return overlaps(site.effective_time);
     }
 
-    static Category logger = 
+    static Category logger =
         Category.getInstance(SiteEffectiveTimeOverlap.class.getName());
-
 }// SiteEffectiveTimeOverlap

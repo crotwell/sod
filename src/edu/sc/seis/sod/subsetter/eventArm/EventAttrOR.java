@@ -30,8 +30,7 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public final class EventAttrOR
-    extends EventLogicalSubsetter
+public final class EventAttrOR extends EventLogicalSubsetter
     implements EventAttrSubsetter {
 
     /**
@@ -43,26 +42,15 @@ public final class EventAttrOR
      * @exception ConfigurationException if an error occurs
      */
     public EventAttrOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e an <code>EventAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    while (it.hasNext()) {
-        EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-        if ( filter.accept(e, cookies)) {
-        return true;
+    public boolean accept(EventAttr e) throws Exception{
+        Iterator it = filterList.iterator();
+        while (it.hasNext()) {
+            EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
+            if ( filter.accept(e)) { return true; }
         }
+        return false;
     }
-    return false;
-    }
-
 }// EventAttrOR

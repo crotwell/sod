@@ -1,13 +1,8 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfSeismogramDC.LocalMotionVector;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * MotionVectorFilter.java
@@ -20,22 +15,7 @@ import edu.iris.Fissures.*;
  */
 
 public interface MotionVectorSubsetter extends Subsetter {
+    public boolean accept(EventAccessOperations event, Channel[] channels,
+              LocalMotionVector motionVectors) throws Exception;
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channels a <code>Channel[]</code> value
-     * @param motionVectors a <code>LocalMotionVector</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network,
-			  Channel[] channels, 
-			  LocalMotionVector motionVectors,
-			  CookieJar cookies) throws Exception;
-    
 }// MotionVectorFilter

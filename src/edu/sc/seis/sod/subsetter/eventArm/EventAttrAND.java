@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.sc.seis.sod.ConfigurationException;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 /**
  *<pre>
@@ -28,39 +26,24 @@ import edu.iris.Fissures.*;
  *
  *</pre>
  */
-public final class EventAttrAND
-    extends EventLogicalSubsetter
+public final class EventAttrAND extends EventLogicalSubsetter
     implements EventAttrSubsetter {
 
-    /**
-     * Creates a new <code>EventAttrAND</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventAttrAND (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
     /**
      * returns true if all the eventAttr subsetters enclosed in the eventAttrAND subsetter are true.
      * and returns false if any one of them is false. The range of eventAttrSubsetters that can be
      * enclosed in an eventAttrANDSubsetter is 0 to UNLIMITED.
-     *
-     * @param e an <code>EventAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
      */
-    public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    while (it.hasNext()) {
-        EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-        if ( !filter.accept(e, cookies)) {
-        return false;
+    public boolean accept(EventAttr e) throws Exception{
+        Iterator it = filterList.iterator();
+        while (it.hasNext()) {
+            EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
+            if ( !filter.accept(e)) { return false;  }
         }
+        return true;
     }
-    return true;
-    }
-
 }// EventAttrAND

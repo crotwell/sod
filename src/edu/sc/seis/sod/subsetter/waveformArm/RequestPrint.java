@@ -12,7 +12,6 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.RequestSubsetter;
 import org.w3c.dom.Element;
 
@@ -26,10 +25,8 @@ public class RequestPrint
     }
 
     public boolean accept(EventAccessOperations event,
-                          NetworkAccess network,
                           Channel channel,
-                          RequestFilter[] request,
-                          CookieJar cookies)
+                          RequestFilter[] request)
         throws Exception
     {
         System.out.println("Request "+ChannelIdUtil.toString(channel.get_id())

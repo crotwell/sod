@@ -11,7 +11,7 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * FlinnEngdahlRegion.java 
+ * FlinnEngdahlRegion.java
  *
  * FlinnEngdahlRegion can be either GeorgraphicRegion or SeismicRegion
  *
@@ -30,43 +30,33 @@ public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
      */
     public FlinnEngdahlRegion (Element config){
 
-	String regionStr = SodUtil.getNestedText(config);
-	StringTokenizer strtok = new StringTokenizer(regionStr, " ");
-	ArrayList arrayList = new ArrayList();
-	while(strtok.hasMoreTokens()) {
-	    Integer newEntry = new Integer(Integer.parseInt(strtok.nextToken()));
-	    arrayList.add(newEntry);
-	}
-	regions = new Integer[arrayList.size()];
-	regions = (Integer[]) arrayList.toArray(regions);
-    
+        String regionStr = SodUtil.getNestedText(config);
+        StringTokenizer strtok = new StringTokenizer(regionStr, " ");
+        ArrayList arrayList = new ArrayList();
+        while(strtok.hasMoreTokens()) {
+            Integer newEntry = new Integer(Integer.parseInt(strtok.nextToken()));
+            arrayList.add(newEntry);
+        }
+        regions = new Integer[arrayList.size()];
+        regions = (Integer[]) arrayList.toArray(regions);
+
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e an <code>EventAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(EventAttr e,  CookieJar cookies) {
-	
-	if(e.region.type.value() == getType().value()) {
-	     for(int counter = 0; counter < regions.length; counter++) {
-		if(e.region.number == regions[counter].intValue()) {
-		    return true;
-		}
-	    }
-
-	}
-	return false;
+    public boolean accept(EventAttr e) {
+        if(e.region.type.value() == getType().value()) {
+            for(int counter = 0; counter < regions.length; counter++) {
+                if(e.region.number == regions[counter].intValue()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public abstract FlinnEngdahlType getType();
 
     private Integer[] regions = new Integer[0];
 
-    static Category logger = 
+    static Category logger =
         Category.getInstance(FlinnEngdahlRegion.class.getName());
-
 }// FlinnEngdahlRegion

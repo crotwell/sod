@@ -1,10 +1,7 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * EventStationSubsetter.java
@@ -18,19 +15,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 
 public interface EventStationSubsetter extends Subsetter{
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event,
-              NetworkAccess network,
-              Station station,
-              CookieJar cookies) throws Exception;
-    
+    public boolean accept(EventAccessOperations event,  Station station)
+        throws Exception;
+
 }// EventStationSubsetter

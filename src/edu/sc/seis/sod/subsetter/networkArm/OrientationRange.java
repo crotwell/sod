@@ -1,55 +1,28 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.TauP.*;
-
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.Orientation;
+import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 
-public class OrientationRange 
-        implements ChannelSubsetter {
-    
-    /**
-     * Creates a new <code>OrientationRange</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
-    public OrientationRange (Element config) throws ConfigurationException {
-	
-	azimuth = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "azimuth")));
-	dip = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "dip")));	
-	offset = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "maxOffset")));       
-
+public class OrientationRange implements ChannelSubsetter {
+    public OrientationRange (Element config){
+        azimuth = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "azimuth")));
+        dip = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "dip")));
+        offset = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "maxOffset")));
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAccess network, Channel e,  CookieJar cookies) throws Exception{
-	double actualDistance = SphericalCoords.distance(e.an_orientation.dip,
-							 e.an_orientation.azimuth,
-							 dip,
-							 azimuth);
-	if(actualDistance <= offset) {
-	    return true;
-	} else return false;
+    public boolean accept(Channel e) throws Exception{
+        Orientation ori = e.an_orientation;
+        double actualDistance = SphericalCoords.distance(ori.dip, ori.azimuth,
+                                                         dip, azimuth);
+        if(actualDistance <= offset) { return true;
+        }else {return false;}
     }
-    
+
     private float azimuth;
-
     private float dip;
-
     private float offset;
-
 }// OrientationRange

@@ -1,29 +1,9 @@
 package edu.sc.seis.sod.process.eventArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfEvent.*;
-import org.w3c.dom.*;
-
-import java.io.*;
-
-/**
- */
-
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
 
 public class NullEventProcess implements EventArmProcess {
-    /**
-     * Creates a new <code>NullEventProcess</code> instance.
-     */
-    public NullEventProcess (){
-	
-    }
+    public NullEventProcess (){}
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param cookies a <code>CookieJar</code> value
-     */
-    public void process(EventAccessOperations event, CookieJar cookies) {
-    }
+    public void process(EventAccessOperations event) {}
 }// NullEventProcess

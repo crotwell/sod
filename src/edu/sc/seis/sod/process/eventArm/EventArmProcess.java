@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.process.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.Process;
 
 /**
@@ -15,13 +14,6 @@ import edu.sc.seis.sod.process.Process;
 
 public interface EventArmProcess extends Process {
 
-    /**
-     * Describe <code>process</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param cookieJar a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
-     */
-    public void process(EventAccessOperations event, CookieJar cookieJar) throws Exception;
-    
+    public void process(EventAccessOperations event) throws Exception;
+
 }// NetworkProcess

@@ -1,12 +1,8 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -19,32 +15,13 @@ import org.w3c.dom.*;
  */
 public class StationCode implements StationSubsetter {
 
-    /**
-     * Creates a new <code>StationCode</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
-    public StationCode(Element config) {
-        this.config = config;
+    public StationCode(Element config) { this.config = config; }
 
-    }
-
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAccess network, Station station, CookieJar cookies) {
+    public boolean accept(Station station) {
         if(station.get_id().station_code.equals(SodUtil.getNestedText(config))) return true;
         else return false;
 
     }
 
     private Element config = null;
-
-
 }

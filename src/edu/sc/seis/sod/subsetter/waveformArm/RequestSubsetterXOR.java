@@ -46,13 +46,11 @@ public final class RequestSubsetterXOR
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event,
-              NetworkAccess network,
               Channel channel,
-              RequestFilter[] original,
-              CookieJar cookies) throws Exception{
+              RequestFilter[] original) throws Exception{
         RequestSubsetter filterA = (RequestSubsetter)filterList.get(0);
         RequestSubsetter filterB = (RequestSubsetter)filterList.get(1);
-        return ( filterA.accept(event, network, channel, original, cookies) != filterB.accept(event, network, channel, original,  cookies));
+        return ( filterA.accept(event, channel, original) != filterB.accept(event, channel, original));
     }
 
 }// RequestSubsetterXOR

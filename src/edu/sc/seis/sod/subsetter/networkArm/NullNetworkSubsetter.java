@@ -1,10 +1,6 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 
 /**
  * NullNetworkAttrSubsetter.java
@@ -18,17 +14,8 @@ import edu.iris.Fissures.network.*;
 
 public class  NullNetworkSubsetter implements NetworkSubsetter{
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param networkAttr a <code>NetworkAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAttr networkAttr, CookieJar cookies) {
-
-    return true;
-
+    public boolean accept(NetworkAttr networkAttr) {
+        return true;
     }
 
 }// NullNetworkAttrSubsetter

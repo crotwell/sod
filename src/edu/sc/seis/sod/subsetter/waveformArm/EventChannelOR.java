@@ -13,46 +13,26 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of EventChannelSubsetters. This subsetter is accepted when even one
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventChannelOR is not accepted.
-  *<pre>
+ *<pre>
  * &lt;eventChannelOR&gt;
  * &lt;/eventChannelOR&gt;
  *</pre>
  */
 
-public final class EventChannelOR
-    extends  WaveformLogicalSubsetter
+public final class EventChannelOR extends  WaveformLogicalSubsetter
     implements EventChannelSubsetter {
 
-    /**
-     * Creates a new <code>EventChannelOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventChannelOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param o an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations o, NetworkAccess network, Channel channel,  CookieJar cookies)
-    throws Exception{
-    Iterator it = filterList.iterator();
-    while (it.hasNext()) {
-        EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-        if (!filter.accept(o, network, channel, cookies)) {
-        return false;
+    public boolean accept(EventAccessOperations o, Channel channel)
+        throws Exception{
+        Iterator it = filterList.iterator();
+        while (it.hasNext()) {
+            EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
+            if (!filter.accept(o, channel)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// EventChannelOR

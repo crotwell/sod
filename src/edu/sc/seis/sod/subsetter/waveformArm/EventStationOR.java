@@ -8,7 +8,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
 
@@ -48,41 +47,20 @@ import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
  */
 
 
-public final class EventStationOR
-    extends  WaveformLogicalSubsetter
+public final class EventStationOR extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
-    /**
-     * Creates a new <code>EventStationOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventStationOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param o an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies)
-    throws Exception{
-    Iterator it = filterList.iterator();
-
-    while(it.hasNext()) {
-        EventStationSubsetter filter = (EventStationSubsetter)it.next();
-        if (filter.accept(o, network, station, cookies)) {
-        return true;
+    public boolean accept(EventAccessOperations o, Station station)
+        throws Exception{
+        Iterator it = filterList.iterator();
+        while(it.hasNext()) {
+            EventStationSubsetter filter = (EventStationSubsetter)it.next();
+            if (filter.accept(o,station)) { return true; }
         }
+        return false;
     }
-    return false;
-    }
-
 }// EventStationOR

@@ -20,18 +20,11 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public final class EventAttrXOR
-    extends EventLogicalSubsetter
+public final class EventAttrXOR  extends EventLogicalSubsetter
     implements EventAttrSubsetter {
 
-    /**
-     * Creates a new <code>EventAttrXOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventAttrXOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
     /**
@@ -44,10 +37,10 @@ public final class EventAttrXOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
+    public boolean accept(EventAttr e) throws Exception{
         EventAttrSubsetter filterA = (EventAttrSubsetter)filterList.get(0);
         EventAttrSubsetter filterB = (EventAttrSubsetter)filterList.get(1);
-        return ( filterA.accept(e, cookies) != filterB.accept(e, cookies));
+        return ( filterA.accept(e) != filterB.accept(e));
     }
 
 }// EventAttrXOR

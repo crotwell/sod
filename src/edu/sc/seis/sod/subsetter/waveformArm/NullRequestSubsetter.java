@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import org.w3c.dom.*;
+import org.w3c.dom.Element;
 
 
 /**
@@ -18,21 +16,12 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 public class NullRequestSubsetter implements RequestSubsetter {
-    public NullRequestSubsetter() {
-        
-    } // NullRequestSubsetter constructor
+    public NullRequestSubsetter() {} // NullRequestSubsetter constructor
 
-    public NullRequestSubsetter(Element config) {
-        
-    } // NullRequestSubsetter constructor
-    
-    public boolean accept(EventAccessOperations event, 
-                          NetworkAccess network, 
-                          Channel channel, 
-                          RequestFilter[] request,
-                          CookieJar cookies) 
-        throws Exception 
-    {
+    public NullRequestSubsetter(Element config) {}
+
+    public boolean accept(EventAccessOperations event, Channel channel,
+                          RequestFilter[] request)throws Exception{
         return true;
     }
 

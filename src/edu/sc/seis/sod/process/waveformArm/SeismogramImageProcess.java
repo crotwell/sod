@@ -16,7 +16,6 @@ import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
@@ -93,12 +92,11 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws Exception {
+                                         LocalSeismogramImpl[] seismograms
+                                        ) throws Exception {
         logger.debug("process() called");
 
         final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
@@ -108,10 +106,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
         memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
         for (int i = 0; i < seismograms.length; i++) {
-            memDSS.add((LocalSeismogramImpl)seismograms[i]);
+            memDSS.add(seismograms[i]);
         }
         bsd.add(new MemoryDataSetSeismogram[]{memDSS});
-
         final String picFileName = fileDir + '/'
             + eventFormatter.getResult(event) + '/'
             + stationFormatter.getResult(channel.my_site.my_station) + '/'

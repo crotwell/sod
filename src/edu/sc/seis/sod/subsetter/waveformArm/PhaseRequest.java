@@ -1,11 +1,8 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -16,6 +13,10 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -85,9 +86,7 @@ public class PhaseRequest implements RequestGenerator{
      * @return a <code>RequestFilter[]</code> value
      */
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                                           NetworkAccess network,
-                                           Channel channel,
-                                           CookieJar cookies) throws Exception{
+                                           Channel channel) throws Exception{
         Origin origin = null;
         double arrivalStartTime = -100.0;
         double arrivalEndTime = -100.0;

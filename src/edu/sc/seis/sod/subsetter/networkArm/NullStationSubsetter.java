@@ -18,18 +18,6 @@ import edu.iris.Fissures.network.*;
 
 public class  NullStationSubsetter implements StationSubsetter{
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Station station, CookieJar cookies) {
+    public boolean accept(Station station) { return true;  }
 
-	return true;
-
-    }
-    
 }// NullStationSubsetter

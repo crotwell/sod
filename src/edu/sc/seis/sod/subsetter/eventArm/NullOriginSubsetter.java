@@ -17,32 +17,12 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public class NullOriginSubsetter
-    implements OriginSubsetter {
+public class NullOriginSubsetter implements OriginSubsetter {
+    public NullOriginSubsetter () {}
 
-    /**
-     * Creates a new <code>NullOriginSubsetter</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
-    public NullOriginSubsetter () {
-    }
+    public NullOriginSubsetter (Element config) { }
 
-    public NullOriginSubsetter (Element config) {
-    }
-
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param e an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
         return true;
     }
-
 }// NullOriginSubsetter

@@ -8,7 +8,6 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
@@ -32,30 +31,16 @@ import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
  */
 
 public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter implements EventStationSubsetter {
-    /**
-     * Creates a new <code>LinearDistanceMagnitudeRange</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public LinearDistanceMagnitudeRange (Element config) throws ConfigurationException{
         super(config);
         Element subElement = SodUtil.getElement(config, "magnitudeRange");
         magnitudeRange = (MagnitudeRange) SodUtil.load(subElement, "eventArm");
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param eventAccess an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) throws Exception {
+    public boolean accept(EventAccessOperations eventAccess,  Station station)
+        throws Exception {
         Origin origin = null;
         origin = eventAccess.get_preferred_origin();
-
         double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
                                                          origin.my_location.longitude,
                                                          station.my_location.latitude,
@@ -67,9 +52,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
             }
         }
         return false;
-
     }
 
     private  MagnitudeRange magnitudeRange;
-
 }// LinearDistanceMagnitudeRange

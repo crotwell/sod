@@ -1,21 +1,19 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventDCOperations;
-import edu.iris.Fissures.IfEvent.NotFound;
+import edu.sc.seis.fissuresUtil.cache.NSEventDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.AbstractSource;
 import java.util.ArrayList;
-import org.apache.log4j.Category;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import java.util.List;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.sc.seis.fissuresUtil.cache.NSEventDC;
 
 /**
  * This subsetter specifies the source of eventDC and the parameters required to query for events.
@@ -81,168 +79,83 @@ import edu.sc.seis.fissuresUtil.cache.NSEventDC;
  */
 
 public class EventFinder extends AbstractSource implements SodElement {
-    /**
-     * Creates a new <code>EventFinder</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public EventFinder (Element config) throws Exception{
         super(config);
-        this.config = config;
+        processConfig(config);
         CommonAccess commonAccess = CommonAccess.getCommonAccess();
-        processConfig();
-        fissuresNamingService = commonAccess.getFissuresNamingService();
-        
+        fisName = commonAccess.getFissuresNamingService();
     }
-    
-    /**
-     * Describe <code>processConfig</code> method here.
-     *
-     * @exception ConfigurationException if an error occurs
-     */
-    protected void processConfig() throws ConfigurationException{
-        
+
+    protected void processConfig(Element config) throws ConfigurationException{
         NodeList childNodes = config.getChildNodes();
-        Node node;
-        catalogs = new ArrayList();
-        contributors = new ArrayList();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            
-            node = childNodes.item(counter);
+            Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
                 if(!tagName.equals("name") && !tagName.equals("dns")) {
                     Object object = SodUtil.load((Element)node, "eventArm");
-                    if(tagName.equals("originDepthRange")) depthRange = ((OriginDepthRange)object);
-                    else if(tagName.equals("eventTimeRange")) eventTimeRange = ((EventTimeRange)object);
-                    else if(tagName.equals("magnitudeRange")) magnitudeRange = (MagnitudeRange)object;
-                    else if(object instanceof edu.iris.Fissures.Area) area = (edu.iris.Fissures.Area)object;
-                    else if(tagName.equals("catalog")) {
-                        catalog = (Catalog)object;
-                        catalogs.add(catalog.getCatalog());
-                    }
-                    else if(tagName.equals("contributor")) {
-                        contributor = (Contributor)object;
-                        contributors.add(contributor.getContributor());
+                    if(tagName.equals("originDepthRange")) {
+                        depthRange = ((OriginDepthRange)object);
+                    }else if(tagName.equals("eventTimeRange")) {
+                        eventTimeRange = ((EventTimeRange)object);
+                    }else if(tagName.equals("magnitudeRange")) {
+                        magnitudeRange = (MagnitudeRange)object;
+                    }else if(object instanceof edu.iris.Fissures.Area){
+                        area = (edu.iris.Fissures.Area)object;
+                    }else if(tagName.equals("catalog")) {
+                        catalogs.add(((Catalog)object).getCatalog());
+                    }else if(tagName.equals("contributor")) {
+                        contributors.add(((Contributor)object).getContributor());
                     }
                 }
             }
-            
         }
-        
     }
-    
-    /**
-     * Describe <code>getEventDC</code> method here.
-     *
-     * @return an <code>EventDC</code> value
-     */
-    public EventDCOperations forceGetEventDC()
-        throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
+
+    public EventDCOperations forceGetEventDC(){
         eventDC = getEventDC();
-        ((NSEventDC)eventDC).reset();
+        eventDC.reset();
         return eventDC;
     }
-    
-    public EventDCOperations getEventDC()
-        throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
+
+    public NSEventDC getEventDC(){
         if (eventDC == null) {
-            eventDC = new NSEventDC(getDNSName(), getSourceName(), fissuresNamingService);
+            eventDC = new NSEventDC(getDNSName(), getSourceName(), fisName);
         }
         return eventDC;
     }
-    
-    
-    /**
-     * Describe <code>getDepthRange</code> method here.
-     *
-     * @return a <code>DepthRange</code> value
-     */
-    public OriginDepthRange getDepthRange() {
-        return depthRange;
-        
-    }
-    
-    /**
-     * Describe <code>getMagnitudeRange</code> method here.
-     *
-     * @return a <code>MagnitudeRange</code> value
-     */
-    public MagnitudeRange getMagnitudeRange() {
-        
-        return magnitudeRange;
-        
-    }
-    
-    /**
-     * Describe <code>getArea</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.Area</code> value
-     */
-    public edu.iris.Fissures.Area getArea() {
-        return area;
-        
-    }
-    
-    /**
-     * Describe <code>getEventTimeRange</code> method here.
-     *
-     * @return an <code>EventTimeRange</code> value
-     */
-    public EventTimeRange getEventTimeRange() {
-        
-        return eventTimeRange;
-        
-    }
-    
-    /**
-     * Describe <code>getCatalogs</code> method here.
-     *
-     * @return a <code>String[]</code> value
-     */
+
+    public OriginDepthRange getDepthRange() { return depthRange; }
+
+    public MagnitudeRange getMagnitudeRange() {  return magnitudeRange; }
+
+    public edu.iris.Fissures.Area getArea() { return area; }
+
+    public EventTimeRange getEventTimeRange() {  return eventTimeRange; }
+
     public String[] getCatalogs() {
-        
-        String[] rtnValues = new String[catalogs.size()];
-        rtnValues = (String[]) catalogs.toArray(rtnValues);
-        return rtnValues;
+        return  (String[]) catalogs.toArray(new String[catalogs.size()]);
     }
-    
-    /**
-     * Describe <code>getContributors</code> method here.
-     *
-     * @return a <code>String[]</code> value
-     */
+
     public String[] getContributors() {
-        
-        String[] rtnValues = new String[contributors.size()];
-        rtnValues = (String[])contributors.toArray(rtnValues);
-        return rtnValues;
+        return  (String[])contributors.toArray(new String[contributors.size()]);
     }
-    
-    
-    private FissuresNamingService fissuresNamingService = null;
-    
-    private EventDCOperations eventDC = null;
-    
-    private Element config = null;
-    
-    private Catalog catalog;
-    
-    private Contributor contributor;
-    
-    private ArrayList catalogs;
-    
-    private ArrayList contributors;
-    
+
+    private FissuresNamingService fisName;
+
+    private NSEventDC eventDC;
+
+    private List catalogs = new ArrayList();
+
+    private List contributors = new ArrayList();
+
     private OriginDepthRange depthRange;
-    
+
     private MagnitudeRange magnitudeRange;
-    
+
     private EventTimeRange eventTimeRange;
-    
+
     private edu.iris.Fissures.Area area;
-    
-    static Category logger =
-        Category.getInstance(EventFinder.class.getName());
-    
+
+    private static Logger logger = Logger.getLogger(EventFinder.class);
 }// EventFinder

@@ -1,11 +1,10 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import org.w3c.dom.*;
+import edu.sc.seis.sod.ConfigurationException;
+import org.w3c.dom.Element;
 
 /**
  * BreqFastRequestSubsetter.java
@@ -21,17 +20,9 @@ public class BreqFastRequestSubsetter implements RequestSubsetter {
         breqfast = new BreqFastAvailableData(config);
     }
 
-    public boolean accept(EventAccessOperations event,
-                          NetworkAccess network,
-                          Channel channel,
-                          RequestFilter[] request,
-                          CookieJar cookies)throws Exception {
-        return breqfast.accept(event,
-                               network,
-                               channel,
-                               request,
-                               request,
-                               cookies);
+    public boolean accept(EventAccessOperations event, Channel channel,
+                          RequestFilter[] request)throws Exception {
+        return breqfast.accept(event, channel, request, request);
     }
     BreqFastAvailableData breqfast;
 } // BreqFastRequestGenerator

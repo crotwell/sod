@@ -1,11 +1,8 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.ConfigurationException;
+import org.w3c.dom.Element;
 
 /**
  * siteXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
@@ -20,31 +17,16 @@ import edu.iris.Fissures.*;
  * @version 1.0
  */
 public final class SiteXOR
-    extends  NetworkLogicalSubsetter
-    implements SiteSubsetter {
+    extends  NetworkLogicalSubsetter implements SiteSubsetter {
 
-    /**
-     * Creates a new <code>SiteXOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public SiteXOR (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Site</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(NetworkAccess network, Site site,  CookieJar cookies) {
+    public boolean accept(Site site) {
         SiteSubsetter filterA = (SiteSubsetter)filterList.get(0);
         SiteSubsetter filterB = (SiteSubsetter)filterList.get(1);
-        return ( filterA.accept(network, site, cookies) != filterB.accept(network, site, cookies));
+        return ( filterA.accept(site) != filterB.accept(site));
 
     }
 

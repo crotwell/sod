@@ -32,43 +32,22 @@ import org.w3c.dom.*;
  */
 
 public class EmbeddedStationSubsetter implements EventStationSubsetter{
-    /**
-     * Creates a new <code>EmbeddedStationSubsetter</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public EmbeddedStationSubsetter (Element config) throws ConfigurationException{
-        
         NodeList childNodes = config.getChildNodes();
-        Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            node = childNodes.item(counter);
+            Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 stationSubsetter = (StationSubsetter) SodUtil.load((Element)node,
                                                                    "networkArm");
                 break;
             }
         }
-        
+
     }
-    
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param eventAccess an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     */
-    public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) throws Exception{
-        
-        return stationSubsetter.accept(network, station, cookies);
-        
-        
+
+    public boolean accept(EventAccessOperations eventAccess, Station station) throws Exception{
+        return stationSubsetter.accept(station);
     }
-    
-    
+
     private StationSubsetter stationSubsetter = null;
-    
 }// EmbeddedStationSubsetter

@@ -26,9 +26,9 @@ public class SomeCoverage implements AvailableDataSubsetter, SodElement{
      * @param config an <code>Element</code> value
      */
     public SomeCoverage (Element config){
-	
+
     }
-    
+
     /**
      * Describe <code>accept</code> method here.
      *
@@ -40,21 +40,19 @@ public class SomeCoverage implements AvailableDataSubsetter, SodElement{
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available, 
-			  CookieJar cookies) {
-	// simple impl, probably need more robust
-	if (available != null && available.length != 0) {
-	    return true;
-	}
-	
-	return false;
+    public boolean accept(EventAccessOperations event,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available) {
+    // simple impl, probably need more robust
+    if (available != null && available.length != 0) {
+        return true;
     }
 
-    static Category logger = 
-	Category.getInstance(SomeCoverage.class.getName());
+    return false;
+    }
+
+    static Category logger =
+    Category.getInstance(SomeCoverage.class.getName());
 
 }// SomeCoverage

@@ -69,13 +69,7 @@ import org.w3c.dom.*;
 
 public class ChoiceRequest implements RequestGenerator{
 
-    /**
-     * Creates a new <code>ChoiceRequest</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public ChoiceRequest (Element config) throws ConfigurationException{
-
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -95,31 +89,17 @@ public class ChoiceRequest implements RequestGenerator{
         }
     }
 
-    /**
-     * Describe <code>generateRequest</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>RequestFilter[]</code> value
-     */
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                                           NetworkAccess network,
-                                           Channel channel,
-                                           CookieJar cookies) throws Exception{
+                                           Channel channel) throws Exception{
         Iterator it = choices.iterator();
         while (it.hasNext()) {
             Choice c = (Choice)it.next();
-            if (c.accept(event, network, channel, cookies)) {
-                return c.generateRequest(event, network, channel, cookies);
+            if (c.accept(event, channel)) {
+                return c.generateRequest(event, channel);
             } // end of if (c.accept(event, network, channel, cookies))
         } // end of while (it.hasNext())
         if (otherwise != null) {
-            return otherwise.generateRequest(event,
-                                             network,
-                                             channel,
-                                             cookies);
+            return otherwise.generateRequest(event, channel);
         } else {
             return new RequestFilter[0];
         } // end of else
@@ -153,24 +133,13 @@ public class ChoiceRequest implements RequestGenerator{
         }
 
         public RequestFilter[] generateRequest(EventAccessOperations event,
-                                               NetworkAccess network,
-                                               Channel channel,
-                                               CookieJar cookies)
-            throws Exception  {
-            return requestGenerator.generateRequest(event,
-                                                    network,
-                                                    channel,
-                                                    cookies);
+                                               Channel channel) throws Exception  {
+            return requestGenerator.generateRequest(event, channel);
         }
 
-        public boolean accept(EventAccessOperations event,
-                              NetworkAccess network,
-                              Channel channel,
-                              CookieJar cookies) throws Exception {
-            return eventChannelSubsetter.accept(event,
-                                                network,
-                                                channel,
-                                                cookies);
+        public boolean accept(EventAccessOperations event, Channel channel)
+            throws Exception {
+            return eventChannelSubsetter.accept(event,channel);
         }
 
         EventChannelSubsetter eventChannelSubsetter;
@@ -196,24 +165,13 @@ public class ChoiceRequest implements RequestGenerator{
         }
 
         public RequestFilter[] generateRequest(EventAccessOperations event,
-                                               NetworkAccess network,
-                                               Channel channel,
-                                               CookieJar cookies)
-            throws Exception  {
-            return requestGenerator.generateRequest(event,
-                                                    network,
-                                                    channel,
-                                                    cookies);
+                                               Channel channel) throws Exception  {
+            return requestGenerator.generateRequest(event, channel);
         }
 
         public boolean accept(EventAccessOperations event,
-                              NetworkAccess network,
-                              Channel channel,
-                              CookieJar cookies) throws Exception {
-            return eventStationSubsetter.accept(event,
-                                                network,
-                                                channel.my_site.my_station,
-                                                cookies);
+                              Channel channel) throws Exception {
+            return eventStationSubsetter.accept(event, channel.my_site.my_station);
         }
 
         EventStationSubsetter eventStationSubsetter;

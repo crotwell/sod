@@ -38,38 +38,19 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class StationAND
-    extends  NetworkLogicalSubsetter
+public final class StationAND extends  NetworkLogicalSubsetter
     implements StationSubsetter {
 
-    /**
-     * Creates a new <code>StationAND</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public StationAND (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    while(it.hasNext()) {
-        StationSubsetter filter = (StationSubsetter)it.next();
-        if (!filter.accept(network, e, cookies)) {
-        return false;
+    public boolean accept(Station e) throws Exception{
+        Iterator it = filterList.iterator();
+        while(it.hasNext()) {
+            StationSubsetter filter = (StationSubsetter)it.next();
+            if (!filter.accept(e)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// StationAND

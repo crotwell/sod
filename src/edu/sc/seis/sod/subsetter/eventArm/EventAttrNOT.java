@@ -23,8 +23,7 @@ import edu.iris.Fissures.*;
  */
 
 
-public final class EventAttrNOT
-    extends EventLogicalSubsetter
+public final class EventAttrNOT extends EventLogicalSubsetter
     implements EventAttrSubsetter {
 
     /**
@@ -36,26 +35,15 @@ public final class EventAttrNOT
      * @exception ConfigurationException if an error occurs
      */
     public EventAttrNOT (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param e an <code>EventAttr</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    if (it.hasNext()) {
-        EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-        if ( filter.accept(e, cookies)) {
-        return false;
+    public boolean accept(EventAttr e) throws Exception{
+        Iterator it = filterList.iterator();
+        if (it.hasNext()) {
+            EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
+            if ( filter.accept(e)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// EventAttrNOT

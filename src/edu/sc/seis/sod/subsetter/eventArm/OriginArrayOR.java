@@ -22,41 +22,22 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class OriginArrayOR 
-    extends EventLogicalSubsetter 
+public class OriginArrayOR  extends EventLogicalSubsetter
     implements OriginSubsetter {
-    
-    /**
-     * Creates a new <code>OriginArrayOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
+
     public OriginArrayOR (Element config) throws ConfigurationException {
-	super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param e an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    OriginSubsetter filter = (OriginSubsetter)it.next();
-	    Origin[] origins = event.get_origins();
-	    for(int counter = 0; counter < origins.length; counter++) {
-		if (filter.accept(event, origins[counter], cookies)) {
-		    return true;
-		}
-	    }
-	}
-	return false;
+    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+        Iterator it = filterList.iterator();
+        while (it.hasNext()) {
+            OriginSubsetter filter = (OriginSubsetter)it.next();
+            Origin[] origins = event.get_origins();
+            for(int counter = 0; counter < origins.length; counter++) {
+                if (filter.accept(event, origins[counter])) { return true; }
+            }
+        }
+        return false;
     }
-
 }// OriginArrayOR

@@ -19,8 +19,8 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 
 public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRangeSubsetter implements OriginSubsetter{
-    
-    
+
+
     /**
      * Creates a new <code>OriginPointDistance</code> instance.
      *
@@ -33,19 +33,13 @@ public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRange
         nodeList = config.getElementsByTagName("longitude");
         longitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
     }
-    
+
     /**
      * Accepts an origin only if it lies within the geven distance range of the
      * given lat and lon.
      *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param origin an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations event,
-                          Origin origin,
-                          CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin origin) {
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
@@ -56,7 +50,7 @@ public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRange
             return false;
         }
     }
-    
+
     double latitude = 0.0;
     double longitude = 0.0;
 }

@@ -42,33 +42,17 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public final class OriginXOR
-    extends EventLogicalSubsetter
+public final class OriginXOR extends EventLogicalSubsetter
     implements OriginSubsetter {
 
-    /**
-     * Creates a new <code>OriginXOR</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public OriginXOR (Element config) throws ConfigurationException {
         super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param e an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
         OriginSubsetter filterA = (OriginSubsetter)filterList.get(0);
         OriginSubsetter filterB = (OriginSubsetter)filterList.get(1);
-        return ( filterA.accept(event, e, cookies) != filterB.accept(event, e, cookies));
+        return ( filterA.accept(event, e) != filterB.accept(event, e));
     }
 
 }// OriginXOR

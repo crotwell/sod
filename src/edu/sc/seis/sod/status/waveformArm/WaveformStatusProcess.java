@@ -24,30 +24,30 @@ public interface WaveformStatusProcess extends Subsetter{
     public void begin(EventAccessOperations eventAccess) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              NetworkAccess networkAccess) throws Exception;
+                      NetworkAccess networkAccess) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              Station station) throws Exception;
+                      Station station) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              Site site) throws Exception;
+                      Site site) throws Exception;
 
     public void begin(EventAccessOperations eventAccess,
-              Channel channel) throws Exception;
+                      Channel channel) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
-            Channel channel,
-            Status status,
-            String reason) throws Exception;
+                    Channel channel,
+                    Status status,
+                    String reason) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
-            Site site) throws Exception;
+                    Site site) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
-            Station station) throws Exception;
+                    Station station) throws Exception;
 
     public void end(EventAccessOperations eventAccess,
-            NetworkAccess networkAccess) throws Exception;
+                    NetworkAccess networkAccess) throws Exception;
 
     public void end(EventAccessOperations eventAccess) throws Exception;
 

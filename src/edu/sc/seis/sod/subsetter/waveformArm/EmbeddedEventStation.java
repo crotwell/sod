@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * EmbeddedEventStation.java
@@ -21,39 +20,20 @@ import edu.iris.Fissures.*;
 
 public class EmbeddedEventStation  implements EventChannelSubsetter{
     public EmbeddedEventStation(Element config) throws ConfigurationException{
-    
-    NodeList childNodes = config.getChildNodes();
-    Node node;
-    for(int counter = 0; counter < childNodes.getLength(); counter++) {
-        node = childNodes.item(counter);
-        if(node instanceof Element) {
-        eventStationSubsetter =
-            (EventStationSubsetter) SodUtil.load((Element)node, "eventArm");
-        break;
+        NodeList childNodes = config.getChildNodes();
+        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+            Node node = childNodes.item(counter);
+            if(node instanceof Element) {
+                eventStationSubsetter =
+                    (EventStationSubsetter) SodUtil.load((Element)node, "eventArm");
+                break;
+            }
         }
     }
-    }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param o an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations o,
-              NetworkAccess network,
-              Channel channel,
-              CookieJar cookies)
-    throws Exception
-    {
-    return eventStationSubsetter.accept(o,
-                        network,
-                        channel.my_site.my_station,
-                        cookies);
+    public boolean accept(EventAccessOperations o, Channel channel)
+        throws Exception {
+        return eventStationSubsetter.accept(o, channel.my_site.my_station);
     }
 
     EventStationSubsetter eventStationSubsetter;

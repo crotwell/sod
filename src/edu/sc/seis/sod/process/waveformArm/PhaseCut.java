@@ -7,7 +7,6 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.PhaseRequest;
 import java.util.LinkedList;
 import org.apache.log4j.Category;
@@ -20,7 +19,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 7555 2004-03-10 18:10:01Z groves $
+ * @version $Id: PhaseCut.java 7650 2004-03-16 18:24:31Z groves $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -50,14 +49,11 @@ public class PhaseCut implements LocalSeismogramProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws Exception {
-        RequestFilter[] cutRequest =
-            phaseRequest.generateRequest(event, network, channel, cookies);
+                                         LocalSeismogramImpl[] seismograms) throws Exception {
+        RequestFilter[] cutRequest = phaseRequest.generateRequest(event, channel);
         logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
         Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time),
                           new MicroSecondDate(cutRequest[0].end_time));

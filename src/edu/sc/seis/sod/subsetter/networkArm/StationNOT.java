@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 /**
  * stationNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
@@ -31,38 +29,19 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public final class StationNOT
-    extends  NetworkLogicalSubsetter
+public final class StationNOT extends  NetworkLogicalSubsetter
     implements StationSubsetter {
 
-    /**
-     * Creates a new <code>StationNOT</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public StationNOT (Element config) throws ConfigurationException {
-    super(config);
+        super(config);
     }
 
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param network a <code>NetworkAccess</code> value
-     * @param e a <code>Station</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(NetworkAccess  network, Station e,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    if (it.hasNext()) {
-        StationSubsetter filter = (StationSubsetter)it.next();
-        if ( filter.accept(network, e, cookies)) {
-        return false;
+    public boolean accept(Station e) throws Exception{
+        Iterator it = filterList.iterator();
+        if (it.hasNext()) {
+            StationSubsetter filter = (StationSubsetter)it.next();
+            if ( filter.accept(e)) { return false; }
         }
+        return true;
     }
-    return true;
-    }
-
 }// StationNOT

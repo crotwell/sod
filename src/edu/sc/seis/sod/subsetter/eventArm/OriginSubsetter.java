@@ -1,9 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * OriginSubsetter.java
@@ -16,17 +14,6 @@ import edu.iris.Fissures.IfEvent.Origin;
  */
 
 public interface OriginSubsetter extends Subsetter{
-    /**
-     * Describe <code>accept</code> method here.
-     *
-     * @param eventAccess an <code>EventAccessOperations</code> value
-     * @param origin an <code>Origin</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
-     */
-    public boolean accept(EventAccessOperations eventAccess,
-              Origin origin,
-              CookieJar cookies) throws Exception;
-    
+    public boolean accept(EventAccessOperations eventAccess, Origin origin)
+        throws Exception;
 }// OriginSubsetter

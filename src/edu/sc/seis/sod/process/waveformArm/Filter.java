@@ -8,7 +8,6 @@ package edu.sc.seis.sod.process.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
@@ -17,7 +16,6 @@ import edu.sc.seis.fissuresUtil.bag.ButterworthFilter;
 import edu.sc.seis.fissuresUtil.freq.SeisGramText;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,18 +23,11 @@ import org.w3c.dom.NodeList;
 
 public class Filter implements LocalSeismogramProcess {
 
-    /**
-     * Creates a new <code>Filter</code> instance.
-     *
-     * @param config an <code>Element</code> that contains the configuration
-     * for this Processor
-     */
     public Filter (Element config) throws ConfigurationException {
         this.config = config;
         NodeList childNodes = config.getChildNodes();
-        Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            node = childNodes.item(counter);
+            Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 Element element = (Element)node;
                 if(element.getTagName().equals("lowFreqCorner")) {
@@ -67,25 +58,12 @@ public class Filter implements LocalSeismogramProcess {
                                        filterType);
     }
 
-    /**
-     * Filters the seismograms.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
-     */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws Exception {
+                                         LocalSeismogramImpl[] seismograms)
+        throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
@@ -106,6 +84,4 @@ public class Filter implements LocalSeismogramProcess {
     int filterType = ButterworthFilter.NONCAUSAL;
 
     edu.sc.seis.fissuresUtil.bag.RMean rmean;
-
 }
-

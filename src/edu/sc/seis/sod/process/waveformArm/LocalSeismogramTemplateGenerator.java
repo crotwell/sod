@@ -7,15 +7,13 @@
 package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
@@ -25,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
 
@@ -93,16 +90,14 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         NetworkAccess network,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookies) throws Exception {
+                                         LocalSeismogramImpl[] seismograms) throws Exception {
         logger.debug("process() called");
 
         if (seismoImageProcess != null){
-            seismoImageProcess.process(event, network, channel, original, available, seismograms, cookies);
+            seismoImageProcess.process(event, channel, original, available, seismograms);
         }
         else {
             logger.debug("There was no picname in config.  I am not generating pictures.");

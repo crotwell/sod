@@ -1,20 +1,26 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import edu.sc.seis.sod.*;
-
-import edu.sc.seis.sod.status.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-import org.apache.log4j.*;
-import java.io.*;
-import java.text.*;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.EventFormatter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
 
 /**
  * Creates a breqfast email requset file based on the events and channels that
@@ -36,18 +42,16 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
         String datadirName = getConfig("dataDirectory");
         this.dataDirectory = new File(datadirName);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        nameGenerator = new EventFormatter(SodUtil.getElement(config,
-                                                                  "label"),
-                                          true);
+        nameGenerator = new EventFormatter(SodUtil.getElement(config,  "label"),
+                                           true);
     }
 
     public boolean accept(EventAccessOperations event,
-                          NetworkAccess network,
                           Channel channel,
                           RequestFilter[] request,
-                          RequestFilter[] available,
-                          CookieJar cookies) throws IOException, ConfigurationException, NoPreferredOrigin {
-        writeToBFEmail(event, network, channel, request, cookies);
+                          RequestFilter[] available) throws IOException,
+        ConfigurationException, NoPreferredOrigin {
+        writeToBFEmail(event, channel, request);
         // don't care if yes or no
         return true;
     }
@@ -57,12 +61,9 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
     }
 
     protected synchronized void writeToBFEmail(EventAccessOperations event,
-                                               NetworkAccess networkAccess,
                                                Channel channel,
-                                               RequestFilter[] request,
-                                               CookieJar cookies)
+                                               RequestFilter[] request)
         throws IOException, ConfigurationException, NoPreferredOrigin {
-
         if ( out != null && event != lastEvent) {
             out.close();
             out = null;
