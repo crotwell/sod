@@ -29,7 +29,7 @@ public class CommonAccess {
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingService(getORB());
             java.util.Properties props = System.getProperties();
-            if ( props.containsKey(NAME_SERVICE_PROP)) {
+            if ( props.containsKey(FissuresNamingService.CORBALOC_PROP)) {
                 fissuresNamingService.setNameServiceCorbaLoc((String)props.get(FissuresNamingService.CORBALOC_PROP));
             } // end of if ()
         } // end of if (fissuresNamingService == null)
