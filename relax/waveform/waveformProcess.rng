@@ -40,7 +40,6 @@
             <ref name="seismogramAND"/>
             <ref name="seismogramOR"/>
             <ref name="seismogramNOT"/>
-            <ref name="waveformCountProcessor"/>
             <ref name="someDataCoverage"/>
             <ref name="noDataGaps"/>
             <ref name="fullDataCoverage"/>
@@ -494,14 +493,6 @@
             </optional>
         </element>
     </define>
-    <define name="waveformCountProcessor">
-        <element name="waveformCountProcessor">
-            <xsd:annotation>
-                <summary>Counts the number of seismograms processed</summary>
-            </xsd:annotation>
-            <empty/>
-        </element>
-    </define>
     <define name="noDataGaps">
         <element name="noDataGaps">
             <xsd:annotation>
@@ -542,3 +533,4 @@
         </element>
     </define>
 </grammar>
+
