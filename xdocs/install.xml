@@ -10,10 +10,10 @@
 
 <section name="Installing SOD">
 <p>
-In addition to the distribution tar or zip file, you also need to get several
-jars that sod depends on. The list can be found in the 
-<a href="http://www.seis.sc.edu/software/sod/dependencies.html">dependency</a>
-section of the project info.
+SOD is currently distributed as a tar or zip file that contains sod itself, plus
+all the other jar files that it depends on. Also, a unix shell script and a windows
+bat file are provided to run it. See the <a href="walkthrough.html">walk through
+</a> document for a sample run of SOD.
 </p>
 
 </section>
