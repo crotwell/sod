@@ -111,7 +111,10 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	if(eventFinderSubsetter == null) return;
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
-	String[] searchTypes = new String[0];
+	String[] searchTypes = new String[3];
+	searchTypes[0] = "MB";
+	searchTypes[1] = "ML";
+	searchTypes[2] = "MS";
 
 	EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
        
@@ -141,6 +144,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    maxMagnitude = eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value;
 	}
 	    
+	System.out.println("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
+	for (int i=0; i<searchTypes.length; i++) {
+	System.out.println("magnitudes "+searchTypes[i]);
+	} // end of for (int i=0; i<searchTypes.length; i++)
+	System.out.println("mag "+minMagnitude+" "+maxMagnitude);
+
 	EventAccess[] eventAccess = finder.query_events(eventFinderSubsetter.getArea(),
 							minDepth,
 							maxDepth,
