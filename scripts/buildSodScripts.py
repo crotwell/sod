@@ -26,7 +26,7 @@ class editor(sodScriptParameters):
         sodScriptParameters.__init__(self, [])
         for mod in mods: self.update(mod)
         self.mainclass='edu.sc.seis.sod.editor.SodGUIEditor'
-        self.name='editor'
+        self.name='sodeditor'
 
 def buildAll(proj):
     scripts = buildSodScripts(proj)
