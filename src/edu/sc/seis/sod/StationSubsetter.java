@@ -13,7 +13,7 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface StationSubsetter {
+public interface StationSubsetter extends Subsetter{
 
     public boolean accept(Station station, CookieJar cookies);
     

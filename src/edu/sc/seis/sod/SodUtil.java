@@ -191,6 +191,26 @@ public class SodUtil {
 	return null;
     }
 
+   /** returns the element with the given name
+     */
+
+     public static Element getElement(Element config, String elementName) {
+
+		NodeList children = config.getChildNodes();
+		Node node;
+
+		for(int counter = 0; counter < children.getLength(); counter++ ) {
+
+			node = children.item(counter);
+			if(node instanceof Element ) {
+
+				if(((Element)node).getTagName().equals(elementName)) return ((Element)node);
+			}
+
+		}
+		return null;
+    }
+
     /** returns the first text child within the node.
      */
     public static String getText(Element config) {
