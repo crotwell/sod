@@ -93,7 +93,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                                      CookieJar cookies) throws Exception {
         logger.debug("process() called");
 
-        final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay(null);
+        final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
         bsd.PRINTING = true;
 
         MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0], "");
@@ -124,5 +124,6 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         return seismograms;
     }
 }
+
 
 
