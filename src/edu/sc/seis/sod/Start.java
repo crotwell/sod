@@ -50,6 +50,18 @@ public class Start implements SodExceptionListener {
         }
     }
     
+    public static WaveFormArm getWaveformArm() {
+        return waveform;
+    }
+    
+    public static EventArm getEventArm() {
+        return event;
+    }
+    
+    public static NetworkArm getNetworkArm() {
+        return network;
+    }
+    
     public boolean validate(Document doc){
         return true;//following lines commented out pending fix to bali
         //Verifier v = new JARVVerifierImpl(Validator.schema.createValidatelet());
@@ -70,37 +82,33 @@ public class Start implements SodExceptionListener {
     public void createArms() throws Exception {
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
-        NetworkArm networkArm = null;
         NodeList children = docElement.getChildNodes();
         Node node;
         for (int i=0; i<children.getLength(); i++) {
             node = children.item(i);
             if (node instanceof Element) {
-                Element subElement = (Element)node;
-                if (subElement.getTagName().equals("description")) {
-                    logger.info(subElement.getTagName());
-                } else if (subElement.getTagName().equals("eventArm")) {
-                    logger.info(subElement.getTagName());
-                    EventArm eventArm = new EventArm(subElement, this, props);
-                    eventArmThread = new Thread(eventArm, "eventArm thread");
+                Element el = (Element)node;
+                if (el.getTagName().equals("description")) {
+                    logger.info(el.getTagName());
+                } else if (el.getTagName().equals("eventArm")) {
+                    logger.info(el.getTagName());
+                    event = new EventArm(el, this, props);
+                    eventArmThread = new Thread(event, "eventArm thread");
                     eventArmThread.start();
-                } else if (subElement.getTagName().equals("networkArm")) {
-                    logger.info(subElement.getTagName());
-                    networkArm = new NetworkArm(subElement);
-                } else if (subElement.getTagName().equals("waveFormArm")) {
-                    logger.info(subElement.getTagName());
-                    int threadPoolSize =
+                } else if (el.getTagName().equals("networkArm")) {
+                    logger.info(el.getTagName());
+                    network = new NetworkArm(el);
+                } else if (el.getTagName().equals("waveFormArm")) {
+                    logger.info(el.getTagName());
+                    int poolSize =
                         Integer.parseInt(props.getProperty("edu.sc.seis.sod.waveformarm.threads",
                                                            "5"));
-                    WaveFormArm waveformArm = new WaveFormArm(subElement,
-                                                              networkArm,
-                                                              this,
-                                                              threadPoolSize);
-                    waveFormArmThread = new Thread(waveformArm, "waveFormArm Thread");
+                    waveform = new WaveFormArm(el, network, this, poolSize);
+                    waveFormArmThread = new Thread(waveform, "waveFormArm Thread");
                     waveFormArmThread.start();
                     
                 }  else {
-                    logger.debug("process "+subElement.getTagName());
+                    logger.debug("process "+el.getTagName());
                 }
             }
         }
@@ -291,6 +299,12 @@ public class Start implements SodExceptionListener {
     private static Thread waveFormArmThread;
     
     private static Thread eventArmThread;
+    
+    private static WaveFormArm waveform;
+    
+    private static EventArm event;
+    
+    private static NetworkArm network;
     
     private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
