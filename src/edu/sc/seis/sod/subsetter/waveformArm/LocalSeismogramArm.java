@@ -180,6 +180,7 @@ public class LocalSeismogramArm implements Subsetter{
 					     waveformArm
 					     );
 	} else {
+	    logger.info("FAIL event channel");
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
 				       Status.COMPLETE_REJECT,
@@ -274,6 +275,7 @@ public class LocalSeismogramArm implements Subsetter{
 		localSeismograms = dataCenter.retrieve_seismograms(infilters);
 		//localSeismograms = new LocalSeismogram[0];
 	    } else {
+		logger.debug("Failed, available data returned no requestFilters ");
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
 	    
@@ -312,6 +314,7 @@ public class LocalSeismogramArm implements Subsetter{
 					    localSeismograms,
 					    waveformArm);
 	} else {
+	    logger.info("FAIL available data");
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
 				       Status.COMPLETE_REJECT,
@@ -360,6 +363,7 @@ public class LocalSeismogramArm implements Subsetter{
 			       localSeismograms,
 			       waveformArm);
 	} else {
+	    logger.info("FAIL seismogram subsetter");
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
 				       Status.COMPLETE_REJECT,

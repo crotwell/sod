@@ -10,6 +10,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 /**
  * sample xml
@@ -49,8 +50,11 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement{
 	if (original.length == available.length) {
 	    return true;
 	} // end of if (original.length == available.length)
-	
+	logger.debug("FAIL fullCoverage");	
 	return false;
     }
-    
+
+    static Category logger = 
+	Category.getInstance(FullCoverage.class.getName());
+
 }// FullCoverage
