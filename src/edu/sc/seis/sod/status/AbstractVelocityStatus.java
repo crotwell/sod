@@ -173,6 +173,10 @@ public abstract class AbstractVelocityStatus implements WaveformArmMonitor,
             if (o instanceof VelocityRenderer) { return ((VelocityRenderer) o).filename.equals(this.filename); }
             return false;
         }
+
+        public int hashCode() {
+            return filename.hashCode();
+        }
     }
 
     protected NetworkArmContext networkArmContext;
