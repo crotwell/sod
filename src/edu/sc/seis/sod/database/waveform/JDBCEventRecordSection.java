@@ -8,7 +8,6 @@ import java.sql.Statement;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCSequence;
-import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCEventRecordSection extends SodJDBC {
@@ -22,15 +21,14 @@ public class JDBCEventRecordSection extends SodJDBC {
             Connection conn) throws SQLException {
         String createStmt = "CREATE TABLE "
                 + tableName
-                + "( recSecId int,  eventid int,  imageName varchar,  bestForEvent "
-                + "boolean, PRIMARY KEY (recSecId))";
+                + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
         String insertStmt = "INSERT INTO "
                 + tableName
-                + "(recSecId, eventid, imageName, bestForEvent) VALUES (?, ?, ?, ?)";
+                + "(recSecId, eventid, imageName) VALUES (?, ?, ?)";
         String getRecSecIdStmt = "SELECT recSecId FROM " + tableName
                 + " WHERE eventid=? AND imageName=?";
         String getBestImageforEventStmt = "SELECT imageName FROM " + tableName
-                + " WHERE eventid=? AND bestForEvent";
+                + " WHERE eventid=?";
         String getImageforEventChannelStmt = "SELECT imageName FROM "
                 + tableName + " eventRecSec," + recChannelTableName
                 + " recSecChannel"
@@ -50,13 +48,12 @@ public class JDBCEventRecordSection extends SodJDBC {
         seq = new JDBCSequence(conn, "RecordSectionSeq");
     }
 
-    public int insert(int eventid, String imageName, boolean bestForEvent)
+    public int insert(int eventid, String imageName)
             throws SQLException {
         int recSecId = seq.next();
         insert.setInt(1, recSecId);
         insert.setInt(2, eventid);
         insert.setString(3, imageName);
-        insert.setBoolean(4, bestForEvent);
         insert.executeUpdate();
         return recSecId;
     }
