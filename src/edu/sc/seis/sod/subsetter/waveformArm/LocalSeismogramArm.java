@@ -118,13 +118,24 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processRequestGeneratorSubsetter</code> method here.
      *
      */
-    public void processRequestGeneratorSubsetter
-	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter dataCenter) throws Exception{
-	RequestFilter[] infilters = requestGeneratorSubsetter.generateRequest(eventAccess, networkAccess, channel, null); 
+    public void processRequestGeneratorSubsetter(EventAccess eventAccess, 
+						 NetworkAccess networkAccess, 
+						 Channel channel, 
+						 DataCenter dataCenter) 
+	throws Exception
+    {
+	RequestFilter[] infilters 
+	    = requestGeneratorSubsetter.generateRequest(eventAccess, 
+							networkAccess, 
+							channel, 
+							null); 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
-	{
+	if (outfilters.length != 0) {
 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
-	}
+	} else {
+	    logger.debug("available data returned no filters for "+ChannelIdUtil.toString(channel.get_id()));
+	} // end of else
+	
 	
     }
     
@@ -132,9 +143,26 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processAvailableDataSubsetter</code> method here.
      *
      */
-    public void processAvailableDataSubsetter
-	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter dataCenter, RequestFilter[] infilters, RequestFilter[] outfilters) throws Exception{
-	if(availableDataSubsetter.accept(eventAccess, networkAccess, channel, infilters, outfilters, null)) {
+    public void processAvailableDataSubsetter(EventAccess eventAccess, 
+					      NetworkAccess networkAccess, 
+					      Channel channel,
+					      DataCenter dataCenter,
+					      RequestFilter[] infilters,
+					      RequestFilter[] outfilters)
+	throws Exception
+    {
+	if(availableDataSubsetter.accept(eventAccess, 
+					 networkAccess, 
+					 channel, 
+					 infilters, 
+					 outfilters, 
+					 null)) {
+	    logger.debug("BEFORE getting seismograms "+infilters.length+" "+outfilters.length);
+	    for (int i=0; i<outfilters.length; i++) {
+		logger.debug("Getting seismograms "+ChannelIdUtil.toStringNoDates(outfilters[i].channel_id)+" from "+outfilters[i].start_time.date_time+" to "+outfilters[i].end_time.date_time);
+		 
+	    } // end of for (int i=0; i<outFilters.length; i++)
+	    
 	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(outfilters);
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
 	}
