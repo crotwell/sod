@@ -1,0 +1,103 @@
+
+<project name="sod" default="dist" basedir=".">
+
+<!-- set global properties for this build -->
+       <property name="src" value="src" />
+       <property name="build" value="build" />
+       <property name="dist" value="dist" />
+       <property name="doc" value="${dist}/doc" />
+       <property name="javadocs" value="${dist}/javadocs" />
+       <property name="fis" value="../fissures" />
+       <property name="fisUtil" value="../fissuresUtil/dist/lib/fissuresUtil.jar" />
+       <property name="geotools" value="../geotools/src/dist/lib/geotools.jar" />
+       <property name="log4j" value="../jars/log4j.jar" />
+       <property name="taup" value="../jars/taup.jar" />
+       <property file="../KeySigning/ant.props" />
+
+       <target name="prepare">
+         <!-- Create the time stamp -->
+         <tstamp/>
+         <!-- Create the build directory structure used by compile -->
+         <mkdir dir="${build}" />
+         <mkdir dir="${dist}" />
+         <mkdir dir="${dist}/lib" />
+         <mkdir dir="${doc}" />
+         <mkdir dir="${javadocs}" />
+       </target>
+
+       <target name="javacompile" 
+               depends="prepare">
+         <!-- Compile the java code from ${src} into ${build} -->
+         <javac destdir="${build}" classpath="${build}:${fis}/dist/lib/FissuresImpl.jar:${fis}/dist/lib/FissuresIDL.jar:${fisUtil}:${geotools}:external/xerces.jar:${log4j}:${taup}">
+            <src path="${src}" />
+            <include name="edu/sc/seis/**/*.java" />
+         </javac>
+         <copy todir="${build}" >
+              <fileset dir="${src}">
+		<include name="edu/sc/seis/sod/data" />
+		<include name="edu/sc/seis/sod/data/**" />
+              </fileset>
+         </copy>
+     </target>
+
+       <target name="testcompile" depends="javacompile">
+         <!-- Compile the java code from ${src} into ${build} -->
+         <javac destdir="${build}" classpath="${build}:../fissures/build:../fissures/IDL/dist/lib/FissuresIDL.jar" >
+            <src path="${src}" />
+            <include name="test/edu/sc/seis/**/*.java" />
+         </javac>
+       </target>
+
+       <target name="test" depends="testcompile">
+           <java fork="yes" classname="junit.swingui.TestRunner"
+                 taskname="junit" failonerror="true" >
+              <arg value="test.edu.sc.seis.database.AllJUnitTests"/>
+              <classpath>
+                <pathelement location="${build}" />
+                <pathelement location="../fissures/build" />
+                <pathelement location="../fissures/IDL/dist/lib/FissuresIDL.jar" />
+              </classpath>
+           </java>
+       </target>
+
+       <target name="javadoc" depends="prepare">
+         <!-- Compile the javadocs from ${src} into ${javadocs} -->
+         <javadoc destdir="${javadocs}" sourcepath="${src}" 
+packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  maxmemory="64m" >
+
+        <link href="http://www.seis.sc.edu/software/Fissures/idljava_docs" />
+         </javadoc>
+       </target>
+
+       <target name="jar" depends="testcompile">
+         <jar jarfile="${dist}/lib/sod.jar" basedir="${build}" />
+       </target>
+
+       <target name="signjar" depends="jar" if="signjarpasswd">
+         <signjar jar="${dist}/lib/dataexplorer.jar" 
+                  alias="scepp" 
+                  storepass="${signjarpasswd}"
+                  keystore="../KeySigning/SCEPPKeystore"/>
+       </target>
+
+       <target name="dist" depends="testcompile, signjar">
+         <copy todir="${dist}/doc" 
+              file="${src}/edu/sc/seis/sod/sodconfigurator.xsd" />
+         <copy todir="${dist}/doc" 
+              file="${src}/edu/sc/seis/sod/DefaultConfig.xml" />
+         <zip zipfile="${dist}/lib/sod_src.zip" >
+              <fileset dir=".." >
+                 <include name="sod/**/*.java" />
+                 <include name="sod/doc/*" />
+                 <exclude name="sod/**/*.class" />
+              </fileset>
+         </zip>
+
+       </target>
+
+       <target name="clean">
+         <!-- Delete the ${build} and ${dist} directory trees -->
+         <delete dir="${build}" />
+         <delete dir="${dist}" />
+       </target>
+</project>
