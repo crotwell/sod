@@ -19,9 +19,10 @@ XMLAPI=$MAVEN/repository/xml-apis/jars/xml-apis-1.0.b2.jar
 JAICORE=$MAVEN/repository/jars/jai_core.jar
 JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-1.7.1.jar
+OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.5.4.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
 # the jaco sh script preloads the orb, so it doesn't need to be in the classpath
-~/External/JacORB/bin/jaco -Xmx128m -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.Start $*
+~/External/JacORB/bin/jaco  -Xmx256m -cp ${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.Start $*
 
