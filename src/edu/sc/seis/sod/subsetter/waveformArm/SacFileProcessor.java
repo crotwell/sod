@@ -63,11 +63,11 @@ public class SacFileProcessor implements LocalSeismogramProcess {
             if ( ! dataDirectory.mkdirs()) {
                 throw new ConfigurationException("Unable to create directory."+dataDirectory);
             } // end of if (!)
-            
+
         } // end of if (dataDirectory.exits())
-        
+
     }
-    
+
     /**
      * Describe <code>process</code> method here.
      *
@@ -87,7 +87,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                      RequestFilter[] available,
                                      LocalSeismogram[] seismograms,
                                      CookieJar cookies) throws Exception {
-        
+
         logger.info("Got "+seismograms.length+" seismograms for "+
                         ChannelIdUtil.toString(channel.get_id())+
                         " for event in "+
@@ -96,10 +96,10 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         DataSet dataset = getDataSet(event);
         saveInDataSet(dataset, event, channel, seismograms);
         saveDataSet(dataset);
-        
+
         return seismograms;
     }
-    
+
     protected URLDataSetSeismogram saveInDataSet(DataSet dataset,
                                                  EventAccessOperations event,
                                                  Channel channel,
@@ -108,7 +108,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         CodecException,
         IOException,
         NoPreferredOrigin {
-        
+
         File eventDirectory = getEventDirectory(event);
         LocalSeismogramImpl[] lseis = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < lseis.length; i++) {
@@ -123,25 +123,29 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                                                        channel,
                                                                        event,
                                                                        audit);
-        
-        
+
+
         return urlDSS;
     }
-    
-    protected void saveDataSet(DataSet ds) {
+
+    protected void saveDataSet(DataSet ds)
+        throws IOException, ParserConfigurationException, MalformedURLException, ConfigurationException {
+
         //            File outFile = new File(eventDirectory, eventDirName+".dsml");
         //            OutputStream fos = new BufferedOutputStream(
         //                new FileOutputStream(outFile));
         //            dataset.write(fos);
         //            fos.close();
-        
+        DataSetToXML dsToXML = new DataSetToXML();
+        File outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()));
+        logger.debug("DSML saved to "+outFile.getName());
         long mbyte = 1024*1024;
         Runtime runtime = Runtime.getRuntime();
         String s = "Memory usage: "+runtime.freeMemory()/mbyte+" "+
             runtime.totalMemory()/mbyte+"/"+runtime.maxMemory()/mbyte+" Mb";
         System.out.println(s);
     }
-    
+
     protected File getEventDirectory(EventAccessOperations event)
         throws ConfigurationException {
         String eventDirName = getLabel(event);
@@ -151,16 +155,16 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                 throw new ConfigurationException("Unable to create directory."+eventDirectory);
             } // end of if (!)
         } // end of if (dataDirectory.exits())
-        
+
         return eventDirectory;
     }
-    
+
     protected DataSet getDataSet(EventAccessOperations event)
         throws NoPreferredOrigin, ConfigurationException {
         DataSet dataset;
-        
+
         File eventDirectory = getEventDirectory(event);
-        
+
         // assume that processing is in event order and never reopens
         // bad but just temporary
         if (lastDataSet != null && lastDataSet.getEvent().equals(event)) {
@@ -178,12 +182,12 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         }
         return dataset;
     }
-    
+
     protected DataSet getXMLDataSet(EventAccessOperations event)
         throws MalformedURLException, ParserConfigurationException, ConfigurationException {
-        
+
         File eventDirectory = getEventDirectory(event);
-        
+
         // load dataset if it already exists
         String eventDirName = getLabel(event);
         File dsFile = new File(eventDirectory, eventDirName+".dsml");
@@ -197,7 +201,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                      "genid"+Math.round(Math.random()*Integer.MAX_VALUE),
                                      eventDirName,
                                      System.getProperty("user.name"));
-            
+
             // add event since dataset is new
             if (event != null) {
                 AuditInfo[] audit = new AuditInfo[1];
@@ -208,7 +212,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         } // end of else
         return dataset;
     }
-    
+
     protected String getLabel(EventAccessOperations event) {
         Element labelConfig = SodUtil.getElement(config, "eventDirLabel");
         if (labelConfig == null) {
@@ -221,32 +225,32 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                 eventFileName+=" "+eventFileNum;
                 eventFileNum++;
             } // end of try-catch
-            
+
             eventFileName = eventFileName.replace(' ', '_');
             eventFileName = eventFileName.replace(',', '_');
             return eventFileName;
         } // end of if (labelConfig == null)
-        
+
         if (nameGenerator == null) {
             nameGenerator = new NameGenerator(labelConfig);
         }
         return nameGenerator.getName(event);
-        
+
     }
-    
+
     DataSet lastDataSet = null;
-    
+
     int eventFileNum = 1;
-    
+
     NameGenerator nameGenerator = null;
-    
+
     ParseRegions regions;
-    
+
     Element config;
-    
+
     File dataDirectory;
-    
+
     static Category logger =
         Category.getInstance(SacFileProcessor.class.getName());
-    
+
 }// SacFileProcessor
