@@ -91,6 +91,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("catalog", new CatalogEditor());
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
+        editors.put("originDepthRange", new UnitRangeEditor(DISTANCE_UNITS, true));
         editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new  UnitRangeEditor(ANGLE_UNITS, -90, 90, 5, false));
         editors.put("longitudeRange", new UnitRangeEditor(ANGLE_UNITS, -180, 180, 5, false));
@@ -110,7 +111,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("fixedDataCenter", new FixedDataCenterEditor(this));
 
         BooleanEditor bool = new BooleanEditor(this);
-        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "seismogram"};
+        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "requestSubsetter", "seismogram"};
         String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
         for (int i = 0; i < switchTypes.length; i++) {
             for (int j = 0; j < logicals.length; j++) {
@@ -129,6 +130,15 @@ public class SodGUIEditor extends SimpleGUIEditor {
                     editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
                 }
                 editors.put(tagName, originSwitcher);
+            }
+        }
+
+
+        String[] wrapperTypes = { "AvailableDataWrapper", "RequestSubsetterWrapper", "LocalSeismogramWrapper", "EventChannelWrapper" };
+        String[] wrapperLogicals = { "AND", "OR" };
+        for (int i = 0; i < wrapperTypes.length; i++) {
+            for (int j = 0; j < wrapperLogicals.length; j++) {
+                editors.put(wrapperLogicals[j]+wrapperTypes[i], bool);
             }
         }
     }
