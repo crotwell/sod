@@ -328,9 +328,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	MicroSecondDate microSecondDate = new MicroSecondDate(startTime);
         logger.debug("The microcsedon startDate is "+microSecondDate);
 	Calendar calendar = Calendar.getInstance();
+	calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
 	calendar.setTime(microSecondDate);
-	logger.debug("The microSeoncDate after Increment is "+new MicroSecondDate(calendar.getTime()));
-	calendar.roll(Calendar.DAY_OF_YEAR, getIncrementValue());
+	calendar.add(Calendar.DAY_OF_YEAR, getIncrementValue());
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	logger.debug("The microSeoncDate after Increment is "+microSecondDate);
 	MicroSecondDate endDate = new MicroSecondDate(givenEndTime);

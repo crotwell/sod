@@ -111,8 +111,11 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	edu.iris.Fissures.Time time = getTime(serverName, serverDNS);
 	MicroSecondDate microSecondDate = new MicroSecondDate(time);
 	Calendar calendar = Calendar.getInstance();
+	calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
 	calendar.setTime(microSecondDate);
-	calendar.roll(Calendar.DAY_OF_YEAR, days);
+	System.out.println("before add"+calendar.getTime());
+	calendar.add(Calendar.DAY_OF_YEAR, days);
+	System.out.println("after add"+calendar.getTime());
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	time = microSecondDate.getFissuresTime();
 	updateTime(serverName,
