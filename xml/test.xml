@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+    <eventArm>
+	   <eventFinder>
+		<name>ANHINGAEVENTDC</name>
+		<dns>edu/sc/seis</dns>
+		<boxArea>
+			<latitudeRange>
+				<min>10</min>
+				<max>40</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-100</min>
+				<max>100</max>
+			</longitudeRange>
+		</boxArea>
+		<originDepthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</originDepthRange>
+		<eventTimeRange>
+		<timeRange>
+			<startTime>1999-01-01T00:00:00Z</startTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+		<magnitudeRange>
+			<magType>mb</magType>
+                        <magType>mb</magType>
+                        <magType>mb</magType>
+			<min>5</min>
+			<max>10</max>
+		</magnitudeRange>
+		<catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+		<contributor><value>NEIC</value></contributor>
+	   </eventFinder>
+
+	   <eventAttrAND>
+		<seismicRegion><value>10 0 20 30 40 50</value></seismicRegion>
+		<eventAttrOR>
+			<eventAttrNOT>
+				<seismicRegion><value>70 80 100</value></seismicRegion>
+			</eventAttrNOT>
+		</eventAttrOR>
+	   </eventAttrAND>
+	   <originAND>
+		<originAND>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+		</originAND>
+                <originArrayAND>
+                 	<originNOT>
+				<magnitudeRange>
+					<magType>mb</magType>
+					<min>7</min>
+					<max>10</max>
+				</magnitudeRange>
+			</originNOT>
+                 </originArrayAND>
+
+	</originAND>
+    
+	<printLineEventProcess/>
+   
+   </eventArm>
+   <networkArm>
+	<networkFinder>
+		<description> this describes the networkFinder</description>
+		<name>SCEPPNetworkDC</name>
+		<dns>edu/sc/seis</dns>
+                <refreshInterval>
+                        <unit>MINUTE</unit>
+                        <value>30</value>
+                </refreshInterval>
+	</networkFinder>
+	<networkIDOR>
+		<networkCode><value>II</value></networkCode>
+		<networkCode><value>IU</value></networkCode>
+		<networkCode><value>SP</value></networkCode>
+	</networkIDOR>
+
+	<networkeffectiveTimeOverlap>
+		<effectiveTimeOverlap>
+			<min>1990-01-01T00:00:00Z</min>
+			<max>2003-01-01T00:00:00Z</max>
+		</effectiveTimeOverlap>
+	</networkeffectiveTimeOverlap>
+
+	<siteCode><value>00</value></siteCode>
+
+	<channelIDAND>
+		<bandCode><value>B</value></bandCode>
+		<gainCode><value>H</value></gainCode>
+                <orientationCode><value>Z</value></orientationCode>
+	</channelIDAND>
+
+	<sampling>
+		<min>1</min>
+		<max>40</max>
+		<interval>
+			<unit>SECOND</unit>
+			<value>1</value>
+		</interval>
+	</sampling>
+
+	<printlineChannelProcessor/>
+	
+    </networkArm>
+ <waveFormArm>
+	<eventStationOR>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>30</min>
+                                        <max>120</max>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<magType>mb</magType>
+					<min>5.5</min>
+                                        <max>12.5</max>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>60</min>
+					<max>180</max>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<magType>mb</magType>
+					<min>6.0</min>
+                                        <max>14.0</max>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+	</eventStationOR>
+        <localSeismogramArm>
+
+
+	<phaseRequest>
+		<beginPhase>firstP</beginPhase>
+		<beginOffset>
+			<unit>SECOND</unit>
+			<value>-120</value>
+		</beginOffset>
+		<endPhase>firstS</endPhase>
+		<endOffset>
+			<unit>SECOND</unit>
+			<value>600</value>
+		</endOffset>
+	</phaseRequest>
+	<fixedDataCenter>
+		<name>SCEPPSeismogramDC</name>
+		<dns>edu/sc/seis</dns>
+	</fixedDataCenter>
+	<availableDataAND>
+		<nogaps/>
+		<fullCoverage/>
+	</availableDataAND>
+        <localSeismograms/>
+	<printlineSeismogramProcess/>
+	</localSeismogramArm>
+   </waveFormArm>
+  
+</sod>
