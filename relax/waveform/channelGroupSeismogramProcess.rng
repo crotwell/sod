@@ -17,7 +17,7 @@
 			<ref name="channelGroupOR"/>
 			<ref name="channelGroupNOT"/>
 			<ref name="channelGroupXOR"/>
-			<ref name="PASS"/>
+			<ref name="channelGroupAlwaysSuccess"/>
          <!-- local seismogramProcesses directly in the motion vector arm
               are treaded as if they are in a ANDLocalSeismogramWrapper -->
 			<externalRef href="seismogramProcess.rng"/>
@@ -211,20 +211,32 @@
 			<ref name="channelGroupSeismogramProcess"/>
 		</element>
 	</define>
-	<define name="PASS">
-		<element name="passChannelGroupSeismogramProcess">
+	<define name="channelGroupAlwaysSuccess">
+		<element name="channelGroupAlwaysSuccess">
 			<xsd:annotation>
 				<xsd:documentation xml:lang="en">
-					<summary> Always returns true. </summary>
-					<description> Simple subsetter that always returns true, useful for testing. </description>
+					<summary>Executes a subprocessor, but always returns true.</summary>
+					<description>This executes the enclosed processor, but always returns
+                a success regardless of whether the enclosed processor succeeded or
+                failed.
+                </description>
 					<example>
-						<passChannelGroupSeismogramProcess/>
+						<channelGroupAlwaysSuccess>
+							<channelGroupFork>
+								<rmean/>
+								<saveSeismogramToFile>
+									<fileType>sac</fileType>
+									<dataDirectory>POND_II</dataDirectory>
+									<eventDirLabel>
+                                Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+									</eventDirLabel>
+								</saveSeismogramToFile>
+							</channelGroupFork>
+						</channelGroupAlwaysSuccess>
 					</example>
 				</xsd:documentation>
 			</xsd:annotation>
-			<zeroOrMore>
-				<ref name="channelGroupSeismogramProcess"/>
-			</zeroOrMore>
+			<ref name="channelGroupSeismogramProcess"/>
 		</element>
 	</define>
 </grammar>
