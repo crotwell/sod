@@ -1,3 +1,4 @@
+#! /usr/bin/python -O
 import sys
 sys.path.append('../../devTools/maven')
 import scriptBuilder, ProjectParser, depCopy

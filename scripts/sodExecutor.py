@@ -1,3 +1,4 @@
+#! /usr/bin/python -O
 import os, sys, signal
 sys.path.append("../../devTools/maven")
 import ProjectParser, sodScriptBuilder, depCopy
