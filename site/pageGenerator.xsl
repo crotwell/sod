@@ -4,7 +4,7 @@
         <xsl:output method="html"/>
         <xsl:template match="/pages">
                 <xsl:for-each select="page">
-                        <redirect:write select="destination/text()">
+                        <redirect:write select="concat(../baseDirectory/text(), destination/text())">
                                 <xsl:apply-templates select="document(source/text())"/>
                         </redirect:write>
                 </xsl:for-each>
