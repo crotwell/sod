@@ -64,7 +64,7 @@
         </page>
         <page>
             <source>None</source>
-            <destination>tagDocs/sod/start.html</destination>
+            <destination>tagDocs/overview.html</destination>
             <name>Tactic Reference</name>
         </page>
     </menu>
@@ -73,6 +73,11 @@
             <source>../xdocs/index.xml</source>
             <destination>index.html</destination>
             <name>Home</name>
+        </page>
+        <page>
+            <source>SchemaDoc</source>
+            <destination>tagDocs/overview.html</destination>
+            <name>Reference Overview</name>
         </page>
         <page>
             <source>SchemaDoc</source>

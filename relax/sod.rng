@@ -6,7 +6,8 @@
             <xsd:annotation>
                 <summary>The root of all SOD tactics</summary>
                 <description>
-                    <a href="../overview.html">Overview</a>
+                    <p>This element is the root of all SOD tactics.</p>
+                    <a href="../overview.html">Back to Overview</a>
                 </description>
             </xsd:annotation>
             <optional>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
     <properties>
-        <title>SOD - Using SOD's Tactic Reference</title>
+        <title>SOD - SOD's Tactic Reference</title>
     </properties>
     <body>
-        <section name="What is the Tactic Reference?">
+        <section name="Welcome to the SOD Tactic Reference!">
             <p>The tactic reference contains a page for every tactic that can go into SOD. If you
                 want to extend and improve your SOD runs, it's the place to find pieces of SOD that
                 do what you want.</p>
