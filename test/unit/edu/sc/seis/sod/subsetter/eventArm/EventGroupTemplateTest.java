@@ -21,30 +21,30 @@ public class EventGroupTemplateTest extends TestCase{
     }
     
     public void testEmpty(){
-        assertEquals("", egt.toString());
+        assertEquals("", egt.getResult());
     }
     
     public void testAdd(){
         egt.change(MockFissures.createEvent(), RunStatus.NEW);
-        assertEquals(epochResult, egt.toString());
+        assertEquals(epochResult, egt.getResult());
     }
     
     public void testUpdate(){
         egt.change(epochEvent, RunStatus.NEW);
         egt.change(epochEvent, RunStatus.PASSED);
-        assertEquals(epochResult, egt.toString());
+        assertEquals(epochResult, egt.getResult());
     }
     
     public void testAddSecondItem(){
         egt.change(epochEvent, RunStatus.NEW);
         egt.change(berlinEvent, RunStatus.NEW);
-        assertEquals(epochResult + berlinResult, egt.toString());
+        assertEquals(epochResult + berlinResult, egt.getResult());
     }
     
     public void testRepeatedAdd(){
         egt.change(epochEvent, RunStatus.NEW);
         egt.change(epochEvent, RunStatus.NEW);
-        assertEquals(epochResult, egt.toString());
+        assertEquals(epochResult, egt.getResult());
     }
     
     private String epochResult = "CENTRAL ALASKA19700101T00:00:00.000";
