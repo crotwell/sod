@@ -99,6 +99,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("refreshInterval", new RefreshIntervalEditor());
         editors.put("saveSeismogramToFile", new SaveSeismogramToFileEditor());
         editors.put("responseWriter", new ResponseWriterEditor());
+        editors.put("waveformNetworkStatus", new WaveformStatusEditor());
+        editors.put("waveformStationStatus", new WaveformStatusEditor());
 
         SubelementEater se = new SubelementEater();
         editors.put("networkInfoTemplateGenerator", se);
