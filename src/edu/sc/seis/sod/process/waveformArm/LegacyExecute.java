@@ -9,11 +9,13 @@ package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.bag.StreamPump;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import java.io.BufferedWriter;
+import java.io.PrintWriter;
 import org.w3c.dom.Element;
 
 public class LegacyExecute implements LocalSeismogramProcess  {
@@ -55,8 +57,14 @@ public class LegacyExecute implements LocalSeismogramProcess  {
         } // end of for (int i=0; i<seismograms.length; i++)
 
         Process process = Runtime.getRuntime().exec(args);
-        process.waitFor();
-        return new LocalSeismogramResult(out, new StringTreeLeaf(this, process.exitValue()==0, "exit value="+process.exitValue()));
+        StreamPump outPump = new StreamPump(process.getInputStream(),
+                                            new BufferedWriter(new PrintWriter(System.out)));
+        StreamPump errPump = new StreamPump(process.getErrorStream(),
+                                            new BufferedWriter(new PrintWriter(System.err)));
+        outPump.start();
+        errPump.start();
+        int exitValue = process.waitFor();
+        return new LocalSeismogramResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
     }
 
     String command;
