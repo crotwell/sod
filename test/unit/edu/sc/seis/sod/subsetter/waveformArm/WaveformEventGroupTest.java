@@ -21,35 +21,43 @@ public class WaveformEventGroupTest extends TestCase{
     }
     
     public void testNoChannels(){
-        assertEquals("", ect.getResults());
+        assertEquals("", ect.getResult());
     }
     
     public void testUpdateSingleChannel(){
         ect.update(simpleECP);
-        assertEquals("1\n", ect.getResults());
+        assertEquals("1\n", ect.getResult());
     }
     
     public void testUpdateSecondChannel(){
         ect.update(simpleECP);
         ect.update(generateSecondChannelECP());
-                       assertEquals("2\n", ect.getResults());
+        assertEquals("2\n", ect.getResult());
     }
     
     public void testAddSecondEvent(){
         ect.update(simpleECP);
         ect.update(generateDiffEventECP());
-        assertEquals("1\n1\n", ect.getResults());
+        assertEquals("1\n1\n", ect.getResult());
     }
     
     public void testComplexConfig(){
         try {
-            ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount/>    <eventLabel><feRegionName/></eventLabel><sorting><date order=\"reverse\"/></sorting>\n</events>"));
+            ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount/>    <eventLabel><feRegionName/></eventLabel><sorting><time order=\"reverse\"/></sorting>\n</events>"));
         } catch (SAXException e) {} catch (ParserConfigurationException e) {} catch (IOException e) {}
         ect.update(simpleECP);
         ect.update(generateDiffEventECP());
         ect.update(generateSecondChannelECP());
-        assertEquals("1    GERMANY\n2    CENTRAL ALASKA\n",
-                     ect.getResults());
+        assertEquals("1    GERMANY\n2    CENTRAL ALASKA\n", ect.getResult());
+    }
+    
+    public void testRejectMonitor(){
+        try{
+            ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount><COMPLETE_REJECT/><COMPLETE_SUCCESS/></channelCount>\n</events>"));
+        } catch (SAXException e) {} catch (ParserConfigurationException e) {} catch (IOException e) {}
+        ect.update(rejectify(MockECP.getECP(MockFissures.createChannel())));
+        ect.update(simpleECP);
+        assertEquals("2\n", ect.getResult());
     }
     
     private EventChannelPair generateSecondChannelECP() {
@@ -63,6 +71,15 @@ public class WaveformEventGroupTest extends TestCase{
     private EventChannelPair successify(EventChannelPair ecp){
         try {
             ecp.update("Testing Success", Status.COMPLETE_SUCCESS);
+            return ecp;
+        } catch (InvalidDatabaseStateException e) {
+            throw new IllegalArgumentException("MockECP shouldn't throw an InvalidDatabaseState Exception");
+        }
+    }
+    
+    private EventChannelPair rejectify(EventChannelPair ecp) {
+        try {
+            ecp.update("Testing Reject", Status.COMPLETE_REJECT);
             return ecp;
         } catch (InvalidDatabaseStateException e) {
             throw new IllegalArgumentException("MockECP shouldn't throw an InvalidDatabaseState Exception");
