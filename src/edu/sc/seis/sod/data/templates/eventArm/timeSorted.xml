@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<template>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<filename>time.html</filename>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -31,8 +32,10 @@ Events (sorted by time)
 </eventLabel><sorting><time/></sorting></events>
 </table>
 <h2>Map:</h2>
-<img src="eventMap.png"/>
-Maps only update once every two minutes</div>
+<img><attribute name="src"><mapEventStatus xlink:href="status/eventMap.png"/></attribute></img>
+<br/>
+Maps only update once every two minutes
+</div>
 <div id="Menu">
 <ul>
 <li>
