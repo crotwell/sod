@@ -37,12 +37,35 @@
 
 
   <xsl:template match="xsd:complexType" >
-    <h3 id="@name" >
+    <xsl:variable name="tag-name" select="@name"/>
+    <h3 id="{$tag-name}" >
       <xsl:if test="@abstract='true'" >
         <xsl:text>Abstract </xsl:text>    
       </xsl:if>
       <xsl:value-of select="@name" />
     </h3>
+    <xsl:if test="xsd:complexContent/xsd:extension">
+      <p>
+        <xsl:text> extends </xsl:text>
+        <xsl:variable name="base" select="xsd:complexContent/xsd:extension/@base"/>
+        <a href="#{$base}">
+          <xsl:value-of select="$base"/>
+        </a>
+      </p>
+    </xsl:if>
+    <p>
+      <h4>
+        <xsl:text>All known subclasses</xsl:text>
+      </h4>
+      <xsl:for-each select="//xsd:complexType[xsd:complexContent/xsd:extension/@base=$tag-name]" >
+        <xsl:sort select="@name" />
+        <xsl:variable name="subclass" select="@name"/>
+        <a href="#{$subclass}">
+          <xsl:value-of select="$subclass"/>
+        </a>
+        <xsl:text> </xsl:text>
+      </xsl:for-each>
+    </p>
     <p>
       <xsl:apply-templates select="xsd:annotation" />
     </p>
@@ -89,7 +112,10 @@
       <xsl:otherwise>
         <xsl:value-of select="@name" />
         <xsl:text> </xsl:text>
-        <xsl:value-of select="@type" />
+          <xsl:variable name="type" select="@type" />
+        <a href="#{$type}">
+          <xsl:value-of select="$type" />
+        </a>
         <xsl:choose>
         <xsl:when test=" not( @minOccurs) and not( @maxOccurs)">
           <xsl:text> exactly once</xsl:text>
@@ -124,13 +150,48 @@
 
   <xsl:template match="xsd:documentation" >
     <h4>Summary</h4>
-    <xsl:copy-of select="summary" />
+    <xsl:copy-of select="summary/node()" />
     <h4>Description</h4>
-    <xsl:copy-of select="description" />
+    <xsl:copy-of select="description/node()" />
     <h4>Example</h4>
-    <pre>
-      <xsl:copy-of select="example" />
-    </pre>
+    <code>
+      <xsl:apply-templates select="example/node()" mode="make-literal" />
+    </code>
   </xsl:template>
+
+  <xsl:template match="*" mode="make-literal" >
+    <xsl:text>&lt;</xsl:text>
+    <xsl:value-of select="name()"/>
+    <xsl:if test="count(@*)">
+      <xsl:text> </xsl:text>
+    </xsl:if>
+    <xsl:for-each select="@*">
+      <xsl:value-of select="name()"/>
+      <xsl:text>=&quot;</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>&quot;</xsl:text>
+    </xsl:for-each>
+    <xsl:choose>
+    <xsl:when test="node()">
+      <xsl:text>&gt;</xsl:text>
+      <br/>
+      <xsl:apply-templates select="node()" mode="make-literal" />
+      <xsl:text>&lt;/</xsl:text>
+      <xsl:value-of select="name()"/>
+      <xsl:text>&gt;</xsl:text>
+      <br/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>/&gt;</xsl:text>
+      <br/>
+    </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="text()" mode="make-literal" >
+    <xsl:value-of select="."/>
+    <br/>
+  </xsl:template>
+
 </xsl:stylesheet>
 
