@@ -167,7 +167,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 + regionName + " at " + dateTime;
         logger.debug(msg);
         if(displayOption.equals("BEST")) {
-            outputBestRecordSection(event, wrap(dss, ds));
+            outputBestRecordSection(event, dss);
         } else {
             outputAllRecordSections(event, dss);
         }
@@ -263,8 +263,9 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public void outputBestRecordSection(EventAccessOperations event,
                                         DataSetSeismogram[] dataSeis,
-                                        OutputStream out) throws IOException {
+                                        OutputStream out) throws Exception {
         DataSetSeismogram[] bestSeismos = getBestSeismos(dataSeis);
+        bestSeismos = wrap(bestSeismos, bestSeismos[0].getDataSet());
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(bestSeismos);
         rsDisplay.outputToPNG(out, recSecDim);
