@@ -7,6 +7,10 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Channels</title>
 <style media="all">@import "../../../main.css";</style>
+<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
 </head>
 <body>
 <div id="Header">
@@ -46,8 +50,8 @@
 </station>
 </table>
 <h2>Channels:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Id</td>
 <td>Begin Time (GMT)</td>
 <td>End Time (GMT)</td>
@@ -65,8 +69,8 @@
 </channels>
 </table>
 <h2>Sites:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Id</td>
 <td>Begin Time (GMT)</td>
 <td>End Time (GMT)</td>

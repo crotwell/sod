@@ -7,6 +7,10 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title><event><feRegionName/></event></title>
 <style media="all">@import "../main.css";</style>
+<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
 </head>
 <body>
 <div id="Header">
@@ -19,8 +23,8 @@
 <img><attribute name="src"><map/></attribute></img><br/>
 Maps only update once every two minutes
 <h2>Stations:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Id</td>
 <td>Begin Time</td>
 <td>End Time</td>

@@ -6,6 +6,10 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Events</title>
 <style media="all">@import "main.css";</style>
+<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
 </head>
 <body>
 <div id="Header">
@@ -18,8 +22,8 @@ Events (sorted by time)
 <h2>Map:</h2>
 <img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
 <h2>Successful:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Region</td>
 <td id="selected"><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
@@ -40,8 +44,8 @@ Events (sorted by time)
 </eventLabel><sorting><time order="descending"/><status>SUCCESS</status></sorting></events>
 </table>
 <h2>In progress:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Region</td>
 <td id="selected"><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
@@ -58,8 +62,8 @@ Events (sorted by time)
 </eventLabel><sorting><time order="descending"/><status>IN PROGRESS</status></sorting></events>
 </table>
 <h2>Failed:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Region</td>
 <td id="selected"><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>

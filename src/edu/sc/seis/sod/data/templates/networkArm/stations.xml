@@ -7,6 +7,10 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Stations</title>
 <style media="all">@import "../../main.css";</style>
+<script type="text/javascript" src="tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
 </head>
 <body>
 <div id="Header">
@@ -38,8 +42,8 @@
 </network>
 </table>
 <h2>Stations:</h2>
-<table>
-<tr id="title">
+<table class="ruler">
+<tr class="title">
 <td>Id</td>
 <td>Name</td>
 <td>Status</td>
