@@ -37,8 +37,8 @@ public class MenuTemplate extends Template implements GenericTemplate{
             String absPathTo = fileDir + '/' + firstChild.getNodeValue();
             if(el.getFirstChild() instanceof Element){
                 el = (Element)firstChild;
-                absPathTo = ((GenericTemplate)getCommonTemplate(el.getNodeName(),
-                                                                el)).getResult();
+                absPathTo = fileDir + '/' + ((GenericTemplate)getCommonTemplate(el.getNodeName(),
+                                                                                el)).getResult();
             }
             path = SodUtil.getRelativePath(pathFrom, absPathTo, "/");
         }
