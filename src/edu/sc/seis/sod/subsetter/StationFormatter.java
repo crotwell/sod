@@ -12,16 +12,16 @@ import org.w3c.dom.Element;
 
 public class StationFormatter extends Template implements StationTemplate{
     StationGroupTemplate sgt;
-    
+
     public StationFormatter(Element el){
         this(el, null);
     }
-    
+
     public StationFormatter(Element el, StationGroupTemplate sgt){
         this.sgt = sgt;
         parse(el);
     }
-    
+
     /**
      * Method getResult
      *
@@ -37,11 +37,11 @@ public class StationFormatter extends Template implements StationTemplate{
             StationTemplate cur = (StationTemplate)it.next();
             buf.append(cur.getResult(station));
         }
-        
+
         return buf.toString();
     }
-    
-    
+
+
     /**
      * Method textTemplate
      *
@@ -57,12 +57,12 @@ public class StationFormatter extends Template implements StationTemplate{
             }
         };
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, Element el) {
-    
+
         if (tag.equals("name")){
             return new StationTemplate(){
                 public String getResult(Station sta){
@@ -74,6 +74,20 @@ public class StationFormatter extends Template implements StationTemplate{
             return new StationTemplate(){
                 public String getResult(Station sta){
                     return sta.get_code();
+                }
+            };
+        }
+        else if (tag.equals("longitude")){
+            return new StationTemplate(){
+                public String getResult(Station sta){
+                    return Float.toString(sta.my_location.longitude);
+                }
+            };
+        }
+        else if (tag.equals("latitude")){
+            return new StationTemplate(){
+                public String getResult(Station sta){
+                    return Float.toString(sta.my_location.latitude);
                 }
             };
         }
@@ -108,7 +122,7 @@ public class StationFormatter extends Template implements StationTemplate{
                 }
             };
         }
-        
+
         return null;
     }
 }
