@@ -92,8 +92,8 @@ def buildInternalDist(proj, name):
               (scriptDir + 'logs', 'logs', False)])
     buildDist(proj, scripts, name, extras)
 
-def buildExternalDist(proj, name):
-    buildJars(proj, True)
+def buildExternalDist(proj, name, filthy):
+    buildJars(proj, filthy)
     scripts = buildManyScripts(proj, ['sod', 'sodeditor'])
     os.chdir(buildPyDir + os.sep + 'site')
     print 'building docs'
@@ -143,8 +143,13 @@ if __name__ == "__main__":
                       help="copy the jars locally for use in the scripts",
                       default=False,
                       action="store_true")
+    parser.add_option("-f", "--filthy", dest="filthy",
+                      help="don't clean the jars before building",
+                      default=False,
+                      action="store_true")
+    
     options = parser.parse_args()[0]
-    if options.external : buildExternalDist(proj, options.name)
+    if options.external : buildExternalDist(proj, options.name, options.filthy)
     elif options.internal: buildInternalDist(proj, options.name)
     else :
         buildJars(proj)
