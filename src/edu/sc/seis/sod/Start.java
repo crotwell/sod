@@ -35,6 +35,7 @@ public class Start {
     public void start() throws ConfigurationException {
 	Element docElement = document.getDocumentElement();
 	logger.info("start "+docElement.getTagName());
+	System.out.println("In the method start the tagName is "+docElement.getTagName());
 	NodeList children = docElement.getChildNodes();
 	Node node;
 	Class[] constructorArgTypes = new Class[1];
@@ -51,6 +52,7 @@ public class Start {
 		    eventArm = new EventArm(subElement);
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
+		    networkArm = new NetworkArm(subElement);
 		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
@@ -85,6 +87,13 @@ public class Start {
 		    commandlineProps = true;
                 }
             }
+
+
+	    //configure commonAccess
+	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
+	    commonAccess.init(args);
+	    commonAccess.initORB();
+	    
 
 	    boolean defaultPropLoadOK = false;
 	    boolean commandlinePropLoadOK = false;
@@ -121,13 +130,14 @@ public class Start {
 	    
             logger.info("Logging configured");
 
-	    InputStream in = new BufferedInputStream(new FileInputStream("../xml/sample0.xml"));
+	    InputStream in = new BufferedInputStream(new FileInputStream("/home/telukutl/sod/xml/network.xml"));
 	    Start start = new Start(in);
             logger.info("Start init()");
 	    start.init();
             logger.info("Start start()");
 	    start.start();
 	} catch(Exception e) {
+	    e.printStackTrace();
 	    if (e instanceof WrappedException) {
 	    logger.error("Problem, wrapped is ", ((WrappedException)e).getCausalException());
 	    } // end of if (e instanceof WrappedException)
@@ -148,6 +158,8 @@ public class Start {
     Document document;
 
     EventArm eventArm;
+    
+    NetworkArm networkArm;
 
     static Category logger = 
         Category.getInstance(Start.class.getName());
