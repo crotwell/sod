@@ -613,6 +613,11 @@
             <element name="eventChannelGroupNOT">
                 <ref name="eventChannel4"/>
             </element>
+            <element name="passEventChannelGroup">
+                <zeroOrMore>
+                    <ref name="eventChannel4"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="eventChannel">
@@ -735,6 +740,11 @@
             </element>
             <element name="channelGroupAvailableDataNOT">
                 <ref name="channelGroupAvailableData"/>
+            </element>
+            <element name="passChannelGroupAvailableData">
+                <zeroOrMore>
+                    <ref name="channelGroupAvailableData"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -1456,6 +1466,11 @@
             </element>
             <element name="channelGroupRequestSubsetterNOT">
                 <ref name="channelGroupRequestSubsetter"/>
+            </element>
+            <element name="passChannelGroupRequestSubsetter">
+                <zeroOrMore>
+                    <ref name="channelGroupRequestSubsetter"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -6306,6 +6321,11 @@
             <element name="channelGroupXOR">
                 <ref name="channelGroupSeismogramProcess"/>
                 <ref name="channelGroupSeismogramProcess"/>
+            </element>
+            <element name="passChannelGroupSeismogramProcess">
+                <zeroOrMore>
+                    <ref name="channelGroupSeismogramProcess"/>
+                </zeroOrMore>
             </element>
             <choice>
                 <ref name="seismogramProcess"/>
