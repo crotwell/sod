@@ -100,7 +100,8 @@ $fissures.formatMagnitude($m),
 #set ( $channel = $chanContext.get("sod_channel") )
 <tr>
 <td><b>$fissures.formatChannel($channel.get_id())</b><br/>
-$!chanContext.sod_phaseStoN_P.value</td>
+$!chanContext.sod_phaseStoN_P.value<br/>
+$!chanContext.sod_phaseStoN_P.when</td>
 <td>
 #if ($chanContext.status.Standing.equals($chanContext.status.Standing.getForName("SUCCESS")) || $chanContext.status.Standing.equals($chanContext.status.Standing.getForName("IN_PROG")))
 <img src="${fissures.formatChannel($channel.get_id())}.png"/>
