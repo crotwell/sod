@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import java.util.*;
+
 /**
  * CookieJar.java
  *
@@ -57,7 +59,7 @@ public class CookieJar {
     }
 
     public void addSeismogramCookie(Object key, Object value) {
-	seismogramCookies().put(key, value);
+	seismogramCookies.put(key, value);
     }
 
 
@@ -78,7 +80,7 @@ public class CookieJar {
     }
 
     void setSeismogramCookies(Map m) {
-	this.seismogramCookies() = m;
+	this.seismogramCookies = m;
     }
 
     private Map eventCookies;

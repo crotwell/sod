@@ -1,5 +1,11 @@
 package edu.sc.seis.sod.filter;
 
+import edu.sc.seis.sod.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+
 /**
  * WildCardIdFilter.java
  *
@@ -36,7 +42,7 @@ public class WildCardIdFilter
 
     public boolean accept(ChannelId channelId, CookieJar cookies) {
 	if (chan.equals("*")) {
-	     return true
+	    return true;
 	} // end of if (chan.equals("*"))
 	return false;
     }

@@ -1,4 +1,6 @@
 package edu.sc.seis.sod;
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
 
 /**
  * EventFilter.java

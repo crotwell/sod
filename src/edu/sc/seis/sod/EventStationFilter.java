@@ -1,5 +1,10 @@
 package edu.sc.seis.sod;
 
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+
 /**
  * EventStationFilter.java
  *

@@ -1,9 +1,11 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissuers.*;
-import edu.iris.Fissuers.IfNetwork.*;
-import edu.iris.Fissuers.IfEvent.*;
-import edu.iris.Fissuers.IfSeismogramDC.*;
+import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+import edu.iris.Fissures.IfSeismogramDC.*;
 
 /**
  * Start.java
@@ -32,7 +34,7 @@ public class Start {
 		continue;
 	    }
 	    while ((net = networkQuery.hasNext()) != null) {
-		if ( ! networkIdCheck.accept(net.get)id()) {
+		if ( ! networkIdCheck.accept(net.get_id())) {
 		    continue;
 		}
 		if ( ! networkCheck.accept(net)) {
@@ -47,10 +49,10 @@ public class Start {
 	    } // end of while ((net = networkQuery.hasNext()) != null)
 	    
 	    if (checkNetwork(net)) {
-		    if (
-		} // end of if (checkNetwork(net))
+		   
+	    } // end of if (checkNetwork(net))
 		
-	    } // end of if (checkEvent(event))
+	 
 	    
 	} // end of while (moreevents)
 	

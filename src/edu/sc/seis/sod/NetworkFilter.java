@@ -1,4 +1,6 @@
 package edu.sc.seis.sod;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
 
 /**
  * NetworkFilter.java

@@ -1,5 +1,12 @@
 package edu.sc.seis.sod.filter;
 
+import edu.sc.seis.sod.*;
+import java.util.*;
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+
 /**
  * EventSeqFilter.java
  *
@@ -18,16 +25,18 @@ public class EventSeqFilter implements EventFilter {
 	filterList.add(filter);
     }
 
-    public boolean accept(EventAccessOperations e) {
+    public boolean accept(EventAccessOperations e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    EventFilter filter = (EventFilter)it.next();
-	    if ( ! filter.accept(event)) {
+	    if ( ! filter.accept(e, cookies)) { //changed from event to e
 		return false;
 	    } // end of if (! filter.accept(event))
 	} // end of while (it.hasNext())
 	return true;
     }
+
+  
 
     List filterList = new LinkedList();
 
