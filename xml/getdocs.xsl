@@ -10,7 +10,7 @@
         <title>Sod Tag Documentation</title>
       </head>
       <body>
-         <p>test</p>
+        <h1>Sod Tag Documentation</h1>
          <xsl:apply-templates select="xsd:schema" />
       </body>
     </html>
@@ -18,49 +18,67 @@
 
   <xsl:template match="xsd:schema" >
     <p>Doing a schema</p>
-    <xsl:apply-templates select="xsd:include" />
-    <xsl:apply-templates select="xsd:complexType" />
-  </xsl:template>
-
-  <xsl:template match="xsd:include" >
-    <p>Found an include <xsl:value-of select="@schemaLocation" /></p>
-    <xsl:apply-templates select="document(@schemaLocation)/xsd:schema" />
+    <xsl:for-each select="xsd:include" >
+      <p>Found an include <xsl:value-of select="@schemaLocation" /></p>
+      <xsl:apply-templates select="document(@schemaLocation)/xsd:schema" />
+    </xsl:for-each>
+    <xsl:apply-templates select="xsd:complexType|xsd:element" />
   </xsl:template>
 
   <xsl:template match="xsd:complexType" >
-    <xsl:if test="not(@abstract='true')" >
-      <h1>
-        <xsl:value-of select="@name" />
-      </h1>
-      <p>
-        <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
-      </p>
-    </xsl:if>
+    <h3>
+      <xsl:if test="@abstract='true'" >
+        <xsl:text>Abstract </xsl:text>    
+      </xsl:if>
+      <xsl:value-of select="@name" />
+    </h3>
+    <p>
+      <xsl:apply-templates select="(preceding-sibling::*|preceding-sibling::comment())[last()]" mode="comments"/>
+      <h5><xsl:text>Elements</xsl:text></h5>
+      <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
+    </p>
+    <hr/>
   </xsl:template>
 
-  <xsl:template match="xsd:sequence" >
+  <xsl:template match="comment()" mode="comments">
+    <h5><xsl:text>Comment</xsl:text></h5>
+    
     <p>
-      <xsl:apply-templates select="xsd:element" />
-      <br/>
+      <xsl:value-of select="."/>
     </p>
-  </xsl:template>
+  </xsl:template>  
 
   <xsl:template match="xsd:complexContent" >
       <xsl:apply-templates select="xsd:extension" />
   </xsl:template>
 
   <xsl:template match="xsd:extension" >
-    <p>doing an extesion</p>
-    <xsl:apply-templates select="ancestor::xsd:complexType[@name=@base]" />
+    <xsl:variable  name="abstractBase">
+      <xsl:value-of  select="@base" />
+    </xsl:variable>
+    <xsl:apply-templates select="//xsd:complexType[@name=$abstractBase]//xsd:sequence" />
     <xsl:apply-templates select="xsd:sequence" />
   </xsl:template>
 
+  <xsl:template match="xsd:sequence" >
+      <xsl:apply-templates select="xsd:element" />
+  </xsl:template>
+
   <xsl:template match="xsd:element" >
-    <p>
-      name = <xsl:value-of select="@name" />
-      type = <xsl:value-of select="@type" />
-      <br/>
-    </p>
+    <xsl:choose>
+      <xsl:when test="@ref">
+        <xsl:variable  name="ref">
+          <xsl:value-of  select="@ref" />
+        </xsl:variable>
+        <xsl:apply-templates select="//xsd:element[@name=$ref]" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@name" />
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@type" />
+        <br/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
