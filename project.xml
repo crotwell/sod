@@ -98,50 +98,32 @@
             <artifactId>JacORB</artifactId>
             <version>2.1</version>
             <url>http://www.jacorb.org</url>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>idl</artifactId>
             <version>2.1</version>
             <url>http://www.jacorb.org</url>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>antlr</artifactId>
             <version>2.7.2</version>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>avalon-framework</artifactId>
             <version>4.1.5</version>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>concurrent</artifactId>
             <version>1.3.2</version>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
             <artifactId>logkit</artifactId>
             <version>1.2</version>
-            <properties>
-                <endorsed/>
-            </properties>
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
