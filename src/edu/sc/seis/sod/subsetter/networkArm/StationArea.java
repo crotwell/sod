@@ -39,14 +39,25 @@ public class StationArea
 	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {
 		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		System.out.println("The min_latitude is "+boxArea.min_latitude);
-		System.out.println("The max_latitude is "+boxArea.max_latitude);
-		System.out.println("The min_longitude is "+boxArea.min_longitude);
-		System.out.println("The max_longitude is "+boxArea.max_longitude);
-		System.out.println("Area is of type BoxArea");
+		System.out.println("min_latitude is "+boxArea.min_latitude);
+		System.out.println("max_latitude is "+boxArea.max_latitude);
+		System.out.println("min_longitude is "+boxArea.min_longitude);
+		System.out.println("max_longitude is "+boxArea.max_longitude);
+		System.out.println("actual_latitude is "+e.my_location.latitude);
+		System.out.println("actual_longitude is "+e.my_location.longitude);
+		
+		if(e.my_location.latitude >= boxArea.min_latitude 
+		   && e.my_location.latitude <=boxArea.max_latitude
+		   && e.my_location.longitude >= boxArea.min_longitude
+		   && e.my_location.longitude <= boxArea.max_longitude) {
+		    System.out.println("RETURNING TRUE");
+		    return true;
+		} else return false;
+	
 	}
 	else System.out.println("The area is null");
 	return true;
+	
     }
 
     private edu.iris.Fissures.Area area = null;
