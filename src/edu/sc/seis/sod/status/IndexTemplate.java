@@ -57,6 +57,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     }
 
     public static String getCopiedConfigFileLocation() {
+        if(copiedConfigFileLoc == null){ return Start.getConfigFileName(); }
         return copiedConfigFileLoc;
     }
 
@@ -119,6 +120,6 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
     private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
     private static String cssFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.css";
-    private static String copiedConfigFileLoc = "";
+    private static String copiedConfigFileLoc;
 }
 
