@@ -47,7 +47,8 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             SodUtil.copyFile(none, dirName + "/images/none.gif");
             String configFileLoc = Start.getConfigFileName();
             String configFileName = new File(configFileLoc).getName();
-            SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + configFileName);
+            copiedConfigFileLoc = dirName + "/" + configFileName;
+            SodUtil.copyFile(Start.getConfigFileName(), copiedConfigFileLoc);
             /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
             convertToHTML(dirName + "/" + configFileName, dirName);
         } catch (Exception e) {
@@ -55,8 +56,12 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
         }
     }
 
+    public static String getCopiedConfigFileLocation() {
+        return copiedConfigFileLoc;
+    }
+
     public static String getHtmlConfigFileName() {
-        String configFileLoc  = Start.getConfigFileName();
+        String configFileLoc  = getCopiedConfigFileLocation();
         String fileName = configFileLoc.substring(0, configFileLoc.indexOf(".xml"));
         return fileName += ".html";
     }
@@ -114,5 +119,6 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
     private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
     private static String cssFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.css";
+    private static String copiedConfigFileLoc = "";
 }
 
