@@ -116,4 +116,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
     File dataDirectory;
 
+    static Category logger = 
+	Category.getInstance(LocalSeismogramArm.class.getName());
+    
 }// SacFileProcessor
