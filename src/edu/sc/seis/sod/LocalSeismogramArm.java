@@ -367,13 +367,13 @@ public class LocalSeismogramArm implements Subsetter{
         }
     }
 
-    private EventChannelSubsetter eventChannel =new NullEventChannelSubsetter();
+    private EventChannelSubsetter eventChannel =new PassEventChannel();
 
     private RequestGenerator requestGenerator = new NullRequestGenerator();
 
-    private RequestSubsetter request = new NullRequestSubsetter();
+    private RequestSubsetter request = new PassRequest();
 
-    private AvailableDataSubsetter availData = new NullAvailableDataSubsetter();
+    private AvailableDataSubsetter availData = new PassAvailableData();
 
     private LinkedList processes = new LinkedList();
 
