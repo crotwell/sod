@@ -57,7 +57,7 @@ public class MapEventStatus implements SodElement, EventArmMonitor, Runnable{
         try {
             try {
                 EventLayer el = map.getEventLayer();
-                el.eventDataChanged(new EQDataEvent(this, events.getAll()));
+                el.eventDataChanged(new EQDataEvent(events.getAll()));
                 map.writeMapToPNG(fileLoc);
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle(e);

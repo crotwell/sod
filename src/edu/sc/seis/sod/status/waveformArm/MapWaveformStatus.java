@@ -65,8 +65,7 @@ public class MapWaveformStatus implements Runnable{
                 addStations(sl, successful, AvailableStationDataEvent.UP);
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
-                EQDataEvent eqEvent = new EQDataEvent(this,
-                                                      new EventAccessOperations[]{events[i]});
+                EQDataEvent eqEvent = new EQDataEvent(new CacheEvent[]{events[i]});
                 el.eventDataChanged(eqEvent);
                 final String fileLoc = fileLocs[i];
                 SwingUtilities.invokeAndWait(new Runnable(){
