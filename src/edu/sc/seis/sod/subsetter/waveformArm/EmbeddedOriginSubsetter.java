@@ -1,11 +1,11 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;

@@ -1,11 +1,11 @@
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.process.waveFormArm.WaveFormArmProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveFormArmProcess;
 /**
  * LocalSeismogramProcess.java
  *

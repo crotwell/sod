@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import org.w3c.dom.Element;
 
@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.EventChannelSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.EventChannelSubsetter;
 
 
 /**

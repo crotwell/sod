@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -9,7 +9,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;

@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 import edu.sc.seis.sod.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;

@@ -4,10 +4,10 @@
  * @author Created by Charles Groves
  */
 
-package edu.sc.seis.sod.status.waveFormArm;
+package edu.sc.seis.sod.status.waveformArm;
 
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 import java.io.IOException;

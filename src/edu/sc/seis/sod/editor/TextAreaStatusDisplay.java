@@ -12,7 +12,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
-import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.JTextArea;

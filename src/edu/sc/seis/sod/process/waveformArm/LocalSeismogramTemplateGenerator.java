@@ -4,7 +4,7 @@
  * @author Created by Philip Oliver-Paull
  */
 
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -13,12 +13,12 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.waveFormArm.LocalSeismogramTemplate;
+import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;

@@ -1,11 +1,11 @@
-package edu.sc.seis.sod.status.waveFormArm;
+package edu.sc.seis.sod.status.waveformArm;
 
 import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

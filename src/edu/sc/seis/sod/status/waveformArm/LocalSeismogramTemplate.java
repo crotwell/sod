@@ -4,7 +4,7 @@
  * @author Created by Philip Oliver-Paull
  */
 
-package edu.sc.seis.sod.status.waveFormArm;
+package edu.sc.seis.sod.status.waveformArm;
 
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;

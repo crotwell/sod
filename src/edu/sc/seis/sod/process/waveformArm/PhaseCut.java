@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -8,7 +8,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.PhaseRequest;
+import edu.sc.seis.sod.subsetter.waveformArm.PhaseRequest;
 import java.util.LinkedList;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 7456 2004-03-06 19:58:22Z crotwell $
+ * @version $Id: PhaseCut.java 7555 2004-03-10 18:10:01Z groves $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {

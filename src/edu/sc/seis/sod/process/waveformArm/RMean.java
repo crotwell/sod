@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 7456 2004-03-06 19:58:22Z crotwell $
+ * @version $Id: RMean.java 7555 2004-03-10 18:10:01Z groves $
  */
 
 public class RMean implements LocalSeismogramProcess {

@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.process.waveFormArm;
+package edu.sc.seis.sod.process.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -8,7 +8,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import org.w3c.dom.Element;
 
 /**
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 7456 2004-03-06 19:58:22Z crotwell $
+ * @version $Id: ExternalSeismogramProcess.java 7555 2004-03-10 18:10:01Z groves $
  */
 
 public class ExternalSeismogramProcess

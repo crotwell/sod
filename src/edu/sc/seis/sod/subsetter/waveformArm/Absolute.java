@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

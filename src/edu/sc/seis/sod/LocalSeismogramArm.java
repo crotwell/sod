@@ -1,5 +1,5 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
+import edu.sc.seis.sod.subsetter.waveformArm.*;
 
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -12,7 +12,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
-import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -64,7 +64,7 @@ public class LocalSeismogramArm implements Subsetter{
                     // skip description element
                     continue;
                 }
-                Object sodElement = SodUtil.load((Element)node,"waveFormArm");
+                Object sodElement = SodUtil.load((Element)node,"waveformArm");
                 if(sodElement instanceof EventChannelSubsetter) {
                     eventChannel = (EventChannelSubsetter)sodElement;
                 } else if(sodElement instanceof RequestGenerator)  {

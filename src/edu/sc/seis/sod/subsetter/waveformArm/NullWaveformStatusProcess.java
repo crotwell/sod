@@ -1,11 +1,11 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.status.waveFormArm.WaveformStatusProcess;
+import edu.sc.seis.sod.status.waveformArm.WaveformStatusProcess;
 import org.w3c.dom.Element;
 
 

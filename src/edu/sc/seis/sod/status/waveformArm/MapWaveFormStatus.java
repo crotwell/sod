@@ -4,7 +4,7 @@
  * @author Created by Omnicore CodeGuide
  */
 
-package edu.sc.seis.sod.status.waveFormArm;
+package edu.sc.seis.sod.status.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -20,7 +20,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
-import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

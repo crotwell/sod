@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import org.w3c.dom.Element;
 
@@ -9,7 +9,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;

@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -9,7 +9,7 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveFormArm.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
 import edu.sc.seis.sod.SodElement;
 import org.w3c.dom.Element;
 /**
