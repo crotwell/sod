@@ -22,9 +22,9 @@ view of how SOD works, please see the
 <p>
 Change into the SOD directory, where you should see various files and subdirectories.
 Start up the GUI editor, by running <br/>
-<code>sodeditor.sh</code><br/>
+<code>bin/sodeditor.sh</code><br/>
  or <br/>
-<code>sodeditor.bat</code><br/>
+<code>bin\sodeditor.bat</code><br/>
 The SOD editor should start with the tutorial strategy file preloaded. This is
 contained within the editor, so there is no need to worry about messing anything
 up as it can be reset by choosing <tt>Open Tutorial</tt> from the <tt>File</tt> menu. You will

@@ -6,7 +6,7 @@
         <body>
         running sod or overview
 
-        what you have, exampel xml and tutorials (tutorial, weed, create bfast)
+        what you have, example xml and tutorials (tutorial, weed, create bfast)
 
         how you run it (cmd line and gui editor)
 
@@ -15,7 +15,7 @@
                                 <p>
                                 <code>sod.sh -f examples/tutorial.xml</code><br/><br/>
                                 If you're on a Unix-like OS, use the <tt>sod.sh</tt> script in the bin
-                                directory. To run it, execute sod.sh with the arguments
+                                directory. To run it, execute bin/sod.sh with the arguments
                                 <tt>-f <em>strategy_file</em></tt>.
                                 The <tt>-f</tt> option
                                 specifies the strategy file SOD uses to set up a run. The
@@ -24,9 +24,9 @@
                         </section>
                         <section name="Windows">
                                 <p>
-                                <code>sod.bat -f examples\tutorial.xml</code><br/><br/>
+                                <code>bin\sod.bat -f examples\tutorial.xml</code><br/><br/>
                                 SOD runs are started with a <tt>.bat</tt> file in Windows. To
-                                execute it, open a command window execute <tt>sod.bat</tt>
+                                execute it, open a command window execute <tt>bin\sod.bat</tt>
                                 with the arguments
                                 <tt>-f <em>strategy_file</em></tt>. This will start SOD
                                 using the strategy file specified after the -f flag. The
