@@ -70,11 +70,11 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) throws Exception {
 	try {
-	    System.out.println("Got "+seismograms.length+" seismograms for "+
-			       ChannelIdUtil.toStringNoDates(channel.get_id())+
-			       " for event in "+
-			       regions.getRegionName(event.get_attributes().region)+
-			       " at "+event.get_preferred_origin().origin_time.date_time);
+	    logger.info("Got "+seismograms.length+" seismograms for "+
+			ChannelIdUtil.toString(channel.get_id())+
+			" for event in "+
+			regions.getRegionName(event.get_attributes().region)+
+			" at "+event.get_preferred_origin().origin_time.date_time);
 	    if ( ! dataDirectory.exists()) {
 		if ( ! dataDirectory.mkdirs()) {
 		    throw new ConfigurationException("Unable to create directory."+dataDirectory);
@@ -174,6 +174,6 @@ logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
     File dataDirectory;
 
     static Category logger = 
-	Category.getInstance(LocalSeismogramArm.class.getName());
+	Category.getInstance(SacFileProcessor.class.getName());
     
 }// SacFileProcessor
