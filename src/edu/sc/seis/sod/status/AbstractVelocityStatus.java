@@ -87,7 +87,6 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
                         }
                         FileWritingTemplate.write(fileDir+"/"+filename,
                                                   out.getBuffer().toString());
-                        System.out.println("Output is: "+out);
                     } catch (Exception e) {
                         GlobalExceptionHandler.handle(e);
                     }
