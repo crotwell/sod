@@ -102,7 +102,7 @@ public class NetworkArm {
 
     public void handleStationSubsetter(NetworkAccess networkAccess, Station station) {
 	
-	if(stationSubsetter.accept(station, null)) {
+	if(stationSubsetter.accept(networkAccess, station, null)) {
 	    Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
 		handleSiteIdSubsetter(networkAccess, channels[subCounter]);
@@ -119,7 +119,7 @@ public class NetworkArm {
 
     public void handleSiteSubsetter(NetworkAccess networkAccess, Channel channel) {
 
-	if(siteSubsetter.accept(channel.my_site, null)) {
+	if(siteSubsetter.accept(networkAccess, channel.my_site, null)) {
 	    handleChannelIdSubsetter(networkAccess, channel);
 	}
     }
@@ -134,7 +134,7 @@ public class NetworkArm {
     
     public void handleChannelSubsetter(NetworkAccess networkAccess, Channel channel) {
 
-	if(channelSubsetter.accept(channel, null)) {
+	if(channelSubsetter.accept(networkAccess, channel, null)) {
 	    handleNetworkArmProcess(networkAccess, channel);
 	}
     }

@@ -17,7 +17,7 @@ import edu.iris.Fissures.network.*;
 public interface EventChannelSubsetter {
 
     public boolean accept(EventAccessOperations event, 
-			  NetworkAccessOperations network, 
+			  NetworkAccess network, 
 			  Channel channel, 
 			  CookieJar cookies) throws Exception;
     

@@ -44,11 +44,11 @@ public class ChannelAND
 	super(config);
     }
 
-    public boolean accept(NetworkAccessOperations network, Channel e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess network, Channel e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    ChannelSubsetter filter = (ChannelSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if ( filter.accept(network, e, cookies)) {
 		return false;
 	    }
 	}

@@ -14,7 +14,7 @@ public class NullEventStationSubsetter
     
     implements EventStationSubsetter {
    
-    public boolean accept(EventAccessOperations o, Station station,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Station station,  CookieJar cookies) {
 	return true;
     }
 

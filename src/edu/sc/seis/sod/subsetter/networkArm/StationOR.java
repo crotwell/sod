@@ -45,11 +45,11 @@ public class StationOR
 	super(config);
     }
 
-    public boolean accept(NetworkAccessOperations network,  Station e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess  network,  Station e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    StationSubsetter filter = (StationSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if ( filter.accept(network, e, cookies)) {
 		return false;
 	    }
 	}

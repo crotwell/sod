@@ -18,11 +18,11 @@ public class EventStationAND
 	super(config);
     }
 
-    public boolean accept(EventAccessOperations o, Station station,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    EventStationSubsetter filter = (EventStationSubsetter)it.next();
-	    if (!filter.accept(o, station, cookies)) {
+	    if (!filter.accept(o, network, station, cookies)) {
 		return false;
 	    }
 	}

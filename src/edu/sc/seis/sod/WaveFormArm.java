@@ -70,7 +70,7 @@ public class WaveFormArm implements Runnable {
 
     public void processWaveFormArm() {
 
-	if(eventStationSubsetter.accept(null, null, null)) {
+	if(eventStationSubsetter.accept(null, null, null, null)) {
 	    processEventChannelSubsetter();
 	}
 	
@@ -78,7 +78,7 @@ public class WaveFormArm implements Runnable {
 
     public void processEventChannelSubsetter() {
 
-	if(eventChannelSubsetter.accept(null, null, null)) {
+	if(eventChannelSubsetter.accept(null, null, null, null)) {
 	    processFixedDataCenter();
 	}
     }
@@ -93,7 +93,8 @@ public class WaveFormArm implements Runnable {
 
     public void processPhaseRequestSubsetter() {
 
-	if(phaseRequestSubsetter.accept(null)) {
+	//if(phaseRequestSubsetter.accept(null)) 
+	{
 	    processAvailableDataSubsetter();
 	}
 	

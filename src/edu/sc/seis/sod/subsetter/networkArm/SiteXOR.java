@@ -27,11 +27,11 @@ public class SiteXOR
 	super(config);
     }
 
-    public boolean accept(NetworkAccessOperations network, Site e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    SiteSubsetter filter = (SiteSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if ( filter.accept(network, e, cookies)) {
 		return false;
 	    }
 	}

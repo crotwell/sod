@@ -30,7 +30,7 @@ public class SiteIDXOR
 	super(config);
     }
 
-    public boolean accept(NetworkAccessOperations network, SiteId e,  CookieJar cookies) {
+    public boolean accept(SiteId e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    SiteIdSubsetter filter = (SiteIdSubsetter)it.next();

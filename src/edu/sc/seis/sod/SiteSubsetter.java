@@ -15,7 +15,7 @@ import edu.iris.Fissures.network.*;
 
 public interface SiteSubsetter extends Subsetter{
 
-    public boolean accept(NetworkAccessOperations network,
+    public boolean accept(NetworkAccess network,
 			  Site station, 
 			  CookieJar cookies);
     

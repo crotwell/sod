@@ -19,7 +19,7 @@ import edu.iris.Fissures.event.*;
 public interface  RequestGenerator {
 
     public RequestFilter[] generateRequest(EventAccessOperations event, 
-					   NetworkAccessOperations network, 
+					   NetworkAccess network, 
 					   Channel channel, 
 					   CookieJar cookies) throws Exception;
     

@@ -54,7 +54,7 @@ public class StationArea
 	
     }
 
-    public boolean accept(NetworkAccessOperations network, Station e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
 	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {
 		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;

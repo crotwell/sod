@@ -13,7 +13,7 @@ import edu.iris.Fissures.*;
 public class NullEventChannelSubsetter 
     
     implements EventChannelSubsetter {
-   public boolean accept(EventAccessOperations o, Channel station,  CookieJar cookies) {
+   public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Channel station,  CookieJar cookies) {
 	return true;
     }
 

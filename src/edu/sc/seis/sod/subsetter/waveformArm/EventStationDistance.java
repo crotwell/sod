@@ -27,7 +27,7 @@ public class EventStationDistance extends DistanceRange implements EventStationS
 	super(config);
     }
     
-    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookies) {
+    public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) {
 
 	return true;
     }

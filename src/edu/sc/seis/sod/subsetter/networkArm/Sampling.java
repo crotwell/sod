@@ -49,11 +49,10 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
 		}
 		if(interval == null) System.out.println("The interval is null");	
-		accept(null, null);
-
+	
 	}
 
-	public boolean accept(NetworkAccessOperations network,Channel channel, CookieJar cookies) {
+	public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) {
 
 		System.out.println("The min Value is "+getMinValue());
 		System.out.println("The max Value is "+getMaxValue());

@@ -14,7 +14,7 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public interface NetworkArmProcess extends Process {
 
-    public void process(NetworkAccessOperations network, 
+    public void process(NetworkAccess network, 
 			Channel chan, 
 			CookieJar cookieJar) throws Exception;
     

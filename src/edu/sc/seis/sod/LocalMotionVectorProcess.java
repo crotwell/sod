@@ -17,11 +17,11 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public interface LocalMotionVectorProcessor extends WaveFormArmProcess {
+public interface LocalMotionVectorProcess extends WaveFormArmProcess {
 
 
     public void process(EventAccessOperations event, 
-			NetworkAccessOperations network, 
+			NetworkAccess network, 
 			ChannelGroup channel, 
 			RequestFilter[] original, 
 			RequestFilter[] available,

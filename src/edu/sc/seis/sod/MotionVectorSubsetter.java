@@ -20,7 +20,7 @@ import edu.iris.Fissures.*;
 public interface MotionVectorSubsetter {
 
     public boolean accept(EventAccessOperations event, 
-			  NetworkAccessOperations network,
+			  NetworkAccess network,
 			  ChannelGroup channel, 
 			  LocalMotionVector motionVectors,
 			  CookieJar cookies) throws Exception;
