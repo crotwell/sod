@@ -9,13 +9,15 @@
     <menu name="Essentials">
       <item name="Front Page"            href="/index.html"/>
       <item name="News and Status"     href="/news.html"/>
+      <item name="Manual"          href="/manual.html"/>
       <item name="XML Tag Docs"          href="/sodDocs/index.html"/>
-      <item name="Bugs and Problems"          href="/bugs.html"/>
+      <item name="Bugs and Problems"     href="/bugs.html"/>
     </menu>
 
     <menu name="Download">
-        <item name="Binaries"              href="/../mavenRepository/sod/jars"/>
-        <item name="Source Code"           href="/../mavenRepository/sod/distributions"/>
+      <item name="Install"        href="/install.html"/>
+      <item name="Binaries"      href="/../mavenRepository/sod/jars"/>
+      <item name="Source Code"   href="/../mavenRepository/sod/distributions"/>
     </menu>
 
     <menu name="Related Projects">

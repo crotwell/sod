@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author>Philip Crotwell</author>
+    <title>SOD Installation</title>
+  </properties>
+
+<body>
+
+<section name="Installing SOD">
+<p>
+In addition to the distribution tar or zip file, you also need to get several
+jars that sod dependeds on. The list can be found in the 
+<a href="http://www.seis.sc.edu/software/sod/dependencies.html">dependency</a>
+section of the project info.
+</p>
+
+</section>
+</body>
+</document>
