@@ -36,20 +36,32 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
                 cur.update("Processing Started", Status.PROCESSING);
                 boolean passedESS;
                 synchronized(eventStationSubsetter) {
-                    passedESS = eventStationSubsetter.accept(eventAccess,
-                                                             networkAccess.getNetworkAccess(),
-                                                             successfulChannels[counter].getChannel().my_site.my_station,
-                                                             null);
+                    try {
+                        passedESS = eventStationSubsetter.accept(eventAccess,
+                                                                 networkAccess.getNetworkAccess(),
+                                                                 successfulChannels[counter].getChannel().my_site.my_station,
+                                                                 null);
+                        if(!passedESS) {
+                            cur.update("Event Station Subsetter Failed",
+                                       Status.COMPLETE_REJECT);
+                        }else{
+                            cur.update("Event Station Subsetter Succeeded",
+                                       Status.PROCESSING);
+                            try {
+                                localSeismogramArm.processLocalSeismogramArm(cur);
+                            } catch (Exception e) {
+                                cur.update(e,
+                                           "System failure in the local seismogram arm processor",
+                                          Status.SOD_FAILURE);
+                            }
+                        }//end of if
+                    } catch (Exception e) {
+                        cur.update(e,
+                                   "System failure in event station subsetter",
+                                   Status.SOD_FAILURE);
+                    }
                     
                 }
-                if(!passedESS) {
-                    cur.update("Event Station Subsetter Failed",
-                               Status.COMPLETE_REJECT);
-                }else{
-                    cur.update("Event Station Subsetter Succeeded",
-                               Status.PROCESSING);
-                    localSeismogramArm.processLocalSeismogramArm(cur);
-                }//end of if
             }//end of for
         } catch(Throwable ce) {
             logger.error("Waveform processing thread dies unexpectantly.",
