@@ -6,9 +6,24 @@
 
 package edu.sc.seis.sod.editor;
 
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.EventStatus;
+import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.subsetter.EventFormatter;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
@@ -25,6 +40,30 @@ public class SodGUIEditor extends SimpleGUIEditor {
         frameName = "SOD Editor";
         tabs = true;
         initEditors();
+        JPanel sodPanel = new JPanel();
+        sodPanel.setName("Sod");
+        getTabPane().add(sodPanel);
+        sodPanel.setLayout(new BorderLayout());
+        final JButton go = new JButton("GO!");
+        sodPanel.add(go, BorderLayout.SOUTH);
+        final TextAreaStatusDisplay statusDisp = new TextAreaStatusDisplay();
+        sodPanel.add(new JScrollPane(statusDisp.getTextArea()), BorderLayout.CENTER);
+        go.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            go.setText("Going...");
+                            start = new Start(getDocument());
+                            start.start();
+
+                            start.getEventArm().add(statusDisp);
+                            start.getWaveformArm().addStatusMonitor(statusDisp);
+                        } catch (Throwable t) {
+                            CommonAccess.handleException("Problem starting SOD", t);
+                            go.setText("Gone.  :(");
+                        }
+                    }
+                });
     }
 
 
@@ -64,9 +103,12 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("boxArea", new BoxAreaEditor());
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
+        editors.put("sacFileProcessor", new SacFileEditor(this));
     }
 
     protected HashMap editors = new HashMap();
+
+    protected Start start;
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException {
         BasicConfigurator.configure();

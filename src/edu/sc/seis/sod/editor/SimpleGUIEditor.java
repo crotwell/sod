@@ -99,8 +99,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             {
                 CommonAccess.handleException("Error in loading names Prop file",e);
             }
-            JTabbedPane tabs = new JTabbedPane();
-            frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
+            frame.getContentPane().add(new JScrollPane(getTabPane()), BorderLayout.CENTER);
             // put each top level sod element in a panel
             NodeList list = doc.getDocumentElement().getChildNodes();
             for (int j = 0; j < list.getLength(); j++) {
@@ -119,7 +118,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     panel.add(box, BorderLayout.NORTH);
                     String tabName = props.getProperty(((Element)list.item(j)).getTagName(),
                                                       ((Element)list.item(j)).getTagName());
-                    tabs.add(EditorUtil.capFirstLetter(tabName),
+                    tabPane.add(EditorUtil.capFirstLetter(tabName),
                                                        panel);
                 }
             }
@@ -155,6 +154,10 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     JComponent getCompForElement(Element element) {
+        return getDefaultCompForElement(element);
+    }
+
+    JComponent getDefaultCompForElement(Element element) {
         JLabel label = new JLabel(element.getTagName());
         Box box = Box.createVerticalBox();
         JComponent comp = getCompForAttributes(element);
@@ -240,6 +243,15 @@ public class SimpleGUIEditor extends CommandLineEditor {
         botRow.add(Box.createGlue());
         return box;
     }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public JTabbedPane getTabPane() {
+        return tabPane;
+    }
+
     /**
      *
      */
@@ -255,6 +267,8 @@ public class SimpleGUIEditor extends CommandLineEditor {
     boolean tabs = false;
 
     JFrame frame;
+
+    JTabbedPane tabPane = new JTabbedPane();
 
     Properties props = new Properties();
 
