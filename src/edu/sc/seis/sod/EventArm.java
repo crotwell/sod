@@ -169,12 +169,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
             Origin origin = event.get_preferred_origin();
             if(originSubsetter.accept(event, origin, null)) {
+                change(event, RunStatus.PASSED);
+                startProcessors(event);
                 Start.getEventQueue().push(eventFinderSubsetter.getDNSName(),
                                            eventFinderSubsetter.getSourceName(),
                                                (EventAccess)((CacheEvent)event).getEventAccess(),
-                                           origin);
-                change(event, RunStatus.PASSED);
-                startProcessors(event);
+                                               origin);
             }else{
                 change(event, RunStatus.FAILED);
             }
