@@ -26,7 +26,11 @@ Maps only update once every two minutes
 <td>End Time (GMT)</td>
 <td>Status</td>
 </tr>
-<channels><channel><tr>
+<channels>
+<statusFilter>
+   <status>Passed</status>
+</statusFilter>
+<channel><tr>
 <td>
 <a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
 </td>
@@ -34,8 +38,26 @@ Maps only update once every two minutes
 <td><endTime/></td>
 <td><attribute name="id"><status/></attribute><status/></td>
 </tr>
-</channel></channels>
+</channel>
+</channels>
+
+<channels>
+<statusFilter>
+   <notStatus>Passed</notStatus>
+</statusFilter>
+<channel><tr>
+<td>
+<a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
+</td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><attribute name="id"><status/></attribute><status/></td>
+</tr>
+</channel>
+</channels>
 </table>
+
+
 </div>
 <div id="Menu">
 <ul>
