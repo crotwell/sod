@@ -4,6 +4,9 @@
     <include href="../include/latLon.rng"/>
     <include href="../include/range.rng"></include>
     <start combine="choice">
+		<ref name="area"/>
+    </start>
+	<define name="area">
         <choice>
             <ref name="boxArea"/>
             <ref name="pointArea"/>
@@ -11,7 +14,7 @@
                 <empty/>
             </element>
         </choice>
-    </start>
+	</define>
     <define name="boxArea">
         <element name="boxArea">
             <externalRef href="latitudeRange.rng"/>
