@@ -1,7 +1,5 @@
 // from http://www.kryogenix.org/code/browser/sorttable/
 
-//addEvent(window, "load", sortables_init);
-
 var SORT_COLUMN_INDEX;
 var img_dir = "";
 
@@ -17,7 +15,6 @@ function sortables_init() {
     for (ti=0;ti<tbls.length;ti++) {
         thisTbl = tbls[ti];
         if (((' '+thisTbl.className+' ').indexOf("sortable") != -1) && (thisTbl.id)) {
-            //initTable(thisTbl.id);
             ts_makeSortable(thisTbl);
         }
     }
@@ -66,8 +63,14 @@ function ts_resortTable(lnk) {
     }
     var spantext = ts_getInnerText(span);
     var td = lnk.parentNode;
-    var column = td.cellIndex;
     var table = getParent(td,'TABLE');
+
+    var tr = getParent(td, 'TR');
+    var column = td.cellIndex;
+    //Actually traverse the nodes to find the column to fix Safari
+    for (i=0; i<tr.childNodes.length;i++){
+        if(tr.childNodes[i] == td){ column = i; }
+    }
 
     // Work out a type for the column
     if (table.rows.length <= 1) return;
@@ -105,7 +108,7 @@ function ts_resortTable(lnk) {
     for (var ci=0;ci<allspans.length;ci++) {
         if (allspans[ci].className == 'sortarrow') {
             if (getParent(allspans[ci],"table") == getParent(lnk,"table")) { // in the same table as us?
-                allspans[ci].innerHTML = '&nbsp;&nbsp;&nbsp;';
+                allspans[ci].innerHTML = '<img src="'+img_dir+'none.gif"/>';
             }
         }
     }
@@ -189,3 +192,4 @@ function addEvent(elm, evType, fn, useCapture)
     alert("Handler could not be removed");
   }
 }
+
