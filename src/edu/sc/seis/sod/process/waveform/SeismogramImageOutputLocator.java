@@ -44,6 +44,9 @@ public class SeismogramImageOutputLocator {
                     }
                 }
             } else if(n.getNodeName().equals("seismogramConfig")) {
+                if (fileDir.equals("")) {
+                    fileDir = FileWritingTemplate.getBaseDirectoryName();
+                }
                 Element config = TemplateFileLoader.getTemplate((Element)n);
                 parseOutputLocationCreators(SodUtil.getElement(config,
                                                                "outputLocation"));
