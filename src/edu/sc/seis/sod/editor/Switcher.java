@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 import org.w3c.dom.Element;
 
 public class Switcher extends TagChooser{
@@ -34,6 +35,7 @@ public class Switcher extends TagChooser{
 
         ImageIcon changeIcon = new ImageIcon(TagChooser.class.getClassLoader().getResource("edu/sc/seis/sod/editor/change.gif"));
         JLabel change=  new JLabel(changeIcon);
+        change.setBorder(new EmptyBorder(0,0,0,4));
         addPopup(change, element);
         Box changeHolder = Box.createVerticalBox();
         changeHolder.add(change);
