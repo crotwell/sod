@@ -98,6 +98,10 @@ public class NetworkArm {
         }
     }
 
+    public void add(NetworkArmMonitor monitor) {
+        statusMonitors.add(monitor);
+    }
+
     public void processNetworkArm(NetworkAccess networkAccess, Channel channel)
         throws Exception{
         Iterator it = networkArmProcesses.iterator();
@@ -106,7 +110,10 @@ public class NetworkArm {
         }
     }
 
-    public NetworkFinder getFinder() throws Exception{
+    public NetworkDCOperations getNetworkDC() {
+        return finder.getNetworkDC();
+    }
+    public NetworkFinder getFinder() {
         return finder.getNetworkDC().a_finder();
     }
 
