@@ -5,14 +5,14 @@ MAVEN=~/.maven
 JACORB_TIMEOUT=900000
 
 JACORB_LIB=$MAVEN/repository/JacORB/jars
-JACORB=$JACORB_LIB/JacORB-2.0_USC1.jar
+JACORB=$JACORB_LIB/JacORB-2.1.jar
 JACORB_ANTLR=$JACORB_LIB/antlr-2.7.2.jar
 JACORB_AVALON=$JACORB_LIB/avalon-framework-4.1.5.jar
 JACORB_CONCURRENT=$JACORB_LIB/concurrent-1.3.2.jar
 JACORB_LOGKIT=$JACORB_LIB/logkit-1.2.jar
 
 
-SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta.jar
+SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta2.jar
 FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.6beta.jar
 FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.4beta.jar
 FISSURESIDL=$MAVEN/repository/fissuresIDL/jars/fissuresIDL-1.0.jar
@@ -24,7 +24,7 @@ XMLAPI=$MAVEN/repository/xml-apis/jars/xml-apis-1.0.b2.jar
 JAICORE=$MAVEN/repository/jars/jai_core.jar
 JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-20040212.jar
-OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.5.4.jar
+OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.6.jar
 JING=$MAVEN/repository/jing/jars/jing-20030619.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
