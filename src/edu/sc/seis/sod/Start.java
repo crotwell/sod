@@ -229,9 +229,20 @@ public class Start{
                 System.err.println("Your database was created with an older version "
                                        + "of SOD.");
                 if (Version.hasSchemaChangedSince(dbVersion.getDBVersion())){
-                    System.err.println("There has been a change in the schema "
-                                           + "since the database was created!  "
+                    System.err.println("There has been a change in the database "
+                                           + "structure since the database was created!  "
                                            + "Continuing this sod run is not advisable!!!");
+                }
+                else {
+                    System.err.println("The structure of the database has not "
+                                      + "changed, so SOD may work if there "
+                                      + "haven't been significant underlying "
+                                      + "changes in SOD. Check "
+                                      + "http://www.seis.sc.edu/SOD/download.html "
+                                      + "to see the differences between your "
+                                      + "running version, " + Version.getVersion()
+                                      + ", and the version that created the "
+                                      + "database, " + dbVersion.getDBVersion());
                 }
             }
         } catch (Exception e) {
