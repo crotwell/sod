@@ -101,3 +101,6 @@ atLeastOnce=At Least Once
 atMostOnce=At Most Once
 removeEventDuplicate=Remove Duplicate Events
 linearDistanceMagnitudeRange=Linear Distance with Magnitude
+
+legacyExecute=Legacy Execute
+channelGroupLegacyExecute=Channel Group Legacy Execute
