@@ -10,22 +10,19 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.w3c.dom.Element;
 
 public class EventStationFormatter extends StationFormatter{
@@ -66,27 +63,13 @@ public class EventStationFormatter extends StationFormatter{
 
 
     private int queryStatus(Station s, PreparedStatement stmt){
-        int id = -1;
+        int id;
         try {
-            NetworkDbObject[] netDbs = Start.getNetworkArm().getSuccessfulNetworks();
-            for (int i = 0; i < netDbs.length; i++) {
-                if(NetworkIdUtil.areEqual(netDbs[i].getNetworkAccess().get_attributes().get_id(),
-                                          s.get_id().network_id)){
-                    StationDbObject[] staDbs = netDbs[i].stationDbObjects;
-                    for (int j = 0; j < staDbs.length; j++) {
-                        if(StationIdUtil.areEqual(staDbs[j].getStation().get_id(),
-                                                  s.get_id())){
-                            id = staDbs[j].getDbId();
-                        }
-                    }
-                }
-            }
+            synchronized(stationTable){ id = stationTable.getDBId(s.get_id()); }
         } catch (Exception e) {
-            GlobalExceptionHandler.handle("Trouble getting successful networks from the network arm", e);
+            GlobalExceptionHandler.handle("Trouble getting dbid from the station table for " + StationIdUtil.toString(s.get_id())
+                                              , e);
             return -1;
-        }
-        if(id == -1){
-            throw new RuntimeException("The network arm knows nothing about station " + StationIdUtil.toString(s.get_id()));
         }
         try {
             synchronized(evStatus){ return evStatus.getNum(stmt, ev, id); }
@@ -97,6 +80,7 @@ public class EventStationFormatter extends StationFormatter{
     }
 
     private static JDBCEventChannelStatus evStatus;
+    private static JDBCStation stationTable;
     private static PreparedStatement retry, failed, success;
 
     private static String getStatusRequest(Status[] statii){
@@ -110,6 +94,7 @@ public class EventStationFormatter extends StationFormatter{
 
     static{
         try {
+            stationTable = new JDBCStation();
             evStatus = new JDBCEventChannelStatus();
             String baseStatement = "SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE " +
                 "eventid = ? AND " +
