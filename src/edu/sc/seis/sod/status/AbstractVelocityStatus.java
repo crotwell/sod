@@ -28,6 +28,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, NetworkArmMonitor {
+
+    public AbstractVelocityStatus(String fileDir, String templateName) throws IOException {
+        this.fileDir = fileDir;
+        this.templateName = templateName;
+        loadTemplate();
+    }
+
     public AbstractVelocityStatus(Element config) throws SQLException, MalformedURLException, IOException {
         networkArmContext = new NetworkArmContext(CookieJar.getCommonContext());
         NodeList nl = config.getChildNodes();
@@ -37,16 +44,23 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
                 Element element = (Element)n;
                 if (element.getTagName().equals("fileDir")){
                     fileDir = SodUtil.getNestedText(element);
-                } else if(n.getNodeName().equals("networkTemplate")) {
-                    networkTemplate = SodUtil.getNestedText(element);
+                } else if(n.getNodeName().equals("template")) {
+                    templateName = SodUtil.getNestedText(element);
                 }
             }
         }
         if (fileDir == null){
             fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
+        if (templateName == null) {
+            throw new MalformedURLException("template config param is null");
+        }
+        loadTemplate();
 
-        URL templateURL = TemplateFileLoader.getUrl(this.getClass().getClassLoader(), networkTemplate);
+    }
+
+    protected void loadTemplate() throws IOException {
+        URL templateURL = TemplateFileLoader.getUrl(this.getClass().getClassLoader(), templateName);
         BufferedReader read = new BufferedReader(new InputStreamReader(templateURL.openStream()));
         String line;
         while ((line = read.readLine()) != null) {
@@ -84,16 +98,11 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
         }
     }
 
-
-    /** so that we don't schedule more than one runnable to unpdate
-     * the networks page, as they would be identical. */
-    protected boolean scheduled = false;
-
     protected NetworkArmContext networkArmContext;
 
     protected String fileDir;
 
-    protected String networkTemplate;
+    protected String templateName;
 
     protected String template = "";
 
