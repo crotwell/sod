@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-        xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect" extension-element-prefixes="redirect">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
         <xsl:output method="html"/>
-        <xsl:template match="/pages">
-                <xsl:for-each select="page">
-                        <redirect:write select="concat(../baseDirectory/text(), destination/text())">
-                                <xsl:apply-templates select="document(source/text())"/>
-                        </redirect:write>
-                </xsl:for-each>
-        </xsl:template>
+        <xsl:include href="menuGenerator.xsl"/>
         <xsl:template match="/document">
                 <html>
                         <xsl:call-template name="head"/>
@@ -79,20 +72,5 @@
                                 <a href="http://www.geol.sc.edu"> Department of Geological
                                 Sciences</a> and the <a href="http://www.iris.edu">IRIS Consortium</a>.</p>
                 </div>
-        </xsl:template>
-        <xsl:template name="menu">
-                <div id="menu">
-                        <ul>
-                                <xsl:apply-templates select="document('allPages.xml')/pages/page" mode="menuGeneration"/>
-                        </ul>
-                </div>
-        </xsl:template>
-        <xsl:template match="page" mode="menuGeneration">
-                <li>
-                        <a>
-                                <xsl:attribute name="href"><xsl:value-of select="destination/text()"/></xsl:attribute>
-                                <xsl:value-of select="name/text()"/>
-                        </a>
-                </li>
         </xsl:template>
 </xsl:stylesheet>
