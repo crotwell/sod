@@ -53,20 +53,37 @@ public class XMLWritingTourist implements Tourist {
     public void leave(Interleave i) {}
 
     public void visit(NamedElement ne) {
-        result.append(open + ne.getName() + close);
+        if (!ne.equals(lastForm) && lastForm != null && !leftLast) {
+            result.append("\n");
+        }
+        write(open + ne.getName() + close);
         lastForm = ne;
+        leftLast = false;
+        depth++;
     }
 
     public void leave(NamedElement ne) {
+        depth--;
         if (ne.equals(lastForm)) {
-            result.replace(result.length() - close.length(), result.length(), " /" + close
-                    + "\n");
+            result.replace(result.length() - close.length(), result.length(),
+                    " /" + close);
         } else {
-            result.append(open + "/" + ne.getName() + close + "\n");
+            write(open + "/" + ne.getName() + close + "\n");
         }
+        leftLast = true;
+    }
+
+    private void write(String text) {
+        if (result.length() > 0 && result.charAt(result.length() - 1) == '\n') {
+            for (int i = 0; i < depth; i++) {
+                result.append("  ");
+            }
+        }
+        result.append(text);
     }
 
     public void visit(Text t) {
+        lastForm = t;
         result.append(DEFAULT_TEXT_VALUE);
     }
 
@@ -80,8 +97,12 @@ public class XMLWritingTourist implements Tourist {
     public String getResult() {
         return result.toString();
     }
-    
+
     private StringBuffer result = new StringBuffer();
+
+    private boolean leftLast;
+
+    int depth = 0;
 
     private Form lastForm;
 
