@@ -1,39 +1,38 @@
 package edu.sc.seis.sod.process.waveform;
 
 import edu.sc.seis.fissuresUtil.xml.DataSet;
-import java.net.URL;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.*;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
+import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
-import org.apache.log4j.BasicConfigurator;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import org.w3c.dom.Element;
-import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.awt.Dimension;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
-import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.database.waveform.JDBCEventRecordSection;
+import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public RecordSectionDisplayGenerator(Element config)
-            throws ConfigurationException {
+            throws ConfigurationException, SQLException {
         this.id = SodUtil.getText(SodUtil.getElement(config, "id"));
         this.displayOption = SodUtil.getText(SodUtil.getElement(config,
                                                                 "displayOption"));
@@ -41,6 +40,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                "fileNameBase"));
         this.numSeisPerImage = new Integer(SodUtil.getText(SodUtil.getElement(config,
                                                                               "numSeisPerRecordSection"))).intValue();
+        recordSectionChannel = new JDBCRecordSectionChannel();
+        eventRecordSection = new JDBCEventRecordSection();
+        eventAccess = new JDBCEventAccess();
+        channel = new JDBCChannel();
     }
 
     public SaveSeismogramToFile getSaveSeismogramToFile()
@@ -65,7 +68,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                   CookieJar cookieJar)
             throws ParserConfigurationException, IOException,
             IncomprehensibleDSMLException, UnsupportedFileTypeException,
-            ConfigurationException {
+            ConfigurationException, NotFound, SQLException {
         try {
             saveSeisToFile = getSaveSeismogramToFile();
             DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
@@ -100,7 +103,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public void outputRecordSections(EventAccessOperations event,
                                      DataSetSeismogram[] dataSeis)
-            throws IOException {
+            throws IOException, SQLException, NotFound {
         int length = dataSeis.length;
         boolean bestDisplay = false;
         if(displayOption.equals("BEST")) {
@@ -109,7 +112,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         if(length > 0) {
             int fileNameCounter = 0;
             if(length <= numSeisPerImage) {
-                writeImage(dataSeis, event, fileNameBase + fileExtension);
+                writeImage(dataSeis, event, fileNameBase + fileNameCounter + fileExtension);
                 return;
             } else {
                 sort(dataSeis);
@@ -123,9 +126,9 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                         tempDSS[j] = dataSeis[index];
                         index += spacing;
                     }
-                    String fileName = (i == 0 ? (fileNameBase + fileExtension)
-                            : (fileNameBase + fileNameCounter + fileExtension));
-                    writeImage(tempDSS, event, fileName);
+                    //String fileName = (i == 1 ? (fileNameBase + fileExtension)
+                      //      : (fileNameBase + fileNameCounter + fileExtension));
+                    writeImage(tempDSS, event, fileNameBase + fileNameCounter + fileExtension);
                     fileNameCounter++;
                 }
                 if(!bestDisplay) {
@@ -135,8 +138,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                         for(int k = 0; k < length - maxIndex - 1; k++) {
                             tempDSS[k] = dataSeis[maxIndex + k + 1];
                         }
-                            writeImage(tempDSS, event, fileNameBase
-                                    + fileNameCounter + fileExtension);
+                        writeImage(tempDSS, event, fileNameBase
+                                + fileNameCounter + fileExtension);
                     }
                 }
             }
@@ -145,13 +148,33 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private void writeImage(DataSetSeismogram[] dataSeis,
                             EventAccessOperations event,
-                            String fileName) throws IOException {
+                            String fileName) throws IOException, NotFound,
+            SQLException {
+        int recSecId=-1;
+        int eventId = eventAccess.getDBId(event);
+        boolean isBest = false;
+        if(displayOption.equals("BEST")) {
+            isBest = true;
+        }
+        if(!eventRecordSection.imageExists(eventId,fileName)){
+            recSecId=eventRecordSection.insert(eventId,fileName,isBest);
+        }else{
+            recSecId=eventRecordSection.getRecSecId(eventId,fileName);
+        }
         File parentDir = saveSeisToFile.getEventDirectory(event);
         RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
         rsDisplay.add(dataSeis);
         try {
             File outPNG = new File(parentDir, fileName);
             rsDisplay.outputToPNG(outPNG, new Dimension(500, 500));
+            for(int j=0;j<dataSeis.length;j++){
+                int channelId=channel.getDBId(dataSeis[j].getRequestFilter().channel_id);
+                if(recordSectionChannel.channelExists(eventId,channelId)){
+                    recordSectionChannel.updateRecordSection(recSecId,eventId,channelId);
+                }else{
+                    recordSectionChannel.insert(recSecId,channelId);
+                }
+            }
         } catch(IOException e) {
             throw new IOException("Problem writing recordSection output to PNG "
                     + e);
@@ -162,9 +185,17 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private String id;
 
-    private int numSeisPerImage=6;
+    private int numSeisPerImage = 6;
 
     private String displayOption = "";
+
+    private JDBCEventRecordSection eventRecordSection;
+
+    private JDBCRecordSectionChannel recordSectionChannel;
+
+    private JDBCEventAccess eventAccess;
+    
+    private JDBCChannel channel;
 
     private String fileNameBase = "RecordSection";//default
 
