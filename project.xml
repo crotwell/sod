@@ -227,6 +227,13 @@
       <version>3.0</version>
       <url>http://jakarta.apache.org/commons/collections</url>
     </dependency> 
+    <dependency>
+      <groupId>velocity-tools</groupId>
+      <artifactId>velocity-tools-generic</artifactId>
+      <version>1.1-rc1</version>
+      <url>http://jakarta.apache.org/velocity</url>
+    </dependency>
+
   </dependencies>
   <build>
     <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
