@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.editor;
 
+import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.model.UnitRangeImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
 import java.awt.BorderLayout;
@@ -120,6 +122,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("sacFileProcessor", new SacFileEditor(this));
         editors.put("originPointDistance", new OriginPointDistanceEditor(this));
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
+        editors.put("eventFinder", new EventFinderEditor(this));
+        editors.put("catalog", new CatalogEditor());
+        editors.put("contributor", new ContributorEditor());
+        editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
 
         TagChooser originTC = new TagChooser("origin", this);
         List subTypes = originTC.getSubTypes();
@@ -138,10 +144,14 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     protected Start start;
 
+    private static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
+
+
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         SodGUIEditor gui = new SodGUIEditor(args);
         gui.start();
     }
 }
+
 

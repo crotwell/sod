@@ -27,6 +27,7 @@ public class OriginPointDistanceEditor  implements EditorPlugin {
         Box vBox = Box.createVerticalBox();
         vBox.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
         Box latLonBox = Box.createHorizontalBox();
+        latLonBox.setBorder(new TitledBorder("Center point"));
         vBox.add(latLonBox);
 
         Element latEl = SodUtil.getElement(element, "latitude");
@@ -42,11 +43,9 @@ public class OriginPointDistanceEditor  implements EditorPlugin {
         latLonBox.add(Box.createHorizontalGlue());
 
         EditorPlugin unitRangeEditor = editor.getCustomEditor("unitRange");
-        if (unitRangeEditor != null) {
-            vBox.add(unitRangeEditor.getGUI(element));
-        } else {
-            vBox.add(new JLabel("...waiting on Charlie..."));
-        }
+        JComponent unitEditor = unitRangeEditor.getGUI(element);
+        unitEditor.setBorder(new TitledBorder("Distance from center point"));
+        vBox.add(unitEditor);
         return vBox;
     }
 

@@ -10,10 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Attr;
@@ -32,15 +32,12 @@ public class EventStatusTemplateEditor implements EditorPlugin{
     }
 
     public JComponent getGUI(Element element) throws Exception {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        Box panel = Box.createHorizontalBox();
         panel.setBorder(new TitledBorder("EventStatusTemplate"));
-
         final JComboBox box = new JComboBox(new String[]{"Depth", "Time", "Magnitude"});
         Node n = XPathAPI.selectSingleNode(element, "eventConfig/@xlink:href");
         final Attr xlink = (Attr)n;
         box.addActionListener(new ActionListener(){
-
                     public void actionPerformed(ActionEvent e) {
                         Object item = box.getSelectedItem();
                         xlink.setValue((String)valueMap.get(item));
@@ -48,8 +45,9 @@ public class EventStatusTemplateEditor implements EditorPlugin{
 
                 });
         box.setSelectedItem(reverseValueMap.get(xlink.getValue()));
-        panel.add(new JLabel("Sort by:"), BorderLayout.WEST);
-        panel.add(box, BorderLayout.CENTER);
+        panel.add(new JLabel("Sort by:"));
+        panel.add(box);
+        panel.add(Box.createHorizontalGlue());
 
         return panel;
     }

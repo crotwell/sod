@@ -43,6 +43,6 @@ public class MagnitudeEditor implements EditorPlugin{
         b.add(Box.createHorizontalGlue());
         return b;
     }
-
 }
+
 

@@ -9,6 +9,7 @@ eventTimeRange=Event Time Range
 magType=Type
 min=Minimum
 max=Maximum
+eventFinder=Query to event server
 catalog=Catalog
 contributor=Contributor
 eventAttrName=Event Name
@@ -20,5 +21,3 @@ originOR=Event Logical Or
 originXOR=Event Logical XOr
 originNOT=Event Logical Not
 originPointDistance=Distance from Event
-
-
