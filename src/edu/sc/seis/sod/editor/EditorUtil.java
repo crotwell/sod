@@ -20,6 +20,16 @@ import org.w3c.dom.Text;
 
 public class EditorUtil {
 
+    public static Box getLabeledTextField(Element element) throws TransformerException {
+        Box b = Box.createHorizontalBox();
+        b.add(getLabel(element.getTagName()));
+        b.add(getTextField((Text)XPathAPI.selectSingleNode(element, "text()")));
+        return b;
+    }
+
+    public static JLabel getLabel(String text) {
+        return new JLabel(SimpleGUIEditor.getDisplayName(text)+":");
+    }
 
     public static JTextField getTextField(Text text) {
         JTextField textField = new JTextField();
