@@ -157,9 +157,27 @@ public class SodUtil {
 		return node.getNodeValue();
 	    }
 	}
-	// nothing found, return null
+	//nothing found, return null
 	return null;
     }
+
+	/** returns the nested text in the tag **/
+	public static String getNestedText(Element config) {
+		String rtnValue = null;
+		NodeList children = config.getChildNodes();
+		Node node;
+		for(int i = 0; i < children.getLength(); i++) {
+			
+			node = children.item(i);
+			if (node instanceof Text){ 
+				rtnValue =  node.getNodeValue();
+				break;
+			}
+			else rtnValue = getNestedText((Element)node);		
+		}		
+		return rtnValue;
+	}
+	
     static org.apache.log4j.Category logger = 
         org.apache.log4j.Category.getInstance(SodUtil.class.getName());
 
