@@ -2,7 +2,7 @@
 # for Log4J
 #
 log4j.rootCategory=debug, R
-log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R=org.apache.log4j.ConsoleAppender
 log4j.appender.R.File=Sod.log
 log4j.appender.R.MaxFileSize=100KB
 log4j.appender.R.MaxBackupIndex=3
@@ -26,7 +26,12 @@ ooc.orb.oa.thread_pool=10
 #    corbaloc:iiop:host.domain:port/NameService
 # You should put your own choices for host.domain and port
 #
-#ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
-ooc.orb.service.NameService=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
+ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+#ooc.orb.service.NameService=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 edu.sc.seis.sod.configuration =dmc_test1.xml
 edu.sc.seis.sod.waveformarm.threads =4
+edu.sc.seis.sod.databasename=telukutl
+edu.sc.seis.sod.username=telukutl
+edu.sc.seis.sod.databasetype=postgres
+edu.sc.seis.sod.persistencetype=atleastonce
+edu.sc.seis.sod.daystoincrement=2
