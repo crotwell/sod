@@ -27,6 +27,16 @@
             </zeroOrMore>
         </element>
     </start>
+    <define name="singleLetterOrNumber">
+        <data type="string">
+            <param name="pattern">[A-Z0-9]{1}</param>
+        </data>
+    </define>
+    <define name="lon">
+        <element name="longitude">
+            <data type="float"/>
+        </element>
+    </define>
     <define name="station">
         <choice>
             <element name="stationCode">
@@ -43,19 +53,16 @@
             </element>
             <element name="stationEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
             </element>
             <element name="stationArea">
                 <choice>
                     <element name="boxArea">
                         <element name="latitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
                             <optional>
                                 <element name="min">
                                     <data type="double"/>
@@ -68,9 +75,6 @@
                             </optional>
                         </element>
                         <element name="longitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
                             <optional>
                                 <element name="min">
                                     <data type="double"/>
@@ -90,30 +94,18 @@
             </element>
             <element name="stationPointDistance">
                 <ref name="range"/>
-                <element name="latitude">
-                    <data type="float"/>
-                </element>
-                <element name="longitude">
-                    <data type="float"/>
-                </element>
+                <ref name="lat"/>
+                <ref name="lon"/>
             </element>
             <element name="stationPointAzimuth">
                 <ref name="range"/>
-                <element name="latitude">
-                    <data type="double"/>
-                </element>
-                <element name="longitude">
-                    <data type="double"/>
-                </element>
+                <ref name="lat"/>
+                <ref name="lon"/>
             </element>
             <element name="stationPointBackAzimuth">
                 <ref name="range"/>
-                <element name="latitude">
-                    <data type="double"/>
-                </element>
-                <element name="longitude">
-                    <data type="double"/>
-                </element>
+                <ref name="lat"/>
+                <ref name="lon"/>
             </element>
             <element name="stationAND">
                 <oneOrMore>
@@ -124,10 +116,6 @@
                 <oneOrMore>
                     <ref name="station"/>
                 </oneOrMore>
-            </element>
-            <element name="stationXOR">
-                <ref name="station"/>
-                <ref name="station"/>
             </element>
             <element name="stationNOT">
                 <ref name="station"/>
@@ -149,11 +137,6 @@
                 </oneOrMore>
             </element>
         </choice>
-    </define>
-    <define name="channelCodeChar">
-        <data type="string">
-            <param name="pattern">[A-Z0-9]{1}</param>
-        </data>
     </define>
     <define name="range">
         <element name="unit">
@@ -276,19 +259,16 @@
             </element>
             <element name="siteEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
             </element>
             <element name="siteArea">
                 <choice>
                     <element name="boxArea">
                         <element name="latitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
                             <optional>
                                 <element name="min">
                                     <data type="double"/>
@@ -301,9 +281,6 @@
                             </optional>
                         </element>
                         <element name="longitudeRange">
-                            <element name="unit">
-                                <value>DEGREE</value>
-                            </element>
                             <optional>
                                 <element name="min">
                                     <data type="double"/>
@@ -331,10 +308,6 @@
                     <ref name="site"/>
                 </oneOrMore>
             </element>
-            <element name="siteXOR">
-                <ref name="site"/>
-                <ref name="site"/>
-            </element>
             <element name="siteNOT">
                 <ref name="site"/>
             </element>
@@ -360,12 +333,6 @@
         <data type="string"/>
     </define>
     <define name="time">
-        <data type="string"/>
-    </define>
-    <define name="time3">
-        <data type="string"/>
-    </define>
-    <define name="time4">
         <choice>
             <data type="string"/>
             <interleave>
@@ -388,6 +355,12 @@
             </interleave>
         </choice>
     </define>
+    <define name="time3">
+        <data type="string"/>
+    </define>
+    <define name="time4">
+        <data type="string"/>
+    </define>
     <define name="channel">
         <choice>
             <element name="channelCode">
@@ -396,13 +369,13 @@
                 </data>
             </element>
             <element name="bandCode">
-                <ref name="channelCodeChar"/>
+                <ref name="singleLetterOrNumber"/>
             </element>
             <element name="gainCode">
-                <ref name="channelCodeChar"/>
+                <ref name="singleLetterOrNumber"/>
             </element>
             <element name="orientationCode">
-                <ref name="channelCodeChar"/>
+                <ref name="singleLetterOrNumber"/>
             </element>
             <element name="sampling">
                 <optional>
@@ -416,15 +389,15 @@
                     </element>
                 </optional>
                 <element name="interval">
-                    <ref name="time4"/>
+                    <ref name="time"/>
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time4"/>
+                    <ref name="time"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time4"/>
+                    <ref name="time"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -464,10 +437,6 @@
                     <ref name="channel"/>
                 </oneOrMore>
             </element>
-            <element name="channelXOR">
-                <ref name="channel"/>
-                <ref name="channel"/>
-            </element>
             <element name="channelNOT">
                 <ref name="channel"/>
             </element>
@@ -489,6 +458,11 @@
             </element>
         </choice>
     </define>
+    <define name="lat">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
+    </define>
     <define name="network">
         <choice>
             <element name="networkCode">
@@ -502,10 +476,10 @@
             </element>
             <element name="networkEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
             </element>
             <element name="networkAND">
@@ -517,10 +491,6 @@
                 <oneOrMore>
                     <ref name="network"/>
                 </oneOrMore>
-            </element>
-            <element name="networkXOR">
-                <ref name="network"/>
-                <ref name="network"/>
             </element>
             <element name="networkNOT">
                 <ref name="network"/>
