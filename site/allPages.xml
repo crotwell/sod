@@ -41,4 +41,10 @@
                 <destination>ES_JulAug_2004_preprint.pdf</destination>
                 <name>SOD Paper(PDF)</name>
         </page>
+        <page>
+                <source>../xdocs/sodcam.xml</source>
+                <destination>sodcam.html</destination>
+                <name>SOD-cam</name>
+        </page>
+
 </pages>
