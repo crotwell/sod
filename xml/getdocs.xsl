@@ -11,8 +11,18 @@
       </head>
       <body>
         <h1>Sod Tag Documentation</h1>
-        <p> <pre>Structure of a SOD configuration file.
-       
+        <p>
+The Structure of a sod configuration file is shown below. In general, for 
+each step there are multiple tags that can fufull that function, and those 
+shown below are merely placeholders. In addition to the specialized subsetters,
+ there are also logical subsetters for each type. For example, at the eventAttr
+subsetter location, there are eventAttrAND, eventAttrOR, eventAttrXOR and 
+eventAttrNOT. Each of these logical subsetters take as subtags any subsetter
+of the same type allowing the creation of complex subsetters from the existing
+simple ones.</p>
+        <p>
+Structure of a SOD configuration file. 
+        <pre>
 &lt;sod&gt;
     &lt;eventArm&gt;
         &lt;<a href="#eventFinderType">eventFinder</a>&gt; or &lt;<a href="#eventChannelFinderType">eventChannelFinder</a>&gt;
