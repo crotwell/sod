@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="channelGroupRequestSubsetter"/>
     </start>
@@ -15,118 +14,118 @@
         </choice>
     </define>
     <define name="ANDRequestSubsetterWrapper">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
+        <element name="ANDRequestSubsetterWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
                     request subsetter. </summary>
-                <description> Allows an event channel request subsetter to be embedded within a event
+                    <description> Allows an event channel request subsetter to be embedded within a event
                     channelgroup request subsetter. The result is the AND of result of all the
                     individual per channel request subsetters. The is most often used within the motion
                     vector arm. </description>
-                <example>
-                    <ANDRequestSubsetterWrapper>
-                        <requestPrint/>
-                    </ANDRequestSubsetterWrapper>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="ANDRequestSubsetterWrapper">
+                    <example>
+                        <ANDRequestSubsetterWrapper>
+                            <requestPrint/>
+                        </ANDRequestSubsetterWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <externalRef href="requestSubsetter.rng"/>
         </element>
     </define>
     <define name="ORRequestSubsetterWrapper">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
+        <element name="ORRequestSubsetterWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
                     request subsetter. </summary>
-                <description> Allows an event channel request subsetter to be embedded within a event
+                    <description> Allows an event channel request subsetter to be embedded within a event
                     channelgroup request subsetter. The result is the OR of the result of all the
                     individual per channel request subsetters. The is most often used within the motion
                     vector arm. </description>
-                <example>
-                    <ORRequestSubsetterWrapper>
-                        <requestPrint/>
-                    </ORRequestSubsetterWrapper>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="ORRequestSubsetterWrapper">
+                    <example>
+                        <ORRequestSubsetterWrapper>
+                            <requestPrint/>
+                        </ORRequestSubsetterWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <externalRef href="requestSubsetter.rng"/>
         </element>
     </define>
     <define name="channelGroupRequestSubsetterAND">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical AND between RequestSubsetter subsetters. </summary>
-                <description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
-                <example>
-                    <channelGroupRequestSubsetterAND>
-                        <something/>
-                        <somethingelse/>
-                    </channelGroupRequestSubsetterAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="channelGroupRequestSubsetterAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <channelGroupRequestSubsetterAND>
+                            <something/>
+                            <somethingelse/>
+                        </channelGroupRequestSubsetterAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="channelGroupRequestSubsetter"/>
             </oneOrMore>
         </element>
     </define>
     <define name="channelGroupRequestSubsetterOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical OR between RequestSubsetter subsetters. </summary>
-                <description> The output is the logical OR of the outputs of all included
-                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
-                <example>
-                    <channelGroupRequestSubsetterOR>
-                        <something/>
-                        <somethingelse/>
-                    </channelGroupRequestSubsetterOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="channelGroupRequestSubsetterOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <channelGroupRequestSubsetterOR>
+                            <something/>
+                            <somethingelse/>
+                        </channelGroupRequestSubsetterOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="channelGroupRequestSubsetter"/>
             </oneOrMore>
         </element>
     </define>
     <define name="channelGroupRequestSubsetterXOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical XOR between RequestSubsetter subsetters. </summary>
-                <description> The output is the logical XOR of the outputs of all included
-                    subsetters. </description>
-                <example>
-                    <channelGroupRequestSubsetterXOR>
-                        <something/>
-                        <somethingelse/>
-                    </channelGroupRequestSubsetterXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="channelGroupRequestSubsetterXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                    subsetters. </description>
+                    <example>
+                        <channelGroupRequestSubsetterXOR>
+                            <something/>
+                            <somethingelse/>
+                        </channelGroupRequestSubsetterXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="channelGroupRequestSubsetter"/>
             <ref name="channelGroupRequestSubsetter"/>
         </element>
     </define>
     <define name="channelGroupRequestSubsetterNOT">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
-                <description> The output is the logical NOT of the output of the included
-                    subsetters. </description>
-                <example>
-                    <channelGroupRequestSubsetterNOT>
-                        <something/>
-                    </channelGroupRequestSubsetterNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="channelGroupRequestSubsetterNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                    subsetters. </description>
+                    <example>
+                        <channelGroupRequestSubsetterNOT>
+                            <something/>
+                        </channelGroupRequestSubsetterNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="channelGroupRequestSubsetter"/>
         </element>
     </define>

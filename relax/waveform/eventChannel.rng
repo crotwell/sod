@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="eventChannel"/>
     </start>
@@ -16,165 +15,165 @@
         </choice>
     </define>
     <define name="embeddedEventStation">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Allows an event station subsetter to be embedded within a event channel
+        <element name="embeddedEventStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event station subsetter to be embedded within a event channel
                     subsetter. </summary>
-                <description> Allows an event station subsetter to be embedded within a event
+                    <description> Allows an event station subsetter to be embedded within a event
                     channel subsetter. The is most often used within an EventChannel logical
                     subsetter. </description>
-                <example>
-                    <embeddedEventStation>
-                        <distanceRange>
-                            <unit>DEGREE</unit>
-                            <min>40</min>
-                        </distanceRange>
-                    </embeddedEventStation>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="embeddedEventStation">
-            <externalRef href="eventStation.rng"/>
-        </element>
-    </define>
-    <define name="embeddedChannel">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Allows a Channel subsetter to be embedded within an EventChannel. </summary>
-                <description> Allows a Channel subsetter to be embedded within an EventChannel. This
-                    is most often used within a EventChannel logical. </description>
-                <example>
-                    <embeddedChannel>
-                        <sampling>
-                            <min>1</min>
-                            <max>40</max>
-                            <interval>
-                                <unit>SECOND</unit>
-                                <value>1</value>
-                            </interval>
-                        </sampling>
-                    </embeddedChannel>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="embeddedChannel">
-            <externalRef href="../network/channel.rng"/>
-        </element>
-    </define>
-    <define name="eventChannelAND">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical AND between EventChannel subsetters. </summary>
-                <description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
-                <example>
-                    <eventChannelAND>
+                    <example>
                         <embeddedEventStation>
                             <distanceRange>
                                 <unit>DEGREE</unit>
                                 <min>40</min>
                             </distanceRange>
                         </embeddedEventStation>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="eventStation.rng"/>
+        </element>
+    </define>
+    <define name="embeddedChannel">
+        <element name="embeddedChannel">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows a Channel subsetter to be embedded within an EventChannel. </summary>
+                    <description> Allows a Channel subsetter to be embedded within an EventChannel. This
+                    is most often used within a EventChannel logical. </description>
+                    <example>
                         <embeddedChannel>
-                            <bandCode>B</bandCode>
+                            <sampling>
+                                <min>1</min>
+                                <max>40</max>
+                                <interval>
+                                    <unit>SECOND</unit>
+                                    <value>1</value>
+                                </interval>
+                            </sampling>
                         </embeddedChannel>
-                    </eventChannelAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="../network/channel.rng"/>
+        </element>
+    </define>
+    <define name="eventChannelAND">
         <element name="eventChannelAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between EventChannel subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <eventChannelAND>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventChannelAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="eventChannel"/>
             </oneOrMore>
         </element>
     </define>
     <define name="eventChannelOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical OR between EventChannel subsetters. </summary>
-                <description> The output is the logical OR of the outputs of all included
-                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
-                <example>
-                    <eventChannelOR>
-                        <embeddedEventStation>
-                            <distanceRange>
-                                <unit>DEGREE</unit>
-                                <min>40</min>
-                            </distanceRange>
-                        </embeddedEventStation>
-                        <embeddedChannel>
-                            <bandCode>B</bandCode>
-                        </embeddedChannel>
-                    </eventChannelOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="eventChannelOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between EventChannel subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <eventChannelOR>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventChannelOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="eventChannel"/>
             </oneOrMore>
         </element>
     </define>
     <define name="eventChannelXOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical XOR between EventChannel subsetters. </summary>
-                <description> The output is the logical XOR of the outputs of included subsetters. </description>
-                <example>
-                    <eventChannelXOR>
-                        <embeddedEventStation>
-                            <distanceRange>
-                                <unit>DEGREE</unit>
-                                <min>40</min>
-                            </distanceRange>
-                        </embeddedEventStation>
-                        <embeddedChannel>
-                            <bandCode>B</bandCode>
-                        </embeddedChannel>
-                    </eventChannelXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="eventChannelXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between EventChannel subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of included subsetters. </description>
+                    <example>
+                        <eventChannelXOR>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventChannelXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="eventChannel"/>
             <ref name="eventChannel"/>
         </element>
     </define>
     <define name="eventChannelNOT">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical NOT of an EventChannel subsetter. </summary>
-                <description> The output is the logical NOT of the output of the included subsetter. </description>
-                <example>
-                    <eventChannelNOT>
-                        <embeddedEventStation>
-                            <distanceRange>
-                                <unit>DEGREE</unit>
-                                <min>40</min>
-                            </distanceRange>
-                        </embeddedEventStation>
-                    </eventChannelNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="eventChannelNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an EventChannel subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included subsetter. </description>
+                    <example>
+                        <eventChannelNOT>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                        </eventChannelNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="eventChannel"/>
         </element>
     </define>
     <define name="PASS">
-                <xsd:annotation>
-                        <xsd:documentation xml:lang="en">
-                                <summary> Always returns true. </summary>
-                                <description> Simple subsetter that always returns true, useful for testing. </description>
-                                <example>
-                                        <passEventChannel/>
-                                </example>
-                        </xsd:documentation>
-                </xsd:annotation>
-                <element name="passEventChannel">
-                        <zeroOrMore>
-                                <ref name="eventChannel"/>
-                        </zeroOrMore>
-                </element>
-        </define>
+        <element name="passEventChannel">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passEventChannel/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="eventChannel"/>
+            </zeroOrMore>
+        </element>
+    </define>
 </grammar>

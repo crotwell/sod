@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/source.rng"/>
     <start>
         <ref name="finder"/>
     </start>
     <define name="finder">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Finds networks. </summary>
-                <description> A Fissures/DHI NetworkDC service is located via the name and dns tags.
+        <element name="networkFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Finds networks. </summary>
+                    <description> A Fissures/DHI NetworkDC service is located via the name and dns tags.
                     The NetworkFinder is aquired from the NetworkDC, and a query is sent with the
                     given arguments. The networks returned are then sent thrrough the NetworkArm for
                     processing. An optional refresh interval can be given if sod should periodically
                     check for new channels. </description>
-                <example>
-                    <networkFinder>
-                        <description>Connect to the IRIS networkDC</description>
-                        <name>IRIS_NetworkDC</name>
-                        <dns>edu/iris/dmc</dns>
-                        <refreshInterval>
-                            <unit>MINUTE</unit>
-                            <value>3000</value>
-                        </refreshInterval>
-                    </networkFinder>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkFinder">
+                    <example>
+                        <networkFinder>
+                            <description>Connect to the IRIS networkDC</description>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                        </networkFinder>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="source"/>
             <externalRef href="../base/externalRef/refreshInterval.rng"/>
         </element>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="seismogramProcess"/>
     </start>
@@ -21,9 +20,9 @@
             <ref name="filter"/>
             <ref name="forkProcess"/>
             <ref name="alwaysSuccess"/>
-            <ref name="phaseSignalToNoise" />
-            <ref name="seismogramImageProcess" />
-            <ref name="legacyExecute" />
+            <ref name="phaseSignalToNoise"/>
+            <ref name="seismogramImageProcess"/>
+            <ref name="legacyExecute"/>
             <ref name="seismogramAND"/>
             <ref name="seismogramOR"/>
             <ref name="seismogramXOR"/>
@@ -32,133 +31,139 @@
         </choice>
     </define>
     <define name="seismogramAND">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical AND between seismogram subsetters. </summary>
-                <description> The output is the logical AND of the outputs of all included
+        <element name="seismogramAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between seismogram subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
                     subsetters. The subsetters after the first false outputed are not evaluated.
                     The seismic data passed down the chain is the data passed in,
                     seismogram results of the contained processors are ignored.</description>
-                <example>
-                    <seismogramAND>
-                        <xyz/>
-                        <pdq/>
-                    </seismogramAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="seismogramAND">
+                    <example>
+                        <seismogramAND>
+                            <xyz/>
+                            <pdq/>
+                        </seismogramAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
             </oneOrMore>
         </element>
     </define>
     <define name="seismogramOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical OR between seismogramSubsetter subsetters. </summary>
-                <description> The output is the logical OR of the outputs of all included
+        <element name="seismogramOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between seismogramSubsetter subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
                     subsetters. The subsetters after the first true outputed are not evaluated.
                     The seismic data passed down the chain is the data passed in,
                     seismogram results of the contained processors are ignored. </description>
-                <example>
-                    <seismogramOR>
-                        <xyz/>
-                        <pdq/>
-                    </seismogramOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="seismogramOR">
+                    <example>
+                        <seismogramOR>
+                            <xyz/>
+                            <pdq/>
+                        </seismogramOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
             </oneOrMore>
         </element>
     </define>
     <define name="seismogramXOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical XOR between seismogramSubsetter subsetters. </summary>
-                <description> The output is the logical XOR of the outputs of all included
+        <element name="seismogramXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between seismogramSubsetter subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
                     subsetters. The seismic data passed down the chain is the data passed in,
                     seismogram results of the contained processors are ignored. </description>
-                <example>
-                    <seismogramXOR>
-                        <xyz/>
-                        <pdq/>
-                    </seismogramXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="seismogramXOR">
+                    <example>
+                        <seismogramXOR>
+                            <xyz/>
+                            <pdq/>
+                        </seismogramXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="seismogramProcess"/>
             <ref name="seismogramProcess"/>
         </element>
     </define>
     <define name="seismogramNOT">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical NOT of an seismogramSubsetter subsetter. </summary>
-                <description> The output is the logical NOT of the output of the included
+        <element name="seismogramNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an seismogramSubsetter subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
                     subsetters. The seismic data passed down the chain is the data passed in,
                     seismogram results of the contained processors are ignored.</description>
-                <example>
-                    <seismogramNOT>
-                        <xyz/>
-                    </seismogramNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="seismogramNOT">
+                    <example>
+                        <seismogramNOT>
+                            <xyz/>
+                        </seismogramNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="seismogramProcess"/>
         </element>
     </define>
 
     <define name="phaseCut">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Cuts seismograms relative to predicted phase arrival times. </summary>
-                <description> Cuts seismogras relative to offsets from phase arrival time predicted
-                    by TauP for the model. </description>
-                <example>
-                    <phaseCut>
-                        <model>prem</model>
-                        <beginPhase>P</beginPhase>
-                        <beginOffset>
-                            <unit>SECOND</unit>
-                            <value>-100</value>
-                        </beginOffset>
-                        <endPhase>P</endPhase>
-                        <endOffset>
-                            <unit>SECOND</unit>
-                            <value>-100</value>
-                        </endOffset>
-                    </phaseCut>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="phaseCut">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Cuts seismograms relative to predicted phase arrival times. </summary>
+                    <description> Cuts seismogras relative to offsets from phase arrival time predicted
+                    by TauP for the model. </description>
+                    <example>
+                        <phaseCut>
+                            <model>prem</model>
+                            <beginPhase>P</beginPhase>
+                            <beginOffset>
+                                <unit>SECOND</unit>
+                                <value>-100</value>
+                            </beginOffset>
+                            <endPhase>P</endPhase>
+                            <endOffset>
+                                <unit>SECOND</unit>
+                                <value>-100</value>
+                            </endOffset>
+                        </phaseCut>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="phaseRequest"/>
         </element>
     </define>
     <define name="filter">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Filter</summary>
-                <description>Applies a butterworth filter to the seismograms.
+        <element name="filter">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Filter</summary>
+                    <description>Applies a butterworth filter to the seismograms.
                 The filterType can be CAUSAL or NONCAUSAL or TWOPASS, with the
                 last two being equivalent.</description>
-                <example>
-                <filter>
-                   <lowFreqCorner><value>50</value><unit>SECOND</unit></lowFreqCorner>
-                   <highFreqCorner><value>5</value><unit>HERTZ</unit></highFreqCorner>
-                   <numPoles>2</numPoles>
-                   <filterType>NONCAUSAL</filterType>
-                </filter>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="filter">
+                    <example>
+                        <filter>
+                            <lowFreqCorner>
+                                <value>50</value>
+                                <unit>SECOND</unit>
+                            </lowFreqCorner>
+                            <highFreqCorner>
+                                <value>5</value>
+                                <unit>HERTZ</unit>
+                            </highFreqCorner>
+                            <numPoles>2</numPoles>
+                            <filterType>NONCAUSAL</filterType>
+                        </filter>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <element name="lowFreqCorner">
                 <ref name="cornerSetting"/>
             </element>
@@ -173,7 +178,7 @@
                     <value>NONCAUSAL</value>
                     <value>CAUSAL</value>
                     <value>TWOPASS</value>
-                 </choice>
+                </choice>
             </element>
         </element>
     </define>
@@ -184,51 +189,51 @@
         </choice>
     </define>
     <define name="rMean">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Remove Mean</summary>
-                <description>Removes the mean of the seismograms.</description>
-                <example>
-                   <rMean/>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="rMean">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Remove Mean</summary>
+                    <description>Removes the mean of the seismograms.</description>
+                    <example>
+                        <rMean/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="rTrend">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Remove Trend</summary>
-                <description>Removes the trend of the seismograms.</description>
-                <example>
-                   <rTrend/>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="rTrend">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Remove Trend</summary>
+                    <description>Removes the trend of the seismograms.</description>
+                    <example>
+                        <rTrend/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="taper">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Apply a taper.</summary>
-                <description>Applys a taper to the seismograms. The type can be
+        <element name="taper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Apply a taper.</summary>
+                    <description>Applys a taper to the seismograms. The type can be
                 one of HANNING, HAMMIN or COSINE, with HANNING the default. The
                 width is given as a fraction of the seismogram length, and so
                 should be  0.5 as otherwise the begin and end taper will
                 overlap each other. 0.05 is the default.</description>
-                <example>
-                   <taper>
-                       <width>.05</width>
-                       <type>HANNING</type>
-                   </taper>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="taper">
+                    <example>
+                        <taper>
+                            <width>.05</width>
+                            <type>HANNING</type>
+                        </taper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <optional>
                 <element name="width">
                     <data type="float"/>
@@ -246,43 +251,43 @@
         </element>
     </define>
     <define name="responseGain">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Response Gain Correction</summary>
-                <description>Applies a overall sensitivity from the response to the seismograms.
+        <element name="responseGain">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Response Gain Correction</summary>
+                    <description>Applies a overall sensitivity from the response to the seismograms.
                     This will convert int or short seismograms into floats to avoid rounding
                     errors that could result in the output seismograms being all zeros. There
                     is no configuration.</description>
-                <example>
-                    <responseGain/>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="responseGain">
+                    <example>
+                        <responseGain/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="saveSeismogramToFile">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Saves seismograms in files. </summary>
-                <description>The seismograms are written to data files in the
+        <element name="saveSeismogramToFile">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Saves seismograms in files. </summary>
+                    <description>The seismograms are written to data files in the
                 given directory. Also writes out a dsml file for use in GEE and
                 other fissures tools that support datasets. Always returns true
                 unless there is an error.
                 </description>
-                <example>
-                    <saveSeismogramToFile>
-                        <fileType>sac</fileType>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <eventDirLabel>
+                    <example>
+                        <saveSeismogramToFile>
+                            <fileType>sac</fileType>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <eventDirLabel>
                             Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                        </eventDirLabel>
-                    </saveSeismogramToFile>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="saveSeismogramToFile">
+                            </eventDirLabel>
+                        </saveSeismogramToFile>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <element name="fileType">
                 <choice>
                     <value>sac</value>
@@ -303,24 +308,24 @@
         </element>
     </define>
     <define name="externalSeismogramProcess">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Runs an externally defined java processor. </summary>
-                <description>This runs the java processor defined in the given
+        <element name="externalSeismogramProcess">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Runs an externally defined java processor. </summary>
+                    <description>This runs the java processor defined in the given
                 class, which must implement the
                 edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess
                 interface.
                 </description>
-                <example>
-                    <externalSeismogramProcess>
-                        <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>
-                        <dataDirectory>POND_II</dataDirectory>
-                        <extraParam>1.7</extraParam>
-                    </externalSeismogramProcess>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="externalSeismogramProcess">
+                    <example>
+                        <externalSeismogramProcess>
+                            <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <extraParam>1.7</extraParam>
+                        </externalSeismogramProcess>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <element name="classname">
                 <data type="string"/>
             </element>
@@ -330,19 +335,19 @@
         </element>
     </define>
     <define name="printlineSeismogramProcess">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Prints a line to std out for each seismogram processed.</summary>
-                <description>This simply prints a line to standard out for each
+        <element name="printlineSeismogramProcess">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Prints a line to std out for each seismogram processed.</summary>
+                    <description>This simply prints a line to standard out for each
                 seismogram to be processed. It can be used as a simple status
                 monitor.
                 </description>
-                <example>
-                    <printlineSeismogramProcess/>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="printlineSeismogramProcess">
+                    <example>
+                        <printlineSeismogramProcess/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
@@ -359,50 +364,50 @@
         </element>
     </define>
     <define name="forkProcess">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Forks the processing of seismograms.</summary>
-                <description>This forks the processing of the seismograms so that
+        <element name="forkProcess">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Forks the processing of seismograms.</summary>
+                    <description>This forks the processing of the seismograms so that
                 more than one sequence of processing steps can be applied to the
                 data independently. The fork processor returns the original input
                 seismograms, but the success boolean of the enclosed processors.
                 </description>
-                <example>
-                    <forkProcess>
-                       <rTrend/>
-                       <saveSeismogramToFile>
-                          <fileType>sac</fileType>
-                          <dataDirectory>rTrendData</dataDirectory>
-                          <eventDirLabel>
+                    <example>
+                        <forkProcess>
+                            <rTrend/>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>rTrendData</dataDirectory>
+                                <eventDirLabel>
                               Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                          </eventDirLabel>
-                       </saveSeismogramToFile>
-                    </forkProcess>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="forkProcess">
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
+                        </forkProcess>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <oneOrMore>
                 <ref name="seismogramProcess"/>
             </oneOrMore>
         </element>
     </define>
     <define name="alwaysSuccess">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Executes a subprocessor, but always returns true.</summary>
-                <description>This executes the enclosed processor, but always returns
+        <element name="alwaysSuccess">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Executes a subprocessor, but always returns true.</summary>
+                    <description>This executes the enclosed processor, but always returns
                 a success regardless of whether the enclosed processor succeeded or
                 failed.
                 </description>
-                <example>
-                    <alwaysSuccess>
-                        <xyz/>
-                    </alwaysSuccess>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="alwaysSuccess">
+                    <example>
+                        <alwaysSuccess>
+                            <xyz/>
+                        </alwaysSuccess>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="seismogramProcess"/>
         </element>
     </define>
@@ -459,22 +464,22 @@
         </element>
     </define>
     <define name="legacyExecute">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Executes an external program.</summary>
-                <description>The legacyExecute processor is capable of running existing
+        <element name="legacyExecute">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Executes an external program.</summary>
+                    <description>The legacyExecute processor is capable of running existing
                         command line programs. It does this by passing the filename
                         of the seismograms saved by a earlier SaveSeismogramToFile
                         processor to a program started with Runtime.exec().
                 </description>
-                <example>
-                    <legacyExecute>
-                        <command>echo</command>
-                    </legacyExecute>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="legacyExecute">
+                    <example>
+                        <legacyExecute>
+                            <command>echo</command>
+                        </legacyExecute>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
             <optional>
                 <element name="prefix">
                     <data type="string"/>
@@ -489,7 +494,7 @@
                 </element>
             </optional>
         </element>
-        </define>
+    </define>
     <define name="waveformCountProcessor">
         <element name="waveformCountProcessor">
             <empty/>

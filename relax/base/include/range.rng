@@ -8,18 +8,18 @@
     <define name="range">
         <ref name="lengthUnit"/>
         <optional>
+            <element name="min">
             <xsd:annotation>
                 <include />
             </xsd:annotation>
-            <element name="min">
                 <data type="double"/>
             </element>
         </optional>
         <optional>
+            <element name="max">
             <xsd:annotation>
                 <include />
             </xsd:annotation>
-            <element name="max">
                 <data type="double"/>
             </element>
         </optional>
