@@ -106,6 +106,50 @@
         </element>
     </define>
     <define name="breqFastRequestSubsetter">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Creates a breqfast request and saves it to a file and returns true. </summary>
+                <description> Mainly useful for accessing data that is not available via
+                Fissures/DHI, such as restricted PASSCAL datasets or data from datacenters
+                that have a breqfast system but not DHI seismogram servers. Of course
+                the network information must be available to SOD.
+
+                As this subsetter always returns true, processing will continue
+                past this point. In most cases, the whole reason to generate
+                breqfast requests is that it is the only way to get the data, and
+                so there is not much point in proceeding down the waveform arm. So
+                you will generally want to wrap the breqFastRequestSubsetter in
+                a &lt;requestSubsetterNOT&gt; so that the return value is false.
+                This will allow SOD to proceed to the next piece of work and avoid
+                the wasted time in going to the server to get data.
+
+                Lastly, there is also an breqFastAvailableData that is similar
+                in functionality to this processor, but happens after the server
+                is queried for available data. Functionally, they are equivalent,
+                but the available data version takes longer due to the call on the
+                server.
+                </description>
+                <example>
+                     <breqFastRequestSubsetter>
+                         <dataDirectory>RUSH_breqfast</dataDirectory>
+                         <label>
+                            <originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            _A
+                         </label>
+                         <name>Jenny Seismologist</name>
+                         <inst>Univ. of Example</inst>
+                         <mail>Dept. of Seismology., Main St. MyTown AA, USA</mail>
+                         <email>joe@seis.example.edu</email>
+                         <phone>555-867-5309</phone>
+                         <fax>none</fax>
+                         <media>Electronic</media>
+                         <altmedia1>Electronic</altmedia1>
+                         <altmedia2>Electronic</altmedia2>
+                         <quality>b</quality>
+                     </breqFastRequestSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="breqFastRequestSubsetter">
             <element name="dataDirectory">
                 <data type="string"/>
