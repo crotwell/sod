@@ -45,9 +45,9 @@
         <element name="availableDataOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed AvailableData subsetter</summary>
-                <description>The output is the logical OR of the outputs of all included AvailableData subsetters. This means
-                    that it will evaluate to true if at least one of the enclosed AvailableData subsetters evaluate to true.
-                    The subsetters after the first true outputted are not evaluated.</description>
+                <description>The output is the logical OR of the outputs of all included AvailableData subsetters. This
+                    means that it will evaluate to true if at least one of the enclosed AvailableData subsetters
+                    evaluate to true. The subsetters after the first true outputted are not evaluated.</description>
                 <example>
                     <availableDataOR>
                         <noGaps/>
@@ -64,8 +64,9 @@
         <element name="availableDataNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed AvailableData subsetter</summary>
-                <description>The output is the logical NOT of the output of the enclosed AvailableData subsetter. This means
-                    that it will evaluate to false if the enclosed AvailableData subsetter evaluates to true, and vice versa.</description>
+                <description>The output is the logical NOT of the output of the enclosed AvailableData subsetter. This
+                    means that it will evaluate to false if the enclosed AvailableData subsetter evaluates to true, and
+                    vice versa.</description>
                 <example>
                     <availableDataNOT>
                         <noGaps/>
@@ -95,7 +96,7 @@
         <element name="someCoverage">
             <xsd:annotation>
                 <summary>Accepts data only if it spans some of original request</summary>
-            </xsd:annotation>            
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
@@ -104,7 +105,7 @@
             <xsd:annotation>
                 <summary>Insert summary here</summary>
                 <description>Insert description here.</description>
-            </xsd:annotation>   
+            </xsd:annotation>
             <ref name="time"/>
         </element>
     </define>
@@ -112,8 +113,8 @@
         <element name="passAvailableData">
             <xsd:annotation>
                 <summary>Accepts any available data</summary>
-                <description>This is a simple subsetter that always returns true for any available data, which is useful for
-                        testing purposes.</description>
+                <description>This is a simple subsetter that always returns true for any available data, which is useful
+                    for testing purposes.</description>
                 <example>
                     <passAvailableData/>
                 </example>
@@ -124,17 +125,17 @@
         </element>
     </define>
     <define name="externalAvailable">
+        <element name="externalAvailableDataSubsetter">
             <xsd:annotation>
                 <summary>Use an AvailableData subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements AvailableDataSubsetter, SOD
-                    calls accept() on the class for every event, channel, and their available data.</description>
+                <description>Attempts to load the class named by classname, and if it implements AvailableDataSubsetter,
+                    SOD calls accept() on the class for every event, channel, and their available data.</description>
                 <example>
                     <externalAvailableDataSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.availableData.MyAvailableDataSubsetter</classname>
                     </externalAvailableDataSubsetter>
                 </example>
             </xsd:annotation>
-        <element name="externalAvailableDataSubsetter">
             <ref name="externalClass"/>
         </element>
     </define>
