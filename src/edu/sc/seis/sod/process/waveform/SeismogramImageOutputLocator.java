@@ -20,15 +20,7 @@ import edu.sc.seis.sod.status.TemplateFileLoader;
  */
 public class SeismogramImageOutputLocator {
 
-    public SeismogramImageOutputLocator(String fileDir,
-            EventFormatter eventDirFormatter,
-            StationFormatter stationDirFormatter,
-            ChannelFormatter imageNameFormatter, String prefix) {
-        this.fileDir = fileDir;
-        eventFormatter = eventDirFormatter;
-        stationFormatter = stationDirFormatter;
-        chanFormatter = imageNameFormatter;
-    }
+    private SeismogramImageOutputLocator() {}
 
     public SeismogramImageOutputLocator(Element el) throws Exception {
         this(el, true);
@@ -66,6 +58,15 @@ public class SeismogramImageOutputLocator {
         if(fileDir == null) {
             fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
+    }
+
+    public static SeismogramImageOutputLocator createForLocalSeismogramTemplate(Element el)
+            throws ConfigurationException {
+        SeismogramImageOutputLocator out = new SeismogramImageOutputLocator();
+        out.parseOutputLocationCreators(el);
+        out.prefix = "original_";
+        out.fileDir = FileWritingTemplate.getBaseDirectoryName();
+        return out;
     }
 
     public String getFileType() {
