@@ -82,7 +82,7 @@ public class EventArm implements Runnable{
                 if ((el).getTagName().equals("description")) continue;
                 Object sodElement = SodUtil.load(el, "eventArm");
                 if(sodElement instanceof EventFinder) {
-                    eventFinderSubsetter = (EventFinder)sodElement;
+                    finder = (EventFinder)sodElement;
                 } else if(sodElement instanceof OriginSubsetter) {
                     originSubsetter = (OriginSubsetter)sodElement;
                 } else if(sodElement instanceof EventArmProcess) {
@@ -95,14 +95,14 @@ public class EventArm implements Runnable{
     }
 
     private void getEvents() throws Exception {
-        if(eventFinderSubsetter == null) return;
-        logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getMSTR());
-        Querier querier = new Querier(eventFinderSubsetter);
+        if(finder == null) return;
+        logger.debug("getting events from "+finder.getEventTimeRange().getMSTR());
+        Querier querier = new Querier(finder);
         boolean done = false;
-        String server = eventFinderSubsetter.getSourceName();
-        String dns =  eventFinderSubsetter.getDNSName();
+        String server = finder.getSourceName();
+        String dns =  finder.getDNSName();
         logger.debug("DNS for events is " + dns + " source is " + server);
-        OriginTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
+        OriginTimeRange reqTimeRange = finder.getEventTimeRange();
         while(!done){
             waitForProcessing();
             MicroSecondDate queryStart = getQueryStart(reqTimeRange, server, dns);
@@ -129,7 +129,7 @@ public class EventArm implements Runnable{
                         // log the error and sleep before retrying
                         numRetries++;
                         // force trip back to name service
-                        eventFinderSubsetter.forceGetEventDC();
+                        finder.forceGetEventDC();
                         GlobalExceptionHandler.handle("Got an Corba exception while trying query from "+
                                                           queryStart.getFissuresTime().date_time+
                                                           " to "+queryEnd.getFissuresTime().date_time+
@@ -319,7 +319,7 @@ public class EventArm implements Runnable{
      * is before the current time
      */
     private boolean shouldQuit(){
-        MicroSecondDate quitDate = eventFinderSubsetter.getEventTimeRange().getEndMSD().add(lag);
+        MicroSecondDate quitDate = finder.getEventTimeRange().getEndMSD().add(lag);
         if(quitDate.before(ClockUtil.now()))  return true;
         return false;
     }
@@ -372,15 +372,15 @@ public class EventArm implements Runnable{
 
             for (int i = 0; i < MAX_RETRY; i++) {
                 try {
-                    edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
+                    edu.iris.Fissures.IfEvent.EventFinder evFinder = finder.getEventDC().a_finder();
                     logger.debug("before finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
-                    EventAccessOperations[] events =  finder.query_events(area,
-                                                                          minDepth, maxDepth,
-                                                                          tr,
-                                                                          searchTypes, minMag, maxMag,
-                                                                          catalogs,
-                                                                          contributors,
-                                                                          sequenceMaximum, holder);
+                    EventAccessOperations[] events =  evFinder.query_events(area,
+                                                                            minDepth, maxDepth,
+                                                                            tr,
+                                                                            searchTypes, minMag, maxMag,
+                                                                            catalogs,
+                                                                            contributors,
+                                                                            sequenceMaximum, holder);
                     logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time+" got "+events.length);
                     if (holder.value != null) {
                         // might be events in the iterator...
@@ -431,9 +431,9 @@ public class EventArm implements Runnable{
         private String[] searchTypes = { "%" };
         private float minMag = -99.0f, maxMag = 99.0f;
 
-        private Area area = eventFinderSubsetter.getArea();
-        private String[] catalogs = eventFinderSubsetter.getCatalogs();
-        private String[] contributors = eventFinderSubsetter.getContributors();
+        private Area area = finder.getArea();
+        private String[] catalogs = finder.getCatalogs();
+        private String[] contributors = finder.getContributors();
         private int sequenceMaximum = 100;
         private EventSeqIterHolder holder = new EventSeqIterHolder();
     }
@@ -444,7 +444,7 @@ public class EventArm implements Runnable{
 
     private TimeInterval increment, lag, refreshInterval;
 
-    private EventFinder eventFinderSubsetter;
+    private EventFinder finder;
 
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 
