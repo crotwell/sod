@@ -6224,7 +6224,7 @@
                     <data type="string"/>
                 </element>
                 <optional>
-                    <element name="dataDirectory">
+                    <element name="workingDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -6455,7 +6455,7 @@
                     <data type="string"/>
                 </element>
                 <optional>
-                    <element name="dataDirectory">
+                    <element name="workingDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -6686,7 +6686,7 @@
                     <data type="string"/>
                 </element>
                 <optional>
-                    <element name="dataDirectory">
+                    <element name="workingDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -6917,7 +6917,7 @@
                     <data type="string"/>
                 </element>
                 <optional>
-                    <element name="dataDirectory">
+                    <element name="workingDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -7148,7 +7148,7 @@
                     <data type="string"/>
                 </element>
                 <optional>
-                    <element name="dataDirectory">
+                    <element name="workingDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -7250,6 +7250,21 @@
                         <ref name="xml10"/>
                     </choice>
                 </oneOrMore>
+            </element>
+            <element name="channelGroupLegacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="channelGroupFork">
                 <zeroOrMore>
