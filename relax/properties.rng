@@ -1,69 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-	<include href="base/include/quantity.rng"/>
-	<start>
-		<element name="properties">
-			<interleave>
-				<optional>
-					<element name="runName">
-						<text/>
-					</element>
-				</optional>
-				<optional>
-					<element name="statusBase">
-						<text/>
-					</element>
-				</optional>
-				<optional>
-					<element name="eventQueryIncrement">
-						<ref name="time"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="eventRefreshInterval">
-						<ref name="time"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="eventLag">
-						<ref name="time"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="maxRetryDelay">
-						<ref name="time"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="waveformWorkerThreads">
-						<text/>
-					</element>
-				</optional>
-				<optional>
-					<element name="reopenEvents">
-						<ref name="trueOrFalse"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="removeDatabase">
-						<ref name="trueOrFalse"/>
-					</element>
-				</optional>
-				<optional>
-					<element name="eventChannelPairProcessing">
-						<choice>
-							<value>atLeastOnce</value>
-							<value>atMostOnce</value>
-						</choice>
-					</element>
-				</optional>
-			</interleave>
-		</element>
-	</start>
-	<define name="trueOrFalse">
-		<choice>
-			<value>TRUE</value>
-			<value>FALSE</value>
-		</choice>
-	</define>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <include href="base/include/quantity.rng"/>
+    <start>
+        <element name="properties">
+            <xsd:annotation>
+                <summary>Various non arm specific SOD run settings</summary>
+                <description>The properties contained here tell SOD how to go
+                    about its business whereas the items in each of the arms
+                    tell SOD what its business is. Go to the page for any
+                    property to find out more about it. </description>
+            </xsd:annotation>
+            <interleave>
+                <optional>
+                    <ref name="runName"/>
+                </optional>
+                <optional>
+                    <ref name="statusBase"/>
+                </optional>
+                <optional>
+                    <ref name="eventQueryIncrement"/>
+                </optional>
+                <optional>
+                    <ref name="eventRefreshInterval"/>
+                </optional>
+                <optional>
+                    <ref name="eventLag"/>
+                </optional>
+                <optional>
+                    <ref name="maxRetryDelay"/>
+                </optional>
+                <optional>
+                    <ref name="waveformWorkerThreads"/>
+                </optional>
+                <optional>
+                    <ref name="reopenEvents"/>
+                </optional>
+                <optional>
+                    <ref name="removeDatabase"/>
+                </optional>
+                <optional>
+                    <ref name="eventChannelPairProcessing"/>
+                </optional>
+            </interleave>
+        </element>
+    </start>
+    <define name="trueOrFalse">
+        <choice>
+            <value>TRUE</value>
+            <value>FALSE</value>
+        </choice>
+    </define>
+    <define name="runName">
+        <element name="runName">
+            <xsd:annotation>
+                <summary>Sets the name of the SOD run</summary>
+                <description>This contents of this tag set the name of the SOD
+                    run. This name is used in the web pages and the files that
+                    SOD generates so that runs can be distinguished from one
+                    another. Try to use a value that makes the run easy to
+                    identify. </description>
+                <include/>
+            </xsd:annotation>
+            <text>
+                <xsd:annotation>
+                    <example>II and IU 1992-1993</example>
+                </xsd:annotation>
+            </text>
+        </element>
+    </define>
+    <define name="statusBase">
+        <element name="statusBase">
+            <xsd:annotation>
+                <summary>Specifies the directory to which all status HTML is written</summary>
+                <description>All SOD's status files are written relative to the
+                    value of this directory. If nothing is set, the files are
+                    written in the directory status in the directory in which
+                    SOD is started.</description>
+            </xsd:annotation>
+            <text/>
+        </element>
+    </define>
+    <define name="eventQueryIncrement">
+        <element name="eventQueryIncrement">
+            <xsd:annotation>
+                <summary>Time spanned by a single event server query</summary>
+                <description>Rather than asking for events over the entire
+                    period in the event arm at once, SOD breaks all of the event
+                    work up into smaller pieces. This allows SOD to begin
+                    processing data for the first events in a run without having
+                    to wait for the retrieval of all of the events. The value of
+                    this property determines the size of the pieces. The piece
+                    size should be large enough so that an event is returned for
+                    every query, but not so large that an overwhelming number of
+                    events is returned each time. The default value is 7 days,
+                    and this should be fine for most runs.</description>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="eventRefreshInterval">
+        <element name="eventRefreshInterval">
+            <xsd:annotation>
+                <summary>Time between queries to the event server</summary>
+                <description>When SOD has an event arm with times spanning into
+                    the future, this value determines how long it waits between
+                    queries to see if there are any new events. Rather than
+                    continually making requests to the event server, this allows
+                    some request throttling as a courtesy to other users of the
+                    server. The default value is 6 minutes, but can be made
+                    higher if the run doesn't need events the minute the arrive
+                    at the server.</description>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="eventLag">
+        <element name="eventLag">
+            <xsd:annotation>
+                <summary>Time after the end event query time to wait for new events</summary>
+                <description>SOD will continue to ask for new events from the
+                    event server for the amount of time specified here after the
+                    end date in the event arm query. This exists so runs that
+                    are close to real time may continue to see if events come in
+                    for the times they're interested in after that time. For
+                    runs in the past, this value will have no effect unless
+                    adding it to the event arm's end date pushes it past the
+                    time the run ends.</description>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="maxRetryDelay">
+        <element name="maxRetryDelay">
+            <xsd:annotation>
+                <summary>Max time after first try to retry items in the waveform arm</summary>
+                <description>If SOD gets an available data failure, or a
+                    transient server failure when trying to process items in the
+                    waveform arm, this value comes into play. SOD will
+                    periodically retry the item that failed up until the first
+                    attempt time plus this value.</description>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="waveformWorkerThreads">
+        <element name="waveformWorkerThreads">
+            <xsd:annotation>
+                <summary>Number of threads to use in the waveform arm</summary>
+                <description>SOD can use multiple threads in the waveform arm to
+                    retrieve and process data. This allows for SOD to stay busy
+                    on processing one event-channel group while retrieving the
+                    data for another. For SOD runs that use gather lots of data,
+                    and do little processing, or vice versa, setting this to 3
+                    or 4 can speed things up. The value defaults to 1. </description>
+            </xsd:annotation>
+            <data type="nonNegativeInteger">
+                <xsd:annotation>
+                    <example>3</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="reopenEvents">
+        <element name="reopenEvents">
+            <xsd:annotation>
+                <summary>Restart events if database exists</summary>
+                <description>If true on a run on an existing SOD database with
+                    completed events in it, SOD will set these events to new and
+                    reprocess them. This is useful if you'd like to rerun the
+                    event over the same data but with a new processor. The
+                    default value is false.</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="removeDatabase">
+        <element name="removeDatabase">
+            <xsd:annotation>
+                <summary>Remove existing SOD database</summary>
+                <description>If true on a run on an existing SOD database, this
+                    will delete the database before starting the run. </description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="eventChannelPairProcessing">
+        <element name="eventChannelPairProcessing">
+            <xsd:annotation>
+                <summary>Sets handling on open event channel pairs on restart</summary>
+                <description>If a SOD run is stopped while running, the event
+                    channel groups its working on are left in an indeterminate
+                    state in the database. SOD knows it started working on them,
+                    but it doesn't know how far it progressed when SOD died.
+                    This property tells SOD how to deal with these indeterminate
+                    items. If "atLeastOnce" is used, SOD will grab the
+                    interminate items, set them to new, and process them. This
+                    means that no matter what happens to a SOD run, the items
+                    will get processed through the entire set of waveform arm
+                    processors. It also might mean that some processors get run
+                    a second time on the items, so if a processor expects to see
+                    everything only once, use the second value, "atMostOnce".
+                    This tells SOD to switch all of the indeterminate items over
+                    to the failed state and ignore them from now on. </description>
+            </xsd:annotation>
+            <choice>
+                <value>atLeastOnce</value>
+                <value>atMostOnce</value>
+            </choice>
+        </element>
+    </define>
 </grammar>
