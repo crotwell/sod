@@ -81,14 +81,6 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
         return output.substring(0, output.length());//don't include last newline
     }
 
-    public void setArmStatus(String status) {
-        // NO IMPL
-    }
-
-    private List events = new ArrayList();
-
-    private Map eventToMonitors = new HashMap();
-
-    private EventSorter sorter;
-
+    public void setArmStatus(String status) {}// NO IMPL
+    protected EventSorter sorter;
 }
