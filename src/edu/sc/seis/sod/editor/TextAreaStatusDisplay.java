@@ -10,8 +10,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.EventStatus;
-import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.subsetter.EventFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,7 +32,7 @@ public class TextAreaStatusDisplay implements EventStatus, WaveFormStatus {
 
     LinkedList messages = new LinkedList();
 
-    public void change(EventAccessOperations event, RunStatus status) throws Exception {
+    public void change(EventAccessOperations event, EventCondition status) throws Exception {
         write(EventFormatter.getDefaultResult(event)+" "+status+"\n");
     }
 
