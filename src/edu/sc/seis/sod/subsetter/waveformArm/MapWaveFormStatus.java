@@ -60,14 +60,14 @@ public class MapWaveFormStatus implements WaveFormStatus {
                         sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
                         EventChannelCondition status = (EventChannelCondition)channelMap.get(cur);
                         if (status == EventChannelCondition.FAILURE ||
-                            status == EventChannelCondition.PROCESSOR_FAILED||
-                            status == EventChannelCondition.SUBSETTER_FAILED){
+                            status == EventChannelCondition.CORBA_FAILURE||
+                            status == EventChannelCondition.SUBSETTER_FAILED ||
+                           status == EventChannelCondition.NO_AVAILABLE_DATA){
                             sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                        cur.my_site.my_station,
                                                                                        AvailableStationDataEvent.DOWN));
                         }
                         else if (status == EventChannelCondition.SUCCESS ||
-                                status == EventChannelCondition.PROCESSOR_PASSED ||
                                 status == EventChannelCondition.SUBSETTER_PASSED){
                             sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                        cur.my_site.my_station,
