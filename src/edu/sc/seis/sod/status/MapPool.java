@@ -2,7 +2,6 @@ package edu.sc.seis.sod.status;
 
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.EventColorizer;
-import edu.sc.seis.fissuresUtil.map.colorizer.event.FreshnessEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 
@@ -16,6 +15,7 @@ public class MapPool{
             maps[i].setEtopoLayer("edu/sc/seis/mapData");
             maps[i].setEventLayer(new EventLayer(maps[i].getMapBean(), colorizer));
             maps[i].setStationLayer(new StationLayer());
+            maps[i].overrideProjChangedInOMLayers(true);
             free[i] = true;
         }
     }
