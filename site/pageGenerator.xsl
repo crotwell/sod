@@ -95,6 +95,10 @@
                     <xsl:value-of select="concat($base, 'main.css')"/>
                 </xsl:attribute>
             </link>
+            <script type="text/javascript"> window.onload=function(){ var menu =
+                document.getElementById('menu'); var content = document.getElementById('content');
+                if(menu.offsetHeight &gt; content.offsetHeight){ var footer =
+                document.getElementById('footer'); footer.style.position = 'absolute';} }</script>
         </head>
     </xsl:template>
     <xsl:template name="header">
