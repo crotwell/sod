@@ -1,24 +1,24 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class PhaseRequest implements RequestGenerator{
     public PhaseRequest (Element config) throws ConfigurationException{
@@ -49,7 +49,7 @@ public class PhaseRequest implements RequestGenerator{
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
                                            Channel channel, CookieJar cookieJar) throws Exception{
-        Origin origin = CacheEvent.extractOrigin(event);
+        Origin origin = EventUtil.extractOrigin(event);
         if ( prevRequestFilters != null &&
             origin.my_location.equals(prevOriginLoc) &&
             channel.my_site.my_location.equals(prevSiteLoc) ) {

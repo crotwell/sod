@@ -5,7 +5,24 @@
  */
 
 package edu.sc.seis.sod.process.waveformArm;
-import edu.sc.seis.fissuresUtil.xml.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -16,31 +33,25 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
+import edu.sc.seis.fissuresUtil.xml.DataSet;
+import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
+import edu.sc.seis.fissuresUtil.xml.DataSetToXMLStAX;
+import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
+import edu.sc.seis.fissuresUtil.xml.SeismogramFileTypes;
+import edu.sc.seis.fissuresUtil.xml.StAXFileWriter;
+import edu.sc.seis.fissuresUtil.xml.StdAuxillaryDataNames;
+import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 
 
@@ -376,7 +387,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
         //always create it so we can get the file name
         logger.debug("creating new dataset "+getLabel(event));
-        DataSet dataset = new MemoryDataSet(CacheEvent.extractOrigin(event).origin_time.date_time,
+        DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
                                             getLabel(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
@@ -419,7 +430,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
                 return eventDS.getDataSet(dsNames[i]);
             }
         }
-        MemoryDataSet dataset = new MemoryDataSet(CacheEvent.extractOrigin(event).origin_time.date_time+"/"+subDSName,
+        MemoryDataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time+"/"+subDSName,
                                                   subDSName,
                                                   System.getProperty("user.name"),
                                                   new AuditInfo[0]);

@@ -125,6 +125,15 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JMenuItem loadWeed = new JMenuItem("Open WEED");
         loadWeed.addActionListener(new FileLoader(configFileBase + "weed.xml"));
         fileMenu.add(loadWeed);
+        JMenuItem loadBreqfast = new JMenuItem("Open BREQFast");
+        loadWeed.addActionListener(new FileLoader(configFileBase + "breqfast.xml"));
+        fileMenu.add(loadBreqfast);
+        JMenuItem loadMovec = new JMenuItem("Open Motion Vector");
+        loadWeed.addActionListener(new FileLoader(configFileBase + "motionvector.xml"));
+        fileMenu.add(loadMovec);
+        JMenuItem loadLegEx = new JMenuItem("Open Legacy Execute");
+        loadWeed.addActionListener(new FileLoader(configFileBase + "legacyExecute.xml")); 
+        fileMenu.add(loadLegEx);
         fileMenu.addSeparator();
         JMenuItem quit = new JMenuItem("Quit");
         fileMenu.add(quit);

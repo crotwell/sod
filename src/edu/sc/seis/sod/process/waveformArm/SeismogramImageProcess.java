@@ -6,7 +6,15 @@
 
 package edu.sc.seis.sod.process.waveformArm;
 
-import edu.sc.seis.sod.status.*;
+import java.awt.Dimension;
+import java.io.File;
+
+import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -16,13 +24,12 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.drawable.Flag;
@@ -33,14 +40,13 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
-import java.awt.Dimension;
-import java.io.File;
-import javax.swing.SwingUtilities;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.status.ChannelFormatter;
+import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FileWritingTemplate;
+import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.status.StationFormatter;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 
 public class SeismogramImageProcess implements LocalSeismogramProcess {
 
@@ -180,7 +186,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
         bsd.add(new MemoryDataSetSeismogram[]{memDSS});
 
-        Origin origin = CacheEvent.extractOrigin(event);
+        Origin origin = EventUtil.extractOrigin(event);
         MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
         Arrival[] arrivals =
             tauP.calcTravelTimes(channel.my_site.my_station, origin, phases);

@@ -1,12 +1,22 @@
 package edu.sc.seis.sod.status;
 
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.TimeZone;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -18,16 +28,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 public class EventFormatter extends Template implements EventTemplate{
 
@@ -237,7 +237,7 @@ public class EventFormatter extends Template implements EventTemplate{
     }
 
     private static Origin getOrigin(EventAccessOperations event){
-        return CacheEvent.extractOrigin(event);
+        return EventUtil.extractOrigin(event);
     }
 
     public static String getRegionName(EventAccessOperations event){

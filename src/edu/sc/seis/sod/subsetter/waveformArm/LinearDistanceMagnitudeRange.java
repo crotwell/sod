@@ -1,18 +1,18 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
+import org.w3c.dom.Element;
+
+import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
-import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
-import org.w3c.dom.Element;
 
 /**
  * sample xml
@@ -44,7 +44,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
     }
 
     public boolean accept(EventAccessOperations eventAccess, double stationLat, double stationLon) {
-        Origin origin = CacheEvent.extractOrigin(eventAccess);
+        Origin origin = EventUtil.extractOrigin(eventAccess);
         Location originLoc = origin.my_location;
         double actualDistance = SphericalCoords.distance(originLoc.latitude,
                                                          originLoc.longitude,
