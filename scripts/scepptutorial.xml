@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="file:/C:/cygwin/home/groves/sod/relax/sod.rng" type="xml"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-                <property>
-                        <name>edu.sc.seis.sod.databasetype</name>
-                        <value>edu.sc.seis.sod.database.HSqlDbManager</value>
-                </property>
-                <!-- number of days to get events per request to eventFinder -->
-                <property>
-                        <name>edu.sc.seis.sod.daystoincrement</name>
-                        <value>7</value>
-                </property>
-                <!-- don't go back and reask server for events that may have
-         appeared in server after this was first run. -->
-                <property>
-                        <name>edu.sc.seis.sod.database.getNewEvents</name>
-                        <value>false</value>
-                </property>
+        <runName>Tutorial Test Run</runName>
+        <statusBase>status</statusBase>
+        <eventQueryIncrement>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventQueryIncrement>
+        <eventRefreshInterval>
+			<value>6</value>
+			<unit>MINUTE</unit>
+		</eventRefreshInterval>
+	    <eventLag>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventLag>
+        <maxRetryDelay>
+            <value>16</value>
+            <unit>DAY</unit>
+        </maxRetryDelay>
+	    <waveformWorkerThreads>1</waveformWorkerThreads>
+        <removeDatabase>TRUE</removeDatabase>
+    	<eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
         </properties>
         <eventArm>
                 <eventFinder>
-                         <name>ANHINGAEVENTDC</name>
-                         <dns>edu/sc/seis</dns>
-
+                        <name>ANHINGAEVENTDC</name>
+                        <dns>edu/sc/seis</dns>
                         <boxArea>
                                 <latitudeRange>
                                         <unit>DEGREE</unit>
@@ -42,54 +46,36 @@
                                         <max>1000</max>
                                 </unitRange>
                         </originDepthRange>
-                        <eventTimeRange>
-                                <timeRange>
-                                        <startTime>20030101T00:00:00.001Z</startTime>
-                                        <endTime>20031131T23:59:59.999Z</endTime>
-                                </timeRange>
-                        </eventTimeRange>
+                        <originTimeRange>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
+                        </originTimeRange>
                         <magnitudeRange>
-                                <magType>M</magType>
-                                <min>5.0</min>
+                                <min>6.0</min>
                                 <max>10.0</max>
                         </magnitudeRange>
-                        <catalog>BIGQUAKE</catalog>
-                        <contributor>NEIC</contributor>
+                        <catalog>PREF</catalog>
+                        <contributor>IRIS</contributor>
                 </eventFinder>
-                <simpleHTMLEventStatus>
-                        <outputDirectory>scepptutorialStatus/</outputDirectory>
-                </simpleHTMLEventStatus>
-                <mapEventStatus xlink:link="scepptutorialStatus/eventMap.png"/>
-                <eventStatusTemplate
-                       outputLocation="scepptutorialStatus/time.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="scepptutorialStatus/depth.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="scepptutorialStatus/location.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="scepptutorialStatus/mag.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
-
+                <removeEventDuplicate/>
+                <printLineEventProcess/>
+                <eventStatusTemplate>
+                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
+        </eventStatusTemplate>
         </eventArm>
         <networkArm>
                 <networkFinder>
-                        <description>Connect to the IRIS networkDC</description>
                         <name>SCEPPNetworkDC</name>
                         <dns>edu/sc/seis</dns>
                         <refreshInterval>
-                                <unit>MINUTE</unit>
-                                <value>3000</value>
+                                <unit>HOUR</unit>
+                                <value>50</value>
                         </refreshInterval>
                 </networkFinder>
                 <networkCode>SP</networkCode>
                 <stationEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                                <min>20030101T00:00:00.001Z</min>
-                                <max>20030131T23:59:59.999Z</max>
-                        </effectiveTimeOverlap>
+                        <startTime>20030101T00:00:00.001Z</startTime>
+                        <endTime>20030131T23:59:59.999Z</endTime>
                 </stationEffectiveTimeOverlap>
                 <siteAND>
                         <siteOR>
@@ -97,30 +83,28 @@
                                 <siteCode>00</siteCode>
                         </siteOR>
                         <siteEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </siteEffectiveTimeOverlap>
                 </siteAND>
                 <channelAND>
-                        <bandCode>B</bandCode>
+                        <bandCode>L</bandCode>
                         <channelNOT>
                                 <!-- to prevent LOG channels -->
                                 <gainCode>O</gainCode>
                         </channelNOT>
                         <channelEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                               <startTime>20030101T00:00:00.001Z</startTime>
+                               <endTime>20030131T23:59:59.999Z</endTime>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
-                <simpleHTMLNetworkStatus>
-                        <outputDirectory>scepptutorialStatus/</outputDirectory>
-                </simpleHTMLNetworkStatus>
+                <networkInfoTemplateGenerator>
+                    <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
+                    <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
+                    <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
+                </networkInfoTemplateGenerator>
         </networkArm>
-        <waveFormArm>
+        <waveformArm>
                 <distanceRange>
                         <unit>DEGREE</unit>
                         <min>30</min>
@@ -144,16 +128,32 @@
                                 <name>SCEPPSeismogramDC</name>
                                 <dns>edu/sc/seis</dns>
                         </fixedDataCenter>
-                        <someCoverage/>
+        	            <someCoverage/>
                         <printlineSeismogramProcess/>
-                        <sacFileProcessor>
-                                <dataDirectory>POND_II</dataDirectory>
-                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+
+                        <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>SCEPP</dataDirectory>
+                                <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                                 </eventDirLabel>
-                        </sacFileProcessor>
+                        </saveSeismogramToFile>
+                        <localSeismogramTemplateGenerator>
+                                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
+                        </localSeismogramTemplateGenerator>
                 </localSeismogramArm>
-                <simpleHTMLWaveformStatus>
-                        <outputDirectory>scepptutorialStatus/</outputDirectory>
-                </simpleHTMLWaveformStatus>
-        </waveFormArm>
+                <waveformEventTemplateGenerator>
+                        <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+                </waveformEventTemplateGenerator>
+                <waveformNetworkStatus>
+                    <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
+                    <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
+                </waveformNetworkStatus>
+
+                <waveformStationStatus>
+                    <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
+                </waveformStationStatus>
+
+        </waveformArm>
 </sod>
+
+
