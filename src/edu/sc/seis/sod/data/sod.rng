@@ -499,15 +499,52 @@
                             </optional>
                             <optional>
                                 <element name="eventDirLabel">
-                                    <ref name="eventLabel"/>
+                                    <interleave>
+                                    <text/>
+                                    <optional>
+                                    <element name="feRegionName">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="feRegionNumber">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="depth">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="magnitude">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="latitude">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="longitude">
+                                    <empty/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="originTime">
+                                    <data type="string"/>
+                                    </element>
+                                    </optional>
+                                    </interleave>
                                 </element>
                             </optional>
                         </element>
                         <element name="waveformEventTemplateGenerator">
-                            <element name="fileLoc">
-                                <ref name="eventLabel"/>
+                            <element name="fileDir">
+                                <data type="string"/>
                             </element>
-                            <element name="externalConfig">
+                            <element name="waveformConfig">
                                 <attribute>
                                     <name ns="http://www.w3.org/1999/xlink/">href</name>
                                 </attribute>
@@ -518,46 +555,6 @@
             </element>
         </element>
     </start>
-    <define name="eventLabel">
-        <interleave>
-            <text/>
-            <optional>
-                <element name="feRegionName">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="feRegionNumber">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="depth">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="magnitude">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="latitude">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="longitude">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="originTime">
-                    <data type="string"/>
-                </element>
-            </optional>
-        </interleave>
-    </define>
     <define name="any">
         <element>
             <anyName/>
@@ -2423,102 +2420,6 @@
             <data type="integer"/>
         </element>
     </define>
-    <define name="channel2">
-        <choice>
-            <element name="bandCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="gainCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="orientationCode">
-                <ref name="channelCodeUtil2"/>
-            </element>
-            <element name="sampling">
-                <optional>
-                    <element name="min">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <element name="interval">
-                    <element name="unit">
-                        <choice>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>HOUR</value>
-                            <value>DAY</value>
-                            <value>YEAR</value>
-                        </choice>
-                    </element>
-                    <element name="value">
-                        <data type="integer"/>
-                    </element>
-                </element>
-            </element>
-            <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
-                </element>
-            </element>
-            <element name="orientationRange">
-                <element name="azimuth">
-                    <data type="float"/>
-                </element>
-                <element name="dip">
-                    <data type="float"/>
-                </element>
-                <element name="maxOffset">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationAzimuthRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationDipRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="channelAND">
-                <oneOrMore>
-                    <ref name="channel2"/>
-                </oneOrMore>
-            </element>
-            <element name="channelOR">
-                <oneOrMore>
-                    <ref name="channel2"/>
-                </oneOrMore>
-            </element>
-            <element name="channelXOR">
-                <ref name="channel2"/>
-                <ref name="channel2"/>
-            </element>
-            <element name="channelNOT">
-                <ref name="channel2"/>
-            </element>
-        </choice>
-    </define>
     <define name="channel">
         <choice>
             <element name="bandCode">
@@ -2612,6 +2513,102 @@
             </element>
             <element name="channelNOT">
                 <ref name="channel"/>
+            </element>
+        </choice>
+    </define>
+    <define name="channel2">
+        <choice>
+            <element name="bandCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="gainCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="orientationCode">
+                <ref name="channelCodeUtil2"/>
+            </element>
+            <element name="sampling">
+                <optional>
+                    <element name="min">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="max">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <element name="interval">
+                    <element name="unit">
+                        <choice>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>HOUR</value>
+                            <value>DAY</value>
+                            <value>YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="integer"/>
+                    </element>
+                </element>
+            </element>
+            <element name="channelEffectiveTimeOverlap">
+                <element name="effectiveTimeOverlap">
+                    <element name="min">
+                        <data type="string"/>
+                    </element>
+                    <element name="max">
+                        <data type="string"/>
+                    </element>
+                </element>
+            </element>
+            <element name="orientationRange">
+                <element name="azimuth">
+                    <data type="float"/>
+                </element>
+                <element name="dip">
+                    <data type="float"/>
+                </element>
+                <element name="maxOffset">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationAzimuthRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationDipRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="channelAND">
+                <oneOrMore>
+                    <ref name="channel2"/>
+                </oneOrMore>
+            </element>
+            <element name="channelOR">
+                <oneOrMore>
+                    <ref name="channel2"/>
+                </oneOrMore>
+            </element>
+            <element name="channelXOR">
+                <ref name="channel2"/>
+                <ref name="channel2"/>
+            </element>
+            <element name="channelNOT">
+                <ref name="channel2"/>
             </element>
         </choice>
     </define>

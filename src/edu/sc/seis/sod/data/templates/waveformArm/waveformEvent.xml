@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<template><html>
+<template>
+<outputLocation><originTime>yyyyMMddHHmmssSSS</originTime></outputLocation>
+<filename>event.html</filename>
+<html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Events</title>

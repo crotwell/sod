@@ -153,8 +153,8 @@
                         </sacFileProcessor>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
-                        <fileLoc>status/<originTime>yyyyMMddHHmmssSSS</originTime>/event.html</fileLoc>
-                        <externalConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+                		<fileDir>status</fileDir>
+                		<waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
         </waveFormArm>
 </sod>
