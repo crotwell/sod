@@ -230,7 +230,6 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             DataSetSeismogram lastBackSeis = dataSeis[dataSeis.length - 1];
             double curBackDistance = DisplayUtils.calculateDistance(lastBackSeis)
                     .get_value();
-            dssList.add(lastFrontSeis);
             if(Math.abs(curFrontDistance - curBackDistance) >= minSpacing) {
                 dssList.add(lastBackSeis);
             }
@@ -263,6 +262,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 }
                 curBackDistance -= spacing;
             }
+            dssList.add(lastFrontSeis);
             double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
                     .get_value();
             double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
