@@ -12704,6 +12704,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="vectorForkProcess">
+                <oneOrMore>
+                    <ref name="waveformVectorProcess"/>
+                </oneOrMore>
+            </element>
         </choice>
     </define>
     <define name="traceColors2">
