@@ -20,7 +20,8 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class WaveformVectorAlwaysSuccess implements WaveformVectorProcess {
+public class WaveformVectorAlwaysSuccess implements
+        WaveformVectorProcessWrapper {
 
     public WaveformVectorAlwaysSuccess(Element config)
             throws ConfigurationException {
@@ -72,4 +73,8 @@ public class WaveformVectorAlwaysSuccess implements WaveformVectorProcess {
     WaveformVectorProcess subProcess;
 
     private static final Logger logger = Logger.getLogger(WaveformVectorAlwaysSuccess.class);
+
+    public WaveformVectorProcess[] getWrappedProcessors() {
+        return new WaveformVectorProcess[] {subProcess};
+    }
 }

@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ORWaveformProcessWrapper implements WaveformVectorProcess {
+public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
 
     public ORWaveformProcessWrapper(WaveformProcess subsetter) {
         this.subsetter = subsetter;
@@ -90,4 +90,8 @@ public class ORWaveformProcessWrapper implements WaveformVectorProcess {
     }
 
     WaveformProcess subsetter;
+
+    public WaveformProcess getWrappedProcess() {
+        return subsetter;
+    }
 }

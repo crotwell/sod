@@ -1,9 +1,8 @@
 /**
  * ChannelGroupNOT.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.process.waveform.vector;
 
 import java.util.Iterator;
@@ -25,19 +24,20 @@ public class WaveformVectorNOT extends WaveformVectorFork {
     }
 
     public WaveformVectorResult process(EventAccessOperations event,
-                                                     ChannelGroup channelGroup,
-                                                     RequestFilter[][] original,
-                                                     RequestFilter[][] available,
-                                                     LocalSeismogramImpl[][] seismograms,
-                                                     CookieJar cookieJar) throws Exception {
+                                        ChannelGroup channelGroup,
+                                        RequestFilter[][] original,
+                                        RequestFilter[][] available,
+                                        LocalSeismogramImpl[][] seismograms,
+                                        CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[][] out = copySeismograms(seismograms);
-
         // pass originals to the contained processors
         WaveformVectorProcess processor;
         Iterator it = cgProcessList.iterator();
-        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
+        WaveformVectorResult result = new WaveformVectorResult(seismograms,
+                                                               new StringTreeLeaf(this,
+                                                                                  true));
         processor = (WaveformVectorProcess)it.next();
-        synchronized (processor) {
+        synchronized(processor) {
             result = processor.process(event,
                                        channelGroup,
                                        original,
@@ -46,10 +46,8 @@ public class WaveformVectorNOT extends WaveformVectorFork {
                                        cookieJar);
         }
         return new WaveformVectorResult(out,
-                                                     new StringTreeBranch(this,
-                                                                          ! result.isSuccess(),
-                                                                          new StringTree[] { result.getReason() } ));
-
+                                        new StringTreeBranch(this,
+                                                             !result.isSuccess(),
+                                                             new StringTree[] {result.getReason()}));
     }
 }
-

@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
+public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
 
     public ANDWaveformProcessWrapper(WaveformProcess subsetter) {
         this.process = subsetter;
@@ -85,4 +85,8 @@ public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
     }
 
     WaveformProcess process;
+
+    public WaveformProcess getWrappedProcess() {
+        return process;
+    }
 }

@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class WaveformVectorFork implements WaveformVectorProcess {
+public class WaveformVectorFork implements WaveformVectorProcessWrapper {
 
     public WaveformVectorFork(Element config) throws ConfigurationException {
         this.config = config;
@@ -95,4 +95,8 @@ public class WaveformVectorFork implements WaveformVectorProcess {
     protected Element config;
 
     private static final Logger logger = Logger.getLogger(WaveformVectorFork.class);
+
+    public WaveformVectorProcess[] getWrappedProcessors() {
+        return (WaveformVectorProcess[])cgProcessList.toArray(new WaveformVectorProcess[0]);
+    }
 }
