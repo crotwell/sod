@@ -23,7 +23,7 @@ SOD automates the most tedious data selection, downloading and routine processin
   <siteAddress>www.seis.sc.edu</siteAddress>
   <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.artifactId}</siteDirectory>
   <distributionSite>www.seis.sc.edu</distributionSite>
-  <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository/${pom.artifactId}</distributionDirectory>
+  <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository</distributionDirectory>
   <mailingList>
     <name>fissures-dev</name>
     <subscribe>majordomo@iris.washington.edu</subscribe>
