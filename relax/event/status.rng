@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-        xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-        <start>
-                <ref name="status"/>
-        </start>
-        <define name="status">
-                <choice>
-                        <ref name="externalEventStatus"/>
-                        <ref name="eventStatusTemplate"/>
-                        <ref name="mapEventStatus"/>
-                </choice>
-        </define>
-        <define name="mapEventStatus">
-                <element name="mapEventStatus">
-                        <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                </element>
-        </define>
-        <define name="eventStatusTemplate">
-                <element name="eventStatusTemplate">
-                        <optional>
-                                <element name="fileDir">
-                                        <data type="string"/>
-                                </element>
-                        </optional>
-                        <element name="eventConfig">
-                                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                        </element>
-                </element>
-        </define>
-        <define name="externalEventStatus">
-                <element name="externalEventStatus">
-                        <element name="classname">
-                                <data type="string"/>
-                        </element>
-                        <zeroOrMore>
-                                <externalRef href="../base/externalRef/anyXML.rng"/>
-                        </zeroOrMore>
-                </element>
-        </define>
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="status"/>
+    </start>
+    <define name="status">
+        <choice>
+            <xsd:annotation>
+                <description>Inserting these items in the eventArm outputs information about events
+                    status in the event arm</description>
+            </xsd:annotation>
+            <ref name="externalEventStatus"/>
+            <ref name="eventStatusTemplate"/>
+            <ref name="mapEventStatus"/>
+        </choice>
+    </define>
+    <define name="mapEventStatus">
+        <element name="mapEventStatus">
+            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+        </element>
+    </define>
+    <define name="eventStatusTemplate">
+        <element name="eventStatusTemplate">
+            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+        </element>
+    </define>
+    <define name="externalEventStatus">
+        <element name="externalEventStatus">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
 </grammar>

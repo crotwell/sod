@@ -1,55 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" 
-	xmlns="http://relaxng.org/ns/structure/1.0" 
-	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-	<start>
-		<ref name="waveformStatus"/>
-	</start>
-	<define name="waveformStatus">
-		<choice>
-			<ref name="waveformEvent"/>
-			<ref name="waveformNetwork"/>
-			<ref name="waveformStation"/>
-		</choice>
-	</define>
-	<define name="waveformEvent">
-		<element name="waveformEventTemplateGenerator">
-			<optional>
-				<element name="fileDir">
-					<data type="string"/>
-				</element>
-			</optional>
-			<element name="waveformConfig">
-				<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-			</element>
-		</element>
-	</define>
-	<define name ="waveformNetwork">
-		<element name="waveformNetworkStatus">
-			<optional>
-				<element name="fileDir">
-					<data type="string"/>
-				</element>
-			</optional>
-			<element name="template">
-				<data type="string"/>
-			</element>
-			<element name="networkListTemplate">
-				<data type="string"/>
-			</element>
-		</element>
-	</define>
-	<define name="waveformStation">
-		<element name="waveformStationStatus">
-			<optional>
-				<element name="fileDir">
-					<data type="string"/>
-				</element>
-			</optional>
-			<element name="template">
-				<data type="string"/>
-			</element>
-		</element>
-	</define>
-	<include href="../base/include/eventLabel.rng"/>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <ref name="waveformStatus"/>
+    </start>
+    <define name="waveformStatus">
+        <choice>
+            <ref name="waveformEvent"/>
+            <ref name="waveformNetwork"/>
+            <ref name="waveformStation"/>
+        </choice>
+    </define>
+    <define name="waveformEvent">
+        <element name="waveformEventTemplateGenerator">
+            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+        </element>
+    </define>
+    <define name="waveformNetwork">
+        <element name="waveformNetworkStatus">
+            <element name="template">
+                <data type="string"/>
+            </element>
+            <element name="networkListTemplate">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="waveformStation">
+        <element name="waveformStationStatus">
+            <element name="template">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <include href="../base/include/eventLabel.rng"/>
 </grammar>
