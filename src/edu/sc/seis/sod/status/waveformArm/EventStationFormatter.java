@@ -8,21 +8,21 @@ package edu.sc.seis.sod.status.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import org.w3c.dom.Element;
 
 public class EventStationFormatter extends StationFormatter{
@@ -34,10 +34,32 @@ public class EventStationFormatter extends StationFormatter{
         if(name.equals("numSuccess")){ return new SuccessfulQuery(); }
         else if(name.equals("numFailed")){ return new FailedQuery(); }
         else if(name.equals("numRetry")){ return new RetryQuery(); }
+        else if(name.equals("distance")){ return new Distance(); }
+        else if(name.equals("baz")){ return new BackAz(); }
         return super.getTemplate(name, el);
     }
 
     public void setEvent(EventAccessOperations ev){ this.ev = ev; }
+
+    private class Distance implements StationTemplate{
+        public String getResult(Station station) {
+            DistAz dAz = new DistAz(CacheEvent.extractOrigin(ev).my_location,
+                                    station.my_location);
+            return df.format(dAz.delta);
+        }
+
+        private DecimalFormat df = new DecimalFormat("000.00");
+    }
+
+    private class BackAz implements StationTemplate{
+        public String getResult(Station station) {
+            DistAz dAz = new DistAz(CacheEvent.extractOrigin(ev).my_location,
+                                    station.my_location);
+            return df.format(dAz.baz);
+        }
+
+        private DecimalFormat df = new DecimalFormat("000.00");
+    }
 
     private class SuccessfulQuery implements StationTemplate{
         public String getResult(Station station) {

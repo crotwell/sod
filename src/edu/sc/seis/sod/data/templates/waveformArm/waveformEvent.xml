@@ -26,11 +26,11 @@ Maps only update once every two minutes
 <table class="ruler">
 <tr class="title">
 <td>Id</td>
-<td>Begin Time</td>
-<td>End Time</td>
-<td># Successful Channels</td>
-<td># Retry Channels</td>
-<td># Reject Channels</td>
+<td>Distance</td>
+<td>Back Azimuth</td>
+<td>Successful Channels</td>
+<td>Retry Channels</td>
+<td>Rejected Channels</td>
 </tr>
 <eventStations>
 <statusFilter>
@@ -40,8 +40,8 @@ Maps only update once every two minutes
 <td>
 <a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/></a>
 </td>
-<td><beginTime>MM/dd/yyyy</beginTime></td>
-<td><endTime>MM/dd/yyyy</endTime></td>
+<td><distance/></td>
+<td><baz/></td>
 <td><numSuccess/></td>
 <td><numRetry/></td>
 <td><numFailed/></td>
@@ -54,8 +54,8 @@ Maps only update once every two minutes
 </statusFilter>
 <station><tr>
 <td><networkCode/>.<stationCode/></td>
-<td><beginTime>MM/dd/yyyy</beginTime></td>
-<td><endTime>MM/dd/yyyy</endTime></td>
+<td><distance/></td>
+<td><baz/></td>
 <td>0</td>
 <td><numRetry/></td>
 <td><numFailed/></td>
