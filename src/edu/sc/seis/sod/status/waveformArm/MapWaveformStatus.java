@@ -1,14 +1,26 @@
 package edu.sc.seis.sod.status.waveformArm;
 
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import javax.swing.SwingUtilities;
+import org.apache.log4j.Logger;
+import com.bbn.openmap.event.CenterEvent;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
 import edu.sc.seis.fissuresUtil.chooser.AvailableStationDataEvent;
 import edu.sc.seis.fissuresUtil.chooser.StationDataEvent;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
+import edu.sc.seis.fissuresUtil.display.EQSelectionEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
+import edu.sc.seis.fissuresUtil.map.layers.DistanceLayer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.Stage;
@@ -17,14 +29,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.OutputScheduler;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import javax.swing.SwingUtilities;
-import org.apache.log4j.Logger;
 
 public class MapWaveformStatus implements Runnable{
     public MapWaveformStatus() throws SQLException{
@@ -38,16 +42,16 @@ public class MapWaveformStatus implements Runnable{
 
     public void run() {
         int numEventsWaiting = 0;
-        CacheEvent[] events = new CacheEvent[0];
+        ProxyEventAccessOperations[] events = new ProxyEventAccessOperations[0];
         String[] fileLocs = new String[0];
         synchronized(eventsToBeRendered){
             numEventsWaiting = eventsToBeRendered.size();
             if(eventsToBeRendered.size()>0){
-                events = new CacheEvent[eventsToBeRendered.size()];
+                events = new ProxyEventAccessOperations[eventsToBeRendered.size()];
                 fileLocs = new String[eventsToBeRendered.size()];
                 Iterator it = eventsToBeRendered.keySet().iterator();
                 while(it.hasNext()){
-                    CacheEvent cur = (CacheEvent)it.next();
+                    ProxyEventAccessOperations cur = (ProxyEventAccessOperations)it.next();
                     events[--numEventsWaiting] = cur;
                     fileLocs[numEventsWaiting] = (String)eventsToBeRendered.get(cur);
                 }
@@ -65,12 +69,21 @@ public class MapWaveformStatus implements Runnable{
                 addStations(sl, successful, AvailableStationDataEvent.UP);
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
-                EQDataEvent eqEvent = new EQDataEvent(new CacheEvent[]{events[i]});
+                DistanceLayer dl = map.getDistanceLayer();
+                EQDataEvent eqEvent = new EQDataEvent(new ProxyEventAccessOperations[]{events[i]});
                 el.eventDataChanged(eqEvent);
+                EQSelectionEvent selEvent = new EQSelectionEvent(this, new ProxyEventAccessOperations[]{events[i]});
+                //el.eqSelectionChanged(selEvent);
+                Origin orig = EventUtil.extractOrigin(events[i]);
+                //map.getMapBean().center(new CenterEvent(this, orig.my_location.latitude, orig.my_location.longitude));
+                dl.eqSelectionChanged(selEvent);
                 final String fileLoc = fileLocs[i];
                 SwingUtilities.invokeAndWait(new Runnable(){
                             public void run(){
                                 try{
+                                    //System.out.println("before Thread.sleep");
+                                    //Thread.sleep(5000);
+                                    //System.out.println("after Thread.sleep");
                                     map.writeMapToPNG(fileLoc);
                                 } catch (Throwable e) {
                                     GlobalExceptionHandler.handle("problem writing map", e);
