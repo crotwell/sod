@@ -85,12 +85,10 @@ public class SodUtil {
             } else if(tagName.equals("TimeRange")) {
                 return loadTimeRange(config);
             } else if(tagName.equals("GlobalArea")) {
-                return loadGlobalArea(config);
+                return new GlobalAreaImpl();
             } else if(tagName.equals("BoxArea")) {
                 return loadBoxArea(config);
-            } else if(tagName.equals("PointArea")) {
-                return loadBoxArea(config);
-            } else if(tagName.equals("FlinnEngdahlArea")) { return loadFEArea(config); }
+            } else if(tagName.equals("PointArea")) { return loadBoxArea(config); }
             // not a known non-sodElement type, so load via reflection
             if(tagName.startsWith("External")) { return loadExternal(tagName,
                                                                      armNames,
@@ -157,7 +155,7 @@ public class SodUtil {
             Class extClass = Class.forName(classname);
             Class mustImplement = load(tagName.substring("external".length()),
                                        armNames);
-            Class[] implementedInterfaces = extClass.getInterfaces();
+            Class[] implementedInterfaces = extClass.getClasses();
             for(int i = 0; i < implementedInterfaces.length; i++) {
                 Class curInterface = implementedInterfaces[i];
                 if(curInterface.equals(mustImplement)) { return loadClass(extClass,
@@ -292,8 +290,7 @@ public class SodUtil {
         return unitRange;
     }
 
-    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config)
-            throws ConfigurationException {
+    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) {
         NodeList children = config.getChildNodes();
         Node node;
         edu.iris.Fissures.Time begin = null, end = null;
@@ -312,11 +309,6 @@ public class SodUtil {
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
         return new TimeRange(begin, end);
-    }
-
-    public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config)
-            throws ConfigurationException {
-        return new GlobalAreaImpl();
     }
 
     public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)
@@ -344,16 +336,6 @@ public class SodUtil {
                                maxLatitude,
                                minLongitude,
                                maxLongitude);
-    }
-
-    public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)
-            throws ConfigurationException {
-        return null;
-    }
-
-    public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config)
-            throws ConfigurationException {
-        return null;
     }
 
     /**
