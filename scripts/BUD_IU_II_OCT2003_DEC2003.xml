@@ -70,7 +70,9 @@
       <contributor>NEIC</contributor>
     </eventFinder>
     <logFactor5EventStatus/>
-    <simpleHTMLEventStatus/>
+    <simpleHTMLEventStatus>
+      <outputDirectory>html/eventStatus</outputDirectory>	
+    </simpleHTMLEventStatus>
   </eventArm>
   <networkArm>
     <networkFinder>
@@ -128,7 +130,7 @@
     <printlineChannelProcessor/>
     <logFactor5NetworkStatus/>
     <simpleHTMLNetworkStatus>
-        <outputDirectory>html/networkStatus</outputDirectory>
+      <outputDirectory>html/networkStatus</outputDirectory>
     </simpleHTMLNetworkStatus>
   </networkArm>
   <waveFormArm>
@@ -165,5 +167,6 @@
       </eventDirLabel>
       </sacFileProcessor>
     </localSeismogramArm>
+    <logFactor5WaveFormStatus/>
   </waveFormArm>
 </sod>
