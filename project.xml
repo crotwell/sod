@@ -63,7 +63,10 @@
   </developers>
 
   <dependencies>
-
+<dependency>
+<id>itext</id>
+<version>0.99</version>
+</dependency>
 <dependency>
   <id>jing</id>
   <version>20030619</version>
