@@ -26,6 +26,8 @@ JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-20040212.jar
 OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.6.jar
 JING=$MAVEN/repository/jing/jars/jing-20030619.jar
+VELOCITY=$MAVEN/repository/velocity/jars/velocity-1.4-rc1.jar
+COMMONS_COLL=$MAVEN/repository/commons-collections/jars/commons-collections-3.0.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
@@ -34,6 +36,6 @@ java -Djava.endorsed.dirs=${JACORB_LIB}  \
     -Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton \
     -Djacorb.connection.client.pending_reply_timeout=${JACORB_TIMEOUT} \
     -Xmx512m \
-    -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${JING}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
+    -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${VELOCITY}:${COMMONS_COLL}:${JING}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
     edu.sc.seis.sod.Start $*
 
