@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 
 public class WaveformStatusTemplate extends FileWritingTemplate implements WaveformArmMonitor{
     public WaveformStatusTemplate(Element el)throws IOException {
-        super(el.getAttribute("filDir"), el.getAttribute("outputLocation"));
+        super(el.getAttribute("fileDir"), el.getAttribute("outputLocation"));
         //TODO get parsing setup
     }
 
