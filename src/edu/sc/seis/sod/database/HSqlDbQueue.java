@@ -221,12 +221,11 @@ public class HSqlDbQueue implements Queue {
      */
     public synchronized int getLength() {
         int numNew = eventDatabase.getCount(Status.NEW);
+        int numAwait = eventDatabase.getCount(Status.AWAITING_FINAL_STATUS);
         int numProcessing = eventDatabase.getCount(Status.PROCESSING);
         int reopen = eventDatabase.getCount(Status.RE_OPEN);
         int reopenProcessing = eventDatabase.getCount(Status.RE_OPEN_PROCESSING);
-        int numSuccessful = eventDatabase.getCount(Status.COMPLETE_SUCCESS);
-        int reopenSuccessful = eventDatabase.getCount(Status.RE_OPEN_SUCCESS);
-        return (numNew + numProcessing + reopen + reopenProcessing);
+        return (numNew + numAwait + numProcessing + reopen + reopenProcessing);
     }
 
     private int getNew() {
