@@ -99,7 +99,7 @@ body>#Header {height:14px;}
 body>#Menu {width:150px;}
 
 #Menu ul {
-     list-style-type: none; 
+     list-style-type: none;
      margin: 0;
      padding: 0;
 }
@@ -108,4 +108,16 @@ body>#Menu {width:150px;}
     list-style-type: circle;
     margin: 0 0 0 10px;
     padding: 0 0 0 10px;
+}
+
+#Passed {
+color: green;
+}
+
+#Failed {
+color: red;
+}
+
+#New {
+color: blue;
 }

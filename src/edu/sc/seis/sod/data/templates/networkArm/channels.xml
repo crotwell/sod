@@ -34,7 +34,7 @@
 <td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
 <td><beginTime/></td>
 <td><endTime/></td>
-<td><status/></td>
+<td><attribute name="id"><status/></attribute><status/></td>
 </tr>
 </channel>
 </channels>

@@ -26,7 +26,7 @@ Networks
 <tr><network>
 <td><networkCode/></td>
 <td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
-<td><status/></td>
+<td><attribute name="id"><status/></attribute><status/></td>
 </network></tr>
 </networks>
 </table>
@@ -34,7 +34,7 @@ Networks
 <div id="Menu">
 <ul>
 <li><a href="index.html"><runName/></a></li>
-<li><a href="config.html">Configuration</a></li>
+<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
 <li><a href="location.html">Events</a></li>
 <li><a href="networks.html">Networks</a></li>
 </ul>
