@@ -36,6 +36,9 @@ Networks
 <li><a href="networks.html">Networks</a></li>
 </ul>
 </div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
 </body>
 </html>
 </template>

@@ -4,22 +4,20 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Channels</title>
-<style media="all">@import "../../../../main.css";</style>
+<style media="all">@import "../../../main.css";</style>
 </head>
 <body>
 <div id="Header">
-<site>
-<a href="../../../networks.html"> Networks</a>
+<station>
+<a href="../../networks.html"> Networks</a>
 >
-<a href="../../stations.html"> <networkCode/></a>
+<a href="../stations.html"> <networkCode/></a>
 >
-<a href="../sites.html"> <stationCode/></a>
->
-<siteCode/>
-</site>
+<stationCode/>
+</station>
 </div>
 <div id="Content">
-<h1>Channels in this site</h1>
+<h1>Channels in this station</h1>
 <h2>Channels:</h2>
 <table>
 <tr id="title">
@@ -51,12 +49,15 @@
 <div id="Menu">
 <ul>
 <li>
-<a href="../location.html">Events</a>
+<a href="../../location.html">Events</a>
 </li>
 <li>
-<a href="../networks.html">Networks</a>
+<a href="../../networks.html">Networks</a>
 </li>
 </ul>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
 </div>
 </body>
 </html>

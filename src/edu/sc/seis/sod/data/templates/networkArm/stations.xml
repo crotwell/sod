@@ -32,7 +32,7 @@
 <stations>
 <station>
 <tr>
-<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/sites.html</attribute><networkCode/>.<stationCode/></a></td>
+<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/channels.html</attribute><networkCode/>.<stationCode/></a></td>
 <td><name/></td>
 <td><beginTime/></td>
 <td><endTime/></td>
@@ -53,6 +53,9 @@
 <a href="../networks.html">Networks</a>
 </li>
 </ul>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
 </div>
 </body>
 </html>
