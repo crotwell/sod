@@ -58,9 +58,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
         ofPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         ofStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
         eventsOfStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
-        String stationsOfStatusWhere = "WHERE channelid = chan_id AND " +
+        String chanJoin = "channelid = chan_id AND " +
             "channel.site_id = site.site_id AND " +
-            "site.sta_id = station.sta_id AND " +
+            "site.sta_id = station.sta_id";
+        String stationsOfStatusWhere = "WHERE "+chanJoin+" AND " +
             "eventid = ? AND " +
             "status = ?";
         stationsOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() +
@@ -75,6 +76,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                                     "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
         dbIdForEventAndChan = conn.prepareStatement("SELECT pairid FROM eventchannelstatus " +
                                                         "WHERE eventid = ? AND channelid = ?");
+        ofStation = conn.prepareStatement("SELECT pairid, eventid, channelid "+
+                                              "FROM channel, site, eventchannelstatus, station "+
+                                              "WHERE "+chanJoin+
+                                              " AND station_sta_id = ?");
 
     }
 
@@ -174,6 +179,11 @@ public class JDBCEventChannelStatus extends SodJDBC{
     public EventChannelPair[] getAll(int eventId)throws SQLException{
         ofEvent.setInt(1, eventId);
         return extractECPs(ofEvent.executeQuery());
+    }
+
+    public EventChannelPair[] getAllForStation(int stationId)throws SQLException{
+        ofStation.setInt(1, stationId);
+        return extractECPs(ofStation.executeQuery());
     }
 
     public EventChannelPair[] getAll(EventAccessOperations ev)throws SQLException, NotFound{
@@ -278,7 +288,8 @@ public class JDBCEventChannelStatus extends SodJDBC{
         ofPair, ofStatus, eventsOfStatus,
         stationsNotOfStatus, stationsOfStatus,
         channelsForPair,
-        dbIdForEventAndChan;
+        dbIdForEventAndChan,
+        ofStation;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
