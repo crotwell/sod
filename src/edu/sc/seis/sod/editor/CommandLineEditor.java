@@ -41,6 +41,10 @@ public class CommandLineEditor {
         testXPath(args);
     }
 
+    public Properties getProperties() {
+        return props;
+    }
+
     void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, TransformerException {
         boolean help = false;
 
