@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.database.Status;
 import org.apache.log4j.lf5.LogLevel;
 
 public class RunStatus{
@@ -22,6 +23,13 @@ public class RunStatus{
     public static final RunStatus GENERIC_STATUS = new RunStatus("Info");
     
     public static LogLevel[] LOG_LEVELS;
+    
+    public static LogLevel translate(Status status) {
+        if(status == Status.NEW) return NEW.getLogLevel();
+        else if(status == Status.COMPLETE_SUCCESS) return PASSED.getLogLevel();
+        else if(status == Status.COMPLETE_REJECT) return FAILED.getLogLevel();
+        else return GENERIC_STATUS.getLogLevel();
+    }
     
     public static LogLevel[] getLogLevels(){
         if(LOG_LEVELS == null){
@@ -46,7 +54,7 @@ public class RunStatus{
         }
         return level;
     }
-        
+    
     private LogLevel level;
     
     private static int statusCount = 0;
