@@ -1,5 +1,7 @@
 package edu.sc.seis.sod.database;
 
+import edu.sc.seis.sod.*;
+
 import edu.sc.seis.fissuresUtil.cache.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
 import edu.iris.Fissures.IfEvent.*;
@@ -23,12 +25,6 @@ public class HSqlDbQueue implements Queue {
 	eventDatabase = new HSqlDatabase();
     }
     
-    public HSqlDbQueue(org.omg.CORBA_2_3.ORB orb) {
- 	this.orb = orb;
- 	eventDatabase = new HSqlDatabase();
-    }
-
-  
     public void push(java.lang.Object obj) {}
     /**
      * inserts the obj at the end of the queue.
@@ -39,8 +35,12 @@ public class HSqlDbQueue implements Queue {
 				  String serverName, 
 				  edu.iris.Fissures.IfEvent.EventAccess obj,
 				  edu.iris.Fissures.IfEvent.Origin originObj) {
-	org.omg.CORBA.ORB orb = ((org.omg.CORBA.portable.ObjectImpl)obj)._orb();
-	this.orb = orb;
+	org.omg.CORBA.ORB orb = null;
+	try {
+	    orb = CommonAccess.getCommonAccess().getORB();
+	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
+	    cfe.printStackTrace();
+	}
 	try {
 	    if(waitFlag)  wait();
 	} catch(InterruptedException ie) {}
@@ -94,7 +94,7 @@ public class HSqlDbQueue implements Queue {
      * pops the first element of the queue.
      * @return a <code>java.lang.Object</code> value
      */
-    public synchronized java.lang.Object pop(int i) {
+    public synchronized java.lang.Object pop() {
 	
 	while((getNew() == 0 && sourceAlive == true)){// || 
 	      // (dbid == -1 && sourceAlive == true)){
@@ -104,9 +104,13 @@ public class HSqlDbQueue implements Queue {
 	    } catch(InterruptedException ie) { }
 
 	}
+	org.omg.CORBA.ORB orb = null;
+	try {
+	    orb = CommonAccess.getCommonAccess().getORB();
+	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
+	    cfe.printStackTrace();
+	}
 	int dbid = eventDatabase.getFirst(Status.NEW);
-	i = dbid;
-
 	System.out.println("The dbid while popping is "+dbid);
 	eventDatabase.updateStatus(dbid, Status.PROCESSING);
 	String ior = eventDatabase.getObject(dbid);
@@ -136,6 +140,12 @@ public class HSqlDbQueue implements Queue {
 		    if(checkdbid == dbid) {
 			//update the ior corresponding to the dbid and return the object.
 			System.out.println("The dbid that matched is "+checkdbid);
+			org.omg.CORBA.ORB orb = null;
+			try {
+			    orb = CommonAccess.getCommonAccess().getORB();
+			} catch(edu.sc.seis.sod.ConfigurationException cfe) {
+			    cfe.printStackTrace();
+			}
 			String newIOR = orb.object_to_string(eventAccess[counter]);
 			eventDatabase.updateIOR(dbid, newIOR);
 			return eventAccess[counter];
@@ -199,7 +209,10 @@ public class HSqlDbQueue implements Queue {
 
     private edu.iris.Fissures.IfEvent.EventDC getEventDC(int dbid) {
 	try {
-	    FissuresNamingServiceImpl fissuresNamingServiceImpl = new FissuresNamingServiceImpl((org.omg.CORBA_2_3.ORB)orb);
+	    
+	
+	    FissuresNamingServiceImpl fissuresNamingServiceImpl = 
+		new FissuresNamingServiceImpl(CommonAccess.getCommonAccess().getORB());
 	    EventDC eventDC = fissuresNamingServiceImpl.getEventDC(eventDatabase.getServerDNS(dbid),
 								   eventDatabase.getServerName(dbid));
 	    return eventDC;
@@ -210,7 +223,7 @@ public class HSqlDbQueue implements Queue {
     }
     
     private boolean sourceAlive = true;
-    
+   
     EventDatabase eventDatabase;
 
     private boolean waitFlag = false;
@@ -221,6 +234,5 @@ public class HSqlDbQueue implements Queue {
 
     private PreparedStatement getMaxIdStmt;
     
-    private org.omg.CORBA.ORB orb;
-
+  
 }// HSqlDbQueue

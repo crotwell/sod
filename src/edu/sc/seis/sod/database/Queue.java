@@ -36,7 +36,7 @@ public interface Queue {
      * pops the first element of the queue.
      * @return a <code>java.lang.Object</code> value
      */
-    public java.lang.Object pop(int i);
+    public java.lang.Object pop();
 
 
     public void setFinalStatus(EventAccess eventAccess, Status status);
