@@ -61,7 +61,8 @@ public class FileWritingTemplate extends Template implements GenericTemplate, Ru
     protected Object getTemplate(String tag, Element el) throws ConfigurationException  {
         if (tag.equals("menu")){
             try {
-                return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
+                Element templateEl = TemplateFileLoader.getTemplate(el);
+                return new MenuTemplate(templateEl, getOutputLocation(), baseDir);
             } catch (Exception e) {
                 GlobalExceptionHandler.handle("Problem getting template for Menu", e);
             }
