@@ -96,14 +96,14 @@ public class SaveSeismogramToFile implements WaveformProcess {
             } // end of if (dataDirectory.exits())
         }
         Element idElement = SodUtil.getElement(config, "id");
-        if (idElement != null) {
+        if(idElement != null) {
             String identifier = SodUtil.getText(idElement);
-            if ( identifier != null && identifier.length() != 0) {
+            if(identifier != null && identifier.length() != 0) {
                 id = identifier;
-            } 
+            }
         }
         Element reqElement = SodUtil.getElement(config, "preserveRequest");
-        if (reqElement != null) {
+        if(reqElement != null) {
             preserveRequest = true;
         }
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
@@ -136,17 +136,14 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                                 new StringTreeLeaf(this,
                                                                                    true)); }
         URLDataSetSeismogram urlDSS;
-        if (preserveRequest) {
+        if(preserveRequest) {
             urlDSS = saveInDataSet(event,
                                    channel,
                                    seismograms,
                                    fileType,
                                    original[0]);
         } else {
-            urlDSS = saveInDataSet(event,
-                                   channel,
-                                   seismograms,
-                                   fileType);
+            urlDSS = saveInDataSet(event, channel, seismograms, fileType);
         }
         URL[] urls = urlDSS.getURLs();
         for(int i = 0; i < urls.length; i++) {
@@ -171,10 +168,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return COOKIE_PREFIX + prefix + ChannelIdUtil.toString(channel) + "_"
                 + i;
     }
-    
+
     public String getId() {
         return id;
-    }   
+    }
 
     protected void createMasterDS() throws ConfigurationException {
         AuditInfo[] audit = new AuditInfo[1];
@@ -279,7 +276,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return saveInDataSet(event, channel, seismograms, fileType, null);
     }
 
-
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
@@ -323,11 +319,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
             bytesWritten += seisFile.length();
         }
         URLDataSetSeismogram urlDSS;
-            urlDSS= new URLDataSetSeismogram(seisURL,
-                                             seisFileTypeArray,
-                                             lastDataSet,
-                                             "",
-                                             request);
+        urlDSS = new URLDataSetSeismogram(seisURL,
+                                          seisFileTypeArray,
+                                          lastDataSet,
+                                          "",
+                                          request);
         if(prefix != null && prefix.length() != 0) {
             urlDSS.setName(prefix + urlDSS.getName());
         }
@@ -389,7 +385,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         // baseUp is not a direct ancestor of ref, fall back to absolute?
         return ref.getPath();
     }
-   
+
     protected DataSet prepareDataset(EventAccessOperations event)
             throws IOException, UnsupportedFileTypeException,
             IncomprehensibleDSMLException, ParserConfigurationException,
@@ -433,10 +429,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                             getLabel(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
-        logger.debug("Event directory " + eventDirectory);
         File dsmlFile = new File(eventDirectory,
                                  DataSetToXML.createFileName(dataset));
-        logger.debug("DSML file " + dsmlFile);
         if(dsmlFile.exists()) return dsmlFile;
         else throw new FileNotFoundException("Dsml File not found for "
                 + EventUtil.getEventInfo(event));
@@ -501,11 +495,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
     String subDS = "";
 
     String prefix = "";
-    
+
     String id = "";
 
     private boolean preserveRequest = false;
-    
+
     public static final String COOKIE_PREFIX = "SeisFile_";
 
     EventFormatter nameGenerator = null;
