@@ -73,9 +73,20 @@ a:hover{
 }
 
 #menu ul {
+	border-top:1px solid;
+	border-bottom:1px solid;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+background:#eee;
+}
+
+#menu .indent{
+	padding-left:15px;
+}
+
+#menu #lastUL{
+	border-top:none;
 }
 
 #menu #selected{
@@ -83,7 +94,6 @@ background:white;
 }
 
 #menu li{
-background:#eee;
 }
 
 th {
@@ -140,7 +150,6 @@ border-left:1px solid black;
 }
 
 div #choice{
-border-left:1px dashed black;
+	border-left:1px dashed black;
   margin-left:5px;
 }
-
