@@ -298,9 +298,6 @@
             </eventDirLabel>
         </saveSeismogramToFile>
         <localSeismogramTemplateGenerator>
-        	<template>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</template>
-        </localSeismogramTemplateGenerator>
-        <localSeismogramTemplateGenerator>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/revImageMapGenerator.xml</template>
         </localSeismogramTemplateGenerator>
          <waveformEventTemplateGenerator>
