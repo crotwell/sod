@@ -1,41 +1,46 @@
-/**
- * EventGroupTemplate.java
- *
- * @author Created by Charles Groves
- */
-
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.NameGenerator;
+import edu.sc.seis.sod.subsetter.Template;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-
-public class EventGroupTemplate{
+public class EventGroupTemplate extends Template{
     public EventGroupTemplate(){ this(null); }
     
     public EventGroupTemplate(Element config){
-        if(config != null){
-            NodeList children = config.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
-                Element el = (Element)children.item(i);
-                if(el.getNodeName().equals("eventLabel")){
-                    gen = new NameGenerator(el);
-                }else if(el.getNodeName().equals("sorting")){
-                    sorter = new EventSorter(el);
-                }
-            }
-        }
-        if(gen == null) gen = new NameGenerator();
+        super(config);
         if(sorter == null) sorter = new EventSorter();
     }
+    
+    protected void useDefaultConfig(){
+        pieces.add(new NameGenerator());
+    }
+    
+    
+    protected Object getInterpreter(String tag, Element el) {
+        if(el.getNodeName().equals("eventLabel")){
+            gen = new NameGenerator(el);
+            return gen;
+        }else if(el.getNodeName().equals("sorting")){
+            sorter = new EventSorter(el);
+        }
+        return new Nothing();
+    }
+    
+    private class Nothing{ public String toString(){ return "";} }
+    
+    protected boolean isInterpreted(String tag) {
+        if(tag.equals("eventLabel") || tag.equals("sorting")) return true;
+        return false;
+    }
+    
     
     public void change(EventAccessOperations event, RunStatus status) {
         if(eventToMonitors.containsKey(event)){
@@ -48,15 +53,23 @@ public class EventGroupTemplate{
         }
     }
     
-    public String toString(){
-        if(events.size() == 0) return "No events";
+    public String toString(){ return getResults(); }
+    
+    public String getResults(){
         StringBuffer output = new StringBuffer();
         List sorted = sorter.getSortedEvents();
         synchronized(sorted){
             Iterator it = sorted.iterator();
             while(it.hasNext()){
-                MonitoredEvent cur = (MonitoredEvent)eventToMonitors.get(it.next());
-                output.append(gen.getName(cur.event));
+                MonitoredEvent curEv = (MonitoredEvent)eventToMonitors.get(it.next());
+                Iterator e = pieces.iterator();
+                while(e.hasNext()){
+                    Object cur = e.next();
+                    if(cur instanceof EventTemplate)
+                        output.append(((EventTemplate)cur).getResult((curEv.event)));
+                    else
+                        output.append(cur);
+                }
             }
         }
         return output.substring(0, output.length());//don't include last newline
