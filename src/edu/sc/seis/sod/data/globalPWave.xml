@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+n<?xml version="1.0"?>
 <sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:noNamespaceSchemaLocation="sod.xsd">
 
@@ -53,7 +53,7 @@
           <value>false</value>
 </property>
 
-<!-- how frequently sod updates its list of networks/channels, units are ??? -->
+<!-- how frequently sod updates its list of networks/channels, units are minutes -->
 <property> 
           <name>edu.sc.seis.sod.database.eventRefreshInterval</name>
           <value>100000</value>
@@ -67,7 +67,7 @@ particular catalog, may need to wait until it exists in server. -->
           <value>false</value>
 </property>
 
-<!-- ??? -->
+<!-- The number days sod runs before exiting. The value is specified in number of days relative to the endtime specified for querying events.  -->
 <property>
           <name>edu.sc.seis.sod.database.quitTime</name>
           <value>-1</value>
