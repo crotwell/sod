@@ -49,9 +49,15 @@ public class AlwaysSuccess implements LocalSeismogramProcess {
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar) throws Exception {
-        LocalSeismogramResult result = localSeisProcess.process(event, channel, original, available, seismograms, cookieJar);
-        return new LocalSeismogramResult(true, result.getSeismograms());
+                                         CookieJar cookieJar) {
+        try {
+            LocalSeismogramResult result = localSeisProcess.process(event, channel, original, available, seismograms, cookieJar);
+            return new LocalSeismogramResult(true, result.getSeismograms());
+        }catch(Exception e) {
+            logger.error("Exception thrown inside Always Success" + e);
+            return new LocalSeismogramResult(true, seismograms);
+        }
+
     }
 
 
