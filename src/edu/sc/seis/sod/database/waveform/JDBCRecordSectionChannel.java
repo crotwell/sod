@@ -34,6 +34,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " SET  recSecId=?, topLeftX=?, topLeftY=?, bottomRightX=?, bottomRightY=? WHERE recSecId=? and channelid=?";
         String getChannelsStmt = " SELECT channelid FROM " + tableName
                 + " WHERE recSecId = ?";
+        String delRecSecStmt = "delete from " + tableName + " where recSecId=?";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -41,6 +42,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         insert = conn.prepareStatement(insertStmt);
         updateRecordSection = conn.prepareStatement(updateRecordSectionStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
+        deleteRecSec = conn.prepareStatement(delRecSecStmt);
     }
 
     public void insert(int recSecId, int channelid, double[] pixelInfo)
@@ -134,8 +136,13 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return -1;
     }
 
+    public int deleteRecSec(int recSecId) throws SQLException {
+        deleteRecSec.setInt(1, recSecId);
+        return deleteRecSec.executeUpdate();
+    }
+
     PreparedStatement insert, updateRecordSection, getRecSecId, getPixelInfo,
-            getChannels;
+            getChannels, deleteRecSec;
 
     Connection conn;
 
