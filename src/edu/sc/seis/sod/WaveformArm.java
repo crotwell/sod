@@ -597,7 +597,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
-                    failLogger.info(ecp);
+                    failLogger.info(ecp+"  "+accepted.toString());
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -693,7 +693,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
-                    failLogger.info(ecp);
+                    failLogger.info(ecp+"  "+accepted.toString());
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
