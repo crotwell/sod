@@ -238,7 +238,7 @@ public class EventFormatter extends Template implements EventTemplate{
         return result;
     }
 
-    private String getMag(EventAccessOperations event){
+    public static String getMag(EventAccessOperations event){
         Magnitude[] mags = getOrigin(event).magnitudes;
         if (mags.length > 0){return MagnitudeUtil.toString(mags[0]); }
         throw new IllegalArgumentException("No magnitudes on event");
