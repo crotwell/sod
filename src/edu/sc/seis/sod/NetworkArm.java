@@ -8,7 +8,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
 import edu.sc.seis.fissuresUtil.cache.SynchronizedDCNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -192,7 +192,7 @@ public class NetworkArm {
         for(int i = 0; i < allNets.length; i++) {
             try {
                 NetworkId id = allNets[i].get_attributes().get_id();
-                allNets[i] = new BulletproofNetworkAccess(allNets[i], netDC, id);
+                allNets[i] = BulletproofNetworkAccessFactory.vest(allNets[i], netDC);
                 if(attrSubsetter.accept(allNets[i].get_attributes())){
                     int dbid;
                     synchronized(netTable){

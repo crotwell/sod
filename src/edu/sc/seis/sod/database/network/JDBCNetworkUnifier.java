@@ -9,7 +9,7 @@ package edu.sc.seis.sod.database.network;
 
 import edu.iris.Fissures.IfNetwork.*;
 
-import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
 import edu.sc.seis.fissuresUtil.cache.SynchronizedDCNetworkAccess;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.JDBCLocation;
@@ -67,7 +67,11 @@ public class JDBCNetworkUnifier{
 
     public NetworkDbObject getNet(int netDbId, NetworkDCOperations ndc) throws NetworkNotFound, NotFound, SQLException{
         NetworkId id = netDb.get(netDbId).get_id();
-        NetworkAccess na = new BulletproofNetworkAccess(ndc.a_finder().retrieve_by_id(id), ndc, id);
+        NetworkAccess na;
+        synchronized(ndc){
+            na = ndc.a_finder().retrieve_by_id(id);
+        }
+        na = BulletproofNetworkAccessFactory.vest(na, ndc);
         return new NetworkDbObject(netDbId, na);
     }
 
