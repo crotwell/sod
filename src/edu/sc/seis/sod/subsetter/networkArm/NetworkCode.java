@@ -13,7 +13,7 @@ import org.w3c.dom.*;
  * &lt;networkCode&gt;&lt;value&gt;SP&lt;/value&gt;&lt;/networkCode&gt;
  * </pre>
  */
-public class NetworkCode implements NetworkIdSubsetter {
+public class NetworkCode implements NetworkSubsetter {
 
     /**
      * Creates a new <code>NetworkCode</code> instance.
@@ -21,22 +21,23 @@ public class NetworkCode implements NetworkIdSubsetter {
      * @param config an <code>Element</code> value
      */
     public NetworkCode(Element config) {
-		this.config = config;
-	}
+        this.config = config;
+    }
 
     /**
      * Describe <code>accept</code> method here.
      *
-     * @param e a <code>NetworkId</code> value
+     * @param event a <code>NetworkAttr</code> value
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
      */
-    public boolean accept(NetworkId e, CookieJar cookies) {
-		if(e.network_code.equals(SodUtil.getNestedText(config))) return true;
-		else return false;
+    public boolean accept(NetworkAttr attr, CookieJar cookies) throws Exception {
+        if(attr.get_code().equals(SodUtil.getNestedText(config))) return true;
+        else return false;
 
-	}
+    }
 
-	private Element config = null;
+    private Element config = null;
 
 }

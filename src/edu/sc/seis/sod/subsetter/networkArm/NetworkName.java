@@ -20,16 +20,16 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public class NetworkAttrName implements NetworkAttrSubsetter {
-    
+public class NetworkName implements NetworkSubsetter {
+
     /**
      * Creates a new <code>NetworkAttrName</code> instance.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public NetworkAttrName (Element config) throws ConfigurationException {
-	this.config = config;
+    public NetworkName (Element config) throws ConfigurationException {
+    this.config = config;
     }
 
     /**
@@ -39,9 +39,9 @@ public class NetworkAttrName implements NetworkAttrSubsetter {
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(NetworkAttr e,  CookieJar cookies) {
-	if(e.name.equals(SodUtil.getNestedText(config))) return true;
-	else return false;
+    public boolean accept(NetworkAttr net,  CookieJar cookies) {
+    if(net.name.equals(SodUtil.getNestedText(config))) return true;
+    else return false;
     }
 
     private Element config;

@@ -10,40 +10,40 @@ import edu.iris.Fissures.*;
 /**
  * networkAttrOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  *the max value of the sequence is unLimited.
- * 
+ *
  * sample xml file
  *<body><pre><bold>
  * &lt;networkAttrOR&gt;
- *	&lt;networkeffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *  &lt;networkeffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *          &lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
  *              &lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
- *	&lt;networkeffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *  &lt;/networkeffectiveTimeOverlap&gt;
+ *  &lt;networkeffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *          &lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
  *              &lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *  &lt;/networkeffectiveTimeOverlap&gt;
  * &lt;/networkAttrOR&gt;
  * </bold></pre></body>
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NetworkAttrOR 
-    extends  NetworkLogicalSubsetter 
-    implements NetworkAttrSubsetter {
-    
+public class NetworkOR
+    extends  NetworkLogicalSubsetter
+    implements NetworkSubsetter {
+
     /**
      * Creates a new <code>NetworkAttrOR</code> instance.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public NetworkAttrOR (Element config) throws ConfigurationException {
-	super(config);
+    public NetworkOR (Element config) throws ConfigurationException {
+    super(config);
     }
 
     /**
@@ -54,15 +54,15 @@ public class NetworkAttrOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(NetworkAttr e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while(it.hasNext()) {
-	    NetworkAttrSubsetter filter = (NetworkAttrSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
-		return true;
-	    }
-	}
-	return false;
+    public boolean accept(NetworkAttr net,  CookieJar cookies) throws Exception{
+    Iterator it = filterList.iterator();
+    while(it.hasNext()) {
+        NetworkSubsetter filter = (NetworkSubsetter)it.next();
+        if ( filter.accept(net, cookies)) {
+        return true;
+        }
+    }
+    return false;
     }
 
 }// NetworkAttrOR

@@ -10,40 +10,40 @@ import edu.iris.Fissures.*;
 /**
  * networkAttrAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  *the max value of the sequence is unLimited.
- * 
+ *
  * sample xml file
  *<body><pre><bold>
  * &lt;networkAttrAND&gt;
- *	&lt;networkeffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *  &lt;networkeffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *          &lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
  *              &lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
- *	&lt;networkeffectiveTimeOverlap&gt;
- *		&lt;effectiveTimeOverlap&gt;
- *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
- *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *  &lt;/networkeffectiveTimeOverlap&gt;
+ *  &lt;networkeffectiveTimeOverlap&gt;
+ *      &lt;effectiveTimeOverlap&gt;
+ *          &lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *          &lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
  *              &lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *  &lt;/networkeffectiveTimeOverlap&gt;
  * &lt;/networkAttrAND&gt;
  * </bold></pre></body>
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NetworkAttrAND 
-    extends  NetworkLogicalSubsetter 
-    implements NetworkAttrSubsetter {
-    
+public class NetworkAND
+    extends  NetworkLogicalSubsetter
+    implements NetworkSubsetter {
+
     /**
      * Creates a new <code>NetworkAttrAND</code> instance.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public NetworkAttrAND (Element config) throws ConfigurationException {
-	super(config);
+    public NetworkAND (Element config) throws ConfigurationException {
+    super(config);
     }
 
     /**
@@ -54,15 +54,15 @@ public class NetworkAttrAND
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(NetworkAttr e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while(it.hasNext()) {
-	    NetworkAttrSubsetter filter = (NetworkAttrSubsetter)it.next();
-	    if ( !filter.accept(e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(NetworkAttr net,  CookieJar cookies) throws Exception{
+    Iterator it = filterList.iterator();
+    while(it.hasNext()) {
+        NetworkSubsetter filter = (NetworkSubsetter)it.next();
+        if ( !filter.accept(net, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// NetworkAttrAND

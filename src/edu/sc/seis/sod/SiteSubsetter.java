@@ -24,7 +24,7 @@ public interface SiteSubsetter extends Subsetter{
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network,
-			  Site station, 
-			  CookieJar cookies);
-    
+              Site site,
+              CookieJar cookies);
+
 }// SiteSubsetter

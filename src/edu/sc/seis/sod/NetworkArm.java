@@ -74,26 +74,12 @@ public class NetworkArm {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {
             networkFinderSubsetter =
                 (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
-        } else if(sodElement instanceof NetworkIdSubsetter) {
-            if (networkIdSubsetter instanceof NullNetworkIdSubsetter ) {
-                networkIdSubsetter = (NetworkIdSubsetter)sodElement;
-            } else {
-                throw new ConfigurationException("More than one NetworkIdSubsetter is in the configuration file: "+sodElement);
-            } // end of else
-        } else if(sodElement instanceof NetworkAttrSubsetter) {
-            if (networkAttrSubsetter instanceof NullNetworkAttrSubsetter ) {
-                networkAttrSubsetter = (NetworkAttrSubsetter)sodElement;
+        } else if(sodElement instanceof NetworkSubsetter) {
+            if (networkAttrSubsetter instanceof NullNetworkSubsetter ) {
+                networkAttrSubsetter = (NetworkSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one NetworkAttrSubsetter is in the configuration file: "+sodElement);
             } // end of else
-
-        } else if (sodElement instanceof StationIdSubsetter) {
-            if ( stationIdSubsetter instanceof NullStationIdSubsetter ) {
-                stationIdSubsetter = (StationIdSubsetter)sodElement;
-            } else {
-                throw new ConfigurationException("More than one StationIdSubsetter is in the configuration file: "+sodElement);
-            } // end of else
-
         } else if(sodElement instanceof StationSubsetter) {
             if ( stationSubsetter instanceof NullStationSubsetter ) {
                 stationSubsetter = (StationSubsetter)sodElement;
@@ -101,25 +87,11 @@ public class NetworkArm {
                 throw new ConfigurationException("More than one StationSubsetter is in the configuration file: "+sodElement);
             } // end of else
 
-        } else if(sodElement instanceof SiteIdSubsetter) {
-            if ( siteIdSubsetter instanceof NullSiteIdSubsetter ) {
-                siteIdSubsetter = (SiteIdSubsetter)sodElement;
-            } else {
-                throw new ConfigurationException("More than one SiteIdSubsetter is in the configuration file: "+sodElement);
-            } // end of else
-
         } else if(sodElement instanceof SiteSubsetter) {
             if ( siteSubsetter instanceof NullSiteSubsetter ) {
                 siteSubsetter = (SiteSubsetter)sodElement;
             } else {
                 throw new ConfigurationException("More than one SiteSubsetter is in the configuration file: "+sodElement);
-            } // end of else
-
-        } else if(sodElement instanceof ChannelIdSubsetter) {
-            if ( channelIdSubsetter instanceof NullChannelIdSubsetter ) {
-                channelIdSubsetter = (ChannelIdSubsetter)sodElement;
-            } else {
-                throw new ConfigurationException("More than one ChannelIdSubsetter is in the configuration file: "+sodElement);
             } // end of else
 
         } else if(sodElement instanceof ChannelSubsetter) {
@@ -151,283 +123,6 @@ public class NetworkArm {
                 tmp[tmp.length-1] = (NetworkStatusProcessor)sodElement;
                 networkStatusProcess = tmp;
             } // end of else
-        }
-    }
-
-    /*
-     *This function starts the processing of the network Arm.
-     *It gets all the NetworkAccesses and network ids from them
-     *and checks if the networkId is accepted by the networkIdSubsetter.
-     **/
-
-    /**
-     * Describe <code>processNetworkArm</code> method here.
-     *
-     * @exception Exception if an error occurs
-     */
-    public void processNetworkArm() throws Exception{
-        channelList = new ArrayList();
-        NetworkDC netdc = networkFinderSubsetter.getNetworkDC();
-        finder = netdc.a_finder();
-        edu.iris.Fissures.IfNetwork.NetworkAccess[] allNets = finder.retrieve_all();
-        logger.info("Got "+allNets.length+" networks from finder.");
-        networkIds = new NetworkId[allNets.length];
-        for(int counter = 0; counter < allNets.length; counter++) {
-            if (allNets[counter] != null) {
-                CookieJar cookieJar = null;
-
-                NetworkAttr attr = allNets[counter].get_attributes();
-                networkIds[counter] = attr.get_id();
-                if(networkIdSubsetter.accept(networkIds[counter], cookieJar)) {
-                    for ( int i=0; i<networkStatusProcess.length; i++) {
-                        networkStatusProcess[i].networkId(true,
-                                                          networkIds[counter],
-                                                          cookieJar);
-                    } // end of for ()
-                    handleNetworkAttrSubsetter(allNets[counter], attr, cookieJar);
-
-                } else {
-                    for ( int i=0; i<networkStatusProcess.length; i++) {
-                        networkStatusProcess[i].networkId(false,
-                                                          networkIds[counter],
-                                                          cookieJar);
-                    } // end of for ()
-
-                    failure.info("Fail "+attr.get_code());
-                } // end of else
-
-            } // end of if (allNets[counter] != null)
-
-        }
-        successfulChannels = new Channel[channelList.size()];
-        successfulChannels = (Channel[]) channelList.toArray(successfulChannels);
-    }
-
-    /**
-     * handles the networkAttrSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param networkAttr a <code>NetworkAttr</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr, CookieJar cookieJar) throws Exception{
-        try {
-            //logger.debug("The stationIdSubsetter is not null");
-            if(networkAttrSubsetter.accept(networkAttr, cookieJar)) {
-                for ( int i=0; i<networkStatusProcess.length; i++) {
-                    networkStatusProcess[i].networkAttr(true,
-                                                        networkAttr,
-                                                        cookieJar);
-                } // end of for ()
-                Station[] stations = networkAccess.retrieve_stations();
-                for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-                    handleStationIdSubsetter(networkAccess,
-                                             stations[subCounter],
-                                             cookieJar);
-                }
-            } else {
-                for ( int i=0; i<networkStatusProcess.length; i++) {
-                    networkStatusProcess[i].networkAttr(false,
-                                                        networkAttr,
-                                                        cookieJar);
-                } // end of for ()
-                failure.info("Fail NetworkAttr"+networkAttr.get_code());
-            }
-        } catch (org.omg.CORBA.UNKNOWN e) {
-            logger.warn("Caught exception, network is: "+NetworkIdUtil.toString(networkAttr.get_id()), e);
-            throw e;
-        } // end of try-catch
-
-    }
-
-    /**
-     * handles the stationIdSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station, CookieJar cookieJar) throws Exception{
-        try {
-
-            if(stationIdSubsetter.accept(station.get_id(), cookieJar)) {
-                for ( int i=0; i<networkStatusProcess.length; i++) {
-                    networkStatusProcess[i].stationId(true,
-                                                      station.get_id(),
-                                                      cookieJar);
-                } // end of for ()
-
-                handleStationSubsetter(networkAccess, station, cookieJar);
-            } else {
-                for ( int i=0; i<networkStatusProcess.length; i++) {
-                    networkStatusProcess[i].stationId(false,
-                                                      station.get_id(),
-                                                      cookieJar);
-                } // end of for ()
-                failure.info("Fail StationId"+station.get_code());
-            }
-        } catch (org.omg.CORBA.UNKNOWN e) {
-            logger.warn("Caught exception, station is: "+StationIdUtil.toString(station.get_id()), e);
-            throw e;
-        } // end of try-catch
-
-    }
-
-    /**
-     * handles the stationSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param station a <code>Station</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleStationSubsetter(NetworkAccess networkAccess, Station station, CookieJar cookieJar) throws Exception{
-
-        if(stationSubsetter.accept(networkAccess, station, cookieJar)) {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].station(true,
-                                                networkAccess,
-                                                station,
-                                                cookieJar);
-            } // end of for ()
-
-            Channel[] channels = null;
-            try {
-                channels =
-                    networkAccess.retrieve_for_station(station.get_id());
-            } catch (org.omg.CORBA.UNKNOWN e) {
-                logger.warn("Caught an UNKNOWN station id ="+StationIdUtil.toString(station.get_id()), e);
-                throw e;
-            } // end of try-catch
-
-            for(int subCounter = 0; subCounter < channels.length; subCounter++) {
-                handleSiteIdSubsetter(networkAccess, channels[subCounter], cookieJar);
-
-
-            }
-        } else {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].station(false,
-                                                networkAccess,
-                                                station,
-                                                cookieJar);
-            } // end of for ()
-            failure.info("Fail Station"+station.get_code());
-        }
-    }
-
-    /**
-     * handles the siteIdSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleSiteIdSubsetter(NetworkAccess networkAccess, Channel channel, CookieJar cookieJar) throws Exception{
-
-        if(siteIdSubsetter.accept(channel.my_site.get_id(), cookieJar)) {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].siteId(true,
-                                               channel.my_site.get_id(),
-                                               cookieJar);
-            } // end of for ()
-
-            handleSiteSubsetter(networkAccess, channel, cookieJar);
-        } else {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].siteId(false,
-                                               channel.my_site.get_id(),
-                                               cookieJar);
-            } // end of for ()
-            failure.info("Fail SiteId "+SiteIdUtil.toString(channel.my_site.get_id()));
-        }
-    }
-
-    /**
-     * handles the siteSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleSiteSubsetter(NetworkAccess networkAccess, Channel channel, CookieJar cookieJar) throws Exception{
-
-        if(siteSubsetter.accept(networkAccess, channel.my_site, cookieJar)) {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].site(true,
-                                             networkAccess,
-                                             channel.my_site,
-                                             cookieJar);
-            } // end of for ()
-
-            handleChannelIdSubsetter(networkAccess, channel, cookieJar);
-        } else {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].site(false,
-                                             networkAccess,
-                                             channel.my_site,
-                                             cookieJar);
-            } // end of for ()
-
-            failure.info("Fail Site "+SiteIdUtil.toString(channel.my_site.get_id()));
-        }
-    }
-
-    /**
-     * handles the channelIdSubsetter
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleChannelIdSubsetter(NetworkAccess networkAccess, Channel channel, CookieJar cookieJar) throws Exception{
-
-        if(channelIdSubsetter.accept(channel.get_id(), cookieJar)) {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].channelId(true,
-                                                  channel.get_id(),
-                                                  cookieJar);
-            } // end of for ()
-
-            handleChannelSubsetter(networkAccess, channel, cookieJar);
-        } else {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].channelId(false,
-                                                  channel.get_id(),
-                                                  cookieJar);
-            } // end of for ()
-
-            failure.info("Fail ChannelId"+ChannelIdUtil.toStringNoDates(channel.get_id()));
-        }
-
-    }
-
-    /**
-     * handles the channelSubsetter.
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @exception Exception if an error occurs
-     */
-    public void handleChannelSubsetter(NetworkAccess networkAccess, Channel channel, CookieJar cookieJar) throws Exception{
-
-        if(channelSubsetter.accept(networkAccess, channel, cookieJar)) {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].channel(true,
-                                                networkAccess,
-                                                channel,
-                                                cookieJar);
-            } // end of for ()
-
-            handleNetworkArmProcess(networkAccess, channel, cookieJar);
-        } else {
-            for ( int i=0; i<networkStatusProcess.length; i++) {
-                networkStatusProcess[i].channel(false,
-                                                networkAccess,
-                                                channel,
-                                                cookieJar);
-            } // end of for ()
-
-            failure.info("Fail Channel "+ChannelIdUtil.toStringNoDates(channel.get_id()));
         }
     }
 
@@ -575,19 +270,14 @@ public class NetworkArm {
 
                 NetworkAttr attr = allNets[counter].get_attributes();
                 networkIds[counter] = attr.get_id();
-                if(networkIdSubsetter.accept(networkIds[counter], cookieJar)) {
-                    //handleNetworkAttrSubsetter(allNets[counter], attr);
-                    if(networkAttrSubsetter.accept(attr, cookieJar)) {
-                        int dbid = networkDatabase.putNetwork(networkFinderSubsetter.getSourceName(),
-                                                              networkFinderSubsetter.getDNSName(),
-                                                              allNets[counter]);
-                        NetworkDbObject networkDbObject = new NetworkDbObject(dbid,
-                                                                              allNets[counter]);
-                        arrayList.add(networkDbObject);
-                    }
-                } else {
-                    failure.info("Fail "+attr.get_code());
-                } // end of else
+                if(networkAttrSubsetter.accept(attr, cookieJar)) {
+                    int dbid = networkDatabase.putNetwork(networkFinderSubsetter.getSourceName(),
+                                                          networkFinderSubsetter.getDNSName(),
+                                                          allNets[counter]);
+                    NetworkDbObject networkDbObject = new NetworkDbObject(dbid,
+                                                                          allNets[counter]);
+                    arrayList.add(networkDbObject);
+                }
 
             } // end of if (allNets[counter] != null)
 
@@ -620,13 +310,10 @@ public class NetworkArm {
                 (CookieJar)cookieJarCache.get(networkDbObject.getNetworkAccess());
             Station[] stations = networkDbObject.getNetworkAccess().retrieve_stations();
             for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-                //      handleStationIdSubsetter(networkAccess, stations[subCounter]);
-                if(stationIdSubsetter.accept(stations[subCounter].get_id(), cookieJar)) {
-                    if(stationSubsetter.accept(networkDbObject.getNetworkAccess(), stations[subCounter], cookieJar)) {
-                        int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
-                        StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
-                        arrayList.add(stationDbObject);
-                    }
+                if(stationSubsetter.accept(networkDbObject.getNetworkAccess(), stations[subCounter], cookieJar)) {
+                    int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
+                    StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
+                    arrayList.add(stationDbObject);
                 }
             }
 
@@ -659,23 +346,22 @@ public class NetworkArm {
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
                 //handleSiteIdSubsetter(networkAccess, channels[subCounter]);
 
-                if(siteIdSubsetter.accept(channels[subCounter].my_site.get_id(), null)) {
-                    if(siteSubsetter.accept(networkAccess, channels[subCounter].my_site, null)) {
-                        //  int addFlag = networkDatabase.getSiteDbId(stationDbObject,
-                        //                                channels[subCounter].my_site);
-                        //          if(addFlag != -1) {
-                        //              if(!arrayList.contains
-                        //              continue;
-                        //          }
-                        int dbid = networkDatabase.putSite(stationDbObject,
-                                                           channels[subCounter].my_site);
-                        SiteDbObject siteDbObject = new SiteDbObject(dbid,
-                                                                     channels[subCounter].my_site);
-                        if(!containsSite(siteDbObject, arrayList)) {
-                            arrayList.add(siteDbObject);
-                        }
+                if(siteSubsetter.accept(networkAccess, channels[subCounter].my_site, null)) {
+                    //  int addFlag = networkDatabase.getSiteDbId(stationDbObject,
+                    //                                channels[subCounter].my_site);
+                    //          if(addFlag != -1) {
+                    //              if(!arrayList.contains
+                    //              continue;
+                    //          }
+                    int dbid = networkDatabase.putSite(stationDbObject,
+                                                       channels[subCounter].my_site);
+                    SiteDbObject siteDbObject = new SiteDbObject(dbid,
+                                                                 channels[subCounter].my_site);
+                    if(!containsSite(siteDbObject, arrayList)) {
+                        arrayList.add(siteDbObject);
                     }
                 }
+
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -722,15 +408,14 @@ public class NetworkArm {
 
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
                 if(!isSameSite(site, channels[subCounter].my_site)) continue;
-                if(channelIdSubsetter.accept(channels[subCounter].get_id(), null)) {
-                    if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
-                        int dbid = networkDatabase.putChannel(siteDbObject,
-                                                              channels[subCounter]);
-                        ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
-                                                                              channels[subCounter]);
-                        arrayList.add(channelDbObject);
-                        handleNetworkArmProcess(networkAccess, channels[subCounter], cookieJar);
-                    }
+
+                if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
+                    int dbid = networkDatabase.putChannel(siteDbObject,
+                                                          channels[subCounter]);
+                    ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
+                                                                          channels[subCounter]);
+                    arrayList.add(channelDbObject);
+                    handleNetworkArmProcess(networkAccess, channels[subCounter], cookieJar);
                 }
             }
         } catch(Exception e) {
@@ -759,13 +444,9 @@ public class NetworkArm {
     private Element config = null;
 
     private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder networkFinderSubsetter = null;
-    private edu.sc.seis.sod.NetworkIdSubsetter networkIdSubsetter = new NullNetworkIdSubsetter();
-    private NetworkAttrSubsetter networkAttrSubsetter = new NullNetworkAttrSubsetter();
-    private StationIdSubsetter stationIdSubsetter = new NullStationIdSubsetter();
+    private NetworkSubsetter networkAttrSubsetter = new NullNetworkSubsetter();
     private StationSubsetter stationSubsetter = new NullStationSubsetter();
-    private SiteIdSubsetter siteIdSubsetter = new NullSiteIdSubsetter();
     private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
-    private ChannelIdSubsetter channelIdSubsetter = new NullChannelIdSubsetter();
     private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
     private NetworkArmProcess[] networkArmProcess = {
         new NullNetworkProcess()

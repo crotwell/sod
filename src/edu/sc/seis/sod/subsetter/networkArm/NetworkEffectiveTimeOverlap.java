@@ -45,7 +45,7 @@ import edu.iris.Fissures.*;
  */
 
 public class NetworkEffectiveTimeOverlap extends
-EffectiveTimeOverlap implements NetworkAttrSubsetter {
+EffectiveTimeOverlap implements NetworkSubsetter {
     /**
      * Creates a new <code>NetworkEffectiveTimeOverlap</code> instance.
      *
