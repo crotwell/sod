@@ -213,8 +213,11 @@ public class EventFormatter extends Template implements EventTemplate{
         while(it.hasNext()){
             name.append(((EventTemplate)it.next()).getResult(event));
         }
-        if(filizeResults) return FissuresFormatter.filize(name.toString());
-        return name.toString();
+        if(filizeResults) {
+            return FissuresFormatter.filize(name.toString());
+        } else {
+            return name.toString();
+        }
     }
 
     public String getFilizedName(EventAccessOperations event) {
