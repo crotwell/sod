@@ -15,7 +15,7 @@
 <div><b>Started on: </b><startTime/></div>
 <div><b>Amount of SAC data written: </b><sacDataWritten/> bytes</div>
 <div><b>Last event received: </b>
-<lastEvent><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></lastEvent>
+<lastEvent><a><attribute name="href"><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></lastEvent>
 </div>
 <div><b>Number waveforms processed: </b><numSuccessfulECP/></div>
 <div><b>Waveforms per hour(WPH): </b><waveformsPerHour/></div>
