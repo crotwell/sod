@@ -116,7 +116,6 @@ Structure of a SOD configuration file.
       <xsl:apply-templates select="xsd:annotation" />
     </p>
     <p>
-      <xsl:apply-templates select="(preceding-sibling::*|preceding-sibling::comment())[last()]" mode="comments"/>
       <h5><xsl:text>Elements</xsl:text></h5>
       <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
     </p>
