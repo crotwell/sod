@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../../devTools/maven')
-import scriptBuilder, ProjectParser
+import scriptBuilder, ProjectParser, depCopy
 class sodScriptParameters(scriptBuilder.jacorbParameters):
     def __init__(self, mods):
         scriptBuilder.jacorbParameters.__init__(self)
@@ -38,4 +38,6 @@ def buildQueryTimerScripts(proj):
     return scripts
 
 if __name__ == "__main__":
-    buildAll(ProjectParser.ProjectParser('../project.xml'))
+    proj = ProjectParser.ProjectParser('../project.xml')
+    depCopy.copy(proj)
+    buildAll(proj)
