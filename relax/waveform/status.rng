@@ -4,7 +4,7 @@
         <choice>
             <ref name="waveformEvent"/>
             <ref name="waveformNetwork"/>
-            <ref name="waveformStatus"/>
+            <ref name="waveformStation"/>
         </choice>
     </start>
     <define name="waveformEvent">
