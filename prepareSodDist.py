@@ -11,7 +11,6 @@ def buildInternal(proj, name=None):
     name =  'internal' + buildName(proj)
     extras = [('scripts/revtest.xml', 'bin/revtest.xml'),
               ('scripts/tutorial.xml', 'bin/tutorial.xml'),
-              ('scripts/restartTest.xml', 'bin/restartTest.xml'),
               ('scripts/weed.xml', 'bin/weed.xml'),
               ('scripts/yjpagent.dll', 'bin/yjpagent.dll'),
               ('scripts/cwg.prop', 'bin/cwg.prop'),
