@@ -18,6 +18,7 @@
       <item name="Bugs and Problems"     href="/bugs.html"/>
       <item name="Tuning"     href="/tuning.html"/>
       <item name="Properties"     href="/properties.html"/>
+      <item name="JavaDocs"                  href="/apidocs/index.html"/>
     </menu>
 
     <menu name="Download">
