@@ -26,6 +26,7 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
@@ -40,7 +41,6 @@ import edu.sc.seis.sod.process.networkArm.NetworkProcess;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
-import edu.sc.seis.sod.subsetter.network.NetworkAND;
 import edu.sc.seis.sod.subsetter.network.NetworkCode;
 import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
@@ -54,14 +54,21 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
  * Handles the subsetting of the Channels. Created: Wed Mar 20 13:30:06 2002
  * 
  * @author <a href="mailto:">Srinivasa Telukutla </a>
- * @version
  */
-public class NetworkArm {
+public class NetworkArm implements Runnable {
 
     public NetworkArm(Element config) throws SQLException, ConfigurationException {
         queryTimeTable = new JDBCQueryTime();
         netTable = new JDBCNetworkUnifier();
         processConfig(config);
+    }
+
+    public void run() {
+        try {
+            getSuccessfulNetworks();
+        } catch(Exception e) {
+            GlobalExceptionHandler.handle(e);
+        }
     }
 
     public NetworkAccess getNetwork(NetworkId network_id) throws Exception {
@@ -160,15 +167,10 @@ public class NetworkArm {
     /**
      * returns an array of SuccessfulNetworks. if the refreshInterval is valid
      * it gets the networks from the database(may be embedded or external). if
-     * not it gets the networks again from the networkserver. After obtaining
-     * the Networks if processes them using the networkIdSubsetter and
-     * networkAttrSubsetter and returns the succesful networks as an array of
+     * not it gets the networks again from the network server specified in the
+     * networkFinder. After obtaining the Networks if processes them using the
+     * NetworkSubsetter and returns the succesful networks as an array of
      * NetworkDbObjects.
-     * 
-     * @return a <code>NetworkDbObject[]</code> value
-     * @throws NotFound
-     * @throws SQLException
-     * @throws NetworkNotFound
      */
     public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound,
             SQLException, NotFound {
@@ -222,9 +224,12 @@ public class NetworkArm {
                     synchronized(netTable) {
                         dbid = netTable.put(allNets[i].get_attributes());
                     }
-                    networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
+                    NetworkDbObject netDb = new NetworkDbObject(dbid,
+                                                                allNets[i]);
+                    networkDBs.add(netDb);
                     change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                   Standing.SUCCESS));
+                    netPopulators.invokeLater(new NetworkPusher(netDb));
                 } else {
                     change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                   Standing.REJECT));
@@ -273,13 +278,31 @@ public class NetworkArm {
     }
 
     /**
-     * Obtains the Stations corresponding to the given networkDbObject,
-     * processes them using stationIdSubsetter and stationSubsetters, returns
-     * the successful stations as an array of StationDbObjects.
-     * 
-     * @param networkDbObject
-     *            a <code>NetworkDbObject</code> value
-     * @return a <code>StationDbObject[]</code> value
+     * retrieves all the stations, sites and channels for a network to populate
+     * the db and cache
+     */
+    private class NetworkPusher implements Runnable {
+
+        public NetworkPusher(NetworkDbObject netDb) {
+            this.netDb = netDb;
+        }
+
+        public void run() {
+            StationDbObject[] staDbs = getSuccessfulStations(netDb);
+            for(int j = 0; j < staDbs.length; j++) {
+                SiteDbObject[] siteDbs = getSuccessfulSites(netDb, staDbs[j]);
+                for(int k = 0; k < siteDbs.length; k++) {
+                    getSuccessfulChannels(netDb, siteDbs[k]);
+                }
+            }
+        }
+
+        private NetworkDbObject netDb;
+    }
+
+    /**
+     * @return stations for the given network object that pass this arm's
+     *         station subsetter
      */
     public synchronized StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
         if(networkDbObject.stationDbObjects != null) { return networkDbObject.stationDbObjects; }
@@ -332,16 +355,8 @@ public class NetworkArm {
     }
 
     /**
-     * Obtains the Channels corresponding to the stationDbObject, retrievesthe
-     * station from each channel and processes the channels using
-     * SiteIdSubsetter and SiteSubsetter and returns an array of successful
-     * SiteDbObjects.
-     * 
-     * @param networkDbObject
-     *            a <code>NetworkDbObject</code> value
-     * @param stationDbObject
-     *            a <code>StationDbObject</code> value
-     * @return a <code>SiteDbObject[]</code> value
+     * @return a SiteDbObject[] containing all the sites from the station that
+     *         pass this network arm's site subsetter
      */
     public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
                                              StationDbObject stationDbObject) {
@@ -405,14 +420,7 @@ public class NetworkArm {
 
     /**
      * Obtains the Channels corresponding to the siteDbObject, processes them
-     * using the channelIdSubsetter and ChannelSubsetter and returns an array of
-     * succesful ChannelDbObjects.
-     * 
-     * @param networkDbObject
-     *            a <code>NetworkDbObject</code> value
-     * @param siteDbObject
-     *            a <code>SiteDbObject</code> value
-     * @return a <code>ChannelDbObject[]</code> value
+     * using the ChannelSubsetter and returns an array of those that pass
      */
     public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
                                                    SiteDbObject siteDbObject) {
@@ -518,13 +526,6 @@ public class NetworkArm {
     }
 
     private void change(NetworkAccess na, Status newStatus) {
-        //try{
-        //    networkStatusTable.setStatus(na.get_attributes(), newStatus);
-        //}
-        //catch(SQLException e){
-        //    GlobalExceptionHandler.handle("something wrong changing status in
-        // database", e);
-        //}
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()) {
             try {
@@ -552,6 +553,10 @@ public class NetworkArm {
         }
     }
 
+    /**
+     * Checks if the sites are the same assuming the came from the same network
+     * and station
+     */
     private boolean isSameSite(Site givenSite, Site tempSite) {
         SiteId givenSiteId = givenSite.get_id();
         SiteId tempSiteId = tempSite.get_id();
@@ -562,6 +567,15 @@ public class NetworkArm {
         }
         return false;
     }
+
+    //Since we synchronize around the NetDC, only 1 thread can get stuff from
+    // the network server at the same time. The pool is here in the off chance
+    // the IRIS Network Server is fixed and we can run multiple threads to fill
+    // up the db. If so, remove SynchronizedNetworkAccess from
+    // BulletproofVestFactory, increase the number of threads here, and chuckle
+    // as the stations stream in.
+    private WorkerThreadPool netPopulators = new WorkerThreadPool("NetPopulator",
+                                                                  1);
 
     private edu.sc.seis.sod.subsetter.network.NetworkFinder finder = null;
 
