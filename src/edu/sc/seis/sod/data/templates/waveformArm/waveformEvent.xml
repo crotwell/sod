@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
-<outputLocation><originTime>yyyyMMddHHmmssSSS</originTime></outputLocation>
+<outputLocation><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></outputLocation>
 <filename>event.html</filename>
 <html>
 <head>
@@ -15,7 +15,7 @@
 <body>
 <div id="Header">
 <a href="../location.html"> Events</a>
-> <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
+<event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
 </div>
 <div id="Content">
 <h1>Station information for this event</h1>

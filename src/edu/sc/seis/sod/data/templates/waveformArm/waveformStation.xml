@@ -1,25 +1,48 @@
 <?xml version="1.0"?>
 <html>
-<header><title>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</title></header>
+<header><title>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</title>
+<style media="all">@import "../../main.css";</style>
+<script type="text/javascript" src="../../tableRuler.js"> </script>
+<script type="text/javascript">
+        window.onload=function(){tableruler();}
+</script>
+<script type="text/javascript" src="../../sorttable.js"></script>
+
+<style type="text/css">
+/* Sortable tables */
+table.sortable a.sortheader {
+    background-color:#eee;
+    color:#666666;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+}
+table.sortable span.sortarrow {
+    color: black;
+    text-decoration: none;
+}
+</style>
+</header>
 <body>
+<div id="Content">
 <h2>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</h2>
 <br/>
-<table>
-<tr>
-<td><b>Time</b></td>
-<td><b>Time</b></td>
-<td><b>Magnitude</b></td>
-<td><b>Depth</b></td>
-<td><b>Latitude</b></td>
-<td><b>Longitude</b></td>
-<td><b>Distance</b></td>
-<td><b>Azimuth</b></td>
-<td><b>Back Azimuth</b></td>
+<table class="sortable" id="eventTable">
+<tr class="title">
+<th><b>Region</b></th>
+<th><b>Time</b></th>
+<th><b>Magnitude</b></th>
+<th><b>Depth</b></th>
+<th><b>Latitude</b></th>
+<th><b>Longitude</b></th>
+<th><b>Distance</b></th>
+<th><b>Azimuth</b></th>
+<th><b>Back Azimuth</b></th>
 </tr>
 #foreach ( $event in $station_events )
-#set ( $origin = $event.get_preferred_origin() )
-#set ( $eventDir = $velocity_date.format("yyyyMMddHHmmssSSS", $event.get_preferred_origin().getTime()) )
 <tr>
+#set ( $origin = $event.get_preferred_origin() )
+#set ( $eventDir = $fissures.formatDateForFile($origin) )
 <td><a href="../../$eventDir/$fissures.formatStation($station.get_id())/seismograms.html">$FERegion.getRegionName(${event.get_attributes().region})</a></td>
 <td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $event.get_preferred_origin().getTime())</td>
 <td>
@@ -35,6 +58,10 @@ $fissures.formatMagnitude($m),
 </tr>
 #end
 </table>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
+</div>
 </body>
 </html>
 

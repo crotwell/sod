@@ -9,7 +9,9 @@ package edu.sc.seis.sod.status;
 import edu.iris.Fissures.IfNetwork.*;
 
 import edu.iris.Fissures.IfEvent.Magnitude;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.Location;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -20,8 +22,11 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 /** this class largely exists as an access for various utility methods for
  * Velocity templates.*/
@@ -112,7 +117,38 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getBaz(), UnitImpl.DEGREE);
     }
 
+    public static String formatDate(Date d) {
+        return longFormat.format(d);
+    }
+
+    public static String formatDateForFile(Date d) {
+        return longFileFormat.format(d);
+    }
+
+    public static String formatDateForFile(Time t) {
+        return formatDateForFile(new MicroSecondDate(t));
+    }
+
+    public static String formatDateForFile(Origin origin) {
+        return formatDateForFile(new MicroSecondDate(origin.origin_time));
+    }
+
+    public static MicroSecondDate now() {
+        return ClockUtil.now();
+    }
+
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
+
+    public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
+
+    public static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+
+    static {
+        yearDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        longFileFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        longFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+
 }
 
 
