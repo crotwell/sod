@@ -69,9 +69,10 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         FileDialog fileDialog = new FileDialog(frame);
                         fileDialog.setMode(FileDialog.SAVE);
                         fileDialog.show();
+                        String outfiledir = fileDialog.getDirectory();
                         String outfilename = fileDialog.getFile();
                         if (outfilename != null) {
-                            File outfile = new File(outfilename);
+                            File outfile = new File(outfiledir, outfilename);
                             try {
                                 save(outfile);
                             } catch (IOException ex) {
