@@ -78,37 +78,7 @@ public class Start{
         try {
             if(!Validator.validate(createInputSource(cl, confFilename))){
                 logger.info("Invalid config file!");
-                System.err.println();
-                System.err.println("******************************************************************");
-                System.err.println();
-                System.err.println("Invalid config file! ");
-                System.err.println();
-                System.err.println("     All hope abandon, ye who enter in!");
-                System.err.println();
-                System.err.println("******************************************************************");
-                System.err.println();
-                for (int i = 0; i < 10; i++) {
-                    try {
-                        Thread.sleep(1000);
-                        System.err.print(" *");
-                    }
-                    catch (InterruptedException e) {
-                    }
-                }
-
-                System.err.println();
-                System.err.println();
-                System.err.println("And lo! towards us coming in a boat");
-                System.err.println("  An old man, hoary with the hair of eld,");
-                System.err.println("  Crying: \"Woe unto you, ye souls depraved!");
-                System.err.println("");
-                System.err.println("Hope nevermore to look upon the heavens;");
-                System.err.println("  I come to lead you to the other shore,");
-                System.err.println("  To the eternal shades in heat and frost.");
-                System.err.println();
-                System.err.println();
-
-                System.err.println(" ...a brave soul trudges on.");
+                allHopeAbandon("Invalid config file! ");
             }else{
                 logger.info("Valid config file");
             }
@@ -218,6 +188,40 @@ public class Start{
         new JDBCStatus();
     }
 
+    private void allHopeAbandon(String message) {
+        System.err.println();
+        System.err.println("******************************************************************");
+        System.err.println();
+        System.err.println(message);
+        System.err.println();
+        System.err.println("     All hope abandon, ye who enter in!");
+        System.err.println();
+        System.err.println("******************************************************************");
+        System.err.println();
+        for (int i = 10; i >= 0; i--) {
+            try {
+                Thread.sleep(1000);
+                System.err.print(" "+i);
+            }
+            catch (InterruptedException e) {
+            }
+        }
+
+        System.err.println();
+        System.err.println();
+        System.err.println("And lo! towards us coming in a boat");
+        System.err.println("  An old man, hoary with the hair of eld,");
+        System.err.println("  Crying: \"Woe unto you, ye souls depraved!");
+        System.err.println("");
+        System.err.println("Hope nevermore to look upon the heavens;");
+        System.err.println("  I come to lead you to the other shore,");
+        System.err.println("  To the eternal shades in heat and frost.");
+        System.err.println();
+        System.err.println();
+
+        System.err.println(" ...a brave soul trudges on.");
+    }
+
     private void startArms(NodeList armNodes) throws Exception{
         for (int i=0; i<armNodes.getLength(); i++) {
             if (armNodes.item(i) instanceof Element) {
@@ -265,9 +269,9 @@ public class Start{
                 System.err.println("Your database was created with an older version "
                                        + "of SOD.");
                 if (Version.hasSchemaChangedSince(dbVersion.getDBVersion())){
-                    System.err.println("There has been a change in the database "
-                                           + "structure since the database was created!  "
-                                           + "Continuing this sod run is not advisable!!!");
+                    allHopeAbandon("There has been a change in the database "
+                                       + "structure since the database was created!  "
+                                       + "Continuing this sod run is not advisable!!!");
                 }
                 else {
                     System.err.println("The structure of the database has not "
@@ -291,8 +295,8 @@ public class Start{
             String configString = JDBCConfig.getConfigString(is);
             JDBCConfig dbConfig = new JDBCConfig(configString);
             if (!dbConfig.isSameConfig(configString)){
-                System.err.println("Your config file has changed since your last run.  "
-                                       + "It may not be advisable to continue this SOD run.");
+                allHopeAbandon("Your config file has changed since your last run.  "
+                                   + "It may not be advisable to continue this SOD run.");
             }
         } catch (Exception e){
             GlobalExceptionHandler.handle("Trouble checking stored config file", e);
