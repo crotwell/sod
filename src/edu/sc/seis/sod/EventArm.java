@@ -137,7 +137,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
             maxMagnitude = eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value;
             searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
         }
-        logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
+        logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getMSTR());
         
         String source = eventFinderSubsetter.getSourceName();
         String dns =  eventFinderSubsetter.getDNSName();
@@ -272,7 +272,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      *
      */
     private boolean pastNow(MicroSecondDate time){
-        return ClockUtil.now().after(time);
+        return ClockUtil.now().before(time);
     }
     
     /**
@@ -292,7 +292,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     private boolean passivateEventArm(MicroSecondDate endDate) {
         MicroSecondDate quitDate = endDate.add(new TimeInterval(Start.QUIT_TIME,
                                                                 UnitImpl.DAY));
-        if(pastNow(quitDate))  return true;
+        if(!pastNow(quitDate))  return true;
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+
                              Start.REFRESH_INTERVAL+" seconds");
