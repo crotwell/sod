@@ -26,8 +26,8 @@
 <td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
 <td><lat/></td>
 <td><lon/></td>
-<td><dip/></td>
 <td><azimuth/></td>
+<td><dip/></td>
 <td><status/></td>
 </tr>
 </channel></channels>
