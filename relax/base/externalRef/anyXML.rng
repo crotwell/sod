@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-    <start>
-        <ref name="any"/>
-    </start>
-    <define name="any">
-        <element>
-            <anyName/>
-            <zeroOrMore>
-                <choice>
-                    <attribute>
+        <start>
+                <ref name="any"/>
+        </start>
+        <define name="any">
+                <oneOrMore>
+                        <choice>
+                                <text/>
+                                <ref name="xml"/>
+                        </choice>
+                </oneOrMore>
+        </define>
+        <define name="xml">
+                <element>
                         <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any"/>
-                </choice>
-            </zeroOrMore>
-        </element>
-    </define>
+                        <zeroOrMore>
+                                <choice>
+                                        <attribute>
+                                                <anyName/>
+                                        </attribute>
+                                        <text/>
+                                        <ref name="xml"/>
+                                </choice>
+                        </zeroOrMore>
+                </element>
+        </define>
 </grammar>
