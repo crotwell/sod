@@ -49,7 +49,8 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    logger.error("Problem writting to breqfast file",e);
 	} // end of try-catch
 	
-	return false;
+	// don't care if yes or no
+	return true;
     }
 
     protected String getConfig(String name) {
