@@ -3,8 +3,10 @@
         <xsl:output method="html"/>
         <xsl:include href="menuGenerator.xsl"/>
 		<xsl:param name="base"/>
+		<xsl:param name="menu" select="'Tutorials'"/>
+		<xsl:param name="page"/>
         <xsl:template match="/">
-                <xsl:param name="currentPage"/>
+                <xsl:param name="currentPage" select="$page"/>
                 <xsl:apply-templates select="*">
                         <xsl:with-param name="currentPage" select="$currentPage"/>
                 </xsl:apply-templates>
@@ -18,6 +20,7 @@
                                 <xsl:call-template name="menu">
                                         <xsl:with-param name="currentPage" select="$currentPage"/>
 										<xsl:with-param name="base" select="$base"/>
+										<xsl:with-param name="menu" select="$menu"/>
                                 </xsl:call-template>
                                 <div id="content">
                                         <xsl:apply-templates select="body/*"/>
