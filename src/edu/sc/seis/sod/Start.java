@@ -6,6 +6,7 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
+import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
 import edu.sc.seis.sod.database.JDBCConfig;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
@@ -362,6 +363,7 @@ public class Start {
 			// this is not the real exception reporter, but do this to catch
 			// initialization exceptions so they are not lost in the log file
 			SystemOutReporter sysOutReporter = new SystemOutReporter();
+            GlobalExceptionHandler.add(new WindowConnectionInterceptor());
 			GlobalExceptionHandler.add(sysOutReporter);
 			
 			// start up log4j before read props so at least there is some
