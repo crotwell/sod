@@ -261,7 +261,7 @@ public class WaveformArm implements Runnable {
                 }
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
-                                             e);
+                                              e);
             }
         }
         synchronized(statusMonitors){
@@ -330,9 +330,9 @@ public class WaveformArm implements Runnable {
                                           Standing.REJECT));
                 }
             }catch(Throwable t){
-                System.err.println("An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu");
+                System.err.println(BIG_ERROR_MSG);
                 t.printStackTrace(System.err);
-                GlobalExceptionHandler.handle(t);
+                GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
             }
         }
 
@@ -347,8 +347,11 @@ public class WaveformArm implements Runnable {
                 throw new RuntimeException("SQL Exception getting the event and channel ids from the event channel status db", e);
             }
         }
+
         private int pairId;
     }
+
+    private static final String BIG_ERROR_MSG = "An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu";
 
     private WorkerThreadPool pool;
 
