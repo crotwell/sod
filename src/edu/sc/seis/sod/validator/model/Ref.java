@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.validator.model;
 
 public class Ref implements FormProvider{
-    public Ref(Grammar owner){ this.owner = owner; }
+    public Ref(Grammar owner){ this(owner, ""); }
 
     public Ref(Grammar owner, String name){ this(owner, name, null); }
 
@@ -15,6 +15,7 @@ public class Ref implements FormProvider{
         this.owner = owner;
         this.name = name;
         this.parent = parent;
+        ann.setFormProvider(this);
     }
 
     public FormProvider copyWithNewParent(Form newParent) {
@@ -26,7 +27,7 @@ public class Ref implements FormProvider{
     }
 
     public Form getForm(){
-        Definition def = owner.getDef(name);
+        Definition def = getDef();
         Form refedForm = def.getForm();
         Form derefedForm = refedForm.deref(parent, def);
         derefedForm.setMin(getMin());
@@ -34,6 +35,10 @@ public class Ref implements FormProvider{
         if(ann != null){ derefedForm.setAnnotation(ann); }
         return derefedForm;
     }
+
+    public String getName(){ return name; }
+
+    public Definition getDef(){ return owner.getDef(name); }
 
     public int getMin() { return min; }
 
@@ -46,7 +51,6 @@ public class Ref implements FormProvider{
         ann.setFormProvider(this);
     }
 
-
     public void setMax(int max) { this.max = max; }
 
     public int hashCode(){
@@ -58,7 +62,7 @@ public class Ref implements FormProvider{
 
     private int max = 1, min = 1;
     private Grammar owner;
-    private String name;
+    private String name = "";
     private Form parent;
-    private Annotation ann;
+    private Annotation ann = new Annotation();
 }
