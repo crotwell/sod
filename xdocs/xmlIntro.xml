@@ -16,7 +16,7 @@
         <section name="What do I need to know about XML to use SOD?">
             <p>Nothing for basic usage. You can use SOD's GUI editor to change settings in the
                 tutorial strategy files distributed with SOD. To actually change the tactics SOD
-                uses though, you'll need to edit the strategy files in a text editor. To do this,
+                uses, however, you'll need to edit the strategy files in a text editor. To do this,
                 it's best to have some understanding of the structure of XML so that you understand
                 what you're editing, and you understand what the error messages mean if something
                 goes wrong. SOD only uses a subset of XML in its builtin processors and subsetters.

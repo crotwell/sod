@@ -37,7 +37,7 @@
                         </p>
                         </section>
                         <p>
-                        At this point SOD should begin running, then downloading data from the DMC
+                        At this point SOD should begin running, and soon after begin downloading data from the DMC
                         in Seattle. The output should look like this:<br/>
 <pre>
 [roo:sod-2.0] crotwell$ bin/sod.sh -f examples/tutorial.xml

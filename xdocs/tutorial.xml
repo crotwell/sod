@@ -29,7 +29,7 @@
                 the examples directory of the SOD distribution.</p>
             <source>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt; 
-&lt;sod xmlns:xlink="http://www.w3.org/1999/xlink/"&gt; 
+&lt;sod&gt; 
    &lt;properties&gt;&lt;/properties&gt;
    &lt;eventArm&gt;&lt;/eventArm&gt;
    &lt;networkArm&gt;&lt;/networkArm&gt;
@@ -39,10 +39,7 @@
                 are correct. The &lt;?xml&gt; line is not really part of the SOD strategy
                 proper, but does signify that this is an XML file the version of the XML
                 specification that is used. The &lt;sod&gt; tag surrounds the sod strategy
-                items and should be the first tag. The attribute of the &lt;sod&gt; tag:
-                xmlns:xlink, allows the XML parser to recognize xlinks that are used by several
-                tags. Understanding how these work is not really important, but having it in your
-                strategy file is very important. SOD may refuse to run if they are not there or wrong.</p>
+                items and should be the first tag.</p>
             <p> The next section is the properties section. This is actually optional, but useful
                 items can be set here. Probably the most important are the
                 &lt;removeDatabase&gt; and &lt;runName&gt; properties.
@@ -128,7 +125,7 @@ s        </section>
         </section>
         <p>These items should go after the end of the event finder and before the second event arm tag in the file.</p>
         <section name="Networks and Channels">
-            <p>Before betting any data, we must choose some channels within the network arm. Here is
+            <p>Before getting any data, we must choose some channels within the network arm. Here is
                 the network arm that gets long period channels from stations within the II network.</p>
             <source>
 &lt;networkFinder&gt;
@@ -246,7 +243,7 @@ s        </section>
             <source>&lt;someCoverage/&gt;</source>
             <p> At this point SOD will request and retrieve the actual data. The last items will
                 print a line saying how many seismograms were received for each request, then
-                save the data in SAC format in a directory. Due to gaps in the original recording,
+                save the data in SAC format in a directory. Because of gaps in the original recording,
                 it is possible to get more than one seismogram from a single request, but usually
                 for a small time window this does not happen.</p>
             <p> The saveSeismogramToFile allows you to customize the directory naming structure.

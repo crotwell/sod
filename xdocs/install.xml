@@ -7,7 +7,7 @@
     <body>
         <section name="Installing SOD">
             <p> SOD is currently distributed in tar and zip formats.
-                After <a href="download.html">downloading</a> the most recent version, untaring or
+                After <a href="download.html">downloading</a> the most recent version, untarring or
                 unzipping it will result in a directory structure like the following: <ul>
                     <li>
                         <tt>sod-2.0</tt>
@@ -29,7 +29,7 @@
             <p> SOD is effectively installed at this point, and you can certainly run it from within
                 the <tt>sod</tt> directory with <tt>./bin/sod.sh</tt>. However, SOD's scripts use
                 the SOD_HOME environment variable to find SOD's libraries. In order to run sod from
-                another directory, you can either set SOD_HOME as an environmental variable or set it in
+                another directory, you can either set SOD_HOME as an environment variable or set it in
                 the scripts in the <tt>bin</tt> directory. Changing the scripts is the recommended
                 method. </p>
             <p>To set it in the script, cd into the bin directory. If you're on a Unix-like
