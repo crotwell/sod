@@ -8,20 +8,25 @@ sys.path.append("../devTools/maven")
 import ProjectParser, mavenExecutor, scriptBuilder, depCopy, distBuilder, utils
 os.chdir(startdir)
 
-class sodScriptParameters(scriptBuilder.jacorbParameters):
+class sodScriptParameters(scriptBuilder.scriptParameters):
     homeloc = '.'
-    def __init__(self, mods, proj, mainclass='edu.sc.seis.sod.Start', name='sod', mavenRepoStructure=False):
-        scriptBuilder.jacorbParameters.__init__(self)
+    def __init__(self, mods, proj, mainclass='edu.sc.seis.sod.Start', name='sod', mavenRepoStructure=False, relax=False):
+        scriptBuilder.scriptParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = name
+        self.relaxScript = relax
         homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1, True)
         libvar = self.getVar('LIB', 'initial')
         if mavenRepoStructure:
             libvar.setValue(utils.getSystemPath(proj.repo))
         else:
-            libvar.setValue(homevar.interp+'/lib')    
+            libvar.setValue(homevar.interp + self.pathSep  + 'lib')    
         self.mainclass = mainclass
         self.xOptions['mx']='mx256m'
+        
+    def whichJars(self, allJars):
+        jarsLessRelaxStuff = filter(lambda x: not x.properties.has_key('relaxBuilder'), allJars)
+        return scriptBuilder.scriptParameters.whichJars(self, jarsLessRelaxStuff)
 
 genericScripts = {'sod':'edu.sc.seis.sod.Start',
                   'queryTimer':'edu.sc.seis.sod.QueryTimer',
