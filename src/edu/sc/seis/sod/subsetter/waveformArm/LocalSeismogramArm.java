@@ -180,10 +180,13 @@ public class LocalSeismogramArm implements Subsetter{
             int MAX_RETRY = 5;
             while(retries < MAX_RETRY) {
                 try {
+                    logger.debug("before available_data call retries="+retries);
                     outfilters = dataCenter.available_data(infilters);
+                    logger.debug("after successful available_data call retries="+retries);
                     break;
                 } catch (org.omg.CORBA.SystemException e) {
                     retries++;
+                    logger.debug("after failed available_data call retries="+retries+" "+e.toString());
                     if (retries < MAX_RETRY) {
                         logger.info("Caught CORBA exception, retrying..."+retries, e);
                         try {
@@ -242,12 +245,15 @@ public class LocalSeismogramArm implements Subsetter{
                 int MAX_RETRY = 5;
                 while(retries < MAX_RETRY) {
                     try {
+                        logger.debug("before retrieve_seismograms");
                         localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                        logger.debug("after successful retrieve_seismograms");
                         break;
                     } catch (org.omg.CORBA.SystemException e) {
+                        retries++;
+                        logger.debug("after failed retrieve_seismograms, retries="+retries);
                         if (retries < MAX_RETRY) {
                             logger.info("Caught CORBA exception, retrying..."+retries, e);
-                            retries++;
                             try {
                                 Thread.sleep(1000*retries);
                             } catch(InterruptedException ex) {}
