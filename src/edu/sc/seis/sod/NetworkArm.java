@@ -104,6 +104,9 @@ public class NetworkArm {
 	edu.iris.Fissures.IfNetwork.NetworkAccess[] allNets = finder.retrieve_all();
 	networkIds = new NetworkId[allNets.length];
 	for(int counter = 0; counter < allNets.length; counter++) {
+	    if (allNets[counter] != null) {
+		 
+	    
 	    NetworkAttr attr = allNets[counter].get_attributes();
 	    networkIds[counter] = attr.get_id();
 	    if(networkIdSubsetter.accept(networkIds[counter], null)) {
@@ -111,6 +114,8 @@ public class NetworkArm {
 	    } else {
 		failure.info("Fail "+attr.get_code());
 	    } // end of else
+
+	    } // end of if (allNets[counter] != null)
 	    
 	}
 	successfulChannels = new Channel[channelList.size()];
