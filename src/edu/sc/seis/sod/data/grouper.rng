@@ -188,6 +188,11 @@
             <element name="siteNOT">
                 <ref name="site"/>
             </element>
+            <element name="passSite">
+                <zeroOrMore>
+                    <ref name="site"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="station">
@@ -358,6 +363,11 @@
             <element name="stationNOT">
                 <ref name="station"/>
             </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="channel">
@@ -460,6 +470,11 @@
             <element name="channelNOT">
                 <ref name="channel"/>
             </element>
+            <element name="passChannel">
+                <zeroOrMore>
+                    <ref name="channel"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="range">
@@ -531,6 +546,11 @@
             </element>
             <element name="networkNOT">
                 <ref name="network"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
