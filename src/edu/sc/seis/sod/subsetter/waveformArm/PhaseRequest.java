@@ -46,18 +46,26 @@ public class PhaseRequest implements RequestGenerator{
 	NodeList childNodes = config.getChildNodes();
 	Node node;
 	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-		node = childNodes.item(counter);
-		if(node instanceof Element) {
-
-			SodElement sodElement = (SodElement) SodUtil.load((Element)node,
-								"edu.sc.seis.sod.subsetter.waveFormArm");
-			if(sodElement instanceof BeginPhase) beginPhase = (BeginPhase)sodElement;
-			else if(sodElement instanceof BeginOffset) beginOffset = (BeginOffset)sodElement;
-			else if(sodElement instanceof EndPhase) endPhase = (EndPhase)sodElement;
-			else if(sodElement instanceof EndOffset) endOffset = (EndOffset)sodElement;
+	    node = childNodes.item(counter);
+	    if(node instanceof Element) {
+		Element element = (Element)node;
+		if(element.getTagName().equals("beginPhase")) {
+		    beginPhase = SodUtil.getNestedText(element);
+		} else if(element.getTagName().equals("beginOffset")) {
+		    SodElement sodElement = 
+			(SodElement) SodUtil.load(element,
+						   waveformArmPackage);
+		    beginOffset = (BeginOffset)sodElement;
+		} else if(element.getTagName().equals("endPhase")) {
+		    endPhase = SodUtil.getNestedText(element);
+		} else if(element.getTagName().equals("endOffset")) {
+		    SodElement sodElement = 
+			(SodElement) SodUtil.load(element,
+						  waveformArmPackage);
+		    endOffset = (EndOffset)sodElement;
 		}
+	    }
 	}
-
     }
     
     /**
@@ -88,24 +96,33 @@ public class PhaseRequest implements RequestGenerator{
 	    tauPModel = "prem";
 	}
 	
-
+	String phaseNames= "";
+	if ( ! beginPhase.equals(ORIGIN)) {
+	    phaseNames += beginPhase;
+	} // end of if (beginPhase.equals("origin"))
+	if ( ! endPhase.equals(ORIGIN)) {
+	    phaseNames += endPhase;
+	} // end of if (beginPhase.equals("origin"))
+	
 
 	Arrival[] arrivals = calculateArrivals(tauPModel, 
-					       beginPhase.getPhase()+" "+endPhase.getPhase(), 
+					       phaseNames,
 					       origin.my_location, 
 					       channel.my_site.my_location);
 
 	for(int counter = 0; counter < arrivals.length; counter++) {
 	    String arrivalName = arrivals[counter].getName();
-	    if(beginPhase.getPhase().startsWith("tt")) {
-		if(beginPhase.getPhase().equals("tts") && arrivalName.toUpperCase().startsWith("S")) {
+	    if(beginPhase.startsWith("tt")) {
+		if(beginPhase.equals("tts") 
+		   && arrivalName.toUpperCase().startsWith("S")) {
 		    arrivalStartTime = arrivals[counter].getTime();
 		    break;
-		} else if(beginPhase.getPhase().equals("ttp") && arrivalName.toUpperCase().startsWith("P")) {
+		} else if(beginPhase.equals("ttp") 
+			  && arrivalName.toUpperCase().startsWith("P")) {
 		    arrivalStartTime = arrivals[counter].getTime();
 		    break;
 		} 
-	    } else if(beginPhase.getPhase().equals(arrivalName)) {
+	    } else if(beginPhase.equals(arrivalName)) {
 		arrivalStartTime = arrivals[counter].getTime();
 		break;
 	    }
@@ -113,20 +130,28 @@ public class PhaseRequest implements RequestGenerator{
 	    
 	for(int counter = 0; counter < arrivals.length; counter++) {
 	    String arrivalName = arrivals[counter].getName();
-	    if(endPhase.getPhase().startsWith("tt")) {
-		if(endPhase.getPhase().equals("tts") && arrivalName.toUpperCase().startsWith("S")) {
+	    if(endPhase.startsWith("tt")) {
+		if(endPhase.equals("tts") 
+		   && arrivalName.toUpperCase().startsWith("S")) {
 		    arrivalEndTime = arrivals[counter].getTime();
 		    break;
-		} else if(endPhase.getPhase().equals("ttp") && arrivalName.toUpperCase().startsWith("P")) {
+		} else if(endPhase.equals("ttp") 
+			  && arrivalName.toUpperCase().startsWith("P")) {
 		    arrivalEndTime = arrivals[counter].getTime();
 		    break;
 		} 
-	    } else if(endPhase.getPhase().equals(arrivalName)) {
+	    } else if(endPhase.equals(arrivalName)) {
 		arrivalEndTime = arrivals[counter].getTime();
 		break;
 	    }
 	}
-	    
+
+	if (beginPhase.equals(ORIGIN)) {
+	    arrivalStartTime = 0;
+	}
+	if (endPhase.equals(ORIGIN)) {
+	    arrivalEndTime = 0;
+	}
 
 	if(arrivalStartTime == -100.0 || arrivalEndTime == -100.0) {
 	    // no arrivals found, return zero length request filters
@@ -192,12 +217,14 @@ public class PhaseRequest implements RequestGenerator{
 	return tauPTime.getArrivals();
     }
 
-   private BeginOffset beginOffset;
+    private BeginOffset beginOffset;
 
-   private BeginPhase beginPhase;
+    private String beginPhase;
 
-   private EndOffset endOffset;
+    private EndOffset endOffset;
 
-   private EndPhase endPhase;
+    private String endPhase;
+
+    private static final String ORIGIN = "origin";
     
 }// PhaseRequest
