@@ -77,8 +77,8 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
             <refreshInterval>
-                <unit>MINUTE</unit>
-                <value>3000</value>
+                <unit>HOUR</unit>
+                <value>50</value>
             </refreshInterval>
         </networkFinder>
         <networkOR>
