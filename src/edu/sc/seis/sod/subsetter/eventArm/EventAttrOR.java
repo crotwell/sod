@@ -8,7 +8,7 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted when even one 
+ * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted when even one
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventAttrOR is not accepted.
  *<pre>
@@ -30,20 +30,20 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class EventAttrOR 
-    extends EventLogicalSubsetter 
+public final class EventAttrOR
+    extends EventLogicalSubsetter
     implements EventAttrSubsetter {
-    
+
     /**
      * returns true if anyone of the enclosed subsetters is true. If all of the enclosed
-     * subsetters are false returns false. The range of subsetters that can be enclosed 
+     * subsetters are false returns false. The range of subsetters that can be enclosed
      * in an eventAttrORSubsetter is 0 .. UNLIMITED.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
     public EventAttrOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -55,14 +55,14 @@ public class EventAttrOR
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
-		return true;
-	    }
-	}
-	return false;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
+        if ( filter.accept(e, cookies)) {
+        return true;
+        }
+    }
+    return false;
     }
 
 }// EventAttrOR

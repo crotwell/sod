@@ -14,17 +14,17 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a negation of availableDataSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
  *<pre>
- *	&lt;availableDataAND&gt;
- *		&lt;nogaps/&gt;
- *	&lt;/availableDataAND&gt;
+ *  &lt;availableDataAND&gt;
+ *      &lt;nogaps/&gt;
+ *  &lt;/availableDataAND&gt;
  *</pre>
  */
 
 
-public class RequestSubsetterNOT 
-    extends  WaveFormLogicalSubsetter 
+public final class RequestSubsetterNOT
+    extends  WaveFormLogicalSubsetter
     implements RequestSubsetter {
-    
+
     /**
      * Creates a new <code>RequestSubsetterNOT</code> instance.
      *
@@ -32,7 +32,7 @@ public class RequestSubsetterNOT
      * @exception ConfigurationException if an error occurs
      */
     public RequestSubsetterNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -46,20 +46,20 @@ public class RequestSubsetterNOT
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              CookieJar cookies) throws Exception{
 
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    RequestSubsetter filter = (RequestSubsetter)it.next();
-	    if (filter.accept(event, network, channel, original, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        RequestSubsetter filter = (RequestSubsetter)it.next();
+        if (filter.accept(event, network, channel, original, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }

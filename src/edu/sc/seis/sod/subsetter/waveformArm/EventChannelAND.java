@@ -9,7 +9,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
-/** 
+/**
  * eventChannelAND contains a sequence of eventChannelSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
  *<pre>
@@ -17,12 +17,12 @@ import edu.iris.Fissures.*;
  * &lt;/eventChannelAND&gt;
  *</pre>
  */
- 
 
-public class EventChannelAND 
-    extends  WaveFormLogicalSubsetter 
+
+public final class EventChannelAND
+    extends  WaveFormLogicalSubsetter
     implements EventChannelSubsetter {
-    
+
     /**
      * Creates a new <code>EventChannelAND</code> instance.
      *
@@ -30,7 +30,7 @@ public class EventChannelAND
      * @exception ConfigurationException if an error occurs
      */
     public EventChannelAND (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -44,15 +44,15 @@ public class EventChannelAND
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations o, NetworkAccess  network,  Channel channel,  CookieJar cookies)
-	throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-	    if (!filter.accept(o, network, channel, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    throws Exception{
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
+        if (!filter.accept(o, network, channel, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// EventChannelAND

@@ -11,21 +11,21 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 import org.apache.log4j.*;
 
-/** 
+/**
  * availableDataAND contains a sequence of availableSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
  *<pre>
- *	&lt;availableDataAND&gt;
- *		&lt;nogaps/&gt;
- *		&lt;fullCoverage/&gt;
- *	&lt;/availableDataAND&gt;
+ *  &lt;availableDataAND&gt;
+ *      &lt;nogaps/&gt;
+ *      &lt;fullCoverage/&gt;
+ *  &lt;/availableDataAND&gt;
  *</pre>
  */
 
-public class RequestSubsetterAND 
-    extends  WaveFormLogicalSubsetter 
+public final class RequestSubsetterAND
+    extends  WaveFormLogicalSubsetter
     implements RequestSubsetter {
-    
+
     /**
      * Creates a new <code>RequestSubsetterAND</code> instance.
      *
@@ -33,7 +33,7 @@ public class RequestSubsetterAND
      * @exception ConfigurationException if an error occurs
      */
     public RequestSubsetterAND (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -47,22 +47,22 @@ public class RequestSubsetterAND
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    RequestSubsetter filter = (RequestSubsetter)it.next();
-	    if (filter.accept(event, network, channel, original, cookies) == false) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              CookieJar cookies) throws Exception{
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        RequestSubsetter filter = (RequestSubsetter)it.next();
+        if (filter.accept(event, network, channel, original, cookies) == false) {
+        return false;
+        }
+    }
+    return true;
     }
 
-    static Category logger = 
-	Category.getInstance(RequestSubsetterAND.class.getName());
+    static Category logger =
+    Category.getInstance(RequestSubsetterAND.class.getName());
 
 }// RequestSubsetterAND

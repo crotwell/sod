@@ -11,36 +11,36 @@ import edu.iris.Fissures.*;
  * subsetters forming the sequence are accepted.
  *<pre>
  *  &lt;originAND&gt;
- *	&lt;description&gt;take any global 6.5 or better EQ&lt;/description&gt;
- * 		&lt;magnitudeRange&gt;
- *			&lt;magType&gt;mb&lt;/magType&gt;
- *			&lt;min&gt;4.5&lt;/min&gt;
+ *  &lt;description&gt;take any global 6.5 or better EQ&lt;/description&gt;
+ *      &lt;magnitudeRange&gt;
+ *          &lt;magType&gt;mb&lt;/magType&gt;
+ *          &lt;min&gt;4.5&lt;/min&gt;
  *              &lt;/magnitudeRange&gt;
- *		&lt;eventArea&gt;
+ *      &lt;eventArea&gt;
  *                  &lt;globalArea/&gt;
  *               &lt;/eventArea&gt;
  *  &lt;/originAND&gt;
- *                    
+ *
  *                           (or)
- * 
+ *
  *   &lt;originAND&gt;
- *		&lt;description&gt;take any 4.5 or better EQ in the southeast&lt;/description&gt;
- *		&lt;eventArea&gt;
- *		   &lt;boxArea&gt;
- *			&lt;latitudeRange&gt;
- *				&lt;min&gt;28&lt;/min&gt;
- *				&lt;max&gt;38&lt;/max&gt;
- *			&lt;/latitudeRange&gt;
- *			&lt;longitudeRange&gt;
- *				&lt;min&gt;-85&lt;/min&gt;
- *				&lt;max&gt;-75&lt;/max&gt;
- *			&lt;/longitudeRange&gt;
- *	           &lt;/boxArea&gt;
- *		&lt;/eventArea&gt;
- *		&lt;magnitudeRange&gt;
- *			&lt;magType&gt;mb&lt;/magType&gt;
- *			&lt;min&gt;4.5&lt;/min&gt;
- *		&lt;/magnitudeRange&gt;
+ *      &lt;description&gt;take any 4.5 or better EQ in the southeast&lt;/description&gt;
+ *      &lt;eventArea&gt;
+ *         &lt;boxArea&gt;
+ *          &lt;latitudeRange&gt;
+ *              &lt;min&gt;28&lt;/min&gt;
+ *              &lt;max&gt;38&lt;/max&gt;
+ *          &lt;/latitudeRange&gt;
+ *          &lt;longitudeRange&gt;
+ *              &lt;min&gt;-85&lt;/min&gt;
+ *              &lt;max&gt;-75&lt;/max&gt;
+ *          &lt;/longitudeRange&gt;
+ *             &lt;/boxArea&gt;
+ *      &lt;/eventArea&gt;
+ *      &lt;magnitudeRange&gt;
+ *          &lt;magType&gt;mb&lt;/magType&gt;
+ *          &lt;min&gt;4.5&lt;/min&gt;
+ *      &lt;/magnitudeRange&gt;
  *     &lt;/originAND&gt;
  *
  *                          (or)
@@ -65,10 +65,10 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class OriginAND 
-    extends EventLogicalSubsetter 
+public final class OriginAND
+    extends EventLogicalSubsetter
     implements OriginSubsetter {
-    
+
     /**
      * Creates a new <code>OriginAND</code> instance.
      *
@@ -76,7 +76,7 @@ public class OriginAND
      * @exception ConfigurationException if an error occurs
      */
     public OriginAND (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -89,14 +89,14 @@ public class OriginAND
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    OriginSubsetter filter = (OriginSubsetter)it.next();
-	    if ( !filter.accept(event, e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        OriginSubsetter filter = (OriginSubsetter)it.next();
+        if ( !filter.accept(event, e, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// OriginAND

@@ -37,10 +37,10 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class ChannelOR 
-    extends  NetworkLogicalSubsetter 
+public final class ChannelOR
+    extends  NetworkLogicalSubsetter
     implements ChannelSubsetter {
-    
+
     /**
      * Creates a new <code>ChannelOR</code> instance.
      *
@@ -48,7 +48,7 @@ public class ChannelOR
      * @exception ConfigurationException if an error occurs
      */
     public ChannelOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -61,14 +61,14 @@ public class ChannelOR
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while(it.hasNext()) {
-	    ChannelSubsetter filter = (ChannelSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
-		return true;
-	    }
-	}
-	return false;
+    Iterator it = filterList.iterator();
+    while(it.hasNext()) {
+        ChannelSubsetter filter = (ChannelSubsetter)it.next();
+        if ( filter.accept(network, e, cookies)) {
+        return true;
+        }
+    }
+    return false;
     }
 
 }// ChannelOR

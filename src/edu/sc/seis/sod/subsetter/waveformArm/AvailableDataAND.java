@@ -11,21 +11,21 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 import org.apache.log4j.*;
 
-/** 
+/**
  * availableDataAND contains a sequence of availableSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
  *<pre>
- *	&lt;availableDataAND&gt;
- *		&lt;nogaps/&gt;
- *		&lt;fullCoverage/&gt;
- *	&lt;/availableDataAND&gt;
+ *  &lt;availableDataAND&gt;
+ *      &lt;nogaps/&gt;
+ *      &lt;fullCoverage/&gt;
+ *  &lt;/availableDataAND&gt;
  *</pre>
  */
 
-public class AvailableDataAND 
-    extends  WaveFormLogicalSubsetter 
+public final class AvailableDataAND
+    extends  WaveFormLogicalSubsetter
     implements AvailableDataSubsetter {
-    
+
     /**
      * Creates a new <code>AvailableDataAND</code> instance.
      *
@@ -33,7 +33,7 @@ public class AvailableDataAND
      * @exception ConfigurationException if an error occurs
      */
     public AvailableDataAND (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -48,23 +48,23 @@ public class AvailableDataAND
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available, 
-			  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-	    if (filter.accept(event, network, channel, original, available, cookies) == false) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available,
+              CookieJar cookies) throws Exception{
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
+        if (filter.accept(event, network, channel, original, available, cookies) == false) {
+        return false;
+        }
+    }
+    return true;
     }
 
-    static Category logger = 
-	Category.getInstance(AvailableDataAND.class.getName());
+    static Category logger =
+    Category.getInstance(AvailableDataAND.class.getName());
 
 }// AvailableDataAND

@@ -36,10 +36,10 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class ChannelXOR 
-    extends  NetworkLogicalSubsetter 
+public final class ChannelXOR
+    extends  NetworkLogicalSubsetter
     implements ChannelSubsetter {
-    
+
     /**
      * Creates a new <code>ChannelXOR</code> instance.
      *
@@ -47,7 +47,7 @@ public class ChannelXOR
      * @exception ConfigurationException if an error occurs
      */
     public ChannelXOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -59,15 +59,11 @@ public class ChannelXOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
-	    ChannelSubsetter filter = (ChannelSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
-		return false;
-	    }
-	}
-	return false;
+    public boolean accept(NetworkAccess network, Channel channel,  CookieJar cookies) throws Exception{
+        ChannelSubsetter filterA = (ChannelSubsetter)filterList.get(0);
+        ChannelSubsetter filterB = (ChannelSubsetter)filterList.get(1);
+        return ( filterA.accept(network, channel, cookies) != filterB.accept(network, channel, cookies));
+
     }
 
 }// ChannelXOR

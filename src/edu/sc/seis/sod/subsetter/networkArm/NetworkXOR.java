@@ -32,7 +32,7 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NetworkXOR
+public final class NetworkXOR
     extends  NetworkLogicalSubsetter
     implements NetworkSubsetter {
 
@@ -55,14 +55,10 @@ public class NetworkXOR
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAttr net,  CookieJar cookies) throws Exception{
-    Iterator it = filterList.iterator();
-    if (it.hasNext()) {
-        NetworkSubsetter filter = (NetworkSubsetter)it.next();
-        if ( filter.accept(net, cookies)) {
-        return false;
-        }
-    }
-    return false;
+        NetworkSubsetter filterA = (NetworkSubsetter)filterList.get(0);
+        NetworkSubsetter filterB = (NetworkSubsetter)filterList.get(1);
+        return ( filterA.accept(net, cookies) != filterB.accept(net, cookies));
+
     }
 
 }// NetworkAttrXOR

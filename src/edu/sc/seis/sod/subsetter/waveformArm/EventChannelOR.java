@@ -10,7 +10,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * This subsetter is used to specify a sequence of EventChannelSubsetters. This subsetter is accepted when even one 
+ * This subsetter is used to specify a sequence of EventChannelSubsetters. This subsetter is accepted when even one
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventChannelOR is not accepted.
   *<pre>
@@ -19,10 +19,10 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class EventChannelOR 
-    extends  WaveFormLogicalSubsetter 
+public final class EventChannelOR
+    extends  WaveFormLogicalSubsetter
     implements EventChannelSubsetter {
-    
+
     /**
      * Creates a new <code>EventChannelOR</code> instance.
      *
@@ -30,7 +30,7 @@ public class EventChannelOR
      * @exception ConfigurationException if an error occurs
      */
     public EventChannelOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -44,15 +44,15 @@ public class EventChannelOR
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations o, NetworkAccess network, Channel channel,  CookieJar cookies)
-	throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-	    if (!filter.accept(o, network, channel, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    throws Exception{
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
+        if (!filter.accept(o, network, channel, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// EventChannelOR

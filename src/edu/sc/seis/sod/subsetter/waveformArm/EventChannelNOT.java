@@ -16,10 +16,10 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class EventChannelNOT 
-    extends  WaveFormLogicalSubsetter 
+public final class EventChannelNOT
+    extends  WaveFormLogicalSubsetter
     implements EventChannelSubsetter {
-    
+
     /**
      * Creates a new <code>EventChannelNOT</code> instance.
      *
@@ -27,7 +27,7 @@ public class EventChannelNOT
      * @exception ConfigurationException if an error occurs
      */
     public EventChannelNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -40,16 +40,16 @@ public class EventChannelNOT
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations o,  NetworkAccess network,Channel channel,  CookieJar cookies) 
-	throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-	    if (!filter.accept(o, network, channel, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(EventAccessOperations o,  NetworkAccess network,Channel channel,  CookieJar cookies)
+    throws Exception{
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
+        if (!filter.accept(o, network, channel, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// EventChannelAND

@@ -21,10 +21,10 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class OriginNOT 
-    extends EventLogicalSubsetter 
+public final class OriginNOT
+    extends EventLogicalSubsetter
     implements OriginSubsetter {
-    
+
     /**
      * Creates a new <code>OriginNOT</code> instance.
      *
@@ -32,7 +32,7 @@ public class OriginNOT
      * @exception ConfigurationException if an error occurs
      */
     public OriginNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -45,14 +45,14 @@ public class OriginNOT
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
-	    OriginSubsetter filter = (OriginSubsetter)it.next();
-	    if (filter.accept(event, e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    if (it.hasNext()) {
+        OriginSubsetter filter = (OriginSubsetter)it.next();
+        if (filter.accept(event, e, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// OriginNOT

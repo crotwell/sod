@@ -20,10 +20,10 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 
-public class EventAttrXOR 
-    extends EventLogicalSubsetter 
+public final class EventAttrXOR
+    extends EventLogicalSubsetter
     implements EventAttrSubsetter {
-    
+
     /**
      * Creates a new <code>EventAttrXOR</code> instance.
      *
@@ -31,11 +31,11 @@ public class EventAttrXOR
      * @exception ConfigurationException if an error occurs
      */
     public EventAttrXOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
-     * returns true if both of the eventAttr subsetters enclosed in an eventAttrXORSubsetter 
+     * returns true if both of the eventAttr subsetters enclosed in an eventAttrXORSubsetter
      * have the same value. i.e., both of them are true or both of them are false.  The range of
      * eventAttrSubsetters that can be enclosed in an eventAttrXORSubsetter is 2 ... 2
      *
@@ -45,21 +45,9 @@ public class EventAttrXOR
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	EventAttrSubsetter first, second;
-	boolean firstBoo, secondBoo;
-	if (it.hasNext()) {
-	    first = (EventAttrSubsetter)it.next();
-	    firstBoo = first.accept(e, cookies);
-	    if (it.hasNext()) {
-		second = (EventAttrSubsetter)it.next();
-		secondBoo = second.accept(e, cookies);
-		if ((firstBoo && ! secondBoo) || (! firstBoo && secondBoo)) {
-		    return true;
-		}
-	    }
-	}
-	return false;
+        EventAttrSubsetter filterA = (EventAttrSubsetter)filterList.get(0);
+        EventAttrSubsetter filterB = (EventAttrSubsetter)filterList.get(1);
+        return ( filterA.accept(e, cookies) != filterB.accept(e, cookies));
     }
 
 }// EventAttrXOR

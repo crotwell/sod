@@ -10,31 +10,31 @@ import edu.iris.Fissures.*;
 /**
  * stationNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
  *the max value of the sequence is 1.
- *  
+ *
  * sample xml file
  *<body><pre><bold>
  *&lt;stationNOT&gt;
  *               &lt;stationArea&gt;
- *		    &lt;boxArea&gt;
- *			&lt;latitudeRange&gt;
- *				&lt;min&gt;20&lt;/min&gt;
- *				&lt;max&gt;40&lt;/max&gt;
- *			&lt;/latitudeRange&gt;
- *			&lt;longitudeRange&gt;
- *				&lt;min&gt;-100&lt;/min&gt;
- *				&lt;max&gt;-80&lt;/max&gt;
- *			&lt;/longitudeRange&gt;
- *		    &lt;/boxArea&gt;
- *		&lt;/stationArea&gt;
+ *          &lt;boxArea&gt;
+ *          &lt;latitudeRange&gt;
+ *              &lt;min&gt;20&lt;/min&gt;
+ *              &lt;max&gt;40&lt;/max&gt;
+ *          &lt;/latitudeRange&gt;
+ *          &lt;longitudeRange&gt;
+ *              &lt;min&gt;-100&lt;/min&gt;
+ *              &lt;max&gt;-80&lt;/max&gt;
+ *          &lt;/longitudeRange&gt;
+ *          &lt;/boxArea&gt;
+ *      &lt;/stationArea&gt;
  *&lt;/stationNOT&gt;
  * </bold></pre></body>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class StationNOT 
-    extends  NetworkLogicalSubsetter 
+public final class StationNOT
+    extends  NetworkLogicalSubsetter
     implements StationSubsetter {
-    
+
     /**
      * Creates a new <code>StationNOT</code> instance.
      *
@@ -42,7 +42,7 @@ public class StationNOT
      * @exception ConfigurationException if an error occurs
      */
     public StationNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -55,14 +55,14 @@ public class StationNOT
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAccess  network, Station e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
-	    StationSubsetter filter = (StationSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    if (it.hasNext()) {
+        StationSubsetter filter = (StationSubsetter)it.next();
+        if ( filter.accept(network, e, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// StationNOT

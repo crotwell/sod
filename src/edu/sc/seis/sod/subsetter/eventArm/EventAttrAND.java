@@ -28,10 +28,10 @@ import edu.iris.Fissures.*;
  *
  *</pre>
  */
-public class EventAttrAND 
-    extends EventLogicalSubsetter 
+public final class EventAttrAND
+    extends EventLogicalSubsetter
     implements EventAttrSubsetter {
-    
+
     /**
      * Creates a new <code>EventAttrAND</code> instance.
      *
@@ -39,12 +39,12 @@ public class EventAttrAND
      * @exception ConfigurationException if an error occurs
      */
     public EventAttrAND (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
      * returns true if all the eventAttr subsetters enclosed in the eventAttrAND subsetter are true.
-     * and returns false if any one of them is false. The range of eventAttrSubsetters that can be 
+     * and returns false if any one of them is false. The range of eventAttrSubsetters that can be
      * enclosed in an eventAttrANDSubsetter is 0 to UNLIMITED.
      *
      * @param e an <code>EventAttr</code> value
@@ -53,14 +53,14 @@ public class EventAttrAND
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-	    if ( !filter.accept(e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
+        if ( !filter.accept(e, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// EventAttrAND

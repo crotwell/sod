@@ -32,7 +32,7 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NetworkAND
+public final class NetworkAND
     extends  NetworkLogicalSubsetter
     implements NetworkSubsetter {
 

@@ -14,16 +14,16 @@ import edu.iris.Fissures.*;
  *  contains a sequence of RequestSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
  *<pre>
- *	&lt;availableDataXOR&gt;
- *		&lt;nogaps/&gt;
- *		&lt;fullCoverage/&gt;
- *	&lt;/availableDataXOR&gt;
+ *  &lt;availableDataXOR&gt;
+ *      &lt;nogaps/&gt;
+ *      &lt;fullCoverage/&gt;
+ *  &lt;/availableDataXOR&gt;
  *</pre>
  */
-public class RequestSubsetterXOR 
-    extends  WaveFormLogicalSubsetter 
+public final class RequestSubsetterXOR
+    extends  WaveFormLogicalSubsetter
     implements RequestSubsetter {
-    
+
     /**
      * Creates a new <code>RequestSubsetterXOR</code> instance.
      *
@@ -31,7 +31,7 @@ public class RequestSubsetterXOR
      * @exception ConfigurationException if an error occurs
      */
     public RequestSubsetterXOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -45,20 +45,14 @@ public class RequestSubsetterXOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  CookieJar cookies) throws Exception{
-
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    RequestSubsetter filter = (RequestSubsetter)it.next();
-	    if (!filter.accept(event, network, channel, original, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              CookieJar cookies) throws Exception{
+        RequestSubsetter filterA = (RequestSubsetter)filterList.get(0);
+        RequestSubsetter filterB = (RequestSubsetter)filterList.get(1);
+        return ( filterA.accept(event, network, channel, original, cookies) != filterB.accept(event, network, channel, original,  cookies));
     }
 
 }// RequestSubsetterXOR

@@ -14,16 +14,16 @@ import edu.iris.Fissures.*;
  * eventAttrXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
  *<pre>
- *	&lt;availableDataXOR&gt;
- *		&lt;nogaps/&gt;
- *		&lt;fullCoverage/&gt;
- *	&lt;/availableDataXOR&gt;
+ *  &lt;availableDataXOR&gt;
+ *      &lt;nogaps/&gt;
+ *      &lt;fullCoverage/&gt;
+ *  &lt;/availableDataXOR&gt;
  *</pre>
  */
-public class AvailableDataXOR 
-    extends  WaveFormLogicalSubsetter 
+public final class AvailableDataXOR
+    extends  WaveFormLogicalSubsetter
     implements AvailableDataSubsetter {
-    
+
     /**
      * Creates a new <code>AvailableDataXOR</code> instance.
      *
@@ -31,7 +31,7 @@ public class AvailableDataXOR
      * @exception ConfigurationException if an error occurs
      */
     public AvailableDataXOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -46,21 +46,17 @@ public class AvailableDataXOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available, 
-			  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available,
+              CookieJar cookies) throws Exception{
 
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-	    if (!filter.accept(event, network, channel, original, available, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+        AvailableDataSubsetter filterA = (AvailableDataSubsetter)filterList.get(0);
+        AvailableDataSubsetter filterB = (AvailableDataSubsetter)filterList.get(1);
+        return ( filterA.accept(event, network, channel, original, available, cookies) != filterB.accept(event, network, channel, original, available, cookies));
+
     }
 
 }// AvailableDataXOR

@@ -14,17 +14,17 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a negation of availableDataSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
  *<pre>
- *	&lt;availableDataAND&gt;
- *		&lt;nogaps/&gt;
- *	&lt;/availableDataAND&gt;
+ *  &lt;availableDataAND&gt;
+ *      &lt;nogaps/&gt;
+ *  &lt;/availableDataAND&gt;
  *</pre>
  */
 
 
-public class AvailableDataNOT 
-    extends  WaveFormLogicalSubsetter 
+public final class AvailableDataNOT
+    extends  WaveFormLogicalSubsetter
     implements AvailableDataSubsetter {
-    
+
     /**
      * Creates a new <code>AvailableDataNOT</code> instance.
      *
@@ -32,7 +32,7 @@ public class AvailableDataNOT
      * @exception ConfigurationException if an error occurs
      */
     public AvailableDataNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -47,21 +47,21 @@ public class AvailableDataNOT
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available, 
-			  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available,
+              CookieJar cookies) throws Exception{
 
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-	    if (filter.accept(event, network, channel, original, available, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
+        if (filter.accept(event, network, channel, original, available, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// AvailableDataNOT

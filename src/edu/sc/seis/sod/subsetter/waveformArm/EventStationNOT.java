@@ -13,18 +13,18 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a negation of EventStationSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
  *<pre>
-  *	&lt;eventStationAND&gt;
- *		&lt;phaseExists&gt;
- * 			&lt;modelName&gt;prem&lt;/modelName&gt;
- *			&lt;phaseName&gt;ttp&lt;/phaseName&gt;
- *		&lt;/phaseExists&gt;
- *	&lt;/eventStationAND&gt;
+  * &lt;eventStationAND&gt;
+ *      &lt;phaseExists&gt;
+ *          &lt;modelName&gt;prem&lt;/modelName&gt;
+ *          &lt;phaseName&gt;ttp&lt;/phaseName&gt;
+ *      &lt;/phaseExists&gt;
+ *  &lt;/eventStationAND&gt;
  *</pre>
  */
-public class EventStationNOT 
-    extends  WaveFormLogicalSubsetter 
+public final class EventStationNOT
+    extends  WaveFormLogicalSubsetter
     implements EventStationSubsetter {
-    
+
     /**
      * Creates a new <code>EventStationNOT</code> instance.
      *
@@ -32,7 +32,7 @@ public class EventStationNOT
      * @exception ConfigurationException if an error occurs
      */
     public EventStationNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -45,16 +45,16 @@ public class EventStationNOT
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies) 
-	throws Exception{
-	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
-	    EventStationSubsetter filter = (EventStationSubsetter)it.next();
-	    if ( filter.accept(o, network, station, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies)
+    throws Exception{
+    Iterator it = filterList.iterator();
+    if (it.hasNext()) {
+        EventStationSubsetter filter = (EventStationSubsetter)it.next();
+        if ( filter.accept(o, network, station, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// EventStationNOT

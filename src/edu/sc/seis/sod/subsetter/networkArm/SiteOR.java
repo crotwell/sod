@@ -10,7 +10,7 @@ import edu.iris.Fissures.*;
 /**
  * siteOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  *the max value of the sequence is unLimited.
- *  
+ *
  * sample xml file
  *<body><pre><bold>
  *&lt;siteOR&gt;
@@ -19,10 +19,10 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class SiteOR 
-    extends  NetworkLogicalSubsetter 
+public final class SiteOR
+    extends  NetworkLogicalSubsetter
     implements SiteSubsetter {
-    
+
     /**
      * Creates a new <code>SiteOR</code> instance.
      *
@@ -30,7 +30,7 @@ public class SiteOR
      * @exception ConfigurationException if an error occurs
      */
     public SiteOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -42,14 +42,14 @@ public class SiteOR
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
-	Iterator it = filterList.iterator();
-	while(it.hasNext()) {
-	    SiteSubsetter filter = (SiteSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
-		return true;
-	    }
-	}
-	return false;
+    Iterator it = filterList.iterator();
+    while(it.hasNext()) {
+        SiteSubsetter filter = (SiteSubsetter)it.next();
+        if ( filter.accept(network, e, cookies)) {
+        return true;
+        }
+    }
+    return false;
     }
 
 }// SiteOR

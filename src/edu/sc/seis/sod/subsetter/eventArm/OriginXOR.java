@@ -12,22 +12,22 @@ import edu.iris.Fissures.*;
  * the max value of the sequence is 2.
  *<pre>
  *      &lt;originXOR&gt;
- *		&lt;eventArea&gt;
- *		   &lt;boxArea&gt;
- *			&lt;latitudeRange&gt;
- *				&lt;min&gt;32&lt;/min&gt;
- *				&lt;max&gt;35.5&lt;/max&gt;
- *			&lt;/latitudeRange&gt;
- *			&lt;longitudeRange&gt;
- *				&lt;min&gt;-83.5&lt;/min&gt;
- *				&lt;max&gt;-78.5&lt;/max&gt;
- *			&lt;/longitudeRange&gt;
- *	           &lt;/boxArea&gt;
- *		&lt;/eventArea&gt;
- *		&lt;magnitudeRange&gt;
- *			&lt;magType&gt;mb&lt;/magType&gt;
- *			&lt;min&gt;3.5&lt;/min&gt;
- *		&lt;/magnitudeRange&gt;
+ *      &lt;eventArea&gt;
+ *         &lt;boxArea&gt;
+ *          &lt;latitudeRange&gt;
+ *              &lt;min&gt;32&lt;/min&gt;
+ *              &lt;max&gt;35.5&lt;/max&gt;
+ *          &lt;/latitudeRange&gt;
+ *          &lt;longitudeRange&gt;
+ *              &lt;min&gt;-83.5&lt;/min&gt;
+ *              &lt;max&gt;-78.5&lt;/max&gt;
+ *          &lt;/longitudeRange&gt;
+ *             &lt;/boxArea&gt;
+ *      &lt;/eventArea&gt;
+ *      &lt;magnitudeRange&gt;
+ *          &lt;magType&gt;mb&lt;/magType&gt;
+ *          &lt;min&gt;3.5&lt;/min&gt;
+ *      &lt;/magnitudeRange&gt;
  *      &lt;/originNOT&gt;
  *</pre>
  */
@@ -42,10 +42,10 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public class OriginXOR
-    extends EventLogicalSubsetter 
+public final class OriginXOR
+    extends EventLogicalSubsetter
     implements OriginSubsetter {
-    
+
     /**
      * Creates a new <code>OriginXOR</code> instance.
      *
@@ -53,7 +53,7 @@ public class OriginXOR
      * @exception ConfigurationException if an error occurs
      */
     public OriginXOR (Element config) throws ConfigurationException {
-	super(config);
+        super(config);
     }
 
     /**
@@ -66,14 +66,9 @@ public class OriginXOR
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    OriginSubsetter filter = (OriginSubsetter)it.next();
-	    if ( !filter.accept(event, e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+        OriginSubsetter filterA = (OriginSubsetter)filterList.get(0);
+        OriginSubsetter filterB = (OriginSubsetter)filterList.get(1);
+        return ( filterA.accept(event, e, cookies) != filterB.accept(event, e, cookies));
     }
 
 }// OriginXOR

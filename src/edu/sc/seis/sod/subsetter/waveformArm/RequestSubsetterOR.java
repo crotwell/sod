@@ -12,21 +12,21 @@ import edu.iris.Fissures.*;
 
 
 /**
- * This subsetter is used to specify a sequence of RequestSubsetters. This subsetter is accepted when even one 
+ * This subsetter is used to specify a sequence of RequestSubsetters. This subsetter is accepted when even one
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the availableDataOR is not accepted.
  *<pre>
- *	&lt;availableDataOR&gt;
- *		&lt;nogaps/&gt;
- *		&lt;fullCoverage/&gt;
- *	&lt;/availableDataOR&gt;
+ *  &lt;availableDataOR&gt;
+ *      &lt;nogaps/&gt;
+ *      &lt;fullCoverage/&gt;
+ *  &lt;/availableDataOR&gt;
  *</pre>
  */
 
-public class RequestSubsetterOR 
-    extends  WaveFormLogicalSubsetter 
+public final class RequestSubsetterOR
+    extends  WaveFormLogicalSubsetter
     implements RequestSubsetter {
-    
+
     /**
      * Creates a new <code>RequestSubsetterOR</code> instance.
      *
@@ -34,7 +34,7 @@ public class RequestSubsetterOR
      * @exception ConfigurationException if an error occurs
      */
     public RequestSubsetterOR (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -48,20 +48,20 @@ public class RequestSubsetterOR
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  CookieJar cookies) throws Exception{
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              CookieJar cookies) throws Exception{
 
-	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    RequestSubsetter filter = (RequestSubsetter)it.next();
-	    if (filter.accept(event, network, channel, original, cookies)) {
-		return true;
-	    }
-	}
-	return false;
+    Iterator it = filterList.iterator();
+    while (it.hasNext()) {
+        RequestSubsetter filter = (RequestSubsetter)it.next();
+        if (filter.accept(event, network, channel, original, cookies)) {
+        return true;
+        }
+    }
+    return false;
     }
 
 }// RequestSubsetterOR

@@ -29,10 +29,10 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class ChannelNOT 
-    extends  NetworkLogicalSubsetter 
+public final class ChannelNOT
+    extends  NetworkLogicalSubsetter
     implements ChannelSubsetter {
-    
+
     /**
      * Creates a new <code>ChannelNOT</code> instance.
      *
@@ -40,7 +40,7 @@ public class ChannelNOT
      * @exception ConfigurationException if an error occurs
      */
     public ChannelNOT (Element config) throws ConfigurationException {
-	super(config);
+    super(config);
     }
 
     /**
@@ -53,14 +53,14 @@ public class ChannelNOT
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
-	Iterator it = filterList.iterator();
-	if (it.hasNext()) {
-	    ChannelSubsetter filter = (ChannelSubsetter)it.next();
-	    if ( filter.accept(network, e, cookies)) {
-		return false;
-	    }
-	}
-	return true;
+    Iterator it = filterList.iterator();
+    if (it.hasNext()) {
+        ChannelSubsetter filter = (ChannelSubsetter)it.next();
+        if ( filter.accept(network, e, cookies)) {
+        return false;
+        }
+    }
+    return true;
     }
 
 }// ChannelNOT
