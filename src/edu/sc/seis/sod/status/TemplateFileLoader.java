@@ -18,16 +18,26 @@ public class TemplateFileLoader{
         if(attr == null || attr.getValue().equals("")) {
             throw new IllegalArgumentException("Expected the passed in element " + el.getNodeName() + " to have a xlink:href attribute, but none found");
         }
-        URL loc = null;
-        if(attr.getValue().startsWith("jar:")) {
-            loc = el.getClass().getClassLoader().getResource(attr.getValue().substring(4));
-        } else {
-            loc = new URL(attr.getValue());
-        }
-        Document doc = Start.createDoc(new InputSource(loc.openStream()));
-        return (Element)doc.getFirstChild();
+        return getTemplate(el.getClass().getClassLoader(), attr.getValue());
     }
-
+    
+    public static Element getTemplate(ClassLoader cl, String loc) throws MalformedURLException, SAXException, ParserConfigurationException, IOException{
+        URL url = getUrl(cl, loc);
+        Document doc = Start.createDoc(new InputSource(url.openStream()));
+        return (Element)doc.getFirstChild();
+        
+    }
+    
+    public static URL getUrl(ClassLoader cl, String loc) throws MalformedURLException{
+        URL url = null;
+        if(loc.startsWith("jar:")) {
+            url =cl.getResource(loc.substring(4));
+        } else {
+            url = new URL(loc);
+        }
+        return url;
+    }
+    
     private static String getError(Element el){
         return "Trouble loading template file from element " + el.getNodeName();
     }
