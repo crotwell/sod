@@ -5,6 +5,7 @@
         <ref name="seismogramSubsetter"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
+    <include href="../base/include/quantity.rng"/>
     <define name="seismogramSubsetter">
         <choice>
             <ref name="longShortSignalToNoise"/>
