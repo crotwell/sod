@@ -10,21 +10,16 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.sod.EventStatus;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.RunStatus;
 
 public class StatusPrintln implements EventStatus{
     public StatusPrintln(Element config){}
     
-    public void fail(EventAccessOperations event, String reason) {
-        System.out.println(DisplayUtils.getEventInfo(event) + " failed because " + reason);
+    public void setArmStatus(String status) {
+        System.out.println("Event Arm: " + status);
     }
     
-    public void begin(EventAccessOperations event) {
-        System.out.print("began processing" + DisplayUtils.getEventInfo(event));
+    public void change(EventAccessOperations event, RunStatus status) {
+        System.out.println(status + ": " + DisplayUtils.getEventInfo(event));
     }
-    
-    public void pass(EventAccessOperations event) {
-        System.out.println(DisplayUtils.getEventInfo(event) + " passed through the event layer");
-    }
-    
-    
 }
