@@ -144,6 +144,14 @@ public class EditorUtil {
         return b;
     }
 
+    public static JComponent getBoxWithLabel(Element el){
+        Box b = Box.createHorizontalBox();
+        b.add(Box.createHorizontalStrut(10));
+        b.add(new JLabel(SimpleGUIEditor.getDisplayName(el.getTagName())));
+        b.add(Box.createHorizontalGlue());
+        return b;
+    }
+
     private static Logger logger = Logger.getLogger(EditorUtil.class);
 }
 
