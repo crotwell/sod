@@ -35,23 +35,7 @@ public class DistanceRangeSubsetter implements SodElement{
      * @exception ConfigurationException if an error occurs
      */
     public void processConfig(Element config) throws ConfigurationException{
-
-    NodeList childNodes = config.getChildNodes();
-    Element unitRangeElement = null;
-    Node node;
-    for(int counter = 0; counter < childNodes.getLength(); counter++) {
-
-        node = childNodes.item(counter);
-        if(node instanceof Element) {
-
-        String tagName = ((Element)node).getTagName();
-        if(tagName.equals("distanceRange")) unitRangeElement = (Element)node;
-
-        }
-
-    }
-
-    unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
+    unitRange = SodUtil.loadUnitRange(config);
 
     }
 
