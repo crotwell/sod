@@ -54,13 +54,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                                      "channel.site_id = site.site_id AND " +
                                                      "site.sta_id = station.sta_id AND " +
                                                      "eventid = ? AND " +
-                                                     "status = ? AND ");
+                                                     "status = ?");
         stationsNotOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() + " FROM channel, site, eventchannelstatus, station " +
                                                         "WHERE channelid = chan_id AND " +
                                                         "channel.site_id = site.site_id AND " +
                                                         "site.sta_id = station.sta_id AND " +
                                                         "eventid = ? AND " +
-                                                        "status != ? AND ");
+                                                        "status != ? ");
         channelsForPair = conn.prepareStatement("SELECT " + JDBCChannel.getNeededForChannel() + " FROM channel, eventchannelstatus " +
                                                     "WHERE pairid = ? AND " +
                                                     "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
