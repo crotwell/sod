@@ -21,34 +21,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- * sample xml
- *<pre>
- *&lt;localSeismogramArm&gt;
- *  &lt;phaseRequest&gt;
- *      &lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
- *      &lt;beginOffset&gt;
- *          &lt;unit&gt;SECOND&lt;/unit&gt;
- *          &lt;value&gt;-120&lt;/value&gt;
- *      &lt;/beginOffset&gt;
- *      &lt;endPhase&gt;tts&lt;/endPhase&gt;
- *      &lt;endOffset&gt;
- *          &lt;unit&gt;SECOND&lt;/unit&gt;
- *          &lt;value&gt;600&lt;/value&gt;
- *      &lt;/endOffset&gt;
- *  &lt;/phaseRequest&gt;
- *
- *  &lt;availableDataAND&gt;
- *      &lt;nogaps/&gt;
- *      &lt;fullCoverage/&gt;
- *  &lt;/availableDataAND&gt;
- *
- *  &lt;sacFileProcessor&gt;
- *      &lt;dataDirectory&gt;SceppEvents&lt;/dataDirectory&gt;
- *  &lt;/sacFileProcessor&gt;
- *&lt;/localSeismogramArm&gt;
- *</pre>
- */
 public class LocalSeismogramArm implements Subsetter{
     public LocalSeismogramArm (Element config) throws ConfigurationException{
         processConfig(config);
@@ -209,7 +181,7 @@ public class LocalSeismogramArm implements Subsetter{
             processAvailableDataSubsetter(ecp,dataCenter,infilters,outfilters);
         } else {
             logger.info("FAIL request subsetter");
-            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.RETRY));
         }
     }
 
@@ -337,7 +309,7 @@ public class LocalSeismogramArm implements Subsetter{
         } else {
             logger.info("FAIL available data");
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.REJECT));
+                                  Standing.RETRY));
         }
     }
 
@@ -403,4 +375,3 @@ public class LocalSeismogramArm implements Subsetter{
 
     private static final Logger logger =Logger.getLogger(LocalSeismogramArm.class);
 }// LocalSeismogramArm
-
