@@ -24,8 +24,8 @@
 <table>
 <tr id="title">
 <td>Id</td>
-<td>Begin Time</td>
-<td>End Time</td>
+<td>Begin Time (GMT)</td>
+<td>End Time (GMT)</td>
 <td>Status</td>
 </tr>
 <channels>

@@ -21,7 +21,7 @@ Events (sorted by magnitude)
 <table>
 <tr id="title">
 <td><a href="location.html">Region</a></td>
-<td><a href="time.html">Time</a></td>
+<td><a href="time.html">Time (GMT)</a></td>
 <td id="selected"><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
 </tr>
