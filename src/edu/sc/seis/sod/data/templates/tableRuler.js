@@ -8,7 +8,7 @@ function tableruler() {
     if (document.getElementById && document.createTextNode) {
         var tables=document.getElementsByTagName('table');
         for (var i=0;i<tables.length;i++) {
-            if(tables[i].className=='ruler') {
+            if(tables[i].className.indexOf('ruler') != -1) {
                 var trs=tables[i].getElementsByTagName('tr');
                 for(var j=0;j<trs.length;j++){
                    if(trs[j].className!='title'){
