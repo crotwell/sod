@@ -6849,21 +6849,31 @@
     <define name="trueOrFalse">
         <choice>
             <value>TRUE</value>
-            <value>True</value>
-            <value>true</value>
-            <value>YES</value>
-            <value>yes</value>
-            <value>Yes</value>
             <value>FALSE</value>
-            <value>False</value>
-            <value>false</value>
-            <value>NO</value>
-            <value>no</value>
-            <value>No</value>
         </choice>
     </define>
     <define name="availableData">
         <choice>
+            <element name="postEventWait">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>HOUR</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
+            </element>
             <element name="noGaps">
                 <empty/>
             </element>
@@ -6971,6 +6981,26 @@
     </define>
     <define name="availableData2">
         <choice>
+            <element name="postEventWait">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>HOUR</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
+            </element>
             <element name="noGaps">
                 <empty/>
             </element>
@@ -7078,6 +7108,26 @@
     </define>
     <define name="availableData3">
         <choice>
+            <element name="postEventWait">
+                <interleave>
+                    <element name="unit">
+                        <choice>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>HOUR</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="float"/>
+                    </element>
+                </interleave>
+            </element>
             <element name="noGaps">
                 <empty/>
             </element>
