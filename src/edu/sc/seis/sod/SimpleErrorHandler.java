@@ -64,5 +64,5 @@ public class SimpleErrorHandler implements ErrorHandler {
 
     } // getLocationString(SAXParseException):String
 
-    static Category logger = Category.getInstance(SimpleErrorHandler.class.getName());
+    private static Category logger = Category.getInstance(SimpleErrorHandler.class.getName());
  }
