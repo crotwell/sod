@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="contributor">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
+                    <description>Checks the group that contributed an event
+                        against the string specified here. If they match, the
+                        event passes.</description>
+                    <summary>Matches events with a given contributor</summary>
                     <example>
                         <contributor>NEIC</contributor>
                     </example>

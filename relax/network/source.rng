@@ -9,11 +9,13 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Finds networks. </summary>
-                    <description> A Fissures/DHI NetworkDC service is located via the name and dns
-                        tags. The NetworkFinder is aquired from the NetworkDC, and a query is sent
-                        with the given arguments. The networks returned are then sent thrrough the
-                        NetworkArm for processing. An optional refresh interval can be given if sod
-                        should periodically check for new channels. </description>
+                    <description> A Fissures/DHI NetworkDC service is located
+                        via the name and dns tags. The NetworkFinder is aquired
+                        from the NetworkDC, and a query is sent with the given
+                        arguments. The networks returned are then sent thrrough
+                        the NetworkArm for processing. An optional refresh
+                        interval can be given if sod should periodically check
+                        for new channels. </description>
                     <example>
                         <networkFinder>
                             <name>IRIS_NetworkDC</name>
@@ -36,11 +38,14 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Name of a network server</summary>
-                    <description>The server's name is used in combination with a dns value to find a
-                        network DC. The name "IRIS_NetworkDC" must be used in combination with the
-                        "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC" must be used in
-                        conjunction with the "edu/berkley/geo/quake" dns value. The name
-                        "SCEPPNetworkDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
+                    <description>The server's name is used in combination with a
+                        dns value to find a network DC. The name
+                        "IRIS_NetworkDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC"
+                        must be used in conjunction with the
+                        "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPNetworkDC" must be used in conjunction with a DNS
+                        value "edu/sc/seis".</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
@@ -56,11 +61,14 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>DNS location of a network server</summary>
-                    <description>The server's dns is used in combination with a name value to find a
-                        server from an network DC. The name "IRIS_NetworkDC" must be used in
-                        combination with the "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC"
-                        must be used in conjunction with the "edu/berkley/geo/quake" dns value. The
-                        name "SCEPPNetworkDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                    <description>The server's dns is used in combination with a
+                        name value to find a server from an network DC. The name
+                        "IRIS_NetworkDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC"
+                        must be used in conjunction with the
+                        "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPNetworkDC" must be used in conjunction with a DNS
+                        value "edu/sc/seis"</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>

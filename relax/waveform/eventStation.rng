@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="eventStation"/>
     </start>
@@ -18,7 +19,7 @@
             <ref name="NOT"/>
             <ref name="midPoint"/>
             <ref name="phaseExists"/>
-<!--
+            <!--
 <ref name="phaseInteraction"/>
 -->
             <ref name="PASS"/>
@@ -28,9 +29,11 @@
         <element name="distanceRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Subsetter based on the distance from the event to station. </summary>
-                    <description> This accepts event station pairs where the distance between the
-preferred origin to the station is within the range given. </description>
+                    <summary> Subsetter based on the distance from the event to
+                        station. </summary>
+                    <description> This accepts event station pairs where the
+                        distance between the preferred origin to the station is
+                        within the range given. </description>
                     <example>
                         <distanceRange>
                             <unit>DEGREE</unit>
@@ -47,11 +50,12 @@ preferred origin to the station is within the range given. </description>
         <element name="embeddedOriginSubsetter">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows the embeedding of an origin subsetter into a
-EventStation location. </summary>
-                    <description> Allows the embeedding of an origin subsetter into a
-EventStation location. This is mainly used with an AND or OR
-where one condition only depends on the origin. </description>
+                    <summary> Allows the embeedding of an origin subsetter into
+                        a EventStation location. </summary>
+                    <description> Allows the embeedding of an origin subsetter
+                        into a EventStation location. This is mainly used with
+                        an AND or OR where one condition only depends on the
+                        origin. </description>
                     <example>
                         <embeddedOriginSubsetter>
                             <magnitudeRange>
@@ -68,11 +72,12 @@ where one condition only depends on the origin. </description>
         <element name="embeddedStationSubsetter">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows the embeedding of an station subsetter into a
-EventStation location. </summary>
-                    <description> Allows the embeedding of an station subsetter into a
-EventStation location. This is mainly used with an AND or OR
-where one condition only depends on the station. </description>
+                    <summary> Allows the embeedding of an station subsetter into
+                        a EventStation location. </summary>
+                    <description> Allows the embeedding of an station subsetter
+                        into a EventStation location. This is mainly used with
+                        an AND or OR where one condition only depends on the
+                        station. </description>
                     <example>
                         <embeddedStationSubsetter>
                             <stationDepthRange>
@@ -93,10 +98,11 @@ where one condition only depends on the station. </description>
         <element name="azimuthRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Subsetter based on the azimuth from the event to station. </summary>
-                    <description> This accepts event station pairs where the azimuth
-from the preferred origin to the station is within the range
-given in degrees. </description>
+                    <summary> Subsetter based on the azimuth from the event to
+                        station. </summary>
+                    <description> This accepts event station pairs where the
+                        azimuth from the preferred origin to the station is
+                        within the range given in degrees. </description>
                     <example>
                         <azimuthRange>
                             <unit>DEGREE</unit>
@@ -113,11 +119,11 @@ given in degrees. </description>
         <element name="backAzimuthRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Subsetter based on the back azimuth from the station to
-the event. </summary>
-                    <description> This accepts event station pairs where the azimuth
-from the station to the preferred origin is within the range
-given in degrees. </description>
+                    <summary> Subsetter based on the back azimuth from the
+                        station to the event. </summary>
+                    <description> This accepts event station pairs where the
+                        azimuth from the station to the preferred origin is
+                        within the range given in degrees. </description>
                     <example>
                         <backAzimuthRange>
                             <unit>DEGREE</unit>
@@ -134,13 +140,14 @@ given in degrees. </description>
         <element name="linearDistanceMagnitudeRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Accepts event stations pairs above a linear threshold of
-magnitude with distance. </summary>
-                    <description> If the magnitude of the event is greater than or equal
-to the linear interpolation at the event station distance,
-then the event station pair is accepted. To reverse and take
-events smaller than the linear interpolation, enclose this
-in an EventStationNOT. </description>
+                    <summary>Accepts event stations pairs above a linear
+                        threshold of magnitude with distance</summary>
+                    <description> If the magnitude of the event is greater than
+                        or equal to the linear interpolation at the event
+                        station distance, then the event station pair is
+                        accepted. To reverse and take events smaller than the
+                        linear interpolation, enclose this in an
+                        EventStationNOT. </description>
                     <example>
                         <linearDistanceMagnitudeRange>
                             <magnitudeRange>
@@ -164,9 +171,9 @@ in an EventStationNOT. </description>
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between EventStation subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all
-included subsetters. The subsetters after the first false
-outputed are not evaluated. </description>
+                    <description> The output is the logical AND of the outputs
+                        of all included subsetters. The subsetters after the
+                        first false outputed are not evaluated. </description>
                     <example>
                         <eventStationAND>
                             <distanceRange>
@@ -191,9 +198,9 @@ outputed are not evaluated. </description>
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between EventStation subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all
-included subsetters. The subsetters after the first true
-output are not evaluated. </description>
+                    <description> The output is the logical OR of the outputs of
+                        all included subsetters. The subsetters after the first
+                        true output are not evaluated. </description>
                     <example>
                         <eventStationOR>
                             <distanceRange>
@@ -218,8 +225,8 @@ output are not evaluated. </description>
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between EventStation subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of all
-included subsetters. </description>
+                    <description> The output is the logical XOR of the outputs
+                        of all included subsetters. </description>
                     <example>
                         <eventStationXOR>
                             <distanceRange>
@@ -243,8 +250,8 @@ included subsetters. </description>
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an EventStation subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the
-included subsetter. </description>
+                    <description> The output is the logical NOT of the output of
+                        the included subsetter. </description>
                     <example>
                         <eventStationNOT>
                             <distanceRange>
@@ -262,9 +269,10 @@ included subsetter. </description>
         <element name="phaseExists">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Accepts a event-station pair if the given phase exists. </summary>
-                    <description> Accepts a event-station pair if the given phase
-exists. </description>
+                    <summary> Accepts a event-station pair if the given phase
+                        exists. </summary>
+                    <description> Accepts a event-station pair if the given
+                        phase exists. </description>
                     <example>
                         <phaseExists>
                             <modelName>prem</modelName>
@@ -287,9 +295,11 @@ exists. </description>
         <element name="midPoint">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Accepts a event-station pair if the midPoint is within the area. </summary>
-                    <description> Accepts a event-station pair if the midPoint is within the given area.
-Areas can be any valid area, including BoxArea, PointDistanceArea and GlobalArea.</description>
+                    <summary> Accepts a event-station pair if the midPoint is
+                        within the area. </summary>
+                    <description> Accepts a event-station pair if the midPoint
+                        is within the given area. Areas can be any valid area,
+                        including BoxArea, PointDistanceArea and GlobalArea.</description>
                     <example>
                         <midPoint>
                             <boxArea>
@@ -309,7 +319,7 @@ Areas can be any valid area, including BoxArea, PointDistanceArea and GlobalArea
             <externalRef href="../base/externalRef/area.rng"/>
         </element>
     </define>
-<!--
+    <!--
 Temprarily remove phaseInteraction from the processors as it is both
 complicated and broken at present. It needs both recoding and a good
 test suite
@@ -386,7 +396,8 @@ test suite
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Always returns true. </summary>
-                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <description> Simple subsetter that always returns true,
+                        useful for testing. </description>
                     <example>
                         <passEventStation/>
                     </example>
