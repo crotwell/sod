@@ -192,8 +192,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                                                                  stations[stationcounter].getDbId(),
                                                                  0,//successfulChannels.length,
                                                                  new MicroSecondDate());
-                            logger.debug("After inserting the site INFO");
-			   
                             if(successfulChannels.length == 0) {
                                 updateSiteCount(eventid, sites[sitecounter].getDbId(), eventAccess);
                             }

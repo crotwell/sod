@@ -118,9 +118,6 @@ public class LocalSeismogramArm implements Subsetter{
 
 	MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
 
-	logger.info("channelbeginTime is "+chanBegin);
-	logger.info("channelendTime is "+chanEnd);
-						 
     // don't bother with channel if effective time does not
     // overlap event time
     EventEffectiveTimeOverlap eventOverlap = 
@@ -212,16 +209,6 @@ public class LocalSeismogramArm implements Subsetter{
 							  null);
 	}
  
-	logger.debug("BEFORE getting seismograms "+infilters.length);
-	for (int i=0; i<infilters.length; i++) {
-	    logger.debug("Getting seismograms "
-			 +ChannelIdUtil.toString(infilters[i].channel_id)
-			 +" from "
-			 +infilters[i].start_time.date_time
-			 +" to "
-			 +infilters[i].end_time.date_time);
-	} // end of for (int i=0; i<outFilters.length; i++)
-
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
@@ -320,6 +307,16 @@ public class LocalSeismogramArm implements Subsetter{
 				       channelDbObject,
 				       Status.PROCESSING,
 				       "availableDataSubsetterCompleted");
+
+        logger.debug("BEFORE getting seismograms "+infilters.length);
+        for (int i=0; i<infilters.length; i++) {
+            logger.debug("Getting seismograms "
+                         +ChannelIdUtil.toString(infilters[i].channel_id)
+                         +" from "
+                         +infilters[i].start_time.date_time
+                         +" to "
+                         +infilters[i].end_time.date_time);
+        } // end of for (int i=0; i<outFilters.length; i++)
 	    logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 	    MicroSecondDate before = new MicroSecondDate();
@@ -328,15 +325,13 @@ public class LocalSeismogramArm implements Subsetter{
 		localSeismograms = dataCenter.retrieve_seismograms(infilters);
 		//localSeismograms = new LocalSeismogram[0];
 	    } else {
-		logger.debug("Failed, available data returned no requestFilters ");
+		logger.info("Failed, available data returned no requestFilters ");
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
 	    
 	    
 	    MicroSecondDate after = new MicroSecondDate();
-	    logger.debug("After getting seismograms "+after.subtract(before));
-	    logger.debug("Using infilters, fix this when DMC fixes server");
-	    
+	    logger.info("After getting seismograms, time taken="+after.subtract(before));
 
 	    for (int i=0; i<localSeismograms.length; i++) {
 		if (localSeismograms[i] == null) {
@@ -349,7 +344,7 @@ public class LocalSeismogramArm implements Subsetter{
 		}
 		if ( ! ChannelIdUtil.areEqual(localSeismograms[i].channel_id, channel.get_id())) {
 		    // must be server error
-		    logger.debug("Channel id in returned seismogram doesn not match channelid in request. req="
+		    logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
 				 +ChannelIdUtil.toString(channel.get_id())
 				 +" seis="
 				 +ChannelIdUtil.toString(localSeismograms[i].channel_id));
@@ -388,8 +383,6 @@ public class LocalSeismogramArm implements Subsetter{
 						 WaveFormArm waveformArm) throws Exception { 
 	
 
-	logger.debug("Using infilters, fix this when DMC fixes server");
-	    
 	boolean b;
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
