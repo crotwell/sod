@@ -346,6 +346,11 @@
                             </oneOrMore>
                         </element>
                         <element name="responseWriter">
+                            <optional>
+                                <element name="type">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
                             <element name="directory">
                                 <data type="string"/>
                             </element>
