@@ -139,38 +139,22 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("catalog", new CatalogEditor());
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
-        BooleanEditor bool = new BooleanEditor(this);
-        editors.put("siteOR", bool);
-        editors.put("channelOR", bool);
-        editors.put("stationOR", bool);
-        editors.put("originOR", bool);
-        editors.put("siteAND", bool);
-        editors.put("channelAND", bool);
-        editors.put("stationAND", bool);
-        editors.put("originAND", bool);
-        editors.put("siteNOT", bool);
-        editors.put("channelNOT", bool);
-        editors.put("stationNOT", bool);
-        editors.put("originNOT", bool);
-        editors.put("eventStationAND", bool);
-        editors.put("eventStationOR", bool);
-        editors.put("eventStationNOT", bool);
-        editors.put("eventChannelAND", bool);
-        editors.put("eventChannelOR", bool);
-        editors.put("eventChannelNOT", bool);
-        editors.put("availableDataNOT", bool);
-        editors.put("availableDataAND", bool);
-        editors.put("availableDataOR", bool);
-        editors.put("localSeismogramNOT", bool);
-        editors.put("localSeismogramAND", bool);
-        editors.put("localSeismogramOR", bool);
         editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new  UnitRangeEditor(ANGLE_UNITS, -90, 90, 5, false));
         editors.put("longitudeRange", new UnitRangeEditor(ANGLE_UNITS, -180, 180, 5, false));
         editors.put("azimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("backAzimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
-        String[] switchTypes = {"origin", "channel", "station", "site", "network"};
+
+        BooleanEditor bool = new BooleanEditor(this);
+        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "localSeismogram"};
+        String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
+        for (int i = 0; i < switchTypes.length; i++) {
+            for (int j = 0; j < logicals.length; j++) {
+                editors.put(switchTypes[i]+logicals[j], bool);
+            }
+        }
+
         for (int i = 0; i < switchTypes.length; i++) {
             Switcher originSwitcher = new Switcher(switchTypes[i], this);
             List subTypes = originSwitcher.getSubTypes();
