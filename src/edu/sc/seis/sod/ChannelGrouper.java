@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 
 public class ChannelGrouper {
 	public ChannelGrouper() {
-		this(" ");
+		this(null);
 	}
 	public ChannelGrouper(String configFileLoc) {
 		defaultRules = loadRules(defaultConfigFileLoc);
