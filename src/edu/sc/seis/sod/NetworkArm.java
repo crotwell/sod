@@ -183,30 +183,31 @@ public class NetworkArm {
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
         NetworkDCOperations netDC = finder.getNetworkDC();
+        NetworkAccess[] allNets;
         synchronized(netDC){
             logger.debug("before netDC.a_finder().retrieve_all()");
-            NetworkAccess[] allNets = netDC.a_finder().retrieve_all();
-            logger.debug("found " + allNets.length + " network access objects from the network DC finder");
-            for(int i = 0; i < allNets.length; i++) {
-                try {
-                    allNets[i] = new SynchronizedDCNetworkAccess(new BulletproofNetworkAccess(allNets[i], netDC,
-                                                                                              allNets[i].get_attributes().get_id()), netDC);
-                    if(attrSubsetter.accept(allNets[i].get_attributes())){
-                        int dbid;
-                        synchronized(netTable){
-                            dbid = netTable.put(allNets[i].get_attributes());
-                        }
-                        networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
-                        change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
-                                                      Standing.SUCCESS));
-                    }else{
-                        change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
-                                                      Standing.REJECT));
+            allNets = netDC.a_finder().retrieve_all();
+        }
+        logger.debug("found " + allNets.length + " network access objects from the network DC finder");
+        for(int i = 0; i < allNets.length; i++) {
+            try {
+                allNets[i] = new SynchronizedDCNetworkAccess(new BulletproofNetworkAccess(allNets[i], netDC,
+                                                                                          allNets[i].get_attributes().get_id()), netDC);
+                if(attrSubsetter.accept(allNets[i].get_attributes())){
+                    int dbid;
+                    synchronized(netTable){
+                        dbid = netTable.put(allNets[i].get_attributes());
                     }
-
-                } catch(Throwable th) {
-                    GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
+                    networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
+                    change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                  Standing.SUCCESS));
+                }else{
+                    change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                  Standing.REJECT));
                 }
+
+            } catch(Throwable th) {
+                GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
             }
         }
         //Set the time of the last check to now
