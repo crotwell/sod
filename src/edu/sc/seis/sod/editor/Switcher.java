@@ -6,16 +6,20 @@
 
 package edu.sc.seis.sod.editor;
 
-import javax.swing.*;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Iterator;
+import java.util.List;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import org.w3c.dom.Element;
 
 public class Switcher extends TagChooser{
     public Switcher(String ssType, SodGUIEditor editor){
         super(ssType, editor);
+    }
+
+    public Switcher(List ssTypes, SodGUIEditor editor){
+        super(ssTypes, editor);
     }
 
     public JComponent getGUI(Element element) throws Exception {
