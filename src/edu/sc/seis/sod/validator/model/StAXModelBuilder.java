@@ -200,12 +200,12 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         reader.next();
                         StringBuffer buf = new StringBuffer();
                         int prevEventType = -1;
-                        while(reader.getEventType() != XMLStreamConstants.END_ELEMENT
+                        while(reader.getEventType() != END_ELEMENT
                                 || !reader.getLocalName().equals("example")) {
                             int curEventType = reader.getEventType();
                             //this if-else block takes care of empty tags
-                            if(prevEventType == XMLStreamConstants.START_ELEMENT
-                                    && curEventType == XMLStreamConstants.END_ELEMENT) {
+                            if(prevEventType == START_ELEMENT
+                                    && curEventType == END_ELEMENT) {
                                 buf.setCharAt(buf.length() - 1, ' ');
                                 buf.append("/>");
                             } else {
