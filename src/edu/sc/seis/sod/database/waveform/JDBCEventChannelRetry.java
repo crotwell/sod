@@ -55,7 +55,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
     public boolean serverFailureRetriesRemain() throws SQLException {
         selectRemainingCorbaFailures.setTimestamp(1, ClockUtil.future().getTimestamp());
         for (int i = 0; i < SERVER_FAIL_STATUS.length; i++) {
-            selectRemainingCorbaFailures.setInt(i + 1, SERVER_FAIL_STATUS[i].getAsShort());
+            selectRemainingCorbaFailures.setInt(i + 2, SERVER_FAIL_STATUS[i].getAsShort());
         }
         ResultSet rs = selectRemainingCorbaFailures.executeQuery();
         return rs.next();
