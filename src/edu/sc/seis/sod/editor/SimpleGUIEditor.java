@@ -255,7 +255,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     /**
      *
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException {
+    public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         SimpleGUIEditor gui = new SimpleGUIEditor(args);
         gui.start();

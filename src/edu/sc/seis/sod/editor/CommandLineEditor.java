@@ -180,7 +180,7 @@ public class CommandLineEditor {
     /**
      *
      */
-    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, TransformerException, ParserConfigurationException, SAXException, IOException, DOMException {
+    public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         CommandLineEditor cle = new CommandLineEditor(args);
         cle.start();

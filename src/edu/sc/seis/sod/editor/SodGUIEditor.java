@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -28,8 +29,10 @@ import org.xml.sax.SAXException;
 
 public class SodGUIEditor extends SimpleGUIEditor {
 
-    SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException {
+    SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
+        grammer = new SchemaGrammer();
+
         frameName = "SOD Editor";
         tabs = true;
         initEditors();
@@ -57,12 +60,19 @@ public class SodGUIEditor extends SimpleGUIEditor {
                         }
                     }
                 });
+
     }
 
 
     public void start() {
         super.start();
     }
+
+    public SchemaGrammer getGrammer() {
+        return grammer;
+    }
+
+    SchemaGrammer grammer;
 
     JComponent getCompForElement(Element element) {
         try {
@@ -80,6 +90,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     protected void initEditors() {
         editors.put("property", new PropertyEditor());
+        editors.put("networkArm", new NetworkArmEditor(this));
         DateEditor dateEdit = new DateEditor();
         editors.put("startTime", dateEdit);
         editors.put("endTime", dateEdit);
@@ -97,13 +108,21 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
         editors.put("sacFileProcessor", new SacFileEditor(this));
+
+        TagChooser originTC = new TagChooser("origin", this);
+        Vector vector = originTC.getSubTypes();
+        for (int i = 0; i < vector.size(); i++) {
+            String tagName = (String)vector.get(i);
+            editors.put(tagName, originTC);
+        }
+
     }
 
     protected HashMap editors = new HashMap();
 
     protected Start start;
 
-    public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException {
+    public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         SodGUIEditor gui = new SodGUIEditor(args);
         gui.start();
