@@ -39,42 +39,32 @@ public class NetCodeEditor implements EditorPlugin {
     }
 
     public JComponent getNetworkCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, allNets);
+        return EditorUtil.getComboBox(element, allNets);
     }
 
 
     public JComponent getStationCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, new String[0]);
+        return EditorUtil.getComboBox(element, new String[0]);
     }
 
     public JComponent getSiteCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, allSites);
+        return EditorUtil.getComboBox(element, allSites);
     }
 
     public JComponent getChannelCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, new String[0]);
+        return EditorUtil.getComboBox(element, new String[0]);
     }
 
     public JComponent getBandCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, bands);
+        return EditorUtil.getComboBox(element, bands);
     }
 
     public JComponent getGainCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, gains);
+        return EditorUtil.getComboBox(element, gains);
     }
 
     public JComponent getOrientationCodeGUI(Element element) throws TransformerException {
-        return initComboBox(element, orientations);
-    }
-
-    public JComboBox initComboBox(Element element, String[] vals) throws TransformerException {
-        Node node = XPathAPI.selectSingleNode(element, "text()");
-        Text text = (Text)node;
-        JComboBox combo = new JComboBox(vals);
-        combo.addItem(text.getNodeValue());
-        combo.setSelectedItem(text.getNodeValue());
-        combo.addItemListener(new TextItemListener(text));
-        return combo;
+        return EditorUtil.getComboBox(element, orientations);
     }
 
     protected String[] allNets = { "II", "IU", "US", "SP" };
