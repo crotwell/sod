@@ -232,7 +232,8 @@ public class Start implements SodExceptionListener {
 
 
     public void sodExceptionHandler(SodException sodException) {
-	System.out.println("Caught Exception in start becoz of the Listener");
+	logger.fatal("Caught Exception in start becoz of the Listener", 
+		     sodException.getException());
 	System.exit(0);
 	
     }
