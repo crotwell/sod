@@ -5,13 +5,12 @@
  */
 
 package edu.sc.seis.sod.validator.model;
-import edu.sc.seis.sod.validator.model.*;
-
-import edu.sc.seis.sod.validator.ModelWalker;
-import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 import java.io.IOException;
+
 import javax.xml.stream.XMLStreamException;
+
 import junit.framework.TestCase;
+import edu.sc.seis.sod.validator.ModelWalker;
 
 public class MostBasicTest extends TestCase{
     public void testMostBasic() throws IOException, XMLStreamException{

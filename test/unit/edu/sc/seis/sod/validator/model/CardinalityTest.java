@@ -5,10 +5,10 @@
  */
 
 package edu.sc.seis.sod.validator.model;
-import edu.sc.seis.sod.validator.model.*;
-
 import java.io.IOException;
+
 import javax.xml.stream.XMLStreamException;
+
 import junit.framework.TestCase;
 
 public class CardinalityTest extends TestCase{
