@@ -243,11 +243,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 		Start.getEventQueue().incrementTime(eventFinderSubsetter.getSourceName(),
 						    eventFinderSubsetter.getDNSName(),
 						    getIncrementValue());
-		startTime = Start.getEventQueue().getTime(eventFinderSubsetter.getSourceName(),
-							  eventFinderSubsetter.getDNSName());
-		Start.getEventQueue().incrementTime(eventFinderSubsetter.getSourceName(),
-						    eventFinderSubsetter.getDNSName(),
-						    getIncrementValue());
+	// 	startTime = Start.getEventQueue().getTime(eventFinderSubsetter.getSourceName(),
+// 							  eventFinderSubsetter.getDNSName());
+// 		Start.getEventQueue().incrementTime(eventFinderSubsetter.getSourceName(),
+// 						    eventFinderSubsetter.getDNSName(),
+// 						    getIncrementValue());
 	    } else {
 		//here delete all the events in the queue from the 
 		//previous day that are successful or failed

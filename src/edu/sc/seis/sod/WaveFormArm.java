@@ -219,10 +219,11 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	Channel channel = channelDbObject.getChannel();
 	int eventid = eventDbObject.getDbId();
 	int channelid = channelDbObject.getDbId();
-
+	//if(status.getId() == Status.PROCESSING.getId()) return;
 	Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
 					   status, reason);
 	waveformStatusProcess.end(eventAccess, channel, status, reason);
+	if(status.getId() == Status.PROCESSING.getId()) return;
 	updateChannelCount(eventid, channelid, eventAccess);
 
     }
@@ -380,26 +381,67 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    if(waveformid == -1) return null;
 	    int eventid = Start.getWaveformQueue().getWaveformEventId(waveformid);
 	    int channelid = Start.getWaveformQueue().getWaveformChannelId(waveformid);
-	    
-	    EventAccessOperations eventAccess =
-		Start.getEventQueue().getEventAccess(eventid);
-	    EventDbObject eventDbObject = new EventDbObject(eventid, eventAccess);
+	 
+	    Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+					       Status.PROCESSING, "just after being popped");
+
+	    EventAccessOperations eventAccess = null;
+	    EventDbObject eventDbObject = null;
 	    ChannelDbObject channelDbObject = null;
-	    if(	((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString())) != null) {
-		channelDbObject = ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString()));
-	    } else {
-		channelDbObject = new ChannelDbObject(channelid, networkArm.getChannel(channelid));
+	    try {
+	
+		//EventAccessOperations 
+		eventAccess =
+		    Start.getEventQueue().getEventAccess(eventid);
+		Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+						   Status.PROCESSING, "got eventAccess");
+
+		//EventDbObject 
+		eventDbObject = new EventDbObject(eventid, eventAccess);
+		//ChannelDbObject channelDbObject = null;
+		if(	((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString())) != null) {
+		    System.out.println("******** Channnel already in the hasmamp");
+		    channelDbObject = ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString()));
+		    Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+							   Status.PROCESSING, "got channeldbobject from map");
+			
+		} else {
+		    channelDbObject = new ChannelDbObject(channelid, networkArm.getChannel(channelid));
+		}
+	    } catch(Throwable ce) {
+		ce.printStackTrace();
+		System.exit(0);
+	    }
+	    setFinalStatus(eventDbObject, channelDbObject,
+	    Status.PROCESSING, "still didnot even form the waveformThread Runnable");
+	    if(eventid == 11 && channelid == 27) {
+		System.out.println("got the needed one");
+		System.out.println("The eventid is "+eventDbObject.getDbId());
+		System.out.println("The channelid is "+channelDbObject.getDbId());
+		//	System.exit(0);
 	    }
 	    //networkArm.getChannel(networkid);
+		NetworkAccess networkAccess = null;
+		NetworkDbObject networkDbObject = null;
+		ChannelDbObject[] paramChannels = new ChannelDbObject[1];
+		 try {
 	    int siteid =
 		networkArm.getSiteDbId(channelid);
 	    int stationid = networkArm.getStationDbId(siteid);
 	    int networkid = networkArm.getNetworkDbId(stationid);
-	    NetworkAccess networkAccess = networkArm.getNetworkAccess(networkid);
-	    NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
-	    ChannelDbObject[] paramChannels = new ChannelDbObject[1];
+	    //NetworkAccess 
+	    networkAccess = networkArm.getNetworkAccess(networkid);
+	    //NetworkDbObject 
+	    networkDbObject = new NetworkDbObject(networkid, networkAccess);
+	    //ChannelDbObject[] paramChannels = new ChannelDbObject[1];
 	    paramChannels[0] = channelDbObject;
-	
+	   } catch(Throwable ce) {
+		ce.printStackTrace();
+		setFinalStatus(eventDbObject, channelDbObject, 
+				Status.PROCESSING,
+				"Exception occured ");
+			System.exit(0);
+	   }
 	    Runnable work = new WaveFormArmThread(eventDbObject, 
 						  eventStationSubsetter,
 						  seismogramDCLocator,

@@ -184,6 +184,13 @@ public class Start implements SodExceptionListener {
 		}
 	    } // end of if (commandlineProps)
 
+	    
+	    Start.props = props;
+	    setProperties(props);
+	    checkRestartOptions();
+	    eventQueue = new HSqlDbQueue(props);
+	    waveformQueue = new WaveformDbQueue(props);
+
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -195,12 +202,7 @@ public class Start implements SodExceptionListener {
 			    preloggingException); 
 	    } // end of else
             logger.info("Logging configured");
-	    
-	    Start.props = props;
-	    eventQueue = new HSqlDbQueue(props);
-	    waveformQueue = new WaveformDbQueue(props);
-
-
+	
 	    String filename 
 		= props.getProperty("edu.sc.seis.sod.configuration");
 	 System.out.println("The file name is "+filename);
@@ -235,7 +237,7 @@ public class Start implements SodExceptionListener {
             logger.info("Start init()");
 	    start.init();
             logger.info("Start start()");
-	    setProperties(props);
+	   
 	    start.startA();
 	    eventArmThread.join();
 	    waveFormArmThread.join();
@@ -298,6 +300,37 @@ public class Start implements SodExceptionListener {
 	
     }
 
+    public static  void checkRestartOptions() {
+
+	//get the quitTime
+	//get refresh Time.
+	//first check if the database alread exists.
+	if(isRemoveDatabase()) Start.REMOVE_DATABASE = true;
+	if(isRefreshInterval()) Start.GET_NEW_EVENTS = true;
+    }
+
+    private static boolean isRemoveDatabase() {
+	String str = props.getProperty("edu.sc.seis.sod.database.remove");
+	if(str != null) {
+	    if(str.equalsIgnoreCase("true")) { return true;}
+	}
+	
+	return false;
+    }
+    
+    private static boolean isRefreshInterval() {
+	String str = props.getProperty("edu.sc.seis.sod.database.eventRefreshInterval");
+	if(str != null) {
+	    if(str.equalsIgnoreCase("true")) {return true;}
+	}
+ 
+	return false;
+    }
+
+
+    public static boolean REMOVE_DATABASE = false;
+
+    public static boolean GET_NEW_EVENTS = false;
 
     private static java.net.URL schemaURL;
  

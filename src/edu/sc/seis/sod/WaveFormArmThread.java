@@ -50,11 +50,11 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 
     public void run() {
 	try {
-	   
+	    
 	    processWaveFormArm(eventAccess);
-	} catch(Exception ce) {
+	} catch(Throwable ce) {
 	    ce.printStackTrace();
-	    notifyListeners(this, ce);
+//	    notifyListeners(this, ce);
 	}
 	
     }
@@ -65,11 +65,24 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @exception Exception if an error occurs
      */
-    public void processWaveFormArm(EventDbObject eventDbObject) throws Exception{
+    public void processWaveFormArm(EventDbObject eventDbObject) throws Throwable{
+
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	if (successfulChannels[0]  == null) System.out.println("Chan is NULL");
 	else System.out.println("channel is NOT NULL");
+
+
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
+	    if(eventDbObject.getDbId() == 11 && successfulChannels[counter].getDbId() == 27) {
+		System.out.println("got the needed one IN PROCESS WAVEFORM ARM");
+		System.out.println("The eventid is "+eventDbObject.getDbId());
+		System.out.println("The channelid is "+successfulChannels[counter].getDbId());
+		//	System.exit(0);
+	}
+	parent.setFinalStatus(eventDbObject,
+			      successfulChannels[counter],
+			      Status.PROCESSING,
+			      "WaveformArmProcessingStarted");
 	    boolean bESS;
 		    synchronized(eventStationSubsetter) {
 		bESS = eventStationSubsetter.accept(eventAccess, 
@@ -85,6 +98,10 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	    }
 	    if( bESS ) {
 		DataCenter dataCenter;
+		parent.setFinalStatus(eventDbObject,
+				      successfulChannels[counter],
+				      Status.PROCESSING,
+				      "EventStationSubsetterSucceeded");
 		synchronized(seismogramDCLocator) {
 		    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
 								     networkAccess.getNetworkAccess(),
