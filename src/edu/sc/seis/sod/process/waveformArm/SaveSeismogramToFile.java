@@ -415,9 +415,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         return dataset;
     }
 
-    public static int getBytesWritten(){ return bytesWritten; }
+    public static long getBytesWritten(){ return bytesWritten; }
 
-    private static int bytesWritten = 0;
+    private static long bytesWritten = 0;
 
     static long lastDataSetFileModTime;
 
