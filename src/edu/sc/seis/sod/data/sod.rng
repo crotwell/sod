@@ -212,29 +212,27 @@
                             <element name="classname">
                                 <data type="string"/>
                             </element>
-                            <zeroOrMore>
-                                <ref name="any3"/>
-                            </zeroOrMore>
+                            <oneOrMore>
+                                <choice>
+                                    <text/>
+                                    <ref name="xml3"/>
+                                </choice>
+                            </oneOrMore>
                         </element>
                     </choice>
                 </zeroOrMore>
                 <zeroOrMore>
                     <choice>
-                        <element name="logFactor5EventStatus">
-                            <empty/>
-                        </element>
-                        <element name="simpleHTMLEventStatus">
-                            <element name="outputDirectory">
-                                <data type="string"/>
-                            </element>
-                        </element>
                         <element name="externalEventStatus">
                             <element name="classname">
                                 <data type="string"/>
                             </element>
-                            <zeroOrMore>
-                                <ref name="any4"/>
-                            </zeroOrMore>
+                            <oneOrMore>
+                                <choice>
+                                    <text/>
+                                    <ref name="xml4"/>
+                                </choice>
+                            </oneOrMore>
                         </element>
                         <element name="eventStatusTemplate">
                             <optional>
@@ -310,13 +308,21 @@
                             <element name="classname">
                                 <data type="string"/>
                             </element>
-                            <zeroOrMore>
-                                <ref name="any5"/>
-                            </zeroOrMore>
+                            <oneOrMore>
+                                <choice>
+                                    <text/>
+                                    <ref name="xml5"/>
+                                </choice>
+                            </oneOrMore>
                         </element>
                         <element name="responseWriter">
                             <element name="responseFile">
-                                <ref name="any6"/>
+                                <oneOrMore>
+                                    <choice>
+                                    <text/>
+                                    <ref name="xml6"/>
+                                    </choice>
+                                </oneOrMore>
                             </element>
                         </element>
                     </choice>
@@ -4347,104 +4353,6 @@
             </element>
         </zeroOrMore>
     </define>
-    <define name="any2">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any2"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any4">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any4"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any5">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any5"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any3">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any3"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any7">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any7"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any6">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any6"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="any">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="seismogramProcess2">
         <choice>
             <element name="printlineSeismogramProcess">
@@ -4542,9 +4450,12 @@
                 <element name="classname">
                     <data type="string"/>
                 </element>
-                <zeroOrMore>
-                    <ref name="any7"/>
-                </zeroOrMore>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml7"/>
+                    </choice>
+                </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
                 <optional>
@@ -4682,9 +4593,12 @@
                 <element name="classname">
                     <data type="string"/>
                 </element>
-                <zeroOrMore>
-                    <ref name="any2"/>
-                </zeroOrMore>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml2"/>
+                    </choice>
+                </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
                 <optional>
@@ -5245,9 +5159,12 @@
                 <element name="classname">
                     <data type="string"/>
                 </element>
-                <zeroOrMore>
-                    <ref name="any"/>
-                </zeroOrMore>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml"/>
+                    </choice>
+                </oneOrMore>
             </element>
         </choice>
     </define>
@@ -5338,7 +5255,7 @@
             </element>
         </optional>
     </define>
-    <define name="range5">
+    <define name="range2">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -5367,7 +5284,7 @@
             </element>
         </optional>
     </define>
-    <define name="range2">
+    <define name="range5">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -5511,6 +5428,104 @@
                 <data type="double"/>
             </element>
         </optional>
+    </define>
+    <define name="xml7">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml7"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml2">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml2"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml3">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml3"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml4">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml4"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml5">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml5"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml6">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml6"/>
+                </choice>
+            </oneOrMore>
+        </element>
     </define>
     <define name="seismogramSubsetter3">
         <choice>
