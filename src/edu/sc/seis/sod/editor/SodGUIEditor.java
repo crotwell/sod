@@ -95,10 +95,9 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("orientationCode", netCodeEdit);
         editors.put("boxArea", new BoxAreaEditor(this));
 
-        EffectiveTimeEditor effTime = new EffectiveTimeEditor();
-        editors.put("stationEffectiveTimeOverlap", effTime);
-        editors.put("siteEffectiveTimeOverlap", effTime);
-        editors.put("channelEffectiveTimeOverlap", effTime);
+        editors.put("stationEffectiveTimeOverlap", timeRangeEdit);
+        editors.put("siteEffectiveTimeOverlap", timeRangeEdit);
+        editors.put("channelEffectiveTimeOverlap", timeRangeEdit);
 
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new UnitRangeEditor(ANGLE_UNITS, 0, 180, 5, true));
