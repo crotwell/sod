@@ -16,10 +16,10 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 
-public class SchemaGrammer {
+public class SchemaGrammar {
 
 
-    public SchemaGrammer() throws Exception {
+    public SchemaGrammar() throws Exception {
 
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         saxParserFactory.setNamespaceAware(true);
@@ -131,4 +131,5 @@ public class SchemaGrammer {
 
     Grammar grammar;
 }
+
 
