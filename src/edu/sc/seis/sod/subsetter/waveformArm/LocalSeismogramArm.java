@@ -75,6 +75,7 @@ public class LocalSeismogramArm implements Subsetter{
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
 		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
+		else if(sodElement instanceof RequestSubsetter) requestSubsetter = (RequestSubsetter)sodElement;
 		else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement; 
    
 	
