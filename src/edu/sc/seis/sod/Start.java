@@ -183,10 +183,8 @@ public class Start{
                 }
             }
         }
-        String indexPageDir = props.getProperty("sod.start.IndexPageDirectory");
-        if(indexPageDir != null){
-            new IndexTemplate(indexPageDir);
-        }
+        new IndexTemplate(props.getProperty("sod.start.IndexPageDirectory",
+                                            "status"));
     }
     
     public static Properties getProperties() {return props; }
