@@ -81,11 +81,11 @@ public class PhaseRequest implements RequestGenerator{
 	String tauPModel = new String();
 	try {
 	    tauPModel = props.getProperty("edu.sc.seis.sod.TaupModel");
-	    if(tauPModel == null) tauPModel = "iasp91";
+	    if(tauPModel == null) tauPModel = "prem";
 	    	   
 	} catch(Exception e) {
 	    
-	    tauPModel = "iasp91";
+	    tauPModel = "prem";
 	}
 	
 
