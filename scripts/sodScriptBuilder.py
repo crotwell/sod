@@ -2,14 +2,16 @@ import sys
 sys.path.append('../../devTools/maven')
 import scriptBuilder, ProjectParser, depCopy
 class sodScriptParameters(scriptBuilder.jacorbParameters):
+    homeloc = '.'
     def __init__(self, mods):
         scriptBuilder.jacorbParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = 'sod'
-        homevar = self.add('SOD_HOME', '.', 'initial', 1)
+        homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1)
         libvar = self.getVar('LIB', 'initial')
         libvar.setValue(homevar.interp+'/lib')
         self.mainclass = 'edu.sc.seis.sod.Start'
+        self.xOptions['mx']='mx256m'
 
 class queryTimer(sodScriptParameters):
     def __init__(self, mods):
@@ -29,6 +31,7 @@ def buildAll(proj):
     scripts = buildSodScripts(proj)
     scripts.extend(buildQueryTimerScripts(proj))
     scripts.extend(buildEditorScripts(proj))
+    scripts.extend(buildProfileScripts(proj))
     return scripts
 
 def buildSodScripts(proj):
@@ -36,10 +39,13 @@ def buildSodScripts(proj):
     scripts = [scriptBuilder.build(sodScriptParameters([]), proj)]
     scriptBuilder.setVarWindows()
     scripts.append(scriptBuilder.build(sodScriptParameters([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
+def buildProfileScripts(proj):
+    scriptBuilder.setVarWindows()
     profileParams = sodScriptParameters([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()])
     profileParams.name='profile'
-    scripts.append(scriptBuilder.build(profileParams, proj))
-    return scripts
+    return [scriptBuilder.build(profileParams, proj)]
 
 def buildQueryTimerScripts(proj):
     scriptBuilder.setVarSh()
