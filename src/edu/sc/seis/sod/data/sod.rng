@@ -5,14 +5,35 @@
             <optional>
                 <element name="properties">
                     <oneOrMore>
-                        <element name="property">
-                            <element name="name">
-                                <data type="string"/>
+                        <choice>
+                            <element name="runName">
+                                <text/>
                             </element>
-                            <element name="value">
-                                <data type="string"/>
+                            <element name="statusBase">
+                                <text/>
                             </element>
-                        </element>
+                            <element name="eventQueryIncrement">
+                                <ref name="time5"/>
+                            </element>
+                            <element name="eventRefreshInterval">
+                                <ref name="time5"/>
+                            </element>
+                            <element name="eventLag">
+                                <ref name="time5"/>
+                            </element>
+                            <element name="maxRetryDelay">
+                                <ref name="time5"/>
+                            </element>
+                            <element name="waveformWorkerThreads">
+                                <text/>
+                            </element>
+                            <element name="reopenEvents">
+                                <empty/>
+                            </element>
+                            <element name="removeDatabase">
+                                <empty/>
+                            </element>
+                        </choice>
                     </oneOrMore>
                 </element>
             </optional>
@@ -201,7 +222,7 @@
                     </element>
                 </oneOrMore>
                 <optional>
-                    <ref name="origin2"/>
+                    <ref name="origin4"/>
                 </optional>
                 <zeroOrMore>
                     <choice>
@@ -278,6 +299,7 @@
                                     <value>MINUTE</value>
                                     <value>HOUR</value>
                                     <value>DAY</value>
+                                    <value>WEEK</value>
                                     <value>YEAR</value>
                                 </choice>
                             </element>
@@ -291,7 +313,7 @@
                     <ref name="network"/>
                 </optional>
                 <optional>
-                    <ref name="station3"/>
+                    <ref name="station4"/>
                 </optional>
                 <optional>
                     <ref name="site"/>
@@ -383,13 +405,13 @@
                                 <data type="string"/>
                             </element>
                             <element name="beginOffset">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                             <element name="endPhase">
                                 <data type="string"/>
                             </element>
                             <element name="endOffset">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                         </element>
                         <optional>
@@ -748,19 +770,19 @@
     <define name="eventStation3">
         <choice>
             <element name="distanceRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="embeddedOriginSubsetter">
                 <ref name="origin3"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station4"/>
+                <ref name="station3"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -776,7 +798,7 @@
                         <data type="float"/>
                     </element>
                 </element>
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -926,10 +948,10 @@
                                     <value>STATION</value>
                                 </choice>
                             </element>
-                            <ref name="phaseInteractionBase3"/>
+                            <ref name="phaseInteractionBase2"/>
                         </element>
                         <element name="absolute">
-                            <ref name="phaseInteractionBase3"/>
+                            <ref name="phaseInteractionBase2"/>
                         </element>
                     </choice>
                 </zeroOrMore>
@@ -942,7 +964,7 @@
                 <ref name="range8"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin4"/>
+                <ref name="origin5"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station5"/>
@@ -1133,7 +1155,7 @@
                 <ref name="range"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin5"/>
+                <ref name="origin"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station"/>
@@ -1324,7 +1346,7 @@
                 <ref name="range2"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin"/>
+                <ref name="origin2"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station2"/>
@@ -1499,10 +1521,10 @@
                                     <value>STATION</value>
                                 </choice>
                             </element>
-                            <ref name="phaseInteractionBase2"/>
+                            <ref name="phaseInteractionBase3"/>
                         </element>
                         <element name="absolute">
-                            <ref name="phaseInteractionBase2"/>
+                            <ref name="phaseInteractionBase3"/>
                         </element>
                     </choice>
                 </zeroOrMore>
@@ -1553,7 +1575,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range7"/>
+                    <ref name="range5"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1563,7 +1585,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range7"/>
+                <ref name="range5"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -1572,7 +1594,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range7"/>
+                <ref name="range5"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -1581,7 +1603,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range7"/>
+                <ref name="range5"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1765,7 +1787,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range9"/>
+                    <ref name="range7"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1775,7 +1797,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range9"/>
+                <ref name="range7"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -1784,7 +1806,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range9"/>
+                <ref name="range7"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -1793,7 +1815,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range9"/>
+                <ref name="range7"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1977,7 +1999,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range3"/>
+                    <ref name="range9"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1987,7 +2009,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range3"/>
+                <ref name="range9"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -1996,7 +2018,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range3"/>
+                <ref name="range9"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -2005,7 +2027,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range3"/>
+                <ref name="range9"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -2189,7 +2211,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range5"/>
+                    <ref name="range6"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -2199,7 +2221,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range5"/>
+                <ref name="range6"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -2208,7 +2230,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range5"/>
+                <ref name="range6"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -2217,7 +2239,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range5"/>
+                <ref name="range6"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -2401,7 +2423,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range4"/>
+                    <ref name="range3"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -2411,7 +2433,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range3"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -2420,7 +2442,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range3"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -2429,7 +2451,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range3"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -3538,6 +3560,7 @@
                                 <value>MINUTE</value>
                                 <value>HOUR</value>
                                 <value>DAY</value>
+                                <value>WEEK</value>
                                 <value>YEAR</value>
                             </choice>
                         </element>
@@ -3636,6 +3659,7 @@
                                 <value>MINUTE</value>
                                 <value>HOUR</value>
                                 <value>DAY</value>
+                                <value>WEEK</value>
                                 <value>YEAR</value>
                             </choice>
                         </element>
@@ -3734,6 +3758,7 @@
                                 <value>MINUTE</value>
                                 <value>HOUR</value>
                                 <value>DAY</value>
+                                <value>WEEK</value>
                                 <value>YEAR</value>
                             </choice>
                         </element>
@@ -3832,6 +3857,7 @@
                                 <value>MINUTE</value>
                                 <value>HOUR</value>
                                 <value>DAY</value>
+                                <value>WEEK</value>
                                 <value>YEAR</value>
                             </choice>
                         </element>
@@ -4116,12 +4142,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range6"/>
+                <ref name="range2"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range6"/>
+                <ref name="range2"/>
             </element>
         </zeroOrMore>
     </define>
@@ -4230,12 +4256,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range2"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range2"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
     </define>
@@ -4424,13 +4450,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
             </element>
             <element name="rMean">
@@ -5532,17 +5558,17 @@
             <element name="longShortSignalToNoise">
                 <optional>
                     <element name="longTime">
-                        <ref name="time6"/>
+                        <ref name="time7"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="shortTime">
-                        <ref name="time6"/>
+                        <ref name="time7"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="delayTime">
-                        <ref name="time6"/>
+                        <ref name="time7"/>
                     </element>
                 </optional>
                 <optional>
@@ -5561,16 +5587,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time6"/>
+                    <ref name="time7"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5742,6 +5768,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5761,6 +5788,27 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
+                    <value>YEAR</value>
+                </choice>
+            </element>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
+    </define>
+    <define name="time8">
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5780,6 +5828,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5799,6 +5848,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5818,6 +5868,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5837,6 +5888,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
@@ -5856,6 +5908,7 @@
                     <value>MINUTE</value>
                     <value>HOUR</value>
                     <value>DAY</value>
+                    <value>WEEK</value>
                     <value>YEAR</value>
                 </choice>
             </element>
