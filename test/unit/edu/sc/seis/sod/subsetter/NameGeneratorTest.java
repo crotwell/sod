@@ -8,7 +8,7 @@ package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.waveFormArm.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissuresCreator;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;

@@ -11,6 +11,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
+import edu.sc.seis.sod.subsetter.MockFissuresCreator;
 import junit.framework.TestCase;
 
 public class SimpleWaveFormHTMLStatusTest extends TestCase{

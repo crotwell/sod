@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.sc.seis.sod.subsetter.MockFissuresCreator;
 import java.io.File;
 import junit.framework.TestCase;
 
