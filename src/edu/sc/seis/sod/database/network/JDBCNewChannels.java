@@ -35,7 +35,7 @@ public class JDBCNewChannels extends SodJDBC {
     }
 
     public int put(Channel chan) throws SQLException, NotFound{
-        int dbId = channelTable.getDBId(chan.get_id(), chan.my_site);
+        int dbId = channelTable.getDBId(chan.get_id());
         put(dbId);
         return dbId;
     }
@@ -49,7 +49,7 @@ public class JDBCNewChannels extends SodJDBC {
     }
 
     public void remove(Channel chan) throws SQLException, NotFound{
-        int dbId = channelTable.getDBId(chan.get_id(), chan.my_site);
+        int dbId = channelTable.getDBId(chan.get_id());
         remove.setInt(1, dbId);
         remove.executeUpdate();
     }

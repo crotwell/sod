@@ -28,6 +28,7 @@ import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.JDBCQueryTime;
@@ -175,7 +176,8 @@ public class NetworkArm {
      * @exception Exception
      *                if an error occurs
      */
-    public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound, SQLException, NotFound  {
+    public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound,
+            SQLException, NotFound {
         if(!needsRefresh()) {
             if(netDbs == null) {
                 netDbs = netTable.getAllNets(getNetworkDC());
@@ -386,38 +388,37 @@ public class NetworkArm {
         Site site = siteDbObject.getSite();
         try {
             Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
-            for(int subCounter = 0; subCounter < channels.length; subCounter++) {
-                if(!isSameSite(site, channels[subCounter].my_site)) {
+            JDBCChannel chanDb = netTable.getChannelDb();
+            Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
+                                       Standing.IN_PROG);
+            for(int i = 0; i < channels.length; i++) {
+                Channel chan = channels[i];
+                if(!isSameSite(site, chan.my_site)) {
                     continue;
                 }
-                change(channels[subCounter],
-                       Status.get(Stage.NETWORK_SUBSETTER, Standing.IN_PROG));
-                if(channelSubsetter.accept(channels[subCounter])) {
+                change(chan, inProg);
+                if(channelSubsetter.accept(chan)) {
                     int dbid;
                     synchronized(netTable) {
                         try {
-                            dbid = netTable.getChannelDb()
-                                    .getDBId(channels[subCounter].get_id(),
-                                             channels[subCounter].my_site);
+                            dbid = chanDb.getDBId(chan.get_id());
                         } catch(NotFound e) {
-                            dbid = netTable.put(channels[subCounter]);
+                            dbid = netTable.put(chan);
                             if(!firstTimeThrough) {
                                 newChanTable.put(dbid);
                             }
                         }
                     }
-                    channelMap.put(new Integer(dbid), channels[subCounter]);
+                    channelMap.put(new Integer(dbid), chan);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
-                                                                          channels[subCounter]);
+                                                                          chan);
                     successes.add(channelDbObject);
-                    change(channels[subCounter], Status.get(Stage.PROCESSOR,
-                                                            Standing.IN_PROG));
-                    processNetworkArm(networkAccess, channels[subCounter]);
-                    change(channels[subCounter],
-                           Status.get(Stage.NETWORK_SUBSETTER, Standing.SUCCESS));
-                } else change(channels[subCounter],
-                              Status.get(Stage.NETWORK_SUBSETTER,
-                                         Standing.REJECT));
+                    change(chan, Status.get(Stage.PROCESSOR, Standing.IN_PROG));
+                    processNetworkArm(networkAccess, chan);
+                    change(chan, Status.get(Stage.NETWORK_SUBSETTER,
+                                            Standing.SUCCESS));
+                } else change(chan, Status.get(Stage.NETWORK_SUBSETTER,
+                                               Standing.REJECT));
             }
         } catch(Throwable e) {
             GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "

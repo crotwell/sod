@@ -101,8 +101,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
 		int evDbid = eventTable.getDBId(ev);
 		int[] channelDbIds = new int[cg.getChannels().length];
 		for(int i = 0; i < cg.getChannels().length; i++) {
-			channelDbIds[i] = chanTable.getDBId(cg.getChannels()[i].get_id(),
-												cg.getChannels()[i].my_site);
+			channelDbIds[i] = chanTable.getDBId(cg.getChannels()[i].get_id());
 		}
 		int[] ids = new int[channelDbIds.length];
 		for(int i = 0; i < ids.length; i++) {
