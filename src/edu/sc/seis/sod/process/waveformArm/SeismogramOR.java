@@ -54,8 +54,8 @@ public class SeismogramOR extends ForkProcess {
         return new LocalSeismogramResult(orResult,
                                          seismograms,
                                          new StringTreeBranch(this,
-                                                                                     orResult,
-                                                                                         (StringTree[])reasons.toArray(new StringTree[0])));
+                                                              orResult,
+                                                                  (StringTree[])reasons.toArray(new StringTree[0])));
 
     }
 }

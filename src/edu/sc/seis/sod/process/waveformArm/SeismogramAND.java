@@ -40,8 +40,12 @@ public class SeismogramAND extends ForkProcess {
         while (it.hasNext() && result.isSuccess()) {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
-                result = processor.process(event, channel, original,
-                                           available, copySeismograms(seismograms), cookieJar);
+                result = processor.process(event,
+                                           channel,
+                                           original,
+                                           available,
+                                           copySeismograms(seismograms),
+                                           cookieJar);
             }
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())

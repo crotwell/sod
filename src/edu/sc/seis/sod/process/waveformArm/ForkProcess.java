@@ -12,6 +12,8 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,7 +51,7 @@ public class ForkProcess implements LocalSeismogramProcess {
      * Forks the processing off the LocalSeismograms. The processes that
      * are contained in this tag are processed, but the return value off
      * the process method is the original seismograms. This allows, for
-     * example tto process both a original and a rmeaned version of the
+     * example to process both a original and a filtered version of the
      * seismograms independently.
      *
      * @param event an <code>EventAccessOperations</code> value
@@ -72,6 +74,7 @@ public class ForkProcess implements LocalSeismogramProcess {
 
         // pass originals to the contained processors
         LocalSeismogramProcess processor;
+        LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
         LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
@@ -80,8 +83,12 @@ public class ForkProcess implements LocalSeismogramProcess {
                 result = processor.process(event, channel, original,
                                                 available, result.getSeismograms(), cookieJar);
             }
+            reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        return new LocalSeismogramResult(result.isSuccess(), out, new StringTreeLeaf(this, result.isSuccess()));
+        return new LocalSeismogramResult(out,
+                                         new StringTreeBranch(this,
+                                                              result.isSuccess(),
+                                                                  (StringTree[])reasons.toArray(new StringTree[0])));
     }
 
     public static LocalSeismogramImpl[] copySeismograms(LocalSeismogramImpl[] seismograms) {
