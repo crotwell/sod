@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<template><html>
+<header><title>Event Arm Status</title></header>
+<body><b>Status:</b><br/><status/><br/>
+<table>
+    <tr>
+        <th ALIGN="LEFT">Location</th>
+        <th ALIGN="LEFT"><A HREF="time.html">Time</A></th>
+        <th><A HREF="mag.html">Magnitude</A></th>
+        <th><A HREF="depth.html">Depth</A></th>
+  </tr>
+<events><eventLabel>    <tr>
+        <td><feRegionName/></td>
+        <td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+        <td><magnitude/></td>
+        <td><depth/></td>
+    </tr>
+</eventLabel><sorting><location/></sorting></events></table>
+</body>
+</html></template>
