@@ -222,39 +222,43 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             double curBackDistance = DisplayUtils.calculateDistance(lastBackSeis)
                     .get_value();
             dssList.add(lastFrontSeis);
-            if(curFrontDistance != curBackDistance) {
+            if(Math.abs(curFrontDistance - curBackDistance) >= minSpacing) {
                 dssList.add(lastBackSeis);
             }
-            DataSetSeismogram temp = null;
+            DataSetSeismogram curSeis = null;
             while(curFrontDistance <= range / 2) {
-                temp = getBestSeis(dataSeis,
-                                   lastFrontSeis,
-                                   curFrontDistance,
-                                   spacing,
-                                   minSpacing);
-                if(temp != null) {
-                    dssList.add(temp);
-                    curFrontDistance = DisplayUtils.calculateDistance(temp)
+                curSeis = getBestSeis(dataSeis,
+                                      lastFrontSeis,
+                                      curFrontDistance,
+                                      spacing,
+                                      minSpacing);
+                if(curSeis != null) {
+                    dssList.add(curSeis);
+                    curFrontDistance = DisplayUtils.calculateDistance(curSeis)
                             .get_value();
-                    lastFrontSeis = temp;
+                    lastFrontSeis = curSeis;
                 }
                 curFrontDistance += spacing;
             }
             while(curBackDistance > range / 2) {
-                temp = getBestSeis(dataSeis,
-                                   lastBackSeis,
-                                   curBackDistance,
-                                   spacing,
-                                   minSpacing);
-                if(temp != null) {
-                    dssList.add(temp);
-                    curBackDistance = DisplayUtils.calculateDistance(temp)
+                curSeis = getBestSeis(dataSeis,
+                                      lastBackSeis,
+                                      curBackDistance,
+                                      spacing,
+                                      minSpacing);
+                if(curSeis != null) {
+                    dssList.add(curSeis);
+                    curBackDistance = DisplayUtils.calculateDistance(curSeis)
                             .get_value();
-                    lastBackSeis = temp;
+                    lastBackSeis = curSeis;
                 }
                 curBackDistance -= spacing;
             }
-            if(Math.abs(curFrontDistance - curBackDistance) < minSpacing) {
+            double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
+                    .get_value();
+            double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
+                    .get_value();
+            if(Math.abs(lastFrontSeisDist - lastBackSeisDist) < minSpacing) {
                 dssList.remove(dssList.size() - 1);
             }
             DataSetSeismogram[] tempDSS = new DataSetSeismogram[dssList.size()];
