@@ -1,195 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <start>
-        <ref name="network"/>
-    </start>
-    <include href="../base/include/timeRange.rng"></include>
-    <define name="network">
-        <choice>
-            <ref name="code"/>
-            <ref name="name"/>
-            <ref name="owner"/>
-            <ref name="effectiveTimeOverlap"/>
-            <ref name="AND"/>
-            <ref name="OR"/>
-            <ref name="XOR"/>
-            <ref name="NOT"/>
-            <ref name="PASS"/>
-        </choice>
-    </define>
-    <define name="code">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Matches a given network code. </summary>
-                <description> A network is accepted if its network code matches the given code
+		xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+	<start>
+		<ref name="network"/>
+	</start>
+	<include href="../base/include/timeRange.rng"></include>
+	<define name="network">
+		<choice>
+			<ref name="code"/>
+			<ref name="name"/>
+			<ref name="owner"/>
+			<ref name="effectiveTimeOverlap"/>
+			<ref name="AND"/>
+			<ref name="OR"/>
+			<ref name="XOR"/>
+			<ref name="NOT"/>
+			<ref name="PASS"/>
+		</choice>
+	</define>
+	<define name="code">
+		<element name="networkCode">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Matches a given network code. </summary>
+					<description> A network is accepted if its network code matches the given code
                     exactly. </description>
-                <example>
-                    <networkCode>IC</networkCode>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkCode">
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="name">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Matches the name of a network. </summary>
-                <description> Matches the name of a network. </description>
-                <example>
-                    <networkName>
-                        <value>Global Seismograph Network (GSN - IRIS/USGS)</value>
-                    </networkName>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkName">
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="owner">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Matches the owner of a network. </summary>
-                <description> Matches the owner of a network. This is a simple string comparision,
+					<example>
+						<networkCode>IC</networkCode>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<data type="string"/>
+		</element>
+	</define>
+	<define name="name">
+		<element name="networkName">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Matches the name of a network. </summary>
+					<description> Matches the name of a network. </description>
+					<example>
+						<networkName>
+							<value>Global Seismograph Network (GSN - IRIS/USGS)</value>
+						</networkName>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<data type="string"/>
+		</element>
+	</define>
+	<define name="owner">
+		<element name="networkOwner">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Matches the owner of a network. </summary>
+					<description> Matches the owner of a network. This is a simple string comparision,
                     and so care must be taken for it to be useful. </description>
-                <example>
-                    <networkOwner>
-                        <value>Scripps Institution of Oceanography</value>
-                    </networkOwner>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkOwner">
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="effectiveTimeOverlap">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Matches if the network overlaps the given time range. </summary>
-                <description> Matches if the network overlaps the given time range. </description>
-                <example>
-                    <networkEffectiveTimeOverlap>
-                            <startTime>20020701T00:00:00.001Z</startTime>
-                            <endTime>20021030T00:00:00.001Z</endTime>
-                    </networkEffectiveTimeOverlap>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkEffectiveTimeOverlap">
-            <ref name="timeRange"/>
-        </element>
-    </define>
-    <define name="AND">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical AND between network subsetters. </summary>
-                <description> The output is the logical AND of the outputs of all included
+					<example>
+						<networkOwner>
+							<value>Scripps Institution of Oceanography</value>
+						</networkOwner>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<data type="string"/>
+		</element>
+	</define>
+	<define name="effectiveTimeOverlap">
+		<element name="networkEffectiveTimeOverlap">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Matches if the network overlaps the given time range. </summary>
+					<description> Matches if the network overlaps the given time range. </description>
+					<example>
+						<networkEffectiveTimeOverlap>
+							<startTime>20020701T00:00:00.001Z</startTime>
+							<endTime>20021030T00:00:00.001Z</endTime>
+						</networkEffectiveTimeOverlap>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<ref name="timeRange"/>
+		</element>
+	</define>
+	<define name="AND">
+		<element name="networkAND">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical AND between network subsetters. </summary>
+					<description> The output is the logical AND of the outputs of all included
                     subsetters. The subsetters after the first false outputed are not evaluated. </description>
-                <example>
-                    <networkAND>
-                        <networkOwner>
-                            <value>Scripps Institution of Oceanography</value>
-                        </networkOwner>
-                        <networkEffectiveTimeOverlap>
-                                <startTime>20020701T00:00:00.001Z</startTime>
-                                <endTime>20021030T00:00:00.001Z</endTime>
-                        </networkEffectiveTimeOverlap>
-                    </networkAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkAND">
-        <oneOrMore>
-            <ref name="network"/>
-        </oneOrMore>
-        </element>
-    </define>
-    <define name="OR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical OR between network subsetters. </summary>
-                <description> The output is the logical OR of the outputs of all included
+					<example>
+						<networkAND>
+							<networkOwner>
+								<value>Scripps Institution of Oceanography</value>
+							</networkOwner>
+							<networkEffectiveTimeOverlap>
+								<startTime>20020701T00:00:00.001Z</startTime>
+								<endTime>20021030T00:00:00.001Z</endTime>
+							</networkEffectiveTimeOverlap>
+						</networkAND>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<oneOrMore>
+				<ref name="network"/>
+			</oneOrMore>
+		</element>
+	</define>
+	<define name="OR">
+		<element name="networkOR">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical OR between network subsetters. </summary>
+					<description> The output is the logical OR of the outputs of all included
                     subsetters. If the first subsetters returns true then the second is not
                     evaluated. </description>
-                <example>
-                    <networkOR>
-                        <networkOwner>
-                            <value>Scripps Institution of Oceanography</value>
-                        </networkOwner>
-                        <networkEffectiveTimeOverlap>
-                                <startTime>20020701T00:00:00.001Z</startTime>
-                                <endTime>20021030T00:00:00.001Z</endTime>
-                        </networkEffectiveTimeOverlap>
-                    </networkOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkOR">
-        <oneOrMore>
-            <ref name="network"/>
-        </oneOrMore>
-        </element>
-    </define>
-    <define name="XOR">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical XOR between network subsetters. </summary>
-                <description> The output is the logical XOR of the outputs of all included
+					<example>
+						<networkOR>
+							<networkOwner>
+								<value>Scripps Institution of Oceanography</value>
+							</networkOwner>
+							<networkEffectiveTimeOverlap>
+								<startTime>20020701T00:00:00.001Z</startTime>
+								<endTime>20021030T00:00:00.001Z</endTime>
+							</networkEffectiveTimeOverlap>
+						</networkOR>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<oneOrMore>
+				<ref name="network"/>
+			</oneOrMore>
+		</element>
+	</define>
+	<define name="XOR">
+		<element name="networkXOR">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical XOR between network subsetters. </summary>
+					<description> The output is the logical XOR of the outputs of all included
                     subsetters. </description>
-                <example>
-                    <networkXOR>
-                        <networkOwner>
-                            <value>Scripps Institution of Oceanography</value>
-                        </networkOwner>
-                        <networkEffectiveTimeOverlap>
-                                <startTime>20020701T00:00:00.001Z</startTime>
-                                <endTime>20021030T00:00:00.001Z</endTime>
-                        </networkEffectiveTimeOverlap>
-                    </networkXOR>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkXOR">
-            <ref name="network"/>
-            <ref name="network"/>
-        </element>
-    </define>
-    <define name="NOT">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Logical NOT of an network subsetter. </summary>
-                <description> The output is the logical NOT of the output of the included subsetter. </description>
-                <example>
-                    <networkNOT>
-                        <networkOwner>
-                            <value>Scripps Institution of Oceanography</value>
-                        </networkOwner>
-                    </networkNOT>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="networkNOT">
-            <ref name="network"/>
-        </element>
-    </define>
-    <define name="PASS">
-                <xsd:annotation>
-                        <xsd:documentation xml:lang="en">
-                                <summary> Always returns true. </summary>
-                                <description> Simple subsetter that always returns true, useful for testing. </description>
-                                <example>
-                                        <passNetwork/>
-                                </example>
-                        </xsd:documentation>
-                </xsd:annotation>
-                <element name="passNetwork">
-                        <zeroOrMore>
-                                <ref name="network"/>
-                        </zeroOrMore>
-                </element>
-        </define>
+					<example>
+						<networkXOR>
+							<networkOwner>
+								<value>Scripps Institution of Oceanography</value>
+							</networkOwner>
+							<networkEffectiveTimeOverlap>
+								<startTime>20020701T00:00:00.001Z</startTime>
+								<endTime>20021030T00:00:00.001Z</endTime>
+							</networkEffectiveTimeOverlap>
+						</networkXOR>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<ref name="network"/>
+			<ref name="network"/>
+		</element>
+	</define>
+	<define name="NOT">
+		<element name="networkNOT">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical NOT of an network subsetter. </summary>
+					<description> The output is the logical NOT of the output of the included subsetter. </description>
+					<example>
+						<networkNOT>
+							<networkOwner>
+								<value>Scripps Institution of Oceanography</value>
+							</networkOwner>
+						</networkNOT>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<ref name="network"/>
+		</element>
+	</define>
+	<define name="PASS">
+		<element name="passNetwork">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Always returns true. </summary>
+					<description> Simple subsetter that always returns true, useful for testing. </description>
+					<example>
+						<passNetwork/>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<zeroOrMore>
+				<ref name="network"/>
+			</zeroOrMore>
+		</element>
+	</define>
 </grammar>
