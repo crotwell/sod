@@ -264,13 +264,15 @@ public class MotionVectorArm implements Subsetter {
                     if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit)
                             .equals(COUNT_SQR)) {
                         logger.debug("NOAMP get seis units="
-                                + localSeismograms[i][j].y_unit+" changed to COUNT internally");
+                                + localSeismograms[i][j].y_unit
+                                + " changed to COUNT internally");
                         localSeismograms[i][j].y_unit = UnitImpl.COUNT;
                     }
                     if(localSeismograms[i][j] == null) {
                         ecp.update(Status.get(Stage.DATA_RETRIEVAL,
                                               Standing.REJECT));
-                        logger.error("Got null in seismogram array for channel "+i+" for "+ecp);
+                        logger.error("Got null in seismogram array for channel "
+                                + i + " for " + ecp);
                         return;
                     }
                     Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
@@ -412,95 +414,36 @@ public class MotionVectorArm implements Subsetter {
         String[] id = new String[rf.length];
         // send each request to server
         for(int i = 0; i < id.length; i++) {
-            int retries = 0;
-            int MAX_RETRY = 5;
-            while(retries < MAX_RETRY) {
-                try {
-                    id[i] = dataCenter.queue_seismograms(rf[i]);
-                    logger.info("request id: " + id[i]);
-                } catch(org.omg.CORBA.SystemException e) {
-                    retries++;
-                    logger.debug("after failed queue_seismograms, retries="
-                            + retries);
-                    if(retries < MAX_RETRY) {
-                        logger.info("Caught CORBA exception, retrying..."
-                                + retries, e);
-                        try {
-                            Thread.sleep(1000 * retries);
-                        } catch(InterruptedException ex) {}
-                        if(retries % 2 == 0) {
-                            // reget from Name service every other
-                            // time
-                            dataCenter.reset();
-                        }
-                    } else {
-                        handle(ecp, Stage.DATA_RETRIEVAL, e);
-                        return (LocalSeismogram[][])null;
-                    }
-                }
+            try {
+                id[i] = queueRequest(rf[i], dataCenter);
+                logger.info("added to queue request id: " + id[i]);
+            } catch(org.omg.CORBA.SystemException e) {
+                handle(ecp, Stage.DATA_RETRIEVAL, e);
+                return (LocalSeismogram[][])null;
             }
         }
         for(int i = 0; i < id.length; i++) {
             // keep checking until request is done, then retrieve it
             String status = LocalSeismogramArm.RETRIEVING_DATA;
-            int retries = 0;
-            int MAX_RETRY = 5;
             while(status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
-                while(retries < MAX_RETRY) {
-                    try {
-                        status = dataCenter.request_status(id[i]);
-                    } catch(org.omg.CORBA.SystemException e) {
-                        retries++;
-                        logger.debug("after failed request_status, retries="
-                                + retries);
-                        if(retries < MAX_RETRY) {
-                            logger.info("Caught CORBA exception, retrying..."
-                                    + retries, e);
-                            try {
-                                Thread.sleep(1000 * retries);
-                            } catch(InterruptedException ex) {}
-                            if(retries % 2 == 0) {
-                                // reget from Name service every other
-                                // time
-                                dataCenter.reset();
-                            }
-                        } else {
-                            handle(ecp, Stage.DATA_RETRIEVAL, e);
-                            return (LocalSeismogram[][])null;
-                        }
-                    }
+                try {
+                    status = statusRequest(id[i], dataCenter);
+                } catch(org.omg.CORBA.SystemException e) {
+                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    return (LocalSeismogram[][])null;
                 }
-                if (status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
+                if(status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
                     try {
                         Thread.sleep(30 * 1000);
                     } catch(InterruptedException ex) {}
                 }
             }
             if(status.equals(LocalSeismogramArm.DATA_RETRIEVED)) {
-                retries = 0;
-                while(retries < MAX_RETRY) {
-                    try {
-                        localSeismograms[i] = dataCenter.retrieve_queue(id[i]);
-                    } catch(org.omg.CORBA.SystemException e) {
-                        retries++;
-                        logger.debug("after failed retrieve_queue, retries="
-                                + retries);
-                        if(retries < MAX_RETRY) {
-                            logger.info("Caught CORBA exception, retrying..."
-                                    + retries, e);
-                            try {
-                                Thread.sleep(1000 * retries);
-                            } catch(InterruptedException ex) {}
-                            if(retries % 2 == 0) {
-                                // reget from Name service every other
-                                // time
-                                dataCenter.reset();
-                            }
-                        } else {
-                            handle(ecp, Stage.DATA_RETRIEVAL, e);
-                            return (LocalSeismogram[][])null;
-                        }
-                    }
+                try {
+                    localSeismograms[i] = retrieveRequest(id[i], dataCenter);
+                } catch(org.omg.CORBA.SystemException e) {
+                    handle(ecp, Stage.DATA_RETRIEVAL, e);
+                    return (LocalSeismogram[][])null;
                 }
             } else {
                 localSeismograms[i] = new LocalSeismogram[0];
@@ -510,7 +453,97 @@ public class MotionVectorArm implements Subsetter {
         }
         return localSeismograms;
     }
-    
+
+    private String queueRequest(RequestFilter[] rf, ProxySeismogramDC dataCenter)
+            throws FissuresException {
+        int retries = 0;
+        int MAX_RETRY = 5;
+        while(retries < MAX_RETRY) {
+            try {
+                return dataCenter.queue_seismograms(rf);
+            } catch(org.omg.CORBA.SystemException e) {
+                retries++;
+                logger.debug("after failed queue_seismograms, retries="
+                        + retries);
+                if(retries < MAX_RETRY) {
+                    logger.info("Caught CORBA exception, retrying..." + retries,
+                                e);
+                    try {
+                        Thread.sleep(1000 * retries);
+                    } catch(InterruptedException ex) {}
+                    if(retries % 2 == 0) {
+                        // reget from Name service every other
+                        // time
+                        dataCenter.reset();
+                    }
+                } else {
+                    throw e;
+                }
+            }
+        }
+        // should never get here
+        throw new RuntimeException("Should never happen");
+    }
+
+    private String statusRequest(String id, ProxySeismogramDC dataCenter)
+            throws FissuresException {
+        int retries = 0;
+        int MAX_RETRY = 5;
+        while(retries < MAX_RETRY) {
+            try {
+                return dataCenter.request_status(id);
+            } catch(org.omg.CORBA.SystemException e) {
+                retries++;
+                logger.debug("after failed request_status, retries=" + retries);
+                if(retries < MAX_RETRY) {
+                    logger.info("Caught CORBA exception, retrying..." + retries,
+                                e);
+                    try {
+                        Thread.sleep(1000 * retries);
+                    } catch(InterruptedException ex) {}
+                    if(retries % 2 == 0) {
+                        // reget from Name service every other
+                        // time
+                        dataCenter.reset();
+                    }
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new RuntimeException("Should never happen");
+    }
+
+    private LocalSeismogram[] retrieveRequest(String id,
+                                              ProxySeismogramDC dataCenter)
+            throws FissuresException {
+        int retries = 0;
+        int MAX_RETRY = 5;
+        while(retries < MAX_RETRY) {
+            try {
+                return dataCenter.retrieve_queue(id);
+            } catch(org.omg.CORBA.SystemException e) {
+                retries++;
+                logger.debug("after failed retrieve_queue, retries=" + retries);
+                if(retries < MAX_RETRY) {
+                    logger.info("Caught CORBA exception, retrying..." + retries,
+                                e);
+                    try {
+                        Thread.sleep(1000 * retries);
+                    } catch(InterruptedException ex) {}
+                    if(retries % 2 == 0) {
+                        // reget from Name service every other
+                        // time
+                        dataCenter.reset();
+                    }
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new RuntimeException("Should never happen");
+    }
+
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {
         if(t instanceof org.omg.CORBA.SystemException) {
             ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
