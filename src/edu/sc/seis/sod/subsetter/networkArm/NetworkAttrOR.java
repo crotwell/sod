@@ -8,8 +8,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- *
- *networkAttrOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ * networkAttrOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  *the max value of the sequence is unLimited.
  * 
  * sample xml file
@@ -30,17 +29,31 @@ import edu.iris.Fissures.*;
  * &lt;/networkAttrOR&gt;
  * </bold></pre></body>
  *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
-
 public class NetworkAttrOR 
     extends  NetworkLogicalSubsetter 
     implements NetworkAttrSubsetter {
     
+    /**
+     * Creates a new <code>NetworkAttrOR</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public NetworkAttrOR (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param e a <code>NetworkAttr</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAttr e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

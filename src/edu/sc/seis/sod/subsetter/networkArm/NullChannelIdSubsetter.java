@@ -18,6 +18,13 @@ import edu.iris.Fissures.network.*;
 
 public class  NullChannelIdSubsetter implements ChannelIdSubsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param channelId a <code>ChannelId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
 
 	return true;

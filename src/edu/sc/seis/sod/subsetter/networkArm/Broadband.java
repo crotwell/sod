@@ -7,19 +7,32 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
-/** 
+/**
  * sample xml file
  * &lt;broadband/&gt;
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
 public class Broadband implements ChannelIdSubsetter {
 
-	public Broadband(Element config) {
+    /**
+     * Creates a new <code>Broadband</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
+    public Broadband(Element config) {
 
 		System.out.println("Broadband must be considered");
 	}
 
-	public boolean accept(ChannelId channelId, CookieJar cookies) {
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param channelId a <code>ChannelId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean accept(ChannelId channelId, CookieJar cookies) {
 
 		return true;
 

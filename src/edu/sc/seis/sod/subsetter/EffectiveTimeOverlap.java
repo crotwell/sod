@@ -18,9 +18,18 @@ import edu.iris.Fissures.*;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{ 
 
+    /**
+     * Creates a new <code>EffectiveTimeOverlap</code> instance.
+     *
+     */
     public EffectiveTimeOverlap() {
 
     }
+    /**
+     * Creates a new <code>EffectiveTimeOverlap</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public EffectiveTimeOverlap (Element config){
 	Element childElement = null;
 	NodeList children = config.getChildNodes();
@@ -48,6 +57,11 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 	if(minElement == null || maxElement == null) System.out.println("one of the min or max ELements is null");
     }
 
+    /**
+     * Describe <code>getMinEffectiveTime</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Time</code> value
+     */
     public edu.iris.Fissures.Time getMinEffectiveTime() {
 	if(minElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(minElement);
@@ -56,6 +70,11 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 	return rtnTime;
     }
 
+    /**
+     * Describe <code>getMaxEffectiveTime</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Time</code> value
+     */
     public edu.iris.Fissures.Time getMaxEffectiveTime() {
 	if(maxElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(maxElement);

@@ -18,12 +18,22 @@ import org.w3c.dom.*;
  */
 
 public class Unit implements SodElement{
+    /**
+     * Creates a new <code>Unit</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public Unit (Element config){
 	
 	this.config = config;
     }
 
 
+    /**
+     * Describe <code>getUnit</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Unit</code> value
+     */
     public edu.iris.Fissures.Unit getUnit() {
 
 

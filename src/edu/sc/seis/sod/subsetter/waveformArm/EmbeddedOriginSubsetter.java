@@ -20,7 +20,12 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class EmbeddedOriginSubsetter implements EventStationSubsetter, Subsetter{
+public class EmbeddedOriginSubsetter implements EventStationSubsetter{
+    /**
+     * Creates a new <code>EmbeddedOriginSubsetter</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public EmbeddedOriginSubsetter (Element config){
 	
 	NodeList childNodes = config.getChildNodes();
@@ -42,6 +47,15 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter, Subsetter
 	
     }
     
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param eventAccess an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param station a <code>Station</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) {
 
 	//return originSubsetter.accept(null, cookies);

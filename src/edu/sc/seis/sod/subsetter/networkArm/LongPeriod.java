@@ -10,16 +10,29 @@ import org.w3c.dom.*;
 /**
  * sample xml file
  * &lt;longPeriod/&gt;
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
 public class LongPeriod implements ChannelIdSubsetter {
 
-	public LongPeriod(Element config) {
+    /**
+     * Creates a new <code>LongPeriod</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
+    public LongPeriod(Element config) {
 
 		System.out.println("LongPeriods must be considered");
 	}
 
-	public boolean accept(ChannelId channelId, CookieJar cookies) {
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param channelId a <code>ChannelId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean accept(ChannelId channelId, CookieJar cookies) {
 
 		return true;
 

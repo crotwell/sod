@@ -11,14 +11,38 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 
 
+/**
+ * Describe class <code>AvailableDataNOT</code> here.
+ *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
+ */
 public class AvailableDataNOT 
     extends  WaveFormLogicalSubsetter 
     implements AvailableDataSubsetter {
     
+    /**
+     * Creates a new <code>AvailableDataNOT</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public AvailableDataNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param original a <code>RequestFilter[]</code> value
+     * @param available a <code>RequestFilter[]</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 

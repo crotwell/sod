@@ -18,6 +18,11 @@ import org.apache.log4j.*;
  */
 
 public class FixedDataCenter extends AbstractSource implements SodElement{
+    /**
+     * Creates a new <code>FixedDataCenter</code> instance.
+     *
+     * @param element an <code>Element</code> value
+     */
     public FixedDataCenter (Element element){
 	super(element);
 	try{
@@ -41,6 +46,11 @@ public class FixedDataCenter extends AbstractSource implements SodElement{
 	
     }
 
+    /**
+     * Describe <code>getSeismogramDC</code> method here.
+     *
+     * @return a <code>DataCenter</code> value
+     */
     public DataCenter getSeismogramDC() {
 
 	try {

@@ -19,9 +19,22 @@ import edu.iris.Fissures.*;
 
 public class EventAttrName implements EventAttrSubsetter {
     
+    /**
+     * Creates a new <code>EventAttrName</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public EventAttrName (Element config) throws ConfigurationException {
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param e an <code>EventAttr</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAttr e,  CookieJar cookies) {
 
 	return true;

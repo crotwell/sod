@@ -9,8 +9,7 @@ import edu.iris.Fissures.*;
 
 
 /**
- *
- *stationAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ * stationAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  *the max value of the sequence is unLimited.
  *  
  * sample xml file
@@ -36,16 +35,32 @@ import edu.iris.Fissures.*;
  *		&lt;/stationeffectiveTimeOverlap&gt;
  *&lt;/stationAND&gt;
  * </bold></pre></body>
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
 public class StationAND 
     extends  NetworkLogicalSubsetter 
     implements StationSubsetter {
     
+    /**
+     * Creates a new <code>StationAND</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public StationAND (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param e a <code>Station</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

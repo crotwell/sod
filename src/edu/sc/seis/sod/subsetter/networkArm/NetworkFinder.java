@@ -18,6 +18,11 @@ import org.apache.log4j.*;
  */
 
 public class NetworkFinder extends AbstractSource{
+    /**
+     * Creates a new <code>NetworkFinder</code> instance.
+     *
+     * @param element an <code>Element</code> value
+     */
     public NetworkFinder (Element element){
 	super(element);
 	try{
@@ -41,6 +46,11 @@ public class NetworkFinder extends AbstractSource{
 	
     }
 
+    /**
+     * Describe <code>getNetworkDC</code> method here.
+     *
+     * @return a <code>NetworkDC</code> value
+     */
     public NetworkDC getNetworkDC() {
 
 	try {

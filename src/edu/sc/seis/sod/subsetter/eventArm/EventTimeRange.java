@@ -21,11 +21,24 @@ import org.w3c.dom.*;
  */
 
 public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implements OriginSubsetter {
+    /**
+     * Creates a new <code>EventTimeRange</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public EventTimeRange (Element config){
 	
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param origin an <code>Origin</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	
 	MicroSecondDate actualDate = new MicroSecondDate(origin.origin_time);

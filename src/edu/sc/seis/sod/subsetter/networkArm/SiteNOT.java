@@ -8,8 +8,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- *
- *siteNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ * siteNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
  *the max value of the sequence is 1.
  *  
  * sample xml file
@@ -17,16 +16,31 @@ import edu.iris.Fissures.*;
  *&lt;siteNOT&gt;
  *&lt;/siteNOT&gt;
  * </bold></pre></body>
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
 public class SiteNOT 
     extends  NetworkLogicalSubsetter 
     implements SiteSubsetter {
     
+    /**
+     * Creates a new <code>SiteNOT</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public SiteNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param e a <code>Site</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(NetworkAccess network, Site e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

@@ -21,10 +21,25 @@ public class OriginNOT
     extends EventLogicalSubsetter 
     implements OriginSubsetter {
     
+    /**
+     * Creates a new <code>OriginNOT</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public OriginNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param e an <code>Origin</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

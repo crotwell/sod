@@ -21,6 +21,11 @@ import edu.iris.Fissures.*;
  */
 
 public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
+    /**
+     * Creates a new <code>FlinnEngdahlRegion</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public FlinnEngdahlRegion (Element config){
 
 	String regionStr = SodUtil.getNestedText(config);
@@ -35,6 +40,13 @@ public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
     
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param e an <code>EventAttr</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAttr e,  CookieJar cookies) {
 	
 	if(e.region.type.value() == getType().value()) {

@@ -17,6 +17,11 @@ import org.w3c.dom.*;
  */
 
 public class UnitRange implements SodElement{
+    /**
+     * Creates a new <code>UnitRange</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public UnitRange (Element config){
 	try {
 	    processConfig(config);
@@ -27,6 +32,12 @@ public class UnitRange implements SodElement{
 	
     }
     
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public void processConfig(Element config) throws ConfigurationException{
 	
 	NodeList childNodes = config.getChildNodes();
@@ -48,6 +59,11 @@ public class UnitRange implements SodElement{
 	
     }
 
+    /**
+     * Describe <code>getUnitRange</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.UnitRange</code> value
+     */
     public edu.iris.Fissures.UnitRange  getUnitRange() {
 
 	return unitRange;

@@ -21,6 +21,11 @@ import org.apache.log4j.*;
  */
 
 public class EventFinder extends AbstractSource implements SodElement {
+    /**
+     * Creates a new <code>EventFinder</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public EventFinder (Element config){
 	super(config);
 	this.config = config;
@@ -37,6 +42,11 @@ public class EventFinder extends AbstractSource implements SodElement {
        
     }
     
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @exception ConfigurationException if an error occurs
+     */
     protected void processConfig() throws ConfigurationException{
 	
 	NodeList childNodes = config.getChildNodes();
@@ -66,6 +76,11 @@ public class EventFinder extends AbstractSource implements SodElement {
 	
     }
 
+    /**
+     * Describe <code>getEventDC</code> method here.
+     *
+     * @return an <code>EventDC</code> value
+     */
     public EventDC getEventDC() {
 
 	try {
@@ -76,18 +91,33 @@ public class EventFinder extends AbstractSource implements SodElement {
 	return null;
     }
 
+    /**
+     * Describe <code>getDepthRange</code> method here.
+     *
+     * @return a <code>DepthRange</code> value
+     */
     public DepthRange getDepthRange() {
 
 	return depthRange;
 
     }
 
+    /**
+     * Describe <code>getMagnitudeRange</code> method here.
+     *
+     * @return a <code>MagnitudeRange</code> value
+     */
     public MagnitudeRange getMagnitudeRange() {
 
 	return magnitudeRange;
 
     }
     
+    /**
+     * Describe <code>getArea</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Area</code> value
+     */
     public edu.iris.Fissures.Area getArea() {
 
 
@@ -95,12 +125,22 @@ public class EventFinder extends AbstractSource implements SodElement {
 	
     }
 
+    /**
+     * Describe <code>getEventTimeRange</code> method here.
+     *
+     * @return an <code>EventTimeRange</code> value
+     */
     public EventTimeRange getEventTimeRange() {
 
 	return eventTimeRange;
 
     }
 
+    /**
+     * Describe <code>getCatalogs</code> method here.
+     *
+     * @return a <code>String[]</code> value
+     */
     public String[] getCatalogs() {
 
 	String[] rtnValues = new String[1];
@@ -108,6 +148,11 @@ public class EventFinder extends AbstractSource implements SodElement {
 	return rtnValues;
     }
 
+    /**
+     * Describe <code>getContributors</code> method here.
+     *
+     * @return a <code>String[]</code> value
+     */
     public String[] getContributors() {
 
 	String[] rtnValues = new String[1];

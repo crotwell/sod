@@ -40,6 +40,12 @@ import edu.iris.Fissures.*;
 public class StationArea 
     implements StationSubsetter,SodElement {
     
+    /**
+     * Creates a new <code>StationArea</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public StationArea (Element config) throws ConfigurationException {
 	NodeList children = config.getChildNodes();
 	System.out.println("In StationArea ");
@@ -54,6 +60,14 @@ public class StationArea
 	
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param e a <code>Station</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
 	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {

@@ -9,8 +9,7 @@ import edu.iris.Fissures.*;
 
 
 /**
- *
- *channelNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ * channelNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
  * the max value of the sequence is 1.
  *
  * sample xml file
@@ -27,17 +26,32 @@ import edu.iris.Fissures.*;
  * &lt;/channelNOT&gt;
  * </bold></pre></body>
  *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
-
 public class ChannelNOT 
     extends  NetworkLogicalSubsetter 
     implements ChannelSubsetter {
     
+    /**
+     * Creates a new <code>ChannelNOT</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public ChannelNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param e a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

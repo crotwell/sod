@@ -18,6 +18,14 @@ import edu.iris.Fissures.network.*;
 
 public class  NullChannelSubsetter implements ChannelSubsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(NetworkAccess network, Channel channel, CookieJar cookies) {
 
 	return true;

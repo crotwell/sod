@@ -18,10 +18,22 @@ import java.io.*;
  */
 
 public class PrintlineChannelProcessor implements NetworkArmProcess {
+    /**
+     * Creates a new <code>PrintlineChannelProcessor</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public PrintlineChannelProcessor (Element config){
 	    
     }
 
+    /**
+     * Describe <code>process</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     */
     public void process(NetworkAccess network, Channel channel, CookieJar cookies) {
 	try {
 	    FileWriter fwriter = new FileWriter("_my_temp_", true);

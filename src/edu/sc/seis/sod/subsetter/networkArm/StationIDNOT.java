@@ -8,8 +8,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- *
- *stationIDNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ * stationIDNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
  *the max value of the sequence is 1.
  *  
  * sample xml file
@@ -17,17 +16,30 @@ import edu.iris.Fissures.*;
  *&lt;stationIDNOT&gt;
  *&lt;/stationIDNOT&gt;
  * </bold></pre></body>
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
-
 public class StationIDNOT 
     extends  NetworkLogicalSubsetter 
     implements StationIdSubsetter {
     
+    /**
+     * Creates a new <code>StationIDNOT</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public StationIDNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param e a <code>StationId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(StationId e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {

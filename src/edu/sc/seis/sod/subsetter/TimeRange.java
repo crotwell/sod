@@ -18,6 +18,11 @@ import edu.iris.Fissures.*;
 
 public abstract class TimeRange implements Subsetter{ 
 
+    /**
+     * Creates a new <code>TimeRange</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public TimeRange (Element config){
 	Element childElement = null;
 	NodeList children = config.getChildNodes();
@@ -45,6 +50,11 @@ public abstract class TimeRange implements Subsetter{
 	if(minElement == null || maxElement == null) System.out.println("one of the min or max ELements is null");
     }
 
+    /**
+     * Describe <code>getStartTime</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Time</code> value
+     */
     public edu.iris.Fissures.Time getStartTime() {
 	if(minElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(minElement);
@@ -53,6 +63,11 @@ public abstract class TimeRange implements Subsetter{
 	return rtnTime;
     }
 
+    /**
+     * Describe <code>getEndTime</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.Time</code> value
+     */
     public edu.iris.Fissures.Time getEndTime() {
 	if(maxElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(maxElement);
@@ -62,6 +77,11 @@ public abstract class TimeRange implements Subsetter{
 
     }
 
+    /**
+     * Describe <code>getTimeRange</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.TimeRange</code> value
+     */
     public edu.iris.Fissures.TimeRange getTimeRange() {
 
 	return new edu.iris.Fissures.TimeRange(getStartTime(), getEndTime());

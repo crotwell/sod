@@ -21,10 +21,24 @@ import org.w3c.dom.*;
  */
 
 public class BeginPhase  {
+    /**
+     * Creates a new <code>BeginPhase</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public BeginPhase (Element config){
 	this.config = config;
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 

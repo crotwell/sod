@@ -21,6 +21,11 @@ import org.w3c.dom.*;
  */
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
+    /**
+     * Creates a new <code>MagnitudeRange</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public MagnitudeRange (Element config){
 	super(config);
 	try {
@@ -44,6 +49,14 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
 	
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param origin an <code>Origin</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	if(origin.magnitudes[0].value >= getMinMagnitude().value &&
 	   origin.magnitudes[0].value <= getMaxMagnitude().value)
@@ -52,12 +65,22 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
 
     }
 
+    /**
+     * Describe <code>getMinMagnitude</code> method here.
+     *
+     * @return a <code>Magnitude</code> value
+     */
     public Magnitude getMinMagnitude() {
 
 	return new Magnitude(magType.getType(), getMinValue(), null);
 	
     }
     
+    /**
+     * Describe <code>getMaxMagnitude</code> method here.
+     *
+     * @return a <code>Magnitude</code> value
+     */
     public Magnitude getMaxMagnitude() {
 
 	return new Magnitude(magType.getType(), getMaxValue(), null);

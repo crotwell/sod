@@ -40,6 +40,12 @@ import edu.iris.Fissures.*;
 public class EventArea 
     implements OriginSubsetter,SodElement {
     
+    /**
+     * Creates a new <code>EventArea</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public EventArea (Element config) throws ConfigurationException {
 	NodeList children = config.getChildNodes();
 	System.out.println("In EventArea ");
@@ -54,6 +60,14 @@ public class EventArea
 	
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param e an <code>Origin</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) {
 	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {

@@ -11,11 +11,26 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 
 
+/**
+ * Describe class <code>NullRequestGenerator</code> here.
+ *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
+ */
 public class NullRequestGenerator 
     
     implements RequestGenerator {
     
-     public RequestFilter[] generateRequest(EventAccessOperations event, 
+    /**
+     * Describe <code>generateRequest</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>RequestFilter[]</code> value
+     */
+    public RequestFilter[] generateRequest(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 
 			  CookieJar cookies){

@@ -17,10 +17,21 @@ import java.io.*;
  */
 
 public class PrintLineEventProcess implements EventArmProcess {
+    /**
+     * Creates a new <code>PrintLineEventProcess</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public PrintLineEventProcess (Element config){
 	
     }
 
+    /**
+     * Describe <code>process</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param cookies a <code>CookieJar</code> value
+     */
     public void process(EventAccessOperations event, CookieJar cookies) {
 	try {
 	    FileWriter fwriter = new FileWriter("_my_event_temp_", true);

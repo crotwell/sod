@@ -18,6 +18,13 @@ import edu.iris.Fissures.network.*;
 
 public class  NullNetworkIdSubsetter implements NetworkIdSubsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param networkId a <code>NetworkId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(NetworkId networkId, CookieJar cookies) {
 
 	return true;

@@ -19,7 +19,12 @@ import org.w3c.dom.*;
 
 public class DistanceRange implements SodElement{
 
-     public DistanceRange (Element config){
+    /**
+     * Creates a new <code>DistanceRange</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
+    public DistanceRange (Element config){
 	try {
 	    processConfig(config);
 	} catch(ConfigurationException ce) {
@@ -29,6 +34,12 @@ public class DistanceRange implements SodElement{
 	
     }
     
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public void processConfig(Element config) throws ConfigurationException{
 	
 	NodeList childNodes = config.getChildNodes();
@@ -50,12 +61,22 @@ public class DistanceRange implements SodElement{
 	
     }
 
+    /**
+     * Describe <code>getDistanceRange</code> method here.
+     *
+     * @return an <code>edu.iris.Fissures.UnitRange</code> value
+     */
     public edu.iris.Fissures.UnitRange  getDistanceRange() {
 
 	return unitRange;
 
     }
  
+    /**
+     * Describe <code>getMinDistance</code> method here.
+     *
+     * @return a <code>Quantity</code> value
+     */
     public Quantity getMinDistance() {
 
 	return new QuantityImpl(getDistanceRange().min_value, getDistanceRange().the_units);
@@ -63,6 +84,11 @@ public class DistanceRange implements SodElement{
     }
 
 
+    /**
+     * Describe <code>getMaxDistance</code> method here.
+     *
+     * @return a <code>Quantity</code> value
+     */
     public Quantity getMaxDistance() {
 	
 	return new QuantityImpl(getDistanceRange().max_value, getDistanceRange().the_units);

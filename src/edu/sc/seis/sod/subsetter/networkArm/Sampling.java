@@ -9,7 +9,7 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
-/** 
+/**
  * sample xml file<br>
  * <body>
  * <pre>
@@ -23,11 +23,17 @@ import org.w3c.dom.*;
  *		&lt;/interval&gt;
  *	&lt;/sampling&gt;
  * </bold></pre></body>
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
 public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
-	public Sampling(Element config) {
+    /**
+     * Creates a new <code>Sampling</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
+    public Sampling(Element config) {
 
 		super(config);
 		NodeList children  = config.getChildNodes();
@@ -52,7 +58,15 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 	
 	}
 
-	public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) {
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) {
 
 		System.out.println("The min Value is "+getMinValue());
 		System.out.println("The max Value is "+getMaxValue());

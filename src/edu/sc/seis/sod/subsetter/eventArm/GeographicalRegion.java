@@ -19,10 +19,20 @@ import edu.iris.Fissures.*;
  */
 
 public class GeographicalRegion  extends FlinnEngdahlRegion{
+    /**
+     * Creates a new <code>GeographicalRegion</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public GeographicalRegion (Element config){
 	super(config);
     }
 
+    /**
+     * Describe <code>getType</code> method here.
+     *
+     * @return a <code>FlinnEngdahlType</code> value
+     */
     public FlinnEngdahlType getType() {
 
 	return FlinnEngdahlType.from_int(1);

@@ -22,10 +22,26 @@ import org.w3c.dom.*;
  */
 
 public class FullCoverage implements AvailableDataSubsetter, SodElement{
+    /**
+     * Creates a new <code>FullCoverage</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public FullCoverage (Element config){
 	
     }
     
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param original a <code>RequestFilter[]</code> value
+     * @param available a <code>RequestFilter[]</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 

@@ -18,6 +18,13 @@ import edu.iris.Fissures.network.*;
 
 public class  NullSiteIdSubsetter implements SiteIdSubsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param siteId a <code>SiteId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     */
     public boolean accept(SiteId siteId, CookieJar cookies) {
 
 	return true;

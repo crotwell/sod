@@ -15,11 +15,21 @@ import org.w3c.dom.*;
  */
 
 public class MagType implements Subsetter{
+    /**
+     * Creates a new <code>MagType</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
     public MagType (Element config){
 	
 	this.config = config;
     }
 
+    /**
+     * Describe <code>getType</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getType() {
 
 	return SodUtil.getNestedText(config);

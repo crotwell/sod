@@ -5,17 +5,38 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
+/**
+ * Describe class <code>Interval</code> here.
+ *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
+ */
 public class Interval implements Subsetter{
 
-	public Interval(Element config) {
+    /**
+     * Creates a new <code>Interval</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     */
+    public Interval(Element config) {
 		this.config = config;		
 	}
 
-	public String getUnit() {
+    /**
+     * Describe <code>getUnit</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getUnit() {
 		return SodUtil.getNestedText(SodUtil.getElement(config,"unit"));
 	}
 
-	public String getValue() {
+    /**
+     * Describe <code>getValue</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getValue() {
 		return SodUtil.getNestedText(SodUtil.getElement(config,"value"));
 	}
 

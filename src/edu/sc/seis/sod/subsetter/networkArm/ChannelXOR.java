@@ -8,8 +8,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- *
- *channelXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 2 and
+ * channelXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
  *
  * sample xml file
@@ -34,17 +33,32 @@ import edu.iris.Fissures.*;
  * &lt;/channelXOR&gt;
  * </bold></pre></body>
  *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
  */
-
-
 public class ChannelXOR 
     extends  NetworkLogicalSubsetter 
     implements ChannelSubsetter {
     
+    /**
+     * Creates a new <code>ChannelXOR</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public ChannelXOR (Element config) throws ConfigurationException {
 	super(config);
     }
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param e a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
