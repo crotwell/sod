@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<template><html>
+<template>
+<html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Stations</title>
@@ -8,7 +9,11 @@
 <body>
 <div id="Header">
 <a href="network.html"> Networks</a>
-> <network><code/>-<name/></network>
+<network>
+<code/>
+-
+<name/>
+</network>
 </div>
 <div id="Content">
 <h1>Stations in this network</h1>
@@ -21,22 +26,30 @@
 <td>Longitude</td>
 <td>Status</td>
 </tr>
-<stations><station><tr>
+<stations>
+<station>
+<tr>
 <td><code/></td>
 <td><name/></td>
 <td><latitude/></td>
 <td><longitude/></td>
 <td><status/></td>
-</tr></station></stations>
+</tr>
+</station>
+</stations>
 </table>
 </div>
 <div id="Menu">
 <ul>
+<li>
+<a href="../location.html">Events</a>
+</li>
 <li>
 <a href="../network.html">Networks</a>
 </li>
 </ul>
 </div>
 </body>
-</html></template>
+</html>
+</template>
 

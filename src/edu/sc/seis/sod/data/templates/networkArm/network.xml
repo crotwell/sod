@@ -24,11 +24,17 @@ Networks
 <networks>
 <tr><network>
 <td><code/></td>
-<td><name/></td>
+<td><a><attribute name="href"><code/>-<firstWord/>/stations.html"</attribute><name/></a></td>
 <td><status/></td>
 </network></tr>
 </networks>
 </table>
+</div>
+<div id="Menu">
+<ul>
+<li><a href="location.html">Events</a></li>
+<li><a href="network.html">Networks</a></li>
+</ul>
 </div>
 </body>
 </html>
