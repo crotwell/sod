@@ -61,7 +61,6 @@ public class EventArm implements Runnable{
     public boolean isAlive(){ return alive; }
 
     public void run() {
-        alive = true;
         try {
             getEvents();
         } catch(Throwable e) {
@@ -456,7 +455,7 @@ public class EventArm implements Runnable{
 
     private JDBCQueryTime queryTimes;
 
-    private boolean alive;
+    private boolean alive = true;
 
     private CacheEvent lastEvent;
 
