@@ -159,7 +159,7 @@ in the instance document
 		<xsd:complexContent>	
 			<xsd:extension base="originType">
 				<xsd:sequence>
-					<xsd:element name="type" type="magnitudetypeType"/>
+					<xsd:element name="magType" type="magnitudetypeType"/>
 					<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
 				</xsd:sequence>
@@ -257,7 +257,7 @@ in the instance document
 					<xsd:element ref="area"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="depthRange"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="eventTimeRange"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="magnitude"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="magnitudeRange"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="catalog" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="contributor" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
 				</xsd:sequence>
@@ -281,6 +281,15 @@ in the instance document
 	<xsd:complexType name="externalEventProcessType">
 		<xsd:complexContent>
 			<xsd:extension base="externalProcessType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="printLineEventProcessType">
+		<xsd:complexContent>
+			<xsd:extension base="internalProcessType">
+				<xsd:sequence>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -311,7 +320,7 @@ in the instance document
 	<xsd:element name="origin" type="originType" abstract="true"/>
 
 	<!-- element representing magnitude -->
-	<xsd:element name="magnitude" type="magnitudeType" substitutionGroup="origin"/>
+	<xsd:element name="magnitudeRange" type="magnitudeType" substitutionGroup="origin"/>
 
 	<!-- element representing depth -->
          <xsd:element name="depthRange" type="depthRangeType" substitutionGroup="origin"/>	
@@ -356,7 +365,7 @@ in the instance document
 
 	<!-- element representing the process -->
 	<xsd:element name="eventProcess" type="processType" abstract="true"/>
-	<xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
+	<xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
 
 	<xsd:complexType name="eventArmType">	
 		<xsd:complexContent>
@@ -365,7 +374,7 @@ in the instance document
 					<xsd:element ref="eventSource"/>
 					<xsd:element ref="eventAttr" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="origin" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="eventProcess" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element ref="printLineEventProcess" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

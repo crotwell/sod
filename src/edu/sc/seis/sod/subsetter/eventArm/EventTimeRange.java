@@ -5,6 +5,7 @@ import edu.sc.seis.sod.subsetter.*;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
+import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
@@ -26,8 +27,12 @@ public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implemen
     }
 
     public boolean accept(Origin origin, CookieJar cookies) {
-
-	return true;
+	
+	MicroSecondDate actualDate = new MicroSecondDate(origin.origin_time);
+	MicroSecondDate startDate = new MicroSecondDate(getStartTime());
+	MicroSecondDate endDate = new MicroSecondDate(getEndTime());
+	if( actualDate.after(startDate) && actualDate.before(endDate)) return true;
+	else return false;
     }
     
 }// EventTimeRange

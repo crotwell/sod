@@ -98,6 +98,7 @@ public class SodUtil {
 		edu.iris.Fissures.model.UnitImpl.class.getField(unitName);
 	    return (edu.iris.Fissures.model.UnitImpl)field.get(edu.iris.Fissures.model.UnitImpl.SECOND);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new ConfigurationException("Can't find unit "+unitName, e);
 	} // end of try-catch
     }
@@ -109,24 +110,24 @@ public class SodUtil {
 
 	NodeList children = config.getChildNodes();
 	Node node;
-	for (int i=0; i<children.getLength(); i++) {
+	for (int i=0; i < children.getLength(); i++) {
 	    node = children.item(i);
 	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
 		String tagName = subElement.getTagName();
-		 if (tagName.equals("unit")) {
+		if (tagName.equals("unit")) {
 		    unit = loadUnit(subElement);
 		} else if (tagName.equals("min")) {
 		    min = Double.parseDouble(getText(subElement));
 		} else if (tagName.equals("max")) {
 		    max = Double.parseDouble(getText(subElement));
 		}		
-		 UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
-		 return unitRange;
+	
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	throw new ConfigurationException("Unable to load unit from "+config.getNodeName());
+	UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
+	return unitRange;
     }
 
     public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) 
@@ -204,7 +205,10 @@ public class SodUtil {
 			node = children.item(counter);
 			if(node instanceof Element ) {
 
-				if(((Element)node).getTagName().equals(elementName)) return ((Element)node);
+				if(((Element)node).getTagName().equals(elementName)) {
+				    System.out.println("in sodUtil getElement, the element name is "+((Element)node).getTagName());
+				    return ((Element)node);
+				}
 			}
 
 		}

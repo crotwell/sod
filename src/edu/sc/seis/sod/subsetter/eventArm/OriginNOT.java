@@ -8,7 +8,7 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * EventAttrAND.java
+ * OriginNOT.java
  *
  *
  * Created: Thu Mar 14 14:02:33 2002
@@ -17,23 +17,23 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public class EventAttrAND 
+public class OriginNOT 
     extends EventLogicalSubsetter 
-    implements EventAttrSubsetter {
+    implements OriginSubsetter {
     
-    public EventAttrAND (Element config) throws ConfigurationException {
+    public OriginNOT (Element config) throws ConfigurationException {
 	super(config);
     }
 
-    public boolean accept(EventAttr e,  CookieJar cookies) {
+    public boolean accept(Origin e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
-	while (it.hasNext()) {
-	    EventAttrSubsetter filter = (EventAttrSubsetter)it.next();
-	    if ( !filter.accept(e, cookies)) {
+	if (it.hasNext()) {
+	    OriginSubsetter filter = (OriginSubsetter)it.next();
+	    if (filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
 	return true;
     }
 
-}// EventAttrAND
+}// OriginNOT

@@ -24,12 +24,12 @@
 		  <stationArea>
 		    <boxArea>
 			<latitudeRange>
-				<min>20</min>
-				<max>40</max>
+				<min>30</min>
+				<max>33</max>
 			</latitudeRange>
 			<longitudeRange>
 				<min>-100</min>
-				<max>-80</max>
+				<max>100</max>
 			</longitudeRange>
 		    </boxArea>
 		   </stationArea>

@@ -33,7 +33,7 @@ public class EventAttrNOT
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// EventAttrNOT

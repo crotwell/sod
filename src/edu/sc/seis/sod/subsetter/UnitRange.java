@@ -30,31 +30,31 @@ public class UnitRange implements SodElement{
     public void processConfig(Element config) throws ConfigurationException{
 	
 	NodeList childNodes = config.getChildNodes();
+	Element unitRangeElement = null;
 	Node node;
 	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-									   
+
 	    node = childNodes.item(counter);
 	    if(node instanceof Element) {
-
+		
 		String tagName = ((Element)node).getTagName();
-		if(tagName.equals("unit")) unit = (edu.sc.seis.sod.subsetter.Unit)SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter");
-		else if(tagName.equals("min")) min = Double.parseDouble(SodUtil.getNestedText((Element)node));
-		else if(tagName.equals("max")) max = Double.parseDouble(SodUtil.getNestedText((Element)node));
+		if(tagName.equals("unitRange")) unitRangeElement = (Element)node;
 		
 	    }
+
 	}
+	
+	unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
 	
     }
 
     public edu.iris.Fissures.UnitRange  getUnitRange() {
 
-	return new edu.iris.Fissures.model.UnitRangeImpl(min, max, unit.getUnit());
+	return unitRange;
 
     }
 
-   
-    private double min;
-    private double max;
-    private edu.sc.seis.sod.subsetter.Unit unit = null;
-
+ 
+    private edu.iris.Fissures.UnitRange unitRange = null;
+  
 }// UnitRange

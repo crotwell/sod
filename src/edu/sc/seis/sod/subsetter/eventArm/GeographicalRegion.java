@@ -22,5 +22,10 @@ public class GeographicalRegion  extends FlinnEngdahlRegion{
     public GeographicalRegion (Element config){
 	super(config);
     }
+
+    public FlinnEngdahlType getType() {
+
+	return FlinnEngdahlType.from_int(1);
+    }
     
 }// GeographicalRegion
