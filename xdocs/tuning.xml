@@ -8,7 +8,7 @@
         <section name="Tuning SOD">
             <ul>
                 <li>sod.event.QueryIncrement<br/> Set this property to the smallest amount of time
-                    that is likely to get an event. This will allow sod to start working on the
+                    that is likely to get an event. This will allow SOD to start working on the
                     first events more quickly as it limits the number of events it must process
                     before it begins working on them individually. </li>
             </ul>

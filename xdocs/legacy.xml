@@ -7,8 +7,8 @@
                 <section name="Executing Commands">
                         <p>The legacyExecute processor is capable of running existing
                         command line programs. It does this by passing the filename
-                        of the seismograms saved by a earlier SaveSeismogramToFile
-                        processor to a program started with Runtime.exec(). See
+                        of the seismograms, saved by an earlier SaveSeismogramToFile
+                        processor, to a program started with Runtime.exec(). See
                         the documentation for the individual SOD tags for more
                         information.
                         </p>
@@ -35,7 +35,7 @@
                      <p>One important thing is that the legacyExecute works in cooperation
                      with the saveSeismogramToFile processor, which handles the saving
                      of the actual seismograms. LegacyExecute just uses the filenames
-                     from SaveSeismogramToFile to pass to the command. So, you must
+                     from SaveSeismogramToFile to pass to the command. Therefore, you must
                      have a saveSeismogramToFile somewhere before the legacyExecute.
                      SaveSeismogramToFile also has an optional prefix tag, which
                      allows more than one to be in the same SOD run without interfering.
@@ -51,28 +51,28 @@
                 <section name="Complications">
                         <p>Unfortunately, there can be significant complications
                         with executing external applications from within SOD. That
-                        is not to say that it is hard, but that there are many
+                        is not to say that it is difficult, but that there are many
                         other potential sources of trouble such as the environment,
-                        locating the executable, and numerous, subtle cross
+                        locating the executable, and numerous subtle cross
                         platform differences. However, given the large body of
-                        existing processing systems, many custom written by researchers
-                        for their particular needs, it would be a real shame if SOD
+                        existing processing systems, many specifically written by researchers
+                        for their particular needs, it would be a shame if SOD
                         were not able to make use of these existing native codes.
                         </p>
                         <p>Perhaps the most important thing to understand is that
-                        SOD cannot directly processes commands as you would when
+                        SOD cannot directly process commands as you would when
                         typing into a shell from the keyboard. It executes a single
                         program with arguments, meaning no redirecting of output, no
-                        multiple commands separated by semicolons and no piping of
+                        multiple commands separated by semicolons, and no piping of
                         input with HERE documents. Therefore, we highly encourage you
                         to let SOD call a separate shell script that in turn calls
                         your code. Shell scripts are familiar to most researchers
-                        and provide a buffer between sod and the operating system.
+                        and provide a buffer between SOD and the operating system.
                         </p>
                         <p>Input and output also causes difficulties. The legacyExecute
                         processor maps the output and error streams from the process
                         to SOD's System.out and System.err, so you can see any output.
-                        However, SOD makes no attempt to process this output. So, it
+                        However, SOD makes no attempt to process this output. It
                         is best if the script you run sends any important information
                         to a separate log file. Expect, freely available from http://expect.nist.gov, may
                         be a better alternative to traditional shell script as it allows
@@ -83,17 +83,17 @@
                         </p>
                         <p>Lastly, the success or failure of an external process
                         is difficult for SOD to determine. It simply looks at the
-                        returned exit code, and calls it an error if it is non-zero.
-                        While non-zero error codes are traditional for Unix applications
+                        returned exit code and calls it an error if it is non-zero.
+                        While non-zero error codes are traditional for Unix applications,
                         they provide little to no debugging information to try
                         and determine the actual cause. Hence, you may need to generate
                         and save logging information internal to your script to
-                        help determine when something has gone wrong and why. Also
+                        help determine when something has gone wrong and why. Also,
                         if you do use a shell script, then you need to ensure that the
                         exit code of the shell script represents the success or failure
-                        of the processing, as opposed to just the script running.
+                        of the processing as opposed to just the script running.
                         </p>
-                        <p>A useful reference, although from a Java programming perspective
+                        <p>A useful reference, although from a Java programming perspective,
                         is <a href="http://www.javaworld.com/javaworld/jw-12-2000/jw-1229-traps.html"><b>When Runtime.exec() won't</b></a>.
                         </p>
                 </section>

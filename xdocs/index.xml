@@ -10,7 +10,7 @@
 <ol>
 <li>A section of grass-covered surface soil held together by matted roots; turf.</li>
 <li>The ground, especially when covered with grass.</li>
-<li>A software application that automates tedious data selection, downloading and routine processing tasks in seismology, shortening the time between idea and science. </li>
+<li>A software application that automates tedious data selection, downloading, and routine processing tasks in seismology, shortening the time between idea and science. </li>
 </ol>
 <i>[Middle English, from Middle Low German, or Middle Dutch<tt> sode</tt>.]</i>
 </p>
@@ -24,8 +24,8 @@
                         by hand is prone to error, there is also a
                         GUI editor included with SOD for creating these files.</p>
                         <p>
-                        The second part is actually running SOD with the strategy file. SOD is
-                        meant to be a long running background program, and so is run
+                        The second part to using SOD is actually running it with the strategy file. SOD is
+                        meant to be a long running background program, so it is run
                         from the command line and does not
                         have a GUI.
                         </p>

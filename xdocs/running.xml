@@ -33,29 +33,29 @@
                 Status Base Directory. The default is the directory <tt>status</tt> relative to
                 wherever the SOD run is started. So, if you start a SOD run on tutorial.xml as
                 described in the first section of this document, a status directory will be created
-                inside of the sod directory. This directory will contain loads of html files
-                describing what SOD is doing. The best to visit first is index.html. It contains
-                some basic information about the run (when it was started, how many waveforms have
-                been processed, etc) and has links to all of the other pages SOD is generating. To
-                find out more about what SOD is doing, follow those links and click on the <img
+                inside of the SOD directory. This directory will contain loads of html files
+                describing what SOD is doing. It is best to first visit index.html. It contains some
+                basic information about the run (when it was started, how many waveforms have been
+                processed, etc) and has links to all of the other pages SOD is generating. To find
+                out more about what SOD is doing, follow those links and click on the <img
                 src="helpmark.png"/> icons to see what the data near them indicates. </p>
         </section>
         <section name="Cleaning up after SOD">
             <img class="right" src="images/half-sodlogo-y100.gif"/>
             <section name="Generated files">
                 <p>SOD runs generate a ton of files, and if those files still exist for subsequent
-                    runs it can cause problems. For example the save seismogram to file waveform arm
-                    processor will not write over the files of a previous run. If it wants to write
-                    to a file already exists, it'll just write that file but with an incrementing
-                    number appended to the end. So if similar SOD runs are executed in the same
-                    directory, they'll probably end up writing out files to the same place with
-                    bigger and bigger numbers appended to the end. These are less than desirable
-                    results. As such, you should either delete the data directories between
-                    subsequent runs, or run SOD in different directories per run as described in the
-                    section about running in a directory other than the install. tutorial.xml and
-                    weed.xml both generate SAC files and save them to the POND_II directory. So, if
-                    you run one of them, tweak it, and then want to run it again in the same
-                    directory, delete the POND_II directory before starting the run.</p>
+                    runs, it can cause problems. For example, the save seismogram to file waveform
+                    arm processor will not write over the files of a previous run. If it wants to
+                    write to a file that already exists, it'll just write that file but with an
+                    incrementing number appended to the end. So if similar SOD runs are executed in
+                    the same directory, they'll probably end up writing out files to the same place
+                    with bigger and bigger numbers appended to the end. These are less than
+                    desirable results. As such, you should either delete the data directories
+                    between subsequent runs or run SOD in different directories per run, as
+                    described in the section about running in a directory other than the install.
+                    tutorial.xml and weed.xml both generate SAC files and save them to the POND_II
+                    directory. So if you run one of them, tweak it, and then want to run it again in
+                    the same directory, delete the POND_II directory before starting the run.</p>
             </section>
             <section name="SOD's Database">
                 <p>SOD uses a database internally to store information about what events and
@@ -63,7 +63,7 @@
                     the results of various processes. If SOD suddenly stops due to events outside of
                     its control (power outage, operating system reboot, 10.5 is on and SOD doesn't
                     want to miss it) it can use this database to pick up where it left off and keep
-                    truckin'. However, if you start SOD and its database is sitting there from a
+                    on truckin'. However, if you start SOD and its database is sitting there from a
                     previous completed run, it'll just think it died unexpectedly and check its
                     database to see what work remains. If the strategy file gets the same events and
                     channels, SOD will declare all work finished and quit immediately. To remedy
@@ -73,7 +73,7 @@
                     happened (nuclear holocaust, T-Rex attack, sale on attractive garnet tractors)
                     and SOD is interrupted, unset this property so SOD will continue where it left
                     off. You can unset it by either changing TRUE inside the removeDatabase tag to
-                    FALSE, or unchecking the Remove Database option in the editor and saving the file.</p>
+                    FALSE or unchecking the Remove Database option in the editor and saving the file.</p>
             </section>
         </section>
     </body>

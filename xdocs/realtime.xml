@@ -7,11 +7,11 @@
 <body>
 <section name="Realtime SOD">
         <p>
-                A SOD run thats getting piping fresh data has a few extra things to take into consideration as opposed to a run gathering historical data.  Mainly a real time run needs to ensure that it gives the data enough time to trickle in from various stations after the event occurs before trying to process the data.  Several configuration in SOD work together to allow you to specify how SOD should wait for data to arrive.
+                Unlike a SOD run gathering historical data, a run that gets piping fresh data has a few extra things to take into consideration.  For the most part, a real time run needs to ensure that it gives the data enough time to trickle in from various stations after the event occurs before trying to process the data.  Several configurations in SOD work together to allow you to specify how SOD should wait for data to arrive.
         </p>
         <section name="Available Data Subsetters">
         <p>
-                The first step in ensuring the data you need for processing exists is to use SOD's available data subsetters in the waveform arm.  The main subsetters are &lt;someCoverage/&gt;, &lt;fullCoverage&gt;, and &lt;noGaps&gt;.  &lt;someCoverage/&gt; ensures that at least some data comes back.  Data that passes &lt;fullCoverage&gt; covers everything specified by the original request.   &lt;noGaps&gt; may not cover all of the request time, but it has no gaps internally.  
+                The first step in ensuring that the data you need for processing exists is to use SOD's available data subsetters in the waveform arm.  The main subsetters are &lt;someCoverage/&gt;, &lt;fullCoverage&gt;, and &lt;noGaps&gt;.  &lt;someCoverage/&gt; ensures that at least some data comes back.  Data that passes &lt;fullCoverage&gt; covers everything specified by the original request.   &lt;noGaps&gt; may not cover all of the request time, but it has no gaps internally.  
         </p>
                 <source>
 &lt;waveFormArm&gt;
@@ -38,12 +38,12 @@
   &lt;/localSeismogramArm&gt;
 &lt;/waveformArm&gt;</source>
                 <p>
-                This waveform arm asks for sixty seconds before the p wave to 20 minutes after its arrival from IRIS's BUD data center and prints out information about the waveforms it receives only after checking that the data it received at least covers part of the request.  If any of the available data subsetters reject some data, SOD periodically goes back to the server and checks for new data.  Through this mechanism its possible to get an event right as it pops into the event server, and quickly grab data from stations that are reporting in real time and have data available for the new event.  Stations that take a little longer to get their data into the servers will get their data processed as the retries get back to it.  
+                This waveform arm asks for sixty seconds before the p wave to 20 minutes after its arrival from IRIS's BUD data center.  It then prints out information about the waveforms it receives only after checking that the data it received at least covers part of the request.  If any of the available data subsetters reject some data, SOD periodically goes back to the server and checks for new data.  Through this mechanism it's possible to get an event right as it pops into the event server and quickly grab data from stations that are reporting in real time and have data available for the new event.  Stations that take a little longer to get their data into the servers will get their data processed as the retries get back to it.  
         </p>
         </section>
         <section name="Deciding when data will never arrive">
                 <p>
-                        The retry system for available data subsetters described in the previous section is great for real time data, but at some point SOD needs to give up on a particular piece of data.  Not every station is going to have data for every event in a run.  To handle this contingency, SOD uses the &lt;maxRetryDelay&gt; in the properties section of its strategy file.  The value of this property determines how long SOD will check for available data for an event after it has occurred.  By default the value is 180 days.
+                        The retry system for available data subsetters, described in the previous section, is great for real time data, but at some point SOD needs to give up on a particular piece of data.  Not every station is going to have data for every event in a run.  To handle this contingency, SOD uses the &lt;maxRetryDelay&gt; in the properties section of its strategy file.  The value of this property determines how long SOD will check for available data for an event after it has occurred.  By default the value is 180 days.
                         </p>
                         <source>
 &lt;properties&gt;
@@ -58,7 +58,7 @@
         </section>
         <section name="Salvaging the data that exists">
                 <p>
-                        But wait!  What if you want full coverage if you can get it, but you'll take some coverage if its available.  Under the system defined up until now, it's either or.  But there are a couple other available data subsetters that can help in this circumstance.  First are the available data logicals.  Like most subsetters, available data has AND, OR, NOT, and XOR versions to allow the combination of subsetter pieces.  The second piece that allows for greater specification of what coverage you want is the &lt;postEventWait&gt; subsetter.  This is a subsetter that takes a time interval and when it's that long after the event has occurred, the subsetter will pass.  This is more easily explained in an example, so here goes:
+                        But wait!  What if you want full coverage if you can get it, but you'll take some coverage if its available?  Under the system as it is currently defined, it must be one or the other.  However, there are a couple other available data subsetters that can help in this circumstance.  First are the available data logicals.  Like most subsetters, available data has AND, OR, NOT, and XOR versions to allow the combination of subsetter pieces.  The second piece that allows for greater specification of what coverage you want is the &lt;postEventWait&gt; subsetter.  This is a subsetter that takes a time interval and when that time interval (starting with the event) has passed, the subsetter will pass.  This is more easily explained in an example, so here goes:
                         </p>
                         <source>
 &lt;availableDataAND&gt;
@@ -72,8 +72,8 @@
   &lt;someCoverage/&gt;
 &lt;/availableDataAND&gt;</source>
                         <p>
-                                First look at the section in the &lt;availableDataOR&gt;.  It specifies a subsetter that will pass if there is full coverage <em>or</em> if 4 days have passed since the event has occurred.  This is then combined with &lt;someCoverage/&gt; in the 
-&lt;availableDataAND&gt;.  This means that when the OR passes, there must also be some data.  Putting this all together means that SOD will wait 4 days for full coverage of the data, and after that point, it'll be happy with just some.  Combined with the 5 day maximum retry wait from the previous section, SOD will give up completely if no data shows up by the fifth day. This allows for a more fine grained data request.
+                                First, look at the section in the &lt;availableDataOR&gt;.  It specifies a subsetter that will pass if there is full coverage <em>or</em> if 4 days have passed since the event has occurred.  This is then combined with &lt;someCoverage/&gt; in the 
+&lt;availableDataAND&gt;.  This means that when the OR passes, there must also be some data.  Putting this all together means that SOD will wait 4 days for full coverage of the data and after that point it'll be happy with just some.  Combined with the 5 day maximum retry wait from the previous section, SOD will give up completely if no data shows up by the fifth day. This allows for a more fine-grained data request.
                         </p>
                 </section>
         </section>

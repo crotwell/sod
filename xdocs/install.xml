@@ -29,12 +29,12 @@
             <p> SOD is effectively installed at this point, and you can certainly run it from within
                 the <tt>sod</tt> directory with <tt>./bin/sod.sh</tt>. However, SOD's scripts use
                 the SOD_HOME environment variable to find SOD's libraries. In order to run sod from
-                another directory, you can either set SOD_HOME as an environmental variable or in
+                another directory, you can either set SOD_HOME as an environmental variable or set it in
                 the scripts in the <tt>bin</tt> directory. Changing the scripts is the recommended
                 method. </p>
-            <p>To set it in the script, cd into the bin directory. If you're on a Unix like
+            <p>To set it in the script, cd into the bin directory. If you're on a Unix-like
                 platform, open up sod.sh in a text editor. On Windows, open up sod.bat for editing.
-                You will also need to edit sodeditor.sh or sodeditor.bat. Near the beginning of
+                You will also need to edit sodeditor.sh or sodeditor.bat.  Near the beginning of
                 these files is the <b>SOD_HOME</b> variable. It's currently set to '../' so you can
                 run SOD from the <tt>sod</tt> directory. Set the value to the path to SOD's
                 directory. For example, if SOD was installed in <tt>/usr/local/sod-2.0</tt>, then
@@ -43,10 +43,10 @@
                 <br/> and this for windows:<br/>
                 <tt>set SOD_HOME=c:\usr\local\sod-2.0</tt>
                 <br/> The scripts are smart enough to append lib or bin as needed. </p>
-            <p> Lastly, you should either add sod.sh and sodeditor.sh, or sod.bat and sodeditor.bat,
+            <p> Lastly, you should either add sod.sh and sodeditor.sh or sod.bat and sodeditor.bat
                 to your system PATH. </p>
             <p> Now SOD can be run from any directory, which makes segregating results from runs
-                easier. Once you've done that SOD is officially installed. If you're not too worn
+                easier. Once you've done that, SOD is officially installed. If you're not too worn
                 out, now might be a good time to go on to the <a href="walkthrough.html">strategy
                     file via editor</a> section to see various neat things SOD can do. </p>
         </section>
