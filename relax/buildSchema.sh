@@ -1,5 +1,5 @@
 #!/bin/sh
-REPOSITORY=${HOME}/.repository
+REPOSITORY=${HOME}/.maven/repository
 
 echo CLASSPATH is...
 echo `./classpath_creator.sh -seperator \: `

@@ -1,5 +1,5 @@
 #!/bin/sh
-MAVEN=${HOME}/.repository
+MAVEN=${HOME}/.maven/repository
 SEP=' '
 
 #if using cygwin, use windows friendly options
