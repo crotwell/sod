@@ -51,9 +51,6 @@ import org.w3c.dom.NodeList;
 
 public class LocalSeismogramArm implements Subsetter{
     public LocalSeismogramArm (Element config) throws ConfigurationException{
-        if ( ! config.getTagName().equals("localSeismogramArm")) {
-            throw new IllegalArgumentException("Configuration element must be a localSeismogramArm tag");
-        }
         processConfig(config);
     }
 
