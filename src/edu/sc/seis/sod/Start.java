@@ -12,10 +12,6 @@ import org.apache.log4j.*;
 import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
-import org.apache.xerces.dom.DOMImplementationImpl;
-import org.apache.xerces.dom3.as.DOMImplementationAS;
-import org.apache.xerces.dom3.as.ASModel;
-import org.apache.xerces.dom3.as.DOMASBuilder;
 import javax.xml.parsers.*;
 
 /**
