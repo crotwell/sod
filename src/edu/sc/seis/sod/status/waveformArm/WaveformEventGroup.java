@@ -2,7 +2,7 @@ package edu.sc.seis.sod.status.waveFormArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;

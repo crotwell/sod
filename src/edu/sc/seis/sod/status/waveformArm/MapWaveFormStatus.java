@@ -19,7 +19,7 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.status.MapPool;

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventDCOperations;
 import edu.iris.Fissures.IfEvent.NotFound;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.AbstractSource;
+import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;

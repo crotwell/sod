@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeUtils;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Subsetter;
+import edu.sc.seis.sod.subsetter.Subsetter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -3,7 +3,7 @@ package edu.sc.seis.sod.process.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.EventArmProcess;
+import edu.sc.seis.sod.process.eventArm.EventArmProcess;
 import edu.sc.seis.sod.SodUtil;
 import java.io.BufferedWriter;
 import java.io.FileWriter;

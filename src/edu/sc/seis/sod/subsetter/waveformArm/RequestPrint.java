@@ -13,7 +13,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.RequestSubsetter;
+import edu.sc.seis.sod.subsetter.waveFormArm.RequestSubsetter;
 import org.w3c.dom.Element;
 
 public class RequestPrint

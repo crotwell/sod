@@ -1,4 +1,6 @@
 package edu.sc.seis.sod;
+import edu.sc.seis.sod.status.waveFormArm.*;
+import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
 import java.util.*;
 
@@ -18,7 +20,7 @@ import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
-import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
+import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;

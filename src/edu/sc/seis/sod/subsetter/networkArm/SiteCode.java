@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.networkArm;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SiteSubsetter;
+import edu.sc.seis.sod.subsetter.networkArm.SiteSubsetter;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 

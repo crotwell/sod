@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.sc.seis.sod.ChannelSubsetter;
+import edu.sc.seis.sod.subsetter.networkArm.ChannelSubsetter;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventChannelSubsetter;

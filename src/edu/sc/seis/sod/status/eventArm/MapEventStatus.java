@@ -4,7 +4,7 @@ import edu.sc.seis.fissuresUtil.display.EQDataEvent;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventStatus;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.database.event.EventCondition;

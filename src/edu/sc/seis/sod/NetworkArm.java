@@ -1,4 +1,7 @@
 package edu.sc.seis.sod;
+import edu.sc.seis.sod.status.networkArm.*;
+import edu.sc.seis.sod.process.networkArm.*;
+import edu.sc.seis.sod.subsetter.networkArm.*;
 
 import edu.iris.Fissures.IfNetwork.*;
 import edu.sc.seis.sod.database.*;

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
+import edu.sc.seis.sod.subsetter.networkArm.*;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;

@@ -9,7 +9,7 @@ package edu.sc.seis.sod.status.waveFormArm;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.RunStatus;
-import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import org.w3c.dom.Element;
 
 public class LogFactor5WaveFormStatus implements WaveFormStatus{

@@ -13,7 +13,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.NetworkStatus;
+import edu.sc.seis.sod.status.networkArm.NetworkStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.NetworkFormatter;

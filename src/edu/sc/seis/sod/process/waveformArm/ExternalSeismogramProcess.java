@@ -9,7 +9,7 @@ import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.SodUtil;
 
 /**
@@ -19,7 +19,7 @@ import edu.sc.seis.sod.SodUtil;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 7180 2004-02-17 22:21:52Z groves $
+ * @version $Id: ExternalSeismogramProcess.java 7205 2004-02-18 20:00:14Z groves $
  */
 
 public class ExternalSeismogramProcess

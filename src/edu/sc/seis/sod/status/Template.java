@@ -19,7 +19,10 @@ public abstract class Template{
     protected abstract Object textTemplate(final String text);
     
     /**if this class has an template for this tag, it creates it using the
-     * passed in element and returns it.  Otherwise it returns null.
+     * passed in element and returns it.  Otherwise it should return
+     * the superclass implementation of this method.  Though no harm will come
+     * from merely returning null, they won't benefit from the wisdom and extra
+     * tags provided by their elder classes.
      */
     protected Object getTemplate(String tag, Element el){
         if(tag.equals("runName")) return new RunNameTemplate();

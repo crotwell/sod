@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.status.waveFormArm;
 
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 import java.io.IOException;

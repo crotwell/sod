@@ -9,8 +9,8 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.EventStationSubsetter;
-import edu.sc.seis.sod.WaveFormLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
+import edu.sc.seis.sod.subsetter.waveFormArm.WaveFormLogicalSubsetter;
 
 /**
  * This subsetter is used to specify a sequence of EventStationSubsetters. This subsetter is accepted when even one

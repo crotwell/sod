@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.waveFormArm.SeismogramDCLocator;
 import edu.sc.seis.sod.SodElement;
 import org.w3c.dom.Element;
 

@@ -15,7 +15,7 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.NetworkStatus;
+import edu.sc.seis.sod.status.networkArm.NetworkStatus;
 import edu.sc.seis.sod.RunStatus;
 import org.w3c.dom.Element;
 

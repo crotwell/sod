@@ -7,7 +7,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.sc.seis.sod.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.waveFormArm.AvailableDataSubsetter;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 

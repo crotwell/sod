@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.sod.Subsetter;
+import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.database.Status;
 
 

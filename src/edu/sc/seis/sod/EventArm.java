@@ -1,4 +1,7 @@
 package edu.sc.seis.sod;
+import edu.sc.seis.sod.status.eventArm.*;
+import edu.sc.seis.sod.subsetter.eventArm.*;
+import edu.sc.seis.sod.process.eventArm.*;
 
 import edu.iris.Fissures.Area;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;

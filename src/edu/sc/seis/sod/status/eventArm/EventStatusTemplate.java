@@ -2,7 +2,7 @@ package edu.sc.seis.sod.status.eventArm;
 
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.sod.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventStatus;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.status.FileWritingTemplate;

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.sc.seis.sod.*;
+import edu.sc.seis.sod.subsetter.*;
 import java.util.*;
 import org.w3c.dom.*;
 import edu.iris.Fissures.IfNetwork.*;

@@ -4,7 +4,7 @@ import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Subsetter;
+import edu.sc.seis.sod.subsetter.Subsetter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

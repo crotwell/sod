@@ -9,7 +9,7 @@ package edu.sc.seis.sod.status.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.database.event.EventCondition;
 import org.apache.log4j.lf5.LogLevel;

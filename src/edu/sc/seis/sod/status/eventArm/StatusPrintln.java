@@ -8,7 +8,7 @@ package edu.sc.seis.sod.status.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventStatus;
 import edu.sc.seis.sod.database.event.EventCondition;
 import org.w3c.dom.Element;
 
