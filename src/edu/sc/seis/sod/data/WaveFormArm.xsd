@@ -521,11 +521,37 @@
         </xsd:complexContent>
     </xsd:complexType>
     
+    <xsd:complexType name="breqfastLabelType" content="mixed" >
+        <xsd:all>
+           <xsd:element name="separator" type="xsd:string" minOccurs="0" />
+           <xsd:element name="feRegionName" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="feRegionNumber" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="depth" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="magnitude" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="latitude" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="longitude" >
+              <xsd:complexType />
+           </xsd:element>
+           <xsd:element name="originTime" type="xsd:string" />
+        </xsd:all>
+    </xsd:complexType name="breqfastLabelType">
+
     <xsd:complexType name="breqfastAvailableDataType"> 
         <xsd:complexContent>
             <xsd:extension base="printLineWaveformProcessorType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
+                    <xsd:element name="label" type="breqfastLabelType" minOccurs="0" />
                     <xsd:element name="name" type="xsd:string"/>
                     <xsd:element name="inst" type="xsd:string"/>
                     <xsd:element name="mail" type="xsd:string"/>
