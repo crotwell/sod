@@ -65,7 +65,7 @@ public class WaveformEventTemplate extends Template implements WaveformArmMonito
         synchronized(toBeRendered){
             if (!toBeRendered.containsKey(loc)){
                 toBeRendered.put(loc, ev);
-                OutputScheduler.DEFAULT.schedule(writer);
+                OutputScheduler.getDefault().schedule(writer);
             }
         }
     }

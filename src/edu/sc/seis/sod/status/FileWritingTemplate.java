@@ -30,7 +30,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate, Ru
         return loc;
     }
 
-    public void write(){ OutputScheduler.DEFAULT.schedule(this);}
+    public void write(){ OutputScheduler.getDefault().schedule(this);}
 
 
     public String getResult() {

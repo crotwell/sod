@@ -58,9 +58,16 @@ public class OutputScheduler extends TimerTask{
         }
     }
 
+    public synchronized static OutputScheduler getDefault() {
+        if (DEFAULT == null) {
+            DEFAULT = new OutputScheduler();
+        }
+        return DEFAULT;
+    }
+
     private static final TimeInterval ACTION_INTERVAL = new TimeInterval(2, UnitImpl.MINUTE);
     private static final long ACTION_INTERVAL_MILLIS = (long)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND).get_value();
-    public static OutputScheduler DEFAULT = new OutputScheduler();
+    public static OutputScheduler DEFAULT = null;
 
     private Set runnables = Collections.synchronizedSet(new HashSet());
     private Timer t = new Timer();

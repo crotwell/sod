@@ -99,7 +99,7 @@ public class MapWaveformStatus implements Runnable{
         synchronized(eventsToBeRendered){
             if (eventsToBeRendered.containsKey(ev)){ return false; }
             eventsToBeRendered.put(ev, outputLoc);
-            OutputScheduler.DEFAULT.schedule(this);
+            OutputScheduler.getDefault().schedule(this);
             return true;
         }
     }

@@ -43,7 +43,7 @@ public class MapEventStatus implements SodElement, EventArmMonitor, Runnable{
     }
 
     public void change(EventAccessOperations event, Status status){
-        OutputScheduler.DEFAULT.schedule(this);
+        OutputScheduler.getDefault().schedule(this);
     }
 
     public String getLocation(){ return fileLoc; }

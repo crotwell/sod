@@ -39,7 +39,7 @@ public class LocalSeismogramTemplate extends Template{
         synchronized(toBeRendered){
             if (!toBeRendered.containsKey(loc)){
                 toBeRendered.put(loc, cj);
-                OutputScheduler.DEFAULT.schedule(writer);
+                OutputScheduler.getDefault().schedule(writer);
             }
         }
     }
