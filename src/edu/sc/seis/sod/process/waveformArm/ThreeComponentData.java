@@ -15,7 +15,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class ThreeComponentData implements WaveformVectorProcess {
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -23,14 +23,14 @@ public class ThreeComponentData implements WaveformVectorProcess {
                                                      CookieJar cookieJar) {
         for (int i = 0; i < seismograms.length; i++) {
             if (seismograms[i].length == 0) {
-                return new ChannelGroupLocalSeismogramResult(false,
+                return new WaveformVectorResult(false,
                                                              seismograms,
                                                              new StringTreeLeaf(this,
                                                                                 false,
                                                                                 "seismograms["+i+"] is empty"));
             }
         }
-        return new ChannelGroupLocalSeismogramResult(true,
+        return new WaveformVectorResult(true,
                                                      seismograms,
                                                      new StringTreeLeaf(this,
                                                                         true));

@@ -111,16 +111,16 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("localSeismogramTemplateGenerator", se);
 
         editors.put("fixedDataCenter", new FixedDataCenterEditor(this));
-        
+
         editors.put("legacyExecute", new LegacyExecuteEditor());
-        editors.put("channelGroupLegacyExecute", new LegacyExecuteEditor());
-        
+        editors.put("legacyVectorExecute", new LegacyExecuteEditor());
+
         editors.put("breqFastRequestSubsetter", new BreqFastRequestSubsetterEditor());
-        
+
         editors.put("phaseSignalToNoise", new PhaseSignalToNoiseEditor());
 
         BooleanEditor bool = new BooleanEditor(this);
-        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "requestSubsetter", "seismogram"};
+        String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "requestSubsetter", "seismogram", "waveformVector"};
         String[] logicals = { "AND", "OR", "NOT" }; // what about XOR?
         for (int i = 0; i < switchTypes.length; i++) {
             for (int j = 0; j < logicals.length; j++) {
@@ -143,7 +143,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         }
 
 
-        String[] wrapperTypes = { "AvailableDataWrapper", "RequestSubsetterWrapper", "LocalSeismogramWrapper", "EventChannelWrapper" };
+        String[] wrapperTypes = { "AvailableDataWrapper", "RequestSubsetterWrapper", "WaveformProcessWrapper", "EventChannelWrapper" };
         String[] wrapperLogicals = { "AND", "OR" };
         for (int i = 0; i < wrapperTypes.length; i++) {
             for (int j = 0; j < wrapperLogicals.length; j++) {

@@ -18,19 +18,19 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
-public class ChannelGroupXOR extends ChannelGroupFork {
+public class WaveformVectorXOR extends WaveformVectorFork {
 
-    public ChannelGroupXOR(Element config) throws ConfigurationException {
+    public WaveformVectorXOR(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
                                                      LocalSeismogramImpl[][] seismograms,
                                                      CookieJar cookieJar) throws Exception {
-        ChannelGroupLocalSeismogramResult resultA, resultB;
+        WaveformVectorResult resultA, resultB;
         WaveformVectorProcess processorA, processorB;
         Iterator it = cgProcessList.iterator();
         processorA = (WaveformVectorProcess)it.next();
@@ -44,7 +44,7 @@ public class ChannelGroupXOR extends ChannelGroupFork {
                                          available, copySeismograms(seismograms), cookieJar);
         }
         boolean xorResult = resultA.isSuccess() != resultB.isSuccess();
-        return new ChannelGroupLocalSeismogramResult(seismograms,
+        return new WaveformVectorResult(seismograms,
                                                      new StringTreeBranch(this,
                                                                           xorResult,
                                                                           new StringTree[] { resultA.getReason(), resultB.getReason() }));

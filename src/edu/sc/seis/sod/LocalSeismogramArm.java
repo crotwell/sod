@@ -16,7 +16,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramResult;
+import edu.sc.seis.sod.process.waveformArm.WaveformResult;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.EventChannelSubsetter;
@@ -347,7 +347,7 @@ public class LocalSeismogramArm implements Subsetter {
                                    LocalSeismogramImpl[] localSeismograms) {
         WaveformProcess processor;
         Iterator it = processes.iterator();
-        LocalSeismogramResult result = new LocalSeismogramResult(true,
+        WaveformResult result = new WaveformResult(true,
                                                                  localSeismograms);
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();

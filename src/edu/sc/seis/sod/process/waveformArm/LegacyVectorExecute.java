@@ -15,13 +15,13 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
-public class ChannelGroupLegacyExecute extends LegacyExecute implements WaveformVectorProcess {
+public class LegacyVectorExecute extends LegacyExecute implements WaveformVectorProcess {
 
-    public ChannelGroupLegacyExecute(Element config) {
+    public LegacyVectorExecute(Element config) {
         super(config);
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -41,7 +41,7 @@ public class ChannelGroupLegacyExecute extends LegacyExecute implements Waveform
             } // end of for (int i=0; i<seismograms.length; i++)
         }
         int exitValue = process(args);
-        return new ChannelGroupLocalSeismogramResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
+        return new WaveformVectorResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
     }
 }
 

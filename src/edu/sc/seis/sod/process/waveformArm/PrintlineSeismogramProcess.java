@@ -23,7 +23,7 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
         filename = SodUtil.getNestedText(config);
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -46,7 +46,7 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
                     + ExceptionReporterUtils.getMemoryUsage() + debugStr);
             logger.debug(debugStr);
         } // end of else
-        return new LocalSeismogramResult(true,
+        return new WaveformResult(true,
                                          seismograms,
                                          new StringTreeLeaf(this, true));
     }

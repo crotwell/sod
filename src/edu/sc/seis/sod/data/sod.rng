@@ -208,7 +208,7 @@
                                     <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml32"/>
+                                    <ref name="xml33"/>
                                     </choice>
                                     </oneOrMore>
                                 </element>
@@ -221,7 +221,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml31"/>
+                                    <ref name="xml32"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -236,7 +236,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml30"/>
+                                    <ref name="xml31"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -316,7 +316,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml28"/>
+                                    <ref name="xml29"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -328,7 +328,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml27"/>
+                                    <ref name="xml28"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -361,7 +361,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml26"/>
+                                    <ref name="xml27"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -456,7 +456,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml44"/>
+                                    <ref name="xml45"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -518,7 +518,7 @@
                         <ref name="channelGroupAvailableData"/>
                     </optional>
                     <zeroOrMore>
-                        <ref name="channelGroupSeismogramProcess"/>
+                        <ref name="waveformVectorProcess"/>
                     </zeroOrMore>
                     <zeroOrMore>
                         <choice>
@@ -614,7 +614,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml40"/>
+                        <ref name="xml41"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1137,7 +1137,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml41"/>
+                        <ref name="xml42"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1253,7 +1253,102 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml36"/>
+                        <ref name="xml37"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="waveformVectorProcess">
+        <choice>
+            <element name="threeComponentData">
+                <empty/>
+            </element>
+            <element name="ANDWaveformProcessWrapper">
+                <zeroOrMore>
+                    <choice>
+                        <ref name="seismogramProcess3"/>
+                        <element name="phaseRequest">
+                            <ref name="phaseRequest3"/>
+                        </element>
+                    </choice>
+                </zeroOrMore>
+            </element>
+            <element name="ORWaveformProcessWrapper">
+                <zeroOrMore>
+                    <choice>
+                        <ref name="seismogramProcess2"/>
+                        <element name="phaseRequest">
+                            <ref name="phaseRequest2"/>
+                        </element>
+                    </choice>
+                </zeroOrMore>
+            </element>
+            <element name="externalWaveformVectorProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml4"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="legacyVectorExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="waveformVectorFork">
+                <zeroOrMore>
+                    <ref name="waveformVectorProcess"/>
+                </zeroOrMore>
+            </element>
+            <element name="waveformVectorAND">
+                <oneOrMore>
+                    <ref name="waveformVectorProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="waveformVectorOR">
+                <oneOrMore>
+                    <ref name="waveformVectorProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="waveformVectorNOT">
+                <ref name="waveformVectorProcess"/>
+            </element>
+            <element name="waveformVectorXOR">
+                <ref name="waveformVectorProcess"/>
+                <ref name="waveformVectorProcess"/>
+            </element>
+            <element name="waveformVectorAlwaysSuccess">
+                <ref name="waveformVectorProcess"/>
+            </element>
+            <choice>
+                <ref name="seismogramProcess"/>
+                <element name="phaseRequest">
+                    <ref name="phaseRequest"/>
+                </element>
+            </choice>
+            <element name="externalWaveformVectorProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml2"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1307,7 +1402,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml34"/>
+                        <ref name="xml35"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1373,7 +1468,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml42"/>
+                        <ref name="xml43"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1796,7 +1891,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml47"/>
+                        <ref name="xml48"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2177,7 +2272,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml38"/>
+                        <ref name="xml39"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2304,7 +2399,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml23"/>
+                        <ref name="xml24"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2561,7 +2656,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml22"/>
+                        <ref name="xml23"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3065,7 +3160,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml25"/>
+                        <ref name="xml26"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3317,7 +3412,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml48"/>
+                        <ref name="xml49"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3569,7 +3664,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml45"/>
+                        <ref name="xml46"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3821,7 +3916,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml33"/>
+                        <ref name="xml34"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4067,7 +4162,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml46"/>
+                        <ref name="xml47"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4190,7 +4285,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml24"/>
+                        <ref name="xml25"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4313,7 +4408,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml49"/>
+                        <ref name="xml22"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4436,7 +4531,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml35"/>
+                        <ref name="xml36"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4559,7 +4654,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml37"/>
+                        <ref name="xml38"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5008,7 +5103,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml29"/>
+                        <ref name="xml30"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5210,7 +5305,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml39"/>
+                        <ref name="xml40"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5551,6 +5646,11 @@
             </element>
             <element name="seismogramImageProcess">
                 <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow3"/>
+                    </element>
+                </optional>
+                <optional>
                     <element name="fileDir">
                         <data type="string"/>
                     </element>
@@ -5707,7 +5807,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml43"/>
+                        <ref name="xml44"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5768,6 +5868,11 @@
                 </element>
             </element>
             <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow4"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="fileDir">
                         <data type="string"/>
@@ -5987,6 +6092,11 @@
             </element>
             <element name="seismogramImageProcess">
                 <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow2"/>
+                    </element>
+                </optional>
+                <optional>
                     <element name="fileDir">
                         <data type="string"/>
                     </element>
@@ -6205,6 +6315,11 @@
             </element>
             <element name="seismogramImageProcess">
                 <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow"/>
+                    </element>
+                </optional>
+                <optional>
                     <element name="fileDir">
                         <data type="string"/>
                     </element>
@@ -6265,6 +6380,82 @@
             </element>
         </choice>
     </define>
+    <define name="phaseWindow4">
+        <optional>
+            <element name="model">
+                <data type="string"/>
+            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time22"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time22"/>
+        </element>
+    </define>
+    <define name="phaseWindow">
+        <optional>
+            <element name="model">
+                <data type="string"/>
+            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="phaseWindow2">
+        <optional>
+            <element name="model">
+                <data type="string"/>
+            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time2"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time2"/>
+        </element>
+    </define>
+    <define name="phaseWindow3">
+        <optional>
+            <element name="model">
+                <data type="string"/>
+            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time3"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time3"/>
+        </element>
+    </define>
     <define name="length3">
         <interleave>
             <ref name="lengthUnit3"/>
@@ -6312,101 +6503,6 @@
                 <data type="float"/>
             </element>
         </interleave>
-    </define>
-    <define name="channelGroupSeismogramProcess">
-        <choice>
-            <element name="threeComponentData">
-                <empty/>
-            </element>
-            <element name="ANDLocalSeismogramWrapper">
-                <zeroOrMore>
-                    <choice>
-                        <ref name="seismogramProcess3"/>
-                        <element name="phaseRequest">
-                            <ref name="phaseRequest3"/>
-                        </element>
-                    </choice>
-                </zeroOrMore>
-            </element>
-            <element name="ORLocalSeismogramWrapper">
-                <zeroOrMore>
-                    <choice>
-                        <ref name="seismogramProcess2"/>
-                        <element name="phaseRequest">
-                            <ref name="phaseRequest2"/>
-                        </element>
-                    </choice>
-                </zeroOrMore>
-            </element>
-            <element name="externalChannelGroupSeismogramProcess">
-                <element name="classname">
-                    <data type="string"/>
-                </element>
-                <oneOrMore>
-                    <choice>
-                        <text/>
-                        <ref name="xml4"/>
-                    </choice>
-                </oneOrMore>
-            </element>
-            <element name="channelGroupLegacyExecute">
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="command">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="channelGroupFork">
-                <zeroOrMore>
-                    <ref name="channelGroupSeismogramProcess"/>
-                </zeroOrMore>
-            </element>
-            <element name="channelGroupAND">
-                <oneOrMore>
-                    <ref name="channelGroupSeismogramProcess"/>
-                </oneOrMore>
-            </element>
-            <element name="channelGroupOR">
-                <oneOrMore>
-                    <ref name="channelGroupSeismogramProcess"/>
-                </oneOrMore>
-            </element>
-            <element name="channelGroupNOT">
-                <ref name="channelGroupSeismogramProcess"/>
-            </element>
-            <element name="channelGroupXOR">
-                <ref name="channelGroupSeismogramProcess"/>
-                <ref name="channelGroupSeismogramProcess"/>
-            </element>
-            <element name="channelGroupAlwaysSuccess">
-                <ref name="channelGroupSeismogramProcess"/>
-            </element>
-            <choice>
-                <ref name="seismogramProcess"/>
-                <element name="phaseRequest">
-                    <ref name="phaseRequest"/>
-                </element>
-            </choice>
-            <element name="externalWaveformVectorProcess">
-                <element name="classname">
-                    <data type="string"/>
-                </element>
-                <oneOrMore>
-                    <choice>
-                        <text/>
-                        <ref name="xml2"/>
-                    </choice>
-                </oneOrMore>
-            </element>
-        </choice>
     </define>
     <define name="range10">
         <element name="unit">
@@ -6524,7 +6620,7 @@
             </element>
         </optional>
     </define>
-    <define name="range5">
+    <define name="range9">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -6553,7 +6649,7 @@
             </element>
         </optional>
     </define>
-    <define name="range9">
+    <define name="range5">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -7077,20 +7173,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml12">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml12"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="xml45">
         <element>
             <anyName/>
@@ -7241,6 +7323,20 @@
                     </attribute>
                     <text/>
                     <ref name="xml2"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml12">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml12"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -7559,6 +7655,12 @@
     <define name="time11">
         <data type="string"/>
     </define>
+    <define name="time17">
+        <data type="string"/>
+    </define>
+    <define name="time25">
+        <data type="string"/>
+    </define>
     <define name="time10">
         <data type="string"/>
     </define>
@@ -7708,12 +7810,6 @@
     <define name="time13">
         <data type="string"/>
     </define>
-    <define name="time25">
-        <data type="string"/>
-    </define>
-    <define name="time17">
-        <data type="string"/>
-    </define>
     <define name="trueOrFalse">
         <choice>
             <value>TRUE</value>
@@ -7721,79 +7817,15 @@
         </choice>
     </define>
     <define name="phaseRequest2">
-        <optional>
-            <element name="model">
-                <data type="string"/>
-            </element>
-        </optional>
-        <element name="beginPhase">
-            <data type="string"/>
-        </element>
-        <element name="beginOffset">
-            <ref name="time2"/>
-        </element>
-        <element name="endPhase">
-            <data type="string"/>
-        </element>
-        <element name="endOffset">
-            <ref name="time2"/>
-        </element>
+        <ref name="phaseWindow2"/>
     </define>
     <define name="phaseRequest3">
-        <optional>
-            <element name="model">
-                <data type="string"/>
-            </element>
-        </optional>
-        <element name="beginPhase">
-            <data type="string"/>
-        </element>
-        <element name="beginOffset">
-            <ref name="time3"/>
-        </element>
-        <element name="endPhase">
-            <data type="string"/>
-        </element>
-        <element name="endOffset">
-            <ref name="time3"/>
-        </element>
+        <ref name="phaseWindow3"/>
     </define>
     <define name="phaseRequest4">
-        <optional>
-            <element name="model">
-                <data type="string"/>
-            </element>
-        </optional>
-        <element name="beginPhase">
-            <data type="string"/>
-        </element>
-        <element name="beginOffset">
-            <ref name="time22"/>
-        </element>
-        <element name="endPhase">
-            <data type="string"/>
-        </element>
-        <element name="endOffset">
-            <ref name="time22"/>
-        </element>
+        <ref name="phaseWindow4"/>
     </define>
     <define name="phaseRequest">
-        <optional>
-            <element name="model">
-                <data type="string"/>
-            </element>
-        </optional>
-        <element name="beginPhase">
-            <data type="string"/>
-        </element>
-        <element name="beginOffset">
-            <ref name="time"/>
-        </element>
-        <element name="endPhase">
-            <data type="string"/>
-        </element>
-        <element name="endOffset">
-            <ref name="time"/>
-        </element>
+        <ref name="phaseWindow"/>
     </define>
 </grammar>

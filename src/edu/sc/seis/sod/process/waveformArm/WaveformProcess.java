@@ -29,7 +29,7 @@ public interface WaveformProcess{
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                      Channel channel,
                      RequestFilter[] original,
                      RequestFilter[] available,

@@ -13,7 +13,7 @@ import edu.sc.seis.sod.CookieJar;
 
 public interface WaveformVectorProcess {
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,

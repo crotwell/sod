@@ -1,5 +1,5 @@
 /**
- * ChannelGroupAND.java
+ * ChannelGroupNOT.java
  *
  * @author Created by Omnicore CodeGuide
  */
@@ -19,13 +19,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
 
-public class ChannelGroupAND extends ChannelGroupFork {
+public class WaveformVectorNOT extends WaveformVectorFork {
 
-    public ChannelGroupAND(Element config) throws ConfigurationException {
+    public WaveformVectorNOT(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -35,25 +35,21 @@ public class ChannelGroupAND extends ChannelGroupFork {
 
         // pass originals to the contained processors
         WaveformVectorProcess processor;
-        LinkedList reasons = new LinkedList();
         Iterator it = cgProcessList.iterator();
-        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
-        while (it.hasNext() && result.isSuccess()) {
-            processor = (WaveformVectorProcess)it.next();
-            synchronized (processor) {
-                result = processor.process(event,
-                                           channelGroup,
-                                           original,
-                                           available,
-                                           copySeismograms(seismograms),
-                                           cookieJar);
-            }
-            reasons.addLast(result.getReason());
-        } // end of while (it.hasNext())
-        return new ChannelGroupLocalSeismogramResult(out,
+        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
+        processor = (WaveformVectorProcess)it.next();
+        synchronized (processor) {
+            result = processor.process(event,
+                                       channelGroup,
+                                       original,
+                                       available,
+                                       copySeismograms(seismograms),
+                                       cookieJar);
+        }
+        return new WaveformVectorResult(out,
                                                      new StringTreeBranch(this,
-                                                                          result.isSuccess(),
-                                                                              (StringTree[])reasons.toArray(new StringTree[0])));
+                                                                          ! result.isSuccess(),
+                                                                          new StringTree[] { result.getReason() } ));
 
     }
 }

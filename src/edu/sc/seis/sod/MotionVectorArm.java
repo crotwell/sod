@@ -19,9 +19,9 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.sod.process.waveformArm.ANDLocalSeismogramWrapper;
+import edu.sc.seis.sod.process.waveformArm.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveformArm.WaveformVectorProcess;
-import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
+import edu.sc.seis.sod.process.waveformArm.WaveformVectorResult;
 import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
@@ -59,7 +59,7 @@ public class MotionVectorArm implements Subsetter {
         } else if(sodElement instanceof WaveformVectorProcess) {
             processes.add(sodElement);
         } else if(sodElement instanceof WaveformProcess) {
-            processes.add(new ANDLocalSeismogramWrapper((WaveformProcess)sodElement));
+            processes.add(new ANDWaveformProcessWrapper((WaveformProcess)sodElement));
         } else {
             logger.warn("Unknown tag in MotionVectorArm config. "
                     + sodElement.getClass().getName());
@@ -344,7 +344,7 @@ public class MotionVectorArm implements Subsetter {
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
         WaveformVectorProcess processor;
-        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(true,
+        WaveformVectorResult result = new WaveformVectorResult(true,
                                                                                          localSeismograms,
                                                                                          new StringTreeLeaf(this,
                                                                                                             true));

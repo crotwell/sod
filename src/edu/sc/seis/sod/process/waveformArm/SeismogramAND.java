@@ -25,7 +25,7 @@ public class SeismogramAND extends ForkProcess {
         super(config);
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -36,7 +36,7 @@ public class SeismogramAND extends ForkProcess {
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+        WaveformResult result = new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             synchronized (processor) {
@@ -52,7 +52,7 @@ public class SeismogramAND extends ForkProcess {
         if (reasons.size() < localSeisProcessList.size()) {
             reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
-        return new LocalSeismogramResult(result.isSuccess(),
+        return new WaveformResult(result.isSuccess(),
                                          seismograms,
                                          new StringTreeBranch(this,
                                                               result.isSuccess(),

@@ -9,13 +9,13 @@ package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.status.StringTree;
 
-public class ChannelGroupLocalSeismogramResult {
+public class WaveformVectorResult {
 
-    public ChannelGroupLocalSeismogramResult(LocalSeismogramImpl[][] seismograms, StringTree reason) {
+    public WaveformVectorResult(LocalSeismogramImpl[][] seismograms, StringTree reason) {
         this(reason.isSuccess(), seismograms, reason);
     }
 
-    public ChannelGroupLocalSeismogramResult(boolean success, LocalSeismogramImpl[][] seismograms, StringTree reason) {
+    public WaveformVectorResult(boolean success, LocalSeismogramImpl[][] seismograms, StringTree reason) {
         this.success = success;
         this.seismograms = seismograms;
         this.reason = reason;

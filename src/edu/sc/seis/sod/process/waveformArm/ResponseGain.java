@@ -19,11 +19,11 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGain.java 10047 2004-08-05 21:26:00Z groves $
+ * @version $Id: ResponseGain.java 10114 2004-08-10 17:44:07Z crotwell $
  */
 
 public class ResponseGain implements WaveformProcess {
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -37,9 +37,9 @@ public class ResponseGain implements WaveformProcess {
             for (int i=0; i<seismograms.length; i++) {
                 out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i], inst);
             } // end of for (int i=0; i<seismograms.length; i++)
-            return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
+            return new WaveformResult(true, out, new StringTreeLeaf(this, true));
         }else{
-            return new LocalSeismogramResult(true, seismograms);
+            return new WaveformResult(true, seismograms);
         }
     }
 }// ResponseGainProcessor

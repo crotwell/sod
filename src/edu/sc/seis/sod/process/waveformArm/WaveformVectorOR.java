@@ -19,13 +19,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
 
-public class ChannelGroupOR extends ChannelGroupFork {
+public class WaveformVectorOR extends WaveformVectorFork {
 
-    public ChannelGroupOR(Element config) throws ConfigurationException {
+    public WaveformVectorOR(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -37,7 +37,7 @@ public class ChannelGroupOR extends ChannelGroupFork {
         WaveformVectorProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = cgProcessList.iterator();
-        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
+        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
         boolean orResult = false;
         while (it.hasNext()  && ! orResult) {
             processor = (WaveformVectorProcess)it.next();
@@ -55,7 +55,7 @@ public class ChannelGroupOR extends ChannelGroupFork {
         if (reasons.size() < cgProcessList.size()) {
             reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
-        return new ChannelGroupLocalSeismogramResult(out,
+        return new WaveformVectorResult(out,
                                                      new StringTreeBranch(this,
                                                                           orResult,
                                                                               (StringTree[])reasons.toArray(new StringTree[0])));

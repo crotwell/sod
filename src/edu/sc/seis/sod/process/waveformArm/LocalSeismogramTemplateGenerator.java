@@ -99,7 +99,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         }
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -121,7 +121,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         } else {
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
-        return new LocalSeismogramResult(true,
+        return new WaveformResult(true,
                                          seismograms,
                                          new StringTreeLeaf(this, true));
     }

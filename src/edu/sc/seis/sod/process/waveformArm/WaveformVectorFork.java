@@ -23,9 +23,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ChannelGroupFork implements WaveformVectorProcess {
+public class WaveformVectorFork implements WaveformVectorProcess {
 
-    public ChannelGroupFork(Element config) throws ConfigurationException {
+    public WaveformVectorFork(Element config) throws ConfigurationException {
         this.config = config;
         NodeList children = config.getChildNodes();
         Node node;
@@ -40,7 +40,7 @@ public class ChannelGroupFork implements WaveformVectorProcess {
                 if(sodElement instanceof WaveformVectorProcess) {
                     cgProcessList.add(sodElement);
                 } else if(sodElement instanceof WaveformProcess) {
-                    cgProcessList.add(new ANDLocalSeismogramWrapper((WaveformProcess)sodElement));
+                    cgProcessList.add(new ANDWaveformProcessWrapper((WaveformProcess)sodElement));
                 } else {
                     logger.warn("Unknown tag in MotionVectorArm config. " +sodElement.getClass().getName());
                 }
@@ -48,7 +48,7 @@ public class ChannelGroupFork implements WaveformVectorProcess {
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -62,7 +62,7 @@ public class ChannelGroupFork implements WaveformVectorProcess {
         WaveformVectorProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = cgProcessList.iterator();
-        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
+        WaveformVectorResult result = new WaveformVectorResult(seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
             synchronized (processor) {
@@ -71,7 +71,7 @@ public class ChannelGroupFork implements WaveformVectorProcess {
             }
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        return new ChannelGroupLocalSeismogramResult(out,
+        return new WaveformVectorResult(out,
                                          new StringTreeBranch(this,
                                                               result.isSuccess(),
                                                                   (StringTree[])reasons.toArray(new StringTree[0])));
@@ -92,7 +92,7 @@ public class ChannelGroupFork implements WaveformVectorProcess {
 
     protected Element config;
 
-    private static final Logger logger = Logger.getLogger(ChannelGroupFork.class);
+    private static final Logger logger = Logger.getLogger(WaveformVectorFork.class);
 
 }
 

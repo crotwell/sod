@@ -20,7 +20,7 @@ public class WaveformCountProcessor implements WaveformProcess {
         jdbcEventChannelStatus= new JDBCEventChannelStatus();
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event, Channel channel,
+    public WaveformResult process(EventAccessOperations event, Channel channel,
                                          RequestFilter[] original, RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) throws Exception {
@@ -30,7 +30,7 @@ public class WaveformCountProcessor implements WaveformProcess {
         FileWriter fileWriter = new FileWriter("waveforms.txt");
         fileWriter.write("Number of Waveforms processed = " + num_waveforms);
         fileWriter.close();
-        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
     }
     JDBCEventChannelStatus jdbcEventChannelStatus;
 }

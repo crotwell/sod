@@ -48,7 +48,7 @@ public class LongShortSignalToNoise implements WaveformProcess {
         sToN = new LongShortStoN(longTime, shortTime, ratio, delayTime);
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
@@ -56,7 +56,7 @@ public class LongShortSignalToNoise implements WaveformProcess {
                           CookieJar cookieJar) throws Exception {
         LongShortTrigger[] triggers = calcTriggers(seismograms);
         boolean hasTriggers = triggers.length != 0;
-        return new LocalSeismogramResult(hasTriggers, seismograms, new StringTreeLeaf(this, hasTriggers));
+        return new WaveformResult(hasTriggers, seismograms, new StringTreeLeaf(this, hasTriggers));
     }
 
     public LongShortTrigger[] calcTriggers(LocalSeismogramImpl[] seismograms) throws FissuresException {

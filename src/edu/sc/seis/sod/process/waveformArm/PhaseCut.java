@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 10047 2004-08-05 21:26:00Z groves $
+ * @version $Id: PhaseCut.java 10114 2004-08-10 17:44:07Z crotwell $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -55,7 +55,7 @@ public class PhaseCut implements WaveformProcess {
      * @exception Exception
      *                if an error occurs
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -76,11 +76,11 @@ public class PhaseCut implements WaveformProcess {
                 list.add(tempSeis);
             }
         } // end of for (int i=0; i<seismograms.length; i++)
-        if(list.size() != 0) { return new LocalSeismogramResult(true,
+        if(list.size() != 0) { return new WaveformResult(true,
                                                                 (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
                                                                 new StringTreeLeaf(this,
                                                                                    true)); }
-        return new LocalSeismogramResult(false,
+        return new WaveformResult(false,
                                          seismograms,
                                          new StringTreeLeaf(this, false));
     }

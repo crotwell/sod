@@ -60,7 +60,7 @@ public class Filter implements WaveformProcess {
                                        filterType);
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -70,7 +70,7 @@ public class Filter implements WaveformProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
+        return new WaveformResult(true, out, new StringTreeLeaf(this, true));
     }
 
     Element config;

@@ -18,13 +18,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ANDLocalSeismogramWrapper implements WaveformVectorProcess {
+public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
 
-    public ANDLocalSeismogramWrapper(WaveformProcess subsetter) {
+    public ANDWaveformProcessWrapper(WaveformProcess subsetter) {
         this.process = subsetter;
     }
 
-    public ANDLocalSeismogramWrapper(Element config) throws ConfigurationException{
+    public ANDWaveformProcessWrapper(Element config) throws ConfigurationException{
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -42,7 +42,7 @@ public class ANDLocalSeismogramWrapper implements WaveformVectorProcess {
     }
 
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -53,7 +53,7 @@ public class ANDLocalSeismogramWrapper implements WaveformVectorProcess {
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for (int i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
-            LocalSeismogramResult result = process.process(event,
+            WaveformResult result = process.process(event,
                                                            channelGroup.getChannels()[i],
                                                            original[i],
                                                            available[i],
@@ -64,9 +64,9 @@ public class ANDLocalSeismogramWrapper implements WaveformVectorProcess {
             b &= result.isSuccess();
         }
         if (! b) {
-            return new ChannelGroupLocalSeismogramResult(false, seismograms, new StringTreeBranch(this, false, reason));
+            return new WaveformVectorResult(false, seismograms, new StringTreeBranch(this, false, reason));
         }
-        return new ChannelGroupLocalSeismogramResult(true, out, new StringTreeBranch(this, true, reason));
+        return new WaveformVectorResult(true, out, new StringTreeBranch(this, true, reason));
     }
 
     public String toString() {

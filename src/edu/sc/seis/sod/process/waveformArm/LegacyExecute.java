@@ -54,7 +54,7 @@ public class LegacyExecute implements WaveformProcess  {
     /**
      * Removes the mean from the seismograms.
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -67,7 +67,7 @@ public class LegacyExecute implements WaveformProcess  {
             args += " "+(String)cookieJar.get(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i));
         } // end of for (int i=0; i<seismograms.length; i++)
         int exitValue = process(args);
-        return new LocalSeismogramResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
+        return new WaveformResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
     }
 
     int process(String args) throws InterruptedException, IOException {

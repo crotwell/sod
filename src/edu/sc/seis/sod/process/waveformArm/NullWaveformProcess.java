@@ -35,12 +35,12 @@ public class NullWaveformProcess implements WaveformProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) {
-        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
 

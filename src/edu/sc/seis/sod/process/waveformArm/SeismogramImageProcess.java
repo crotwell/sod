@@ -125,7 +125,7 @@ public class SeismogramImageProcess implements WaveformProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -135,7 +135,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     /** allows specifying a fileType, png or pdf. */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          LocalSeismogramImpl[] seismograms,
@@ -145,7 +145,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     /** allows specifying a fileType, png or pdf, and a list of phases.*/
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          LocalSeismogramImpl[] seismograms,
@@ -157,7 +157,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
 
     /** allows specifying a fileType, png or pdf, and a list of phases.*/
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          LocalSeismogramImpl[] seismograms,
@@ -216,7 +216,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                     }
                 });
 
-        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     private static TauP_Time tauptime = null;

@@ -78,26 +78,26 @@ public class PhaseSignalToNoise  implements WaveformProcess {
     }
 
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) throws Exception {
         if (seismograms.length == 0 ) {
-            return new LocalSeismogramResult(seismograms, new StringTreeLeaf(this, false, "no seismograms"));
+            return new WaveformResult(seismograms, new StringTreeLeaf(this, false, "no seismograms"));
         }
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
                 cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
-                return new LocalSeismogramResult(seismograms,
+                return new WaveformResult(seismograms,
                                                  new StringTreeLeaf(this, true));
             }
-            return new LocalSeismogramResult(seismograms,
+            return new WaveformResult(seismograms,
                                              new StringTreeLeaf(this, false, "trigger="+trigger.getValue()+" < "+ratio));
         } else {
-            return new LocalSeismogramResult(seismograms,
+            return new WaveformResult(seismograms,
                                              new StringTreeLeaf(this, false, "trigger is null"));
         }
     }

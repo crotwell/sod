@@ -63,7 +63,7 @@ public class ForkProcess implements WaveformProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -76,7 +76,7 @@ public class ForkProcess implements WaveformProcess {
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+        WaveformResult result = new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             synchronized (processor) {
@@ -85,7 +85,7 @@ public class ForkProcess implements WaveformProcess {
             }
             reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        return new LocalSeismogramResult(out,
+        return new WaveformResult(out,
                                          new StringTreeBranch(this,
                                                               result.isSuccess(),
                                                                   (StringTree[])reasons.toArray(new StringTree[0])));

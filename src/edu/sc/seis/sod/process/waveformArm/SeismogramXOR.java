@@ -23,14 +23,14 @@ public class SeismogramXOR extends ForkProcess {
         super(config);
     }
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar
                                         ) throws Exception {
-        LocalSeismogramResult resultA, resultB;
+        WaveformResult resultA, resultB;
         WaveformProcess processorA, processorB;
         Iterator it = localSeisProcessList.iterator();
         processorA = (WaveformProcess)it.next();
@@ -44,7 +44,7 @@ public class SeismogramXOR extends ForkProcess {
                                          available, copySeismograms(seismograms), cookieJar);
         }
         boolean xorResult = resultA.isSuccess() != resultB.isSuccess();
-            return new LocalSeismogramResult( xorResult,
+            return new WaveformResult( xorResult,
                                              seismograms,
                                              new StringTreeBranch(this,
                                                                   xorResult,

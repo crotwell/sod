@@ -45,18 +45,18 @@ public class AlwaysSuccess implements WaveformProcess {
 
 
 
-    public LocalSeismogramResult process(EventAccessOperations event,
+    public WaveformResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) {
         try {
-            LocalSeismogramResult result = localSeisProcess.process(event, channel, original, available, seismograms, cookieJar);
-            return new LocalSeismogramResult(true, result.getSeismograms());
+            WaveformResult result = localSeisProcess.process(event, channel, original, available, seismograms, cookieJar);
+            return new WaveformResult(true, result.getSeismograms());
         }catch(Exception e) {
             GlobalExceptionHandler.handle("Caught an exception inside Always Success and moving on ...",e);
-            return new LocalSeismogramResult(true, seismograms);
+            return new WaveformResult(true, seismograms);
         }
 
     }

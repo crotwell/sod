@@ -10,17 +10,17 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class LocalSeismogramResult {
+public class WaveformResult {
 
-    public LocalSeismogramResult(boolean success, LocalSeismogramImpl[] seismograms) {
+    public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms) {
         this(success, seismograms, new StringTreeLeaf("", success));
     }
 
-    public LocalSeismogramResult(LocalSeismogramImpl[] seismograms, StringTree reason) {
+    public WaveformResult(LocalSeismogramImpl[] seismograms, StringTree reason) {
         this(reason.isSuccess(), seismograms,reason);
     }
 
-    public LocalSeismogramResult(boolean success, LocalSeismogramImpl[] seismograms, StringTree reason) {
+    public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms, StringTree reason) {
         this.success = success;
         this.seismograms = seismograms;
         this.reason = reason;

@@ -18,13 +18,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ORLocalSeismogramWrapper implements WaveformVectorProcess {
+public class ORWaveformProcessWrapper implements WaveformVectorProcess {
 
-    public ORLocalSeismogramWrapper(WaveformProcess subsetter) {
+    public ORWaveformProcessWrapper(WaveformProcess subsetter) {
         this.subsetter = subsetter;
     }
 
-    public ORLocalSeismogramWrapper(Element config) throws ConfigurationException{
+    public ORWaveformProcessWrapper(Element config) throws ConfigurationException{
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -43,7 +43,7 @@ public class ORLocalSeismogramWrapper implements WaveformVectorProcess {
     }
 
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+    public WaveformVectorResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,
                                                      RequestFilter[][] original,
                                                      RequestFilter[][] available,
@@ -56,7 +56,7 @@ public class ORLocalSeismogramWrapper implements WaveformVectorProcess {
         boolean b = false;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for (int i = 0; b == false && i < channelGroup.getChannels().length; i++) {
-            LocalSeismogramResult result = subsetter.process(event,
+            WaveformResult result = subsetter.process(event,
                                                              channelGroup.getChannels()[i],
                                                              original[i],
                                                              available[i],
@@ -67,9 +67,9 @@ public class ORLocalSeismogramWrapper implements WaveformVectorProcess {
             reason[i] = result.getReason();
         }
         if (b) {
-            return new ChannelGroupLocalSeismogramResult(true, out, new StringTreeBranch(this, true, reason));
+            return new WaveformVectorResult(true, out, new StringTreeBranch(this, true, reason));
         }
-        return new ChannelGroupLocalSeismogramResult(false, seismograms, new StringTreeBranch(this, false, reason));
+        return new WaveformVectorResult(false, seismograms, new StringTreeBranch(this, false, reason));
     }
 
     public String toString() {

@@ -15,14 +15,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.process.waveformArm.WaveformVectorProcess;
-import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
+import edu.sc.seis.sod.process.waveformArm.WaveformVectorResult;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.StringTree;
-import edu.sc.seis.sod.process.waveformArm.ChannelGroupFork;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramResult;
+import edu.sc.seis.sod.process.waveformArm.WaveformVectorFork;
+import edu.sc.seis.sod.process.waveformArm.WaveformResult;
 import edu.sc.seis.sod.process.waveformArm.ForkProcess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
@@ -49,14 +49,14 @@ public class ChannelGroupAlwaysSuccess implements WaveformVectorProcess {
 
     }
 
-    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event, ChannelGroup channelGroup, RequestFilter[][] original, RequestFilter[][] available, LocalSeismogramImpl[][] seismograms, CookieJar cookieJar) throws Exception {
-        ChannelGroupLocalSeismogramResult result = null;
+    public WaveformVectorResult process(EventAccessOperations event, ChannelGroup channelGroup, RequestFilter[][] original, RequestFilter[][] available, LocalSeismogramImpl[][] seismograms, CookieJar cookieJar) throws Exception {
+        WaveformVectorResult result = null;
         try {
             result = channelGroupLocalSeisProcess.process(event, channelGroup, original, available, seismograms, cookieJar);
-            return new ChannelGroupLocalSeismogramResult(true, result.getSeismograms(),new StringTreeBranch(this, true, result.getReason()));
+            return new WaveformVectorResult(true, result.getSeismograms(),new StringTreeBranch(this, true, result.getReason()));
         }catch(Exception e) {
             GlobalExceptionHandler.handle("Caught an exception inside ChannelGroupAlwaysSuccess and moving on ...",e);
-            return new ChannelGroupLocalSeismogramResult(true, seismograms,new StringTreeBranch(this,true,result.getReason()));
+            return new WaveformVectorResult(true, seismograms,new StringTreeBranch(this,true,result.getReason()));
         }
 
     }
