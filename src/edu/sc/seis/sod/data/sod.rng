@@ -8470,6 +8470,16 @@
                     </choice>
                 </element>
                 <optional>
+                    <element name="clipTicks">
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                    </element>
+                </optional>
+                <optional>
                     <element name="titleFont">
                         <ref name="fontContents"/>
                     </element>
@@ -10642,6 +10652,16 @@
                 </choice>
             </element>
             <optional>
+                <element name="clipTicks">
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
                 <element name="titleFont">
                     <ref name="fontContents5"/>
                 </element>
@@ -10679,6 +10699,16 @@
                     <value>right</value>
                 </choice>
             </element>
+            <optional>
+                <element name="clipTicks">
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
             <optional>
                 <element name="titleFont">
                     <ref name="fontContents4"/>
@@ -10718,6 +10748,16 @@
                 </choice>
             </element>
             <optional>
+                <element name="clipTicks">
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
                 <element name="titleFont">
                     <ref name="fontContents3"/>
                 </element>
@@ -10755,6 +10795,16 @@
                     <value>right</value>
                 </choice>
             </element>
+            <optional>
+                <element name="clipTicks">
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
             <optional>
                 <element name="titleFont">
                     <ref name="fontContents2"/>
