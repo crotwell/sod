@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class SiteAND 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements SiteSubsetter {
     
     public SiteAND (Element config) throws ConfigurationException {

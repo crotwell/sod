@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class ChannelIDAND 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements ChannelIdSubsetter {
     
     public ChannelIDAND (Element config) throws ConfigurationException {

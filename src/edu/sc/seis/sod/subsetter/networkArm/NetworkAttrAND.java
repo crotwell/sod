@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class NetworkAttrAND 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements NetworkAttrSubsetter {
     
     public NetworkAttrAND (Element config) throws ConfigurationException {

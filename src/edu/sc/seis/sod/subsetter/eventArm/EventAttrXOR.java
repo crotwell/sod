@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class EventAttrXOR 
-    extends LogicalSubsetter 
+    extends EventLogicalSubsetter 
     implements EventAttrSubsetter {
     
     public EventAttrXOR (Element config) throws ConfigurationException {

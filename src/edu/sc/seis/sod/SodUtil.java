@@ -20,7 +20,7 @@ public class SodUtil {
 	
     }
     
-    public static Object load(Element config) 
+    public static Object load(Element config, String packageName) 
 	throws ConfigurationException {
 	
 	try {
@@ -52,7 +52,7 @@ public class SodUtil {
 	   
 	    // not a known non-sodElement type, so load via reflection
 	    Class subsetterSubclass = 
-		Class.forName("edu.sc.seis.sod.subsetter."+
+		Class.forName(packageName+"."+
 			      tagName);
 	    Constructor constructor = 
 		subsetterSubclass.getConstructor(constructorArgTypes);

@@ -30,7 +30,7 @@ public abstract class LogicalSubsetter implements Subsetter {
 	    node = children.item(i);
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
-		Object obj = SodUtil.load(subElement);
+		Object obj = SodUtil.load(subElement, getPackageName());
 		if (obj instanceof Subsetter) {
 		    filterList.add((Subsetter)obj);
 		} // end of if (sodElement instanceof EventAttrSubsetter)
@@ -40,6 +40,8 @@ public abstract class LogicalSubsetter implements Subsetter {
 	} // end of for (int i=0; i<children.getSize(); i++)
 	
     }
+
+    public abstract String getPackageName();
 
     protected List filterList = new LinkedList();
 

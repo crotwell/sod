@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class StationOR 
-    extends LogicalSubsetter 
+    extends NetworkLogicalSubsetter 
     implements StationSubsetter {
     
     public StationOR (Element config) throws ConfigurationException {

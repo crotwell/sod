@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class SiteNOT 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements SiteSubsetter {
     
     public SiteNOT (Element config) throws ConfigurationException {

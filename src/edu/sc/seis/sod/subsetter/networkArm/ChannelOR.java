@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class ChannelOR 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements ChannelSubsetter {
     
     public ChannelOR (Element config) throws ConfigurationException {

@@ -31,7 +31,7 @@ public class NetworkArm {
 	    node = children.item(i);
 	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
-		Object sodElement = SodUtil.load((Element)node);
+		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.networkArm");
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
     }

@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class StationNOT 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements StationSubsetter {
     
     public StationNOT (Element config) throws ConfigurationException {

@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class NetworkIDOR 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements NetworkIdSubsetter {
     
     public NetworkIDOR (Element config) throws ConfigurationException {

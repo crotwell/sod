@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class NetworkIDNOT 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements NetworkIdSubsetter {
     
     public NetworkIDNOT (Element config) throws ConfigurationException {

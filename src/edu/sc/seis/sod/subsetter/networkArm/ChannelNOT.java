@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  */
 
 public class ChannelNOT 
-    extends LogicalSubsetter 
+    extends  NetworkLogicalSubsetter 
     implements ChannelSubsetter {
     
     public ChannelNOT (Element config) throws ConfigurationException {
