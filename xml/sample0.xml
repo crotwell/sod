@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+	   xsi:noNamespaceSchemaLocation='http://www.seis.sc.edu/xschema/sod/sod.xsd'>
      <eventArm>
 	   <eventFinder>
 		<name>finder</name>
