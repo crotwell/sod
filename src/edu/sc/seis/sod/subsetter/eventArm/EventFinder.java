@@ -15,6 +15,7 @@ import org.omg.CosNaming.NamingContextPackage.InvalidName;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.fissuresUtil.cache.NSEventDC;
 
 /**
  * This subsetter specifies the source of eventDC and the parameters required to query for events.
@@ -141,14 +142,15 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public EventDCOperations forceGetEventDC()
         throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
-        eventDC = fissuresNamingService.getEventDC(getDNSName(), getSourceName());
+        eventDC = getEventDC();
+        ((NSEventDC)eventDC).reset();
         return eventDC;
     }
 
     public EventDCOperations getEventDC()
         throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
         if (eventDC == null) {
-            return forceGetEventDC();
+            eventDC = new NSEventDC(getDNSName(), getSourceName(), fissuresNamingService);
         }
         return eventDC;
     }
