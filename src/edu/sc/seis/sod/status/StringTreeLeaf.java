@@ -9,7 +9,7 @@ package edu.sc.seis.sod.status;
 public class StringTreeLeaf extends StringTree {
 
     public StringTreeLeaf(Object name, boolean boo, String string) {
-        this(name, boo);
+        super(name, boo);
         this.string = string;
     }
 
@@ -24,7 +24,7 @@ public class StringTreeLeaf extends StringTree {
     }
 
     public String toString() {
-        return super.toString()+" :"+string+"  "+t;
+        return super.toString()+" :"+string+(t!=null ? "  "+t : "");
     }
 
     protected String string;
