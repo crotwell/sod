@@ -1,10 +1,14 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.Time;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Subsetter;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * TimeRange.java
@@ -16,79 +20,64 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public abstract class TimeRange implements Subsetter{ 
-
+public abstract class TimeRange implements Subsetter{
+    
     /**
      * Creates a new <code>TimeRange</code> instance.
      *
      * @param config an <code>Element</code> value
      */
     public TimeRange (Element config){
-	Element childElement = null;
-	NodeList children = config.getChildNodes();
-	Node node;
-	for (int i=0; i<children.getLength(); i++) {
-	    node = children.item(i);
-	    if(node instanceof Element) {
-		String tagName = ((Element)node).getTagName();
-		if(tagName.equals("timeRange") ){
-			childElement =(Element)node;
-		}
-	    }
-
-	}
-	children = childElement.getChildNodes(); 
-	for(int  i = 0; i < children.getLength(); i ++) {
-		node = children.item(i); 
-		if(node instanceof Element) {
-			String tagName = ((Element)node).getTagName();
-			if(tagName.equals("startTime")) minElement = (Element)node;
-			else if(tagName.equals("endTime")) maxElement = (Element)node;
-		}
-	}
+        Element childElement = null;
+        NodeList children = config.getChildNodes();
+        Node node;
+        for (int i=0; i<children.getLength(); i++) {
+            node = children.item(i);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                if(tagName.equals("timeRange") ){
+                    childElement =(Element)node;
+                }
+            }
+            
+        }
+        children = childElement.getChildNodes();
+        for(int  i = 0; i < children.getLength(); i ++) {
+            node = children.item(i);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                if(tagName.equals("startTime")) startTime = getTime((Element)node);
+                else if(tagName.equals("endTime")) endTime = getTime((Element)node);
+            }
+        }
+        timeRange = new MicroSecondTimeRange(startTime, endTime);
     }
-
-    /**
-     * Describe <code>getStartTime</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.Time</code> value
-     */
-    public edu.iris.Fissures.Time getStartTime() {
-	if(minElement == null) return null;
-	String effectiveTime = SodUtil.getNestedText(minElement);
-	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
-	return rtnTime;
+    
+    public Time getStartTime() { return startTime.getFissuresTime(); }
+    
+    public Time getEndTime() { return endTime.getFissuresTime(); }
+    
+    private MicroSecondDate getTime(Element e){
+        return new MicroSecondDate(new Time(SodUtil.getNestedText(e), 0));
     }
-
-    /**
-     * Describe <code>getEndTime</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.Time</code> value
-     */
-    public edu.iris.Fissures.Time getEndTime() {
-	if(maxElement == null) return null;
-	String effectiveTime = SodUtil.getNestedText(maxElement);
-	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime, 0);
-	return rtnTime;
-
-    }
-
-    /**
-     * Describe <code>getTimeRange</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.TimeRange</code> value
-     */
+    
     public edu.iris.Fissures.TimeRange getTimeRange() {
-
-	return new edu.iris.Fissures.TimeRange(getStartTime(), getEndTime());
-
+        return new edu.iris.Fissures.TimeRange(getStartTime(), getEndTime());
     }
-
-    Element minElement = null;
-
-    Element maxElement = null;
-
-    static Category logger = 
-        Category.getInstance(TimeRange.class.getName());
-
+    
+    public String toString(){ return timeRange.toString(); }
+    
+    public MicroSecondTimeRange getMSTR(){ return timeRange; }
+    
+    public MicroSecondDate getStartMSD(){ return startTime; }
+    
+    public MicroSecondDate getEndMSD(){ return endTime; }
+    
+    private MicroSecondTimeRange timeRange;
+    
+    private MicroSecondDate startTime;
+    
+    private MicroSecondDate endTime;
+    
+    static Logger logger = Logger.getLogger(TimeRange.class);
 }// TimeRange
