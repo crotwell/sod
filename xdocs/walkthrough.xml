@@ -22,7 +22,7 @@ Start up the GUI editor, by running <code>./bin/editor.sh</code> or <code>bin\ed
 The editor should start with the tutorial configuration preloaded. This is
 contained within the editor, so there is no need to worry about messing anything
 up as it can be reset by choosing ***TODO*** from the ***TODO*** menu. You will
-see several tabs which cover the various sectios of a SOD run. We will cover each
+see several tabs which cover the various sections of a SOD run. We will cover each
 in turn.
 </p>
 <section name="Event">
@@ -31,17 +31,17 @@ The Event tab, also known as the Event Arm, selects which events are of interest
 The tutorial configuration file by default gets events from the IRIS Event server
 from anywhere in the world with magnitude greater than 6 during January of 2003.
 These values can be changed and SOD can do quite a bit more things, but this is
-a minimal set paramters. One subtle point is that a single real earthquake will
+a minimal set parameters. One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is currently
 no way to automatically group these related origins into a single event based on
 the information that the DMC has, these origins each appear in separate events.
 So, it is usually wise to pick a particular catalog to avoid duplicate
 processing. The default here is the PREF catalog from the DMC. PREF is not a true
-catalog, but rather somethign that the DMC Event server understands as the "best"
+catalog, but rather something that the DMC Event server understands as the "best"
 catalog depending on the time range. The weeklies, or WHDF, catalog from the
 NEIC is another common one for historical data and if you
 are doing a SOD run and want near real time data, then you probably want to
-use FINGER catalog as that has a short delay from earthquake occuring to the
+use FINGER catalog as that has a short delay from earthquake occurring to the
 location being in the FINGER catalog.
 </p>
 <p>
@@ -72,8 +72,8 @@ thing, but this is a good way of introducing the logical subsetters. Notice that
 there are three channel subsetters joined with a logical AND, and one of these
 is a logical NOT that contains another subsetter. SOD makes heavy use of the
 ability to build up complex queries from simple building blocks glued
-together with logical operators. SOD trys to provide lots of small operations,
-insted of big, monoliths in order to give the user the flexibility to use it
+together with logical operators. SOD tries to provide lots of small operations,
+instead of big, monoliths in order to give the user the flexibility to use it
 in new and interesting ways.
 </p>
 <p>
@@ -105,18 +105,18 @@ The Phase Request selects the time range, relative to particular phases, for
 which the server will be asked. The travel time calculations are based on the
 <a href="http://www.seis.sc.edu/software/TauP">TauP Toolkit</a>, and so
 any choice of phase and model that is compatible with TauP is allowed. It is
-inportant to be careful of phases that might not exist at all distances, like
+important to be careful of phases that might not exist at all distances, like
 P and S. An alternative is to use ttp and tts which are TauP aliases for
-p, P, Pn, Pdiff, PKiKP, PKIKP and s, S, Sn, Sdiff, SKIKS respectivly. In any case
+p, P, Pn, Pdiff, PKiKP, PKIKP and s, S, Sn, Sdiff, SKIKS respectively. In any case
 the first arriving phase of that name is used. The offsets are added to the
 phase times to get the request time window. Note that this means that the
 begun offset should usually be negative in order to include the phase. The server
 in many cases will actually return a slightly wider time window than the actual
-request in order to avoid spliting data chunks.
+request in order to avoid splitting data chunks.
 </p>
 <p>
 Once the request is ready, SOD needs to choose the server. In this case we will
-send it to the IRIS POND. Users need to know the charateristics of the servers
+send it to the IRIS POND. Users need to know the characteristics of the servers
 that they use. For example, the POND only has data for events of magnitude 5.5
 or larger and the BUD only has data for the last three months.
 </p>
@@ -125,7 +125,7 @@ Next is the Some Coverage subsetter. It acts on the servers response to a query
 for available data, simply requiring that there be some. This is a pretty common
 subsetter to use as it keeps SOD from asking for data that doesn't exist, as well
 as logging the fact that the data wasn't available. This aids in SOD's ability
-to go back later and rety requests if the data was not yet available, perhaps due
+to go back later and retry requests if the data was not yet available, perhaps due
 to a delay in transmitting the data from the station.
 </p>
 <p>
@@ -138,7 +138,7 @@ usually for small time window this does not happen.
 </p>
 <p>
 The SacFileProcessor allows you to customize the directory naming structure.
-First, the dataDirectory element gives the parent directory into which sod
+First, the data-Directory element gives the parent directory into which sod
 will build the actual event directories. Sod will create this directory if it
 does not exist. Next, the eventDirLabel creates the name of each event's
 subdirectory. We will name the directories with Event_ followed by the time
@@ -157,7 +157,7 @@ used, and images of the retrieved seismograms.
 <p>
 Although there is a GUI for editing the configuration files, SOD itself is not
 a GUI application. This is done intentionally as SOD will likely be a long running
-background processes, and so command line execution is the perfered way. So, to
+background processes, and so command line execution is the preferred way. So, to
 start a SOD run, you need to save the XML configuration file to disk. Then start
 it up with <code>sod.sh -f mysod.xml</code>.
 </p>
@@ -167,7 +167,7 @@ it up with <code>sod.sh -f mysod.xml</code>.
 <p>
 Now that you have seen the tutorial template, feel free to visit the weed template,
 also located in the ***TODO*** menu.
-It attempts to make SOD behaive similarly to the old IRIS WEED program. There are
+It attempts to make SOD behave similarly to the old IRIS WEED program. There are
 some areas where making the functionality exactly like WEED would have been harder
 on the user, and so it was not designed to merely be similar. In addition to the
 functionality in the Tutorial template, the WEED template also supports distance,
