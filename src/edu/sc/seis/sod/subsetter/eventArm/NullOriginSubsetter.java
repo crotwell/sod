@@ -19,7 +19,7 @@ import edu.iris.Fissures.*;
 
 public class NullOriginSubsetter
     implements OriginSubsetter {
-    
+
     /**
      * Creates a new <code>NullOriginSubsetter</code> instance.
      *
@@ -27,6 +27,9 @@ public class NullOriginSubsetter
      * @exception ConfigurationException if an error occurs
      */
     public NullOriginSubsetter () {
+    }
+
+    public NullOriginSubsetter (Element config) {
     }
 
     /**
@@ -39,7 +42,7 @@ public class NullOriginSubsetter
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	return true;
+        return true;
     }
 
 }// NullOriginSubsetter
