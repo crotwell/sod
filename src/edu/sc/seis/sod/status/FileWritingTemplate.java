@@ -17,7 +17,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-public class FileWritingTemplate extends Template implements GenericTemplate {
+public class FileWritingTemplate extends Template implements GenericTemplate, Runnable {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
         this.baseDir = baseDir;
         this.outputLocation = loc;
@@ -30,9 +30,8 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         return loc;
     }
 
-    public void write(){ w.actIfPeriodElapsed(); }
+    public void write(){ OutputScheduler.DEFAULT.schedule(this);}
 
-    private MicroSecondDate lastWriteTime;
 
     public String getResult() {
         StringBuffer buf = new StringBuffer();
@@ -87,9 +86,9 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         return super.getTemplate(tag, el);
     }
 
-    private class Writer extends PeriodicAction{
-        public void act(){ write(getOutputLocation(), getResult()); }
-    }
+    public void run(){ write(getOutputLocation(), getResult()); }
+
+    public String toString(){ return "FileWriter for " + getOutputLocation(); }
 
     public static void write(String outputLocation, String output){
         File loc = new File(outputLocation);
@@ -112,7 +111,6 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
     public static final String BASE_DIR_PROP_NAME = "sod.start.StatusBaseDirectory";
 
     private String baseDir;
-    private Writer w = new Writer();
     private String outputLocation;
     private static Logger logger = Logger.getLogger(FileWritingTemplate.class);
 }
