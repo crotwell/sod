@@ -25,12 +25,17 @@ if __name__ == "__main__":
                       help="remove scripts after running",
                       default=False,
                       action="store_true")
+    parser.add_option("-v", "--validate", dest="validate",
+                      help="validate examples",
+                      default=False,
+                      action="store_true")
     options = parser.parse_args()[0]
     proj = ProjectParser.ProjectParser('../project.xml')
     scripts = [('buildSchema', 'com.sun.msv.writer.relaxng.Driver sod.rng > ../src/edu/sc/seis/sod/data/sod.rng'),
                ('buildGrouperSchema', 'com.sun.msv.writer.relaxng.Driver network/grouper.rng > ../src/edu/sc/seis/sod/data/grouper.rng'),
-               ('serializeGrammar', 'edu.sc.seis.sod.editor.SchemaGrammar'),
-               ('validateExamples', 'edu.sc.seis.sod.validator.example.ExampleValidator')]
+               ('serializeGrammar', 'edu.sc.seis.sod.editor.SchemaGrammar')]
+    if validate:
+        scripts = [('validateExamples', 'edu.sc.seis.sod.validator.example.ExampleValidator')]
     for name, mainclass in scripts:
         print 'running ' + name
         if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
