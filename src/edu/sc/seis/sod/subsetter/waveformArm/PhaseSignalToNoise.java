@@ -102,8 +102,14 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
     public LongShortTrigger calcTrigger(EventAccessOperations event,
                                         Channel channel,
                                         LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauModelException {
-        if (seismograms.length == 0) { return null; }
-        return phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
+        // find the first seismogram with a non-null trigger, probably the first
+        // that overlaps the timewindow, and return it.
+        for (int i = 0; i < seismograms.length; i++) {
+            LongShortTrigger trigger =
+                phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[i]);
+            if (trigger != null) { return trigger; }
+        }
+        return null;
     }
 
     public String getPhaseName() {
