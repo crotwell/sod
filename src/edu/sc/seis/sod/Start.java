@@ -401,6 +401,6 @@ public class Start{
 
     protected static int[] suspendedPairs = new int[0];
 
-    public static final String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
+    public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
 }// Start
 
