@@ -16,6 +16,7 @@
             <ref name="OR"/>
             <ref name="XOR"/>
             <ref name="NOT"/>
+            <ref name="PASS"/>
         </choice>
     </define>
     <define name="code">
@@ -209,4 +210,20 @@
             <ref name="site"/>
         </element>
     </define>
+    <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passSite/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passSite">
+                        <zeroOrMore>
+                                <ref name="site"/>
+                        </zeroOrMore>
+                </element>
+     </define>
 </grammar>
