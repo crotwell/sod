@@ -47,7 +47,7 @@ public class EventStationFormatter extends StationFormatter{
             return df.format(dAz.getDelta());
         }
 
-        private DecimalFormat df = new DecimalFormat("000.00");
+        private DecimalFormat df = new DecimalFormat("0.00");
     }
 
     private class BackAz implements StationTemplate{
@@ -56,7 +56,7 @@ public class EventStationFormatter extends StationFormatter{
             return df.format(dAz.getBaz());
         }
 
-        private DecimalFormat df = new DecimalFormat("000.00");
+        private DecimalFormat df = new DecimalFormat("0.00");
     }
 
     private class SuccessfulQuery implements StationTemplate{
