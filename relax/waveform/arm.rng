@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="waveformArms"/>
     </start>
@@ -7,8 +8,12 @@
         <choice>
             <xsd:annotation>
                 <summary>Operates on the networks and events returned by the network and event arms</summary>
-                <description>The waveform arms take the items returned by the network and event arms and generate the
-                    necessary requests to retrieve seismograms. The data received are then processed.</description>
+                <description>Both types of waveform arm take the items returned by the network and
+                    event arms and generate the necessary requests to retrieve seismograms. The data
+                    received are then processed. The regular waveformArm takes each channel from the
+                    network arm and runs it through its subsetters and processors individually. The
+                    waveformVectorArm takes the channels from the network arm, groups them as
+                    motion vectors, and runs them through its items as a group.</description>
             </xsd:annotation>
             <externalRef href="localSeismogram.rng"/>
             <externalRef href="waveformVectorArm.rng"/>

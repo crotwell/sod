@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="waveformVectorArm">
             <xsd:annotation>
                 <summary>Downloads and processes wavforms by channel groups</summary>
-                <description>The waveformVectorArm groups the three components from a site and then does the necessary
-                    processing on them as a group.</description>
+                <description>The waveformVectorArm groups three orthogonal components from a site
+                    and then does its necessary processing on them as a group.</description>
             </xsd:annotation>
             <optional>
                 <externalRef href="eventStation.rng"/>

@@ -77,8 +77,6 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches sites that are within a given area</summary>
-                    <description> Matches sites that are within a given area. See the documentation
-                        for Area to see the available area types. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="station"/>
@@ -11,7 +12,8 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting stations</summary>
-                <description>This collects all of the subsetters that make decisions on the contents of a station.</description>
+                <description>This collects all of the subsetters that make decisions on the contents
+                    of a station.</description>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="name"/>
@@ -46,8 +48,8 @@
         <element name="stationName">
             <xsd:annotation>
                 <summary>Matches the name of a station</summary>
-                <description> Matches the name of a station. This is a simple string comparison, and so care must be
-                    taken for this to be useful. </description>
+                <description> Matches the name of a station. This is a simple string comparison, and
+                    so care must be taken for this to be useful. </description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>
@@ -60,8 +62,8 @@
         <element name="stationOperator">
             <xsd:annotation>
                 <summary>Matches the operator of a station</summary>
-                <description> Matches the operator of a station. This is a simple string comparison, and so care must be
-                    taken for this to be useful. </description>
+                <description> Matches the operator of a station. This is a simple string comparison,
+                    and so care must be taken for this to be useful. </description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>
@@ -90,9 +92,9 @@
         <element name="stationEffectiveTimeOverlap">
             <xsd:annotation>
                 <summary>Matches if the station effective time overlaps the given time range</summary>
-                <description> Matches if the station effective time overlaps the given time range. This is generally
-                    used to avoid processing stations that did not yet exist, or were deactivated before a time range of
-                    interest. </description>
+                <description> Matches if the station effective time overlaps the given time range.
+                    This is generally used to avoid processing stations that did not yet exist, or
+                    were deactivated before a time range of interest. </description>
             </xsd:annotation>
             <ref name="timeRange"/>
         </element>
@@ -101,8 +103,6 @@
         <element name="stationArea">
             <xsd:annotation>
                 <summary>Matches stations that are within a given area</summary>
-                <description> Matches stations that are within a given area. See the documentation for Area to see the
-                    available area types. </description>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
         </element>
@@ -111,7 +111,8 @@
         <element name="stationPointDistance">
             <xsd:annotation>
                 <summary> Distance range from a fixed point</summary>
-                <description> True if the station is within the given distance range of the given lat and lon. </description>
+                <description> True if the station is within the given distance range of the given
+                    lat and lon. </description>
             </xsd:annotation>
             <ref name="range"/>
             <ref name="lat"/>
@@ -122,8 +123,9 @@
         <element name="stationPointAzimuth">
             <xsd:annotation>
                 <summary>Azimuth (point to station) range from a fixed point</summary>
-                <description> True if the station is within the given azimuth range of the given lat and lon. In keeping
-                    with common seismic terminology, azimuth is measured from the point to the station.</description>
+                <description> True if the station is within the given azimuth range of the given lat
+                    and lon. In keeping with common seismic terminology, azimuth is measured from
+                    the point to the station.</description>
             </xsd:annotation>
             <ref name="range"/>
             <ref name="lat"/>
@@ -134,8 +136,9 @@
         <element name="stationPointBackAzimuth">
             <xsd:annotation>
                 <summary>Back azimuth (station to point) range from a fixed point</summary>
-                <description> True if the station is within the given back azimuth range of the given lat and lon. In
-                    keeping with common seismic terminology, back azimuth is measured from the station to the point. </description>
+                <description> True if the station is within the given back azimuth range of the
+                    given lat and lon. In keeping with common seismic terminology, back azimuth is
+                    measured from the station to the point. </description>
             </xsd:annotation>
             <ref name="range"/>
             <ref name="lat"/>
@@ -146,9 +149,10 @@
         <element name="stationAND">
             <xsd:annotation>
                 <summary>Matches all enclosed Station subsetters</summary>
-                <description>The output is the logical AND of the outputs of all included Station subsetters. This
-                        means that it will evaluate to true only if all the enclosed Station subsetters evaluate to
-                        true. The subsetters after the first false outputted are not evaluated.</description>
+                <description>The output is the logical AND of the outputs of all included Station
+                    subsetters. This means that it will evaluate to true only if all the enclosed
+                    Station subsetters evaluate to true. The subsetters after the first false
+                    outputted are not evaluated.</description>
                 <example>
                     <stationAND>
                         <stationEffectiveTimeOverlap>
@@ -181,9 +185,10 @@
         <element name="stationOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed Station subsetter</summary>
-                <description>The output is the logical OR of the outputs of all included Station subsetters. This
-                        means that it will evaluate to true if at least one of the enclosed Station subsetters evaluate
-                        to true. The subsetters after the first true outputted are not evaluated.</description>
+                <description>The output is the logical OR of the outputs of all included Station
+                    subsetters. This means that it will evaluate to true if at least one of the
+                    enclosed Station subsetters evaluate to true. The subsetters after the first
+                    true outputted are not evaluated.</description>
                 <example>
                     <stationOR>
                         <stationEffectiveTimeOverlap>
@@ -216,9 +221,9 @@
         <element name="stationNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed Station subsetter</summary>
-                <description>The output is the logical NOT of the output of the enclosed Station subsetter. This
-                        means that it will evaluate to false if the enclosed Station subsetter evaluates to true, and
-                        vice versa.</description>
+                <description>The output is the logical NOT of the output of the enclosed Station
+                    subsetter. This means that it will evaluate to false if the enclosed Station
+                    subsetter evaluates to true, and vice versa.</description>
                 <example>
                     <stationNOT>
                         <stationArea>
@@ -245,8 +250,8 @@
         <element name="passStation">
             <xsd:annotation>
                 <summary>Accepts any station</summary>
-                <description>This is a simple subsetter that always returns true for any Station, which is useful
-                        for testing purposes.</description>
+                <description>This is a simple subsetter that always returns true for any Station,
+                    which is useful for testing purposes.</description>
                 <example>
                     <passStation/>
                 </example>
@@ -260,8 +265,8 @@
         <element name="externalStationSubsetter">
             <xsd:annotation>
                 <summary>Use a station subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements StationSubsetter, SOD
-                    calls accept() on the class for every station.</description>
+                <description>Attempts to load the class named by classname, and if it implements
+                    StationSubsetter, SOD calls accept() on the class for every station.</description>
                 <example>
                     <externalStationSubsetter>
                         <className>edu.somewhere.seis.sodExt.subsetter.station.MyStationSubsetter</className>

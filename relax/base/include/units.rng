@@ -93,14 +93,6 @@
             </choice>
         </element>
     </define>
-    <define name="degrees" combine="choice">
-        <element name="unit">
-            <xsd:annotation>
-                <summary>A unit of distance in degrees</summary>
-            </xsd:annotation>
-            <value>DEGREE</value>
-        </element>
-    </define>
     <define name="timeUnit" combine="choice">
         <element name="unit">
             <xsd:annotation>

@@ -18,7 +18,7 @@
     <define name="responseWriter">
         <element name="responseWriter">
             <xsd:annotation>
-                <summmary>Prints channel responses to file</summmary>
+                <summary>Prints channel responses to file</summary>
             </xsd:annotation>
             <element name="directory">
                 <data type="string">
@@ -28,6 +28,9 @@
                 </data>
             </element>
             <element name="filePattern">
+                <xsd:annotation>
+                    <example><filePattern><networkCode/>-<stationCode/>-<channelCode/>.resp</filePattern></example>
+                </xsd:annotation>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </element>
         </element>

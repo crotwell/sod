@@ -41,7 +41,6 @@
             <xsd:annotation>
                 <summary>A range of distance in degrees</summary>
             </xsd:annotation>
-            <ref name="degrees"/>
             <optional>
                 <element name="min">
                     <xsd:annotation>

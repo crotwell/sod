@@ -78,7 +78,11 @@
                     written in the directory status in the directory in which
                     SOD is started.</description>
             </xsd:annotation>
-            <text/>
+            <text>
+                <xsd:annotation>
+                    <example>/Apache/htdocs/SodStatus</example>
+                </xsd:annotation>
+            </text>
         </element>
     </define>
     <define name="eventQueryIncrement">
@@ -151,13 +155,11 @@
                 <description>SOD can use multiple threads in the waveform arm to
                     retrieve and process data. This allows for SOD to stay busy
                     on processing one event-channel group while retrieving the
-                    data for another. For SOD runs that use gather lots of data,
-                    and do little processing, or vice versa, setting this to 3
-                    or 4 can speed things up. The value defaults to 1. </description>
+                    data for another. Setting this to 2 can speed things up. The value defaults to 1. </description>
             </xsd:annotation>
             <data type="nonNegativeInteger">
                 <xsd:annotation>
-                    <example>3</example>
+                    <example>2</example>
                 </xsd:annotation>
             </data>
         </element>
@@ -190,11 +192,11 @@
             <xsd:annotation>
                 <summary>Sets handling on open event channel pairs on restart</summary>
                 <description>If a SOD run is stopped while running, the event
-                    channel groups its working on are left in an indeterminate
+                    channel groups it's working on are left in an indeterminate
                     state in the database. SOD knows it started working on them,
                     but it doesn't know how far it progressed when SOD died.
                     This property tells SOD how to deal with these indeterminate
-                    items. If "atLeastOnce" is used, SOD will grab the
+                    items. If "atLeastOnce" is used, SOD will take the
                     indeterminate items, set them to new, and process them. This
                     means that no matter what happens to a SOD run, the items
                     will get processed through the entire set of waveform arm
