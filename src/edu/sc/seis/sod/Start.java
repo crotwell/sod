@@ -237,8 +237,7 @@ public class Start{
             props.load(propStream);
             propStream.close();
         } catch (Exception f) {
-            System.err.println("Problem loading props!");
-            f.printStackTrace();
+            GlobalExceptionHandler.handle("Problem loading props!", f);
             System.exit(0);
         }
     }
@@ -320,6 +319,6 @@ public class Start{
 
     private static MicroSecondDate startTime;
 
-    private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
+    public static final String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
 
