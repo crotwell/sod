@@ -30,9 +30,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class Start{
-    static {
-        GlobalExceptionHandler.registerWithAWTThread();
-    }
+    static { GlobalExceptionHandler.registerWithAWTThread(); }
 
     /**
      * Creates a new <code>Start</code> instance set to use the XML config file
@@ -94,13 +92,6 @@ public class Start{
 
     public static String getConfigFileName(){ return configFile; }
 
-    public static String getRunName(){
-        if(runName == null){
-            runName = props.getProperty("sod.start.RunName", "Your Sod");
-        }
-        return runName;
-    }
-
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
         loadProps((Start.class).getClassLoader().getResourceAsStream(DEFAULT_PROPS));
@@ -123,7 +114,7 @@ public class Start{
         Element propertiesElement = SodUtil.getElement(docElement, "properties");
         if(propertiesElement != null) {
             //load the properties fromt the configurationfile.
-            SodUtil.loadProperties(propertiesElement, props);
+            runProps = new RunProperties(propertiesElement);
         } else {
             logger.debug("No properties specified in the configuration file");
         }
@@ -154,6 +145,8 @@ public class Start{
 
     public static NetworkArm getNetworkArm() { return network; }
 
+    public static RunProperties getRunProps(){ return runProps; }
+
     public static Document createDoc(InputSource source)
         throws SAXException, IOException, ParserConfigurationException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -179,29 +172,23 @@ public class Start{
                 } else if (el.getTagName().equals("eventArm")) {
                     logger.info(el.getTagName());
                     event = new EventArm(el);
-                    eventArmThread = new Thread(event, "eventArm thread");
-                    eventArmThread.start();
+                    new Thread(event, "Event Arm").start();
                 } else if (el.getTagName().equals("networkArm")) {
                     logger.info(el.getTagName());
                     network = new NetworkArm(el);
                 } else if (el.getTagName().equals("waveformArm")) {
                     logger.info(el.getTagName());
-                    int poolSize =
-                        Integer.parseInt(props.getProperty("edu.sc.seis.sod.waveformarm.threads",
-                                                           "5"));
+                    int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, network, poolSize);
-                    waveformArmThread = new Thread(waveform, "waveformArm Thread");
-                    waveformArmThread.start();
+                    new Thread(waveform, "Waveform Arm").start();
                 }  else {
                     logger.debug("process "+el.getTagName());
                 }
             }
         }
         indexTemplate.performRegistration();
-        //new JDBCStatus();
+        new JDBCStatus();
     }
-
-    public static Properties getProperties() {return props; }
 
     public Document getDocument(){ return document; }
 
@@ -248,8 +235,7 @@ public class Start{
 
     private static  void executeRestartOptions() {
         //TODO - use this in new db
-        Start.REMOVE_DATABASE = isRemoveDatabase();
-        if(isReopenEvents()){
+        if(runProps.reopenEvents()){
             try {
                 JDBCEventStatus eventStatus = new JDBCEventStatus();
                 eventStatus.restartCompletedEvents();
@@ -259,63 +245,24 @@ public class Start{
         }
     }
 
-    public static TimeInterval getIntervalProp(TimeInterval defaultInterval,
-                                               String propName) throws NoSuchFieldException {
-        String unitName = props.getProperty(propName + ".unit", "DAY");
-        if(unitName != null){
-            UnitImpl unit = UnitImpl.getUnitFromString(unitName);
-            int val = getIntProp(propName + ".value", -1);
-            if(val != -1) return new TimeInterval(val, unit);
-        }
-        return defaultInterval;
-    }
-
-    private static boolean isRemoveDatabase() {
-        String str = props.getProperty("edu.sc.seis.sod.database.remove");
-        if(str != null) {
-            if(str.equalsIgnoreCase("true")) { return true;}
-        }
-        return false;
-    }
-
-    public static int getIntProp(String propName, int defaultValue){
-        String str = props.getProperty(propName);
-        if(str != null) {
-            try {
-                return Integer.parseInt(str);
-            } catch(NumberFormatException nfe) {}
-        }
-        return defaultValue;
-    }
-
-    private static boolean isReopenEvents() {
-        String str = props.getProperty("sod.start.ReopenEvents");
-        if(str != null && str.equalsIgnoreCase("true"))  return true;
-        return false;
-    }
-
     public static final String
         DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
-
-    public static boolean REMOVE_DATABASE = false;
-
-    private static Properties props = System.getProperties();
 
     private Document document;
 
     private static Logger logger = Logger.getLogger(Start.class);
 
-    private static Thread waveformArmThread;
-
-    private static Thread eventArmThread;
-
     private static WaveformArm waveform;
+
+    private static Properties props = System.getProperties();
+
+    private static RunProperties runProps;
 
     private static EventArm event;
 
     private static NetworkArm network;
 
-    private static String configFile, runName = null;
+    private static String configFile;
 
     private static MicroSecondDate startTime;
 
