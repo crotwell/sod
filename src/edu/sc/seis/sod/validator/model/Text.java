@@ -7,14 +7,14 @@ package edu.sc.seis.sod.validator.model;
 
 import edu.sc.seis.sod.validator.tour.Tourist;
 
-public class Text extends Empty {
+public class Text extends AbstractForm{
 
     public Text() {
         this(null);
     }
 
     public Text(Form parent) {
-        super(parent);
+        super(1, 1, parent);
     }
 
     public FormProvider copyWithNewParent(Form newParent) {
