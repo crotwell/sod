@@ -94,7 +94,7 @@ public class Start {
         }
         initDocument(args);
     }
-
+    
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
         System.err.println("You told SOD to use "
@@ -370,6 +370,15 @@ public class Start {
         return document;
     }
 
+    public static String getConfFileName(String[] args) {
+        for(int i = 0; i < args.length; i++) {
+            if(args[i].equals("-conf") || args[i].equals("-f")) {
+                return args[i + 1];
+            } else if(args[i].equals("-demo")) { return SimpleGUIEditor.TUTORIAL_LOC; }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         try {
             // this is not the real exception reporter, but do this to catch
@@ -381,14 +390,7 @@ public class Start {
             // logging
             // later we will use PropertyConfigurator to really configure log4j
             BasicConfigurator.configure();
-            String confFilename = null;
-            for(int i = 0; i < args.length; i++) {
-                if(args[i].equals("-conf") || args[i].equals("-f")) {
-                    confFilename = args[i + 1];
-                } else if(args[i].equals("-demo")) {
-                    confFilename = SimpleGUIEditor.TUTORIAL_LOC;
-                }
-            }
+            String confFilename = getConfFileName(args);
             if(confFilename == null) {
                 exit("No configuration file given.  Supply a configuration file "
                         + "using -f <configFile>, or to just see sod run use "
