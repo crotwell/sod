@@ -1,21 +1,53 @@
 <?xml version="1.0"?>
-<template><html>
-<header><title>Event Arm Status</title></header>
-<body><b>Status:</b><br/><status/><br/>
+<template>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Events</title>
+<style media="all">@import "../main.css";</style>
+</head>
+<body>
+<div id="Header">
+<a href="../mainSite.html">SOD</a>
+<a href="location.html">> Event Arm</a>
+<a href="time.html">> Sorted by Time</a>
+</div>
+<div id="Content">
+<h1>Events</h1>
+<h2>Status:</h2>
+<status/><br/>
+<h2>Map:</h2>
+<img src="eventMap.png"/>
+<h2>Successful events sorted by time:</h2>
 <table>
-    <tr>
-        <th ALIGN="LEFT"><A HREF="location.html">Location</A></th>
-        <th ALIGN="LEFT">Time</th>
-        <th><A HREF="mag.html">Magnitude</A></th>
-        <th><A HREF="depth.html">Depth</A></th>
-  </tr>
-<events><eventLabel>    <tr>
-        <td><feRegionName/></td>
-        <td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
-        <td><magnitude/></td>
-        <td><depth/></td>
-    </tr>
-</eventLabel><sorting><date/></sorting></events></table>
+<tr id="title">
+<td>Location</td>
+<td id="selected">Time</td>
+<td>Magnitude</td>
+<td>Depth</td>
+</tr>
+<events><eventLabel><tr>
+<td><feRegionName/></td>
+<td id="selected"><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td><magnitude/></td>
+<td><depth/></td>
+</tr>
+</eventLabel><sorting><time/></sorting></events>
+</table>
+</div>
+<div id="Menu">
+<ul>
+<li>
+<a href="eventArm/locSorted.html">Event Arm</a><br />
+<ul>
+<li><a href="location.html" id="Submenu">Location</a></li>
+<li><a href="time.html" id="Submenu">Time</a></li>
+<li><a href="mag.html" id="Submenu">Magnitude</a></li>
+<li><a href="depth.html" id="Submenu">Depth</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </body>
 </html></template>
 
