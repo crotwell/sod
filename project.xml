@@ -281,6 +281,7 @@
             </includes>
             <excludes>
                 <exclude>XMLConfigUtil.java</exclude>
+				<exclude>**/CoverageTestData.java</exclude>
             </excludes>
             <resources>
                 <resource>
