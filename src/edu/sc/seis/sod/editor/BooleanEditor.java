@@ -71,7 +71,7 @@ public class BooleanEditor implements EditorPlugin{
         }else if(name.endsWith(AND)){
             type = AND;
         }else if(name.endsWith(NOT)){
-            type = AND;
+            type = NOT;
         }else if(name.endsWith(XOR)){
             type = XOR;
         }else if(name.startsWith(AND)){
