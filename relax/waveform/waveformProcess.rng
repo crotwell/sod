@@ -288,6 +288,11 @@
                     <data type="string"/>
                 </element>
             </optional>
+            <optional>
+                <element name="preserveRequest">
+                    <empty></empty>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="recordSectionDisplayGenerator">
