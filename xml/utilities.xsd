@@ -8,6 +8,40 @@
 			Schema for the EventArm of SOD
 		</xsd:documentation>
 	</xsd:annotation>
+
+	<!-- MAIN ABSTRACT BASE TYPE FOR SOD -->
+	<xsd:complexType name="sodItemType" abstract="true">
+		<xsd:sequence>
+			<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- ABSTRACT TYPE FOR SOURCE -->
+	<xsd:complexType name="sourceType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="dns" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	
+	<!-- ABSTRACT TYPE FOR ARMS -->	
+	<xsd:complexType name="armType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- ABSTRACT TYPE FOR SUBSETTER -->
+	<xsd:complexType name="subsetterType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
 	
 	<!-- mainly used in the NetworkARm EFFECTIVE TIME OVERLAP TYPE -->
 	<xsd:complexType name="effectiveTimeOverlapType">
@@ -28,10 +62,31 @@
 
 	<!-- PROCESS TYPE -->
 	<xsd:complexType name="processType" abstract="true">
-		<xsd:sequence>
-			<xsd:element name="class" type="xsd:string"/>
-			<xsd:element name="params" type="paramsType" minOccurs="0" maxOccurs="unbounded"/>
-		</xsd:sequence>
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EXTERNAL PROCESS TYPE -->
+	<xsd:complexType name="externalProcessType" abstract="true">		
+		<xsd:complexContent>
+			<xsd:extension base="processType">
+				<xsd:sequence>
+					<xsd:element name="class" type="xsd:string"/>
+					<xsd:element name="params" type="paramsType" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- INTERNAL PROCESS TYPE -->
+	<xsd:complexType name="internalProcessType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="processType">
+				<xsd:sequence>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 	
@@ -43,14 +98,24 @@
 			<xsd:enumeration value="SECOND"/>
 			<xsd:enumeration value="AMPERE"/>
 			<xsd:enumeration value="DEGREE"/>
+			<xsd:enumeration value="NANOMETER"/>
+			<xsd:enumeration value="MICROMETER"/>
+			<xsd:enumeration value="MILLIMETER"/>
+			<xsd:enumeration value="NANOSECOND"/>
+			<xsd:enumeration value="MICROSECOND"/>
+			<xsd:enumeration value="MILLISECOND"/>
+			<xsd:enumeration value="MINUTE"/>
+			<xsd:enumeration value="HOUR"/>
+			<xsd:enumeration value="DAY"/>
+			<xsd:enumeration value="YEAR"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 
 	<!-- QUANTITY TYPE -->
 	<xsd:complexType name="quantityType">
 		<xsd:sequence>
+			<xsd:element name="unit" type="unitType"/>
 			<xsd:element name="value" type="xsd:integer"/>
-			<xsd:element name="quantity" type="unitType"/>
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -79,17 +144,101 @@
 	</xsd:complexType>
 
 	<!-- DISTANCE TYPE -->
-	<xsd:complexType name="distanceType">
+	<xsd:complexType name="distanceRangeType">
 		<xsd:sequence>
 			<xsd:element name="unit" type="unitType"/>
 			<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
 			<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
 		</xsd:sequence>
 	</xsd:complexType>
+
+	<!-- AREA TYPE is abstract -->
+	<xsd:complexType name="areaType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="sodItemType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- BOX AREA TYPE -->
+	<xsd:complexType name="boxAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+					<xsd:element ref="latitudeRange"/>
+					<xsd:element ref="longitudeRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+	<!-- POINT AREA TYPE -->
+	<xsd:complexType name="pointAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+					<xsd:element name="latitude" type="xsd:float"/>
+					<xsd:element name="longitude" type="xsd:float"/>
+					<xsd:element ref="distanceRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+
+	<!-- LATITUDE TYPE -->
+	<xsd:complexType name="latitudeLongitudeRangeType">
+		<xsd:sequence>
+			<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<!-- GLOBAL AREA TYPE -->
+	<xsd:complexType name="globalAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="areaType">
+				<xsd:sequence>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	
+
+	<!-- TIME  RANGE TYPE -->
+	<xsd:complexType name="timeRangeType">
+		<xsd:sequence>
+			<xsd:element name="startTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="endTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	 <!-- abstract element areaType -->
+	 <xsd:element name="area" type="areaType" abstract="true"/>
+
+	 <!-- element representing boxArea -->
+	 <xsd:element name="boxArea" type="boxAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing globalArea -->
+	 <xsd:element name="globalArea" type="globalAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing pointArea -->
+	 <xsd:element name="pointArea" type="pointAreaType" substitutionGroup="area"/>
+
+	 <!-- element representing latitude -->
+	 <xsd:element name="latitudeRange" type="latitudeLongitudeRangeType"/>
+
+	 <!-- element representing longitude -->
+	 <xsd:element name="longitudeRange" type="latitudeLongitudeRangeType"/>
+
+	<!-- distanceRange element -->
+	<xsd:element name="distanceRange" type="distanceRangeType"/>
+
+	<!-- timeRangeType element -->
+	<xsd:element name="timeRange" type="timeRangeType"/>
 	
+		
 </xsd:schema>
-
-
-
-

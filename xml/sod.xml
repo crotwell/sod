@@ -6,15 +6,19 @@
 		<name>finder</name>
 		<dns>edu/sc/seis</dns>
 		<globalArea/>
-		<depth>
-			<unit>KILOMETER</unit>
-			<min>10</min>
-			<max>100</max>
-		</depth>
+		<depthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</depthRange>
+		<eventTimeRange>
 		<timeRange>
 			<startTime>1999-01-01T00:00:00Z</startTime>
 			<endTime>2000-01-01T00:00:00Z</endTime>
 		</timeRange>
+		</eventTimeRange>
 		<magnitude>
 			<type>mb</type>
 			<min>5</min>
@@ -49,25 +53,31 @@
 			<min>5</min>
 			<max>10</max>
 		</magnitude>
-		<depth>
-			<unit>KILOMETER</unit>
-			<min>10</min>
-			<max>100</max>
-		</depth>
+		<depthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</depthRange>
+		<eventTimeRange>
 		<timeRange>
 			<startTime>2001-01-01T00:00:00Z</startTime>
 			<endTime>2002-01-01T00:00:00Z</endTime>
 		</timeRange>
+		</eventTimeRange>
+		<eventArea>
 		<boxArea>
-			<latitude>
+			<latitudeRange>
 				<min>38</min>
 				<max>120</max>
-			</latitude>
-			<longitude>
+			</latitudeRange>
+			<longitudeRange>
 				<min>-90</min>
 				<max>90</max>
-			</longitude>
+			</longitudeRange>
 		</boxArea>
+		</eventArea>
 		<originAND>
 			<originNOT>
 				<description>this describes the originNOT</description>
@@ -115,16 +125,18 @@
 	</networkeffectiveTimeOverlap>
 
 	<stationAND>
-		<stationLatLonBox>
-			<latitude>
+		  <stationArea>
+		    <boxArea>
+			<latitudeRange>
 				<min>20</min>
 				<max>40</max>
-			</latitude>
-			<longitude>
+			</latitudeRange>
+			<longitudeRange>
 				<min>-100</min>
 				<max>-80</max>
-			</longitude>
-		</stationLatLonBox>
+			</longitudeRange>
+		    </boxArea>
+		   </stationArea>
 		<stationeffectiveTimeOverlap>
 			<effectiveTimeOverlap>
 				<min>1999-01-01T00:00:00Z</min>
@@ -149,9 +161,7 @@
 		</interval>
 	</sampling>
 
-	<printlineChannelProcessor>
-		<class>edu.sc.seis.sod.NotKnown</class>
-	</printlineChannelProcessor>
+	<printlineChannelProcessor/>
 	
     </networkArm>
 
@@ -164,13 +174,13 @@
 					<min>30</min>
 				</distance>
 			</eventStationDistance>
-			<eventStationMagnitude>
+			<embeddedOriginSubsetter>
 				<magnitude>
 					<description>describes magnitude</description>
 					<type>mb</type>
 					<min>5.5</min>
 				</magnitude>
-			</eventStationMagnitude>
+			</embeddedOriginSubsetter>
 		</eventStationAND>
 		<eventStationAND>
 			<eventStationDistance>
@@ -180,12 +190,12 @@
 					<max>90</max>
 				</distance>
 			</eventStationDistance>
-			<eventStationMagnitude>
+			<embeddedOriginSubsetter>
 				<magnitude>
 					<type>mb</type>
 					<min>6.0</min>
 				</magnitude>
-			</eventStationMagnitude>
+			</embeddedOriginSubsetter>
 		</eventStationAND>
 	</eventStationOR>
 
@@ -212,9 +222,7 @@
 		<fullCoverage/>
 	</availableDataAND>
 
-	<printlineWaveformProcessor>
-		<class>edu.sc.seis.sod.NotKnown</class>
-	</printlineWaveformProcessor>
+	<printlineWaveformProcessor/>
 
    </waveFormArm>
 </sod>

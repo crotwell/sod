@@ -14,24 +14,23 @@
 
 	<!-- This is the base abstract Type -->
 	<xsd:complexType name="eventAttrSubsetterType" abstract="true">
-		<xsd:sequence>
-			<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-		</xsd:sequence>
-
+		<xsd:complexContent>
+			<xsd:extension base="subsetterType"/>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 	<!-- origin abstract type -->
 	<xsd:complexType name="originType" abstract="true">
-		<xsd:sequence>
-			<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-		</xsd:sequence>
+		<xsd:complexContent>
+			<xsd:extension base="subsetterType"/>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 	<!-- event source abstract type -->
 	<xsd:complexType name="eventSourceType" abstract="true">
-		<xsd:sequence>
-			<xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-		</xsd:sequence>
+		<xsd:complexContent>
+			<xsd:extension base="sourceType"/>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 
@@ -137,12 +136,11 @@ in the instance document
 
 
 	<!-- TIME  RANGE TYPE -->
-	<xsd:complexType name="timeRangeType">
+	<xsd:complexType name="eventTimeRangeType">
 		<xsd:complexContent>
 			<xsd:extension base="originType">
 				<xsd:sequence>
-					<xsd:element name="startTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="endTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="timeRange"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -170,29 +168,16 @@ in the instance document
 	</xsd:complexType>
 
 	<!-- DEPTH TYPE -->
-	<xsd:complexType name="depthType">
+	<xsd:complexType name="depthRangeType">
 		<xsd:complexContent>
 			<xsd:extension base="originType">
 				<xsd:sequence>
-					<xsd:element name="unit" type="unitType"/>
-					<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="unitRange" type="unitRangeType"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- LATITUDE TYPE -->
-	<xsd:complexType name="latitudeLongitudeType">
-		<xsd:complexContent>
-			<xsd:extension base="originType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 	
 	<!-- LOCATION TYPE TYPE -->
 	<xsd:simpleType name="locationtypeType">
@@ -216,47 +201,7 @@ in the instance document
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	
-	<!-- AREA TYPE is abstract -->
-	<xsd:complexType name="areaType">
-		<xsd:complexContent>
-			<xsd:extension base="originType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 
-	<!-- BOX AREA TYPE -->
-	<xsd:complexType name="boxAreaType">
-		<xsd:complexContent>
-			<xsd:extension base="areaType">
-				<xsd:sequence>
-					<xsd:element name="latitude" type="latitudeLongitudeType"/>
-					<xsd:element name="longitude" type="latitudeLongitudeType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- POINT AREA TYPE -->
-	<xsd:complexType name="pointAreaType">
-		<xsd:complexContent>
-			<xsd:extension base="areaType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- GLOBAL AREA TYPE -->
-	<xsd:complexType name="globalAreaType">
-		<xsd:complexContent>
-			<xsd:extension base="areaType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
 
 	<!-- ORIGIN AND TYPE -->
 	<xsd:complexType name="originANDType">
@@ -309,11 +254,9 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="eventSourceType">
 				<xsd:sequence>
-					<xsd:element name="name" type="xsd:string"/>
-					<xsd:element name="dns" type="xsd:string"/>
 					<xsd:element ref="area"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="depth"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="timeRange"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="depthRange"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="eventTimeRange"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="magnitude"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="catalog" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="contributor" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
@@ -327,6 +270,7 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="eventSourceType">
 				<xsd:sequence>
+					<xsd:element name="eventname" type="xsd:string"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -336,7 +280,7 @@ in the instance document
 	<!-- EVENT PROCESS TYPE -->
 	<xsd:complexType name="externalEventProcessType">
 		<xsd:complexContent>
-			<xsd:extension base="processType">
+			<xsd:extension base="externalProcessType">
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -370,25 +314,21 @@ in the instance document
 	<xsd:element name="magnitude" type="magnitudeType" substitutionGroup="origin"/>
 
 	<!-- element representing depth -->
-         <xsd:element name="depth" type="depthType" substitutionGroup="origin"/>	
+         <xsd:element name="depthRange" type="depthRangeType" substitutionGroup="origin"/>	
 
-	 <!-- element representing latitude -->
-	 <xsd:element name="latitude" type="latitudeLongitudeType" substitutionGroup="origin"/>
+	<!-- EVENT AREA TYPE -->
+	<xsd:complexType name="eventAreaType">
+		<xsd:complexContent>
+			<xsd:extension base="originType">
+				<xsd:sequence>
+					<xsd:element ref="area"/>
+				</xsd:sequence>	
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-	 <!-- element representing longitude -->
-	 <xsd:element name="longitude" type="latitudeLongitudeType" substitutionGroup="origin"/>
-
-	 <!-- abstract element areaType -->
-	 <xsd:element name="area" type="areaType" abstract="true" substitutionGroup="origin"/>
-
-	 <!-- element representing boxArea -->
-	 <xsd:element name="boxArea" type="boxAreaType" substitutionGroup="area"/>
-
-	 <!-- element representing globalArea -->
-	 <xsd:element name="globalArea" type="globalAreaType" substitutionGroup="area"/>
-
-	 <!-- element representing pointArea -->
-	 <xsd:element name="pointArea" type="pointAreaType" substitutionGroup="area"/>
+	<!-- element representing eventArea -->
+	<xsd:element name="eventArea" type="eventAreaType" substitutionGroup="origin"/>
 
 	<!-- element representing originAND -->
 	<xsd:element name="originAND" type="originANDType" substitutionGroup="origin"/>
@@ -403,7 +343,7 @@ in the instance document
 	<xsd:element name="originNOT" type="originNOTType" substitutionGroup="origin"/>
 
 	<!-- element representing timeRange -->
-	<xsd:element name="timeRange" type="timeRangeType" substitutionGroup="origin"/>
+	<xsd:element name="eventTimeRange" type="eventTimeRangeType" substitutionGroup="origin"/>
 
 	<!-- The element eventSource is the base abstract element -->
 	<xsd:element name="eventSource" type="eventSourceType" abstract="true"/>
@@ -414,15 +354,21 @@ in the instance document
 	<!-- element representing eventChannelFinder -->
 	<xsd:element name="eventChannelFinder" type="eventChannelFinderType" substitutionGroup="eventSource"/>
 
+	<!-- element representing the process -->
+	<xsd:element name="eventProcess" type="processType" abstract="true"/>
+	<xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
 
 	<xsd:complexType name="eventArmType">	
-		<xsd:sequence>
-			<xsd:element ref="eventSource"/>
-			<xsd:element ref="eventAttr"/>
-			<xsd:element ref="origin"/>
-			<xsd:element name="externalEventProcess" type="externalEventProcessType" minOccurs="0"
-			maxOccurs="unbounded"/>
-		</xsd:sequence>
+		<xsd:complexContent>
+			<xsd:extension base="armType">
+				<xsd:sequence>
+					<xsd:element ref="eventSource"/>
+					<xsd:element ref="eventAttr" minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="origin" minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="eventProcess" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 	<!-- element representing EVENTARM -->    
