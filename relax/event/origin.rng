@@ -28,7 +28,7 @@
                         <ref name="OR"/>
                         <ref name="XOR"/>
                         <ref name="NOT"/>
-                        <ref name="NULL"/>
+                        <ref name="PASS"/>
                 </choice>
         </define>
     <define name="name">
@@ -319,18 +319,17 @@
                     </optional>
                 </element>
         </define>
-        <define name="NULL">
+        <define name="PASS">
                 <xsd:annotation>
                         <xsd:documentation xml:lang="en">
                                 <summary> Always returns true. </summary>
-                                <description> Simple subsetter that always returns true, useful for
-                                        testing. </description>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
                                 <example>
-                                        <nullOriginSubsetter/>
+                                        <passOrigin/>
                                 </example>
                         </xsd:documentation>
                 </xsd:annotation>
-                <element name="nullOriginSubsetter">
+                <element name="passOrigin">
                         <zeroOrMore>
                                 <ref name="origin"/>
                         </zeroOrMore>
