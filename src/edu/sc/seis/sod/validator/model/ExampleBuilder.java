@@ -28,14 +28,24 @@ public class ExampleBuilder {
         this.closeBracket = closeBracket;
     }
 
+    public void setRequiredExample(Annotation ann){
+        this.requiredExample = ann;
+    }
+
     public void write(Form f){
         write(f, true);
     }
 
     public void write(Form f, boolean ignoreMin){
-        //System.out.println(ModelUtil.toString(f));
-        if (f.getMin() == 0 && !ignoreMin && !f.getAnnotation().getInclude()) {
-            return;
+        if (f.getMin() == 0
+            && !ignoreMin
+            && !f.getAnnotation().getInclude()) {
+            if (requiredExample == null || !ModelWalker.isTowards(f, requiredExample.getFormProvider().getForm())){
+                return;
+            }
+        }
+        if (requiredExample != null && f.equals(requiredExample.getFormProvider().getForm())){
+            buf.append(requiredExample.getExample(false));
         }
         //this attribute stuff is wrong.  Don't worry right now
         if (f instanceof Attribute){
@@ -105,6 +115,7 @@ public class ExampleBuilder {
     private StringBuffer buf = new StringBuffer();
     private List attrQueue = new ArrayList();
     private String openBracket, closeBracket;
+    private Annotation requiredExample = null;
 
     public static final String DEFAULT_TEXT_VALUE = "text";
     public static final int DEFAULT_INT_VALUE = 12;
