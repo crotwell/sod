@@ -394,7 +394,8 @@ public class JDBCEventChannelStatus extends SodJDBC{
             Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
             Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
             Status.get(Stage.DATA_SUBSETTER, Standing.REJECT),
-            Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE)};
+            Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.PROCESSOR, Standing.REJECT)};
 
     public static final Status[] RETRY_STATUS = new Status[]{
         Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY),
