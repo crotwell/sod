@@ -23,7 +23,7 @@ public class UnitRange implements SodElement{
      * @param config an <code>Element</code> value
      */
     public UnitRange (Element config) throws Exception{
-	    processConfig(config);
+        processConfig(config);
     }
     
     /**
@@ -33,38 +33,33 @@ public class UnitRange implements SodElement{
      * @exception ConfigurationException if an error occurs
      */
     public void processConfig(Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Element unitRangeElement = null;
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-
-	    node = childNodes.item(counter);
-	    if(node instanceof Element) {
-		
-		String tagName = ((Element)node).getTagName();
-		if(tagName.equals("unitRange")) unitRangeElement = (Element)node;
-		
-	    }
-
-	}
-	
-	unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
-	
+        
+        NodeList childNodes = config.getChildNodes();
+        Element unitRangeElement = null;
+        Node node;
+        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+            node = childNodes.item(counter);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                if(tagName.equals("unitRange")) unitRangeElement = (Element)node;
+                if(tagName.equals("unit")) unitRangeElement = config;
+            }
+        }
+        unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
     }
-
+    
     /**
      * Describe <code>getUnitRange</code> method here.
      *
      * @return an <code>edu.iris.Fissures.UnitRange</code> value
      */
     public edu.iris.Fissures.UnitRange  getUnitRange() {
-
-	return unitRange;
-
+        
+        return unitRange;
+        
     }
-
- 
+    
+    
     private edu.iris.Fissures.UnitRange unitRange = null;
-  
+    
 }// UnitRange
