@@ -30,8 +30,13 @@ ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
 #ooc.orb.service.NameService=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 edu.sc.seis.sod.configuration =dmc_test1.xml
 edu.sc.seis.sod.waveformarm.threads =4
+# for both postgres and hsql, default is soddatabase
 edu.sc.seis.sod.databasename=telukutl
+# only for postgres, default is sod
 edu.sc.seis.sod.username=telukutl
+# postgres or hsqldb, default is hsqldb
 edu.sc.seis.sod.databasetype=postgres
+# atleastonce or atmostonce, atleastonce is default
 edu.sc.seis.sod.persistencetype=atleastonce
+# default is 1
 edu.sc.seis.sod.daystoincrement=2
