@@ -7,7 +7,10 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -15,26 +18,35 @@ import java.util.Iterator;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import edu.sc.seis.sod.database.event.StatefulEvent;
 
 public class EventFormatter extends Template implements EventTemplate{
 
-    public EventFormatter(){ this(null, false); }
+    public EventFormatter(boolean filize) throws ConfigurationException   {
+        this(null, filize);
+    }
 
-    public EventFormatter(boolean filize){ this(null, filize); }
-
-    public EventFormatter(Element config) {
+    public EventFormatter(Element config) throws ConfigurationException  {
         this(config, false);
     }
 
-    public EventFormatter(Element config, boolean filize){
+    public EventFormatter(Element config, boolean filize) throws ConfigurationException {
         if(config == null || config.hasChildNodes() == false) useDefaultConfig();
         else parse(config);
         filizeResults = filize;
     }
 
-    public static String getDefaultResult(EventAccessOperations event) {
-        if(defaultFormatter == null) defaultFormatter = new EventFormatter();
+    public static EventFormatter getDefaultFormatter() {
+        try {
+            if(defaultFormatter == null) defaultFormatter = new EventFormatter(false);
+        } catch (ConfigurationException e) {
+            // this should never happen as default is constructed with a null element
+            GlobalExceptionHandler.handle("This should never have happened, there is a bug in the default EventFormater.", e);
+            throw new RuntimeException("Got configuration exception for default event formater", e);
+        }
+        return defaultFormatter;
+    }
+
+    public static String getDefaultResult(EventAccessOperations event)  {
         return defaultFormatter.getResult(event);
     }
 
@@ -83,7 +95,7 @@ public class EventFormatter extends Template implements EventTemplate{
         } else if(tag.equals("eventStatus")) {
             return new EventStatusFormatter();
         }
-        return super.getTemplate(tag, el);
+        return super.getCommonTemplate(tag, el);
     }
 
     private String format(double d){

@@ -30,12 +30,15 @@ import java.text.*;
  */
 
 public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElement {
-    public BreqFastAvailableData(Element config) {
+    public BreqFastAvailableData(Element config) throws ConfigurationException {
         this.config = config;
         regions = ParseRegions.getInstance();
         String datadirName = getConfig("dataDirectory");
         this.dataDirectory = new File(datadirName);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        nameGenerator = new EventFormatter(SodUtil.getElement(config,
+                                                                  "label"),
+                                          true);
     }
 
     public boolean accept(EventAccessOperations event,
@@ -157,10 +160,6 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
     }
 
     protected String getLabel(EventAccessOperations event) {
-        if (nameGenerator == null) {
-            nameGenerator = new EventFormatter(SodUtil.getElement(config,
-                                                                  "label"));
-        }
         return nameGenerator.getFilizedName(event);
     }
 

@@ -10,6 +10,7 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
@@ -30,7 +31,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     private List channelListeners = new ArrayList();
 
     public LocalSeismogramTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event, Station sta)
-        throws IOException{
+        throws IOException, ConfigurationException{
         super(baseDir, outputLocation);
         this.event = event;
         station = sta;
@@ -50,7 +51,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el)throws ConfigurationException {
         //I intend to change this channels thing to something a little more sophisticated
         if (tag.equals("channels")){
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
@@ -67,7 +68,9 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     }
 
     private class EventTemplate implements GenericTemplate{
-        public EventTemplate(Element el){ formatter = new EventFormatter(el); }
+        public EventTemplate(Element el) throws ConfigurationException {
+            formatter = new EventFormatter(el);
+        }
 
         public String getResult() { return formatter.getResult(event); }
 
@@ -75,7 +78,9 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     }
 
     private class MyStationTemplate implements GenericTemplate{
-        public MyStationTemplate(Element el){ formatter = new StationFormatter(el); }
+        public MyStationTemplate(Element el) throws ConfigurationException {
+            formatter = new StationFormatter(el);
+        }
 
         public String getResult() { return formatter.getResult(station); }
 

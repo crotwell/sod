@@ -10,12 +10,15 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -29,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
     private String fileDir, netsOutputFileName, stasOutputFileName, sitesOutputFileName, chansOutputFileName;
@@ -88,33 +90,64 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
             || staConfig == null || chanConfig == null || netsOutputFileName == null
             || stasOutputFileName == null || chansOutputFileName == null){
             throw new IllegalArgumentException(
-                                               "The configuration element must contain a fileDir, netConfig, stationConfig, and chanConfig.");
+                "The configuration element must contain a fileDir, netConfig, stationConfig, and chanConfig.");
         }
 
         netTemplate = new NetworkStatusTemplate(netConfig, fileDir ,netsOutputFileName);
     }
 
     public void change(NetworkAccess net, Status status){
-        netTemplate.change(net, status);
-        getStationsInNetworkTemplate(net);
+        try {
+            netTemplate.change(net, status);
+            getStationsInNetworkTemplate(net);
+        } catch (ConfigurationException e) {
+            String msg = "Got an ConfigurationException changing station status: ";
+            msg += NetworkIdUtil.toString(net.get_attributes().get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        }
     }
 
     public void change(Station station, Status status){
-        StationsInNetworkTemplate snt = getStationsInNetworkTemplate(station);
-        snt.change(station, status);
-        getChannelsInStationTemplate(station);
+        try {
+            StationsInNetworkTemplate snt = getStationsInNetworkTemplate(station);
+            snt.change(station, status);
+            getChannelsInStationTemplate(station);
+        } catch (IOException e) {
+            String msg = "Got an IOException changing station status: ";
+            msg += StationIdUtil.toString(station.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        } catch (ConfigurationException e) {
+            String msg = "Got an ConfigurationException changing station status: ";
+            msg += StationIdUtil.toString(station.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        }
     }
 
     public void change(Channel channel, Status status) {
-        ChannelsInStationTemplate cst = getChannelsInStationTemplate(channel);
-        cst.change(channel, status);
+        try {
+            ChannelsInStationTemplate cst = getChannelsInStationTemplate(channel);
+            cst.change(channel, status);
+        } catch (IOException e) {
+            String msg = "Got an IOException changing channel status: ";
+            msg += ChannelIdUtil.toString(channel.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        } catch (ConfigurationException e) {
+            String msg = "Got an ConfigurationException changing channel status: ";
+            msg += ChannelIdUtil.toString(channel.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        }
     }
 
     public NetworkStatusTemplate getNetworkStatusTemplate(){
         return netTemplate;
     }
 
-    public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net){
+    public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net) throws ConfigurationException {
         if (!contains(net)){
             try {
                 stationTemplates.put(getIDString(net),
@@ -132,31 +165,27 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
         return snt;
     }
 
-    public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station){
+    public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station) throws ConfigurationException {
         return getStationsInNetworkTemplate(getNetworkFromStation(station));
     }
 
-    public ChannelsInStationTemplate getChannelsInStationTemplate(Station station){
+    public ChannelsInStationTemplate getChannelsInStationTemplate(Station station) throws IOException, ConfigurationException  {
         if (!contains(station)){
-            try {
-                channelTemplates.put(getIDString(station),
-                                     new ChannelsInStationTemplate(chanConfig,
-                                                                   fileDir,
-                                                                   netFormatter.getResult(getNetworkFromStation(station))
-                                                                       + '/'
-                                                                       + staFormatter.getResult(station)
-                                                                       + '/'
-                                                                       + chansOutputFileName,
-                                                                   station));
-            } catch (IOException e) {
-                CommonAccess.handleException(e, "trouble creating ChannelsInSiteTemplate");
-            }
+            channelTemplates.put(getIDString(station),
+                                 new ChannelsInStationTemplate(chanConfig,
+                                                               fileDir,
+                                                               netFormatter.getResult(getNetworkFromStation(station))
+                                                                   + '/'
+                                                                   + staFormatter.getResult(station)
+                                                                   + '/'
+                                                                   + chansOutputFileName,
+                                                               station));
         }
         ChannelsInStationTemplate cst = (ChannelsInStationTemplate)channelTemplates.get(getIDString(station));
         return cst;
     }
 
-    public ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan){
+    public ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan) throws IOException, ConfigurationException  {
         return getChannelsInStationTemplate(chan.my_site.my_station);
     }
 

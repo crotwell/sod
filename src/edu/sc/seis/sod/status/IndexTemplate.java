@@ -1,13 +1,14 @@
 package edu.sc.seis.sod.status;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
+import java.io.File;
 import java.io.IOException;
 import org.w3c.dom.Element;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
-import java.io.File;
 
 
 
@@ -32,7 +33,7 @@ public class IndexTemplate extends FileWritingTemplate{
         }
     }
 
-    protected Object getTemplate(String tagName, Element el){
+    protected Object getTemplate(String tagName, Element el) throws ConfigurationException  {
         if(tagName.equals("eventMap")){
             MapEventStatus mes = new MapEventStatus(el, true);
             return new RelativeLocationTemplate(getOutputLocation(),

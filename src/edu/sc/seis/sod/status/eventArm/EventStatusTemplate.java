@@ -2,8 +2,8 @@ package edu.sc.seis.sod.status.eventArm;
 
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 
 public class EventStatusTemplate extends FileWritingTemplate implements EventArmMonitor{
 
-    public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException {
+    public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException, ConfigurationException   {
         super(extractConstructorBaseDirArg(el), extractConstructorFilenameArg(el));
         Element config = TemplateFileLoader.getTemplate(SodUtil.getElement(el, "eventConfig"));
         config.removeChild(SodUtil.getElement(config, "filename"));
@@ -54,7 +54,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
         write();
     }
 
-    public Object getTemplate(String tag, Element el){
+    public Object getTemplate(String tag, Element el) throws ConfigurationException  {
         if(tag.equals("events")) {
             return  new EventGroupTemplate(el);
         } else if(tag.equals("armStatus")) {

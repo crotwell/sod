@@ -1,12 +1,15 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
@@ -19,10 +22,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import edu.sc.seis.sod.status.FileWritingTemplate;
 
 public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveformArmMonitor {
-    public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException {
+    public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException, ConfigurationException {
         if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -51,16 +53,32 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
     }
 
     public void change(EventAccessOperations event, Status status) {
+        try {
         getTemplate(event);
+        } catch (IOException e) {
+            String msg = "Got an IOException changing event status: ";
+            try {
+                msg += event.get_preferred_origin().origin_time.date_time;
+            } catch (NoPreferredOrigin ee) {
+                msg += " NoPreferredOrigin ";
+            }
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        } catch (ConfigurationException e) {
+            String msg = "Got an ConfigurationException changing event status: ";
+            try {
+                msg += event.get_preferred_origin().origin_time.date_time;
+            } catch (NoPreferredOrigin ee) {
+                msg += " NoPreferredOrigin ";
+            }
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        }
     }
 
-    public WaveformEventTemplate getTemplate(EventAccessOperations ev)  {
+    public WaveformEventTemplate getTemplate(EventAccessOperations ev) throws IOException, ConfigurationException {
         if(!eventTemplates.containsKey(ev)){
-            try {
-                eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir, formatter.getResult(ev) + '/' + filename, ev));
-            } catch (IOException e) {
-                GlobalExceptionHandler.handle(e);
-            }
+            eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir, formatter.getResult(ev) + '/' + filename, ev));
         }
         return (WaveformEventTemplate)eventTemplates.get(ev);
     }

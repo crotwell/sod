@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.status.networkArm;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.NetworkGroupTemplate;
@@ -23,7 +24,7 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     private List networkListeners = new ArrayList();
     private Logger logger = Logger.getLogger(NetworkStatusTemplate.class);
 
-    public NetworkStatusTemplate(Element el, String baseDir, String outputLocation) throws IOException{
+    public NetworkStatusTemplate(Element el, String baseDir, String outputLocation) throws IOException, ConfigurationException {
         super(baseDir, outputLocation);
         parse(el);
         write();
@@ -50,7 +51,7 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if (tag.equals("networks")) {
             NetworkGroupTemplate t = new NetworkGroupTemplate(el);
             networkListeners.add(t);

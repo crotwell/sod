@@ -8,6 +8,7 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,18 +21,18 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
 
     Map networkMap = new HashMap();
 
-    public NetworkGroupTemplate(Element el){
+    public NetworkGroupTemplate(Element el) throws ConfigurationException {
         parse(el);
     }
 
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el)  throws ConfigurationException {
         if (tag.equals("network")){
             return new NetworkFormatter(el, this);
         }
-        return super.getTemplate(tag, el);
+        return getCommonTemplate(tag, el);
     }
 
     /**

@@ -1,24 +1,22 @@
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
-import edu.sc.seis.sod.status.eventArm.EventTemplate;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveformArmMonitor{
     public WaveformEventGroup(){ useDefaultConfig(); }
 
-    public WaveformEventGroup(Element el) { parse(el); }
+    public WaveformEventGroup(Element el) throws ConfigurationException {
+        parse(el);
+    }
 
-    public Object getTemplate(String tag, Element el) {
+    public Object getTemplate(String tag, Element el) throws ConfigurationException {
         try {
             // this is a weird template due to dependence on external an xml template
             // maybe this should be changed later...

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.status;
 
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +18,34 @@ public abstract class Template{
      * called
      */
     protected abstract Object textTemplate(final String text);
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it should return
-     * the superclass implementation of this method.  Though no harm will come
+     * the superclass implementation of the getCommonTemplate method.  Though no harm will come
      * from merely returning null, they won't benefit from the wisdom and extra
      * tags provided by their elder classes.
      */
-    protected Object getTemplate(String tag, Element el){
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
+        return getCommonTemplate(tag, el);
+    }
+
+    /** actually return Templates for common tags. This is to allow subclasses to
+     * avoid throwing ConfigurationException if it can never really happen.
+     **/
+    protected final Object getCommonTemplate(String tag, Element el) {
         if(tag.equals("runName")) return new RunNameTemplate();
         else if(tag.equals("startTime")) return new StartTimeTemplate();
         else if(tag.equals("now"))  return new NowTemplate();
         else if(tag.equals("configFileName")) return textTemplate(Start.getConfigFileName());
         return null;
     }
-    
-    protected void parse(Element el) {
+
+    protected void parse(Element el) throws ConfigurationException {
         parse(el.getChildNodes());
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
     }
-    
-    private void parse(NodeList nl) {
+
+    private void parse(NodeList nl) throws ConfigurationException {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if(n.getNodeType() == Node.TEXT_NODE) addString(n.getNodeValue());
@@ -59,18 +67,18 @@ public abstract class Template{
             }
         }
     }
-    
+
     private void addTemplate(Object template){
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
         templates.add(template);
         builtUpText = "";
     }
-    
+
     private void addString(String text){  builtUpText += text; }
-    
+
     private String builtUpText = "";
-    
-    private int addAttributes(Node n) {
+
+    private int addAttributes(Node n) throws ConfigurationException {
         addString(getAttrString(n));
         int numAttr = 0;
         for (int i = 0; i < n.getChildNodes().getLength() && childName(i, n).equals("attribute"); i++) {
@@ -82,11 +90,11 @@ public abstract class Template{
         }
         return numAttr;
     }
-    
+
     private static String childName(int i, Node n){
         return n.getChildNodes().item(i).getNodeName();
     }
-    
+
     private String getAttrString(Node n){
         String result = "";
         NamedNodeMap attr = n.getAttributes();
@@ -96,10 +104,10 @@ public abstract class Template{
         }
         return result;
     }
-    
+
     public void setUp(){}
-    
+
     protected List templates = new ArrayList();
-    
+
     private static Logger logger = Logger.getLogger(Template.class);
 }

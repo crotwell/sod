@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.NetworkFormatter;
@@ -26,7 +27,7 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
     private List stationListeners = new ArrayList();
     private Logger logger = Logger.getLogger(StationsInNetworkTemplate.class);
 
-    public StationsInNetworkTemplate(Element el, String baseDir, String outputLocation, NetworkAccess net) throws IOException{
+    public StationsInNetworkTemplate(Element el, String baseDir, String outputLocation, NetworkAccess net) throws IOException, ConfigurationException{
         super(baseDir, outputLocation);
         network = net;
         parse(el);
@@ -36,7 +37,7 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if (tag.equals("stations")){
             StationGroupTemplate sgt = new StationGroupTemplate(el);
             stationListeners.add(sgt);
@@ -62,7 +63,9 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
 
     private class MyNetworkTemplate implements GenericTemplate{
 
-        public MyNetworkTemplate(Element el){ formatter = new NetworkFormatter(el); }
+        public MyNetworkTemplate(Element el) throws ConfigurationException {
+            formatter = new NetworkFormatter(el);
+        }
 
         public String getResult() {
             return formatter.getResult(network);

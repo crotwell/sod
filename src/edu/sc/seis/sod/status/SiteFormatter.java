@@ -8,7 +8,7 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.Time;
+import edu.sc.seis.sod.ConfigurationException;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -16,16 +16,16 @@ import org.w3c.dom.Element;
 
 public class SiteFormatter extends Template implements SiteTemplate {
     SiteGroupTemplate sgt;
-    
-    public SiteFormatter(Element el){
+
+    public SiteFormatter(Element el) throws ConfigurationException {
         this(el, null);
     }
-    
-    public SiteFormatter(Element el, SiteGroupTemplate sgt){
+
+    public SiteFormatter(Element el, SiteGroupTemplate sgt) throws ConfigurationException {
         this.sgt = sgt;
         parse(el);
     }
-    
+
     /**
      * Method getResult
      *
@@ -43,7 +43,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
         }
         return buf.toString();
     }
-    
+
     /**
      *returns an object of the template type that this class uses, and returns
      * the passed in text when the getResult method of that template type is
@@ -56,12 +56,12 @@ public class SiteFormatter extends Template implements SiteTemplate {
             }
         };
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, final Element el) {
-    
+
         if (tag.equals("siteCode")){
             return new SiteTemplate(){
                 public String getResult(Site site){
@@ -148,15 +148,15 @@ public class SiteFormatter extends Template implements SiteTemplate {
                 }
             };
         }
-        return super.getTemplate(tag, el);
+        return getCommonTemplate(tag, el);
     }
-    
+
     public static String formatSiteCode(String siteCode){
         if (siteCode == null || siteCode.equals("")){
             return "  ";
         }
         else return siteCode;
     }
-    
+
 }
 

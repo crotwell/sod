@@ -8,7 +8,7 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import java.text.SimpleDateFormat;
+import edu.sc.seis.sod.ConfigurationException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.w3c.dom.Element;
@@ -17,16 +17,16 @@ import org.w3c.dom.Element;
 
 public class NetworkFormatter extends Template implements NetworkTemplate{
     private NetworkGroupTemplate ngt;
-    
-    public NetworkFormatter(Element el){
+
+    public NetworkFormatter(Element el) throws ConfigurationException {
         this(el, null);
     }
-    
-    public NetworkFormatter(Element el, NetworkGroupTemplate ngt){
+
+    public NetworkFormatter(Element el, NetworkGroupTemplate ngt) throws ConfigurationException {
         this.ngt = ngt;
         parse(el);
     }
-    
+
     /**
      * Method getResult
      *
@@ -44,8 +44,8 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
         }
         return buf.toString();
     }
-    
-    
+
+
     /**
      *returns an object of the template type that this class uses, and returns
      * the passed in text when the getResult method of that template type is
@@ -58,7 +58,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
             }
         };
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -76,7 +76,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                     return btt.getResult(net.get_attributes().get_id().begin_time);
                 }
                 TimeTemplate btt = new TimeTemplate(el, false);
-                    
+
             };
         }
         else if (tag.equals("endTime")){
@@ -130,7 +130,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                 }
             };
         }
-        return super.getTemplate(tag, el);
+        return getCommonTemplate(tag, el);
     }
 }
 

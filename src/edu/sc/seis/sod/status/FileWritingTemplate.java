@@ -4,7 +4,8 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Start;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import edu.sc.seis.sod.Start;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
@@ -59,7 +59,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         return new File(getOutputLocation()).getParentFile();
     }
 
-    protected Object getTemplate(String tag, Element el){
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException  {
         if (tag.equals("menu")){
             try {
                 return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
@@ -68,7 +68,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
             }
         }
 
-        return super.getTemplate(tag, el);
+        return getCommonTemplate(tag, el);
     }
 
     private class Writer extends PeriodicAction{

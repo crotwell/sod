@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -26,7 +27,7 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
 
-    public ChannelsInSiteTemplate(Element el, String baseDir, String outputLocation, Site site) throws IOException{
+    public ChannelsInSiteTemplate(Element el, String baseDir, String outputLocation, Site site)  throws ConfigurationException  , IOException{
         super(baseDir, outputLocation);
         this.site = site;
         parse(el);
@@ -36,7 +37,7 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el)  throws ConfigurationException  {
         if (tag.equals("channels")){
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
             channelListeners.add(cgt);
@@ -61,7 +62,9 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
 
     private class MySiteTemplate implements GenericTemplate{
 
-        public MySiteTemplate(Element el){ formatter = new SiteFormatter(el); }
+        public MySiteTemplate(Element el) throws ConfigurationException  {
+            formatter = new SiteFormatter(el);
+        }
 
         public String getResult(){
             return formatter.getResult(site);

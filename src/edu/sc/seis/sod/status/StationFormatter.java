@@ -9,22 +9,22 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.Time;
+import edu.sc.seis.sod.ConfigurationException;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
 public class StationFormatter extends Template implements StationTemplate{
     StationGroupTemplate sgt;
-    
-    public StationFormatter(Element el){
+
+    public StationFormatter(Element el) throws ConfigurationException {
         this(el, null);
     }
-    
-    public StationFormatter(Element el, StationGroupTemplate sgt){
+
+    public StationFormatter(Element el, StationGroupTemplate sgt) throws ConfigurationException {
         this.sgt = sgt;
         parse(el);
     }
-    
+
     /**
      * Method getResult
      *
@@ -40,11 +40,11 @@ public class StationFormatter extends Template implements StationTemplate{
             StationTemplate cur = (StationTemplate)it.next();
             buf.append(cur.getResult(station));
         }
-        
+
         return buf.toString();
     }
-    
-    
+
+
     /**
      * Method textTemplate
      *
@@ -60,7 +60,7 @@ public class StationFormatter extends Template implements StationTemplate{
             }
         };
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -165,8 +165,8 @@ public class StationFormatter extends Template implements StationTemplate{
                 }
             };
         }
-        
-        return super.getTemplate(tag, el);
+
+        return getCommonTemplate(tag, el);
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.status.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -15,9 +16,11 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 public class EventGroupTemplate extends Template implements GenericTemplate{
-    protected EventGroupTemplate(){ sorter = new EventSorter(); }
+    protected EventGroupTemplate() {
+        sorter = new EventSorter();
+    }
 
-    public EventGroupTemplate(Element config) {
+    public EventGroupTemplate(Element config)  throws ConfigurationException {
         this();
         parse(config);
     }
@@ -28,19 +31,19 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
         return egt;
     }
 
-    public void parse(Element el) {
+    public void parse(Element el) throws ConfigurationException  {
         if(el.hasChildNodes() == false) useDefaultConfig();
         else super.parse(el);
         if(sorter == null) sorter = new EventSorter();
     }
 
     protected void useDefaultConfig(){
-        templates.add(new EventFormatter());
+        templates.add(EventFormatter.getDefaultFormatter());
         sorter = new EventSorter();
     }
 
 
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if(el.getNodeName().equals("eventLabel")){
             return new EventFormatter(el);
         }else if(el.getNodeName().equals("sorting")){

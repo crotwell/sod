@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,16 +19,16 @@ import org.w3c.dom.Element;
 public class SiteGroupTemplate extends Template implements GenericTemplate {
     Map siteMap = new HashMap();
 
-    public SiteGroupTemplate(Element el){
+    public SiteGroupTemplate(Element el) throws ConfigurationException {
         parse(el);
     }
 
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el)  throws ConfigurationException {
         if (tag.equals("site")) return new SiteFormatter(el, this);
-        return super.getTemplate(tag, el);
+        return getCommonTemplate(tag, el);
     }
 
     /**

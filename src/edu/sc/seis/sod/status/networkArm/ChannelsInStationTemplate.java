@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
@@ -26,14 +27,14 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
     private List siteListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInStationTemplate.class);
 
-    public ChannelsInStationTemplate(Element el, String baseDir, String outputLocation, Station sta) throws IOException{
+    public ChannelsInStationTemplate(Element el, String baseDir, String outputLocation, Station sta)  throws ConfigurationException, IOException{
         super(baseDir, outputLocation);
         station = sta;
         parse(el);
         write();
     }
 
-    protected Object getTemplate(String tag, Element el){
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException  {
         if (tag.equals("channels")){
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
             channelListeners.add(cgt);
@@ -65,7 +66,9 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
     }
 
     private class MyStationTemplate implements GenericTemplate{
-        public MyStationTemplate(Element el){ formatter = new StationFormatter(el); }
+        public MyStationTemplate(Element el) throws ConfigurationException  {
+            formatter = new StationFormatter(el);
+        }
 
         public String getResult(){
             return formatter.getResult(station);

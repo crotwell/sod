@@ -17,10 +17,10 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 public class BreqFastRequestSubsetter implements RequestSubsetter {
-    public BreqFastRequestSubsetter(Element config) {
+    public BreqFastRequestSubsetter(Element config) throws ConfigurationException {
         breqfast = new BreqFastAvailableData(config);
     }
-    
+
     public boolean accept(EventAccessOperations event,
                           NetworkAccess network,
                           Channel channel,

@@ -4,6 +4,7 @@ import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
@@ -21,7 +22,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
              event);
     }
 
-    public WaveformEventTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event) throws IOException {
+    public WaveformEventTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event) throws IOException, ConfigurationException {
         super(baseDir, outputLocation);
         this.event = event;
         parse(el);
@@ -39,7 +40,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
         }
     }
 
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if(tag.equals("channels")) {
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
             channelListeners.add(cgt);
@@ -59,7 +60,9 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
     }
 
     private class EventTemplate implements GenericTemplate{
-        public EventTemplate(Element el){ formatter = new EventFormatter(el); }
+        public EventTemplate(Element el) throws ConfigurationException {
+            formatter = new EventFormatter(el);
+        }
 
         public String getResult() { return formatter.getResult(event); }
 

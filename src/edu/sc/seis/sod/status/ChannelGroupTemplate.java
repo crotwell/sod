@@ -2,7 +2,9 @@ package edu.sc.seis.sod.status;
 
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,12 +12,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import edu.sc.seis.sod.Standing;
+import java.lang.reflect.Field;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     private Map channelMap = new HashMap();
 
-    public ChannelGroupTemplate(Element el){ parse(el);  }
+    public ChannelGroupTemplate(Element el) throws ConfigurationException {
+        parse(el);
+    }
 
     public String getResult() {
         StringBuffer buf = new StringBuffer();
@@ -51,7 +55,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
         return channelMap.get(chan).toString();
     }
 
-    public Object getTemplate(String tag, Element element){
+    public Object getTemplate(String tag, Element element) throws ConfigurationException {
         if(tag.equals("channel")) {
             return new ChannelFormatter(element, this);
         } else if (tag.equals("statusFilter")) {
@@ -60,16 +64,30 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
                 if (nl.item(i) instanceof Element) {
                     Element child = (Element)nl.item(i);
                     String name = SodUtil.getNestedText(child);
-                    if (child.getTagName().equals("status")) {
+                    try {
+                        if (child.getTagName().equals("status")) {
                             useStanding.add(Standing.getForName(name));
-                    } else if (child.getTagName().equals("notStatus")) {
+                        } else if (child.getTagName().equals("notStatus")) {
                             notUseStanding.add(Standing.getForName(name));
+                        }
+                    } catch (NoSuchFieldException e) {
+                        // this means the config file is wrong, the name is not
+                        // a valid Standing...
+                        String msg = "status tag "+name+" is not a valid Standing, please use one of: ";
+
+                        Field[] fields = Standing.class.getFields();
+                        for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+                            if (fields[fieldIndex].getType().equals(Standing.class)) {
+                                msg+=((fieldIndex==0)?" ":", ")+fields[fieldIndex].getName();
+                            }
+                        }
+                        throw new ConfigurationException(msg);
                     }
                 }
             }
             return new AllTextTemplate("");
         }
-        return super.getTemplate(tag, element);
+        return getCommonTemplate(tag, element);
     }
 
     LinkedList useStanding = new LinkedList();

@@ -6,10 +6,10 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements Wavef
         //TODO get parsing setup
     }
 
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if(tag.equals("events")){
             WaveformEventGroup ect = new WaveformEventGroup(el);
             eventTemplates.add(ect);
