@@ -35,7 +35,7 @@ public class EventPageTest extends TestCase{
 
     private String EVENT_OUTPUT = "CENTRAL ALASKA 01/01/1970 00:00:00 GMT Mag: 5.0 Depth: 0.00 km";
 
-    private String CHANNEL_STRING = "TESTCODE.19700101T00:00:00.000Z.TST.TSTS.BHZ.19700101T00:00:00.000Z";
+    private String CHANNEL_STRING = "TESTCODE.19700101T00:00:00.000Z.STTN.  .BHZ.19700101T00:00:00.000Z";
 
     private String emptyPage =
         "<html>\n" +
@@ -54,3 +54,4 @@ public class EventPageTest extends TestCase{
         "</body>\n" +
         "</html>";
 }
+
