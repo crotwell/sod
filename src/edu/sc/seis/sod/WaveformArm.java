@@ -68,8 +68,6 @@ public class WaveformArm implements Runnable {
                     Thread.sleep(1000);
                 } catch(InterruptedException e) {}
             }
-            // go ahead and get networks while waiting on first event
-            NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             waitForInitialEvent();
             do {
                 populateEventChannelDb();
