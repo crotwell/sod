@@ -13,6 +13,7 @@
             </xsd:annotation>
             <ref name="phaseRequest"/>
             <ref name="originOffsetRequest"/>
+            <ref name="choiceRequest"/>
         </choice>
     </define>
     <define name="phaseRequest">
@@ -49,6 +50,27 @@
             <element name="endOffset">
                 <ref name="time"/>
             </element>
+        </element>
+    </define>
+    <define name="choiceRequest">
+        <element name="choiceRequest">
+            <xsd:annotation>
+                <summary>Generates requests based on the first event-channel match.</summary>
+                <description>This generates requests for the first embedded request generator whose Event-Channel subsetter matches.
+                 This allows different time windows based on magnitude or distance from the station. 
+                </description>
+            </xsd:annotation>
+            <oneOrMore>
+                <element name="choice">
+                    <externalRef href="../eventChannel.rng"/>
+                    <ref name="requestGenerator"/>
+                </element>
+            </oneOrMore>
+            <optional>
+                <element name="otherwise">
+                    <ref name="requestGenerator"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
