@@ -7,6 +7,9 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -233,6 +236,11 @@ public class SeismogramImageProcess implements WaveformProcess {
                                         DEFAULT_DIMENSION);
                     }
                     if(putDataInCookieJar) {
+                        if(!pairsInserted.add(new Integer(cookieJar.getEventChannelPair()
+                                .getPairId()))) {
+                            logger.debug("inserting same key into cookie jar!  You can fix this by making sure each channel in a vector process gets its correct cookie jar...");
+                            return;
+                        }
                         /*
                          * Currently only the regions around first P and first S
                          * Flags are made clickable
@@ -260,6 +268,8 @@ public class SeismogramImageProcess implements WaveformProcess {
         });
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
+
+    private static Set pairsInserted = Collections.synchronizedSet(new HashSet());
 
     private boolean putDataInCookieJar = false;
 
