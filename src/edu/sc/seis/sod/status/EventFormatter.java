@@ -225,7 +225,7 @@ public class EventFormatter extends Template implements EventTemplate{
         Magnitude[] mags = getOrigin(event).magnitudes;
         String result = new String();
         for (int i = 0; i < mags.length; i++) {
-            result += MagnitudeUtil.toString(mags[0]) + " ";
+            result += MagnitudeUtil.toString(mags[i]) + " ";
         }
         return result;
     }
