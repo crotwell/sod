@@ -33,7 +33,6 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
     }
     
     public void change(Channel chan, RunStatus status){
-        System.out.println("CHANGING CHANNEL");
         channelMap.put(chan, status);
     }
     
