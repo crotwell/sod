@@ -28,7 +28,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess{
 								  RequestFilter[] original, RequestFilter[] available,
 								  LocalSeismogramImpl[] seismograms,
 								  CookieJar cookieJar) throws Exception {
-		try {
+		/*	try {
 			DataSet ds = DataSetToXML.load(SaveSeismogramToFile.getDSMLFile(event).toURI().toURL());
 			dss = new DataSetSeismogram[ds.getDataSetSeismogramNames().length];
 			for(int i=0;i<ds.getDataSetSeismogramNames().length;i++){
@@ -45,7 +45,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess{
 		}catch(IOException e) {
 			throw new IOException("Problem opening dsml file" + e);
 			
-		}
+		 } */
 		return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
 	}
 	public DataSetSeismogram[] dss;
