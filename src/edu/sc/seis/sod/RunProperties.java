@@ -44,8 +44,8 @@ public class RunProperties{
         }
 
         Element serverRetryChild = SodUtil.getElement(el, "serverRetryDelay");
-        if(maxRetryChild != null){
-            serverRetryDelay = SodUtil.loadTimeInterval(maxRetryChild);
+        if(serverRetryChild != null){
+            serverRetryDelay = SodUtil.loadTimeInterval(serverRetryChild);
         }
 
         Element numWorkersChild = SodUtil.getElement(el, "waveformWorkerThreads");
@@ -62,7 +62,7 @@ public class RunProperties{
             reopenEvents = true;
         }
 
-        if(SodUtil.isTrue(el, "reopenEvents")){
+        if(SodUtil.isTrue(el, "removeDatabase")){
             removeDatabase = true;
         }
     }
