@@ -21,7 +21,7 @@ public class Status{
     private Standing standing;
 
     public short getAsShort() {
-        return (byte)((getStage().getVal()<<8)+getStanding().getVal());
+        return (short)((getStage().getVal()<<8)+getStanding().getVal());
     }
 
     public static Status getFromShort(short val) {
