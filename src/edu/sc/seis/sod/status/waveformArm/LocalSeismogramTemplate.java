@@ -86,13 +86,15 @@ public class LocalSeismogramTemplate extends Template{
     public static String getVelocityResult(String template, CookieJar cookieJar) {
         try {
             StringWriter out = new StringWriter();
-            // the new VeocityContext "wrapper" is to help with a possible memory leak
-            // due to velocity gathering introspection information,
-            // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
-            boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(cookieJar.getContext()),
-                                                                                     out,
-                                                                                     "localSeismogramTemplate",
-                                                                                     template);
+            synchronized (LocalSeismogramTemplateGenerator.getVelocity()) {
+                // the new VeocityContext "wrapper" is to help with a possible memory leak
+                // due to velocity gathering introspection information,
+                // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
+                boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(cookieJar.getContext()),
+                                                                                         out,
+                                                                                         "localSeismogramTemplate",
+                                                                                         template);
+            }
             template = out.toString();
         } catch (ParseErrorException e) {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
