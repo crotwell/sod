@@ -164,8 +164,8 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE TYPE -->
-	<xsd:complexType name="linearDistanceMagnitudeType">
+	<!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE RANGE TYPE -->
+	<xsd:complexType name="linearDistanceMagnitudeRangeType">
 		<xsd:complexContent>
 			<xsd:extension base="eventStationType">
 				<xsd:sequence>
@@ -225,7 +225,6 @@
 		<xsd:complexContent>
 			<xsd:extension base="phaseInteractionType">
 				<xsd:sequence>
-					<xsd:element ref="area"/>
 					<xsd:element name="depthRange">
 						<xsd:complexType>
 							<xsd:sequence>	
@@ -234,11 +233,19 @@
 						</xsd:complexType>
 					</xsd:element>
 					<xsd:element ref="distanceRange"/>
+					<xsd:element name="reference" type="phaseDistanceReferenceType"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-
+	
+	<!-- PHASE DISTANCE REFERENCE TYPE -->
+	<xsd:simpleType name="phaseDistanceReferenceType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="EVENT"/>
+			<xsd:enumeration value="STATION"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
 	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
 
@@ -463,7 +470,7 @@
 	<xsd:element name="embeddedStationSubsetter" type="embeddedStationSubsetterType" substitutionGroup="eventStation"/>
 	<xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
 	<xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
-	<xsd:element name="linearDistanceMagnitude" type="linearDistanceMagnitudeType" substitutionGroup="eventStation"/>
+	<xsd:element name="linearDistanceMagnitudeRange" type="linearDistanceMagnitudeRangeType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
 	<xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
