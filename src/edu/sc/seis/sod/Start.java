@@ -9,6 +9,7 @@ import edu.sc.seis.sod.database.JDBCConfig;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.editor.SimpleGUIEditor;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -257,6 +258,18 @@ public class Start{
                 eventStatus.restartCompletedEvents();
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle("Trouble restarting completed events", e);
+            }
+        }else {
+            File dbDir = new File("SodDb");
+            if (dbDir.exists()){
+                try {
+                    JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
+                    evChanStatusTable.updateEventChannelStates(runProps.getEventChannelPairProcessing());
+                } catch (Exception e) {
+                    GlobalExceptionHandler.handle("Trouble updating status of "
+                                                      + "existing event-channel pairs",
+                                                  e);
+                }
             }
         }
     }
