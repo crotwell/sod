@@ -1,4 +1,6 @@
 package edu.sc.seis.sod;
+import java.util.*;
+
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -20,11 +22,6 @@ import edu.sc.seis.sod.subsetter.waveformArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.NullEventStationSubsetter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -552,7 +549,7 @@ public class WaveformArm implements Runnable {
     //made up of retries if possible
     private static Logger logger = Logger.getLogger(WaveformArm.class);
 
-    private List statusMonitors = Collections.synchronizedList(new ArrayList());
+    private Set statusMonitors = Collections.synchronizedSet(new HashSet());
     private int poolLineCapacity = 100, retryNum;
     private Object retryNumLock = new Object();
 }
