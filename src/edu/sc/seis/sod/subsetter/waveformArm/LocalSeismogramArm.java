@@ -131,6 +131,11 @@ public class LocalSeismogramArm implements Subsetter{
 							networkAccess, 
 							channel, 
 							null); 
+	logger.debug("BEFORE getting seismograms "+infilters.length);
+	for (int i=0; i<infilters.length; i++) {
+	    logger.debug("Getting seismograms "+ChannelIdUtil.toString(infilters[i].channel_id)+" from "+infilters[i].start_time.date_time+" to "+infilters[i].end_time.date_time);
+	} // end of for (int i=0; i<outFilters.length; i++)
+
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 
 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
@@ -162,12 +167,7 @@ public class LocalSeismogramArm implements Subsetter{
 					 infilters, 
 					 outfilters, 
 					 null)) {
-	    logger.debug("BEFORE getting seismograms "+infilters.length+" "+outfilters.length);
 	    logger.debug("Using infilters, fix this when DMC fixes server");
-	    for (int i=0; i<infilters.length; i++) {
-		logger.debug("Getting seismograms "+ChannelIdUtil.toString(infilters[i].channel_id)+" from "+infilters[i].start_time.date_time+" to "+infilters[i].end_time.date_time);
-		 
-	    } // end of for (int i=0; i<outFilters.length; i++)
 	    
 	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(infilters);
