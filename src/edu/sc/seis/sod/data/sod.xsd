@@ -1,33 +1,52 @@
 <?xml version="1.0"?>
 
 <xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
+xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
+<!--
+ targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
+ -->
 
+<!--
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             Schema for the SOD
         </xsd:documentation>
     </xsd:annotation>
-
+-->
 
 
     <!-- Include the external schemas necessary for this schema -->
+<!--
     <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/utilities.xsd"/>
     <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/EventArm.xsd"/>
     <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/NetworkArm.xsd"/>
     <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/WaveFormArm.xsd"/>
+-->
+    <xsd:include schemaLocation="utilities.xsd"/>
+    <xsd:include schemaLocation="EventArm.xsd"/>
+    <xsd:include schemaLocation="NetworkArm.xsd"/>
+    <xsd:include schemaLocation="WaveFormArm.xsd"/>
+
 
     <xsd:complexType name="sodType">
         <xsd:sequence>
-            <xsd:element ref="properties" minOccurs="0" maxOccurs="1"/>
-            <xsd:element ref="eventArm" minOccurs="0" maxOccurs="1"/>
-            <xsd:element ref="networkArm" minOccurs="0" maxOccurs="1"/>
-            <xsd:element ref="waveFormArm" minOccurs="0" maxOccurs="1"/>
+
+            <xsd:element name="properties" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+        <xsd:sequence>
+            <xsd:element name="property" type="target:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="eventArm" type="target:eventArmType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="networkArm" type="target:networkArmType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="waveFormArm" type="target:waveFormArmType" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:element name="sod" type="sodType"/>
+    <xsd:element name="sod" type="target:sodType"/>
 </xsd:schema>
 
 

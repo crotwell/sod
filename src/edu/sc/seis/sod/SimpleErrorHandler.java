@@ -13,7 +13,7 @@ public class SimpleErrorHandler implements ErrorHandler {
 
     //not sure why this is needed???
     boolean warmup=false;
-    
+
     boolean foundError = false;
 
             /** Warning. */
@@ -40,10 +40,10 @@ public class SimpleErrorHandler implements ErrorHandler {
         throw ex;
     }
 
-    public boolean isfoundError() {
+    public boolean isFoundError() {
         return foundError;
     }
-    
+
     /** Returns a string of the location. */
     private String getLocationString(SAXParseException ex) {
         StringBuffer str = new StringBuffer();

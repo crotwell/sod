@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
 
 <xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
+ xmlns="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 
-    <xsd:annotation>
-        <xsd:documentation xml:lang="en">
-            Schema for the EventArm of SOD
-        </xsd:documentation>
-    </xsd:annotation>
+
 
     <!-- MAIN ABSTRACT BASE TYPE FOR SOD -->
     <xsd:complexType name="sodItemType" abstract="true">
@@ -69,11 +66,7 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="propertySequenceType">
-        <xsd:sequence>
-            <xsd:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
+
 
     <!-- PROCESS TYPE -->
     <xsd:complexType name="processType" abstract="true">
@@ -297,9 +290,6 @@
 
     <!-- REFRESH INTERVAL element -->
     <xsd:element name="refreshInterval" type="refreshIntervalType"/>
-
-    <!-- PROPERTIES ELEMENT -->
-    <xsd:element name="properties" type="propertySequenceType"/>
 
     <xsd:simpleType name="channelCodeUtilType">
         <xsd:restriction base="xsd:string">

@@ -219,7 +219,7 @@ public class LocalSeismogramArm implements Subsetter{
 	logger.debug("TIME: after SeismogramDCLocator "+a1);
 
 	MicroSecondDate b2 = new MicroSecondDate();
-	logger.debug("TIME: before requestGeneratorSubsetter "+b2);
+	logger.debug("TIME: before requestGenerator "+b2);
 
 	synchronized (requestGeneratorSubsetter) {
 	    infilters = 
@@ -229,7 +229,7 @@ public class LocalSeismogramArm implements Subsetter{
 							  null);
 	}
 	MicroSecondDate a2 = new MicroSecondDate();
-	logger.debug("TIME: after requestGeneratorSubsetter "+a2); 
+	logger.debug("TIME: after requestGenerator "+a2); 
 
 
 	waveformArm.setFinalStatus(eventDbObject,

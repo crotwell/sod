@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 
 <xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
+xmlns="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-
+<!--
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             Schema for the NetworkArm of SOD
         </xsd:documentation>
     </xsd:annotation>
+-->
 
     <!-- Include the external schemas necessary for this schema -->
-    <xi:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/utilities.xsd"/>
+   <xsd:include schemaLocation="utilities.xsd"/>
 
     <!-- ABSTRACT TYPE DECLARATIONS -->
 
