@@ -22,6 +22,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,35 +30,67 @@ import org.w3c.dom.NodeList;
 
 public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, NetworkArmMonitor {
 
-    public AbstractVelocityStatus(String fileDir, String templateName) throws IOException {
-        this.fileDir = fileDir;
-        this.templateName = templateName;
-        loadTemplate();
+    public AbstractVelocityStatus(Element config) throws SQLException, MalformedURLException, IOException {
+        this(getFileDir(config), getTemplateName(config));
     }
 
-    public AbstractVelocityStatus(Element config) throws SQLException, MalformedURLException, IOException {
+    public AbstractVelocityStatus(String fileDir, String templateName) throws  SQLException, IOException {
+        this.fileDir = fileDir;
+        this.templateName = templateName;
         networkArmContext = new NetworkArmContext(CookieJar.getCommonContext());
+        template = loadTemplate(templateName);
+        try {
+            Element menuEl = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
+                                                            MenuTemplate.TEMPLATE_LOC);
+            MenuTemplate menu = new MenuTemplate(menuEl, createExamplePath(),
+                                                 fileDir);
+            renderedMenu = menu.getResult();
+        } catch (Exception e) {
+            GlobalExceptionHandler.handle("Trouble creating menuTemplate for Velocity based status",
+                                          e);
+        }
+    }
+
+    public static String getFileDir(Element config){
+        String fileDir = getNestedTextForElement("fileDir", config);
+        if(fileDir != null){ return fileDir; }
+        return  FileWritingTemplate.getBaseDirectoryName();
+    }
+
+    public static String getTemplateName(Element config) throws MalformedURLException{
+        String templateName = getNestedTextForElement("template", config);
+        if(templateName != null){ return templateName; }
+        throw new MalformedURLException("template config param is null");
+    }
+
+    public static String getNestedTextForElement(String elementName, Element config){
         NodeList nl = config.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n instanceof Element) {
                 Element element = (Element)n;
-                if (element.getTagName().equals("fileDir")){
-                    fileDir = SodUtil.getNestedText(element);
-                } else if(n.getNodeName().equals("template")) {
-                    templateName = SodUtil.getNestedText(element);
+                if (element.getTagName().equals(elementName)){
+                    return SodUtil.getNestedText(element);
                 }
             }
         }
-        if (fileDir == null){
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
-        }
-        if (templateName == null) {
-            throw new MalformedURLException("template config param is null");
-        }
-        template = loadTemplate();
-
+        return null;
     }
+
+
+    //creates a path with the same number of directories as the actual location
+    //will for use in menu creationw
+    private String createExamplePath(){
+        String path = fileDir + '/';
+        for (int i = 0; i < getNumDirDeep(); i++) { path += "dir/"; }
+        return path + "file.html";
+    }
+
+    /**
+     * Method getNumDirDeep returns how many directories below the base status
+     * directory this template will write
+     */
+    public abstract int getNumDirDeep();
 
     /** loads the default template, given by the <template> tag in the config. */
     protected String loadTemplate() throws IOException {
@@ -78,6 +111,7 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
     /** Schedules the default template (from the <template> element in the config,
      * for output. */
     public void scheduleOutput(final String filename, final Context context) {
+        System.out.println(filename + " being scheduled");
         scheduleOutput(filename, context, template);
     }
 
@@ -88,14 +122,14 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
                     runnableMap.remove(filename);
                     StringWriter out = new StringWriter();
                     try {
-                        synchronized (LocalSeismogramTemplateGenerator.getVelocity()) {
+                        VelocityEngine engine = LocalSeismogramTemplateGenerator.getVelocity();
+                        synchronized (engine) {
                             // the new VeocityContext "wrapper" is to help with a possible memory leak
                             // due to velocity gathering introspection information,
                             // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
-                            boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(context),
-                                                                                                     out,
-                                                                                                     filename,
-                                                                                                     template);
+                            Context tempContext = new VelocityContext(context);
+                            tempContext.put("menu", renderedMenu);
+                            engine.evaluate(tempContext, out, filename, template);
                         }
                         FileWritingTemplate.write(fileDir+"/"+filename,
                                                   out.getBuffer().toString());
@@ -110,15 +144,6 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
     }
 
     protected NetworkArmContext networkArmContext;
-
-    protected String fileDir;
-
-    protected String templateName;
-
-    protected String template = "";
-
+    private String renderedMenu, fileDir, templateName, template = "";
     protected HashMap runnableMap = new HashMap();
-
 }
-
-
