@@ -233,6 +233,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    Start.getEventQueue().waitForProcessing();
 	    
 	}// end of while loop where checking for isFinished.
+	Start.getEventQueue().setSourceAlive(false);
 
     }
 
