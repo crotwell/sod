@@ -76,7 +76,7 @@ public class NetworkArm {
     
     void loadConfigElement(Object sodElement) throws ConfigurationException {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {
-            finderSubsetter =
+            finder =
                 (edu.sc.seis.sod.subsetter.networkArm.NetworkFinder)sodElement;
         } else if(sodElement instanceof NetworkSubsetter) {
             if (attrSubsetter instanceof NullNetworkSubsetter ) {
@@ -158,14 +158,14 @@ public class NetworkArm {
      * @returns true if the number of minutes se
      */
     private boolean needsRefresh() {
-        RefreshInterval refreshInterval = finderSubsetter.getRefreshInterval();
+        RefreshInterval refreshInterval = finder.getRefreshInterval();
         try {
             logger.debug("checking on the validity of the refresh interval which is " + refreshInterval.getValue() + " " + refreshInterval.getUnit());
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }
-        Time databaseTime = networkDatabase.getTime(finderSubsetter.getSourceName(),
-                                                    finderSubsetter.getDNSName());
+        Time databaseTime = networkDatabase.getTime(finder.getSourceName(),
+                                                    finder.getDNSName());
         logger.debug("the last time the networks were checked was " + new MicroSecondDate(databaseTime));
         if(refreshInterval == null) return false;
         MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
@@ -200,14 +200,11 @@ public class NetworkArm {
      * @exception Exception if an error occurs
      */
     public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
-        if(networksBeenChecked && !needsRefresh()) {
-            return networkDbObjects;
-        }
+        if(networksBeenChecked && !needsRefresh())  return netDbs;
         statusChanged("Getting networks");
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
-        NetworkDCOperations netDC =
-            new RetryNetworkDC(finderSubsetter.getNetworkDC(), 2);
+        NetworkDCOperations netDC = new RetryNetworkDC(finder.getNetworkDC(),2);
         logger.debug("before netDC.a_finder().retrieve_all()");
         NetworkAccess[] allNets = netDC.a_finder().retrieve_all();
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
@@ -217,29 +214,27 @@ public class NetworkArm {
                 cookieJarCache.put(allNets[i], cookieJar);
                 allNets[i] = new RetryNetworkAccess(allNets[i], 2);
                 if(attrSubsetter.accept(allNets[i].get_attributes(),cookieJar)){
-                    int dbid = networkDatabase.putNetwork(finderSubsetter.getSourceName(),
-                                                          finderSubsetter.getDNSName(),
+                    int dbid = networkDatabase.putNetwork(finder.getSourceName(),
+                                                          finder.getDNSName(),
                                                           allNets[i]);
                     networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
-                }else{
-                    change(allNets[i], RunStatus.FAILED);
-                }
+                }else change(allNets[i], RunStatus.FAILED);
             } // end of if (allNets[counter] != null)
         }
         //Set the time of the last check to now
-        networkDatabase.setTime(finderSubsetter.getSourceName(),
-                                finderSubsetter.getDNSName(),
+        networkDatabase.setTime(finder.getSourceName(),
+                                finder.getDNSName(),
                                 ClockUtil.now().getFissuresTime());
         
-        networkDbObjects = new NetworkDbObject[networkDBs.size()];
-        networkDbObjects = (NetworkDbObject[]) networkDBs.toArray(networkDbObjects);
-        logger.debug("got " + networkDbObjects.length + " networkDBobjects");
+        netDbs = new NetworkDbObject[networkDBs.size()];
+        netDbs = (NetworkDbObject[]) networkDBs.toArray(netDbs);
+        logger.debug("got " + netDbs.length + " networkDBobjects");
         networksBeenChecked = true;
         statusChanged("Waiting for a request");
-        for (int i = 0; i < networkDbObjects.length; i++) {
-            change(networkDbObjects[i].getNetworkAccess(), RunStatus.PASSED);
+        for (int i = 0; i < netDbs.length; i++) {
+            change(netDbs[i].getNetworkAccess(), RunStatus.PASSED);
         }
-        return networkDbObjects;
+        return netDbs;
     }
     
     /**
@@ -442,7 +437,7 @@ public class NetworkArm {
     }
     
     
-    private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder finderSubsetter = null;
+    private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder finder = null;
     
     private NetworkSubsetter attrSubsetter = new NullNetworkSubsetter();
     
@@ -457,7 +452,7 @@ public class NetworkArm {
     //Set to true the first time getSuccessfulNetworks is called
     private boolean networksBeenChecked = false;
     
-    private NetworkDbObject[] networkDbObjects;
+    private NetworkDbObject[] netDbs;
     
     private NetworkDatabase networkDatabase;
     
