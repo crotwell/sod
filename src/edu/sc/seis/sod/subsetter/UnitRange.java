@@ -1,10 +1,12 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UnitRange.java
@@ -20,20 +22,12 @@ public class UnitRange implements SodElement{
     public UnitRange (Element config) throws Exception{
         processConfig(config);
     }
-    
-    /**
-     * Describe <code>processConfig</code> method here.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
+
     public void processConfig(Element config) throws ConfigurationException{
-        
         NodeList childNodes = config.getChildNodes();
         Element unitRangeElement = null;
-        Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            node = childNodes.item(counter);
+            Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
                 if(tagName.equals("unitRange")) unitRangeElement = (Element)node;
@@ -42,19 +36,8 @@ public class UnitRange implements SodElement{
         }
         unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "");
     }
-    
-    /**
-     * Describe <code>getUnitRange</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.UnitRange</code> value
-     */
-    public edu.iris.Fissures.UnitRange  getUnitRange() {
-        
-        return unitRange;
-        
-    }
-    
-    
+
+    public edu.iris.Fissures.UnitRange  getUnitRange() { return unitRange; }
+
     private edu.iris.Fissures.UnitRange unitRange = null;
-    
 }// UnitRange

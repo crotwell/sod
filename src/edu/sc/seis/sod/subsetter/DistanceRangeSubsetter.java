@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 /**
  * DistanceRange.java
@@ -18,60 +18,25 @@ import org.w3c.dom.*;
  */
 
 public class DistanceRangeSubsetter implements SodElement{
-
-    /**
-     * Creates a new <code>DistanceRange</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public DistanceRangeSubsetter (Element config) throws ConfigurationException{
         processConfig(config);
     }
 
-    /**
-     * Describe <code>processConfig</code> method here.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public void processConfig(Element config) throws ConfigurationException{
-    unitRange = SodUtil.loadUnitRange(config);
-
+        unitRange = SodUtil.loadUnitRange(config);
     }
 
-    /**
-     * Describe <code>getDistanceRange</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.UnitRange</code> value
-     */
-    public edu.iris.Fissures.UnitRange  getDistanceRange() {
+    public edu.iris.Fissures.UnitRange  getDistanceRange() { return unitRange; }
 
-    return unitRange;
-
-    }
-
-    /**
-     * Describe <code>getMinDistance</code> method here.
-     *
-     * @return a <code>Quantity</code> value
-     */
     public QuantityImpl getMinDistance() {
-
-    return new QuantityImpl(getDistanceRange().min_value, getDistanceRange().the_units);
-
+        return new QuantityImpl(getDistanceRange().min_value,
+                                getDistanceRange().the_units);
     }
 
-
-    /**
-     * Describe <code>getMaxDistance</code> method here.
-     *
-     * @return a <code>Quantity</code> value
-     */
     public QuantityImpl getMaxDistance() {
-
-    return new QuantityImpl(getDistanceRange().max_value, getDistanceRange().the_units);
+        return new QuantityImpl(getDistanceRange().max_value,
+                                getDistanceRange().the_units);
     }
 
-    private edu.iris.Fissures.UnitRange unitRange = null;
-
+    private edu.iris.Fissures.UnitRange unitRange;
 }// DistanceRange
