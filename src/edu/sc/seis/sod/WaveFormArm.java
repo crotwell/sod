@@ -91,7 +91,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
-	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
 		if (((Element)node).getTagName().equals("description")) {
 		    // skip description element

@@ -126,16 +126,21 @@ public class NetworkArm {
      */
     public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) throws Exception{
 
-	//System.out.println("The stationIdSubsetter is not null");
-	if(networkAttrSubsetter.accept(networkAttr, null)) { 
-	    Station[] stations = networkAccess.retrieve_stations();
-	    for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-		handleStationIdSubsetter(networkAccess, stations[subCounter]);
-	    }
-	} else {
+	try {
+	    //System.out.println("The stationIdSubsetter is not null");
+	    if(networkAttrSubsetter.accept(networkAttr, null)) { 
+		Station[] stations = networkAccess.retrieve_stations();
+		for(int subCounter = 0; subCounter < stations.length; subCounter++) {
+		    handleStationIdSubsetter(networkAccess, stations[subCounter]);
+		}
+	    } else {
 		failure.info("Fail NetworkAttr"+networkAttr.get_code());
 	    }
-
+	} catch (org.omg.CORBA.UNKNOWN e) {
+	    logger.warn("Caught exception, network is: "+NetworkIdUtil.toString(networkAttr.get_id()), e);
+	    throw e;
+	} // end of try-catch
+	    
     }
 
     /**
@@ -146,12 +151,18 @@ public class NetworkArm {
      * @exception Exception if an error occurs
      */
     public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station) throws Exception{
-	
+	try {
+	     
 	if(stationIdSubsetter.accept(station.get_id(), null)) {
 	    handleStationSubsetter(networkAccess, station); 
 	} else {
 		failure.info("Fail StationId"+station.get_code());
 	    }
+	} catch (org.omg.CORBA.UNKNOWN e) {
+	    logger.warn("Caught exception, station is: "+StationIdUtil.toString(station.get_id()), e);
+	    throw e;
+	} // end of try-catch
+	
     }
 
     /**

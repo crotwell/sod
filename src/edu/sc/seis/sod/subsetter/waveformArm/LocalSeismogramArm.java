@@ -167,10 +167,17 @@ public class LocalSeismogramArm implements Subsetter{
 					 infilters, 
 					 outfilters, 
 					 null)) {
-	    logger.debug("Using infilters, fix this when DMC fixes server");
+	    //  logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 	    MicroSecondDate before = new MicroSecondDate();
-	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(infilters);
+	    LocalSeismogram[] localSeismograms;
+	    if (outfilters.length != 0) {
+		localSeismograms = dataCenter.retrieve_seismograms(outfilters);
+	    } else {
+		localSeismograms = new LocalSeismogram[0];
+	    } // end of else
+	    
+	    
 	    MicroSecondDate after = new MicroSecondDate();
 	    logger.debug("After getting seismograms "+after.subtract(before));
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);

@@ -106,6 +106,15 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 					 "genid"+Math.round(Math.random()*Integer.MAX_VALUE),
 					 eventDirName,
 					 System.getProperty("user.name"));
+
+		// add event since dataset is new
+		Document doc = dataset.getElement().getOwnerDocument();
+		Element eventElement = doc.createElement("event");
+		XMLEvent.insert(eventElement, event);
+		AuditInfo[] audit = new AuditInfo[1];
+		audit[0] = new AuditInfo(System.getProperty("user.name"),
+					 "event loaded via sod.");
+		dataset.addParameter( "event", eventElement, audit);
 	    } // end of else
 
 	    SacTimeSeries sac;
