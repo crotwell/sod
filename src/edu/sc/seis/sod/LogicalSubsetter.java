@@ -30,9 +30,9 @@ public abstract class LogicalSubsetter implements Subsetter {
 	    node = children.item(i);
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
-		SodElement sodElement = SodUtil.load(subElement);
-		if (sodElement instanceof Subsetter) {
-		    filterList.add((Subsetter)sodElement);
+		Object obj = SodUtil.load(subElement);
+		if (obj instanceof Subsetter) {
+		    filterList.add((Subsetter)obj);
 		} // end of if (sodElement instanceof EventAttrSubsetter)
 		
 	    } // end of if (node instanceof Element)
