@@ -57,6 +57,7 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
      *
      */
     public void put(int pairId, String name, Serializable value) throws SQLException {
+        synchronized(conn) {
         if (get(pairId, name) == null) {
             insertObject.setInt(1, pairId);
             insertObject.setString(2, name);
@@ -68,6 +69,7 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
             updateObject.setString(3, name);
             updateObject.executeUpdate();
         }
+        }
     }
 
     public PreparedStatement prepareStatement(String stmt) throws SQLException {
@@ -75,6 +77,7 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
     }
 
     public CookieJarResult get(int pairId, String name) throws SQLException {
+        synchronized(conn) {
         get.setInt(1, pairId);
         get.setString(2, name);
         ResultSet rs = get.executeQuery();
@@ -83,9 +86,11 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
         } else {
             return null;
         }
+        }
     }
 
     public List getAllForPair(int pairId) throws SQLException {
+        synchronized(conn) {
         get.setInt(1, pairId);
         ResultSet rs = get.executeQuery();
         LinkedList out = new LinkedList();
@@ -93,9 +98,11 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
             out.add(extract(rs));
         }
         return out;
+        }
     }
 
     public List getAllForName(String name) throws SQLException {
+        synchronized(conn) {
         get.setString(1, name);
         ResultSet rs = get.executeQuery();
         LinkedList out = new LinkedList();
@@ -103,9 +110,11 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
             out.add(extract(rs));
         }
         return out;
+        }
     }
 
     public void put(int pairId, String name, double value) throws SQLException{
+        synchronized(conn) {
         if (get(pairId, name) == null) {
             insertDouble.setInt(1, pairId);
             insertDouble.setString(2, name);
@@ -117,10 +126,11 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
             updateDouble.setString(3, name);
             updateDouble.executeUpdate();
         }
-
+        }
     }
 
     public void put(int pairId, String name, String value) throws SQLException{
+        synchronized(conn) {
         if (get(pairId, name) == null) {
             insertString.setInt(1, pairId);
             insertString.setString(2, name);
@@ -131,6 +141,7 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
             updateString.setInt(2, pairId);
             updateString.setString(3, name);
             updateString.executeUpdate();
+        }
         }
     }
 
@@ -175,11 +186,13 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
 
 
     public CookieJarResult remove(int pairId, String name) throws SQLException {
+        synchronized(conn) {
         CookieJarResult out = get(pairId, name);
         remove.setInt(1, pairId);
         remove.setString(2, name);
         remove.executeUpdate();
         return out;
+        }
     }
 
 
