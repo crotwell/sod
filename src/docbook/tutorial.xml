@@ -118,10 +118,8 @@ magnitude to be at least 6. Here is the eventFinder section to accomplish this.
         &lt;/unitRange&gt;
     &lt;/originDepthRange&gt;
     &lt;eventTimeRange&gt;
-        &lt;timeRange&gt;
-            &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-            &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-        &lt;/timeRange&gt;
+        &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+        &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
     &lt;/eventTimeRange&gt;
     &lt;magnitudeRange&gt;
         &lt;magType&gt;ALL&lt;/magType&gt;
@@ -206,10 +204,8 @@ overlaps the time range for our event selection.
 </para>
 <programlisting>
       &lt;stationEffectiveTimeOverlap&gt;
-        &lt;effectiveTimeOverlap&gt;
-            &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
-            &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
-        &lt;/effectiveTimeOverlap&gt;
+            &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+            &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
       &lt;/stationEffectiveTimeOverlap&gt;
 </programlisting>
 <para>
@@ -227,8 +223,8 @@ both a logical site id subsetter as well as a site subsetter.
       &lt;/siteIDOR&gt;
 
       &lt;siteEffectiveTimeOverlap&gt;
-              &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
-              &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
+              &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+              &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
       &lt;/siteEffectiveTimeOverlap&gt;
     &lt;/siteIDAND&gt;
 </programlisting>
@@ -242,8 +238,8 @@ printlineChannelProcessor to print out the name of each successful channel.
     &lt;bandCode&gt;L&lt;/bandCode&gt;
 
     &lt;channelEffectiveTimeOverlap&gt;
-            &lt;min&gt;20030101T00:00:00.001Z&lt;/min&gt;
-            &lt;max&gt;20030131T23:59:59.999Z&lt;/max&gt;
+            &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+            &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
     &lt;/channelEffectiveTimeOverlap&gt;
 
     &lt;printlineChannelProcessor/&gt;
