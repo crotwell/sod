@@ -23,7 +23,7 @@ public class RangeSubsetter {
     }
 
     public float getMinValue() {
-        if(minElement == null) return Float.MIN_VALUE;
+        if(minElement == null) return -1f * (Float.MAX_VALUE - 1);
         String rtnValue = SodUtil.getNestedText(minElement);
         return  Float.parseFloat(rtnValue);
     }
