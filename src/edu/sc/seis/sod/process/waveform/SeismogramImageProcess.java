@@ -19,6 +19,7 @@ import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -32,7 +33,10 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
+import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.PhaseAlignedTimeConfig;
+import edu.sc.seis.fissuresUtil.display.registrar.TimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
@@ -140,26 +144,13 @@ public class SeismogramImageProcess implements WaveformProcess {
                        cookieJar);
     }
 
-    /** allows specifying a fileType, png or pdf, and a list of phases. */
-    public WaveformResult process(EventAccessOperations event,
-                                  Channel channel,
-                                  RequestFilter[] original,
-                                  LocalSeismogramImpl[] seismograms,
-                                  final String fileType,
-                                  String[] phases,
-                                  boolean relTime,
-                                  final CookieJar cookieJar) throws Exception {
-        logger.debug("process() called");
-        // only needed if relTime
-        PhaseAlignedTimeConfig phaseTime = null;
-        if(relTime) {
-            phaseTime = new PhaseAlignedTimeConfig();
-            phaseTime.setTauP(tauptime);
-        }
-        final BasicSeismogramDisplay bsd = relTime ? new BasicSeismogramDisplay(phaseTime)
-                : new BasicSeismogramDisplay();
+    public static MemoryDataSetSeismogram createSeis(LocalSeismogramImpl[] seismograms,
+                                                     RequestFilter[] original,
+                                                     PhaseWindow phaseWindow,
+                                                     EventAccessOperations ev,
+                                                     Channel chan)
+            throws Exception {
         MemoryDataSetSeismogram memDSS = null;
-        PhaseRequest phaseRequest = null;
         if(phaseWindow == null) {
             memDSS = new MemoryDataSetSeismogram(original[0], "");
             memDSS.setBeginTime(DisplayUtils.firstBeginDate(original)
@@ -167,10 +158,8 @@ public class SeismogramImageProcess implements WaveformProcess {
             memDSS.setEndTime(DisplayUtils.lastEndDate(original)
                     .getFissuresTime());
         } else {
-            phaseRequest = phaseWindow.getPhaseRequest();
-            RequestFilter[] request = phaseRequest.generateRequest(event,
-                                                                   channel,
-                                                                   null);
+            PhaseRequest req = phaseWindow.getPhaseRequest();
+            RequestFilter[] request = req.generateRequest(ev, chan, null);
             memDSS = new MemoryDataSetSeismogram(request[0], "");
             memDSS.setBeginTime(DisplayUtils.firstBeginDate(request)
                     .getFissuresTime());
@@ -180,84 +169,148 @@ public class SeismogramImageProcess implements WaveformProcess {
         for(int i = 0; i < seismograms.length; i++) {
             memDSS.add(seismograms[i]);
         }
-        DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
-                + memDSS.getName(), "temp", new AuditInfo[0]);
-        dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
-        dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
-        bsd.add(new MemoryDataSetSeismogram[] {memDSS});
-        Origin origin = EventUtil.extractOrigin(event);
+        return memDSS;
+    }
+
+    protected TimeConfig getTimeConfig(boolean relTime) {
+        if(relTime) {
+            PhaseAlignedTimeConfig phaseTime = new PhaseAlignedTimeConfig();
+            phaseTime.setTauP(tauptime);
+            return phaseTime;
+        } else {
+            return new BasicTimeConfig();
+        }
+    }
+
+    protected Arrival[] getArrivals(Channel chan, Origin o, String[] phases)
+            throws TauModelException {
+        Station sta = chan.my_site.my_station;
         TimeInterval filterOffset = new TimeInterval(10, UnitImpl.SECOND);
-        final MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
-        Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(channel.my_site.my_station,
-                                                                      origin,
+        Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(sta,
+                                                                      o,
                                                                       phases),
                                                  filterOffset);
         if(showOnlyFirst) {
             arrivals = PhasePhilter.mindPsAndSs(arrivals);
         }
+        return arrivals;
+    }
+
+    protected SodFlag[] createSodFlags(Arrival[] arrivals,
+                                       Origin o,
+                                       SeismogramDisplay bsd) {
         final SodFlag[] flags = new SodFlag[arrivals.length];
+        MicroSecondDate originTime = new MicroSecondDate(o.origin_time);
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));
             flags[i] = new SodFlag(flagTime, renamer.rename(arrivals[i]), bsd);
-            bsd.add(flags[i]);
         }
-        final String picFileName = locator.getLocation(event, channel, fileType);
-        SwingUtilities.invokeAndWait(new Runnable() {
+        return flags;
+    }
 
-            public void run() {
-                logger.debug("writing " + picFileName);
-                try {
-                    if(fileType.equals(PDF)) {
-                        bsd.outputToPDF(new File(picFileName));
-                    } else {
-                        bsd.outputToPNG(new File(picFileName), dims);
-                    }
-                    if(putDataInCookieJar) {
-                        if(!pairsInserted.add(new Integer(cookieJar.getEventChannelPair()
-                                .getPairId()))) {
-                            logger.debug("inserting same key into cookie jar!  You can fix this by making sure each channel in a vector process gets its correct cookie jar...");
-                            return;
-                        }
-                        /*
-                         * Currently only the regions around first P and first S
-                         * Flags are made clickable
-                         */
-                        int pLeft = NUM_P_TO_MARK;
-                        int sLeft = NUM_S_TO_MARK;
-                        for(int i = 0; i < flags.length; i++) {
-                            String phase = flags[i].getName();
-                            FlagData flagData = flags[i].getFlagData();
-                            if(phase.startsWith("P") && pLeft-- > 0) {
-                                cookieJar.put(locator.getPrefix() + COOKIE_KEY
-                                        + "P", flagData);
-                            } else if(phase.startsWith("S") && sLeft-- > 0) {
-                                cookieJar.put(locator.getPrefix() + COOKIE_KEY
-                                        + "S", flagData);
-                            }
-                        }
-                    }
-                } catch(Throwable e) {
-                    GlobalExceptionHandler.handle("unable to save seismogram image to "
-                                                          + picFileName,
-                                                  e);
-                }
-            }
-        });
+    /** allows specifying a fileType, png or pdf, and a list of phases. */
+    public WaveformResult process(EventAccessOperations event,
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  LocalSeismogramImpl[] seismograms,
+                                  String fileType,
+                                  String[] phases,
+                                  boolean relTime,
+                                  CookieJar cookieJar) throws Exception {
+        logger.debug("process() called");
+        BasicSeismogramDisplay bsd = new BasicSeismogramDisplay(getTimeConfig(relTime));
+        MemoryDataSetSeismogram memDSS = createSeis(seismograms,
+                                                    original,
+                                                    phaseWindow,
+                                                    event,
+                                                    channel);
+        DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
+                + memDSS.getName(), "temp", new AuditInfo[0]);
+        dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
+        Origin o = EventUtil.extractOrigin(event);
+        dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
+        Arrival[] arrivals = getArrivals(channel, o, phases);
+        SodFlag[] flags = createSodFlags(arrivals, o, bsd);
+        String picFileName = locator.getLocation(event, channel, fileType);
+        SwingUtilities.invokeAndWait(new ImageWriter(cookieJar,
+                                                     bsd,
+                                                     fileType,
+                                                     picFileName,
+                                                     flags));
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    protected class ImageWriter implements Runnable {
+
+        private final CookieJar cookieJar;
+
+        private final BasicSeismogramDisplay bsd;
+
+        private final String fileType;
+
+        private final String picFileName;
+
+        private final SodFlag[] flags;
+
+        private ImageWriter(CookieJar cookieJar, BasicSeismogramDisplay bsd,
+                String fileType, String picFileName, SodFlag[] flags) {
+            this.cookieJar = cookieJar;
+            this.bsd = bsd;
+            this.fileType = fileType;
+            this.picFileName = picFileName;
+            this.flags = flags;
+        }
+
+        public void run() {
+            logger.debug("writing " + picFileName);
+            try {
+                if(fileType.equals(PDF)) {
+                    bsd.outputToPDF(new File(picFileName));
+                } else {
+                    bsd.outputToPNG(new File(picFileName), dims);
+                }
+                if(putDataInCookieJar) {
+                    if(!pairsInserted.add(new Integer(cookieJar.getEventChannelPair()
+                            .getPairId()))) {
+                        logger.debug("inserting same key into cookie jar!  You can fix this by making sure each channel in a vector process gets its correct cookie jar...");
+                        return;
+                    }
+                    //Currently only the regions around first P and first S
+                    //Flags are made clickable
+                    int pLeft = NUM_P_TO_MARK;
+                    int sLeft = NUM_S_TO_MARK;
+                    for(int i = 0; i < flags.length; i++) {
+                        String phase = flags[i].getName();
+                        FlagData flagData = flags[i].getFlagData();
+                        if(phase.startsWith("P") && pLeft-- > 0) {
+                            cookieJar.put(locator.getPrefix() + COOKIE_KEY
+                                    + "P", flagData);
+                        } else if(phase.startsWith("S") && sLeft-- > 0) {
+                            cookieJar.put(locator.getPrefix() + COOKIE_KEY
+                                    + "S", flagData);
+                        }
+                    }
+                }
+            } catch(Throwable e) {
+                GlobalExceptionHandler.handle("unable to save seismogram image to "
+                                                      + picFileName,
+                                              e);
+            }
+        }
     }
 
     private static Set pairsInserted = Collections.synchronizedSet(new HashSet());
 
     private boolean putDataInCookieJar = false;
 
-    private SeismogramImageOutputLocator locator;
+    protected SeismogramImageOutputLocator locator;
 
     private TauPUtil tauP;
 
     private boolean showOnlyFirst;
 
-    private PhaseWindow phaseWindow = null;
+    protected PhaseWindow phaseWindow = null;
 
     private PhasePhilter.PhaseRenamer renamer = new PhasePhilter.PhaseRenamer();
 
@@ -265,7 +318,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private boolean relativeTime = false;
 
-    private String[] phaseFlagNames = DEFAULT_PHASES;
+    protected String[] phaseFlagNames = DEFAULT_PHASES;
+
+    protected Dimension dims = DEFAULT_DIMENSION;
 
     private static TauP_Time tauptime = null;
 
@@ -282,8 +337,6 @@ public class SeismogramImageProcess implements WaveformProcess {
     private static final int NUM_S_TO_MARK = 1;
 
     private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
-
-    private Dimension dims = DEFAULT_DIMENSION;
 
     private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
 }
