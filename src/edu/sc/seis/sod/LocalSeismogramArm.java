@@ -15,7 +15,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.time.SortTool;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
