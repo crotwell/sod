@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <html>
 <header>
-<title>$runName - $network.getNetworkAccess().get_attributes().get_code() in the waveform arm</title>
+<title>$runName - $network.get_attributes().get_code() in the waveform arm</title>
 <style media="all">@import "../main.css";</style>
 <script type="text/javascript" src="../tableRuler.js"> </script>
 <script type="text/javascript">
@@ -14,7 +14,7 @@ window.onload=function(){
 </header>
 <body>
 <div id="Header">
-$network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())
+$network.get_attributes().get_code() $fissures.networkName($network)
 </div>
 <div id="Content">
 #set( $extraRows = 20 )
@@ -33,7 +33,7 @@ $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($n
 #set ( $stacode = $sta.get_code())
 <tr>
 <td>$sta.get_code()</td>
-<td><a href="$network.getNetworkAccess().get_attributes().get_code()/$network.getNetworkAccess().get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
+<td><a href="$network.get_attributes().get_code()/$network.get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
 <td>$fissures.getLatitude($sta)</td>
 <td>$fissures.getLongitude($sta)</td>
 <td>$stations.getNumSuccessful($staDb)</td>
