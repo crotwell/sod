@@ -7,7 +7,6 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -19,7 +18,6 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.process.networkArm.NetworkArmProcess;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
-import edu.sc.seis.sod.subsetter.RefreshInterval;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,16 +110,13 @@ public class NetworkArm {
     }
 
     public NetworkFinder getFinder() throws Exception{
-        return new RetryNetworkDC(finder.getNetworkDC(),2).a_finder();
+        return finder.getNetworkDC().a_finder();
     }
 
     private boolean needsRefresh() {
-        RefreshInterval refreshInterval = finder.getRefreshInterval();
-        try {
-            logger.debug("checking on the validity of the refresh interval which is " + refreshInterval.getValue() + " " + refreshInterval.getUnit());
-        } catch (ConfigurationException e) {
-            CommonAccess.handleException(e, "Problem with the refresh interval");
-        }
+        TimeInterval refreshInterval = finder.getRefreshInterval();
+        logger.debug("checking the refresh interval which is " + refreshInterval.getValue() + " " + refreshInterval.getUnit());
+
         Date databaseTime = new Date(0);
         try {
             databaseTime = queryTimeTable.getQuery(finder.getSourceName(),
@@ -137,20 +132,15 @@ public class NetworkArm {
         MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
         MicroSecondDate currentTime = ClockUtil.now();
         TimeInterval timeInterval = currentTime.difference(lastTime);
-        try {
-            timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
-        } catch (ConfigurationException e) {
-            CommonAccess.handleException(e, "The time interval set in the refreshInterval for the NetworkFinder has an unacceptable unit");
-            System.exit(0);
+
+        timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
+
+        if(timeInterval.getValue() >= refreshInterval.getValue()) {
+            return true;
+        } else {
+            statusChanged("Waiting until " + lastTime.add(refreshInterval) + " to recheck networks");
+            return false;
         }
-        if(timeInterval.getValue() >= refreshInterval.getValue()) return true;
-        try {
-            statusChanged("Waiting until " + lastTime.add(refreshInterval.getTimeInterval()) + " to recheck networks");
-        } catch (ConfigurationException e) {
-            CommonAccess.handleException(e, "The time interval set in the refreshInterval for the NetworkFinder has an unacceptable unit");
-            System.exit(0);
-        }
-        return false;
     }
 
     /**
@@ -168,7 +158,7 @@ public class NetworkArm {
         statusChanged("Getting networks");
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
-        NetworkDCOperations netDC = new RetryNetworkDC(finder.getNetworkDC(),2);
+        NetworkDCOperations netDC = finder.getNetworkDC();
         logger.debug("before netDC.a_finder().retrieve_all()");
         NetworkAccess[] allNets = netDC.a_finder().retrieve_all();
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");

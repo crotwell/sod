@@ -176,12 +176,6 @@ public class SodUtil {
 
 
     public static QuantityImpl loadQuantity(Element config) throws ConfigurationException {
-        String unitName = null;
-        NodeList children = config.getChildNodes();
-        Node node = children.item(0);
-        if (node instanceof Text) {
-            unitName = node.getNodeValue();
-        }
         try {
             double value = Double.parseDouble(XMLUtil.getText(XMLUtil.getElement(config, "value")));
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));

@@ -1,14 +1,15 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-
-import edu.sc.seis.fissuresUtil.namingService.*;
-import edu.iris.Fissures.IfNetwork.*;
-
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.AbstractSource;
+import org.w3c.dom.Element;
 
 
 /**
@@ -35,48 +36,31 @@ import org.apache.log4j.*;
  */
 
 public class NetworkFinder extends AbstractSource{
-    /**
-     * Creates a new <code>NetworkFinder</code> instance.
-     *
-     * @param element an <code>Element</code> value
-     */
-    public NetworkFinder (Element element) throws Exception{
-    super(element);
-        CommonAccess commonAccess = CommonAccess.getCommonAccess();
-        fissuresNamingService = commonAccess.getFissuresNamingService();
 
-        dns = getDNSName();
-        objectName = getSourceName();
+    public NetworkFinder (Element element) throws Exception{
+        super(element);
+        CommonAccess commonAccess = CommonAccess.getCommonAccess();
+        FissuresNamingService fns = commonAccess.getFissuresNamingService();
+
+        String dns = getDNSName();
+        String objectName = getSourceName();
         Element subElement = SodUtil.getElement(element,"refreshInterval");
         if(subElement != null) {
-            Object obj = SodUtil.load(subElement, "networkArm");
-            refreshInterval = (RefreshInterval)obj;
-        } else refreshInterval = null;
-
+            refreshInterval = TimeInterval.createTimeInterval(SodUtil.loadQuantity(subElement));
+        } else refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+        netDC = new RetryNetworkDC(new NSNetworkDC(dns, objectName, fns), 2);
     }
 
-    /**
-     * Describe <code>getNetworkDC</code> method here.
-     *
-     * @return a <code>NetworkDC</code> value
-     */
-    public NetworkDC getNetworkDC() throws Exception{
-
-        return fissuresNamingService.getNetworkDC(dns, objectName);
-
+    public NetworkDCOperations getNetworkDC() throws Exception{
+        return netDC;
     }
 
-    public RefreshInterval getRefreshInterval() {
-
-    return this.refreshInterval;
+    public TimeInterval getRefreshInterval() {
+        return this.refreshInterval;
     }
 
-    private FissuresNamingService fissuresNamingService = null;
+    private NetworkDCOperations netDC;
 
-    private String dns = null;
-
-    private String objectName = null;
-
-    private RefreshInterval refreshInterval;
+    private TimeInterval refreshInterval;
 
 }// NetworkFinder
