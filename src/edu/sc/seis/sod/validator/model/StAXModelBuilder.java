@@ -207,7 +207,6 @@ public class StAXModelBuilder implements XMLStreamConstants{
                         prevEventType = curEventType;
                     }
                     note.setExample(buf.toString());
-                    System.out.println(buf.toString());
                 }
             }
         }
