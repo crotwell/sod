@@ -1,19 +1,19 @@
-/**
- * StringTreeBranch.java
- *
- * @author Created by Omnicore CodeGuide
- */
-
 package edu.sc.seis.sod.status;
+
+import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
 
 public class StringTreeBranch extends StringTree {
 
-    public StringTreeBranch(Object name, boolean boo, StringTree branch) {
-        this(name, boo, new StringTree[] { branch });
+    public StringTreeBranch(Object actor, boolean boo, StringTree branch) {
+        this(actor, boo, new StringTree[] { branch });
     }
 
-    public StringTreeBranch(Object name, boolean boo, StringTree[] branches) {
-        super(name, boo);
+    public StringTreeBranch(Object actor, boolean boo, StringTree[] branches) {
+        this(ExceptionReporterUtils.getClassName(actor), boo, branches);
+    }
+    
+    public StringTreeBranch(String actorName, boolean status, StringTree[] branches){
+        super(actorName, status);
         this.branches = branches;
     }
 
