@@ -95,8 +95,7 @@ public class OutputScheduler extends Thread{
 
     private Set runnables = Collections.synchronizedSet(new HashSet());
     private Set onExitRunnables = Collections.synchronizedSet(new HashSet());
-    private Timer t = new Timer();
-
     private static final Logger logger = Logger.getLogger(OutputScheduler.class);
 
 }
+
