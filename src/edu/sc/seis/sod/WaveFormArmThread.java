@@ -73,7 +73,10 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	    if( bESS ) {
 		DataCenter dataCenter;
 		synchronized(seismogramDCLocator) {
-		    dataCenter = seismogramDCLocator.getSeismogramDC();
+		    dataCenter = seismogramDCLocator.getSeismogramDC(null, 
+								     null,
+								     successfulChannels[counter].my_site.my_station,
+								     null);
 		}
 		localSeismogramArm.processLocalSeismogramArm(eventAccess, 
 							     null, 
