@@ -31,6 +31,14 @@ public class ThreeComponentData implements WaveformVectorProcess {
                                                                    false,
                                                                    "seismograms["+i+"] is empty"));
             }
+            
+            if (seismograms[i][0].num_points == 0) {
+                return new WaveformVectorResult(false,
+                                                seismograms,
+                                                new StringTreeLeaf(this,
+                                                                   false,
+                                                                   "seismograms["+i+"][0] has zero data points"));
+            }
         }
         return new WaveformVectorResult(true,
                                         seismograms,
