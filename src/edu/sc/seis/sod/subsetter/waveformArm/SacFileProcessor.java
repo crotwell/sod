@@ -231,12 +231,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
     protected File getEventDirectory(EventAccessOperations event)
         throws ConfigurationException {
         String eventDirName = getLabel(event);
-        eventDirName = eventDirName.replace(' ', '_');
-        eventDirName = eventDirName.replace(',', '_');
-        eventDirName = eventDirName.replace('/', '_');
-//        eventDirName = eventDirName.replace('\\', '_');
-        eventDirName = eventDirName.replace(':', '_');
-        File eventDirectory = new File(dataDirectory, eventDirName);
+        File eventDirectory = new File(dataDirectory, NameGenerator.filize(eventDirName));
         if ( ! eventDirectory.exists()) {
             if ( ! eventDirectory.mkdirs()) {
                 throw new ConfigurationException("Unable to create directory."+eventDirectory);
