@@ -5,7 +5,7 @@ MAVEN=~/.maven
 JACORB_TIMEOUT=900000
 
 JACORB_LIB=$MAVEN/repository/JacORB/jars
-JACORB=$JACORB_LIB/JacORB-2.0.jar
+JACORB=$JACORB_LIB/JacORB-2.0_USC1.jar
 JACORB_ANTLR=$JACORB_LIB/antlr-2.7.2.jar
 JACORB_AVALON=$JACORB_LIB/avalon-framework-4.1.5.jar
 JACORB_CONCURRENT=$JACORB_LIB/concurrent-1.3.2.jar
@@ -33,7 +33,7 @@ java -Djava.endorsed.dirs=${JACORB_LIB}  \
     -Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB \
     -Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton \
     -Djacorb.connection.client.pending_reply_timeout=${JACORB_TIMEOUT} \
-    -Xmx128m \
+    -Xmx512m \
     -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${JING}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
     edu.sc.seis.sod.Start $*
 
