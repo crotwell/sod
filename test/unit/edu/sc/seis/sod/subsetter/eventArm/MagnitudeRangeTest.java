@@ -11,7 +11,7 @@ import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.mockFissures.IfEvent.MockOrigin;
+import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockOrigin;
 import edu.sc.seis.sod.XMLConfigUtil;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import junit.framework.TestCase;

@@ -8,8 +8,8 @@ package edu.sc.seis.sod.process;
 
 import java.io.*;
 
-import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;

@@ -9,8 +9,6 @@ package edu.sc.seis.sod.database.waveform;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
@@ -18,6 +16,8 @@ import edu.sc.seis.sod.Status;
 import java.sql.SQLException;
 import junit.framework.TestCase;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class JDBCEventChannelStatusTest extends TestCase{

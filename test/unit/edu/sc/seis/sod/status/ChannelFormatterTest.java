@@ -4,7 +4,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.XMLConfigUtil;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;

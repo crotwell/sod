@@ -8,7 +8,7 @@ package edu.sc.seis.sod.status;
 
 import junit.framework.TestCase;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 
 public class FissuresFormatterTest extends TestCase{
 
