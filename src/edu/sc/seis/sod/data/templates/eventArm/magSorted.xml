@@ -14,26 +14,66 @@ Events (sorted by magnitude)
 <div id="Content">
 <h1>Events</h1>
 <h2>Status:</h2>
-<status/><br/>
+<armStatus/><br/>
 <h2>Map:</h2>
 <img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
-<h2>Successful events sorted by magnitude:</h2>
+<h2>Successful:</h2>
 <table>
 <tr id="title">
 <td>Region</td>
 <td><a href="time.html">Time (GMT)</a></td>
 <td id="selected"><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
+<td># Processed Channels</td>
+<td># Rejected Channels</td>
+<td># Retry Channels</td>
+</tr>
+<events><eventLabel><tr>
+<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td id="selected"><magnitude/></td>
+<td><depth/></td>
+<td><waveformChannels>SUCCESS</waveformChannels></td>
+<td><waveformChannels>REJECT</waveformChannels></td>
+<td><waveformChannels>RETRY</waveformChannels></td>
+</tr>
+</eventLabel><sorting><magnitude order="descending"/><status>SUCCESS</status></sorting></events>
+</table>
+<h2>In progress:</h2>
+<table>
+<tr id="title">
+<td>Region</td>
+<td ><a href="time.html">Time (GMT)</a></td>
+<td id="selected"><a href="mag.html">Magnitude</a></td>
+<td><a href="depth.html">Depth</a></td>
 <td>Status</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
-<td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td id="selected"><magnitude/></td>
 <td><depth/></td>
 <td><eventStatus/></td>
 </tr>
-</eventLabel><sorting><magnitude/></sorting></events>
+</eventLabel><sorting><magnitude order="descending"/><status>IN PROGRESS</status></sorting></events>
+</table>
+<h2>Failed:</h2>
+<table>
+<tr id="title">
+<td>Region</td>
+<td ><a href="time.html">Time (GMT)</a></td>
+<td id="selected"><a href="mag.html">Magnitude</a></td>
+<td><a href="depth.html">Depth</a></td>
+<td>Status</td>
+</tr>
+<events><eventLabel><tr>
+<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td id="selected"><magnitude/></td>
+<td><depth/></td>
+<td><eventStatus/></td>
+</tr>
+</eventLabel><sorting><magnitude order="descending"/><status>FAILED</status></sorting></events>
 </table>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
