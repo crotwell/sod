@@ -11,7 +11,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationGroupTemplate;
-import edu.sc.seis.sod.subsetter.networkArm.NetworkInfoTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -6,14 +6,12 @@
 
 package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.SiteGroupTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
-import edu.sc.seis.sod.subsetter.networkArm.NetworkInfoTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
