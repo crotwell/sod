@@ -12,6 +12,10 @@ import org.apache.log4j.*;
 import java.io.*;
 import java.util.*;
 import org.w3c.dom.*;
+import org.apache.xerces.dom.DOMImplementationImpl;
+import org.apache.xerces.dom3.as.DOMImplementationAS;
+import org.apache.xerces.dom3.as.ASModel;
+import org.apache.xerces.dom3.as.DOMASBuilder;
 import javax.xml.parsers.*;
 
 /**
@@ -193,7 +197,12 @@ public class Start implements SodExceptionListener {
 		java.net.URLConnection conn = url.openConnection();
 		in = new BufferedInputStream(conn.getInputStream());
 	    } else {
-		in = new BufferedInputStream(new FileInputStream(filename));
+		String schemaFilename = "edu/sc/seis/sod/data/";
+		schemaURL = 
+		    (Start.class).getClassLoader().getResource(schemaFilename);
+		
+		in = (Start.class).getClassLoader().getResourceAsStream(filename);	
+		    //new BufferedInputStream(new FileInputStream(filename));
 	    } // end of else
 	    
 
@@ -226,8 +235,20 @@ public class Start implements SodExceptionListener {
     protected Document initParser(InputStream xmlFile) 
 	throws ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	factory.setValidating(true);
+	//factory.set
+	factory.setNamespaceAware(true);
+
 	DocumentBuilder docBuilder = factory.newDocumentBuilder();
-	return docBuilder.parse(xmlFile);
+	SimpleErrorHandler errorHandler = new SimpleErrorHandler();
+	docBuilder.setErrorHandler(errorHandler);
+	Document document =  docBuilder.parse(xmlFile, schemaURL.toString());
+	if(errorHandler.isValid()) return document;
+	else {
+	    System.out.println("The xml Configuration file contains errors");
+	    System.exit(0);
+	    return null;
+	}
     }
 
 
@@ -239,6 +260,8 @@ public class Start implements SodExceptionListener {
     }
 
 
+    private static java.net.URL schemaURL;
+ 
     private static Properties props = null;
 
     InputStream configFile;
