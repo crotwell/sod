@@ -23,15 +23,32 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     public MagnitudeRange (Element config) throws ConfigurationException {
         super(config);
         this.config = config;
+        parseSearchTypes();
     }
 
     public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
-        if(origin.magnitudes[0].value >= getMinValue() &&
-           origin.magnitudes[0].value <= getMaxValue()) { return true;
-        }else return false;
+        for (int i = 0; i < origin.magnitudes.length; i++) {
+            if(origin.magnitudes[i].value >= getMinValue() &&
+               origin.magnitudes[i].value <= getMaxValue() ) {
+                if (getSearchTypes().length == 0) {
+                    // don't care about search types
+                    return true;
+                }
+                for (int j = 0; j < searchTypes.length; j++) {
+                    if (origin.magnitudes[i].type.equals(searchTypes[j])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
-    public String[] getSearchTypes() throws ConfigurationException{
+    public String[] getSearchTypes() {
+        return searchTypes;
+    }
+
+    protected void parseSearchTypes() throws ConfigurationException{
         ArrayList arrayList = new ArrayList();
         NodeList childNodes = config.getChildNodes();
         for(int counter  = 0; counter < childNodes.getLength(); counter++) {
@@ -46,8 +63,10 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
         }
         String[] searchTypes = new String[arrayList.size()];
         searchTypes = (String[])arrayList.toArray(searchTypes);
-        return searchTypes;
     }
 
+    private String[] searchTypes;
+
     private Element config;
+
 }// MagnitudeRange
