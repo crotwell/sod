@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<html>
+<head>
+<meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
+<title>Help for event pages</title>
+<style media="all">@import "../main.css";</style>
+</head>
+<body>
+<div id="Header">
+Help for event pages
+</div>
+<div id="Content">
+<h1>Event page explanation</h1>
+<p>
+The event summary pages in SOD consist of three major sections: event and waveform arm status, a map, and a set of tables containing the status of all of the events in SOD's waveform and event arms.
+</p>
+<a name="Status"><h2>Status</h2></a>
+<p>
+The status section of the event page has messages from the event arm and waveform indicating what they were doing when the page was generated.
+</p>
+<a name="Map"><h2>Map:</h2></a>
+<p>
+The event page map contains all of the events retrieved so far by SOD.  The five most recently retreived are colored red, the five retreived before that are orange, and all other events are colored yellow.
+</p>
+<a name="Tables"><h2>Event tables:</h2></a>
+<p>
+The event page has three tables on it. They can be sorted by the time, magnitude, and depth for the earthquakes in each table.  To select a particular sorting, click on the link at the top of each column.  The current sorting is highlighted in a light grey.
+</p>
+<p>
+The first table, Successful, has all the events that passed the event arm's subsetters.  This means that these events have entered the domain of the waveform arm, so they have some extra columns to indicate what the waveform arm is doing to them.  The column # Successful Channels has the number of channels that have passed all of the waveform arm's subsetters and have been fully processed without errors.  So if the waveform arm has a sac file processor on it and a seismogram image generator, having things in the column indicates that there's sac data on disk and images generated for this event.  The # Rejected Channels column shows the number of channels that have either been rejected by the waveform arm's subsetters, or have caused errors either in running through the subsetters or the processors.  The last column, # Retry Channels, has a count for all the channels that didn't have any data available for this event when the available data subsetter queried them.  This means that SOD will try to get some data for them again later.  To get more information about a particular event in this table, just click on the link for that event in the location column.  This will take you to a page with a summary of the particular event's travel through the waveform arm, and another table with information about the fate of all the stations SOD has worked on for this event.
+</p>
+<p>
+The next table, In Progress, has events that have been retrieved by the event arm, but haven't been examined by its subsetters yet.
+</p>
+<p>
+The last table, Failures, has events the event arm's subsetters rejected.  To figure out why, you can go to the configuration file for this run and compare the settings on the subsetters in the event arm against the data for the events in this table.
+</p>
+</div>
+<menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
+</body>
+</html>
+</template>
