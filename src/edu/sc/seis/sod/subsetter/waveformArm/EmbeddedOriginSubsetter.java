@@ -5,6 +5,9 @@ import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+
 import org.w3c.dom.*;
 
 /**
@@ -17,7 +20,7 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class EmbeddedOriginSubsetter implements Subsetter{
+public class EmbeddedOriginSubsetter implements EventStationSubsetter, Subsetter{
     public EmbeddedOriginSubsetter (Element config){
 	
 	NodeList childNodes = config.getChildNodes();
@@ -33,9 +36,9 @@ public class EmbeddedOriginSubsetter implements Subsetter{
 	
     }
     
-    public boolean accept(Origin origin, CookieJar cookies) {
+    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookies) {
 
-	return originSubsetter.accept(origin, cookies);
+	return originSubsetter.accept(null, cookies);
 
     }
  
