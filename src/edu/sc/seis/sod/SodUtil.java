@@ -12,6 +12,7 @@ import edu.sc.seis.sod.subsetter.LongitudeRange;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
@@ -452,6 +453,15 @@ public class SodUtil {
             }
         }
     }
+
+    public static int[] intArrayFromList(List list){
+        int[] array = new int[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = ((Integer)list.get(i)).intValue();
+        }
+        return array;
+    }
+
     private static Logger logger = Logger.getLogger(SodUtil.class);
 
 }// SubsetterUtil
