@@ -192,6 +192,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             //this statement is required to make
             //the state of the waveform database consistent.
             restoreDb();
+            logger.info("Waveform arm done.");
 
         } catch(InvalidDatabaseStateException idse) {
             CommonAccess.handleException("Invalid database StateException", idse);
@@ -272,7 +273,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()){
                 try {
-                ((WaveFormStatus)it.next()).update(ecp);
+                    ((WaveFormStatus)it.next()).update(ecp);
                 } catch (Exception e) {
                     // oh well, log it and go to next status processor
                     CommonAccess.handleException("Problem in setStatus", e);
