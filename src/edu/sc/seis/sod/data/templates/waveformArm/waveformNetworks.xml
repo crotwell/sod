@@ -6,7 +6,7 @@
 <script type="text/javascript">
         window.onload=function(){tableruler();}
 </script>
-//<script type="text/javascript" src="sorttable.js"></script>
+<script type="text/javascript" src="sorttable.js"></script>
 
 <style type="text/css">
 /* Sortable tables */
@@ -25,6 +25,9 @@ table.sortable span.sortarrow {
 </header>
 <body>
 
+<div id="Header">
+Networks
+</div>
 <div id="Content">
 <table class="sortable" id="netTable">
 <tr  class="title">

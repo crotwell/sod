@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <html>
-<header><title>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</title>
+<header><title>Events for $fissures.formatStation($station.get_id())</title>
 <style media="all">@import "../../main.css";</style>
 <script type="text/javascript" src="../../tableRuler.js"> </script>
 <script type="text/javascript">
@@ -24,9 +24,10 @@ table.sortable span.sortarrow {
 </style>
 </header>
 <body>
+<div id="Header">
+Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())
+</div>
 <div id="Content">
-<h2>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</h2>
-<br/>
 <table class="sortable" id="eventTable">
 <tr class="title">
 <th><b>Region</b></th>

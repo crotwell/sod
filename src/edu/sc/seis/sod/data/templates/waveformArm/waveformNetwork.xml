@@ -25,9 +25,10 @@ table.sortable span.sortarrow {
 </style>
 </header>
 <body>
+<div id="Header">
+$network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())
+</div>
 <div id="Content">
-<h2>$network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())</h2>
-<br/>
 <table class="sortable" id="stationtable">
 <tr class="title">
 <td>Code</td>
