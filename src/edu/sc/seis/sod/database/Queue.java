@@ -36,7 +36,7 @@ public interface Queue {
      * pops the first element of the queue.
      * @return a <code>java.lang.Object</code> value
      */
-    public java.lang.Object pop();
+    public int pop();
 
 
     public void setFinalStatus(EventAccess eventAccess, Status status);
@@ -66,10 +66,14 @@ public interface Queue {
      */
     public boolean getSourceAlive();
 
+    public EventAccessOperations getEventAccess(int dbid);
+
 
     public void waitForProcessing();
 
     public void closeDatabase();
+
+    public int getEventId(EventAccess eventAccess);
    
     public void setTime(String serverName,
 			String serverDNS,

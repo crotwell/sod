@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import edu.sc.seis.sod.subsetter.*;
+import edu.sc.seis.sod.database.*;
 import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
 import edu.sc.seis.fissuresUtil.cache.*;
@@ -32,9 +33,11 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 			      EventStationSubsetter eventStationSubsetter,
 			      SeismogramDCLocator seismogramDCLocator, 
 			      LocalSeismogramArm localSeismogramArm,
+			      NetworkAccess networkAccess,
 			      Channel[] successfulChannels, WaveFormArm parent, 
 			      SodExceptionListener sodExceptionListener){
 	this.eventAccess = eventAccess;
+	this.networkAccess = networkAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
 	this.seismogramDCLocator = seismogramDCLocator;
 	this.localSeismogramArm = localSeismogramArm;
@@ -66,31 +69,39 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	    boolean bESS;
 		    synchronized(eventStationSubsetter) {
 		bESS = eventStationSubsetter.accept(eventAccess, 
-						 null, 
+						 networkAccess, 
 						 successfulChannels[counter].my_site.my_station, 
 						 null);
+		if(!bESS) {
+			parent.setFinalStatus(eventAccess,
+					      successfulChannels[counter],
+					      Status.COMPLETE_REJECT,
+					      "EventStationSubsetterFailed");
+		}
 	    }
 	    if( bESS ) {
 		DataCenter dataCenter;
 		synchronized(seismogramDCLocator) {
-		    dataCenter = seismogramDCLocator.getSeismogramDC(null, 
-								     null,
+		    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
+								     networkAccess,
 								     successfulChannels[counter].my_site.my_station,
 								     null);
 		}
 		localSeismogramArm.processLocalSeismogramArm(eventAccess, 
-							     null, 
+							     networkAccess, 
 							     successfulChannels[counter], 
-							     dataCenter);
-	    }
-	}
-	
-	Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
-				     Status.COMPLETE_SUCCESS);
+							     dataCenter,
+							     parent);
+/*	Start.getQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+				     Status.COMPLETE_SUCCESS);*/
+	}//end of if
+	}//end of for
 	//parent.signalWaveFormArm();
     }
 
      private EventAccessOperations eventAccess;
+
+    private NetworkAccess networkAccess;
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 

@@ -40,6 +40,12 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 	return networkDatabase;
     }
 
+    public WaveformDatabase getWaveformDatabase() {
+	if(waveformDatabase == null) {
+	    waveformDatabase = new HSqlWaveformDb(getConnection());
+	}
+	return waveformDatabase;
+    }
 
     public Connection getConnection() {
 	try {
@@ -62,6 +68,8 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     private EventDatabase eventDatabase;
     
     private NetworkDatabase networkDatabase;
+
+    private WaveformDatabase waveformDatabase;
     
     private Connection connection;
     

@@ -274,45 +274,28 @@ public class NetworkArm {
 
     }
 
+    public Channel getChannel(int dbid) {
+	return networkDatabase.getChannel(dbid);
+    }
+
+    public NetworkAccess getNetworkAccess(int dbid) {
+	return networkDatabase.getNetworkAccess(dbid);
+    }
+
+    public int getNetworkId(Channel channel) {
+	return networkDatabase.getId("notused",
+				     "notused",
+				     channel);
+    }
+
     /**
      * Describe <code>getSuccessfulChannels</code> method here.
      *
      * @return a <code>Channel[]</code> value
      */
-    public Channel[] getSuccessfulChannels() throws Exception{
+    public int[] getSuccessfulChannels() throws Exception{
 
 	    RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
-	 //    if(lastDate != null && refreshInterval != null) {
-		
-// 		//RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
-// 		Date currentDate = Calendar.getInstance().getTime();
-// 		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
-// 		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
-// 		TimeInterval timeInterval = currentTime.difference(lastTime);
-// 		timeInterval = (TimeInterval)timeInterval.convertTo(UnitImpl.MINUTE);
-// 		int minutes = (int)timeInterval.value;
-// 		//System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
-// 		if(minutes >= refreshInterval.getValue()) {
-// 		    processNetworkArm();
-// 		    lastDate = Calendar.getInstance().getTime();
-// 		}
-// 	    } else {
-// 		edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(eventFinderSubsetter.getSourceName(),
-// 									      eventFinderSubsetter.getDNSName());
-		
-// 		if(databaseTime != null) {
-// 		    lastDate = new MicroSecondDate(databaseTime);
-// 		    //successfulChannels = networkDatabase.getChannels();
-// 		} else {						      
-// 		    processNetworkArm();
-// 		    lastDate = Calendar.getInstance().getTime();
-// 		    networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
-// 					    networkFinderSubsetter.getDNSName(),
-// 					    new MicroSecondDate(lastDate).getFissuresTime());
-// 		}
-		 
-// 	    }
-	    //System.out.println("successfulChannels length is "+successfulChannels.length);
 
 	    edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(networkFinderSubsetter.getSourceName(),
 									  networkFinderSubsetter.getDNSName());
@@ -321,8 +304,8 @@ public class NetworkArm {
 		
 		if(refreshInterval == null) {
 		    successfulChannels = networkDatabase.getChannels();
-		  
-		    return successfulChannels;
+		    return networkDatabase.getIds();
+		    // return successfulChannels;
 		}
 
 		Date currentDate = Calendar.getInstance().getTime();
@@ -342,7 +325,8 @@ public class NetworkArm {
 		}  else if(lastDate == null) {
 		      successfulChannels = networkDatabase.getChannels();
 		      lastDate = new MicroSecondDate(databaseTime);
-		      return successfulChannels;
+		      ///  return getIds();
+		      //		      return successfulChannels;
 		}
 
 		
@@ -352,8 +336,10 @@ public class NetworkArm {
 		networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
 					networkFinderSubsetter.getDNSName(),
 					new MicroSecondDate(lastDate).getFissuresTime());
+		//return networkDatabase.getIds();
 	    } 
-	    return successfulChannels;
+	    //	    return successfulChannels;
+	    return networkDatabase.getIds();
 	    
     }
     

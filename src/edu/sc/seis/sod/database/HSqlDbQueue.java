@@ -140,48 +140,30 @@ public class HSqlDbQueue implements Queue {
      * pops the first element of the queue.
      * @return a <code>java.lang.Object</code> value
      */
-    public synchronized java.lang.Object pop() {
+    public synchronized int pop() {
 	int dbid = eventDatabase.getFirst(Status.NEW);
-	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% In the method pop the value of sourceAlive is "+sourceAlive);
+	
 	while((getLength() == 0 && sourceAlive == true)  || 
 	    (dbid == -1 && sourceAlive == true)){
 	    try {
-		System.out.println("Waiting in POP())))))))))))))))()()()()()()()()()()()()()()()()()(");
-		System.out.println("Before Wait in pop of Queue");
 		wait();
-		System.out.println("After Wait in pop of Queue");
-		dbid = eventDatabase.getFirst(Status.NEW);
+		if(dbid == -1) {
+		    dbid = eventDatabase.getFirst(Status.NEW);
+		}
 	    } catch(InterruptedException ie) { 
 		ie.printStackTrace();
 	    }
 
 	}
-	org.omg.CORBA.ORB orb = null;
-	try {
-	    orb = CommonAccess.getCommonAccess().getORB();
-	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
-	    cfe.printStackTrace();
-	}
-	//int dbid = eventDatabase.getFirst(Status.NEW);
-	System.out.println("The dbid while popping is "+dbid);
 	eventDatabase.updateStatus(dbid, Status.PROCESSING);
-	String ior = eventDatabase.getObject(dbid);
-	System.out.println("The ior for the dbid is "+ior);
-	if(ior == null) return null;
-	org.omg.CORBA.Object obj = orb.string_to_object(ior);
-	obj = reValidate(dbid, obj);
-	EventAccess eventAccess = EventAccessHelper.narrow(obj);
-	if(getLength() <= 4){ 
-	    System.out.println("NOtifying the OTHER THREADS AS EVENTS ARE <= 4 #################################################################");
-	    waitFlag = false;
-	    notifyAll();
-	}
-	if(eventAccess == null) {
-	    System.out.println("The event Access is null ");
-	    System.exit(0);
-	}
-	return new CacheEvent(eventAccess);
-	//return eventAccess;
+	return dbid;
+// 	EventAccess eventAccess = getEventAccess(dbid);
+// 	if(getLength() <= 4){ 
+// 	    waitFlag = false;
+// 	    notifyAll();
+// 	}
+
+// 	return new CacheEvent(eventAccess);
     }
 
     private org.omg.CORBA.Object reValidate(int dbid, org.omg.CORBA.Object obj) {
@@ -218,6 +200,10 @@ public class HSqlDbQueue implements Queue {
 	    return obj;
 	}
 
+    }
+   
+    public int getEventId(EventAccess eventAccess) {
+	return eventDatabase.get(eventAccess);
     }
 
   
@@ -297,6 +283,21 @@ public class HSqlDbQueue implements Queue {
 	    e.printStackTrace();
 	    return null;
 	}
+    }
+
+    public EventAccessOperations getEventAccess(int dbid) {
+	org.omg.CORBA.ORB orb = null;
+	try {
+	    orb = CommonAccess.getCommonAccess().getORB();
+	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
+	    cfe.printStackTrace();
+	}
+	String ior = eventDatabase.getObject(dbid);
+	if(ior == null) return null;
+	org.omg.CORBA.Object obj = orb.string_to_object(ior);
+	obj = reValidate(dbid, obj);
+	EventAccess eventAccess = EventAccessHelper.narrow(obj);
+	return new CacheEvent(eventAccess);
     }
 
     public void closeDatabase() {

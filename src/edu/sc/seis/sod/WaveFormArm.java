@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import edu.sc.seis.sod.subsetter.*;
+import edu.sc.seis.sod.database.*;
 import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
 import edu.sc.seis.fissuresUtil.cache.*;
@@ -44,7 +45,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	this.networkArm = networkArm;
 	addSodExceptionListener(sodExceptionListener);
 	this.sodExceptionListener = sodExceptionListener;
-	pool = new ThreadPool(5);
+	pool = new ThreadPool(5, this);
     }
 	
     /**
@@ -53,36 +54,49 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      */
     public void run() {
 	EventAccessOperations eventAccess = null;  
+	int eventid;
 	//ThreadPool pool = new ThreadPool(5);
 	//getThreadGroup().list();
 		try {
 	    System.out.println("IN The waveform Arm Thread before POPPING");
 	    int i = 0;
-	    eventAccess = (EventAccessOperations)Start.getEventQueue().pop();
-	     logger.debug("The queue is size "+Start.getEventQueue().getLength());
+	    eventid = Start.getEventQueue().pop();
+	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
 	    // if(Start.getEventQueue().getLength() < 4) notifyAll();
-	    while(eventAccess != null) {
-		logger.debug("The name of the event is "+eventAccess.get_attributes().name);
-		Channel[] successfulChannels = 
+	    while(eventid != -1) {
+		int[] successfulChannels = 
 		    networkArm.getSuccessfulChannels();
-
-		Runnable work = new WaveFormArmThread(eventAccess, 
-						      eventStationSubsetter,
-						      seismogramDCLocator,
-						      localSeismogramArm,
-						      successfulChannels, 
-						      this,
-						      sodExceptionListener);
+		//when the threads are really changed to per channel base ..
+		// the below for loop must be removed...
+		for(int counter = 0; counter < successfulChannels.length; counter++) {
+		 //    Channel[] paramChannels = new Channel[1];
+// 		    Start.getWaveformQueue().push(eventid, successfulChannels[counter]);
+			
+// 		    paramChannels[0] = networkArm.getChannel(successfulChannels[counter]);
+// 		    eventAccess = Start.getEventQueue().getEventAccess(eventid);
+		  
+// 		    NetworkAccess networkAccess = networkArm.getNetworkAccess(successfulChannels[counter]);
+// 		    Runnable work = new WaveFormArmThread(eventAccess, 
+// 							  eventStationSubsetter,
+// 							  seismogramDCLocator,
+// 							  localSeismogramArm,
+// 							  networkAccess,
+// 							  paramChannels, 
+// 							  this,
+// 							  sodExceptionListener);
 	
-		
 		    
-		pool.doWork(work);
+		    Start.getWaveformQueue().push(eventid, successfulChannels[counter]);
+		    
+		    // pool.doWork(work);
+		}
 		
-		eventAccess = 
-		    (EventAccessOperations)Start.getEventQueue().pop();
+		eventid = 
+		    Start.getEventQueue().pop();
 	    }   
 	    logger.debug("CALLING THE FINISHED METHOD OF THE POOL");
-	    pool.finished();
+	    //pool.finished();
+	    Start.getWaveformQueue().setSourceAlive(false);
 	     pool.join(); 
 	    logger.debug("The active count is "+Thread.activeCount());
 	    System.out.println("Before exiting the wave form arm ");
@@ -129,6 +143,39 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	notifyAll();
     }
 
+    public synchronized int getNetworkId(Channel channel) {
+	return networkArm.getNetworkId(channel);
+    }
+
+    public synchronized int getEventId(EventAccess eventAccess) {
+	return Start.getEventQueue().getEventId(eventAccess);
+    }
+
+    public synchronized void setFinalStatus(EventAccessOperations eventAccess,
+					    Channel channel,
+					    Status status,
+					    String reason) {
+	int eventid = getEventId((EventAccess)
+		((CacheEvent)eventAccess).getEventAccess());
+	int networkid = getNetworkId(channel);
+	Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, networkid),
+	status, reason);
+	
+	//now check if the eventn from the event database must be deleted..
+	try {
+	    if(Start.getWaveformQueue().getSuccessfulChannelCount(eventid) == 0) {
+		Start.getWaveformQueue().delete(eventid);
+		Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+						     Status.COMPLETE_SUCCESS);
+	    } // else {
+// 		Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+// 						     Status.COMPLETE_REJECT);
+// 	    }
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+    }
+
 
     class ThreadWorker extends Thread {
 
@@ -147,13 +194,14 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	public void run() {
 	    Runnable work = pool.getWork();
 	    logger.debug("In the run method of the worker before the while loop");
-	    while ( ! finished) {
+	    while ( ! finished && work != null) {
 		logger.debug("Starting the Worker Thread");
 		work.run();
 		logger.debug("THe active count of thread is ");
 		///getThreadGroup().list();
 		logger.debug("GO AND GET NEW WORK");
 		work = pool.getWork();
+		
 		logger.debug("AFTER GETTING WOEK");
 	    } // end of while ( ! finished)
 	    //getThreadGroup().list();
@@ -166,7 +214,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
     class ThreadPool {
 
-	ThreadPool(int n) {
+	ThreadPool(int n, WaveFormArm waveformArm) {
+	    this.waveformArm = waveformArm;
 	    for (int i=0; i<n; i++) {
 		Thread t = new ThreadWorker(this);
 		t.setName("waveFormArm Worker Thread"+i);
@@ -195,25 +244,49 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	}
 
 	public synchronized Runnable getWork() {
-	    logger.debug("INSIDETHE METHOD GETWORK");
-	    while (work == null && ! finished) {
-		try {
-		    logger.debug("Waiting in the getWork METHOD");
-		    System.out.println("Before Wait in getWork of ThreadPool");
-		    wait();
-		    System.out.println("After Wait in getWork of ThreadPool");
-		} catch (InterruptedException e) { }
-	    }
-	    if (finished) {
-		logger.debug("finished everything so just...returning null");
-		notifyAll();
-		return null;
-	    } // end of if (finished)
-	    logger.debug("returning mywork");
-	    Runnable myWork = work;
-	    work = null;
-	    notifyAll();
-	    return myWork;
+
+	    	    
+	    int waveformid = Start.getWaveformQueue().pop();
+	    if(waveformid == -1) return null;
+	    int eventid = Start.getWaveformQueue().getWaveformEventId(waveformid);
+	    int networkid = Start.getWaveformQueue().getWaveformNetworkId(waveformid);
+	    
+	    EventAccessOperations eventAccess =
+		Start.getEventQueue().getEventAccess(eventid);
+	    Channel channel= networkArm.getChannel(networkid);
+	    NetworkAccess networkAccess =
+		networkArm.getNetworkAccess(networkid);
+	    Channel[] paramChannels = new Channel[1];
+	    paramChannels[0] = channel;
+	    Runnable work = new WaveFormArmThread(eventAccess, 
+						  eventStationSubsetter,
+						  seismogramDCLocator,
+						  localSeismogramArm,
+						  networkAccess,
+						  paramChannels, 
+						  waveformArm,
+						  sodExceptionListener);
+	    return work;
+	    
+	    //   logger.debug("INSIDETHE METHOD GETWORK");
+	    // 	    while (work == null && ! finished) {
+	    // 		try {
+	    // 		    logger.debug("Waiting in the getWork METHOD");
+	    // 		    System.out.println("Before Wait in getWork of ThreadPool");
+	    // 		    wait();
+	    // 		    System.out.println("After Wait in getWork of ThreadPool");
+	    // 		} catch (InterruptedException e) { }
+	    // 	    }
+	    // 	    if (finished) {
+	    // 		logger.debug("finished everything so just...returning null");
+	    // 		notifyAll();
+	    // 		return null;
+	    // 	    } // end of if (finished)
+	    // 	    logger.debug("returning mywork");
+	    // 	    Runnable myWork = work;
+	    // 	    work = null;
+	    // 	    notifyAll();
+	    // 	    return myWork;
 	}
 
 	public void join() {
@@ -257,6 +330,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
 
 	private boolean finished = false;
+
+	private WaveFormArm waveformArm;
     }
 
     

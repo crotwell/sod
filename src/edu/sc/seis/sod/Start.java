@@ -104,6 +104,11 @@ public class Start implements SodExceptionListener {
 
     }
 
+
+    public static WaveformQueue getWaveformQueue() {
+	return waveformQueue;
+    }
+
     public static void setProperties(Properties props) {
 	
 	props = props;
@@ -175,6 +180,7 @@ public class Start implements SodExceptionListener {
 
 	    Start.props = props;
 	    eventQueue = new HSqlDbQueue(props);
+	    waveformQueue = new WaveformDbQueue(props);
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -227,6 +233,7 @@ public class Start implements SodExceptionListener {
 	    start.startA();
 	    eventArmThread.join();
 	    waveFormArmThread.join();
+	   
 	    getEventQueue().closeDatabase();
 	    System.out.println("After closing the database of eventQueue");
 	    //Start starta = new Start(null);
@@ -297,6 +304,8 @@ public class Start implements SodExceptionListener {
     EventArm eventArm;
 
     private static Queue eventQueue; //= new HSqlDbQueue();
+
+    private static WaveformQueue waveformQueue;
     
     NetworkArm networkArm;
 

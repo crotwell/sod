@@ -27,6 +27,8 @@ public  abstract class AbstractDatabaseManager  {
     
     public abstract NetworkDatabase getNetworkDatabase();
 
+    public abstract WaveformDatabase getWaveformDatabase();
+
     public void close() {
 	try {
 	    getEventDatabase().delete(Status.COMPLETE_SUCCESS);

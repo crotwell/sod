@@ -40,6 +40,14 @@ public class PostgresDbManager extends AbstractDatabaseManager{
 	}
 	return networkDatabase;
     }
+    
+    public WaveformDatabase getWaveformDatabase() {
+
+	if(waveformDatabase == null) {
+	    waveformDatabase = new PostgresWaveformDb(getConnection());
+	}
+	return waveformDatabase;
+    }
 
     public Connection getConnection() {
 	try {
@@ -57,12 +65,16 @@ public class PostgresDbManager extends AbstractDatabaseManager{
 	}
 	
     }
+
+    
     
     private ConfigDatabase eventConfigDb;
     
     private EventDatabase eventDatabase;
 
     private NetworkDatabase networkDatabase;
+
+    private WaveformDatabase waveformDatabase;
 
     private Connection connection;
         

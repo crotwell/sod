@@ -61,8 +61,9 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 						  " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
 	    getIdStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase "+
-						    " WHERE serverName = ? AND "+
-						    " serverDNS = ? AND " +
+						    " WHERE "+
+						   //" serverName = ? AND "+
+						    //" serverDNS = ? AND " +
 						    " network_code = ? AND "+
 						    " station_code = ? AND "+
 						    " site_code = ? AND "+
@@ -71,8 +72,10 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 						    " channel_time = ? ");
 
 
-	    getChannelsStmt = connection.prepareStatement(" SELECT networkid, channelIdIOR FROM networkdatabase ");
-						    
+	    getIdsStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase ");
+	    
+	    getChannelByIdStmt = connection.prepareStatement(" SELECT channelIdIOR FROM networkdatabase "+
+							 " WHERE networkid = ? ");
 
 	} catch(Exception e) {
 	    e.printStackTrace();
@@ -90,7 +93,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 		    edu.iris.Fissures.Time channel_time,
 		    String channelIdIOR) {
 	try {
-	    int index = insert(putStmt,
+	    int index = insert(0,putStmt,
 			       1,
 			       serverName,
 			       serverDNS,
@@ -149,7 +152,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	    
     }
     
-    private int insert(PreparedStatement stmt,
+    private int insert(int option,PreparedStatement stmt,
 		       int index,
 		       String serverName,
 		       String serverDNS,
@@ -160,8 +163,10 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 		       edu.iris.Fissures.Time network_time,
 		       edu.iris.Fissures.Time channel_time) {
 	try {
+	   if(option == 0) {
 	    stmt.setString(index++, serverName);
 	    stmt.setString(index++, serverDNS);
+	  }
 	    stmt.setString(index++, network_code);
 	    stmt.setString(index++, station_code);
 	    stmt.setString(index++, site_code);
@@ -185,7 +190,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 		   edu.iris.Fissures.Time network_time,
 		   edu.iris.Fissures.Time channel_time) {
 	try {
-	    insert(getIdStmt,
+	    insert(1,getIdStmt,
 		   1,
 		   serverName,
 		   serverDNS,
@@ -226,6 +231,25 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	      
     }
 
+
+    public int[] getIds() {
+	try {
+	    ResultSet rs = getIdsStmt.executeQuery();
+	    ArrayList arrayList = new ArrayList();
+	    while(rs.next()) {
+		arrayList.add(new Integer(rs.getInt(1)));
+	    }
+	    int[] rtnValues = new int[arrayList.size()];
+	    for(int counter = 0; counter < arrayList.size(); counter++) {
+		rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	    }
+	    return rtnValues;
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return new int[0];
+    }
+
     public String getTimeConfigName() {
 	return "networktimeconfig";
     }
@@ -248,34 +272,53 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 
     public Channel[] getChannels() {
 	try {
-	    ResultSet rs = getChannelsStmt.executeQuery();
-	    ArrayList arrayList = new ArrayList();
-	    while(rs.next()) {
-		String ior = rs.getString("channelIdIOR");
-		//System.out.println("ChannelId that is obtained is "+ior);
-		org.omg.CORBA.ORB orb = CommonAccess.getCommonAccess().getORB();
-		org.omg.CORBA.Object obj = orb.string_to_object(ior);
-		NetworkAccess networkAccess = NetworkAccessHelper.narrow(obj);
-		// here I must revalidate
-		int dbid = rs.getInt("networkid");
-		//System.out.println("before retrieveing the channel");
-		//System.out.println(networkAccess.get_attributes().name);
-		Channel channel = networkAccess.retrieve_channel(getChannelId(dbid));
-		//System.out.println("After retrieveing the channel");
-		arrayList.add(channel);
-		
+
+	    int[] ids = getIds();
+	    Channel[] rtnValues = new Channel[ids.length];
+	    for(int counter = 0; counter < ids.length; counter++) {
+
+		rtnValues[counter] = getChannel(ids[counter]);
 	    }
-	    
-	    
-	    Channel[] rtnValues = new Channel[arrayList.size()];
-	    rtnValues = (Channel[]) arrayList.toArray(rtnValues);
 	    return rtnValues;
 	} catch(Exception e) {
 	    e.printStackTrace();
 	    return new Channel[0];
 	}
     }
+    
+    public Channel getChannel(int dbid) {
+	try {
+	    NetworkAccess networkAccess = getNetworkAccess(dbid);
+	    // here I must revalidate
+	    //System.out.println("before retrieveing the channel");
+	    //System.out.println(networkAccess.get_attributes().name);
+	    Channel channel = networkAccess.retrieve_channel(getChannelId(dbid));
+	    //System.out.println("After retrieveing the channel");
+	    return channel;
+       	} catch(Exception sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
 
+    public NetworkAccess getNetworkAccess(int dbid) {
+	try {
+	    getChannelByIdStmt.setInt(1, dbid);
+	    ResultSet rs = getChannelByIdStmt.executeQuery();
+	    if(rs.next()) {
+		String ior = rs.getString("channelIdIOR");
+		//System.out.println("ChannelId that is obtained is "+ior);
+		org.omg.CORBA.ORB orb = CommonAccess.getCommonAccess().getORB();
+		org.omg.CORBA.Object obj = orb.string_to_object(ior);
+		NetworkAccess networkAccess = NetworkAccessHelper.narrow(obj);
+		return networkAccess;
+	    }
+	} catch(Exception sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+    
     public NetworkId getNetworkId(int dbid) {
 	String network_code = getNetworkCode(dbid);
 	edu.iris.Fissures.Time network_time = getNetworkTime(dbid);
@@ -370,6 +413,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
     
     private PreparedStatement getIdStmt;
 
-    private PreparedStatement getChannelsStmt;
+    private PreparedStatement getIdsStmt;
+
+    private PreparedStatement getChannelByIdStmt;
     
 }// AbstractNetworkDatabase

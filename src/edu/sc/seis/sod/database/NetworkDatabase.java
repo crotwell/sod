@@ -23,7 +23,7 @@ public interface  NetworkDatabase {
 // 		    edu.iris.Fissures.Time channel_time,
 // 		    String channelIdIOR);
 
-    public int put(String serverName,
+   public int put(String serverName,
 		   String serverDNS,
 		   Channel channel,
 		   NetworkAccess networkAccess);
@@ -40,6 +40,14 @@ public interface  NetworkDatabase {
     public void incrementTime(String serverName, String serverDNS, int numDays);
 
     public Channel[] getChannels();
+
+    public int[] getIds();
+
+    public Channel getChannel(int dbid);
+    
+    public NetworkAccess getNetworkAccess(int dbid);
+    
+    
 
 //     public int get(String serverName,
 // 		   String serverDNS,
