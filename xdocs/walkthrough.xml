@@ -165,7 +165,15 @@ it up with <code>sod.sh -f mysod.xml</code>.
 
 <section name="WEED">
 <p>
-Now that you have
+Now that you have seen the tutorial template, feel free to visit the weed template,
+also located in the ***TODO*** menu.
+It attempts to make SOD behaive similarly to the old IRIS WEED program. There are
+some areas where making the functionality exactly like WEED would have been harder
+on the user, and so it was not designed to merely be similar. In addition to the
+functionality in the Tutorial template, the WEED template also supports distance,
+azimuth and back azimuth from a fixed point for events, response output to file,
+more logical operations, and distance, azimuth, back azimuth and mid point for
+event station pairs.
 </p>
 </section>
 </body>
