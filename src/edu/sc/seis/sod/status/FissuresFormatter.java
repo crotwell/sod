@@ -73,18 +73,18 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
-        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
-        return new QuantityImpl(d.delta, UnitImpl.DEGREE);
+        DistAz d = new DistAz(from, to);
+        return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
 
     public static QuantityImpl getAzimuth(Location from, Location to) {
-        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
-        return new QuantityImpl(d.az, UnitImpl.DEGREE);
+        DistAz d = new DistAz(from, to);
+        return new QuantityImpl(d.getAz(), UnitImpl.DEGREE);
     }
 
     public static QuantityImpl getBackAzimuth(Location from, Location to) {
-        DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
-        return new QuantityImpl(d.baz, UnitImpl.DEGREE);
+        DistAz d = new DistAz(from, to);
+        return new QuantityImpl(d.getBaz(), UnitImpl.DEGREE);
     }
 
 }

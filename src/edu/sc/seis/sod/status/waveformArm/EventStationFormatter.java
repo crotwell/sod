@@ -43,9 +43,8 @@ public class EventStationFormatter extends StationFormatter{
 
     private class Distance implements StationTemplate{
         public String getResult(Station station) {
-            DistAz dAz = new DistAz(CacheEvent.extractOrigin(ev).my_location,
-                                    station.my_location);
-            return df.format(dAz.delta);
+            DistAz dAz = new DistAz(station, ev);
+            return df.format(dAz.getDelta());
         }
 
         private DecimalFormat df = new DecimalFormat("000.00");
@@ -53,9 +52,8 @@ public class EventStationFormatter extends StationFormatter{
 
     private class BackAz implements StationTemplate{
         public String getResult(Station station) {
-            DistAz dAz = new DistAz(CacheEvent.extractOrigin(ev).my_location,
-                                    station.my_location);
-            return df.format(dAz.baz);
+            DistAz dAz = new DistAz(station, ev);
+            return df.format(dAz.getBaz());
         }
 
         private DecimalFormat df = new DecimalFormat("000.00");
