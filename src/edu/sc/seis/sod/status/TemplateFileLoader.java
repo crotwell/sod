@@ -25,7 +25,7 @@ public class TemplateFileLoader{
     public static Element getTemplate(ClassLoader cl, String loc) throws MalformedURLException, SAXException, ParserConfigurationException, IOException{
         URL url = getUrl(cl, loc);
         InputStream in = url.openStream();
-        Document doc = Start.createDoc(new InputSource(in));
+        Document doc = Start.createDoc(new InputSource(in), loc);
         return (Element)doc.getFirstChild();
 
     }
@@ -38,9 +38,5 @@ public class TemplateFileLoader{
             url = new URL(loc);
         }
         return url;
-    }
-
-    private static String getError(Element el){
-        return "Trouble loading template file from element " + el.getNodeName();
     }
 }

@@ -244,7 +244,7 @@ public class ChannelGrouper {
 			if(!validator.validate(getRules(configFileLoc))){
 				logger.info("Invalid config file!");
 			}else{
-				Document doc = Start.createDoc(getRules(configFileLoc));
+				Document doc = Start.createDoc(getRules(configFileLoc), configFileLoc);
 				NodeList ruleList = doc.getElementsByTagName("rule");
 				rules = new Element[ruleList.getLength()];
 				for(int i=0;i<ruleList.getLength();i++) {
