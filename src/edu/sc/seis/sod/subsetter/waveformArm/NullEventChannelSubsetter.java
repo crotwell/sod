@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.EventChannelSubsetter;
+import edu.sc.seis.sod.subsetter.waveFormArm.EventChannelSubsetter;
 
 
 /**

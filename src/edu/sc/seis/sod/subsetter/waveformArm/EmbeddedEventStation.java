@@ -21,18 +21,17 @@ import edu.iris.Fissures.*;
 
 public class EmbeddedEventStation  implements EventChannelSubsetter{
     public EmbeddedEventStation(Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-	    node = childNodes.item(counter);
-	    if(node instanceof Element) {
-		eventStationSubsetter = 
-		    (EventStationSubsetter) SodUtil.load((Element)node,
-							 eventArmPackage);
-		break;
-	    }
-	}
+    
+    NodeList childNodes = config.getChildNodes();
+    Node node;
+    for(int counter = 0; counter < childNodes.getLength(); counter++) {
+        node = childNodes.item(counter);
+        if(node instanceof Element) {
+        eventStationSubsetter =
+            (EventStationSubsetter) SodUtil.load((Element)node, "eventArm");
+        break;
+        }
+    }
     }
 
     /**
@@ -45,16 +44,16 @@ public class EmbeddedEventStation  implements EventChannelSubsetter{
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations o,  
-			  NetworkAccess network,
-			  Channel channel,  
-			  CookieJar cookies) 
-	throws Exception
+    public boolean accept(EventAccessOperations o,
+              NetworkAccess network,
+              Channel channel,
+              CookieJar cookies)
+    throws Exception
     {
-	return eventStationSubsetter.accept(o, 
-					    network, 
-					    channel.my_site.my_station, 
-					    cookies);
+    return eventStationSubsetter.accept(o,
+                        network,
+                        channel.my_site.my_station,
+                        cookies);
     }
 
     EventStationSubsetter eventStationSubsetter;

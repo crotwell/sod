@@ -37,18 +37,18 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter{
      * @param config an <code>Element</code> value
      */
     public EmbeddedStationSubsetter (Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-		node = childNodes.item(counter);
-		if(node instanceof Element) {
-		    stationSubsetter = (StationSubsetter) SodUtil.load((Element)node,
-								       "edu.sc.seis.sod.subsetter.networkArm");
-		    break;
-		}
-	}
-	
+        
+        NodeList childNodes = config.getChildNodes();
+        Node node;
+        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+            node = childNodes.item(counter);
+            if(node instanceof Element) {
+                stationSubsetter = (StationSubsetter) SodUtil.load((Element)node,
+                                                                   "networkArm");
+                break;
+            }
+        }
+        
     }
     
     /**
@@ -61,13 +61,13 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter{
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) throws Exception{
-
-	return stationSubsetter.accept(network, station, cookies);
-	
-
+        
+        return stationSubsetter.accept(network, station, cookies);
+        
+        
     }
- 
-  
+    
+    
     private StationSubsetter stationSubsetter = null;
     
 }// EmbeddedStationSubsetter

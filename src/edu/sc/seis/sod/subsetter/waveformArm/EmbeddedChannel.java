@@ -1,13 +1,16 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.sod.ChannelSubsetter;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.waveFormArm.EventChannelSubsetter;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * EmbeddedEventStation.java
@@ -21,18 +24,17 @@ import edu.iris.Fissures.*;
 
 public class EmbeddedChannel  implements EventChannelSubsetter{
     public EmbeddedChannel(Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-	    node = childNodes.item(counter);
-	    if(node instanceof Element) {
-		channelSubsetter = 
-		    (ChannelSubsetter) SodUtil.load((Element)node,
-						    networkArmPackage);
-		break;
-	    }
-	}
+    
+    NodeList childNodes = config.getChildNodes();
+    Node node;
+    for(int counter = 0; counter < childNodes.getLength(); counter++) {
+        node = childNodes.item(counter);
+        if(node instanceof Element) {
+        channelSubsetter =
+            (ChannelSubsetter) SodUtil.load((Element)node, "networkArm");
+        break;
+        }
+    }
     }
 
     /**
@@ -46,14 +48,14 @@ public class EmbeddedChannel  implements EventChannelSubsetter{
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations o,
-			  NetworkAccess network,
-			  Channel channel,  
-			  CookieJar cookies) 
-	throws Exception
+              NetworkAccess network,
+              Channel channel,
+              CookieJar cookies)
+    throws Exception
     {
-	return channelSubsetter.accept(network, 
-				       channel, 
-				       cookies);
+    return channelSubsetter.accept(network,
+                       channel,
+                       cookies);
     }
 
     ChannelSubsetter channelSubsetter;

@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
  * sample xml representation of EventArea are
  *
  *
-  *              &lt;stationArea&gt;
+ *              &lt;stationArea&gt;
  *                           &lt;boxArea&gt;
  *                                    &lt;latitudeRange&gt;
  *                                                   &lt;min&gt;30&lt;/min&gt;
@@ -45,27 +45,18 @@ import org.w3c.dom.NodeList;
  */
 
 
-public class EventArea
-    implements OriginSubsetter,SodElement {
-    
-    /**
-     * Creates a new <code>EventArea</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
+public class EventArea implements OriginSubsetter,SodElement {
     public EventArea (Element config) throws ConfigurationException {
-    NodeList children = config.getChildNodes();
-    for(int i = 0; i < children.getLength() ; i++) {
-        Node node = children.item(i);
-        if(node instanceof Element) {
-            area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "edu.sc.seis.sod");
-            break;
+        NodeList children = config.getChildNodes();
+        for(int i = 0; i < children.getLength() ; i++) {
+            Node node = children.item(i);
+            if(node instanceof Element) {
+                area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "eventArm");
+                break;
+            }
         }
     }
     
-    }
-
     /**
      * returns true if the given origin is within the area specified in the
      * configuration file else returns false.
@@ -77,19 +68,19 @@ public class EventArea
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) {
         if(area instanceof edu.iris.Fissures.BoxArea) {
-        edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
+            edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
+            
+            if(e.my_location.latitude >= boxArea.min_latitude
+               && e.my_location.latitude <=boxArea.max_latitude
+               && e.my_location.longitude >= boxArea.min_longitude
+               && e.my_location.longitude <= boxArea.max_longitude) {
+                return true;
+            } else return false;
+            
+        }
+        return true;
         
-        if(e.my_location.latitude >= boxArea.min_latitude
-           && e.my_location.latitude <=boxArea.max_latitude
-           && e.my_location.longitude >= boxArea.min_longitude
-           && e.my_location.longitude <= boxArea.max_longitude) {
-            return true;
-        } else return false;
-    
     }
-    return true;
     
-    }
-
     private edu.iris.Fissures.Area area = null;
 }// EventArea

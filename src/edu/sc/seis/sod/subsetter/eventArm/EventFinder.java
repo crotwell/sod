@@ -92,30 +92,27 @@ public class EventFinder extends AbstractSource implements SodElement {
         CommonAccess commonAccess = CommonAccess.getCommonAccess();
         processConfig();
         fissuresNamingService = commonAccess.getFissuresNamingService();
-
+        
     }
-
+    
     /**
      * Describe <code>processConfig</code> method here.
      *
      * @exception ConfigurationException if an error occurs
      */
     protected void processConfig() throws ConfigurationException{
-
+        
         NodeList childNodes = config.getChildNodes();
         Node node;
         catalogs = new ArrayList();
         contributors = new ArrayList();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
-
+            
             node = childNodes.item(counter);
             if(node instanceof Element) {
-
                 String tagName = ((Element)node).getTagName();
                 if(!tagName.equals("name") && !tagName.equals("dns")) {
-
-
-                    Object object = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter.eventArm");
+                    Object object = SodUtil.load((Element)node, "eventArm");
                     if(tagName.equals("originDepthRange")) depthRange = ((OriginDepthRange)object);
                     else if(tagName.equals("eventTimeRange")) eventTimeRange = ((EventTimeRange)object);
                     else if(tagName.equals("magnitudeRange")) magnitudeRange = (MagnitudeRange)object;
@@ -130,11 +127,11 @@ public class EventFinder extends AbstractSource implements SodElement {
                     }
                 }
             }
-
+            
         }
-
+        
     }
-
+    
     /**
      * Describe <code>getEventDC</code> method here.
      *
@@ -146,7 +143,7 @@ public class EventFinder extends AbstractSource implements SodElement {
         ((NSEventDC)eventDC).reset();
         return eventDC;
     }
-
+    
     public EventDCOperations getEventDC()
         throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
         if (eventDC == null) {
@@ -154,8 +151,8 @@ public class EventFinder extends AbstractSource implements SodElement {
         }
         return eventDC;
     }
-
-
+    
+    
     /**
      * Describe <code>getDepthRange</code> method here.
      *
@@ -163,20 +160,20 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public OriginDepthRange getDepthRange() {
         return depthRange;
-
+        
     }
-
+    
     /**
      * Describe <code>getMagnitudeRange</code> method here.
      *
      * @return a <code>MagnitudeRange</code> value
      */
     public MagnitudeRange getMagnitudeRange() {
-
+        
         return magnitudeRange;
-
+        
     }
-
+    
     /**
      * Describe <code>getArea</code> method here.
      *
@@ -184,68 +181,68 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public edu.iris.Fissures.Area getArea() {
         return area;
-
+        
     }
-
+    
     /**
      * Describe <code>getEventTimeRange</code> method here.
      *
      * @return an <code>EventTimeRange</code> value
      */
     public EventTimeRange getEventTimeRange() {
-
+        
         return eventTimeRange;
-
+        
     }
-
+    
     /**
      * Describe <code>getCatalogs</code> method here.
      *
      * @return a <code>String[]</code> value
      */
     public String[] getCatalogs() {
-
+        
         String[] rtnValues = new String[catalogs.size()];
         rtnValues = (String[]) catalogs.toArray(rtnValues);
         return rtnValues;
     }
-
+    
     /**
      * Describe <code>getContributors</code> method here.
      *
      * @return a <code>String[]</code> value
      */
     public String[] getContributors() {
-
+        
         String[] rtnValues = new String[contributors.size()];
         rtnValues = (String[])contributors.toArray(rtnValues);
         return rtnValues;
     }
-
-
+    
+    
     private FissuresNamingService fissuresNamingService = null;
-
+    
     private EventDCOperations eventDC = null;
-
+    
     private Element config = null;
-
+    
     private Catalog catalog;
-
+    
     private Contributor contributor;
-
+    
     private ArrayList catalogs;
-
+    
     private ArrayList contributors;
-
+    
     private OriginDepthRange depthRange;
-
+    
     private MagnitudeRange magnitudeRange;
-
+    
     private EventTimeRange eventTimeRange;
-
+    
     private edu.iris.Fissures.Area area;
-
+    
     static Category logger =
         Category.getInstance(EventFinder.class.getName());
-
+    
 }// EventFinder

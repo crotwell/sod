@@ -11,7 +11,7 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
-import edu.sc.seis.sod.subsetter.EventFormatter;
+import edu.sc.seis.sod.status.EventFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

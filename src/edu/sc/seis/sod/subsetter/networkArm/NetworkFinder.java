@@ -49,7 +49,7 @@ public class NetworkFinder extends AbstractSource{
         objectName = getSourceName();
         Element subElement = SodUtil.getElement(element,"refreshInterval");
         if(subElement != null) {
-            Object obj = SodUtil.load(subElement, "edu.sc.seis.sod.subsetter");
+            Object obj = SodUtil.load(subElement, "networkArm");
             refreshInterval = (RefreshInterval)obj;
         } else refreshInterval = null;
 

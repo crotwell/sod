@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
+
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;

@@ -1,14 +1,16 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.EventStationSubsetter;
+import edu.sc.seis.sod.OriginSubsetter;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * specifies the embeddedOriginSubsetter
@@ -31,18 +33,18 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
      * @param config an <code>Element</code> value
      */
     public EmbeddedOriginSubsetter (Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-		node = childNodes.item(counter);
-		if(node instanceof Element) {
-		    originSubsetter = (OriginSubsetter) SodUtil.load((Element)node,
-								 "edu.sc.seis.sod.subsetter.eventArm");
-		    break;
-		}
-	}
-	
+        
+        NodeList childNodes = config.getChildNodes();
+        Node node;
+        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+            node = childNodes.item(counter);
+            if(node instanceof Element) {
+                originSubsetter = (OriginSubsetter) SodUtil.load((Element)node,
+                                                                 "eventArm");
+                break;
+            }
+        }
+        
     }
     
     /**
@@ -55,12 +57,12 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) throws Exception{
-
-	return originSubsetter.accept(eventAccess, eventAccess.get_preferred_origin(), cookies);
-	
+        
+        return originSubsetter.accept(eventAccess, eventAccess.get_preferred_origin(), cookies);
+        
     }
- 
-  
+    
+    
     private OriginSubsetter originSubsetter = null;
     
 }// EmbeddedOriginSubsetter

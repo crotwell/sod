@@ -13,7 +13,7 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 public class Interval implements Subsetter{
-
+    
     /**
      * Creates a new <code>Interval</code> instance.
      *
@@ -22,7 +22,7 @@ public class Interval implements Subsetter{
     public Interval(Element config) {
         this.config = config;
     }
-
+    
     /**
      * Describe <code>getUnit</code> method here.
      *
@@ -30,9 +30,9 @@ public class Interval implements Subsetter{
      */
     public UnitImpl getUnit() throws ConfigurationException{
         Element element = SodUtil.getElement(config, "unit");
-        return (UnitImpl)SodUtil.load(element,"edu.sc.seis.sod.subsetter");//here the second parameter doesnot matter.
+        return (UnitImpl)SodUtil.load(element,"");//here the second parameter doesnot matter.
     }
-
+    
     /**
      * Describe <code>getValue</code> method here.
      *
@@ -41,14 +41,14 @@ public class Interval implements Subsetter{
     public double getValue() {
         return Double.parseDouble(SodUtil.getNestedText(SodUtil.getElement(config,"value")));
     }
-
+    
     public QuantityImpl getQuantity() throws ConfigurationException{
         return new QuantityImpl(getValue(), getUnit());
     }
-
+    
     public TimeInterval getTimeInterval() throws ConfigurationException {
         return new TimeInterval(getQuantity());
     }
-
+    
     private Element config;
 }//Interval

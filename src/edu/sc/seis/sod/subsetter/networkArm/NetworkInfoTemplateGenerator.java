@@ -5,6 +5,7 @@
  */
 
 package edu.sc.seis.sod.subsetter.networkArm;
+import edu.sc.seis.sod.status.networkArm.*;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -15,9 +16,9 @@ import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.NetworkStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.NetworkFormatter;
-import edu.sc.seis.sod.subsetter.StationFormatter;
-import edu.sc.seis.sod.subsetter.TemplateFileLoader;
+import edu.sc.seis.sod.status.NetworkFormatter;
+import edu.sc.seis.sod.status.StationFormatter;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;

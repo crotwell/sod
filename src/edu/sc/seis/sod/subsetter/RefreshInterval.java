@@ -17,8 +17,5 @@ import org.w3c.dom.*;
  */
 
 public class RefreshInterval extends Interval{
-    public RefreshInterval (Element config){
-	super(config);
-    }
-        
+    public RefreshInterval (Element config){ super(config); }
 }// RefreshInterval

@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 
-import edu.sc.seis.sod.subsetter.*;
+
 import java.util.*;
 import org.w3c.dom.*;
 import edu.iris.Fissures.IfEvent.*;

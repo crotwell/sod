@@ -23,17 +23,17 @@ import edu.sc.seis.sod.subsetter.DepthRange;
  *                      &lt;max&gt;100&lt;/max&gt;
  *              &lt;/longitudeRange&gt;
  *      &lt;/boxArea&gt;
- *	&lt;depthRange&gt;
- *	        &lt;unitRange&gt;
- *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
- *			&lt;min&gt;-1000&lt;/min&gt;
- *			&lt;max&gt;1000&lt;/max&gt;
- *		&lt;/unitRange&gt;
- *	&lt;/depthRange&gt;
- * &lt;/absolute&gt; 
+ *  &lt;depthRange&gt;
+ *          &lt;unitRange&gt;
+ *          &lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *          &lt;min&gt;-1000&lt;/min&gt;
+ *          &lt;max&gt;1000&lt;/max&gt;
+ *      &lt;/unitRange&gt;
+ *  &lt;/depthRange&gt;
+ * &lt;/absolute&gt;
  *
  *                      (or)
- * 
+ *
  *
   * &lt;absolute&gt;
  *      &lt;boxArea&gt;
@@ -51,53 +51,53 @@ import edu.sc.seis.sod.subsetter.DepthRange;
  *                      (or)
  *
  * &lt;absolute&gt;
- *	&lt;depthRange&gt;
- *	        &lt;unitRange&gt;
- *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
- *			&lt;min&gt;-1000&lt;/min&gt;
- *			&lt;max&gt;1000&lt;/max&gt;
- *		&lt;/unitRange&gt;
- *	&lt;/depthRange&gt;
+ *  &lt;depthRange&gt;
+ *          &lt;unitRange&gt;
+ *          &lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *          &lt;min&gt;-1000&lt;/min&gt;
+ *          &lt;max&gt;1000&lt;/max&gt;
+ *      &lt;/unitRange&gt;
+ *  &lt;/depthRange&gt;
  * &lt;/absolute&gt;
  *</pre>
  */
 
 public class Absolute extends PhaseInteractionType {
 
-	public Absolute(Element config) throws ConfigurationException{
-		super(config);	
-		this.config = config;
-	}
+    public Absolute(Element config) throws ConfigurationException{
+        super(config);
+        this.config = config;
+    }
 
-	public void processConfig() throws ConfigurationException{
-		NodeList nodeList = config.getChildNodes();
-		Node node;
-		for(int counter = 0; counter < nodeList.getLength(); counter++) {
-			node = nodeList.item(counter);
-			if(node instanceof Element) {
-				Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter");
-				if(obj instanceof Area) area = (Area)obj;
-				else if(obj instanceof DepthRange) depthRange = (DepthRange)obj;
-			}
+    public void processConfig() throws ConfigurationException{
+        NodeList nodeList = config.getChildNodes();
+        Node node;
+        for(int counter = 0; counter < nodeList.getLength(); counter++) {
+            node = nodeList.item(counter);
+            if(node instanceof Element) {
+                Object obj = SodUtil.load((Element)node, "waveFormArm");
+                if(obj instanceof Area) area = (Area)obj;
+                else if(obj instanceof DepthRange) depthRange = (DepthRange)obj;
+            }
 
-		}
+        }
 
-	}
+    }
 
-	public edu.iris.Fissures.Area getArea() { 
+    public edu.iris.Fissures.Area getArea() {
 
-		return this.area;
-	}
+        return this.area;
+    }
 
-	public edu.sc.seis.sod.subsetter.DepthRange getDepthRange() {
+    public edu.sc.seis.sod.subsetter.DepthRange getDepthRange() {
 
-		return this.depthRange;
+        return this.depthRange;
 
-	}
+    }
 
-	private Area area = null;
+    private Area area = null;
 
-	private DepthRange depthRange = null;
+    private DepthRange depthRange = null;
 
-	private Element config;
+    private Element config;
 }//Absolute

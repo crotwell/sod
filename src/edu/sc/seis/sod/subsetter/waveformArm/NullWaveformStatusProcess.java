@@ -1,4 +1,5 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
+import edu.sc.seis.sod.status.waveFormArm.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;

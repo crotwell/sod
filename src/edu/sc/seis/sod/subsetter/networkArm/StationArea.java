@@ -18,7 +18,7 @@ import edu.iris.Fissures.*;
  *
  * This class is used to represent the subsetter StationArea. Station Area implements StationSubsetter
  * and can be any one of GlobalArea or BoxArea or PointDistanceArea or FlinneEngdahlArea.
- * 
+ *
  * sample xml representation of StationArea are
  *
  * <pre>
@@ -39,7 +39,7 @@ import edu.iris.Fissures.*;
  */
 
 
-public class StationArea 
+public class StationArea
     implements StationSubsetter,SodElement {
     
     /**
@@ -49,15 +49,15 @@ public class StationArea
      * @exception ConfigurationException if an error occurs
      */
     public StationArea (Element config) throws ConfigurationException {
-	NodeList children = config.getChildNodes();
-	for(int i = 0; i < children.getLength() ; i++) {
-		Node node = children.item(i);
-		if(node instanceof Element) {
-			area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "edu.sc.seis.sod");	
-			break;
-		}
-	}
-	
+    NodeList children = config.getChildNodes();
+    for(int i = 0; i < children.getLength() ; i++) {
+        Node node = children.item(i);
+        if(node instanceof Element) {
+            area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
+            break;
+        }
+    }
+    
     }
 
     /**
@@ -69,18 +69,18 @@ public class StationArea
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
-	if(area instanceof edu.iris.Fissures.BoxArea) {
-		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		if(e.my_location.latitude >= boxArea.min_latitude   
-		   && e.my_location.latitude <=boxArea.max_latitude
-		   && e.my_location.longitude >= boxArea.min_longitude
-		   && e.my_location.longitude <= boxArea.max_longitude) {
-		    return true;
-		} else return false;
-	
-	} else if(area instanceof GlobalArea) return true;
-	return true;
-	
+    if(area instanceof edu.iris.Fissures.BoxArea) {
+        edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
+        if(e.my_location.latitude >= boxArea.min_latitude
+           && e.my_location.latitude <=boxArea.max_latitude
+           && e.my_location.longitude >= boxArea.min_longitude
+           && e.my_location.longitude <= boxArea.max_longitude) {
+            return true;
+        } else return false;
+    
+    } else if(area instanceof GlobalArea) return true;
+    return true;
+    
     }
 
     private edu.iris.Fissures.Area area = null;

@@ -1,7 +1,8 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
+
+import edu.sc.seis.sod.status.*;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import java.util.*;
 import org.w3c.dom.*;

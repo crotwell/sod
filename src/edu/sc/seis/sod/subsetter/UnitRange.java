@@ -17,11 +17,6 @@ import org.w3c.dom.*;
  */
 
 public class UnitRange implements SodElement{
-    /**
-     * Creates a new <code>UnitRange</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public UnitRange (Element config) throws Exception{
         processConfig(config);
     }
@@ -45,7 +40,7 @@ public class UnitRange implements SodElement{
                 if(tagName.equals("unit")) unitRangeElement = config;
             }
         }
-        unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
+        unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "");
     }
     
     /**

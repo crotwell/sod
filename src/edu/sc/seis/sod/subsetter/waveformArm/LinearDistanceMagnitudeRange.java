@@ -38,11 +38,9 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
      * @param config an <code>Element</code> value
      */
     public LinearDistanceMagnitudeRange (Element config) throws ConfigurationException{
-	super(config);
-	
-	Element subElement = SodUtil.getElement(config, "magnitudeRange");
-	magnitudeRange = (MagnitudeRange) SodUtil.load(subElement, "edu.sc.seis.sod.subsetter.eventArm");
-	
+        super(config);
+        Element subElement = SodUtil.getElement(config, "magnitudeRange");
+        magnitudeRange = (MagnitudeRange) SodUtil.load(subElement, "eventArm");
     }
     
     /**
@@ -55,23 +53,23 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) throws Exception {
-	Origin origin = null;
-	origin = eventAccess.get_preferred_origin();
-	
-	double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
-							 origin.my_location.longitude,
-							 station.my_location.latitude,
-							 station.my_location.longitude);
-	if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-	    double resultantMagnitude = magnitudeRange.getMinMagnitude().value + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxMagnitude().value - magnitudeRange.getMinMagnitude().value)/(getMinDistance().value - getMaxDistance().value);
-	     if(origin.magnitudes[0].value >= resultantMagnitude) {
-		return true;
-	    } 
-	} 
-	return false;
-	
+        Origin origin = null;
+        origin = eventAccess.get_preferred_origin();
+        
+        double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
+                                                         origin.my_location.longitude,
+                                                         station.my_location.latitude,
+                                                         station.my_location.longitude);
+        if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
+            double resultantMagnitude = magnitudeRange.getMinMagnitude().value + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxMagnitude().value - magnitudeRange.getMinMagnitude().value)/(getMinDistance().value - getMaxDistance().value);
+            if(origin.magnitudes[0].value >= resultantMagnitude) {
+                return true;
+            }
+        }
+        return false;
+        
     }
-
-   private  MagnitudeRange magnitudeRange;
-
+    
+    private  MagnitudeRange magnitudeRange;
+    
 }// LinearDistanceMagnitudeRange
