@@ -19,7 +19,7 @@ XMLAPI=$MAVEN/repository/xml-apis/jars/xml-apis-1.0.b2.jar
 JAICORE=$MAVEN/repository/jars/jai_core.jar
 JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-1.7.1.jar
-JCAL=$MAVEN/repository/jcalendar/jars/jcalendar-0.6usc1.jar
+JCAL=$MAVEN/repository/jcalendar/jars/jcalendar-0.6.1beta.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 

@@ -64,7 +64,13 @@
     <dependency>
       <groupId>jcalendar</groupId>
       <artifactId>jcalendar</artifactId>
-      <version>0.6usc1</version>
+      <version>0.6.1beta</version>
+    </dependency>
+
+    <dependency>
+      <groupId>JacORB</groupId>
+      <artifactId>JacORB</artifactId>
+      <version>2.0beta3</version>
     </dependency>
     <dependency>
       <groupId>openorb</groupId>
