@@ -153,6 +153,8 @@ public class EventArm implements Runnable{
         logger.debug("Finished processing the event arm.");
     }
 
+    public String getLastEvent() { return lastEvent.toString(); }
+
     private void resetQueryTimeForLag(String server, String dns, MicroSecondDate queryStart) {
         try {
             MicroSecondDate curEnd = new MicroSecondDate(queryTimes.getQuery(server, dns));
@@ -271,6 +273,7 @@ public class EventArm implements Runnable{
             change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                      Standing.REJECT));
         }
+        lastEvent = event;
     }
 
     public void change(EventAccessOperations event, Status status) throws Exception{
@@ -443,6 +446,8 @@ public class EventArm implements Runnable{
     private JDBCQueryTime queryTimes;
 
     private boolean alive;
+
+    private CacheEvent lastEvent;
 
     private static Logger logger = Logger.getLogger(EventArm.class);
 }// EventArm
