@@ -71,7 +71,8 @@ public class Start {
         configFileName = confFilename;
         ClassLoader cl = getClass().getClassLoader();
         try {
-            document = createDoc(createInputSource(cl, confFilename), confFilename);
+            document = createDoc(createInputSource(cl, confFilename),
+                                 confFilename);
         } catch(IOException io) {
             informUserOfBadFileAndExit(confFilename);
         } catch(Exception e) {
@@ -196,8 +197,8 @@ public class Start {
         return runProps;
     }
 
-    public static Document createDoc(InputSource source, String filename) throws SAXException,
-            IOException, ParserConfigurationException {
+    public static Document createDoc(InputSource source, String filename)
+            throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -274,11 +275,18 @@ public class Start {
         if(runProps.removeDatabase()) {
             File dbDir = new File(DATABASE_DIR);
             if(dbDir.exists()) {
+                logger.info("Removing old database");
                 File[] dbFiles = dbDir.listFiles();
                 for(int i = 0; i < dbFiles.length; i++) {
-                    dbFiles[i].delete();
+                    if(!dbFiles[i].delete()) {
+                        logger.warn("Unable to delete "
+                                + dbFiles[i]
+                                + " when removing the previous database.  The old database might still exist");
+                    }
                 }
-                dbDir.delete();
+                if(!dbDir.delete()) {
+                    logger.warn("Unable to delete the database directory.");
+                }
             }
         } else if(runProps.reopenEvents()) {
             try {
