@@ -142,6 +142,10 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                  "seismogram loaded via sod.");
         dataset.addDataSetSeismogram(urlDSS,
                                      audit);
+        dataset.addParameter(DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
+                             channel,
+                             audit);
+        
         return urlDSS;
     }
     
