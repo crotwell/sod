@@ -32,14 +32,12 @@ public class BreqFastRequestSubsetter
                           CookieJar cookies) 
         throws Exception 
     {
-        breqfast.accept(event, 
+        return breqfast.accept(event, 
                         network, 
                         channel, 
                         request, 
                         request,
                         cookies);
-
-        return true;
     }
 
     BreqFastAvailableData breqfast;
