@@ -8,13 +8,11 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 
-public interface EventStatus {
-
+public interface EventStatus extends SodElement {
     public void begin(EventAccessOperations event);
 
     public void fail(EventAccessOperations event, String reason);
 
-    public void succeed(EventAccessOperations event);
-
+    public void pass(EventAccessOperations event);
 }
 
