@@ -17,7 +17,7 @@
                 <externalRef href="availableData.rng"/>
             </optional>
             <zeroOrMore>
-                <externalRef href="seismogramProcess.rng"/>
+                <externalRef href="waveformProcess.rng"/>
             </zeroOrMore>
             <zeroOrMore>
                 <externalRef href="status.rng"/>
