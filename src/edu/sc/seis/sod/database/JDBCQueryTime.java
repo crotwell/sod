@@ -38,7 +38,14 @@ public class JDBCQueryTime extends SodJDBC{
         getQuery.setString(1, server);
         getQuery.setString(2, dns);
         ResultSet rs = getQuery.executeQuery();
-        if(rs.next())return new MicroSecondDate(rs.getTimestamp("query_time"));
+        
+        if(rs.next()) {
+            Timestamp t = rs.getTimestamp("query_time");
+            if (t == null) {
+                throw new NotFound("query time is null for " + server + " " + dns);
+            }
+            return new MicroSecondDate(t);
+        }
         throw new NotFound("no stored query time for " + server + " " + dns);
     }
 
