@@ -53,6 +53,11 @@ public class RunProperties{
             numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
         }
 
+        Element evChanPairProcChild = SodUtil.getElement(el, "eventChannelPairProcessing");
+        if(evChanPairProcChild != null){
+            evChanPairProc = SodUtil.getText(evChanPairProcChild);
+        }
+
         if(SodUtil.isTrue(el, "reopenEvents")){
             reopenEvents = true;
         }
@@ -82,6 +87,10 @@ public class RunProperties{
 
     public boolean removeDatabase(){ return removeDatabase; }
 
+    public String getEventChannelPairProcessing(){
+        return evChanPairProc;
+    }
+
     public static final TimeInterval NO_TIME = new TimeInterval(0, UnitImpl.SECOND);
     public static final TimeInterval ONE_WEEK = new TimeInterval(7, UnitImpl.DAY);
     public static final TimeInterval TEN_MIN = new TimeInterval(10, UnitImpl.MINUTE);
@@ -100,4 +109,9 @@ public class RunProperties{
 
     private boolean reopenEvents = false;
     private boolean removeDatabase = false;
+
+    public static final String AT_LEAST_ONCE = "atLeastOnce";
+    public static final String AT_MOST_ONCE = "atMostOnce";
+
+    private String evChanPairProc = AT_LEAST_ONCE;
 }
