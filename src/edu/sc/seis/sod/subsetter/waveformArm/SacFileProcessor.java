@@ -112,6 +112,9 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                         " for event in "+
                         regions.getRegionName(event.get_attributes().region)+
                         " at "+event.get_preferred_origin().origin_time.date_time);
+
+        if (seismograms.length == 0) { return seismograms; }
+        
         if ( ! event.equals(lastEvent)) {
             // this also updates lastDataSetElement, lastDataSetFile
             DataSet dataset = getDataSet(event);
@@ -149,7 +152,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         CodecException,
         IOException,
         NoPreferredOrigin {
-
+        
         File eventDirectory = getEventDirectory(event);
         File dataDirectory = new File(eventDirectory, "data");
         dataDirectory.mkdirs();
@@ -175,7 +178,9 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
                                                                SeismogramFileTypes.SAC,
                                                                lastDataSet);
-
+        for (int i = 0; i < seisURL.length; i++) {
+            urlDSS.addToCache(seisURL[i], (LocalSeismogramImpl)seismograms[i]);
+        }
 
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.NETWORK_BEGIN,
                                 channel.get_id().network_id.begin_time.date_time);
@@ -190,9 +195,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         dsToXML.insert(lastDataSetElement,
                        DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
                        channel);
-        for (int i = 0; i < seisURL.length; i++) {
-            urlDSS.addToCache(seisURL[i], (LocalSeismogramImpl)seismograms[i]);
-        }
+
 
 
         return urlDSS;
@@ -350,3 +353,4 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         Category.getInstance(SacFileProcessor.class.getName());
 
 }// SacFileProcessor
+
