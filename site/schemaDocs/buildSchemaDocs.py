@@ -21,6 +21,9 @@ def buildScripts(proj):
     scripts = [scriptBuilder.build(schemaDocsParams([]), proj)]
     scriptBuilder.setVarWindows()
     scripts.append(scriptBuilder.build(schemaDocsParams([scriptBuilder.windowsParameters()]), proj))
+    profileParams = schemaDocsParams([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()])
+    profileParams.name = 'profile'
+    scripts.append(scriptBuilder.build(profileParams, proj))
     return scripts
 
 def signal_handler(signal, frame):
@@ -29,7 +32,7 @@ def signal_handler(signal, frame):
 def main(argv):
     signal.signal(signal.SIGINT, signal_handler)
     startdir = os.path.abspath('.')
-    command = 'schemaDocumenter.bat'
+    command = 'profile.bat'
     proj = ProjectParser.ProjectParser('../../project.xml')
     buildSod.build(proj)
     buildScripts(proj)
