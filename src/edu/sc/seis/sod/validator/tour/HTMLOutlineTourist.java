@@ -60,8 +60,8 @@ public class HTMLOutlineTourist implements Tourist {
     public void visit(Value v) {
         genericVisit(v);
         String output = "<b>" + v.getValue() + "</b>";
-        if(v.getParent() instanceof MultigenitorForm){ 
-            output = "<div>" + output + "</div>\n"; 
+        if(v.getParent() instanceof MultigenitorForm) {
+            output = "<div>" + output + "</div>\n";
         }
         result.append(output);
     }
@@ -109,25 +109,26 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(NamedElement ne) {
         genericVisit(ne);
-        if(ne.getChild() instanceof Empty){
+        if(ne.getChild() instanceof Empty) {
             result.append("&lt;" + getName(ne) + "/&gt;");
-        }else{
-        result.append("&lt;" + getName(ne) + "&gt;");
-        if(!isData(ne.getChild())) {
-            appendIfChildren = " " + getCardinality(ne) + "<div>\n";
-        }
+        } else {
+            result.append("&lt;" + getName(ne) + "&gt;");
+            if(!isData(ne.getChild())) {
+                appendIfChildren = " " + getCardinality(ne) + "<div>\n";
+            }
         }
     }
 
     public void leave(NamedElement ne) {
         appendIfNoChildren = " " + getCardinality(ne) + "<div/>";
-        if(!(ne.getChild() instanceof Empty)){
+        if(!(ne.getChild() instanceof Empty)) {
             if(!isData(ne.getChild())) {
-                appendIfChildren = "</div>\n&lt;/" + getName(ne) + "&gt;<div/>\n";
+                appendIfChildren = "</div>\n&lt;/" + getName(ne)
+                        + "&gt;<div/>\n";
             } else {
                 appendIfChildren = "&lt;/" + getName(ne) + "&gt; "
                         + getCardinality(ne) + "<div/>\n";
-            }  
+            }
         }
         genericLeave(ne);
     }
