@@ -123,6 +123,20 @@
   
     <!-- ABSTRACT TYPE WAVE FORM-->
     <xsd:complexType name="seismogramProcessType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all seismogram processors.
+            </summary>
+            <description>
+                This is a place holder for seismogram processors. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+                <example>
+                   
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -297,6 +311,25 @@
     
     <!-- EVENT STATION DISTANCE TYPE -->
     <xsd:complexType name="eventStationDistanceType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Subsetter based on the distance from the event to station.
+                </summary>
+                <description>
+                   This accepts event station pairs where the distance 
+                   between the preferred origin to the station is within the
+                   range given.                   
+                </description>
+                <example>
+                   <distanceRange>
+                       <unit>DEGREE</unit>
+                       <min>30</min>
+                       <max>90</max>
+                   </distanceRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -306,8 +339,28 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- EVENT STATION MAGNITUDE TYPE -->
+    <!-- EMBEDDED ORIGIN TYPE -->
     <xsd:complexType name="embeddedOriginSubsetterType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Allows the embeedding of an origin subsetter into a 
+                   EventStation location.
+                </summary>
+                <description>
+                   Allows the embeedding of an origin subsetter into a 
+                   EventStation location. This is mainly used with an AND or OR
+                   where one condition only depends on the origin.
+                </description>
+                <example>
+                   <embeddedOriginSubsetter>
+                      <magnitudeRange>
+                          <min>5.5</min>
+                      </magnitudeRange>
+                   </embeddedOriginSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -319,6 +372,30 @@
     
     <!-- EVENT STATION STATION TYPE -->
     <xsd:complexType name="embeddedStationSubsetterType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Allows the embeedding of an station subsetter into a 
+                   EventStation location.
+                </summary>
+                <description>
+                   Allows the embeedding of an station subsetter into a 
+                   EventStation location. This is mainly used with an AND or OR
+                   where one condition only depends on the station.
+                </description>
+                <example>
+                   <embeddedStationSubsetter>
+                    <stationDepthRange>
+                        <unitRange>
+                            <unit>METER</unit>
+                            <min>100</min>
+                            <max>200</max>
+                        </unitRange>
+                    </stationDepthRange>
+                   </embeddedStationSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -330,6 +407,25 @@
     
     <!-- EVENT STATION AZIMUTH RANGE TYPE -->
     <xsd:complexType name="azimuthRangeType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Subsetter based on the azimuth from the event to station.
+                </summary>
+                <description>
+                   This accepts event station pairs where the azimuth 
+                   from the preferred origin to the station is within the
+                   range given in degrees.                   
+                </description>
+                <example>
+                   <azimuthRange>
+                       <unit>DEGREE</unit>
+                       <min>30</min>
+                       <max>90</max>
+                   </azimuthRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -343,6 +439,25 @@
     
     <!-- EVENT STATION BACK AZIMUTH RANGE TYPE -->
     <xsd:complexType name="backAzimuthRangeType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Subsetter based on the back azimuth from the station to the event.
+                </summary>
+                <description>
+                   This accepts event station pairs where the azimuth 
+                   from the station to the preferred origin is within the
+                   range given in degrees.  
+                </description>
+                <example>
+                   <backAzimuthRange>
+                       <unit>DEGREE</unit>
+                       <min>30</min>
+                       <max>90</max>
+                   </backAzimuthRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -355,6 +470,34 @@
     
     <!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE RANGE TYPE -->
     <xsd:complexType name="linearDistanceMagnitudeRangeType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Accepts event stations pairs above a linear threshold of magnitude with distance.
+                </summary>
+                <description>
+                   If the magnitude of the event is greater than or equal to 
+                   the linear interpolation at the event station distance, then
+                   the event statino pair is accepted. To reverse and take 
+                   events smaller than the linear interpolation, enclose 
+                   this in an EventStationNOT.
+                </description>
+                <example>
+                   <linearDistanceMagnitudeRange>
+                      <magnitudeRange>
+                          <magType>mb</magType>
+                          <magType>M</magType>
+                          <min>5.5</min>
+                      </magnitudeRange>
+                   <distanceRange>
+                       <unit>DEGREE</unit>
+                       <min>30</min>
+                       <max>90</max>
+                   </distanceRange>
+                   </linearDistanceMagnitudeRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>

@@ -407,6 +407,26 @@
     </xsd:complexType>
     
     <xsd:complexType name="magnitudeType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                   Accepts a range of magnitudes.
+                </summary>
+                <description>
+                   If the origin has a magnitude of the given types, and it is
+                   greater than or equals to the min and less than or equal to 
+                   the max, then it is accepted. If the type is missing, than
+                   any type is accepted.
+                </description>
+                <example>
+                      <magnitudeRange>
+                          <magType>mb</magType>
+                          <magType>M</magType>
+                          <min>5.5</min>
+                      </magnitudeRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>	
             <xsd:extension base="originType">
                 <xsd:sequence>
