@@ -23,7 +23,7 @@ public class BoxAreaEditor  implements EditorPlugin {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(new TitledBorder("Area"));
+        panel.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
 
         Element el = (Element)XPathAPI.selectSingleNode(element, "latitudeRange");
         panel.add(editor.getCompForElement(el), BorderLayout.NORTH);
