@@ -33,11 +33,17 @@ public class IndexTemplate extends FileWritingTemplate{
         }
     }
 
+    /** Exists so IndexTemplate can be created before arms, in order for exceptions
+     * in initialization to be in the status pages.*/
+    public void registerMapWithEventArm() {
+        Start.getEventArm().add(mapEventStatus);
+    }
+
     protected Object getTemplate(String tagName, Element el) throws ConfigurationException  {
         if(tagName.equals("eventMap")){
-            MapEventStatus mes = new MapEventStatus(el, true);
+            mapEventStatus = new MapEventStatus(el, false);
             return new RelativeLocationTemplate(getOutputLocation(),
-                                                mes.getLocation());
+                                                mapEventStatus.getLocation());
         }
         return super.getTemplate(tagName, el);
     }
@@ -47,6 +53,8 @@ public class IndexTemplate extends FileWritingTemplate{
         errorDir.mkdirs();
         GlobalExceptionHandler.add(new HTMLReporter(errorDir));
     }
+
+    private MapEventStatus mapEventStatus;
 
     private static String indexLoc = "jar:edu/sc/seis/sod/data/templates/index.xml";
 
