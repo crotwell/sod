@@ -22,7 +22,7 @@ Maps only update once every two minutes
 <h2>Successful events sorted by depth:</h2>
 <table>
 <tr id="title">
-<td><a href="location.html">Region</a></td>
+<td>Region</td>
 <td><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
 <td id="selected"><a href="depth.html">Depth</a></td>
