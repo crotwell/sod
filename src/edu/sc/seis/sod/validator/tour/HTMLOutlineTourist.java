@@ -156,7 +156,11 @@ public class HTMLOutlineTourist implements Tourist {
     private String getDefLink(Form f, String name) {
         String path = SchemaDocumenter.makePath(f.getDef()) + ".html";
         String href = SodUtil.getRelativePath(curLoc, path, "/");
-        return "<a href=\"" + href + "\">" + name + "</a>\n";
+String title = "";
+        if(f.getAnnotation().hasSummary()){
+            title = "title=\""+f.getAnnotation().getSummary() + "\"";
+        }
+        return "<a href=\"" + href + "\" " + title +">" + name + "</a>\n";
     }
 
     private String getCardinality(Form f) {
