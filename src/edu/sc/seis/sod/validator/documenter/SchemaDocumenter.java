@@ -54,7 +54,7 @@ public class SchemaDocumenter {
         Iterator it = defs.iterator();
         while(it.hasNext()){
             Definition cur = (Definition)it.next();
-            //if(makePath(cur).startsWith("event/origin/remove")){
+            //if(makePath(cur).startsWith("sod")){
                 render(c, ve, cur, transformer);
             //}
         }
@@ -86,6 +86,8 @@ public class SchemaDocumenter {
                                                  "/");
         relPath = relPath.substring(0, relPath.length() - "../generatedSite".length());
         t.setParameter("base", relPath);
+        t.setParameter("menu", "Reference");
+        t.setParameter("page", "tagDocs/" + path + ".html");
         t.transform(new StreamSource("xml/"+path+".xml"), new StreamResult(htmlFile));
     }
 
