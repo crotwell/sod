@@ -9,13 +9,13 @@ import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 
 public class ChoiceRequest implements RequestGenerator {
 
@@ -29,7 +29,8 @@ public class ChoiceRequest implements RequestGenerator {
                 if(element.getTagName().equals("choice")) {
                     choices.add(new Choice(element));
                 } else if(element.getTagName().equals("otherwise")) {
-                    otherwise = (RequestGenerator)SodUtil.load((Element)node,
+                    otherwise = (RequestGenerator)SodUtil.load(DOMHelper.extractElement((Element)node,
+                                                                                        "*"),
                                                                "requestGenerator");
                 } // end of else
             }
@@ -43,11 +44,9 @@ public class ChoiceRequest implements RequestGenerator {
         Iterator it = choices.iterator();
         while(it.hasNext()) {
             Choice c = (Choice)it.next();
-            if(c.accept(event, channel, cookieJar).isSuccess()) {
-                return c.generateRequest(event,
-                                         channel,
-                                         cookieJar);
-            }
+            if(c.accept(event, channel, cookieJar).isSuccess()) { return c.generateRequest(event,
+                                                                                           channel,
+                                                                                           cookieJar); }
         } // end of while (it.hasNext())
         if(otherwise != null) {
             return otherwise.generateRequest(event, channel, cookieJar);
@@ -63,7 +62,7 @@ public class ChoiceRequest implements RequestGenerator {
     class Choice implements RequestGenerator, EventChannelSubsetter {
 
         RequestGenerator requestGenerator;
-        
+
         Choice(Element config) throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
             Node node;
@@ -90,12 +89,11 @@ public class ChoiceRequest implements RequestGenerator {
         }
 
         public StringTree accept(EventAccessOperations event,
-                              Channel channel,
-                              CookieJar cookieJar) throws Exception {
+                                 Channel channel,
+                                 CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
         }
 
         EventChannelSubsetter eventChannelSubsetter;
     }
-
 }// PhaseRequest
