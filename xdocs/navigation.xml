@@ -13,6 +13,7 @@
       <item name="Manual"          href="/manual.html"/>
       <item name="XML Tag Docs"          href="/sodDocs/index.html"/>
       <item name="Bugs and Problems"     href="/bugs.html"/>
+      <item name="Tuning"     href="/tuning.html"/>
     </menu>
 
     <menu name="Download">
