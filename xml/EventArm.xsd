@@ -116,7 +116,7 @@
 <!-- flinnengdahlList is a list of PositiveIntegers. Actually itz best to change at this position so that it can include
 either a list of numbers only or a list of strings or a list with the combination of strings and numbers-->
 	<xsd:simpleType name="flinnengdahlList">
-		<xsd:list itemType="xsd:positiveInteger">
+		<xsd:list itemType="xsd:nonNegativeInteger">
 		</xsd:list>
 	</xsd:simpleType>
 

@@ -95,12 +95,8 @@ public class WaveFormArm implements Runnable {
 		}
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
-		else if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
-		else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;
-		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
+		else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
 	
-		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
-		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
@@ -120,70 +116,18 @@ public class WaveFormArm implements Runnable {
 	    System.out.println("Calling accept on eventStationSubsetter");
 	    if(eventStationSubsetter == null) System.out.println("NULL");
 	    else System.out.println("NOT NULL");
-	      if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
-		processEventChannelSubsetter(eventAccess,null,successfulChannels[counter]);
+	    if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
+		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter]);  
 	    }
 	}
 	
     }
 
-    /**
-     * Describe <code>processEventChannelSubsetter</code> method here.
-     *
-     * @exception Exception if an error occurs
-     */
-    public void processEventChannelSubsetter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
-
-	if(eventChannelSubsetter.accept(eventAccess, networkAccess, channel, null)) {
-	    processFixedDataCenter(eventAccess, networkAccess, channel);
-	}
-    }
-
-    /**
-     * Describe <code>processFixedDataCenter</code> method here.
-     *
-     */
-    public void processFixedDataCenter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
-	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
-	if(dataCenter == null) System.out.println("****** Data Center is NULL ******");
-	else System.out.println("****** Data Center is NOT NULL ******");
-	processRequestGeneratorSubsetter(eventAccess, networkAccess, channel);
-	
-    }
-
-    /**
-     * Describe <code>processRequestGeneratorSubsetter</code> method here.
-     *
-     */
-    public void processRequestGeneratorSubsetter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
-	System.out.println("Processing RequestGenerator");
-	RequestFilter[] filters = requestGeneratorSubsetter.generateRequest(eventAccess, networkAccess, channel, null); 
-	{
-	   // processAvailableDataSubsetter();
-	}
-	
-    }
-    
-    /**
-     * Describe <code>processAvailableDataSubsetter</code> method here.
-     *
-     */
-    public void processAvailableDataSubsetter() {
-
- 	System.out.println("Successfully iterated through the WaveFormArm");
-    }
+   
 
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
-    private EventChannelSubsetter eventChannelSubsetter = new NullEventChannelSubsetter();
-
-    private FixedDataCenter fixedDataCenterSubsetter = null;
-    
-    private RequestGenerator requestGeneratorSubsetter = null;//new NullRequestGenerator();
-    
-    private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
-
-    private WaveFormArmProcess waveFormArmProcessSubsetter;
+    private LocalSeismogramArm localSeismogramArm = null;
 
     private NetworkArm networkArm = null;
     

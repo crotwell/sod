@@ -317,6 +317,14 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<!--LOCAL SEISMOGRAM TYPE-->
+	<xsd:complexType name="localSeismogramType">
+		<xsd:complexContent>
+			<xsd:extension base="waveFormType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	<!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
 
 	<xsd:complexType name="externalWaveformProcessType">
@@ -376,23 +384,36 @@
 	<xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
 	<xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
 	<xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
+	<xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
 
-
-	<!-- element representing the process -->
+	<!-- element representing the process -->waw
 	<xsd:element name="waveFormProcess" type="processType" abstract="true"/>
 	<xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
+	<xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
 
+	<xsd:complexType name="localSeismogramArmType">
+		<xsd:complexContent>
+			<xsd:extension base="armType">
+				<xsd:sequence>
+					<xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
+					<xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
+					<xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="waveForm"  minOccurs="0" maxOccurs="1"/>
+	                                <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="localSeismogramArm" type="localSeismogramArmType"/>
 	<xsd:complexType name="waveFormArmType">
 		<xsd:complexContent>
 			<xsd:extension base="armType">
 				<xsd:sequence>
 					<xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
-					<xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
-					<xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="waveForm"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="localSeismogramArm"/>
 					<xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>

@@ -25,7 +25,7 @@
 		<eventTimeRange>
 		<timeRange>
 			<startTime>1999-01-01T00:00:00Z</startTime>
-			<endTime>2002-01T00:00:00Z</endTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
 		</timeRange>
 		</eventTimeRange>
 		<magnitudeRange>
@@ -38,7 +38,7 @@
 	   </eventFinder>
 
 	   <eventAttrAND>
-		<seismicRegion><value>0 10 20 30 40 50</value></seismicRegion>
+		<seismicRegion><value>10 0 20 30 40 50</value></seismicRegion>
 		<eventAttrOR>
 			<eventAttrNOT>
 				<seismicRegion><value>70 80 100</value></seismicRegion>
@@ -161,7 +161,7 @@
 			</eventStationDistance>
 			<embeddedOriginSubsetter>
 				<magnitudeRange>
-					<type>mb</type>
+					<magType>mb</magType>
 					<min>5.5</min>
                                         <max>12.5</max>
 				</magnitudeRange>
@@ -177,18 +177,15 @@
 			</eventStationDistance>
 			<embeddedOriginSubsetter>
 				<magnitudeRange>
-					<type>mb</type>
+					<magType>mb</magType>
 					<min>6.0</min>
                                         <max>14.0</max>
 				</magnitudeRange>
 			</embeddedOriginSubsetter>
 		</eventStationAND>
 	</eventStationOR>
+        <localSeismogramArm>
 
-	<fixedDataCenter>
-		<name>SCEPPSeismogramDC</name>
-		<dns>edu/sc/seis</dns>
-	</fixedDataCenter>
 
 	<phaseRequest>
 		<beginPhase>firstP</beginPhase>
@@ -202,14 +199,17 @@
 			<value>600</value>
 		</endOffset>
 	</phaseRequest>
-
+	<fixedDataCenter>
+		<name>SCEPPSeismogramDC</name>
+		<dns>edu/sc/seis</dns>
+	</fixedDataCenter>
 	<availableDataAND>
 		<nogaps/>
 		<fullCoverage/>
 	</availableDataAND>
-
-	<printlineWaveformProcessor/>
-
+        <localSeismograms/>
+	<printlineSeismogramProcess/>
+	</localSeismogramArm>
    </waveFormArm>
   
 </sod>

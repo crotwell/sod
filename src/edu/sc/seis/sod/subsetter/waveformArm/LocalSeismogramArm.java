@@ -64,7 +64,7 @@ public class LocalSeismogramArm implements Subsetter{
 	
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramSubsetter) localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
-		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
+		else if(sodElement instanceof LocalSeismogramProcess) waveFormArmProcessSubsetter = (LocalSeismogramProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
@@ -138,15 +138,16 @@ public class LocalSeismogramArm implements Subsetter{
 	
 	if(localSeismogramSubsetter.accept(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null)) {
 
-	    processSeismograms(localSeismograms);
+	    processSeismograms(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
 
 	}
 	    
     }
     
-    public void processSeismograms(LocalSeismogram[] localSeismograms) {
+    public void processSeismograms	
+	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
 
-
+	waveFormArmProcessSubsetter.process(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null);
 	System.out.println(" ~~~~~~~~ GOT "+localSeismograms.length+" seismograms");
 	
     }
@@ -161,7 +162,7 @@ public class LocalSeismogramArm implements Subsetter{
 
     private LocalSeismogramSubsetter localSeismogramSubsetter = null;
 
-    private WaveFormArmProcess waveFormArmProcessSubsetter;
+    private LocalSeismogramProcess waveFormArmProcessSubsetter;
     
     static Category logger = 
 	Category.getInstance(LocalSeismogramArm.class.getName());

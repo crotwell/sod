@@ -15,7 +15,7 @@ import edu.iris.Fissures.IfSeismogramDC.*;
  * @version
  */
 
-public interface LocalSeismogramSubsetter {
+public interface LocalSeismogramSubsetter extends Subsetter{
     
     /**
      * Describe <code>accept</code> method here.
