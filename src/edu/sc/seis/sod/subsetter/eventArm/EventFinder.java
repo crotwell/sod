@@ -12,6 +12,7 @@ import org.apache.log4j.*;
 
 /** 
  * This subsetter specifies the source of eventDC and the parameters required to query for events.
+ *<pre>
  *  &lt;eventFinder&gt;
  *		&lt;name&gt;ANHINGAEVENTDC&lt;/name&gt;
  *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
@@ -69,6 +70,7 @@ import org.apache.log4j.*;
  *		&lt;/timeRange&gt;
  *		&lt;/eventTimeRange&gt;
  *  &lt;/eventFinder&gt;
+ *</pre>
  */
 
 public class EventFinder extends AbstractSource implements SodElement {

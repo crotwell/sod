@@ -13,10 +13,12 @@ import edu.iris.Fissures.*;
 /**
  * eventAttrXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
+ *<pre>
  *	&lt;availableDataXOR&gt;
  *		&lt;nogaps/&gt;
  *		&lt;fullCoverage/&gt;
  *	&lt;/availableDataXOR&gt;
+ *</pre>
  */
 public class AvailableDataXOR 
     extends  WaveFormLogicalSubsetter 

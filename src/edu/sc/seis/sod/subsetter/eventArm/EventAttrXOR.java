@@ -11,21 +11,13 @@ import edu.iris.Fissures.*;
 /**
  * eventAttrXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
+ *<pre>
  * &lt;eventAttrXOR&gt;
  *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
  *            &lt;geographicRegion&gt;&lt;value&gt;162 258 324 404&lt;value/&gt;&lt;&lt;geographicRegion&gt;
  * &lt;/eventAttrXOR&gt;
  *
- *                                   (or)
- *
- *  &lt;eventAttrXOR&gt;
- *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
- * &lt;/eventAttrXOR&gt;
- *
- *                                   (or)
- * &lt;eventAttrXOR&gt;
- * &lt;/eventAttrXOR&gt;
- *
+ *</pre>
  */
 
 public class EventAttrXOR 

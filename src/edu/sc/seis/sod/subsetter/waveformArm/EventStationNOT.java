@@ -12,12 +12,14 @@ import edu.iris.Fissures.*;
 /**
  * This subsetter is used to specify a negation of EventStationSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
+ *<pre>
   *	&lt;eventStationAND&gt;
  *		&lt;phaseExists&gt;
  * 			&lt;modelName&gt;prem&lt;/modelName&gt;
  *			&lt;phaseName&gt;ttp&lt;/phaseName&gt;
  *		&lt;/phaseExists&gt;
  *	&lt;/eventStationAND&gt;
+ *</pre>
  */
 public class EventStationNOT 
     extends  WaveFormLogicalSubsetter 

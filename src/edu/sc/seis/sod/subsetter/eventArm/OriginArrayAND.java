@@ -10,6 +10,7 @@ import edu.iris.Fissures.*;
 /**
  * Contains a single OriginSubsetter. OriginArrayAND returns true when the contained originSubsetter is
  * true for all the origins.
+ *<pre>
  *  &lt;originArrayAND&gt;
  *        &lt;originNOT&gt;
  *               &lt;magnitudeRange&gt;
@@ -19,6 +20,7 @@ import edu.iris.Fissures.*;
  *               &lt;/magnitudeRange&gt;
  *        &lt;/originNOT&gt;
  *  &lt;/originArrayAND&gt;
+ *</pre>
  */
 
 public class OriginArrayAND 

@@ -13,7 +13,9 @@ import org.w3c.dom.*;
 
 /**
  * sample xml
+ *<pre>
  *&lt;fullCoverage/&gt;
+ *</pre>
  */
 
 public class FullCoverage implements AvailableDataSubsetter, SodElement{

@@ -14,10 +14,12 @@ import edu.iris.Fissures.*;
 
 /**
  * sample xml
+ *<pre>
  *      &lt;phaseExists&gt;
  *		&lt;modelName&gt;prem&lt;/modelName&gt;
  *		&lt;phaseName&gt;ttp&lt;/phaseName&gt;
  *	&lt;/phaseExists&gt;
+ *</pre>
  */
 public class PhaseExists 
     implements EventStationSubsetter {

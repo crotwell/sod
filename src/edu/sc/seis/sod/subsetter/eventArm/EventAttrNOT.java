@@ -9,6 +9,7 @@ import edu.iris.Fissures.*;
 /**
  * This subsetter is used to specify a negation of EventAttrSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
+ *<pre>
  * &lt;eventAttrNOT&gt;
  *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
  * &lt;/eventAttrNOT&gt;
@@ -18,6 +19,7 @@ import edu.iris.Fissures.*;
  * &lt;eventAttrNOT&gt;
  * &lt;/eventAttrNOT&gt;
  *
+ *</pre>
  */
 
 

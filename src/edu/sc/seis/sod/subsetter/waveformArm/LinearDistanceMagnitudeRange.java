@@ -16,6 +16,7 @@ import org.w3c.dom.*;
 
 /**
  * sample xml
+ *<pre>
  *  &lt;linearDistanceMagnitude&gt;
  *    &lt;magnitudeRange&gt;
  *           &lt;description&gt;describes magnitude&lt;/description&gt;
@@ -27,6 +28,7 @@ import org.w3c.dom.*;
  *           &lt;min&gt;30&lt;/min&gt;
  *     &lt;/distanceRange&gt;
  *  &lt;/linearDistanceMagnitude&gt;
+ *</pre>
  */
 
 public class LinearDistanceMagnitudeRange extends DistanceRange implements EventStationSubsetter {

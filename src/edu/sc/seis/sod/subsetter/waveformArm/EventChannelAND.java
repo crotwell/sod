@@ -12,8 +12,10 @@ import edu.iris.Fissures.*;
 /** 
  * eventChannelAND contains a sequence of eventChannelSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
+ *<pre>
  * &lt;eventChannelAND&gt;
  * &lt;/eventChannelAND&gt;
+ *</pre>
  */
  
 

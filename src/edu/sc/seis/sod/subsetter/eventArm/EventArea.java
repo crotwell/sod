@@ -19,6 +19,7 @@ import edu.iris.Fissures.*;
  * This class is used to represent the subsetter EventArea. Event Area implements EventSubsetter
  * and can be any one of GlobalArea or BoxArea or PointDistanceArea or FlinneEngdahlArea.
  * 
+ *<pre>
  * sample xml representation of EventArea are
  *
  *
@@ -34,6 +35,7 @@ import edu.iris.Fissures.*;
  *                                    &lt;/longitudeRange&gt;
  *                           &lt;/boxArea&gt;
  *              &lt;/stationArea&gt;
+ *</pre>
  */
 
 

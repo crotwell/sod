@@ -10,7 +10,9 @@ import org.w3c.dom.*;
 
 /**
  * This tag is used to specify the value of the catalog.
+ *<pre>
  * &lt;contributor&gt;&lt;value&gt;NEIC&lt;/value&gt;&lt;/contributor&gt;
+ *</pre>
  */
 
 

@@ -12,6 +12,7 @@ import edu.iris.Fissures.*;
 /**
  * eventStationXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
+ *<pre>
  *	&lt;eventStationXOR&gt;
  *		&lt;phaseExists&gt;
  * 			&lt;modelName&gt;prem&lt;/modelName&gt;
@@ -39,6 +40,7 @@ import edu.iris.Fissures.*;
  *			&lt;/relative&gt;
  *		&lt;/phaseInteraction&gt;
  *	&lt;/eventStationXOR&gt;
+ *</pre>
  */
 
 public class EventStationXOR 

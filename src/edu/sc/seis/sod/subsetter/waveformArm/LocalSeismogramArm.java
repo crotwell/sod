@@ -16,6 +16,7 @@ import org.apache.log4j.*;
 
 /**
  * sample xml
+ *<pre>
  *&lt;localSeismogramArm&gt;
  *	&lt;phaseRequest&gt;
  *		&lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
@@ -39,6 +40,7 @@ import org.apache.log4j.*;
  *		&lt;dataDirectory&gt;SceppEvents&lt;/dataDirectory&gt;
  *	&lt;/sacFileProcessor&gt;
  *&lt;/localSeismogramArm&gt;
+ *</pre>
  */
 
 
@@ -168,7 +170,7 @@ public class LocalSeismogramArm implements Subsetter{
 
     private LocalSeismogramSubsetter localSeismogramSubsetter = new NullLocalSeismogramSubsetter();
 
-    private LocalSeismogramProcess waveFormArmProcessSubsetter;
+    private LocalSeismogramProcess waveFormArmProcessSubsetter = new NullWaveformProcess();
     
     static Category logger = 
 	Category.getInstance(LocalSeismogramArm.class.getName());

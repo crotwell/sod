@@ -16,13 +16,15 @@ import org.w3c.dom.*;
 
 
 /**
- * eventStattionSubsetter
+ * sample xml 
+ *<pre>
  *  &lt;eventStationDistance&gt;
  *        &lt;distanceRange&gt;
  *              &lt;unit&gt;DEGREE&lt;/unit&gt;
  *              &lt;min&gt;30&lt;/min&gt;
  *        &lt;/distanceRange&gt;
  *  &lt;/eventStationDistance&gt;
+ *</pre>
  */
 
 

@@ -15,10 +15,12 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of AvailableDataSubsetters. This subsetter is accepted when even one 
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the availableDataOR is not accepted.
+ *<pre>
  *	&lt;availableDataOR&gt;
  *		&lt;nogaps/&gt;
  *		&lt;fullCoverage/&gt;
  *	&lt;/availableDataOR&gt;
+ *</pre>
  */
 
 public class AvailableDataOR 

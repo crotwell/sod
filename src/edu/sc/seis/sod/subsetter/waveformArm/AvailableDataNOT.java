@@ -13,9 +13,11 @@ import edu.iris.Fissures.*;
 /**
  * This subsetter is used to specify a negation of availableDataSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
+ *<pre>
  *	&lt;availableDataAND&gt;
  *		&lt;nogaps/&gt;
  *	&lt;/availableDataAND&gt;
+ *</pre>
  */
 
 

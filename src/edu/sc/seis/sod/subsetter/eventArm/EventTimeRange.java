@@ -10,7 +10,9 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
+
 /**
+ *<pre>
  * This subsetter specifies the EventTimeRange.
  *	&lt;eventTimeRange&gt;
  *		&lt;timeRange&gt;
@@ -40,7 +42,8 @@ import org.w3c.dom.*;
  *		&lt;timeRange&gt;
  *			&lt;endTime&gt;1999-01-01T00:00:00Z&lt;/endTime&gt;
  *		&lt;/timeRange&gt;
- *	&lt;/eventTimeRange&gt;
+ *	&lt;/eventTimeRange&gt; 
+ *</pre>
  *
  */
 

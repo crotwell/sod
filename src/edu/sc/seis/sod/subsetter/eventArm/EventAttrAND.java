@@ -8,6 +8,7 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
+ *<pre>
  * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted only when all the
  * subsetters forming the sequence are accepted.
  * &lt;eventAttrAND&gt;
@@ -25,6 +26,7 @@ import edu.iris.Fissures.*;
  * &lt;eventAttrAND&gt;
  * &lt;/eventAttrAND&gt;
  *
+ *</pre>
  */
 public class EventAttrAND 
     extends EventLogicalSubsetter 

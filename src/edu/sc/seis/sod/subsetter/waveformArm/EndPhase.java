@@ -12,7 +12,9 @@ import org.w3c.dom.*;
 
 /**
  * specifies the endPhase
+ *<pre>
  * &lt;endPhase&gt;ttp&lt;/endPhase&gt;
+ *</pre>
  */
 
 public class EndPhase implements Subsetter{

@@ -14,9 +14,11 @@ import java.io.*;
 
 /**
  * sample xml file
+ *<pre>
  * &lt;sacFileProcessor&gt;
  *        &lt;dataDirectory&gt;SceppEvents&lt;/dataDirectory&gt;
  * &lt;/sacFileProcessor&gt;
+ *</pre>
  */
 
 public class PrintlineSeismogramProcess implements LocalSeismogramProcess {

@@ -13,6 +13,7 @@ import edu.iris.Fissures.*;
 /** 
  * eventStationAND contains a sequence of eventStationSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
+ *<pre>
  *	&lt;eventStationAND&gt;
  *		&lt;phaseExists&gt;
  * 			&lt;modelName&gt;prem&lt;/modelName&gt;
@@ -40,6 +41,7 @@ import edu.iris.Fissures.*;
  *			&lt;/relative&gt;
  *		&lt;/phaseInteraction&gt;
  *	&lt;/eventStationAND&gt;
+ *</pre>
  */
 
 public class EventStationAND 

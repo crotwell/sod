@@ -9,7 +9,9 @@ import edu.iris.Fissures.*;
 
 /**
  * This tag is used to specify the name of the EventAttr.
+ *<pre>
  * &lt;eventAttrName&gt;&lt;value&gt;somename&lt;/value&gt;&lt;/eventAttrName&gt;
+ *</pre>
  */
 
 public class EventAttrName implements EventAttrSubsetter {

@@ -16,6 +16,7 @@ import org.w3c.dom.*;
 
 /** 
  * sample xml file
+ *<pre>
  *	&lt;phaseRequest&gt;
  *		&lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
  *       	&lt;beginOffset&gt;
@@ -28,6 +29,7 @@ import org.w3c.dom.*;
  *			&lt;value&gt;600&lt;/value&gt;
  *		&lt;/endOffset&gt;
  *	&lt;/phaseRequest&gt;
+ *</pre>
  */
 
 

@@ -15,6 +15,7 @@ import org.w3c.dom.*;
 
 
 /** sample xml
+ *<pre>
  * 	&lt;phaseInteraction&gt;
  * 			&lt;modelName&gt;prem&lt;/modelName&gt;
  *			&lt;phaseName&gt;PcP&lt;/phaseName&gt;
@@ -36,6 +37,7 @@ import org.w3c.dom.*;
  *				&lt;/distanceRange&gt;
  *			&lt;/relative&gt;
  *	&lt;/phaseInteraction&gt;
+ *</pre>
  */
 
 public class PhaseInteraction implements EventStationSubsetter {

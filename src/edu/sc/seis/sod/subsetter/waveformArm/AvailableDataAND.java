@@ -13,10 +13,12 @@ import edu.iris.Fissures.*;
 /** 
  * availableDataAND contains a sequence of availableSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
+ *<pre>
  *	&lt;availableDataAND&gt;
  *		&lt;nogaps/&gt;
  *		&lt;fullCoverage/&gt;
  *	&lt;/availableDataAND&gt;
+ *</pre>
  */
 
 public class AvailableDataAND 

@@ -14,7 +14,9 @@ import java.io.*;
 
 /**
  * sample xml 
+ *<pre>
  * &lt;printlineWaveformProcessor/&gt;
+ *</pre>
  */
 
 public class PrintlineWaveformProcessor implements LocalSeismogramProcess {

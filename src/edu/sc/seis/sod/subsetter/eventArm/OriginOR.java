@@ -11,6 +11,7 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted when even one 
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventAttrOR is not accepted.
+ *<pre>
  *  &lt;originOR&gt;
  *              &lt;originAND&gt;
  *		&lt;description&gt;take any global 6.5 or better EQ&lt;/description&gt;
@@ -63,6 +64,7 @@ import edu.iris.Fissures.*;
  *		&lt;/magnitudeRange&gt;
  *              &lt;/originAND&gt;
  *  &lt;/originOR&gt;
+ *</pre>
 /**
  * OriginOR.java
  *

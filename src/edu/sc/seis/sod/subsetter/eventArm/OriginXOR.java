@@ -10,6 +10,7 @@ import edu.iris.Fissures.*;
 /**
  * originXOR contains a sequence of originSubsetters. The minimum value of the sequence is 2 and
  * the max value of the sequence is 2.
+ *<pre>
  *      &lt;originXOR&gt;
  *		&lt;eventArea&gt;
  *		   &lt;boxArea&gt;
@@ -28,6 +29,7 @@ import edu.iris.Fissures.*;
  *			&lt;min&gt;3.5&lt;/min&gt;
  *		&lt;/magnitudeRange&gt;
  *      &lt;/originNOT&gt;
+ *</pre>
  */
 
 /**

@@ -14,10 +14,12 @@ import org.w3c.dom.*;
 
 /**
  * specifies the beginOffset
+ *<pre>
  * 	&lt;beginOffset&gt;
  *			&lt;unit&gt;SECOND&lt;/unit&gt;
  *			&lt;value&gt;-120&lt;/value&gt;
  * 	&lt;/beginOffset&gt;
+ *</pre>
  */		
  
 

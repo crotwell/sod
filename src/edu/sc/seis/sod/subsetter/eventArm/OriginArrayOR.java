@@ -9,6 +9,7 @@ import edu.iris.Fissures.*;
 /**
  * Contains a single OriginSubsetter. OriginArrayOR returns true when the contained originSubsetter is
  * true for any one of the origins.
+ *<pre>
  *  &lt;originArrayOR&gt;
  *        &lt;originNOT&gt;
  *               &lt;magnitudeRange&gt;
@@ -18,6 +19,7 @@ import edu.iris.Fissures.*;
  *               &lt;/magnitudeRange&gt;
  *        &lt;/originNOT&gt;
  *  &lt;/originArrayOR&gt;
+ *</pre>
  */
 
 public class OriginArrayOR 

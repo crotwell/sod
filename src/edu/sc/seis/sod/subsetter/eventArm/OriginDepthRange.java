@@ -13,6 +13,7 @@ import org.w3c.dom.*;
    /**
      * This subsetter specifies the depthRange for the origin
      * 
+     *<pre>
      *  &lt;originDepthRange&gt;
      *      &lt;unitRange&gt;
      *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
@@ -35,7 +36,7 @@ import org.w3c.dom.*;
      *  &lt;originDepthRange&gt;
      *      &lt;unitRange&gt;
      *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
-       *           &lt;max&gt;100&lt;/max&gt;
+     *           &lt;max&gt;100&lt;/max&gt;
      *      &lt;/unitRange&gt;
      *  &lt;/originDepthRange&gt;
      * 
@@ -44,8 +45,9 @@ import org.w3c.dom.*;
      *  &lt;originDepthRange&gt;
      *      &lt;unitRange&gt;
      *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
-      *      &lt;/unitRange&gt;
+     *      &lt;/unitRange&gt;
      *  &lt;/originDepthRange&gt;
+     *</pre>
      */
 
 public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange implements OriginSubsetter{

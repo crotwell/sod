@@ -15,6 +15,7 @@ import org.w3c.dom.*;
 
 /**
  * sample xml
+ *<pre>
  * &lt;absolute&gt;
  *      &lt;boxArea&gt;
  *              &lt;latitudeRange&gt;
@@ -62,6 +63,7 @@ import org.w3c.dom.*;
  *		&lt;/unitRange&gt;
  *	&lt;/depthRange&gt;
  * &lt;/absolute&gt
+ *</pre>
  */
 
 public class Absolute extends PhaseInteractionType {

@@ -12,7 +12,9 @@ import org.w3c.dom.*;
 
 /**
  * This tag is used to specify the value of the catalog.
+ *<pre>
  * &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
+ *</pre>
  */
 
 

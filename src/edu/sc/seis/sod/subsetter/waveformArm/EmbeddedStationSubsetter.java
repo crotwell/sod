@@ -12,6 +12,7 @@ import org.w3c.dom.*;
 
 /**
  * specifies the embeddedOriginSubsetter
+ *<pre>
  * &lt;embeddedOriginSubsetter&gt;
  *              &lt;stationArea&gt;
  *                           &lt;boxArea&gt;
@@ -26,6 +27,7 @@ import org.w3c.dom.*;
  *                           &lt;/boxArea&gt;
  *              &lt;/stationArea&gt;
  * &lt;/embeddedOriginSubsetter&gt;
+ *</pre>
  */
 
 public class EmbeddedStationSubsetter implements EventStationSubsetter{

@@ -12,7 +12,9 @@ import org.w3c.dom.*;
 
 /**
  * specifies the beginPhase
+ *<pre>
  * &lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
+ *</pre>
  */
 
 public class BeginPhase implements Subsetter {

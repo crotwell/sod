@@ -9,6 +9,7 @@ import edu.iris.Fissures.*;
 /**
  * This subsetter is used to specify a sequence of OriginANDSubsetters. This subsetter is accepted only when all the
  * subsetters forming the sequence are accepted.
+ *<pre>
  *  &lt;originAND&gt;
  *	&lt;description&gt;take any global 6.5 or better EQ&lt;/description&gt;
  * 		&lt;magnitudeRange&gt;
@@ -61,6 +62,7 @@ import edu.iris.Fissures.*;
  *                &lt;/originArrayAND&gt;
  *
  *     &lt;/originAND&gt;
+ *</pre>
  */
 
 public class OriginAND 

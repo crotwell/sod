@@ -16,10 +16,12 @@ import org.w3c.dom.*;
 
 /**
  * specifies the azimuth Range
+ *<pre>
  * &lt;azimuthRange&gt;
  *      &lt;min&gt;30&lt;/min&gt;
  *      &lt;max&gt;180&lt;/max&gt;
  * &lt;/azimuthRange&gt;
+ *</pre>
  */
      
 

@@ -15,6 +15,7 @@ import org.w3c.dom.*;
 
 /**
  * sample xml
+ *<pre>
  * &lt;relative&gt;
  *	&lt;reference&gt;EVENT&lt;/reference&gt;
  *	&lt;depthRange&gt;
@@ -54,6 +55,7 @@ import org.w3c.dom.*;
  *		&lt;/unitRange&gt;
  *	&lt;/depthRange&gt;
  * &lt;/relative&gt; 
+ *</pre>
  */
 
 public class Relative extends PhaseInteractionType {

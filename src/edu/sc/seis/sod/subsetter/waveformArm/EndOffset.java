@@ -14,10 +14,12 @@ import org.w3c.dom.*;
 
 /**
  * specifies the endOffset
+ *<pre>
  * 	&lt;endOffset&gt;
  *			&lt;unit&gt;SECOND&lt;/unit&gt;
  *			&lt;value&gt;-120&lt;/value&gt;
  * 	&lt;/endOffset&gt;
+ *</pre>
  */	
 
 public class EndOffset extends Interval {

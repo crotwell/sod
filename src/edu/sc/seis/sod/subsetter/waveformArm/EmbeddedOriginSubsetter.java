@@ -12,6 +12,7 @@ import org.w3c.dom.*;
 
 /**
  * specifies the embeddedOriginSubsetter
+ *<pre>
  * &lt;embeddedOriginSubsetter&gt;
  *     &lt;magnitudeRange&gt;
  *           &lt;description&gt;describes magnitude&lt;/description&gt;
@@ -19,6 +20,7 @@ import org.w3c.dom.*;
  *           &lt;min&gt;5.5&lt;/min&gt;
  *     &lt;/magnitudeRange&gt;
  * &lt;/embeddedOriginSubsetter&gt;
+ *</pre>
  */
 
 

@@ -11,6 +11,7 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /** 
+ *<pre>
  * This subsetter specifies the MagnitudeRange
  * &lt;magnitudeRange&gt;
  *	 &lt;magType&gt;mb&lt;/magType&gt;
@@ -41,6 +42,7 @@ import org.w3c.dom.*;
  *	 &lt;magType&gt;mb&lt;/magType&gt;
  *	 &lt;magType&gt;MS&lt;/magType&gt;
  *  &lt;/magnitudeRange&gt;
+ *</pre>
  */
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{

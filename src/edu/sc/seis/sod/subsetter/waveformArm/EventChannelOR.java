@@ -13,8 +13,10 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of EventChannelSubsetters. This subsetter is accepted when even one 
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventChannelOR is not accepted.
+  *<pre>
  * &lt;eventChannelOR&gt;
  * &lt;/eventChannelOR&gt;
+ *</pre>
  */
 
 public class EventChannelOR 

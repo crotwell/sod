@@ -11,6 +11,7 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted when even one 
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventAttrOR is not accepted.
+ *<pre>
  * &lt;eventAttrOR&gt;
  *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
  *            &lt;geographicRegion&gt;&lt;value&gt;162 258 324 404&lt;value/&gt;&lt;&lt;geographicRegion&gt;
@@ -26,6 +27,7 @@ import edu.iris.Fissures.*;
  * &lt;eventAttrOR&gt;
  * &lt;/eventAttrOR&gt;
  *
+ *</pre>
  */
 
 public class EventAttrOR 

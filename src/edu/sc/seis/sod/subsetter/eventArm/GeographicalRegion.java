@@ -9,7 +9,9 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
+ *<pre>
  * &lt;geographicalRegion&gt;10 20 30 40&lt;/geographicalRegion&gt;
+ *</pre>
  */
 
 public class GeographicalRegion  extends FlinnEngdahlRegion{

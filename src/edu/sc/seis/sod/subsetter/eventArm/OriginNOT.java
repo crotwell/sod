@@ -10,6 +10,7 @@ import edu.iris.Fissures.*;
 /**
  * This subsetter is used to specify a negation of OriginSubsetter. This subsetter is accepted only when the included
  * subsetter is false.
+ *<pre>
  *  &lt;originNOT&gt;
  *         &lt;magnitudeRange&gt;
  *                 &lt;magType&gt;mb&lt;/magType&gt;
@@ -17,6 +18,7 @@ import edu.iris.Fissures.*;
  *                  &lt;max&gt;10&lt;/max&gt;
  *           &lt;/magnitudeRange&gt;
  *    &lt;/originNOT&gt;
+ *</pre>
  */
 
 public class OriginNOT 

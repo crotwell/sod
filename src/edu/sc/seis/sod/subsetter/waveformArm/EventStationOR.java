@@ -13,6 +13,7 @@ import edu.iris.Fissures.*;
  * This subsetter is used to specify a sequence of EventStationSubsetters. This subsetter is accepted when even one 
  * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
  * the eventStationOR is not accepted.
+ *<pre>
  *	&lt;eventStationOR&gt;
  *		&lt;phaseExists&gt;
  * 			&lt;modelName&gt;prem&lt;/modelName&gt;
@@ -40,6 +41,7 @@ import edu.iris.Fissures.*;
  *			&lt;/relative&gt;
  *		&lt;/phaseInteraction&gt;
  *	&lt;/eventStationOR&gt;
+ *</pre>
  */
 
 
