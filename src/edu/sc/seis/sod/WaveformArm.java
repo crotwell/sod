@@ -46,8 +46,7 @@ public class WaveformArm implements Runnable {
         processConfig(config);
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
-        MAX_RETRY_DELAY =  Start.getIntervalProp(new TimeInterval(180, UnitImpl.DAY),
-                                                 "sod.waveform.maxRetryDelay");
+        MAX_RETRY_DELAY =  Start.getRunProps().getMaxRetryDelay();
     }
 
     public boolean isFinished() { return finished;}

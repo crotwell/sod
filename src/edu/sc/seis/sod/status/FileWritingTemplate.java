@@ -105,10 +105,8 @@ public class FileWritingTemplate extends Template implements GenericTemplate, Ru
     }
 
     public static String getBaseDirectoryName() {
-        return Start.getProperties().getProperty(FileWritingTemplate.BASE_DIR_PROP_NAME, "status");
+        return Start.getRunProps().getStatusBaseDir();
     }
-
-    public static final String BASE_DIR_PROP_NAME = "sod.start.StatusBaseDirectory";
 
     private String baseDir;
     private String outputLocation;
