@@ -6,9 +6,7 @@
  */
 
 package edu.sc.seis.sod;
-import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -32,6 +30,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class ChannelGroup {
@@ -48,25 +47,27 @@ public class ChannelGroup {
 		}
 		return false;
 	}
-	public static ChannelGroup[] group(Channel[] channels,List failures)  {
-		if(defaultRules == null) {
-			loadDefaultRules(defaultConfigFileLoc);
-		}
-		return applyRules(channels,defaultRules,failures);
+	public static ChannelGroup[] group(Channel[] channels,List failures) {
+		return group(channels,new Element[0],failures);
 	}
 	public static ChannelGroup[] group(Channel[] channels,Element[] additionalRules,List failures)  {
-		if(defaultRules == null) {
-			loadDefaultRules(defaultConfigFileLoc);
+		synchronized(ChannelGroup.class) {
+			if(defaultRules == null) {
+				try {
+					loadDefaultRules();
+				}catch(Exception e) {
+					Start.allHopeAbandon("Unable to load default rules for grouper");
+					System.exit(0);
+				}
+			}
 		}
 		int ruleCount = defaultRules.length + additionalRules.length;
 		Element[] allRules = new Element[ruleCount];
 		for(int j=0;j<additionalRules.length;j++) {
 			allRules[j] = additionalRules[j];
 		}
-		if(defaultRules != null) {
-			for(int k=additionalRules.length;k<ruleCount;k++) {
-				allRules[k] = defaultRules[k-additionalRules.length];
-			}
+		for(int k=additionalRules.length;k<ruleCount;k++) {
+			allRules[k] = defaultRules[k-additionalRules.length];
 		}
 		return applyRules(channels,allRules,failures);
 	}
@@ -251,31 +252,24 @@ public class ChannelGroup {
 		}
 		return bandGain;
 	}
-	
-	private static void loadDefaultRules(String configFileName) {
-		try {
-			Validator.setSchemaLoc(grouperSchemaLoc);
-			if(!Validator.validate(Start.createInputSource((ChannelGroup.class).getClassLoader(),configFileName))){
-				logger.info("Invalid config file!");
-				throw new SAXException("Invalid config file");
-			}else{
-				Document doc = Start.createDoc(Start.createInputSource((ChannelGroup.class).getClassLoader(),configFileName));
-				NodeList rules = doc.getElementsByTagName("rule");
-				defaultRules = new Element[rules.getLength()];
-				for(int i=0;i<rules.getLength();i++) {
-					defaultRules[i] = (Element) rules.item(i);
-				}
+	//If the config file in invalid the validator throws a SAXException
+	private static void loadDefaultRules() throws Exception {
+		Validator validator = new Validator(grouperSchemaLoc);
+		if(!validator.validate(getDefaultRules())){
+			logger.info("Invalid config file!");
+			throw new ConfigurationException("Invalid default rules file for channel grouper");
+		}else{
+			Document doc = Start.createDoc(getDefaultRules());
+			NodeList rules = doc.getElementsByTagName("rule");
+			defaultRules = new Element[rules.getLength()];
+			for(int i=0;i<rules.getLength();i++) {
+				defaultRules[i] = (Element) rules.item(i);
 			}
-		} catch (ParserConfigurationException e) {
-			GlobalExceptionHandler.handle("Invalid config file for grouper ", e);
-		} catch (SAXException e) {
-			GlobalExceptionHandler.handle("Invalid config file for grouper ", e);
-		} catch (IOException e) {
-			GlobalExceptionHandler.handle("IOException while loading default rules for grouper " ,e);
-		} catch(Exception e) {
-			GlobalExceptionHandler.handle("Exception loading the default rules", e);
 		}
-		
+	}
+	private static InputSource getDefaultRules() throws IOException {
+		ClassLoader loader = ChannelGroup.class.getClassLoader();
+		return  Start.createInputSource(loader,defaultConfigFileLoc);
 	}
 	private static Logger logger = Logger.getLogger(ChannelGroup.class);
 	private Channel[] channels;
