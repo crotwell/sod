@@ -1,7 +1,6 @@
 package edu.sc.seis.sod;
 
 import java.util.*;
-
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -37,16 +36,14 @@ import org.w3c.dom.NodeList;
 public class WaveformArm implements Runnable {
 
     public WaveformArm(Element config, NetworkArm networkArm, int threadPoolSize)
-        throws Exception {
+            throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         eventRetryTable = new JDBCEventChannelRetry();
-
-        logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"+
-                        "honey; I need hands outstretched to take it.");
-        for (int i = 0; i < Status.ALL.length; i++) {
-            for (int j = 0; j < Status.ALL[i].length; j++) {
-                logger.info("Status: "+Status.ALL[i][j]+" found "+evChanStatus.getNumOfStatus(Status.ALL[i][j]));
+        for(int i = 0; i < Status.ALL.length; i++) {
+            for(int j = 0; j < Status.ALL[i].length; j++) {
+                logger.info("Status: " + Status.ALL[i][j] + " found "
+                        + evChanStatus.getNumOfStatus(Status.ALL[i][j]));
             }
         }
         processConfig(config);
@@ -81,7 +78,7 @@ public class WaveformArm implements Runnable {
             MicroSecondDate runFinishTime = ClockUtil.now();
             MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
             while((serverFailDelayEnd.after(ClockUtil.now()) && serverFailuresRemain())
-                  || availableDataFailuresRemain()) {
+                    || availableDataFailuresRemain()) {
                 retryIfNeededAndAvailable();
                 try {
                     Thread.sleep(10000);
@@ -96,6 +93,8 @@ public class WaveformArm implements Runnable {
             GlobalExceptionHandler.handle("Problem running waveform arm", e);
         }
         finished = true;
+        logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
+                + "honey; I need hands outstretched to take it.");
     }
 
     private boolean availableDataFailuresRemain() throws SQLException {
@@ -134,7 +133,7 @@ public class WaveformArm implements Runnable {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev.getEvent());
             NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             logger.debug("got " + networks.length
-                             + " networks from getSuccessfulNetworks()");
+                    + " networks from getSuccessfulNetworks()");
             for(int i = 0; i < networks.length; i++) {
                 startNetwork(ev, overlap, networks[i]);
             }
@@ -143,9 +142,9 @@ public class WaveformArm implements Runnable {
             // inserted
             //in the waveformDatabase.
             Start.getEventArm()
-                .change(ev.getEvent(),
-                        Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                   Standing.SUCCESS));
+                    .change(ev.getEvent(),
+                            Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                       Standing.SUCCESS));
         }
     }
 
@@ -155,8 +154,10 @@ public class WaveformArm implements Runnable {
         // don't bother with network if effective time does no
         // overlap event time
         if(!overlap.overlaps(net.getNetworkAccess().get_attributes())) {
-            failLogger.info(NetworkIdUtil.toString(net.getNetworkAccess().get_attributes().get_id())+
-                                "  The networks effective time does not overlap the event time.");
+            failLogger.info(NetworkIdUtil.toString(net.getNetworkAccess()
+                    .get_attributes()
+                    .get_id())
+                    + "  The networks effective time does not overlap the event time.");
             return;
         } // end of if ()
         StationDbObject[] stations = networkArm.getSuccessfulStations(net);
@@ -171,8 +172,9 @@ public class WaveformArm implements Runnable {
                               StationDbObject station,
                               EventDbObject ev) throws Exception {
         if(!overlap.overlaps(station.getStation())) {
-            failLogger.debug(StationIdUtil.toString(station.getStation().get_id())+
-                                 "  The stations effective time does not overlap the event time.");
+            failLogger.debug(StationIdUtil.toString(station.getStation()
+                    .get_id())
+                    + "  The stations effective time does not overlap the event time.");
             return;
         } // end of if ()
         SiteDbObject[] sites = networkArm.getSuccessfulSites(net, station);
@@ -187,13 +189,13 @@ public class WaveformArm implements Runnable {
                            SiteDbObject site,
                            EventDbObject ev) throws Exception {
         if(!overlap.overlaps(site.getSite())) {
-            failLogger.debug(SiteIdUtil.toString(site.getSite().get_id())+
-                                 "  The sites effective time does not overlap the event time: ");
+            failLogger.debug(SiteIdUtil.toString(site.getSite().get_id())
+                    + "  The sites effective time does not overlap the event time: ");
             return;
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
         logger.debug(ExceptionReporterUtils.getMemoryUsage() + " got "
-                         + chans.length + " SuccessfulChannels");
+                + chans.length + " SuccessfulChannels");
         if(motionVectorArm != null) {
             Channel[] channels = new Channel[chans.length];
             for(int i = 0; i < channels.length; i++) {
@@ -209,7 +211,8 @@ public class WaveformArm implements Runnable {
                                                    Standing.REJECT);
             while(it.hasNext()) {
                 Channel failchan = (Channel)it.next();
-                failLogger.info(ChannelIdUtil.toString(failchan.get_id())+"  Channel not grouped.");
+                failLogger.info(ChannelIdUtil.toString(failchan.get_id())
+                        + "  Channel not grouped.");
                 for(int k = 0; k < chans.length; k++) {
                     if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
                                               failchan.get_id())) {
@@ -227,7 +230,7 @@ public class WaveformArm implements Runnable {
                 for(int j = 0; j < pairIds.length; j++) {
                     for(int k = 0; k < chans.length; k++) {
                         if(ChannelIdUtil.areEqual(chans[k].getChannel()
-                                                      .get_id(),
+                                                          .get_id(),
                                                   chanGroups[i].getChannels()[j].get_id())) {
                             synchronized(evChanStatus) {
                                 pairIds[j] = evChanStatus.put(evDbId,
@@ -303,9 +306,8 @@ public class WaveformArm implements Runnable {
                     break;
                 }
             }
-            if(pairGroup == null) {
-                throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "+ecp);
-            }
+            if(pairGroup == null) { throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "
+                    + ecp); }
             int[] pairIds;
             synchronized(evChanStatus) {
                 pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
@@ -340,8 +342,8 @@ public class WaveformArm implements Runnable {
                         }
                     } catch(NotFound e) {
                         GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair "
-                                                          + pairId
-                                                          + " right after it gave it to me",
+                                                              + pairId
+                                                              + " right after it gave it to me",
                                                       e);
                         return null;
                     }
@@ -412,8 +414,8 @@ public class WaveformArm implements Runnable {
                     }
                 } catch(NotFound e) {
                     GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair "
-                                                      + pairIds[i]
-                                                      + " right after it gave it to me",
+                                                          + pairIds[i]
+                                                          + " right after it gave it to me",
                                                   e);
                 }
             }
@@ -486,18 +488,18 @@ public class WaveformArm implements Runnable {
     }
 
     public static final String[] PACKAGES = new String[] {"waveformArm",
-            "availableData",
-            "availableData.vector",
-            "eventChannel",
-            "eventChannel.vector",
-            "eventStation",
-            "request",
-            "request.vector",
-            "requestGenerator",
-            "requestGenerator.vector",
-            "waveform",
-            "waveform.vector",
-            "dataCenter"};
+                                                          "availableData",
+                                                          "availableData.vector",
+                                                          "eventChannel",
+                                                          "eventChannel.vector",
+                                                          "eventStation",
+                                                          "request",
+                                                          "request.vector",
+                                                          "requestGenerator",
+                                                          "requestGenerator.vector",
+                                                          "waveform",
+                                                          "waveform.vector",
+                                                          "dataCenter"};
 
     public void addStatusMonitor(WaveformMonitor monitor) {
         statusMonitors.add(monitor);
@@ -538,7 +540,7 @@ public class WaveformArm implements Runnable {
     }
 
     private void handleAvailableDataFailure(EventChannelPair ecp)
-        throws SQLException {
+            throws SQLException {
         MicroSecondDate oTime = new MicroSecondDate(ecp.getEvent().getOrigin().origin_time);
         if(oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
             synchronized(eventRetryTable) {
@@ -605,7 +607,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
-                    failLogger.info(ecp+"  "+accepted.toString());
+                    failLogger.info(ecp + "  " + accepted.toString());
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -652,12 +654,12 @@ public class WaveformArm implements Runnable {
     }
 
     private class RetryMotionVectorWaveformWorkUnit extends
-        MotionVectorWaveformWorkUnit {
+            MotionVectorWaveformWorkUnit {
 
         public RetryMotionVectorWaveformWorkUnit(int[] pairId) {
             super(pairId);
             logger.debug("Retrying on pair id " + pairId[0] + " " + pairId[1]
-                             + " " + pairId[2]);
+                    + " " + pairId[2]);
             synchronized(retryNumLock) {
                 retryNum++;
             }
@@ -701,7 +703,7 @@ public class WaveformArm implements Runnable {
                 } else {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
-                    failLogger.info(ecp+"  "+accepted.toString());
+                    failLogger.info(ecp + "  " + accepted.toString());
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -711,7 +713,7 @@ public class WaveformArm implements Runnable {
         }
 
         private EventChannelGroupPair extractEventChannelGroupPair()
-            throws Exception {
+                throws Exception {
             try {
                 EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
                 synchronized(evChanStatus) {
