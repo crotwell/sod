@@ -16,6 +16,7 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.Quantity;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.event.EventAttrImpl;
 import edu.iris.Fissures.event.OriginImpl;
 import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
@@ -24,6 +25,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.iris.Fissures.network.SiteImpl;
 import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import java.util.Calendar;
@@ -59,7 +61,7 @@ public class MockFissures{
     }
     
     private static Channel createChannel(ChannelId id, String info){
-        return new ChannelImpl(id, info, new Orientation(0,0), null, null, null);
+        return new ChannelImpl(id, info, new Orientation(0,0), null, null, createSite());
     }
     
     public static ChannelId createChanID(){ return createChanId("BHZ"); }
@@ -70,8 +72,8 @@ public class MockFissures{
         ChannelId chanId = new ChannelId();
         chanId.network_id = createNetworkID();
         chanId.channel_code = chanCode;
-        chanId.site_code = "TSTS";
-        chanId.station_code = "TST";
+        chanId.site_code = "  ";
+        chanId.station_code = "STTN";
         chanId.begin_time = time.getFissuresTime();
         return chanId;
     }
@@ -103,6 +105,16 @@ public class MockFissures{
     
     public static EventAttr createWallFallAttr(){
         return new EventAttrImpl("Fall of the Berlin Wall Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), 543));
+    }
+    
+    public static Site createSite(){
+        return new SiteImpl(createSiteId(), loc, createStation(), "this is a site.  Isn't it grand?");
+    }
+    
+    public static SiteId createSiteId(){
+        Station sta = createStation();
+        SiteId sid = new SiteId(createNetworkID(), sta.get_code(), "  ", time.getFissuresTime());
+        return sid;
     }
     
     public static Station createStation(){
