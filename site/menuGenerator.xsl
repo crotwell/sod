@@ -39,12 +39,19 @@
         <xsl:param name="base"/>
         <li>
             <xsl:for-each select="page">
+                <xsl:if test="$currentPage = destination/text()">
+                    <xsl:attribute name="id">
+                        <xsl:value-of select="'selected'"/>
+                    </xsl:attribute>
+                </xsl:if>
+            </xsl:for-each>
+            <xsl:for-each select="page">
                 <a>
-                    <xsl:if test="$currentPage = destination/text()">
-                        <xsl:attribute name="id">
-                            <xsl:value-of select="'selected'"/>
-                        </xsl:attribute>
-                    </xsl:if>
+                <xsl:if test="$currentPage != destination/text()">
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="'notSelected'"/>
+                    </xsl:attribute>
+                </xsl:if>
                     <xsl:attribute name="href">
                         <xsl:value-of select="concat($base, destination/text())"/>
                     </xsl:attribute>
