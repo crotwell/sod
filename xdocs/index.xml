@@ -69,6 +69,17 @@
                 </section>
                 <section name="News">
                 <table id="entry">
+                <th>11 August 2004</th>
+                <tr>
+                        <td>
+                                <p>The zip download from Sod 2.0 beta 8
+                                had an error on extraction. The tar was
+                                not effected and a new zip file is available
+                                in the download section. </p>
+                        </td>
+                </tr>
+                </table>
+                <table id="entry">
                 <th>29 July 2004</th>
                 <tr>
                         <td>
