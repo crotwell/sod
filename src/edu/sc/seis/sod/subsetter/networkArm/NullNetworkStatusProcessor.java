@@ -16,7 +16,7 @@ import org.w3c.dom.*;
  * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell</a>
  * @version 1.0
  */
-public class NullNetworkStatusProcessor {
+public class NullNetworkStatusProcessor implements NetworkStatusProcessor {
 
     public NullNetworkStatusProcessor() {
 
