@@ -9,7 +9,6 @@ JACORB_CONCURRENT=$JACORB_LIB/concurrent-1.3.2.jar
 JACORB_LOGKIT=$JACORB_LIB/logkit-1.2.jar
 
 
-
 SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta.jar
 FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.6beta.jar
 FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.4beta.jar
@@ -31,7 +30,7 @@ java -Djava.endorsed.dirs=${JACORB_LIB}  \
     -Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB \
     -Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton \
     -Djacorb.connection.client.pending_reply_timeout=120000 \
-    -Xmx256m \
+    -Xmx128m \
     -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${JING}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
     edu.sc.seis.sod.Start $*
 
