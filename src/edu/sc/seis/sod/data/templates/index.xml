@@ -13,18 +13,20 @@
 <div id="Content">
 <h1><runName/> Information</h1>
 <div><b>Started on: </b><startTime/></div>
-<div><b>Amount of SAC data written: </b><sacDataWritten/> bytes</div>
+<div><b>Amount of SAC data written: </b><sacDataWritten/> MB</div>
 <div><b>Last event received: </b>
 <lastEvent><a><attribute name="href">events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></lastEvent>
 </div>
 <div><b>Number waveforms processed: </b><numSuccessfulECP/></div>
 <div><b>Waveforms per hour(WPH): </b><waveformsPerHour/></div>
 <div><b>Error Count: </b><errorCount/></div>
-<div><b>Events to date:</b></div>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
 <div id="LeftColumn">
 <menu><template>jar:edu/sc/seis/sod/data/templates/menu.xml</template></menu>
+<div id="Key">
+<img src="images/mapkey.gif"/>
+</div>
 </div>
 <div id="footer">
 <h2>Page last generated:</h2><now/>
