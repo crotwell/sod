@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
 
@@ -54,7 +55,7 @@ public class AlwaysSuccess implements LocalSeismogramProcess {
             LocalSeismogramResult result = localSeisProcess.process(event, channel, original, available, seismograms, cookieJar);
             return new LocalSeismogramResult(true, result.getSeismograms());
         }catch(Exception e) {
-            logger.error("Exception thrown inside Always Success" + e);
+            GlobalExceptionHandler.handle("Caught an exception inside Always Success and moving on ...",e);
             return new LocalSeismogramResult(true, seismograms);
         }
 
