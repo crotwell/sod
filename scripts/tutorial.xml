@@ -7,21 +7,21 @@
             <value>1</value>
             <unit>WEEK</unit>
         </eventQueryIncrement>
-        <eventLag>
+        <eventRefreshInterval>
+			<value>6</value>
+			<unit>MINUTE</unit>
+		</eventRefreshInterval>
+	    <eventLag>
             <value>1</value>
             <unit>WEEK</unit>
         </eventLag>
-        <eventRefreshInterval>
-            <value>6</value>
-            <unit>MINUTE</unit>
-        </eventRefreshInterval>
-            <waveformWorkerThreads>1</waveformWorkerThreads>
         <maxRetryDelay>
             <value>16</value>
             <unit>DAY</unit>
         </maxRetryDelay>
-             <removeDatabase>TRUE</removeDatabase>
-	<eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
+	    <waveformWorkerThreads>1</waveformWorkerThreads>
+        <removeDatabase>TRUE</removeDatabase>
+    	<eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
         </properties>
         <eventArm>
                 <eventFinder>
