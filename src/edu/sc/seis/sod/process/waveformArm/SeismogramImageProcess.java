@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.process.waveformArm;
 
+import edu.sc.seis.sod.status.*;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -26,14 +28,8 @@ import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
-import edu.sc.seis.sod.status.ChannelFormatter;
-import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.StationFormatter;
-import edu.sc.seis.sod.status.TemplateFileLoader;
 import java.awt.Dimension;
 import java.io.File;
-import java.util.Timer;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -138,11 +134,11 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
             bsd.add(new Flag(flagTime, arrivals[i].getName()));
         }
 
-        final String picFileName = fileDir + '/'
+        final String picFileName = FissuresFormatter.filize(fileDir + '/'
             + eventFormatter.getResult(event) + '/'
             + stationFormatter.getResult(channel.my_site.my_station) + '/'
             + prefix
-            + chanFormatter.getResult(channel);
+            + chanFormatter.getResult(channel));
 
         SwingUtilities.invokeAndWait(new Runnable(){
                     public void run(){
