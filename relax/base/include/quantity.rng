@@ -6,21 +6,27 @@
         <notAllowed/>
     </start>
     <define name="quantity">
-        <ref name="unit"/>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <ref name="unit"/>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
     <define name="time">
-        <ref name="timeUnit"/>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <ref name="timeUnit"/>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
     <define name="length">
-        <ref name="lengthUnit"/>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <ref name="lengthUnit"/>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
 </grammar>

@@ -273,21 +273,23 @@
                         <data type="string"/>
                     </element>
                     <element name="refreshInterval">
-                        <element name="unit">
-                            <choice>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>HOUR</value>
-                                <value>DAY</value>
-                                <value>YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="integer"/>
-                        </element>
+                        <interleave>
+                            <element name="unit">
+                                <choice>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>HOUR</value>
+                                    <value>DAY</value>
+                                    <value>YEAR</value>
+                                </choice>
+                            </element>
+                            <element name="value">
+                                <data type="float"/>
+                            </element>
+                        </interleave>
                     </element>
                 </element>
                 <optional>
@@ -506,20 +508,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="any4">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any4"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="any3">
         <element>
             <anyName/>
@@ -530,6 +518,20 @@
                     </attribute>
                     <text/>
                     <ref name="any3"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="any4">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any4"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -2328,7 +2330,29 @@
             </element>
         </choice>
     </define>
-    <define name="range5">
+    <define name="SignalToNoiseBase">
+        <optional>
+            <element name="longTime">
+                <ref name="time2"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="shortTime">
+                <ref name="time2"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="delayTime">
+                <ref name="time2"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="ratio">
+                <data type="float"/>
+            </element>
+        </optional>
+    </define>
+    <define name="range">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -2358,6 +2382,35 @@
         </optional>
     </define>
     <define name="range2">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+    <define name="range5">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -2444,35 +2497,6 @@
             </element>
         </optional>
     </define>
-    <define name="range">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
-    </define>
     <define name="eventChannel">
         <choice>
             <element name="embeddedEventStation">
@@ -2503,26 +2527,19 @@
     <define name="seismogramSubsetter">
         <choice>
             <element name="longShortSignalToNoise">
-                <optional>
-                    <element name="longTime">
-                        <ref name="time2"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="shortTime">
-                        <ref name="time2"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="delayTime">
-                        <ref name="time2"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="ratio">
-                        <data type="float"/>
-                    </element>
-                </optional>
+                <ref name="SignalToNoiseBase"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <ref name="SignalToNoiseBase"/>
+                <element name="modelName">
+                    <data type="string"/>
+                </element>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="triggerWindow">
+                    <ref name="time2"/>
+                </element>
             </element>
             <element name="seismogramSubsetterAND">
                 <oneOrMore>
@@ -2544,55 +2561,61 @@
         </choice>
     </define>
     <define name="time">
-        <element name="unit">
-            <choice>
-                <value>NANOSECOND</value>
-                <value>MICROSECOND</value>
-                <value>MILLISECOND</value>
-                <value>SECOND</value>
-                <value>MINUTE</value>
-                <value>HOUR</value>
-                <value>DAY</value>
-                <value>YEAR</value>
-            </choice>
-        </element>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>YEAR</value>
+                </choice>
+            </element>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
     <define name="time2">
-        <element name="unit">
-            <choice>
-                <value>NANOSECOND</value>
-                <value>MICROSECOND</value>
-                <value>MILLISECOND</value>
-                <value>SECOND</value>
-                <value>MINUTE</value>
-                <value>HOUR</value>
-                <value>DAY</value>
-                <value>YEAR</value>
-            </choice>
-        </element>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>YEAR</value>
+                </choice>
+            </element>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
     <define name="time3">
-        <element name="unit">
-            <choice>
-                <value>NANOSECOND</value>
-                <value>MICROSECOND</value>
-                <value>MILLISECOND</value>
-                <value>SECOND</value>
-                <value>MINUTE</value>
-                <value>HOUR</value>
-                <value>DAY</value>
-                <value>YEAR</value>
-            </choice>
-        </element>
-        <element name="value">
-            <data type="integer"/>
-        </element>
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>YEAR</value>
+                </choice>
+            </element>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
     </define>
     <define name="channel2">
         <choice>
@@ -2617,21 +2640,23 @@
                     </element>
                 </optional>
                 <element name="interval">
-                    <element name="unit">
-                        <choice>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>HOUR</value>
-                            <value>DAY</value>
-                            <value>YEAR</value>
-                        </choice>
-                    </element>
-                    <element name="value">
-                        <data type="integer"/>
-                    </element>
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>HOUR</value>
+                                <value>DAY</value>
+                                <value>YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
@@ -2713,21 +2738,23 @@
                     </element>
                 </optional>
                 <element name="interval">
-                    <element name="unit">
-                        <choice>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>HOUR</value>
-                            <value>DAY</value>
-                            <value>YEAR</value>
-                        </choice>
-                    </element>
-                    <element name="value">
-                        <data type="integer"/>
-                    </element>
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>HOUR</value>
+                                <value>DAY</value>
+                                <value>YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">

@@ -9,6 +9,7 @@
     <define name="seismogramSubsetter">
         <choice>
             <ref name="longShortSignalToNoise"/>
+            <ref name="phaseSignalToNoise"/>
             <ref name="seismogramSubsetterAND"/>
             <ref name="seismogramSubsetterOR"/>
             <ref name="seismogramSubsetterXOR"/>
@@ -91,8 +92,7 @@
             <ref name="seismogramSubsetter"/>
         </element>
     </define>
-    <define name="longShortSignalToNoise">
-        <element name="longShortSignalToNoise">
+    <define name="SignalToNoiseBase">
             <optional>
             <element name="longTime">
                 <ref name="time"/>
@@ -113,6 +113,24 @@
                 <data type="float"/>
             </element>
             </optional>
+    </define>
+    <define name="longShortSignalToNoise">
+        <element name="longShortSignalToNoise">
+            <ref name="SignalToNoiseBase"/>
+        </element>
+    </define>
+    <define name="phaseSignalToNoise">
+        <element name="phaseSignalToNoise">
+            <ref name="SignalToNoiseBase"/>
+            <element name="modelName">
+                <data type="string"/>
+            </element>
+            <element name="phaseName">
+                <data type="string"/>
+            </element>
+            <element name="triggerWindow">
+                <ref name="time"/>
+            </element>
         </element>
     </define>
 </grammar>
