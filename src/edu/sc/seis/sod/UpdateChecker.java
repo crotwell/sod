@@ -9,13 +9,14 @@ package edu.sc.seis.sod;
 import edu.sc.seis.fissuresUtil.cache.JobTracker;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.UpdateCheckerJob;
+import edu.sc.seis.sod.Version;
 
 public class UpdateChecker  {
 
     public UpdateChecker(boolean gui) {
         UpdateCheckerJob job = new UpdateCheckerJob("SOD update checker",
                                                     "SOD",
-                                                    "1.0",
+                                                    Version.getVersion(),
                                                     updateURL,
                                                     gui,
                                                     forceCheck);
