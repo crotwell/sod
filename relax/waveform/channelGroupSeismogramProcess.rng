@@ -8,7 +8,6 @@
     <include href="../base/include/quantity.rng"/>
     <define name="channelGroupSeismogramProcess">
         <choice>
-            <externalRef href="seismogramProcess.rng"/>
             <ref name="threeComponentData" />
             <ref name="ANDLocalSeismogramWrapper" />
             <ref name="ORLocalSeismogramWrapper" />
