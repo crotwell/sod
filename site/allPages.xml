@@ -37,6 +37,11 @@
                 <name>Realtime Run Considerations</name>
         </page>
         <page>
+                <source>../xdocs/legacy.xml</source>
+                <destination>legacy.html</destination>
+                <name>Legacy Code Considerations</name>
+        </page>
+        <page>
                 <source>include/ES_JulAug_2004_preprint.pdf</source>
                 <destination>ES_JulAug_2004_preprint.pdf</destination>
                 <name>SOD Paper(PDF)</name>
