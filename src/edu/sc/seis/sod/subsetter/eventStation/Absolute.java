@@ -10,7 +10,7 @@ import edu.sc.seis.sod.subsetter.DepthRange;
 
 public class Absolute extends PhaseInteractionType {
 
-    public Absolute(Element config) throws ConfigurationException {
+    public Absolute(Element config) {
         super(config);
         this.config = config;
     }
