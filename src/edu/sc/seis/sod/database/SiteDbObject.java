@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.network.SiteIdUtil;
 
 /**
  * SiteDbObject.java
@@ -14,12 +15,16 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public class SiteDbObject extends DbObject{
     public SiteDbObject (int dbid, Site site){
-	super(dbid);
-	this.site = site;
+    super(dbid);
+    this.site = site;
     }
 
     public Site getSite() {
-	return this.site;
+    return this.site;
+    }
+    
+    public String toString(){
+        return SiteIdUtil.toString(site.get_id());
     }
 
     public ChannelDbObject[] channelDbObjects = null;

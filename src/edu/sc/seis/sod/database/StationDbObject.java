@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.StationIdUtil;
 
 /**
  * StationDbObject.java
@@ -14,16 +15,20 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public class StationDbObject extends DbObject{
     public StationDbObject (int dbid, Station station){
-	super(dbid);
-	this.station = station;
+        super(dbid);
+        this.station = station;
     }
-
+    
     public Station getStation() {
-	return this.station;
+        return this.station;
     }
-
+    
+    public String toString(){
+        return StationIdUtil.toString(station.get_id());
+    }
+    
     public SiteDbObject[] siteDbObjects = null;
-
+    
     private Station station;
     
 }// StationDbObject

@@ -13,18 +13,20 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public class NetworkDbObject extends DbObject{
     public NetworkDbObject (int dbid, NetworkAccess networkAccess){
-	super(dbid);
-	this.networkAccess = networkAccess;
+        super(dbid);
+        this.networkAccess = networkAccess;
     }
     
     public NetworkAccess getNetworkAccess() {
-	return this.networkAccess;
+        return this.networkAccess;
     }
-
     
-
+    public String toString(){
+        return networkAccess.get_attributes().get_code();
+    }
+    
     public StationDbObject[] stationDbObjects = null;
-
+    
     private NetworkAccess networkAccess;
     
 }// NetworkDbObject
