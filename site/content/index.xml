@@ -30,6 +30,7 @@
                         <p class="about">Please read the <a href="walkthrough.html">walkthrough</a>
                                 document for an simple tutorial using SOD to get SAC data from the
                                 IRIS DMC.</p>
+                        <p class="about">Send any comments, good or bad, to sod at seis.sc.edu.</p>
                 </section>
                 <section name="News">
                         <table id="entry">
