@@ -98,10 +98,10 @@ public class PhaseRequest implements RequestGenerator{
 	
 	String phaseNames= "";
 	if ( ! beginPhase.equals(ORIGIN)) {
-	    phaseNames += beginPhase;
+	    phaseNames += " "+beginPhase;
 	} // end of if (beginPhase.equals("origin"))
 	if ( ! endPhase.equals(ORIGIN)) {
-	    phaseNames += endPhase;
+	    phaseNames += " "+endPhase;
 	} // end of if (beginPhase.equals("origin"))
 	
 
