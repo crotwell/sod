@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 
 import edu.sc.seis.sod.subsetter.*;
+import edu.sc.seis.sod.database.*;
 
 import org.w3c.dom.*;
 import org.apache.log4j.*;
@@ -47,7 +48,8 @@ public class NetworkArm {
      */
     protected void processConfig() 
 	throws ConfigurationException {
-
+	networkDatabase = DatabaseManager.getDatabaseManager(Start.getProperties(), "postgres").getNetworkDatabase();
+	
 	NodeList children = config.getChildNodes();
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
@@ -97,7 +99,6 @@ public class NetworkArm {
      * @exception Exception if an error occurs
      */
     public void processNetworkArm() throws Exception{
-
 	channelList = new ArrayList();
 	NetworkDC netdc = networkFinderSubsetter.getNetworkDC();
         finder = netdc.a_finder();
@@ -111,6 +112,7 @@ public class NetworkArm {
 	    networkIds[counter] = attr.get_id();
 	    if(networkIdSubsetter.accept(networkIds[counter], null)) {
 		handleNetworkAttrSubsetter(allNets[counter], attr);
+	
 	    } else {
 		failure.info("Fail "+attr.get_code());
 	    } // end of else
@@ -183,6 +185,8 @@ public class NetworkArm {
 	    Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
 		handleSiteIdSubsetter(networkAccess, channels[subCounter]);
+	
+
 	    }
 	} else {
 		failure.info("Fail Station"+station.get_code());
@@ -263,6 +267,9 @@ public class NetworkArm {
      */
     public void handleNetworkArmProcess(NetworkAccess networkAccess, Channel channel) throws Exception{
 	channelList.add(channel);
+	networkDatabase.put(networkFinderSubsetter.getSourceName(),
+			    networkFinderSubsetter.getDNSName(),
+			    channel, networkAccess);
 	networkArmProcess.process(networkAccess, channel, null);
 
     }
@@ -273,28 +280,81 @@ public class NetworkArm {
      * @return a <code>Channel[]</code> value
      */
     public Channel[] getSuccessfulChannels() throws Exception{
+
 	    RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
-	    if(lastDate != null && refreshInterval != null) {
-		//RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+	 //    if(lastDate != null && refreshInterval != null) {
+		
+// 		//RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+// 		Date currentDate = Calendar.getInstance().getTime();
+// 		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
+// 		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
+// 		TimeInterval timeInterval = currentTime.difference(lastTime);
+// 		timeInterval = (TimeInterval)timeInterval.convertTo(UnitImpl.MINUTE);
+// 		int minutes = (int)timeInterval.value;
+// 		//System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
+// 		if(minutes >= refreshInterval.getValue()) {
+// 		    processNetworkArm();
+// 		    lastDate = Calendar.getInstance().getTime();
+// 		}
+// 	    } else {
+// 		edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(eventFinderSubsetter.getSourceName(),
+// 									      eventFinderSubsetter.getDNSName());
+		
+// 		if(databaseTime != null) {
+// 		    lastDate = new MicroSecondDate(databaseTime);
+// 		    //successfulChannels = networkDatabase.getChannels();
+// 		} else {						      
+// 		    processNetworkArm();
+// 		    lastDate = Calendar.getInstance().getTime();
+// 		    networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
+// 					    networkFinderSubsetter.getDNSName(),
+// 					    new MicroSecondDate(lastDate).getFissuresTime());
+// 		}
+		 
+// 	    }
+	    //System.out.println("successfulChannels length is "+successfulChannels.length);
+
+	    edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(networkFinderSubsetter.getSourceName(),
+									  networkFinderSubsetter.getDNSName());
+	    
+	    if(databaseTime != null) {
+		
+		if(refreshInterval == null) {
+		    successfulChannels = networkDatabase.getChannels();
+		  
+		    return successfulChannels;
+		}
+
 		Date currentDate = Calendar.getInstance().getTime();
-		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
-		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
+		MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
+		MicroSecondDate currentTime = new MicroSecondDate(databaseTime);
 		TimeInterval timeInterval = currentTime.difference(lastTime);
 		timeInterval = (TimeInterval)timeInterval.convertTo(UnitImpl.MINUTE);
 		int minutes = (int)timeInterval.value;
 		//System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
 		if(minutes >= refreshInterval.getValue()) {
+		    //here may have to delete all the channels from the networkDatabase.
 		    processNetworkArm();
-		    lastDate = Calendar.getInstance().getTime();
+		    lastDate = currentDate;
+		    networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
+					    networkFinderSubsetter.getDNSName(),
+					    new MicroSecondDate(lastDate).getFissuresTime());
+		}  else if(lastDate == null) {
+		      successfulChannels = networkDatabase.getChannels();
+		      lastDate = new MicroSecondDate(databaseTime);
+		      return successfulChannels;
 		}
-	    } else {
-		 processNetworkArm();
-		 lastDate = Calendar.getInstance().getTime();
+
 		
-	    }
-	//System.out.println("successfulChannels length is "+successfulChannels.length);
-	return successfulChannels;
-	
+	    } else {						      
+		processNetworkArm();
+		lastDate = Calendar.getInstance().getTime();
+		networkDatabase.setTime(networkFinderSubsetter.getSourceName(),
+					networkFinderSubsetter.getDNSName(),
+					new MicroSecondDate(lastDate).getFissuresTime());
+	    } 
+	    return successfulChannels;
+	    
     }
     
     private Element config = null;
@@ -317,6 +377,8 @@ public class NetworkArm {
     private  Channel[] successfulChannels = new Channel[0];
     
     private static java.util.Date lastDate = null;
+
+    private NetworkDatabase networkDatabase;
 
     static Category logger = 
         Category.getInstance(NetworkArm.class.getName());

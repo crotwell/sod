@@ -46,6 +46,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 
     public void run() {
 	try {
+	   
 	    processWaveFormArm(eventAccess);
 	} catch(Exception ce) {
 	    ce.printStackTrace();
@@ -63,7 +64,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     public void processWaveFormArm(EventAccessOperations eventAccess) throws Exception{
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
 	    boolean bESS;
-	    synchronized(eventStationSubsetter) {
+		    synchronized(eventStationSubsetter) {
 		bESS = eventStationSubsetter.accept(eventAccess, 
 						 null, 
 						 successfulChannels[counter].my_site.my_station, 
@@ -83,7 +84,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	
 	Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
 				     Status.COMPLETE_SUCCESS);
-	parent.signalWaveFormArm();
+	//parent.signalWaveFormArm();
     }
 
      private EventAccessOperations eventAccess;
@@ -100,6 +101,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     
     private WaveFormArm parent;
 
+  
     static Category logger = 
 	Category.getInstance(WaveFormArmThread.class.getName());
     
