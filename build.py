@@ -5,7 +5,7 @@ startdir = os.getcwd()
 buildPyDir = os.path.realpath(os.path.dirname(sys.argv[0]))
 os.chdir(buildPyDir)
 sys.path.append("../devTools/maven")
-import ProjectParser, mavenExecutor, scriptBuilder, depCopy, distBuilder
+import ProjectParser, mavenExecutor, scriptBuilder, depCopy, distBuilder, utils
 os.chdir(startdir)
 
 class sodScriptParameters(scriptBuilder.jacorbParameters):
@@ -17,11 +17,7 @@ class sodScriptParameters(scriptBuilder.jacorbParameters):
         homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1, True)
         libvar = self.getVar('LIB', 'initial')
         if mavenRepoStructure:
-            if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
-                stdin, stdout = os.popen2('cygpath -w ' + proj.repo)
-                libvar.setValue(stdout.read())
-            else:
-                libvar.setValue(proj.repo)    
+            libvar.setValue(utils.getSystemPath(proj.repo))
         else:
             libvar.setValue(homevar.interp+'/lib')    
         self.mainclass = mainclass
@@ -41,11 +37,11 @@ def buildProfileScripts(proj, useMavenJars=False):
     scriptBuilder.setVarSh()
     profileParams = sodScriptParameters([scriptBuilder.sharkParameters()], proj, mavenRepoStructure=useMavenJars)
     profileParams.name='profile'
-    scripts = [scriptBuilder.build(profileParams, proj)]
+    scripts = [scriptBuilder.build(profileParams, proj, useMavenJars=useMavenJars)]
     scriptBuilder.setVarWindows()
     profileParams = sodScriptParameters([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()], proj, mavenRepoStructure=useMavenJars)
     profileParams.name='profile'
-    scripts.append(scriptBuilder.build(profileParams, proj))
+    scripts.append(scriptBuilder.build(profileParams, proj, useMavenJars=useMavenJars))
     return scripts
 
 def buildManyScripts(proj, names, useMavenJars=False):
