@@ -33,3 +33,7 @@ config.create=CREATE TABLE config( configString varchar, \
 networkstatus.create=CREATE TABLE networkstatus( networkid int, status int, \
                                                  FOREIGN KEY(networkid) \
                                                  REFERENCES network (net_id))
+
+newchannels.create=CREATE TABLE newchannels( channelid int, \
+                                             FOREIGN KEY(channelid) \
+                                             REFERENCES channel (chan_id))
