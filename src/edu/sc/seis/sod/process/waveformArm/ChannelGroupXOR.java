@@ -30,7 +30,6 @@ public class ChannelGroupXOR extends ChannelGroupFork {
                                                      RequestFilter[][] available,
                                                      LocalSeismogramImpl[][] seismograms,
                                                      CookieJar cookieJar) throws Exception {
-        LocalSeismogramImpl[][] out = copySeismograms(seismograms);
         ChannelGroupLocalSeismogramResult resultA, resultB;
         ChannelGroupLocalSeismogramProcess processorA, processorB;
         Iterator it = cgProcessList.iterator();
