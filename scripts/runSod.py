@@ -4,19 +4,18 @@ sys.path.append("../../devTools/maven")
 import ProjectParser, buildSodScripts, depCopy
 sys.path.append('../')
 import buildSod
+from optparse import OptionParser
 
 def signal_handler(signal, frame):
     sys.exit(0)
 
-def main(argv):
+def main(options):
     signal.signal(signal.SIGINT, signal_handler)
     startdir = os.path.abspath('.')
-    command = 'sod.bat'
-    config = 'revtest.xml'
-    proj = ProjectParser.ProjectParser('../project.xml')
+    command = options.command
+    config = options.config
+    proj = ProjectParser.ProjectParser(options.project)
     buildSod.build(proj)
-    if len(argv) > 0: command = argv[0]
-    if len(argv) > 1: config = argv[1]
     print 'built %s scripts' % len(buildSodScripts.buildAll(proj))
     depCopy.copy(proj)
     os.chdir(startdir)
@@ -28,4 +27,14 @@ def main(argv):
     print '\ndone'
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    parser = OptionParser()
+    parser.add_option("-c", "--command", dest="command",
+                      help="run COMMAND command", metavar="COMMAND",
+                      default="sod.bat")
+    parser.add_option("-f", "--config", dest="config",
+                      help="use CONFIG as config file", metavar="CONFIG",
+                      default="tutorial.xml")
+    parser.add_option("-p", "--project", dest="project",
+                      help="use PROJECT as the project file", metavar="PROJECT",
+                      default="../project.xml")
+    main(parser.parse_args()[0])
