@@ -176,17 +176,18 @@ public class LocalSeismogramArm implements Subsetter{
             RequestFilter[] outfilters = null;
             logger.debug("Trying available_data for "+ChannelIdUtil.toString(infilters[0].channel_id)+
                              " from "+infilters[0].start_time.date_time+" to "+infilters[0].end_time.date_time);
-            int retries = 5;
-            while(retries > 0) {
+            int retries = 0;
+            int MAX_RETRY = 5;
+            while(retries < MAX_RETRY) {
                 try {
                     outfilters = dataCenter.available_data(infilters);
                     break;
                 } catch (org.omg.CORBA.SystemException e) {
-                    if (retries > 0) {
+                    if (retries < MAX_RETRY) {
                         logger.info("Caught CORBA exception, retrying..."+retries, e);
-                        retries--;
+                        retries++;
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(1000*retries);
                         } catch(InterruptedException ex) {}
                     } else {
                         throw e;
@@ -235,14 +236,27 @@ public class LocalSeismogramArm implements Subsetter{
             logger.debug("Using infilters, fix this when DMC fixes server");
 
             MicroSecondDate before = new MicroSecondDate();
-            LocalSeismogram[] localSeismograms;
+            LocalSeismogram[] localSeismograms = new LocalSeismogram[0];
             if (outfilters.length != 0) {
-                try {
-                    localSeismograms = dataCenter.retrieve_seismograms(infilters);
-                } catch (org.omg.CORBA.UNKNOWN e) {
-                    // maybe try again???
-                    localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                int retries = 0;
+                int MAX_RETRY = 5;
+                while(retries < MAX_RETRY) {
+                    try {
+                        localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                        break;
+                    } catch (org.omg.CORBA.SystemException e) {
+                        if (retries < MAX_RETRY) {
+                            logger.info("Caught CORBA exception, retrying..."+retries, e);
+                            retries++;
+                            try {
+                                Thread.sleep(1000*retries);
+                            } catch(InterruptedException ex) {}
+                        } else {
+                            throw e;
+                        }
+                    }
                 }
+
             } else {
                 logger.debug("Failed, available data returned no requestFilters ");
                 localSeismograms = new LocalSeismogram[0];
