@@ -4,7 +4,7 @@
  * @author Created by Charles Groves
  */
 
-package edu.sc.seis.sod.subsetter.waveFormArm;
+package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -27,7 +27,6 @@ import edu.iris.Fissures.network.ChannelImpl;
 import java.util.Calendar;
 import java.util.TimeZone;
 import org.easymock.MockControl;
-import java.util.Date;
 
 public class MockFissuresCreator{
     public static EventAccessOperations createEvent(){
