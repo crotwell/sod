@@ -45,8 +45,8 @@
                 <max>1000</max>
             </originDepthRange>
             <originTimeRange>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
+                <startTime>20040701T00:00:00.001Z</startTime>
+                <endTime>20040731T23:59:59.999Z</endTime>
             </originTimeRange>
             <magnitudeRange>
                 <min>6.0</min>
@@ -76,10 +76,10 @@
                 <value>2</value>
             </refreshInterval>
         </networkFinder>
-        <networkCode>II</networkCode>
+        <networkCode>SP</networkCode>
         <stationEffectiveTimeOverlap>
-            <startTime>20030101T00:00:00.001Z</startTime>
-            <endTime>20030131T23:59:59.999Z</endTime>
+            <startTime>20040701T00:00:00.001Z</startTime>
+            <endTime>20040731T23:59:59.999Z</endTime>
         </stationEffectiveTimeOverlap>
         <siteAND>
             <siteOR>
@@ -98,8 +98,8 @@
                 <gainCode>O</gainCode>
             </channelNOT>
             <channelEffectiveTimeOverlap>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
+                <startTime>20040701T00:00:00.001Z</startTime>
+                <endTime>20040731T23:59:59.999Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
         <externalNetworkProcess>
