@@ -40,7 +40,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
     }
 
     public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookieJar) throws Exception{
-        return originSubsetter.accept(eventAccess, eventAccess.get_preferred_origin());
+        return originSubsetter.accept(eventAccess, eventAccess.get_attributes(), eventAccess.get_preferred_origin());
     }
 
     private OriginSubsetter originSubsetter = null;

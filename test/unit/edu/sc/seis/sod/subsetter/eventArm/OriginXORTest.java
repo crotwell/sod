@@ -55,7 +55,7 @@ public class OriginXORTest
 
     public void testAccept() throws Exception {
         // JUnitDoclet begin method accept
-        assertTrue(originxor.accept(null, null));
+        assertTrue(originxor.accept(null, null, null));
         // JUnitDoclet end method accept
     }
 

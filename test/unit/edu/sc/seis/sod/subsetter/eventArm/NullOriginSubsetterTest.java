@@ -51,7 +51,7 @@ extends TestCase
 
   public void testAccept() throws Exception {
     // JUnitDoclet begin method accept
-      assertTrue(nulloriginsubsetter.accept(null, null));
+      assertTrue(nulloriginsubsetter.accept(null, null, null));
     // JUnitDoclet end method accept
   }
 
