@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.validator.ModelWalker;
+
 public class Annotation{
     public void setDescription(String description){ desc = description; }
 
@@ -20,6 +22,7 @@ public class Annotation{
     public String getSummary(){ return summary; }
 
     public String getExample(){
+        System.out.println("getting example");
         return getExample(DEFAULT_HTMLIZE);
     }
 
@@ -28,31 +31,41 @@ public class Annotation{
     }
 
     public String getExample(boolean htmlize){
-        if (example.equals("")){
+        System.out.println("getExample(" + htmlize + ")");
+        if (example.equals("") || example == null){
             ExampleBuilder eb = new ExampleBuilder(htmlize);
-            htmlize = false; //since the exampleBuilder handles htmlization, we don't need to
+            //System.out.println("created new ExampleBuilder");
             eb.write(formProvider.getForm());
+            //System.out.println("wrote example");
             example = eb.toString();
+            //System.out.println("got example");
+            //System.out.println(example);
         }
-        if (htmlize){
-            return getHTMLizedString(example);
+        else if (htmlize){
+            //System.out.println("htmlize");
+            String string = getHTMLizedString(example);
+            //System.out.println("htmlized existed example");
+            System.out.println(string);
+            return string;
         }
-        else {
-            return example;
-        }
+        //System.out.println("blah");
+        return example;
     }
 
     public static String getHTMLizedString(String bracketedXML){
-        StringBuffer buf = new StringBuffer();
-        char[] chars = bracketedXML.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == '<'){
-                buf.append("&lt;");
-            } else if (chars[i] == '>'){
-                buf.append("&gt;");
-            } else {
-                buf.append(chars[i]);
-            }
+        StringBuffer buf = new StringBuffer(bracketedXML);
+        String newString = replaceAllInstances(buf.toString(), "<", "&lt;");
+        buf = new StringBuffer(newString);
+        newString = replaceAllInstances(buf.toString(), ">", "&gt;");
+        return newString;
+    }
+
+    public static String replaceAllInstances(String string, String orig, String replacement){
+        StringBuffer buf = new StringBuffer(string);
+        int repIndex = buf.indexOf(orig);
+        while (repIndex != -1){
+            buf.replace(repIndex, repIndex + 1, replacement);
+            repIndex = buf.indexOf(orig);
         }
         return buf.toString();
     }
