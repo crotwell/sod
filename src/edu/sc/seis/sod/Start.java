@@ -2,7 +2,6 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCStatus;
@@ -10,6 +9,7 @@ import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,8 +122,6 @@ public class Start{
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
-
-        executeRestartOptions();
     }
 
     private InputSource createInputSource(String loc) throws IOException{
@@ -159,12 +157,17 @@ public class Start{
 
     public void start() throws Exception {
         startTime = ClockUtil.now();
+        handleStartupRunProperties();
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
-        logger.info("start "+docElement.getTagName());
-        NodeList children = docElement.getChildNodes();
-        for (int i=0; i<children.getLength(); i++) {
-            Node node = children.item(i);
+        startArms(docElement.getChildNodes());
+        indexTemplate.performRegistration();
+        new JDBCStatus();
+    }
+
+    private void startArms(NodeList armNodes) throws Exception{
+        for (int i=0; i<armNodes.getLength(); i++) {
+            Node node = armNodes.item(i);
             if (node instanceof Element) {
                 Element el = (Element)node;
                 if (el.getTagName().equals("description")) {
@@ -186,8 +189,26 @@ public class Start{
                 }
             }
         }
-        indexTemplate.performRegistration();
-        new JDBCStatus();
+    }
+
+    private void handleStartupRunProperties() {
+        if(runProps.removeDatabase()){
+            File dbDir = new File("SodDb");
+            if(dbDir.exists()){
+                File[] dbFiles = dbDir.listFiles();
+                for (int i = 0; i < dbFiles.length; i++) {
+                    dbFiles[i].delete();
+                }
+                dbDir.delete();
+            }
+        }else if(runProps.reopenEvents()){
+            try {
+                JDBCEventStatus eventStatus = new JDBCEventStatus();
+                eventStatus.restartCompletedEvents();
+            } catch (SQLException e) {
+                GlobalExceptionHandler.handle("Trouble restarting completed events", e);
+            }
+        }
     }
 
     public Document getDocument(){ return document; }
@@ -231,18 +252,6 @@ public class Start{
 
     public static void add(Properties newProps){
         props.putAll(newProps);
-    }
-
-    private static  void executeRestartOptions() {
-        //TODO - use this in new db
-        if(runProps.reopenEvents()){
-            try {
-                JDBCEventStatus eventStatus = new JDBCEventStatus();
-                eventStatus.restartCompletedEvents();
-            } catch (SQLException e) {
-                GlobalExceptionHandler.handle("Trouble restarting completed events", e);
-            }
-        }
     }
 
     public static final String
