@@ -64,14 +64,18 @@ public class WaveformArm implements Runnable {
             addSuspendedPairsToQueue(Start.suspendedPairs);
             while(pool.isEmployed()) {
                 try {
-                    Thread.sleep(10000);
+                    logger.debug("pool employed, sleeping for 1 sec");
+                    Thread.sleep(1000);
                 } catch(InterruptedException e) {}
             }
+            // go ahead and get networks while waiting on first event
+            NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             waitForInitialEvent();
             do {
                 populateEventChannelDb();
                 try {
-                    Thread.sleep(10000);
+                    logger.debug("after populateEventChannelDb, sleeping 5 sec");
+                    Thread.sleep(5000);
                 } catch(InterruptedException e) {}
                 retryIfNeededAndAvailable();
             } while(eventArm.isAlive());
@@ -87,7 +91,7 @@ public class WaveformArm implements Runnable {
             }
             while(pool.isEmployed()) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(1000);
                 } catch(InterruptedException e) {}
             }
         } catch(Throwable e) {
