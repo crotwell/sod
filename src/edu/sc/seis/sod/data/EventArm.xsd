@@ -11,7 +11,47 @@
     <!-- Include the external schemas necessary for this schema -->
     <xsd:include schemaLocation="./utilities.xsd"/>
     
+<!-- BEGIN Event Source -->
+
+        <!-- event source abstract type -->
+    <xsd:complexType name="eventSourceType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="sourceType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- EVENT FINDER TYPE -->
+    <xsd:complexType name="eventFinderType">
+        <xsd:complexContent>
+            <xsd:extension base="eventSourceType">
+                <xsd:sequence>
+                    <xsd:element ref="area"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="originDepthRange"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="eventTimeRange"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="magnitudeRange"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="catalog" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
     
+    <!-- EVENT CHANNEL FINDER TYPE -->
+    <xsd:complexType name="eventChannelFinderType">
+        <xsd:complexContent>
+            <xsd:extension base="eventSourceType">
+                <xsd:sequence>
+                    <xsd:element name="eventchannelname" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
+<!-- END Event Source -->    
+
+    <!-- BEGIN EventAttr -->
+
     <!-- This is the base abstract Type -->
     <xsd:complexType name="eventAttrSubsetterType" abstract="true">
         <xsd:annotation>
@@ -24,29 +64,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- origin abstract type -->
-    <xsd:complexType name="originType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Superclass for all subsetters that act on Origin objects.
-                </summary>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <!-- event source abstract type -->
-    <xsd:complexType name="eventSourceType" abstract="true">
-        <xsd:complexContent>
-            <xsd:extension base="sourceType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    
-    <!-- This type is used for eventAttrANDType minOccurs="0" maxOccurs="unbounded"  -->
     <xsd:complexType name="eventAttrANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -66,7 +83,6 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        
         <xsd:complexContent>
             <xsd:extension base="eventAttrSubsetterType">
                 <xsd:sequence>
@@ -77,7 +93,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- This type is used for eventAttrORType minOccurs="0" maxOccurs="unbounded"  -->
     <xsd:complexType name="eventAttrORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -108,7 +123,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- This type is used for eventAttrXORType minOccurs="2" maxOccurs="2"  -->
     <xsd:complexType name="eventAttrXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -137,12 +151,11 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- This type is used for eventAttrNOTType minOccurs="1" maxOccurs="1"  -->
     <xsd:complexType name="eventAttrNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical NOT between EventAttr subsetters.
+                    Logical NOT of an EventAttr subsetter.
                 </summary>
                 <description>
                     The output is the logical NOT of the output of the 
@@ -155,7 +168,6 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        
         <xsd:complexContent>
             <xsd:extension base="eventAttrSubsetterType">
                 <xsd:sequence>
@@ -165,7 +177,6 @@
         </xsd:complexContent>
     </xsd:complexType>	
     
-    <!-- The EventAttrName Tag it containts string for now  might be changed latter -->
     <xsd:complexType name="eventAttrNameType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -182,7 +193,6 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        
         <xsd:complexContent>
             <xsd:extension base="eventAttrSubsetterType">
                 <xsd:sequence>
@@ -192,7 +202,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- The geographicRegionType contains a list of numbers for now, might be changed latter -->
     <xsd:complexType name="geographicRegionType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -210,7 +219,6 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        
         <xsd:complexContent>
             <xsd:extension base="eventAttrSubsetterType">
                 <xsd:sequence>
@@ -220,7 +228,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- The seismicRegionType contains a list of numbers for now, might be changed latter -->
     <xsd:complexType name="seismicRegionType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -238,7 +245,6 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        
         <xsd:complexContent>
             <xsd:extension base="eventAttrSubsetterType">
                 <xsd:sequence>
@@ -248,8 +254,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- flinnengdahlList is a list of PositiveIntegers. Actually itz best to change at this position so that it can include
-    either a list of numbers only or a list of strings or a list with the combination of strings and numbers-->
     <xsd:simpleType name="flinnengdahlList">
         <xsd:list itemType="xsd:nonNegativeInteger">
         </xsd:list>
@@ -269,9 +273,43 @@
     element-->
     <xsd:element name="seismicRegion" type="seismicRegionType" substitutionGroup="eventAttr"/>
     
+<!-- END EventAttr -->
+
+<!-- BEGIN Origin -->    
     
-    <!-- TIME  RANGE TYPE -->
-    <xsd:complexType name="eventTimeRangeType">
+    <xsd:complexType name="originType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Superclass for all subsetters that act on Origin objects.
+                </summary>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="originTimeRangeType">
+      <xsd:annotation>
+         <xsd:documentation xml:lang="en">
+            <summary>
+                Matchs events who's preferred origin's origin time occurs
+                within the given time range. 
+            </summary>
+            <description>
+                
+            </description>
+            <example>
+               <originTimeRange>
+                  <timeRange>
+                     <startTime>20010101T00:00:00Z</startTime>
+                     <endTime>20011231T00:00:00Z</endTime>
+                  </timeRange>
+               </originTimeRange>
+            </example>
+         </xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
@@ -281,15 +319,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- MAGNITUDE TYPE  TYPE -->
-    <xsd:simpleType name="magnitudetypeType">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="mb"/>
-            <xsd:enumeration value="ms"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <!-- MAGNITUDE TYPE -->
     <xsd:complexType name="magnitudeType">
         <xsd:complexContent>	
             <xsd:extension base="originType">
@@ -302,7 +331,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- ORIGIN DEPTH RANGE TYPE -->
     <xsd:complexType name="originDepthRangeType">
         <xsd:complexContent>
             <xsd:extension base="originType">
@@ -362,6 +390,24 @@
     
     <!-- ORIGIN AND TYPE -->
     <xsd:complexType name="originANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between Origin subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included Origin subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <originAND>
+                        <catalog><value>FINGER</value></catalog>
+                        <contributor><value>NEIC</value></contributor>
+                    </originAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
@@ -372,8 +418,25 @@
     </xsd:complexType>
     
     
-    <!-- ORIGIN OR TYPE -->
     <xsd:complexType name="originORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between Origin subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included Origin subsetters. The subsetters after the
+                    first true outputed are not evaluated. 
+                </description>
+                <example>
+                    <originOR>
+                        <catalog><value>FINGER</value></catalog>
+                        <contributor><value>NEIC</value></contributor>
+                    </originOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
@@ -385,6 +448,23 @@
     
     <!-- ORIGIN XOR TYPE -->
     <xsd:complexType name="originXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between Origin subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included Origin subsetters.  
+                </description>
+                <example>
+                    <originXOR>
+                        <catalog><value>FINGER</value></catalog>
+                        <contributor><value>NEIC</value></contributor>
+                    </originXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
@@ -396,6 +476,22 @@
     
     <!-- ORIGIN NOT TYPE -->
     <xsd:complexType name="originNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an Origin subsetter.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included Origin subsetters.  
+                </description>
+                <example>
+                    <originNOT>
+                        <catalog><value>FINGER</value></catalog>
+                    </originNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
@@ -405,34 +501,9 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    
-    <!-- EVENT FINDER TYPE -->
-    <xsd:complexType name="eventFinderType">
-        <xsd:complexContent>
-            <xsd:extension base="eventSourceType">
-                <xsd:sequence>
-                    <xsd:element ref="area"  minOccurs="1" maxOccurs="1"/>
-                    <xsd:element ref="originDepthRange"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="eventTimeRange"  minOccurs="1" maxOccurs="1"/>
-                    <xsd:element ref="magnitudeRange"  minOccurs="0" maxOccurs="1"/>
-                    <xsd:element ref="catalog" minOccurs="0" maxOccurs="unbounded"/>
-                    <xsd:element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <!-- EVENT CHANNEL FINDER TYPE -->
-    <xsd:complexType name="eventChannelFinderType">
-        <xsd:complexContent>
-            <xsd:extension base="eventSourceType">
-                <xsd:sequence>
-                    <xsd:element name="eventchannelname" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
+    <!-- END Origin -->
+
+<!-- BEGIN Event Process -->
     
     <!-- EVENT PROCESS TYPE -->
     <xsd:complexType name="externalEventProcessType">
@@ -545,7 +616,7 @@
     <xsd:element name="originNOT" type="originNOTType" substitutionGroup="origin"/>
     
     <!-- element representing timeRange -->
-    <xsd:element name="eventTimeRange" type="eventTimeRangeType" substitutionGroup="origin"/>
+    <xsd:element name="originTimeRange" type="originTimeRangeType" substitutionGroup="origin"/>
     
     <!-- The element eventSource is the base abstract element -->
     <xsd:element name="eventSource" type="eventSourceType" abstract="true"/>
