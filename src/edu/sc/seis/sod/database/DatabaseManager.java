@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.database;
 
+import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
 /**
@@ -18,14 +19,32 @@ public class DatabaseManager {
     }
     
     public static AbstractDatabaseManager getDatabaseManager(Properties props, String type) {
-	if(databaseManager == null) {
-	    if(!type.equals("postgres")) {
-		databaseManager = new HSqlDbManager(props);
-	    } else {
-		databaseManager = new PostgresDbManager(props);
-	    }
-	}
+	try {
+	if(databaseManager != null) return databaseManager;
+	//use reflection to get the appropriate Database Manager.
+	String className = getDatabaseType(props);
+	Class[] constructorArgTypes = new Class[1];
+	constructorArgTypes[0] = Properties.class;
+	Class externalClass = Class.forName(className);
+	Constructor constructor = 
+		externalClass.getConstructor(constructorArgTypes);
+	Object[] constructorArgs = new Object[1];
+	constructorArgs[0] = props;
+	Object obj = 
+		constructor.newInstance(constructorArgs);
+	databaseManager = (AbstractDatabaseManager)obj;
 	return databaseManager;
+	} catch(Exception e) {
+		e.printStackTrace();
+		return null;	
+	}
+    }
+
+    private static String getDatabaseType(Properties props) {
+	if(props == null) return "edu.sc.seis.sod.database.HSqlDbManager";
+	String rtnValue = props.getProperty("edu.sc.seis.sod.databasetype");
+	if(rtnValue != null) return rtnValue;
+	return "edu.sc.seis.sod.database.HSqlDbManager";
     }
     
     private static AbstractDatabaseManager databaseManager;
