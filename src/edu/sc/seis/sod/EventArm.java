@@ -342,11 +342,23 @@ public class EventArm implements Runnable{
                 minMag = magRange.getMinMagnitude().value;
                 maxMag = magRange.getMaxMagnitude().value;
                 searchTypes = magRange.getSearchTypes();
-                logger.debug("mag range is in subsetter, min of " + minMag + " max of " + maxMag);
+                String s = "mag range is in subsetter, min of " + minMag + " max of " + maxMag+" types= ";
+                for (int i = 0; i < searchTypes.length; i++) {
+                    s+= i+"="+searchTypes[i]+", ";
+                }
+                logger.debug(s);
             }else{
                 logger.debug("Using default mag ranges for event search");
             }
-            logger.debug("Searching over area " + area + " in catalogs " + catalogs[0] + " from contributors " + contributors[0]);
+            String s="Searching over area " + area + " in catalogs ";
+            for (int i = 0; i < catalogs.length; i++) {
+                s+= i+"="+catalogs[i]+", ";
+            }
+            s+= " from contributors ";
+            for (int i = 0; i < contributors.length; i++) {
+                s+= i+"="+contributors[i]+", ";
+            }
+            logger.debug(s);
         }
 
         public CacheEvent[] query(TimeRange tr)
@@ -363,7 +375,7 @@ public class EventArm implements Runnable{
                                                                           catalogs,
                                                                           contributors,
                                                                           sequenceMaximum, holder);
-                    logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
+                    logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time+" got "+events.length);
                     if (holder.value != null) {
                         // might be events in the iterator...
                         LinkedList allEvents = new LinkedList();
