@@ -421,9 +421,11 @@
     </define>
     <define name="seismogramImageProcess">
         <element name="seismogramImageProcess">
-	    <optional>
-		<ref name="phaseRequest"/>
-	    </optional>
+        <optional>
+            <element name="phaseWindow">
+                 <ref name="phaseWindow"/>
+            </element>
+        </optional>
             <optional>
                 <element name="fileDir">
                     <data type="string"/>
