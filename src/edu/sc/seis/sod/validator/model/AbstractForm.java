@@ -53,5 +53,10 @@ public abstract class AbstractForm implements Form {
     private int min, max;
     private Form parent;
     private Annotation ann = new Annotation();
+    public void copyGutsOver(AbstractForm copy) {
+        copy.setAnnotation(getAnnotation());
+        copy.def = getDef();
+        
+    }
 }
 

@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 public class Attribute extends AbstractGenitorForm{
     public Attribute(int min, int max, String name){
         super(min, max);
@@ -18,14 +20,13 @@ public class Attribute extends AbstractGenitorForm{
 
     public FormProvider copyWithNewParent(Form newParent) {
         Attribute attr = new Attribute(getMin(), getMax(), getName(), newParent);
-        copyChildToNewParent(attr);
-        attr.setAnnotation(getAnnotation());
+        super.copyGutsOver(attr);
         return attr;
     }
 
     public String getName(){ return name; }
 
-    public void accept(FormVisitor v) {
+    public void accept(Tourist v) {
         v.visit(this);
         super.accept(v);
         v.leave(this);

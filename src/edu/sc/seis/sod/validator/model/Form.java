@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 public interface Form extends FormProvider{
     public String getXPath();
 
@@ -42,5 +44,5 @@ public interface Form extends FormProvider{
      */
     public Form deref(Form parent, Definition def);
 
-    public void accept(FormVisitor v);
+    public void accept(Tourist v);
 }

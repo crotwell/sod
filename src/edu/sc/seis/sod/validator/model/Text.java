@@ -6,7 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
-import edu.sc.seis.sod.validator.model.datatype.AnyText;
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 
 public class Text extends Empty{
     public Text(){ this(null); }
@@ -15,11 +16,11 @@ public class Text extends Empty{
 
     public FormProvider  copyWithNewParent(Form newParent){
         Text t = new Text(newParent);
-        t.setAnnotation(getAnnotation());
+        super.copyGutsOver(t);
         return t;
     }
 
     public String toString(){ return "Any Text"; }
 
-    public void accept(FormVisitor v) { v.visit(this);}
+    public void accept(Tourist v) { v.visit(this);}
 }

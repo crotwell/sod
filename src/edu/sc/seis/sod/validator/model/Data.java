@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 public class Data extends AbstractForm{
     public Data(int min, int max, ModelDatatype datatype){
         this(min, max, datatype, null);
@@ -18,7 +20,7 @@ public class Data extends AbstractForm{
 
     public FormProvider  copyWithNewParent(Form newParent) {
         Data d = new Data(getMin(), getMax(), getDatatype(), newParent);
-        d.setAnnotation(getAnnotation());
+        super.copyGutsOver(d);
         return d;
     }
 
@@ -28,7 +30,7 @@ public class Data extends AbstractForm{
 
     public String toString(){ return "Data of type " + getDatatype(); }
 
-    public void accept(FormVisitor v) { v.visit(this);}
+    public void accept(Tourist v) { v.visit(this);}
 
     private ModelDatatype datatype;
 }

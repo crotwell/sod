@@ -7,6 +7,8 @@
 package edu.sc.seis.sod.validator.model;
 
 import edu.sc.seis.sod.validator.ModelWalker;
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,25 +81,26 @@ public abstract class AbstractMultigenitorForm extends AbstractForm implements M
         kids.add(newChild);
     }
 
-    public void accept(FormVisitor v) {
+    public void accept(Tourist v) {
         if(!ModelWalker.isSelfReferential(this)){
             Form[] children = getChildren();
             for (int i = 0; i < children.length; i++) { children[i].accept(v); }
         }
     }
 
-    void copyKidsToNewParent(AbstractMultigenitorForm newParent){
+    void copyGutsOver(AbstractMultigenitorForm copy) {
         for (int i = 0; i < kids.size(); i++) {
             if(kids.get(i) instanceof Ref){
                 Ref kid = (Ref)kids.get(i);
-                newParent.add(kid.copyWithNewParent(newParent));
+                copy.add(kid.copyWithNewParent(copy));
             }else{
                 Form kid = (Form)kids.get(i);
-                newParent.add(kid.copyWithNewParent(newParent));
+                copy.add(kid.copyWithNewParent(copy));
             }
         }
+        super.copyGutsOver(copy);
     }
-
+    
     int getNumChildren(){ return kids.size(); }
 
     FormProvider[] getFormProviders(){

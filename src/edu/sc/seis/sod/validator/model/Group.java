@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 public class Group extends AbstractMultigenitorForm {
     public Group(int min, int max){ super(min, max); }
 
@@ -13,12 +15,11 @@ public class Group extends AbstractMultigenitorForm {
 
     public FormProvider copyWithNewParent(Form newParent) {
         Group g = new Group(getMin(), getMax(), newParent);
-        copyKidsToNewParent(g);
-        g.setAnnotation(getAnnotation());
+        super.copyGutsOver(g);
         return g;
     }
 
-    public void accept(FormVisitor v) {
+    public void accept(Tourist v) {
         v.visit(this);
         super.accept(v);
         v.leave(this);

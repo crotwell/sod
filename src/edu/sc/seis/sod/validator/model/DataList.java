@@ -13,8 +13,7 @@ public class DataList extends AbstractMultigenitorForm {
 
     public FormProvider copyWithNewParent(Form newParent) {
         DataList l = new DataList(1, 1, newParent);
-        copyKidsToNewParent(l);
-        l.setAnnotation(getAnnotation());
+        super.copyGutsOver(l);
         return l;
     }
 

@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.validator.model;
 
 import edu.sc.seis.sod.validator.model.datatype.Token;
+import edu.sc.seis.sod.validator.tour.Tourist;
 
 public class Value extends Data{
     /**
@@ -34,11 +35,11 @@ public class Value extends Data{
 
     public FormProvider copyWithNewParent(Form newParent){
         Value v = new Value(getMin(), getMax(), value, getDatatype(), newParent);
-        v.setAnnotation(getAnnotation());
+        super.copyGutsOver(v);
         return v;
     }
 
-    public void accept(FormVisitor v) { v.visit(this);}
+    public void accept(Tourist v) { v.visit(this);}
 
     private String value;
 }

@@ -6,9 +6,8 @@
 
 package edu.sc.seis.sod.validator.model;
 
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.validator.tour.Tourist;
+
 
 public class NamedElement extends AbstractGenitorForm{
     public NamedElement(int min, int max, String name){
@@ -53,8 +52,7 @@ public class NamedElement extends AbstractGenitorForm{
 
     public FormProvider copyWithNewParent(Form newParent) {
         NamedElement copy = new NamedElement(getMin(), getMax(), getName(), newParent);
-        copyChildToNewParent(copy);
-        copy.setAnnotation(getAnnotation());
+        super.copyGutsOver(copy);
         return copy;
     }
 
@@ -62,7 +60,7 @@ public class NamedElement extends AbstractGenitorForm{
         return getName();
     }
 
-    public void accept(FormVisitor v){
+    public void accept(Tourist v){
         v.visit(this);
         super.accept(v);
         v.leave(this);
