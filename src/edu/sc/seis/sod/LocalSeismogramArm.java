@@ -137,8 +137,8 @@ public class LocalSeismogramArm implements Subsetter{
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
-                    dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
-                                                           ecp.getChannel().my_site.my_station);
+                    dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(), ecp.getChannel(),
+                                                           infilters);
                 } catch (Throwable e) {
                     handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                     return;

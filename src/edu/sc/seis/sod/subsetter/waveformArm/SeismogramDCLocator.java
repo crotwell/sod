@@ -1,9 +1,7 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
-import edu.sc.seis.sod.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 
 /**
@@ -19,6 +17,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 public interface SeismogramDCLocator {
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
-                                      Station station) throws Exception;
+                                             Channel channel,
+                                             RequestFilter[] infilters) throws Exception;
 
 }// SeismogramDCLocator

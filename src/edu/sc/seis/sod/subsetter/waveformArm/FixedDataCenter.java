@@ -1,16 +1,17 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.fissuresUtil.cache.RetryDataCenter;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
 import org.w3c.dom.Element;
-import edu.sc.seis.fissuresUtil.cache.RetryDataCenter;
 /**
  * FixedDataCenter.java
  *
@@ -35,7 +36,8 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
-                                             Station station) throws Exception{
+                                             Channel channel,
+                                             RequestFilter[] infilters) throws Exception{
         return dataCenter;
     }
 
