@@ -48,11 +48,13 @@ public class JDBCEventChannelRetry extends SodJDBC{
     public int next() throws SQLException {
         ResultSet rs = selectNext.executeQuery();
         while(rs.next()){
-            if(rs.getTimestamp("retry_time").after(ClockUtil.now())) continue;
-            updateStatus.setInt(1, -1);
-            updateStatus.setInt(2, rs.getInt("pairid"));
-            updateStatus.executeUpdate();
-            return rs.getInt("pairid");
+            if(rs.getTimestamp("retry_time").after(ClockUtil.now())){ continue;}
+            else{
+                updateStatus.setInt(1, -1);
+                updateStatus.setInt(2, rs.getInt("pairid"));
+                updateStatus.executeUpdate();
+                return rs.getInt("pairid");
+            }
         }
         return -1;
     }
@@ -75,7 +77,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
     private int getNumFailure(int pairId) throws SQLException {
         selectPair.setInt(1, pairId);
         ResultSet rs = selectPair.executeQuery();
-        if(rs.next())return rs.getInt("numfailure") + 1;
+        if(rs.next()){ return rs.getInt("numfailure") + 1; }
         return -1;
     }
 
