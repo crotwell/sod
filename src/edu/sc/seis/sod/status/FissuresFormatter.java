@@ -1,18 +1,26 @@
 /**
  * FissuresFormatter.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.IfNetwork.*;
-
-import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.Origin;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.IfEvent.Magnitude;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.SiteId;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -23,14 +31,13 @@ import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
-/** this class largely exists as an access for various utility methods for
- * Velocity templates.*/
+/**
+ * this class largely exists as an access for various utility methods for
+ * Velocity templates.
+ */
 public class FissuresFormatter {
 
     public static String formatQuantity(QuantityImpl q) {
@@ -42,7 +49,7 @@ public class FissuresFormatter {
     }
 
     public static String formatChannel(ChannelId id) {
-        if (id == null) { return "null"; }
+        if(id == null) { return "null"; }
         return ChannelIdUtil.toStringNoDates(id);
     }
 
@@ -61,8 +68,10 @@ public class FissuresFormatter {
     public static String formatNetwork(NetworkId id) {
         return NetworkIdUtil.toStringNoDates(id);
     }
+
     public static String formatNetworkYear(NetworkId id) {
-        return id.network_code+yearDateFormat.format(new MicroSecondDate(id.begin_time));
+        return id.network_code
+                + yearDateFormat.format(new MicroSecondDate(id.begin_time));
     }
 
     public static String networkName(NetworkAccess net) {
@@ -139,25 +148,15 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDistance(Station station, Origin origin) {
-        if (station == null) {
-            throw new NullPointerException("station is null");
-        }
-        if (origin == null) {
-            throw new NullPointerException("origin is null");
-        }
-        if (origin.my_location == null) {
-            throw new NullPointerException("origin.my_location is null");
-        }
+        if(station == null) { throw new NullPointerException("station is null"); }
+        if(origin == null) { throw new NullPointerException("origin is null"); }
+        if(origin.my_location == null) { throw new NullPointerException("origin.my_location is null"); }
         return getDistance(station.my_location, origin.my_location);
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
-        if (from == null) {
-            throw new NullPointerException("from Location is null");
-        }
-        if (to == null) {
-            throw new NullPointerException("to Location is null");
-        }
+        if(from == null) { throw new NullPointerException("from Location is null"); }
+        if(to == null) { throw new NullPointerException("to Location is null"); }
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
@@ -204,7 +203,7 @@ public class FissuresFormatter {
         return ClockUtil.now();
     }
 
-    public static String filize(String fileName){
+    public static String filize(String fileName) {
         fileName = fileName.trim();
         fileName = fileName.replaceAll("[ :]", "_");
         fileName = fileName.replaceAll("[\t\n\f\r]", "");
@@ -212,7 +211,7 @@ public class FissuresFormatter {
     }
 
     public static String filize(String base, String extension) {
-        return filize(base+"."+extension);
+        return filize(base + "." + extension);
     }
 
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
@@ -221,16 +220,12 @@ public class FissuresFormatter {
 
     public static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
 
+    public static SimpleDateFormat mediumFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
     static {
         yearDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         longFileFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         longFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
+    public static ParseRegions pr = ParseRegions.getInstance();
 }
-
-
-
-
-
-
