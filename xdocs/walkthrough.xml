@@ -8,13 +8,14 @@
 
 <body>
 
-<section name="Take off your shoes, wiggle your toes and take a walk on the SOD">
+<section name="Take a walk on the SOD">
 <p>
 We shall assume that you have successfully downloaded and extracted SOD from
 its tar or zip file. If not please have a look at the
 <a href="install.html">installation</a> document. This document covers SOD from
 the point of view of the GUI editor. If you would like a lower level, XML based
-view of how SOD works, please see the ***TODO*** tutorial document.
+view of how SOD works, please see the 
+<a href="tutorial.html">XML-based tutorial</a> document.
 </p>
 <p>
 Change into the SOD directory, where you should see various files and subdirectories.
