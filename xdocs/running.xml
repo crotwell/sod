@@ -76,7 +76,7 @@
                                         Remove Database set in both weed.xml and tutorial.xml that
                                         tells SOD to wipe its database before starting up. As long
                                         as this is set, SOD starts with a clean slate. However, if
-                                        the unexpected has happend (nuclear holocaust, T-Rex attack,
+                                        the unexpected has happened (nuclear holocaust, T-Rex attack,
                                         sale on attractive garnet tractors) and SOD is interrupted,
                                         unset this property so SOD will continue where it left off.
                                         You can unset it by either changing TRUE inside the

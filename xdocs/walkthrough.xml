@@ -162,14 +162,14 @@ a GUI application. This is done intentionally as SOD will likely be a long runni
 background processes, and so command line execution is the preferred way. So, to
 start a SOD run, you need to save the XML configuration file to disk. Then start
 it up with <code>sod.sh -f mysod.xml</code>. Once SOD is started, open the
-<code>index.html</code> file withing the <code>status</code> directory. You will
+<code>index.html</code> file within the <code>status</code> directory. You will
 see a map of the events that have been found as well as some statistics about
 the run. The Networks link show which networks, stations and channels were
 accepted by SOD. The Events link in the menu on the left takes you to a page with the
 same map, but with a list of the accepted events below. Each event link goes to
 a summary for that event showing which stations were accepted. The stations
 in the list are links that show more information about the station and event as
-well as which channels retrieved data, and a image of the seimogram if it was
+well as which channels retrieved data, and a image of the seismogram if it was
 successful.
 </p>
 <p>
