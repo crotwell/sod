@@ -33,6 +33,7 @@ def buildExternal(proj, name):
               ('scripts/legacyExecuteMoVec.xml', 'examples/legacyExecuteMoVec.xml'),
               ('scripts/realtime.xml', 'examples/realtime.xml'),
               ('scripts/breqfast.xml', 'examples/breqfast.xml'),
+              ('scripts/motionvector.xml', 'examples/motionvector.xml'),
               ('site/generatedSite', 'docs')]
     zip = zipfile.ZipFile(name + ".zip", 'w')
     tar = tarfile.open(name + '.tar', 'w')
