@@ -8,7 +8,15 @@
         <choice>
             <ref name="printline"/>
             <ref name="external"/>
+	    <ref name="responseWriter"/>
         </choice>
+    </define>
+    <define name="responseWriter">
+        <element name="responseWriter">
+           <element name="responseFile">
+	   <externalRef href="../base/externalRef/anyXML.rng"/>
+	   </element>
+        </element>
     </define>
     <define name="printline">
         <element name="printlineChannelProcessor">
