@@ -1,8 +1,9 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.database.*;
 import edu.sc.seis.sod.subsetter.eventArm.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
-import edu.sc.seis.fissuresUtil.cache.*;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
@@ -54,7 +55,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    notifyListeners(this, e);
 	}
 	if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
-	logger.debug("The number of events in the eventQueue are "
+	logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "
 			   +Start.getEventQueue().getLength());
 	
     }
@@ -185,7 +186,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    edu.iris.Fissures.TimeRange timeRange = new edu.iris.Fissures.TimeRange(startTime, endTime);
 	    System.out.println("The start time is "+new MicroSecondDate(startTime));
 	    System.out.println("The end Time is "+new MicroSecondDate(endTime));
-	    eventConfigDb.incrementTime(1);
+	 
 
 	    
 	    EventAccess[] eventAccessOrig = 
@@ -203,6 +204,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 				    );
 	    
 	    System.out.println("The number of events returned are "+eventAccessOrig.length);
+	    Thread.sleep(5000);
 	    EventAccessOperations[] eventAccess = 
 		new EventAccessOperations[eventAccessOrig.length];
 	    for(int counter = 0; counter < eventAccess.length; counter++) {
@@ -214,11 +216,17 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    }
 	    startTime = eventConfigDb.getTime();
 	    if(startTime == null) {
-		System.out.println("time is not stored in the database so store it");
+		System.out.println("times is not stored in the database so store it");
 		startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
+
 		eventConfigDb.setTime(startTime);
+	    } else {
+		//here delete all the events in the queue from the 
+		//previous day that are successful or failed
+		Start.getEventQueue().delete(Status.COMPLETE_SUCCESS);
+		Start.getEventQueue().delete(Status.COMPLETE_REJECT);
+		eventConfigDb.incrementTime(1);
 	    }
-	    
 	
 	    endTime = calculateEndTime(startTime, 
 				       eventFinderSubsetter.getEventTimeRange().getEndTime());

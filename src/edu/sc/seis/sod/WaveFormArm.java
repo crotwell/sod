@@ -174,6 +174,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	public synchronized void doWork(Runnable workUnit) {
 	    while (work != null) {
 		try {
+		      logger.debug("waiting in doWork method The queue is size "+Start.getEventQueue().getLength());
+		      //System.exit(0);
 		    wait();
 		} catch (InterruptedException e) { }
 	    }

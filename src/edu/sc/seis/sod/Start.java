@@ -70,7 +70,7 @@ public class Start implements SodExceptionListener {
 		    logger.info(subElement.getTagName());
 		    eventArm = new EventArm(subElement, this);
 		    Thread eventArmThread = new Thread(eventArm);
-		    eventArmThread.start();
+		     eventArmThread.start();
 			    System.out.println("******************* EVENT ARM THREAD JOINED SO CAN EXIT");
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
