@@ -88,7 +88,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
                 public String getResult(Site site){
                     return btt.getResult(site.get_id().begin_time);
                 }
-                    TimeTemplate btt = new TimeTemplate(el);
+                    TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if (tag.equals("endTime")){
@@ -96,7 +96,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
                 public String getResult(Site site){
                     return btt.getResult(site.effective_time.end_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if (tag.equals("status") && sgt != null){

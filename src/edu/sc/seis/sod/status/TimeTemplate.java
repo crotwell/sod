@@ -9,15 +9,21 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.SodUtil;
 import java.text.SimpleDateFormat;
 import org.w3c.dom.Element;
 
 public class TimeTemplate implements GenericTemplate {
-    public TimeTemplate(Element config){ sdf = createSDF(config); }
+    public TimeTemplate(Element config, boolean representTimeInFuture){
+        sdf = createSDF(config);
+        this.representTimeInFuture = representTimeInFuture;
+    }
     
     public TimeTemplate(Element config, Time time){
-        this(config);
+        this(config, true);
         setTime(time);
     }
     
@@ -27,18 +33,22 @@ public class TimeTemplate implements GenericTemplate {
         return new SimpleDateFormat();
     }
     
-    public void setTime(Time t){ time = t; }
+    public void setTime(Time t){ time = new MicroSecondDate(t); }
     
     public String getResult(Time t){
         setTime(t);
         return getResult();
     }
     
-    public String getResult() { return sdf.format(new MicroSecondDate(time));
+    public String getResult() {
+        if(!representTimeInFuture && time.after(ClockUtil.future())) return "-";
+        return sdf.format(time);
     }
     
     private SimpleDateFormat sdf;
     
-    private Time time;
+    private MicroSecondDate time;
+    
+    private boolean representTimeInFuture = true;
 }
 

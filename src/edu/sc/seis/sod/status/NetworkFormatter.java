@@ -75,7 +75,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                 public String getResult(NetworkAccess net){
                     return btt.getResult(net.get_attributes().get_id().begin_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
                     
             };
         }
@@ -84,7 +84,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                 public String getResult(NetworkAccess net){
                     return btt.getResult(net.get_attributes().effective_time.end_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if (tag.equals("beginTimeUnformatted")){

@@ -140,7 +140,7 @@ public class StationFormatter extends Template implements StationTemplate{
                 public String getResult(Station sta){
                     return btt.getResult(sta.get_id().begin_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if (tag.equals("endTime")){
@@ -148,7 +148,7 @@ public class StationFormatter extends Template implements StationTemplate{
                 public String getResult(Station sta){
                     return btt.getResult(sta.effective_time.end_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if (tag.equals("beginTimeUnformatted")){

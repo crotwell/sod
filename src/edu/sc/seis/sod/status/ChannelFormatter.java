@@ -64,7 +64,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                 public String getResult(Channel chan){
                     return btt.getResult(chan.get_id().begin_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if(tag.equals("endTime")){
@@ -72,7 +72,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                 public String getResult(Channel chan){
                     return btt.getResult(chan.effective_time.end_time);
                 }
-                TimeTemplate btt = new TimeTemplate(el);
+                TimeTemplate btt = new TimeTemplate(el, false);
             };
         }
         else if(tag.equals("beginTimeUnformatted")){
