@@ -23,10 +23,14 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
+import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.BorderedDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.borders.Border;
 import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
+import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
@@ -125,13 +129,13 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         colors = extractColors(config);
     }
 
-    public Color[] extractColors(Element config) {
+    public static Color[] extractColors(Element config) {
         Element el = SodUtil.getElement(config, "colors");
         if(el == null) { return SeismogramDisplay.COLORS; }
         NodeList colors = el.getElementsByTagName("color");
         Color[] colorSeq = new Color[colors.getLength()];
         for(int i = 0; i < colors.getLength(); i++) {
-            String colorStr =  "0X"+ SodUtil.getText((Element)colors.item(i));
+            String colorStr = "0X" + SodUtil.getText((Element)colors.item(i));
             colorSeq[i] = Color.decode(colorStr);
         }
         return colorSeq;
@@ -205,7 +209,6 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                          RecordSectionGrouping group,
                                          DataSetSeismogram[] dataSeis)
             throws IOException, NotFound, SQLException {
-        String fileNameSuffix = "Best";
         DistanceRange distRange = group.getDistanceRange();
         double minSpacing = group.getMinSpacing();
         double range = (distRange.getMaxDistance() - distRange.getMinDistance());
@@ -219,7 +222,9 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             double curBackDistance = DisplayUtils.calculateDistance(lastBackSeis)
                     .get_value();
             dssList.add(lastFrontSeis);
-            dssList.add(lastBackSeis);
+            if(curFrontDistance != curBackDistance) {
+                dssList.add(lastBackSeis);
+            }
             DataSetSeismogram temp = null;
             while(curFrontDistance <= range / 2) {
                 temp = getBestSeis(dataSeis,
@@ -254,8 +259,11 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             }
             DataSetSeismogram[] tempDSS = new DataSetSeismogram[dssList.size()];
             tempDSS = (DataSetSeismogram[])dssList.toArray(tempDSS);
-            writeImage(tempDSS, event, fileNameBase + fileNameSuffix
-                    + fileExtension, distRange, group.getRecSecDimension());
+            writeImage(tempDSS,
+                       event,
+                       fileNameBase + fileExtension,
+                       distRange,
+                       group.getRecSecDimension());
         }
     }
 
@@ -343,15 +351,21 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         } else {
             recSecId = eventRecordSection.getRecSecId(eventId, fullName);
         }
-        RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
+        RecordSectionDisplay rsDisplay = new RecordSectionDisplay(true);
         if(distRange != null) {
             CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
                                                                    distRange.getMaxDistance());
             rsDisplay.setLayout(custConfig);
         }
         DistanceBorder distBorder = new DistanceBorder(rsDisplay,
+                                                       DistanceBorder.BOTTOM,
                                                        DistanceBorder.ASCENDING);
-        rsDisplay.setDistBorder(distBorder);
+        distBorder.setPreferredSize(new Dimension(BasicSeismogramDisplay.PREFERRED_WIDTH,
+                                                  50));
+        TimeBorder timeBorder = new TimeBorder(rsDisplay, TimeBorder.ASCENDING);
+        timeBorder.setPreferredSize(new Dimension(80, 50));
+        rsDisplay.setDistBorder(distBorder, RecordSectionDisplay.BOTTOM_CENTER);
+        rsDisplay.setTimeBorder(timeBorder, RecordSectionDisplay.CENTER_LEFT);
         rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
         rsDisplay.setColors(colors);
         rsDisplay.add(dataSeis);
