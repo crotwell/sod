@@ -20,7 +20,46 @@ public class SodUtil {
     public SodUtil (){
 	
     }
-    
+        
+    public static synchronized SodElement loadExternal(Element config, 
+						       String classname) 
+	throws ConfigurationException {
+	try {
+	    Class[] constructorArgTypes = new Class[1];
+	    constructorArgTypes[0] = Element.class;
+
+	    Class externalClass = 
+		Class.forName(classname);
+	    Constructor constructor = 
+		externalClass.getConstructor(constructorArgTypes);
+	    Object[] constructorArgs = new Object[1];
+	    constructorArgs[0] = config;
+	    Object obj = 
+		constructor.newInstance(constructorArgs);
+	    return (SodElement)obj;
+	} catch (InvocationTargetException e) {
+	    // occurs if the constructor throws an exception
+	    // don't repackage ConfigurationExceptioN
+	    e.printStackTrace();
+	    Throwable subException = e.getTargetException();
+	    if (subException instanceof ConfigurationException) {
+		throw (ConfigurationException)subException;
+	    } else if (subException instanceof Exception) {
+		throw new ConfigurationException("Problem creating "+
+						 config.getTagName(),
+						 (Exception)subException);
+	    } else {
+		// not an Exception, so must be an Error
+		throw (java.lang.Error)subException;
+	    } // end of else
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    throw new ConfigurationException("Problem understanding "+
+					     config.getTagName(), e);
+	} // end of try-catch
+
+    }
+
     public static synchronized Object load(Element config, String packageName) 
 	throws ConfigurationException {
 	
