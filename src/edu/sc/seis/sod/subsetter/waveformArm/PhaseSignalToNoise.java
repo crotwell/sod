@@ -52,25 +52,13 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
                 }else if(element.getTagName().equals("ratio")) {
                     ratio = Float.parseFloat(SodUtil.getNestedText(element));
                 } else if(element.getTagName().equals("shortOffsetBegin")) {
-                    SodElement sodElement =
-                        (SodElement) SodUtil.load(element,
-                                                  waveformArmPackage);
-                    shortOffsetBegin = ((BeginOffset)sodElement).getTimeInterval();
+                    shortOffsetBegin = SodUtil.loadTimeInterval(element);
                 } else if(element.getTagName().equals("shortOffsetEnd")) {
-                    SodElement sodElement =
-                        (SodElement) SodUtil.load(element,
-                                                  waveformArmPackage);
-                    shortOffsetEnd = ((BeginOffset)sodElement).getTimeInterval();
+                    shortOffsetEnd = SodUtil.loadTimeInterval(element);
                 } else if(element.getTagName().equals("longOffsetBegin")) {
-                    SodElement sodElement =
-                        (SodElement) SodUtil.load(element,
-                                                  waveformArmPackage);
-                    longOffsetBegin = ((BeginOffset)sodElement).getTimeInterval();
+                    longOffsetBegin = SodUtil.loadTimeInterval(element);
                 } else if(element.getTagName().equals("longOffsetEnd")) {
-                    SodElement sodElement =
-                        (SodElement) SodUtil.load(element,
-                                                  waveformArmPackage);
-                    longOffsetEnd = ((BeginOffset)sodElement).getTimeInterval();
+                    longOffsetEnd = SodUtil.loadTimeInterval(element);
                 }
             }
         }
