@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.subsetter.waveFormArm.*;
 import org.w3c.dom.*;
 import java.lang.reflect.*;
 import edu.iris.Fissures.*;
@@ -20,7 +21,7 @@ public class SodUtil {
 	
     }
     
-    public static Object load(Element config, String packageName) 
+    public static synchronized Object load(Element config, String packageName) 
 	throws ConfigurationException {
 	
 	try {
@@ -55,6 +56,7 @@ public class SodUtil {
 		Class.forName(packageName+"."+
 			      tagName);
 	    System.out.println("IN sod UTIL "+packageName+"."+tagName);	
+	   
 	    Constructor constructor = 
 		subsetterSubclass.getConstructor(constructorArgTypes);
 	    Object[] constructorArgs = new Object[1];
@@ -62,6 +64,7 @@ public class SodUtil {
 	    Object obj = 
 		constructor.newInstance(constructorArgs);
 	    if(tagName.equals("NetworkFinder")) return obj;
+	   
 	    return (SodElement)obj;
 	} catch (InvocationTargetException e) {
 	    // occurs if the constructor throws an exception

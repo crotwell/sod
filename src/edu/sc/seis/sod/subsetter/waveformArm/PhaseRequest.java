@@ -8,6 +8,8 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
+import edu.iris.Fissures.model.*;
+
 import edu.iris.Fissures.IfSeismogramDC.*;
 
 import org.w3c.dom.*;
@@ -29,8 +31,24 @@ public class PhaseRequest implements RequestGenerator{
      *
      * @param config an <code>Element</code> value
      */
-    public PhaseRequest (Element config){
-	
+    public PhaseRequest (Element config) throws ConfigurationException{
+
+	System.out.println("In the constructor of PhaseRequest");
+	NodeList childNodes = config.getChildNodes();
+	Node node;
+	for(int counter = 0; counter < childNodes.getLength(); counter++) {
+		node = childNodes.item(counter);
+		if(node instanceof Element) {
+
+			SodElement sodElement = (SodElement) SodUtil.load((Element)node,
+								"edu.sc.seis.sod.subsetter.waveFormArm");
+			if(sodElement instanceof BeginPhase) beginPhase = (BeginPhase)sodElement;
+			else if(sodElement instanceof BeginOffset) beginOffset = (BeginOffset)sodElement;
+			else if(sodElement instanceof EndPhase) endPhase = (EndPhase)sodElement;
+			else if(sodElement instanceof EndOffset) endOffset = (EndOffset)sodElement;
+		}
+	}
+
     }
     
     /**
@@ -46,10 +64,45 @@ public class PhaseRequest implements RequestGenerator{
 			  NetworkAccess network, 
 			  Channel channel, 
 			  CookieJar cookies){
+	System.out.println("the begin phase is "+beginPhase.getPhase());
+	System.out.println("the end phase is "+endPhase.getPhase());
+	System.out.println("the beginOffset unit is "+beginOffset.getUnit());
+	System.out.println("the beginOffset value is "+beginOffset.getValue());
+	System.out.println("the endOffset unit is "+endOffset.getUnit());
+	System.out.println("the endOffset value is "+endOffset.getValue());
+	Origin origin = null;
+	try {
+	    origin = event.get_preferred_origin();
+	} catch(NoPreferredOrigin npoe) {
+	    
+	    System.out.println("caught Exception no Preferred Origin");
+	}
+	edu.iris.Fissures.Time originTime = origin.origin_time;
+	MicroSecondDate originDate = new MicroSecondDate(originTime);
+	TimeInterval bInterval = new TimeInterval(Integer.parseInt(beginOffset.getValue())*100000, UnitImpl.SECOND);
+	TimeInterval eInterval = new TimeInterval(Integer.parseInt(endOffset.getValue())*100000, UnitImpl.SECOND);
+	MicroSecondDate bDate = originDate.add(bInterval);
+	MicroSecondDate eDate = originDate.add(eInterval);
+	RequestFilter[] filters;
+        filters = new RequestFilter[1];
+        filters[0] = 
+            new RequestFilter(channel.get_id(),
+                              bDate.getFissuresTime(),
+			      eDate.getFissuresTime()
+                              );
 	
-	return null;
+	
+	
+	return filters;
 
     }
-    
+   
+   private BeginOffset beginOffset;
+
+   private BeginPhase beginPhase;
+
+   private EndOffset endOffset;
+
+   private EndPhase endPhase;
     
 }// PhaseRequest

@@ -20,7 +20,7 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class BeginPhase  {
+public class BeginPhase implements Subsetter {
     /**
      * Creates a new <code>BeginPhase</code> instance.
      *
@@ -30,6 +30,10 @@ public class BeginPhase  {
 	this.config = config;
     }
 
+    public String getPhase() {
+
+	return SodUtil.getNestedText(config);
+    }
     /**
      * Describe <code>accept</code> method here.
      *

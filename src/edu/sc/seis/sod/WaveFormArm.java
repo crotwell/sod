@@ -98,6 +98,7 @@ public class WaveFormArm implements Runnable {
 		else if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
 		else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;
 		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
+	
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
@@ -120,7 +121,7 @@ public class WaveFormArm implements Runnable {
 	    if(eventStationSubsetter == null) System.out.println("NULL");
 	    else System.out.println("NOT NULL");
 	      if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
-		processEventChannelSubsetter();
+		processEventChannelSubsetter(eventAccess,null,successfulChannels[counter]);
 	    }
 	}
 	
@@ -131,10 +132,10 @@ public class WaveFormArm implements Runnable {
      *
      * @exception Exception if an error occurs
      */
-    public void processEventChannelSubsetter() throws Exception{
+    public void processEventChannelSubsetter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
 
-	if(eventChannelSubsetter.accept(null, null, null, null)) {
-	    processFixedDataCenter();
+	if(eventChannelSubsetter.accept(eventAccess, networkAccess, channel, null)) {
+	    processFixedDataCenter(eventAccess, networkAccess, channel);
 	}
     }
 
@@ -142,11 +143,11 @@ public class WaveFormArm implements Runnable {
      * Describe <code>processFixedDataCenter</code> method here.
      *
      */
-    public void processFixedDataCenter() {
+    public void processFixedDataCenter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
 	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
 	if(dataCenter == null) System.out.println("****** Data Center is NULL ******");
 	else System.out.println("****** Data Center is NOT NULL ******");
-	processRequestGeneratorSubsetter();
+	processRequestGeneratorSubsetter(eventAccess, networkAccess, channel);
 	
     }
 
@@ -154,11 +155,11 @@ public class WaveFormArm implements Runnable {
      * Describe <code>processRequestGeneratorSubsetter</code> method here.
      *
      */
-    public void processRequestGeneratorSubsetter() {
-
-	//if(phaseRequestSubsetter.accept(null)) 
+    public void processRequestGeneratorSubsetter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
+	System.out.println("Processing RequestGenerator");
+	RequestFilter[] filters = requestGeneratorSubsetter.generateRequest(eventAccess, networkAccess, channel, null); 
 	{
-	    processAvailableDataSubsetter();
+	   // processAvailableDataSubsetter();
 	}
 	
     }
@@ -178,7 +179,7 @@ public class WaveFormArm implements Runnable {
 
     private FixedDataCenter fixedDataCenterSubsetter = null;
     
-    private RequestGenerator requestGeneratorSubsetter = new NullRequestGenerator();
+    private RequestGenerator requestGeneratorSubsetter = null;//new NullRequestGenerator();
     
     private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
 
