@@ -16,7 +16,7 @@
       <value>7</value>
     </property>
 
-    <!-- don't go back and reask server for events that may have 
+    <!-- don't go back and reask server for events that may have
          appeared in server after this was first run. -->
     <property>
       <name>edu.sc.seis.sod.database.getNewEvents</name>
@@ -74,7 +74,7 @@
         </refreshInterval>
     </networkFinder>
 
-    <networkCode><value>II</value></networkCode>
+    <networkCode>II</networkCode>
 
     <stationEffectiveTimeOverlap>
       <effectiveTimeOverlap>
@@ -83,26 +83,32 @@
       </effectiveTimeOverlap>
     </stationEffectiveTimeOverlap>
 
-    <siteIDOR>
-      <siteCode><value>  </value></siteCode>
-      <siteCode><value>00</value></siteCode>
-    </siteIDOR>
-
-    <siteEffectiveTimeOverlap>
-      <effectiveTimeOverlap>
-        <min>20030101T00:00:00.001Z</min>
-        <max>20030131T23:59:59.999Z</max>
-      </effectiveTimeOverlap>
-    </siteEffectiveTimeOverlap>
-
-    <bandCode><value>L</value></bandCode>
-
-    <channelEffectiveTimeOverlap>
+    <siteAND>
+      <siteOR>
+        <siteCode>  </siteCode>
+        <siteCode>00</siteCode>
+      </siteOR>
+      <siteEffectiveTimeOverlap>
         <effectiveTimeOverlap>
-            <min>20030101T00:00:00.001Z</min>
-            <max>20030131T23:59:59.999Z</max>
+          <min>20030101T00:00:00.001Z</min>
+          <max>20030131T23:59:59.999Z</max>
         </effectiveTimeOverlap>
-    </channelEffectiveTimeOverlap>
+      </siteEffectiveTimeOverlap>
+    </siteAND>
+
+    <channelAND>
+      <bandCode>L</bandCode>
+      <channelNOT>
+        <!-- to prevent LOG channels -->
+        <gainCode>G</gainCode>
+      </channelNOT>
+      <channelEffectiveTimeOverlap>
+          <effectiveTimeOverlap>
+              <min>20030101T00:00:00.001Z</min>
+              <max>20030131T23:59:59.999Z</max>
+          </effectiveTimeOverlap>
+      </channelEffectiveTimeOverlap>
+    </channelAND>
 
     <printlineChannelProcessor/>
   </networkArm>
