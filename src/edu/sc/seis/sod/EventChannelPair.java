@@ -9,11 +9,11 @@ package edu.sc.seis.sod;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import org.apache.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class EventChannelPair{
         this.net = net;
         this.pairId = pairId;
     }
-    
+
     public int getPairId(){ return pairId; }
 
     public void update(Exception e, String info, EventChannelCondition status) {
@@ -60,6 +60,12 @@ public class EventChannelPair{
         return code;
     }
 
+    public String toString(){
+        return "EventChannelPair: " + getEvent() + " " +
+            ChannelIdUtil.toString(getChannel().get_id()) + " " + getStatus() +
+            " " + info;
+    }
+
     public int getChannelDbId(){ return chan.getDbId(); }
 
     public int getEventDbId() { return event.getDbId(); }
@@ -85,7 +91,7 @@ public class EventChannelPair{
     private WaveFormArm owner;
 
     private NetworkDbObject net;
-    
+
     private int pairId;
 
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
