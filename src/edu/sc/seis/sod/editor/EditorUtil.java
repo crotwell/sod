@@ -78,6 +78,13 @@ public class EditorUtil {
         return box;
     }
 
+    public static JComponent getLabeledComboBox(Element element, Object[] vals) throws TransformerException {
+        Box b = Box.createHorizontalBox();
+        b.add(getLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
+        b.add(getComboBox(element, vals));
+        return b;
+    }
+
 
     public static JComboBox getComboBox(Element element, Object[] vals) throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
@@ -129,4 +136,5 @@ public class EditorUtil {
     private static Logger logger = Logger.getLogger(EditorUtil.class);
 
 }
+
 
