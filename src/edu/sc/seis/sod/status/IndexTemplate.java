@@ -45,20 +45,22 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             SodUtil.copyFile(up, dirName + "/images/up.gif");
             SodUtil.copyFile(down, dirName + "/images/down.gif");
             SodUtil.copyFile(none, dirName + "/images/none.gif");
-            String configFileLoc = Start.getConfigFileName();
-            String configFileName = new File(configFileLoc).getName();
-            copiedConfigFileLoc = dirName + "/" + configFileName;
-            SodUtil.copyFile(Start.getConfigFileName(), copiedConfigFileLoc);
             /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
-            convertToHTML(dirName + "/" + configFileName, dirName);
+            convertToHTML(dirName);
         } catch (Exception e) {
             GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
         }
     }
 
+    public static void setConfigFileLoc() throws FileNotFoundException{
+        String configFileLoc = Start.getConfigFileName();
+        String configFileName = new File(configFileLoc).getName();
+        configFile = configFileName;
+        SodUtil.copyFile(Start.getConfigFileName(), FileWritingTemplate.getBaseDirectoryName() + "/" + configFile);
+    }
+
     public static String getCopiedConfigFileLocation() {
-        if(copiedConfigFileLoc == null){ return Start.getConfigFileName(); }
-        return copiedConfigFileLoc;
+        return configFile;
     }
 
     public static String getHtmlConfigFileName() {
@@ -91,18 +93,19 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
         errorDir.mkdirs();
         GlobalExceptionHandler.add(new HTMLReporter(errorDir));
     }
-    private void convertToHTML(String configFileLoc, String statusDir) throws TransformerException, FileNotFoundException, MalformedURLException, TransformerConfigurationException, IOException {
-        String xslFileName = statusDir +"/xmlverbatimwrapper.xsl";
-        SodUtil.copyFile(xslWrapperFileLoc,xslFileName);
-        SodUtil.copyFile(supportXslFileLoc,statusDir+"/xmlverbatim.xsl");
+    private void convertToHTML(String statusDir) throws TransformerException, FileNotFoundException, MalformedURLException, TransformerConfigurationException, IOException {
+        String wrapperFile = statusDir + "/xmlverbatimwrapper.xsl";
+        String mainXSL = statusDir + "/xmlverbatim.xsl";
+        SodUtil.copyFile(xslWrapperFileLoc,wrapperFile);
+        SodUtil.copyFile(supportXslFileLoc,mainXSL);
         SodUtil.copyFile(cssFileLoc,statusDir+"/xmlverbatim.css");
-        String fileName = configFileLoc.substring(0, configFileLoc.indexOf(".xml"));
-        String htmlFile = statusDir + "/" + new File(fileName).getName() + ".html";
+        String htmlFile = statusDir + "/" + getHtmlConfigFileName();
         TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer transformer = tFactory.newTransformer(new StreamSource(xslFileName));
-        transformer.transform(new StreamSource(configFileLoc), new StreamResult(new FileOutputStream(htmlFile)));
-        new File(xslFileName).delete();
-        new File(statusDir + "/xmlverbatim.xsl").delete();
+        Transformer t = tFactory.newTransformer(new StreamSource(wrapperFile));
+        t.transform(new StreamSource(statusDir + "/" + configFile),
+                    new StreamResult(new FileOutputStream(htmlFile)));
+        new File(wrapperFile).delete();
+        new File(mainXSL).delete();
     }
 
 
@@ -120,6 +123,6 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
     private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
     private static String cssFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.css";
-    private static String copiedConfigFileLoc;
+    private static String configFile;
 }
 
