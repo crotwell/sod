@@ -57,7 +57,7 @@ public class Start {
 		    networkArm = new NetworkArm(subElement);
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
-		    // waveFormArm = new WaveFormArm(subElement);
+		     waveFormArm = new WaveFormArm(subElement);
 		    
 		} else {
 		logger.debug("process "+subElement.getTagName());

@@ -36,7 +36,7 @@ public class SodUtil {
 	    // first check for things that are not SodElements
 	    if (tagName.equals("Unit")) {
 		return loadUnit(config);
-	    } else if (tagName.equals("UnitRange")) {
+	    } else if (tagName.equals("UnitRange") || tagName.equals("DistanceRange")) {
 		return loadUnitRange(config);
 	    } else if (tagName.equals("TimeRange")) {
 		return loadTimeRange(config);

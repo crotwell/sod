@@ -61,7 +61,8 @@ public class WaveFormArm implements Runnable {
 		else if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
 		else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;
 		else if(sodElement instanceof PhaseRequestSubsetter) phaseRequestSubsetter = (PhaseRequestSubsetter)sodElement;
-		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;     
+		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
+		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 	processWaveFormArm();	
@@ -84,8 +85,8 @@ public class WaveFormArm implements Runnable {
 
     public void processFixedDataCenter() {
 	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
-	if(dataCenter == null) System.out.println("Data Center is NULL");
-	else System.out.println("Data Center is NOT NULL");
+	if(dataCenter == null) System.out.println("****** Data Center is NULL ******");
+	else System.out.println("****** Data Center is NOT NULL ******");
 	processPhaseRequestSubsetter();
 	
     }
@@ -112,6 +113,8 @@ public class WaveFormArm implements Runnable {
     private PhaseRequestSubsetter phaseRequestSubsetter = new NullPhaseRequestSubsetter();
     
     private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
+
+    private WaveFormArmProcess waveFormArmProcessSubsetter;
 
     static Category logger = 
 	Category.getInstance(WaveFormArm.class.getName());
