@@ -39,16 +39,9 @@ import org.w3c.dom.NodeList;
 
 public class EventArm implements Runnable{
     public EventArm (Element config) throws ConfigurationException {
-        try {
-            TimeInterval tenMinutes = new TimeInterval(10, UnitImpl.MINUTE);
-            refreshInterval = Start.getIntervalProp(tenMinutes,
-                                                    "sod.event.RefreshInterval");
-            TimeInterval oneWeek = new TimeInterval(7, UnitImpl.DAY);
-            lag = Start.getIntervalProp(oneWeek, "sod.event.Lag");
-            increment = Start.getIntervalProp(oneWeek, "sod.event.QueryIncrement");
-        } catch (NoSuchFieldException e) {
-            throw new ConfigurationException("the properties aren't quite right for the event arm");
-        }
+        refreshInterval = Start.getRunProps().getEventRefreshInterval();
+        lag = Start.getRunProps().getEventLag();
+        increment = Start.getRunProps().getEventQueryIncrement();
         try {
             eventStatus = new JDBCEventStatus();
             queryTimes = new JDBCQueryTime();
