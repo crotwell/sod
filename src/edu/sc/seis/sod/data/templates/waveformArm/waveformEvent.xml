@@ -46,8 +46,7 @@ Maps only update once every two minutes
    <notStatus>Passed</notStatus>
 </statusFilter>
 <channel><tr>
-<td>
-<a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>
 </td>
 <td><beginTime/></td>
 <td><endTime/></td>
