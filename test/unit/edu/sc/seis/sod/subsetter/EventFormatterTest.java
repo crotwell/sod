@@ -92,7 +92,7 @@ public class EventFormatterTest extends TestCase{
     }
     
     public void testFilize(){
-        assertEquals("_test_____", EventFormatter.filize("\t\n test \t\n:/  "));
+        assertEquals("_test_____", EventFormatter.filize("\t\n test \t\n:_  "));
     }
     
     public void testComplicatedMarkup(){
