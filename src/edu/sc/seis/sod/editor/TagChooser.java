@@ -19,7 +19,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.w3c.dom.Element;
 
-public class TagChooser implements EditorPlugin {
+public abstract class TagChooser implements EditorPlugin {
 
     public TagChooser(String ssType, SodGUIEditor editor) {
         this.editor = editor;
@@ -35,23 +35,10 @@ public class TagChooser implements EditorPlugin {
         Collections.sort(subTypes);
     }
 
-    public JComponent getGUI(Element element) throws Exception {
-        // this is a hack to avoid same-named tags in the eventFinder element
-        // need a real fix, but this is ok for short term
-        if (element.getParentNode().getNodeName().equals("eventFinder")) {
-            if (editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX) != null) {
-                return editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX).getGUI(element);
-            }
-            return editor.getDefaultCompForElement(element);
-        }
-
-        Box b = Box.createHorizontalBox();
-        ImageIcon recycleIcon = new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png"));
-        JButton replace = new JButton(recycleIcon);
-        replace.setMargin(new Insets(1,1,1,1));
+    protected void addPopup(JComponent popper, Element element){
         final JPopupMenu popup = new JPopupMenu();
         ButtonGroup popupGroup = new ButtonGroup();
-        Iterator it = subTypes.iterator();
+        Iterator it = getSubTypes().iterator();
         while(it.hasNext()) {
             String ssType = (String)it.next();
             JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(editor.getDisplayName(ssType));
@@ -61,15 +48,13 @@ public class TagChooser implements EditorPlugin {
             }
             popup.add(menuItem);
         }
-        replace.addMouseListener(new MouseAdapter() {
+        popper.addMouseListener(new MouseAdapter() {
                     public void mousePressed(MouseEvent e) {
                         maybeShowPopup(e);
                     }
-
                     public void mouseReleased(MouseEvent e) {
                         maybeShowPopup(e);
                     }
-
                     private void maybeShowPopup(MouseEvent e) {
                         if (e.isPopupTrigger()) {
                             System.out.println("Show popup");
@@ -80,36 +65,18 @@ public class TagChooser implements EditorPlugin {
                             System.out.println("No show popup");
                         }
                     }
-
-
                 });
-        Box vBox = Box.createVerticalBox();
-        vBox.add(replace);
-        vBox.add(Box.createVerticalGlue());
-        b.add(vBox);
-
-        EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
-        JComponent comp;
-        if (plugin != null) {
-            comp = plugin.getGUI(element);
-        } else {
-            comp = editor.getDefaultCompForElement(element);
-        }
-        b.add(comp);
-        return b;
     }
 
-    public List getSubTypes() {
-        return subTypes;
-    }
+    public List getSubTypes() { return subTypes; }
 
     public static final String PLUGIN_SUFFIX = "_tagChooser";
 
-    SodGUIEditor editor;
+    protected SodGUIEditor editor;
 
-    String subsetterType;
+    private String subsetterType;
 
-    LinkedList subTypes = new LinkedList();
+    private LinkedList subTypes = new LinkedList();
 
     class ComboElementReset implements ListSelectionListener {
 
