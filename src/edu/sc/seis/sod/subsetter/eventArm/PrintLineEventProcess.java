@@ -20,6 +20,7 @@ public class PrintLineEventProcess implements EventArmProcess {
      * @param config an <code>Element</code> value
      */
     public PrintLineEventProcess (Element config){
+        filename = SodUtil.getNestedText(config);
     }
 
     /**

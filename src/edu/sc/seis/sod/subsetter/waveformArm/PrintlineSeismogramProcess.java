@@ -29,7 +29,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      * @param config an <code>Element</code> value
      */
     public PrintlineSeismogramProcess (Element config){
-	
+        filename = SodUtil.getNestedText(config);
     }
 
     /**
@@ -50,9 +50,9 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
 			RequestFilter[] available,
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) {
-        if (filename != null) {     
+        if (filename != null && filename.length() != 0) {
         	try {
-                FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
+                FileWriter fwriter = new FileWriter(filename, true);
                 BufferedWriter bwriter = new BufferedWriter(fwriter);
                 String debugStr = "Got "+seismograms.length+" seismograms for "+
                     ChannelIdUtil.toString(channel.get_id())+

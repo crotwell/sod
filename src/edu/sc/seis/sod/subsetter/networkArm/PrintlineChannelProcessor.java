@@ -26,7 +26,7 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
      * @param config an <code>Element</code> value
      */
     public PrintlineChannelProcessor (Element config){
-	    
+        filename = SodUtil.getNestedText(config);
     }
 
     /**
@@ -37,7 +37,7 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
      * @param cookies a <code>CookieJar</code> value
      */
     public void process(NetworkAccess network, Channel channel, CookieJar cookies) {
-        if (filename != null) {
+        if (filename != null && filename.length() != 0) {
             try {
                 FileWriter fwriter = new FileWriter(filename, true);
                 BufferedWriter bwriter = new BufferedWriter(fwriter);
