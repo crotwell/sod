@@ -5,22 +5,26 @@ import edu.sc.seis.sod.database.HSqlDbQueue;
 import edu.sc.seis.sod.database.Queue;
 import edu.sc.seis.sod.database.WaveformDbQueue;
 import edu.sc.seis.sod.database.WaveformQueue;
+import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.iso_relax.verifier.Verifier;
+import org.iso_relax.verifier.VerifierConfigurationException;
+import org.kohsuke.validatelet.jarv.JARVVerifierImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,16 +45,40 @@ public class Start implements SodExceptionListener {
      * @param configFile an <code>InputStream</code> value pointing to a SOD xml
      * config file
      */
-    public Start (InputStream configFile, URL schemaURL) throws ParserConfigurationException,
-        SAXException,
-        IOException{
-        //initialize the parser
+    public Start (InputSource configFile){
+        try {
+            document = createDoc(configFile);
+        } catch (Exception e) {
+            System.out.println("Trouble creating xml document");
+            e.printStackTrace();
+        }
+        try {
+            if(!validate(document)){
+                System.out.println("Invalid config file!");
+                System.exit(0);
+            }
+        } catch (Exception e) {
+            System.out.println("Problem configuring schema validator");
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+    
+    public boolean validate(Document doc) throws SAXException, VerifierConfigurationException{
+        return true;//following lines removed pending fix to bali
+        //Verifier v = new JARVVerifierImpl(Validator.schema.createValidatelet());
+        //if(v.verify(doc)) return true;
+        //return false;
+    }
+    
+    public static Document createDoc(InputSource source)
+        throws SAXException, IOException, ParserConfigurationException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = factory.newDocumentBuilder();
-        docBuilder.setErrorHandler(new SimpleErrorHandler());
-        logger.info("Schema loc is: "+schemaURL.toString());
-        document =  docBuilder.parse(configFile, schemaURL.toString());
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new SimpleErrorHandler());
+        Document doc =  builder.parse(source);
+        return doc;
     }
     
     public void createArms() throws Exception {
@@ -124,38 +152,17 @@ public class Start implements SodExceptionListener {
                 return;
             }
             PropertyConfigurator.configure(props);
-            URL schemaURL =
-                (Start.class).getClassLoader().getResource("edu/sc/seis/sod/data/sod.xsd");
-            if (schemaURL == null) {
-                logger.fatal("Can't find the sod.xsd xschema file, this may indicate a corrupt installation of sod! Cowardly quitting at this point.");
-                return;
+            InputStream in = null;
+            if(confFilename.startsWith("http:") || confFilename.startsWith("ftp:")){
+                in = new URL(confFilename).openConnection().getInputStream();
+            }else{
+                in = new FileInputStream(confFilename);
             }
-            
-            boolean invalid = Validator.validate(confFilename);
-            if (invalid) {
-                System.err.println("The configuration file "+confFilename+" did not validate against the xschema for sod.");
-                logger.fatal("The configuration file "+confFilename+" did not validate against the xschema for sod.");
-                System.err.println("Please see the log file for more information.");
-                System.exit(0);
-            } else {
-                System.out.println("Configuration file "+confFilename+" is valid.");
-            }
-            
-            InputStream in;
-            if (confFilename.startsWith("http:") || confFilename.startsWith("ftp:")) {
-                URL url = new java.net.URL(confFilename);
-                URLConnection conn = url.openConnection();
-                in = new BufferedInputStream(conn.getInputStream());
-            } else {
-                in = new BufferedInputStream(new FileInputStream(confFilename));
-            } // end of else
-            
-            if (in == null) {
+            if(in == null){
                 logger.fatal("Unable to load configuration file "+confFilename+", quiting...");
                 return;
-            } // end of if (in == null)
-            
-            Start start = new Start(in, schemaURL);
+            }
+            Start start = new Start(new InputSource(new BufferedInputStream(in)));
             
             //now override the properties with the properties specified
             // in the configuration file.
@@ -271,8 +278,7 @@ public class Start implements SodExceptionListener {
         return false;
     }
     
-    /** Default parser name. */
-    private static final String
+    public static final String
         DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
     
     public static boolean REMOVE_DATABASE = false;
@@ -302,4 +308,3 @@ public class Start implements SodExceptionListener {
     
     private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
-
