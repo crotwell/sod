@@ -83,7 +83,7 @@ public class LocalSeismogramArm implements Subsetter{
 
     }
 
-    public void processLocalSeismogramArm(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter
+    public void processLocalSeismogramArm(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter
     dataCenter) throws Exception{
 	processEventChannelSubsetter(eventAccess, networkAccess, channel, dataCenter);
 	
@@ -94,7 +94,7 @@ public class LocalSeismogramArm implements Subsetter{
      *
      * @exception Exception if an error occurs
      */
-    public void processEventChannelSubsetter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel,
+    public void processEventChannelSubsetter(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel,
     DataCenter dataCenter) throws Exception{
 
 	if(eventChannelSubsetter.accept(eventAccess, networkAccess, channel, null)) {
@@ -120,7 +120,7 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processRequestGeneratorSubsetter</code> method here.
      *
      */
-    public void processRequestGeneratorSubsetter(EventAccess eventAccess, 
+    public void processRequestGeneratorSubsetter(EventAccessOperations eventAccess, 
 						 NetworkAccess networkAccess, 
 						 Channel channel, 
 						 DataCenter dataCenter) 
@@ -153,7 +153,7 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processAvailableDataSubsetter</code> method here.
      *
      */
-    public void processAvailableDataSubsetter(EventAccess eventAccess, 
+    public void processAvailableDataSubsetter(EventAccessOperations eventAccess, 
 					      NetworkAccess networkAccess, 
 					      Channel channel,
 					      DataCenter dataCenter,
@@ -178,7 +178,7 @@ public class LocalSeismogramArm implements Subsetter{
     }
     
     public void processLocalSeismogramSubsetter
-	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception{ 
+	(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception{ 
 	
 	if(localSeismogramSubsetter.accept(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null)) {
 
@@ -189,7 +189,7 @@ public class LocalSeismogramArm implements Subsetter{
     }
     
     public void processSeismograms	
-	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
+	(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
 
 	waveFormArmProcessSubsetter.process(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null);
     }

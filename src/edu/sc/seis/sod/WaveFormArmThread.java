@@ -27,7 +27,7 @@ import org.apache.log4j.*;
  */
 
 public class WaveFormArmThread extends SodExceptionSource implements Runnable{
-    public WaveFormArmThread (EventAccess eventAccess, 
+    public WaveFormArmThread (EventAccessOperations eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
 			      FixedDataCenter fixedDataCenterSubsetter, 
 			      LocalSeismogramArm localSeismogramArm,
@@ -56,10 +56,10 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
      /**
      * Describe <code>processWaveFormArm</code> method here.
      *
-     * @param eventAccess an <code>EventAccess</code> value
+     * @param eventAccess an <code>EventAccessOperations</code> value
      * @exception Exception if an error occurs
      */
-    public void processWaveFormArm(EventAccess eventAccess) throws Exception{
+    public void processWaveFormArm(EventAccessOperations eventAccess) throws Exception{
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
 	     if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
 		 DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
@@ -69,7 +69,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	parent.signalWaveFormArm();
     }
 
-     private EventAccess eventAccess;
+     private EventAccessOperations eventAccess;
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 

@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import edu.sc.seis.sod.subsetter.eventArm.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
+import edu.sc.seis.fissuresUtil.cache.*;
 
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
@@ -156,7 +157,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	} // end of for (int i=0; i<searchTypes.length; i++)
 	System.out.println("mag "+minMagnitude+" "+maxMagnitude);
 
-	EventAccess[] eventAccess = finder.query_events(eventFinderSubsetter.getArea(),
+	EventAccess[] eventAccessOrig = 
+        finder.query_events(eventFinderSubsetter.getArea(),
 							minDepth,
 							maxDepth,
 							eventFinderSubsetter.getEventTimeRange().getTimeRange(),
@@ -169,10 +171,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 							eventSeqIterHolder
 							);
 	
-	System.out.println("The number of events returned are "+eventAccess.length);
+	System.out.println("The number of events returned are "+eventAccessOrig.length);
+	EventAccessOperations[] eventAccess = 
+        new EventAccessOperations[eventAccessOrig.length];
 	for(int counter = 0; counter < eventAccess.length; counter++) {
 
-
+        eventAccess[counter] = new CacheEvent(eventAccessOrig[counter]);
 	    EventAttr attr = eventAccess[counter].get_attributes();
 	    handleEventAttrSubsetter(eventAccess[counter], attr);
 	    
@@ -183,11 +187,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
     /**
      * Describe <code>handleEventAttrSubsetter</code> method here.
      *
-     * @param eventAccess an <code>EventAccess</code> value
+     * @param eventAccess an <code>EventAccessOperations</code> value
      * @param eventAttr an <code>EventAttr</code> value
      * @exception Exception if an error occurs
      */
-    public void handleEventAttrSubsetter(EventAccess eventAccess, EventAttr eventAttr) throws Exception {
+    public void handleEventAttrSubsetter(EventAccessOperations eventAccess, EventAttr eventAttr) throws Exception {
 
 	if(eventAttrSubsetter == null || eventAttrSubsetter.accept(eventAttr, null)) {
 	    try {	 
@@ -199,11 +203,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
     /**
      * Describe <code>handleOriginSubsetter</code> method here.
      *
-     * @param eventAccess an <code>EventAccess</code> value
+     * @param eventAccess an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value
      * @exception Exception if an error occurs
      */
-    public void handleOriginSubsetter(EventAccess eventAccess, Origin origin) throws Exception{
+    public void handleOriginSubsetter(EventAccessOperations eventAccess, Origin origin) throws Exception{
 
 
 	if(originSubsetter.accept(eventAccess, origin, null)) {
@@ -216,11 +220,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
     /**
      * Describe <code>handleEventArmProcess</code> method here.
      *
-     * @param eventAccess an <code>EventAccess</code> value
+     * @param eventAccess an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value
      * @exception Exception if an error occurs
      */
-    public void handleEventArmProcess(EventAccess eventAccess, Origin origin) throws Exception{
+    public void handleEventArmProcess(EventAccessOperations eventAccess, Origin origin) throws Exception{
 	Start.getEventQueue().push(eventAccess);
 	eventArmProcess.process(eventAccess, null);
 

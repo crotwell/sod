@@ -49,9 +49,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      *
      */
     public void run() {
-	EventAccess eventAccess = null;  
+	EventAccessOperations eventAccess = null;  
 	try {
-	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());
+	    eventAccess = (EventAccessOperations)Start.getEventQueue().pop();
 	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
 	    while(eventAccess != null) {
 		logger.debug("The name of the event is "+eventAccess.get_attributes().name);
@@ -68,7 +68,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		    thread.start();
 		}
 		eventAccess = 
-		    EventAccessHelper.narrow(Start.getEventQueue().pop());
+		    (EventAccessOperations)Start.getEventQueue().pop();
 	    }   
 
 	} catch(Exception e) {
