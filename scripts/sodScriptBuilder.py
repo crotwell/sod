@@ -6,6 +6,9 @@ class sodScriptParameters(scriptBuilder.jacorbParameters):
         scriptBuilder.jacorbParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = 'sod'
+        homevar = self.add('SOD_HOME', '.', 'initial', 1)
+        libvar = self.getVar('LIB', 'initial')
+        libvar.setValue(homevar.interp+'/lib')
         self.mainclass = 'edu.sc.seis.sod.Start'
 
 class queryTimer(sodScriptParameters):
