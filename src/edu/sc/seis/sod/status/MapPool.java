@@ -13,7 +13,7 @@ public class MapPool{
             maps[i] = 
             	new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
             maps[i].setEtopoLayer("edu/sc/seis/mapData");
-            maps[i].setEventLayer(new EventLayer(maps[i].getMapBean(), colorizer));
+            maps[i].setEventLayer(new EventLayer(maps[i], colorizer));
             maps[i].setStationLayer(new StationLayer());
             maps[i].overrideProjChangedInOMLayers(true);
             free[i] = true;
