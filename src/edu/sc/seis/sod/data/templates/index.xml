@@ -14,7 +14,7 @@
 <h1><runName/> Information</h1>
 <h2>Started on: </h2><startTime/>
 <h2>Events to date:</h2>
-<img><attribute name="src"><eventMap xlink:href="status/eventMap.png"/></attribute></img>
+<img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
 <div id="Menu">
 <ul>
