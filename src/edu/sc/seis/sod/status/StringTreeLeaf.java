@@ -28,7 +28,7 @@ public class StringTreeLeaf extends StringTree {
         this(name, boo, "");
     }
     public String toString() {
-        return super.toString() + " :" + reason + (t != null ? "  " + t : "");
+        return super.toString() + ":" + reason + (t != null ? ":" + t : "");
     }
 
     protected String reason;
