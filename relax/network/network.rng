@@ -24,9 +24,7 @@
                 <description> A network is accepted if its network code matches the given code
                     exactly. </description>
                 <example>
-                    <networkCode>
-                        <value>IC</value>
-                    </networkCode>
+                    <networkCode>IC</networkCode>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
