@@ -1,7 +1,8 @@
 /**
  * ChannelGroup.java
  *
- * @author Created by Omnicore CodeGuide
+ * @author Jagadeesh Danala
+ * @version
  */
 
 package edu.sc.seis.sod;
@@ -51,14 +52,14 @@ public class ChannelGroup {
 		loadDefaultRules(defaultConfigFileLoc);
 		return applyRules(channels,defaultRules,failures);
 	}
-	public static ChannelGroup[] group(Channel[] channels,Element[] extraRules,List failures)  {
-		int ruleCount = defaultRules.length + extraRules.length;
+	public static ChannelGroup[] group(Channel[] channels,Element[] additionalRules,List failures)  {
+		int ruleCount = defaultRules.length + additionalRules.length;
 		Element[] allRules = new Element[ruleCount];
-		for(int j=0;j<extraRules.length;j++) {
-			allRules[j] = extraRules[j];
+		for(int j=0;j<additionalRules.length;j++) {
+			allRules[j] = additionalRules[j];
 		}
-		for(int k=extraRules.length;k<ruleCount;k++) {
-			allRules[k] = defaultRules[k-extraRules.length];
+		for(int k=additionalRules.length;k<ruleCount;k++) {
+			allRules[k] = defaultRules[k-additionalRules.length];
 		}
 		return applyRules(channels,allRules,failures);
 	}
@@ -126,9 +127,9 @@ public class ChannelGroup {
 									NetworkId netId = channels[0].get_id().network_id;
 									NetworkDbObject[] networks = Start.getNetworkArm().getSuccessfulNetworks();
 									NetworkAttr netAttr = null;
-									for(int n = 0; n<networks.length;n++) {
-										if(NetworkIdUtil.areEqual(networks[n].getNetworkAccess().get_attributes().get_id(),netId)){
-											netAttr = networks[n].getNetworkAccess().get_attributes();
+									for(int nCount = 0; nCount<networks.length;nCount++) {
+										if(NetworkIdUtil.areEqual(networks[nCount].getNetworkAccess().get_attributes().get_id(),netId)){
+											netAttr = networks[nCount].getNetworkAccess().get_attributes();
 										}
 										NetworkSubsetter netSubsetter = (NetworkSubsetter) subsetter;
 										if(!netSubsetter.accept(netAttr)) {
@@ -161,6 +162,7 @@ public class ChannelGroup {
 				failedList.addAll(chn);
 			}
 		} catch (ConfigurationException e) {
+			GlobalExceptionHandler.handle("Error while loading Sod element in grouper",e);
 		}catch(Exception e ) {
 			GlobalExceptionHandler.handle("Exception while grouping channels",e);
 		}
@@ -210,7 +212,7 @@ public class ChannelGroup {
 		return false;
 	}
 	
-	public static boolean checkSamplingRate(Channel[] channelGroup) {
+	private static boolean checkSamplingRate(Channel[] channelGroup) {
 		SamplingImpl sampl = (SamplingImpl) channelGroup[0].sampling_info;
 		double samplingRate0 = (sampl.getFrequency().get_value()) * sampl.getNumPoints();
 		for(int i=1;i<channelGroup.length;i++) {
