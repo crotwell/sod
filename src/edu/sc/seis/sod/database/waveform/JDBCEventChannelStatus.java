@@ -81,10 +81,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                               "WHERE "+chanJoin+
                                               " AND station.sta_id = ?");
         ofStationStatus = conn.prepareStatement("SELECT pairid, eventid, channelid, status "+
-                                              "FROM channel, site, eventchannelstatus, station "+
-                                              "WHERE "+chanJoin+
-                                              " AND station.sta_id = ?"+
-                                              " AND status = ?");
+                                                    "FROM channel, site, eventchannelstatus, station "+
+                                                    "WHERE "+chanJoin+
+                                                    " AND station.sta_id = ?"+
+                                                    " AND status = ?");
     }
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException{
@@ -292,6 +292,65 @@ public class JDBCEventChannelStatus extends SodJDBC{
             setStatus.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("RUNNING THE SQL " + setStatus.toString(), e);
+        }
+    }
+
+
+    public void updateEventChannelStates(String processingRule)
+        throws SQLException, ConfigurationException{
+
+        if (!processingRule.equals(RunProperties.AT_LEAST_ONCE)
+            && !processingRule.equals(RunProperties.AT_MOST_ONCE)){
+            throw new ConfigurationException("SOD does not know how to handle this "
+                                                 + "processing rule: " + processingRule);
+        }
+
+        Stage[] stages =  {
+            Stage.EVENT_STATION_SUBSETTER,
+                Stage.EVENT_CHANNEL_SUBSETTER,
+                Stage.AVAILABLE_DATA_SUBSETTER,
+                Stage.DATA_SUBSETTER
+        };
+        Standing[] standings = {
+            Standing.IN_PROG,
+                Standing.INIT,
+                Standing.SUCCESS
+        };
+
+        String query = "SELECT pairid FROM eventchannelstatus WHERE ";
+
+        for (int i = 0; i < stages.length; i++) {
+            for (int j = 0; j < standings.length; j++) {
+                if (stages[i] != Stage.DATA_SUBSETTER
+                    || standings[j] != Standing.SUCCESS){
+                    Status curStatus = Status.get(stages[i], standings[j]);
+                    query+="status = " + curStatus.getAsShort();
+                    if (stages[i] != Stage.DATA_SUBSETTER
+                        || standings[j] != Standing.INIT){
+                        query+=" OR ";
+                    }
+                }
+            }
+        }
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()){
+            int curId = rs.getInt(1);
+            if (processingRule.equals(RunProperties.AT_LEAST_ONCE)){
+                setStatus(curId, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                            Standing.INIT));
+            }
+            else{
+                try {
+                    Stage currentStage = get(curId, null).getStatus().getStage();
+                    setStatus(curId, Status.get(currentStage, Standing.SYSTEM_FAILURE));
+                }catch (NotFound e){
+                    GlobalExceptionHandler.handle("Could not find event-channel "
+                                                      + "pair that was just purported "
+                                                      + "to exist in the database", e);
+                }
+            }
+
         }
     }
 
