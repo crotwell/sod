@@ -94,7 +94,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
     public static void write(String outputLocation, String output){
         File loc = new File(outputLocation);
         try {
-            File temp = File.createTempFile(loc.getName(), null);
+            File temp = File.createTempFile(loc.getName(), null, loc.getParentFile());
             BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
             writer.write(output);
             writer.close();
