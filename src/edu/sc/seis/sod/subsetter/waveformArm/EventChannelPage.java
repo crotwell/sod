@@ -11,7 +11,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.subsetter.PageSection;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import java.io.File;
@@ -27,11 +27,11 @@ public class EventChannelPage extends SimpleHTMLPage{
         sections.add(chanSec);
     }
 
-    public void add(Channel c, Status string) throws IOException{
+    public void add(Channel c, EventChannelCondition string) throws IOException{
         add(c, string, false);
     }
 
-    public void add(Channel c, Status string, boolean stampTime) throws IOException {
+    public void add(Channel c, EventChannelCondition string, boolean stampTime) throws IOException {
         String time = "";
         if(stampTime) time = df.format(ClockUtil.now())  + " ";
         chanSec.append(time + string + " " + ChannelIdUtil.toString(c.get_id()) + "<br>\n");

@@ -21,6 +21,7 @@ import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.subsetter.MapPool;
 import java.io.IOException;
 import org.apache.log4j.Logger;
@@ -57,14 +58,17 @@ public class MapWaveFormStatus implements WaveFormStatus {
                     while(it.hasNext()){
                         Channel cur = (Channel)it.next();
                         sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
-                        Status status = (Status)channelMap.get(cur);
-                        if (status == Status.COMPLETE_REJECT ||
-                            status == Status.SOD_FAILURE){
+                        EventChannelCondition status = (EventChannelCondition)channelMap.get(cur);
+                        if (status == EventChannelCondition.FAILURE ||
+                            status == EventChannelCondition.PROCESSOR_FAILED||
+                            status == EventChannelCondition.SUBSETTER_FAILED){
                             sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                        cur.my_site.my_station,
                                                                                        AvailableStationDataEvent.DOWN));
                         }
-                        else if (status == Status.COMPLETE_SUCCESS){
+                        else if (status == EventChannelCondition.SUCCESS ||
+                                status == EventChannelCondition.PROCESSOR_PASSED ||
+                                status == EventChannelCondition.SUBSETTER_PASSED){
                             sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                        cur.my_site.my_station,
                                                                                        AvailableStationDataEvent.UP));
@@ -120,7 +124,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
             write();
     }
 
-    public boolean add(Channel chan, Status status){
+    public boolean add(Channel chan, EventChannelCondition status){
         synchronized(channelMap){
             if(channelMap.put(chan, status) != status) return true;
         }
@@ -137,7 +141,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
 
     public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
 
-    public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
+    public EventChannelCondition getStatus(Channel chan){ return (EventChannelCondition)channelMap.get(chan);}
 
     public boolean contains(EventAccessOperations ev) {
         return events.contains(ev);
