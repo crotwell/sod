@@ -13,6 +13,7 @@ import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.Status;
+import org.apache.log4j.Logger;
 
 public class EventChannelPair{
     public EventChannelPair(NetworkDbObject net, EventDbObject event,
@@ -21,6 +22,11 @@ public class EventChannelPair{
         this.chan = chan;
         this.owner = owner;
         this.net = net;
+    }
+    
+    public void update(Exception e, String info, Status status) throws InvalidDatabaseStateException {
+        logger.error(info, e);
+        update(info, status);
     }
     
     public void update(String info, Status status)throws InvalidDatabaseStateException{
@@ -54,4 +60,6 @@ public class EventChannelPair{
     private WaveFormArm owner;
     
     private NetworkDbObject net;
+    
+    private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }
