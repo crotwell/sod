@@ -7,9 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -391,7 +388,7 @@ public class EventArm implements Runnable {
 
     private class Querier {
 
-        public Querier(EventFinder ef) throws ConfigurationException {
+        public Querier(EventFinder ef) {
             if(ef.getDepthRange() != null) {
                 minDepth = ef.getDepthRange().getMinDepth();
                 maxDepth = ef.getDepthRange().getMaxDepth();
@@ -425,8 +422,7 @@ public class EventArm implements Runnable {
             logger.debug(s);
         }
 
-        public CacheEvent[] query(TimeRange tr) throws NotFound, CannotProceed,
-                InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
+        public CacheEvent[] query(TimeRange tr) {
             for(int i = 0; i < MAX_RETRY; i++) {
                 try {
                     edu.iris.Fissures.IfEvent.EventFinder evFinder = finder.getEventDC()
