@@ -3930,6 +3930,19 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="waveFormStatusType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="logFactor5WaveFormStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormStatusType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="phaseCutType">
          <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -4168,7 +4181,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="rMean" type="rMeanType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="rTrend" type="rTrendType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
-
+    <xsd:element name="waveFormStatus" type="waveFormStatusType" abstract="true"/>
+    <xsd:element name="logFactor5WaveFormStatus" type="logFactor5WaveFormStatusType" substitutionGroup="waveFormStatus"/>
+   
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
     <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
 
@@ -4196,7 +4211,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                 <xsd:sequence>
                     <xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="localSeismogramArm"/>
-
+                    <xsd:element ref="waveFormStatus" minOccurs="0" maxOccurs="unbounded"/>
                     <xsd:element ref="statusProcess" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
