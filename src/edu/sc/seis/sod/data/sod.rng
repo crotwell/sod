@@ -457,7 +457,9 @@
                         <zeroOrMore>
                             <choice>
                                 <ref name="seismogramProcess2"/>
-                                <ref name="phaseRequest2"/>
+                                <element name="phaseRequest">
+                                    <ref name="phaseRequest2"/>
+                                </element>
                             </choice>
                         </zeroOrMore>
                     </element>
@@ -6812,7 +6814,9 @@
         <choice>
             <choice>
                 <ref name="seismogramProcess3"/>
-                <ref name="phaseRequest3"/>
+                <element name="phaseRequest">
+                    <ref name="phaseRequest3"/>
+                </element>
             </choice>
             <element name="threeComponentData">
                 <empty/>
@@ -6821,7 +6825,9 @@
                 <zeroOrMore>
                     <choice>
                         <ref name="seismogramProcess4"/>
-                        <ref name="phaseRequest4"/>
+                        <element name="phaseRequest">
+                            <ref name="phaseRequest4"/>
+                        </element>
                     </choice>
                 </zeroOrMore>
             </element>
@@ -6829,7 +6835,9 @@
                 <zeroOrMore>
                     <choice>
                         <ref name="seismogramProcess5"/>
-                        <ref name="phaseRequest5"/>
+                        <element name="phaseRequest">
+                            <ref name="phaseRequest5"/>
+                        </element>
                     </choice>
                 </zeroOrMore>
             </element>
@@ -6883,7 +6891,9 @@
             </element>
             <choice>
                 <ref name="seismogramProcess"/>
-                <ref name="phaseRequest"/>
+                <element name="phaseRequest">
+                    <ref name="phaseRequest"/>
+                </element>
             </choice>
         </choice>
     </define>
@@ -7520,108 +7530,98 @@
         </choice>
     </define>
     <define name="phaseRequest3">
-        <element name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
+        <optional>
+            <element name="model">
                 <data type="string"/>
             </element>
-            <element name="beginOffset">
-                <ref name="time5"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time5"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time5"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time5"/>
         </element>
     </define>
     <define name="phaseRequest2">
-        <element name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
+        <optional>
+            <element name="model">
                 <data type="string"/>
             </element>
-            <element name="beginOffset">
-                <ref name="time"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time"/>
         </element>
     </define>
     <define name="phaseRequest4">
-        <element name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
+        <optional>
+            <element name="model">
                 <data type="string"/>
             </element>
-            <element name="beginOffset">
-                <ref name="time6"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time6"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time6"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time6"/>
         </element>
     </define>
     <define name="phaseRequest">
-        <element name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
+        <optional>
+            <element name="model">
                 <data type="string"/>
             </element>
-            <element name="beginOffset">
-                <ref name="time8"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time8"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time8"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time8"/>
         </element>
     </define>
     <define name="phaseRequest5">
-        <element name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
+        <optional>
+            <element name="model">
                 <data type="string"/>
             </element>
-            <element name="beginOffset">
-                <ref name="time7"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time7"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string"/>
+        </element>
+        <element name="beginOffset">
+            <ref name="time7"/>
+        </element>
+        <element name="endPhase">
+            <data type="string"/>
+        </element>
+        <element name="endOffset">
+            <ref name="time7"/>
         </element>
     </define>
     <define name="channelCodeUtil2">
