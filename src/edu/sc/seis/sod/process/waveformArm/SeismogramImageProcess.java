@@ -184,12 +184,12 @@ public class SeismogramImageProcess implements WaveformProcess {
 		
 		MemoryDataSetSeismogram memDSS = null;
 		PhaseRequest phaseRequest = null;
-		String prefix = "";
+		String tempPrefix = "";
 		if(phaseWindow == null) {
 			memDSS = new MemoryDataSetSeismogram(original[0], "");
 			memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
 			memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
-			prefix = "original_";
+			tempPrefix = "original_";
 		}else {
 			phaseRequest = phaseWindow.getPhaseRequest();
 			RequestFilter[] request = phaseRequest.generateRequest(event,channel,null);
@@ -210,7 +210,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 		final Arrival[] arrivals =
 			tauP.calcTravelTimes(channel.my_site.my_station, origin, phases);
 		final SodFlag[] flags = new SodFlag[arrivals.length];
-		final String phasePrefix = prefix;
+		final String phasePrefix = tempPrefix;
 		for (int i = 0; i < arrivals.length; i++) {
 			MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(), UnitImpl.SECOND));
 			flags[i] = new SodFlag(flagTime, arrivals[i].getName(),bsd);
@@ -254,7 +254,6 @@ public class SeismogramImageProcess implements WaveformProcess {
     private String prefix = "";
     private String fileType = PNG;
     private boolean relativeTime = false;
-	private static int prefixCount = 1;
     public static final String PDF = "pdf";
     public static final String PNG = "png";
 }
