@@ -73,13 +73,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         fileDialog.show();
                         String outfilename = fileDialog.getFile();
                         if (outfilename != null) {
-                        File outfile = new File(outfilename);
-                        try {
-                            save(outfile);
-                        } catch (IOException ex) {
-                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                            File outfile = new File(outfilename);
+                            try {
+                                save(outfile);
+                            } catch (IOException ex) {
+                                GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                            }
                         }
-                    }
                     }
                 });
         JMenuItem quit = new JMenuItem("Quit");
@@ -93,12 +93,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = getDocument();
         if (tabs) {
-            try {
-                props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream(NAME_PROPS ));
-            }catch(IOException e)
-            {
-                GlobalExceptionHandler.handle("Error in loading names Prop file",e);
-            }
             frame.getContentPane().add(new JScrollPane(getTabPane()), BorderLayout.CENTER);
             // put each top level sod element in a panel
             NodeList list = doc.getDocumentElement().getChildNodes();
@@ -116,10 +110,9 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     JPanel panel = new JPanel();
                     panel.setLayout(new BorderLayout());
                     panel.add(box, BorderLayout.NORTH);
-                    String tabName = props.getProperty(((Element)list.item(j)).getTagName(),
-                                                      ((Element)list.item(j)).getTagName());
+                    String tabName = getDisplayName(((Element)list.item(j)).getTagName());
                     tabPane.add(EditorUtil.capFirstLetter(tabName),
-                                                       panel);
+                                panel);
                 }
             }
         } else {
@@ -138,6 +131,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     }
                 });
     }
+
 
     protected void save(File file) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -252,6 +246,10 @@ public class SimpleGUIEditor extends CommandLineEditor {
         return tabPane;
     }
 
+    public static String getDisplayName(String tagName) {
+        return props.getProperty(tagName, tagName);
+    }
+
     /**
      *
      */
@@ -270,12 +268,19 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     JTabbedPane tabPane = new JTabbedPane();
 
-    Properties props = new Properties();
+    static Properties props = new Properties();
 
     private static String NAME_PROPS = "edu/sc/seis/sod/editor/names.prop";
 
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
 
+    static {
+        try {
+            props.load(SimpleGUIEditor.class.getClassLoader().getResourceAsStream(NAME_PROPS ));
+        }catch(IOException e) {
+            GlobalExceptionHandler.handle("Error in loading names Prop file",e);
+        }
+    }
 
 }
 
