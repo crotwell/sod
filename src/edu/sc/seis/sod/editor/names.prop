@@ -62,3 +62,4 @@ maxRetryDelay=Max Retry Delay
 runName=Run Name
 statusBase=Status Directory
 waveformWorkerThreads=Waveform Arm Threads
+printLineEventProcess=Print Events to Standard Out
