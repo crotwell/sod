@@ -244,9 +244,7 @@
 	    	</optional>
     		<optional>
     			<element name="advanceInterval">
-    				<element name="unit">
     					<ref name="timeUnit"/>
-	    			</element>
     				<element name="value">
     					<data type="double"/>
 	    			</element>
