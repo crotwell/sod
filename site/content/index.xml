@@ -10,17 +10,11 @@
 <ol>
 <li>A section of grass-covered surface soil held together by matted roots; turf.</li>
 <li> The ground, especially when covered with grass.</li>
-<li>The science and art of using all the forces of
-                        a nation to execute approved plans for retrieveing seismic data
-                        as effectively as possible during peace or war.</li>
+<li>a software application that automates tedious data selection, downloading and routine processing tasks in seismology, shortening the time between idea and science. </li>
 </ol>
 <i>[Middle English, from Middle Low German, or Middle Dutch<tt> sode</tt>.]</i>
-</p><br/><br/>
+</p>
 
-                        <p class="about">
-                        SOD (Standing Order for Data) automates tedious data
-                                selection, downloading and routine processing tasks in seismology,
-                                shortening the time between idea and science. </p>
                         <p class="about">
                         There are two parts to using SOD. The first
                         is the creation of a strategy file. The strategy file contains
@@ -28,7 +22,7 @@
                         file is written in <a href="http://www.w3c.org/XML">XML</a>,
                         and can be editied with any text editor. Because editing XML
                         by hand is prone to error, there is also a
-                        GUI editor that included with SOD for creating these files.</p>
+                        GUI editor included with SOD for creating these files.</p>
                         <p>
                         The second part is actually running SOD with the strategy file. SOD is
                         meant to be a long running background program, and so is run
