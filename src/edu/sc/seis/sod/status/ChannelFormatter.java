@@ -74,6 +74,9 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("siteCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
+                    if(chan.get_id().site_code.equals("  ") && filizeResults){
+                        return "__";
+                    }
                     return chan.get_id().site_code;
                 }
             };
