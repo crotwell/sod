@@ -1,6 +1,6 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.WrappedException;
+import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
 import edu.sc.seis.sod.database.HSqlDbQueue;
 import edu.sc.seis.sod.database.Queue;
 import edu.sc.seis.sod.database.WaveformDbQueue;
@@ -15,7 +15,6 @@ import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.w3c.dom.Document;
