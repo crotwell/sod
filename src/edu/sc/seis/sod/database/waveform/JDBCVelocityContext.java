@@ -35,6 +35,8 @@ public class JDBCVelocityContext extends AbstractContext {
         }
     }
 
+    /** The interface requires Object value, but we really want it to be
+     * limited to String Double and Serializable. */
     public Object internalPut(String name, Object value) {
         try {
             if (value instanceof String) {

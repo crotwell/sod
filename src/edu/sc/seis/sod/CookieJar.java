@@ -10,10 +10,10 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
 import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class CookieJar {
         return context.get(key);
     }
 
-    public void put(String key, Object value) {
+    public void put(String key, Serializable value) {
         context.put(key, value);
     }
 
