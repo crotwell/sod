@@ -41,9 +41,6 @@ public class OutputScheduler extends Thread{
         } catch (InterruptedException e) {}
 
         while(true) {
-            System.out.println("****************************************************");
-            System.out.println("     Status pages update at: "+ClockUtil.now());
-            System.out.println("****************************************************");
             runAll(runnables);
             if(Start.getWaveformArm() != null && Start.getWaveformArm().isFinished()){
                 runAll(runnables);
