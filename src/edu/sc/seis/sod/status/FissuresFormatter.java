@@ -214,6 +214,10 @@ public class FissuresFormatter {
         return fileName.trim();
     }
 
+	public static String filize(String base, String extension) {
+		return filize(base+"."+extension);
+	}
+	
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 
     public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
