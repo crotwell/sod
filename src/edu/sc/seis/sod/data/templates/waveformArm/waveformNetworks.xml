@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <html>
 <header><title>Networks in the waveform arm</title>
-<style media="all">@import "main.css";</style>
+<style media="all">@import "../main.css";</style>
 <script type="text/javascript" src="../tableRuler.js"/>
 <script type="text/javascript" src="../sorttable.js"/>
 <script type="text/javascript">
