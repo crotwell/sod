@@ -158,14 +158,6 @@ public class PhaseRequest implements RequestGenerator{
 	    return new RequestFilter[0];
 	} 
 
-	/*System.out.println("originDpeth "+originDepth);
-	System.out.println("distance "+SphericalCoords.distance(origin.my_location.latitude, 
-		 				    origin.my_location.longitude,
-			 			    channel.my_site.my_station.my_location.latitude,
-				 			       channel.my_site.my_station.my_location.longitude));
-	System.out.println("arrivalStartTime = "+arrivalStartTime);
-	System.out.println("arrivalEndTime = "+arrivalEndTime);*/
-
 	// round to milliseconds
 	arrivalStartTime = Math.rint(1000*arrivalStartTime)/1000;
 	arrivalEndTime = Math.rint(1000*arrivalEndTime)/1000;
