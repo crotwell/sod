@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
+import org.w3c.dom.*;
 
 /**
  * EventAND.java
@@ -18,7 +19,7 @@ import edu.iris.Fissures.event.*;
  */
 
 public class EventAND implements EventSubsetter {
-    public EventAND (){
+    public EventAND (Element config){
     }
 
     public void add(EventSubsetter eventSubsetter) {

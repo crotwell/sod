@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter;
 
 import edu.sc.seis.sod.*;
 import java.util.*;
+import org.w3c.dom.*;
 
 /**
  * EventAttrAND.java
@@ -14,8 +15,8 @@ import java.util.*;
  */
 
 public class EventAttrAND implements EventAttrSubsetter {
-    public EventAttrAND (){
-	
+    public EventAttrAND (Element config){
+	processConfig(config);
     }
     
     public void add(EventAttrSubsetter eventSubsetter) {
@@ -31,6 +32,38 @@ public class EventAttrAND implements EventAttrSubsetter {
 	    } // end of if (! filter.accept(event))
 	} // end of while (it.hasNext())
 	return true;
+    }
+
+    protected void processConfig(Element config) {
+	NodeList children = config.getChildNodes();
+	Node node;
+	Class[] constructorArgs = new Class[1];
+	constructorArgs[0] = Element.class;
+
+	for (int i=0; i<children.getLength(); i++) {
+	    node = children.item(i);
+	    if (node instanceof Element) {
+		try {
+		    Element subElement = (Element)node;
+		    Class eventAttrSubclass = 
+			Class.forName("edu.sc.seis.sod.subsetter."+
+				      subElement.getTagName());
+
+		    Object obj = eventAttrSubclass.getInstance();
+		} catch (ConfigurationException e) {
+		    // don't repackage ConfigurationException
+		    throw e;
+		} catch (Exception e) {
+		    throw new ConfigurationException("Problem understanding "+
+						     subElement.getTagName()+
+						     " within "+
+						     config.getTagName(), e);
+		} // end of try-catch
+		
+	    } // end of if (node instanceof Element)
+	    
+	} // end of for (int i=0; i<children.getSize(); i++)
+	
     }
 
     List filterList = new LinkedList();
