@@ -33,6 +33,8 @@ public class PrintLineEventProcess implements EventArmProcess {
 	String eventStr = 
 	    regions.getRegionName(event.get_attributes().region);
 	try {
+	    eventStr =event.get_preferred_origin().magnitudes[0].type+" "+
+            event.get_preferred_origin().magnitudes[0].value+" "+eventStr;
 	    eventStr+=" "+event.get_preferred_origin().origin_time.date_time;
 	} catch (NoPreferredOrigin e) {
 	    eventStr+=" No Pref Origin!";
