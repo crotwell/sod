@@ -10,9 +10,13 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.PageSection;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class EventChannelPage extends SimpleHTMLPage{
     public EventChannelPage(String title, File location, EventAccessOperations event){
@@ -22,10 +26,18 @@ public class EventChannelPage extends SimpleHTMLPage{
         sections.add(chanSec);
     }
     
-    public void add(Channel c){
-        chanSec.append(ChannelIdUtil.toString(c.get_id()) + "<br>\n");
+    public void add(Channel c, Status string){
+        add(c, string, false);
+    }
+    
+    public void add(Channel c, Status string, boolean stampTime){
+        String time = "";
+        if(stampTime) time = df.format(ClockUtil.now())  + " ";
+        chanSec.append(time + string + " " + ChannelIdUtil.toString(c.get_id()) + "<br>\n");
         write();
     }
+    
+    public static final DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
     
     PageSection chanSec;
     
