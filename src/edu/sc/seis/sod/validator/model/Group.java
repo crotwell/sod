@@ -14,6 +14,7 @@ public class Group extends AbstractMultigenitorForm {
     public FormProvider copyWithNewParent(Form newParent) {
         Group g = new Group(getMin(), getMax(), newParent);
         copyKidsToNewParent(g);
+        g.setAnnotation(getAnnotation());
         return g;
     }
 

@@ -14,7 +14,9 @@ public class Empty extends AbstractForm{
     }
 
     public FormProvider  copyWithNewParent(Form newParent) {
-        return new Empty(newParent);
+        Empty e = new Empty(newParent);
+        e.setAnnotation(getAnnotation());
+        return e;
     }
 
     public void accept(FormVisitor v) { v.visit(this);}

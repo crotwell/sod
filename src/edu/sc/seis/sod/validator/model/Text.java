@@ -14,7 +14,9 @@ public class Text extends Empty{
     public Text(Form parent){ super(parent); }
 
     public FormProvider  copyWithNewParent(Form newParent){
-        return new Text(newParent);
+        Text t = new Text(newParent);
+        t.setAnnotation(getAnnotation());
+        return t;
     }
 
     public String toString(){ return "Any Text"; }

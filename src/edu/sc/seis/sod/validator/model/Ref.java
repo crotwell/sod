@@ -33,7 +33,7 @@ public class Ref implements FormProvider{
             derefedForm = refedForm.deref(parent, def);
             derefedForm.setMin(getMin());
             derefedForm.setMax(getMax());
-            if(ann != null){ derefedForm.setAnnotation(ann); }
+            derefedForm.setAnnotation(ann);
         }
         return derefedForm;
     }

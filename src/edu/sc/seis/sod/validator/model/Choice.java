@@ -17,6 +17,7 @@ public class Choice
     public FormProvider copyWithNewParent(Form newParent) {
         Choice c = new Choice(getMin(), getMax(), newParent);
         copyKidsToNewParent(c);
+        c.setAnnotation(getAnnotation());
         return c;
     }
 

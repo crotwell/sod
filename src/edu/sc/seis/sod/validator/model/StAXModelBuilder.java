@@ -141,7 +141,6 @@ public class StAXModelBuilder implements XMLStreamConstants{
 
     private FormProvider handleAll() throws XMLStreamException{
         List kids = new ArrayList();
-        Annotation note = null;
         while(reader.getEventType() == START_ELEMENT){
             String tag = reader.getLocalName();
             if(isCardinality(tag)){ kids.add(handleCardinality()); }
@@ -151,19 +150,11 @@ public class StAXModelBuilder implements XMLStreamConstants{
             else if(tag.equals("ref")){ kids.add(handleRef()); }
             else if(tag.equals("externalRef")){ kids.add(handleExtRef()); }
             else if(isData(tag)){ kids.add(handleData()); }
-            else if(tag.equals("annotation")){
-                note = handleAnn();
-                continue;
-            }
             else{
                 System.out.println("SHIT!!  Unknown tag!" + tag + " " + definedGrammar);
                 System.exit(0);
 
                 break;
-            }
-            if(note != null){
-                ((FormProvider)kids.get(kids.size() - 1)).setAnnotation(note);
-                note = null;
             }
         }
         if(kids.size() == 1){ return (FormProvider)kids.get(0); }
@@ -175,42 +166,46 @@ public class StAXModelBuilder implements XMLStreamConstants{
         return g;
     }
 
+    private boolean isAnn(String tag){ return tag.equals("annotation"); }
+
     private Annotation handleAnn() throws XMLStreamException {
         Annotation note = new Annotation();
-        while(reader.next() != END_ELEMENT ||
-              ! reader.getLocalName().equals("annotation")){
-            if(reader.getEventType() == START_ELEMENT){
-                if(reader.getLocalName().equals("summary")){
-                    reader.next();
-                    note.setSummary(reader.getText());
-                }else if(reader.getLocalName().equals("description")){
-                    reader.next();
-                    note.setDescription(reader.getText());
-                } else if (reader.getLocalName().equals("include")){
-                    reader.next();
-                    note.setInclude(true);
-                } else if(reader.getLocalName().equals("example")){
-                    reader.next();
-                    StringBuffer buf = new StringBuffer();
-                    int prevEventType = -1;
-                    while (reader.getEventType()!= XMLStreamConstants.END_ELEMENT || !reader.getLocalName().equals("example")){
-                        int curEventType = reader.getEventType();
-                        //this if-else block takes care of empty tags
-                        if (prevEventType == XMLStreamConstants.START_ELEMENT
-                            && curEventType == XMLStreamConstants.END_ELEMENT){
-                            buf.setCharAt(buf.length() - 1, ' ');
-                            buf.append("/>");
-                        } else {
-                            buf.append(XMLUtil.readEvent(reader));
-                        }
+        if(isAnn(reader.getLocalName())){
+            while(reader.next() != END_ELEMENT ||
+                  ! reader.getLocalName().equals("annotation")){
+                if(reader.getEventType() == START_ELEMENT){
+                    if(reader.getLocalName().equals("summary")){
                         reader.next();
-                        prevEventType = curEventType;
+                        note.setSummary(reader.getText());
+                    }else if(reader.getLocalName().equals("description")){
+                        reader.next();
+                        note.setDescription(reader.getText());
+                    } else if (reader.getLocalName().equals("include")){
+                        reader.next();
+                        note.setInclude(true);
+                    } else if(reader.getLocalName().equals("example")){
+                        reader.next();
+                        StringBuffer buf = new StringBuffer();
+                        int prevEventType = -1;
+                        while (reader.getEventType()!= XMLStreamConstants.END_ELEMENT || !reader.getLocalName().equals("example")){
+                            int curEventType = reader.getEventType();
+                            //this if-else block takes care of empty tags
+                            if (prevEventType == XMLStreamConstants.START_ELEMENT
+                                && curEventType == XMLStreamConstants.END_ELEMENT){
+                                buf.setCharAt(buf.length() - 1, ' ');
+                                buf.append("/>");
+                            } else {
+                                buf.append(XMLUtil.readEvent(reader));
+                            }
+                            reader.next();
+                            prevEventType = curEventType;
+                        }
+                        note.setExample(buf.toString());
                     }
-                    note.setExample(buf.toString());
                 }
             }
+            reader.nextTag();
         }
-        reader.nextTag();
         return note;
     }
 
@@ -221,7 +216,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
      *
      * It returns a FormProvider representing the internals of that cardinality
      * and advances the reader to the next tag past the END_ELEMENT of the
-     * cardinality handle started
+     * cardinality
      *
      * The parent on the returned FormProvider is not set, so this must be
      * handled by the object calling this.
@@ -238,6 +233,10 @@ public class StAXModelBuilder implements XMLStreamConstants{
 
         //make sub structure
         reader.nextTag();
+        if(isAnn(reader.getLocalName())){
+            Annotation note = handleAnn();
+            throw new RuntimeException("Annotation with summary " + note.getSummary() + " not allowed directly in cardinality tag");
+        }
         FormProvider result = handleAll();
 
         //set cardinality on substructure
@@ -269,6 +268,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
         String name = reader.getAttributeValue(0);
         nextTag();
         NamedElement result = new NamedElement(1, 1, name);
+        result.setAnnotation(handleAnn());
         result.setChild(handleAll());
         nextTag();
         return result;
@@ -278,6 +278,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
         String name = reader.getAttributeValue(0);
         nextTag();
         Attribute result = new Attribute(1, 1, name);
+        result.setAnnotation(handleAnn());
         result.setChild(handleAll());
         nextTag();
         return result;
@@ -291,6 +292,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
         else if(tag.equals("list")){ parent = new DataList(1, 1); }
         else{ parent = new Interleave(1, 1); }
         nextTag();
+        Annotation followingNote = handleAnn();
         FormProvider child = handleAll();
         nextTag();
         if(child instanceof AbstractMultigenitorForm){
@@ -301,6 +303,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
             for (int i = 0; i < myKids.length; i++) {
                 parent.add(myKids[i].copyWithNewParent(parent));
             }
+            parent.setAnnotation(followingNote);
             return parent;
         }else{
             return child;
@@ -324,19 +327,23 @@ public class StAXModelBuilder implements XMLStreamConstants{
     private Ref handleRef() throws XMLStreamException{
         String name = reader.getAttributeValue(0);
         nextTag();
+        Ref ref = new Ref(definedGrammar, name);
+        ref.setAnnotation(handleAnn());
         nextTag();
-        return new Ref(definedGrammar, name);
+        return ref;
     }
 
 
     private Ref handleExtRef() throws XMLStreamException{
         String refGramLoc = getAbsPath();
         nextTag();
+        Ref ref = new Ref(getGrammar(refGramLoc));
+        ref.setAnnotation(handleAnn());
         nextTag();
-        return new Ref(getGrammar(refGramLoc));
+        return ref;
     }
 
-    private Object handleData() throws XMLStreamException {
+    private Form handleData() throws XMLStreamException {
         String tag = reader.getLocalName();
         Form result = null;
         if(tag.equals("notAllowed")){ result = new NotAllowed(); }
@@ -356,6 +363,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
             }
         }
         nextTag();
+        result.setAnnotation(handleAnn());
         while(reader.getEventType() == START_ELEMENT &&
               reader.getLocalName().equals("param")){
             handleParam((Data)result);
@@ -419,4 +427,6 @@ public class StAXModelBuilder implements XMLStreamConstants{
     private Grammar definedGrammar;
     private static Map parsedGrammars = new HashMap();
 }
+
+
 

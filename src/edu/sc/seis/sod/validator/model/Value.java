@@ -33,7 +33,9 @@ public class Value extends Data{
     public String getValue(){ return value; }
 
     public FormProvider copyWithNewParent(Form newParent){
-        return new Value(getMin(), getMax(), value, getDatatype(), newParent);
+        Value v = new Value(getMin(), getMax(), value, getDatatype(), newParent);
+        v.setAnnotation(getAnnotation());
+        return v;
     }
 
     public void accept(FormVisitor v) { v.visit(this);}

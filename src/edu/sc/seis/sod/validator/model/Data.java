@@ -17,7 +17,9 @@ public class Data extends AbstractForm{
     }
 
     public FormProvider  copyWithNewParent(Form newParent) {
-        return new Data(getMin(), getMax(), getDatatype(), newParent);
+        Data d = new Data(getMin(), getMax(), getDatatype(), newParent);
+        d.setAnnotation(getAnnotation());
+        return d;
     }
 
     public int hashCode(){ return super.hashCode() * 37 + datatype.hashCode(); }

@@ -14,6 +14,7 @@ public class Interleave extends AbstractMultigenitorForm {
     public FormProvider copyWithNewParent(Form newParent) {
         Interleave i = new Interleave(getMin(), getMax(), newParent);
         copyKidsToNewParent(i);
+        i.setAnnotation(getAnnotation());
         return i;
     }
 

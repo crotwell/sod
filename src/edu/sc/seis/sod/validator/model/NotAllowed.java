@@ -15,7 +15,9 @@ public class NotAllowed extends AbstractForm{
     }
 
     public FormProvider copyWithNewParent(Form newParent) {
-        return new NotAllowed(newParent);
+        NotAllowed na = new NotAllowed(newParent);
+        na.setAnnotation(getAnnotation());
+        return na;
     }
 }
 
