@@ -4,9 +4,8 @@ body {
 	margin: 0px;
 }
 
-
 #header, #menu, #footer{
-        background-color: #fff;
+  background-color: #fff;
 }
 
 #header, #footer {
@@ -22,7 +21,6 @@ body {
 	border-top: 1px solid;
 }
 
-
 #footer {
 	position: relative;
 	bottom: 10px;
@@ -31,18 +29,15 @@ body {
 	border-bottom: 1px solid;
 }
 
-#footer p {
-	
-}
-
+#footer p {}
 
 #content {
-	margin: 125px 20px 20px 175px;
+	margin: 125px 20px 20px 200px;
 	padding: 5px;
 }
 
 .left{
-float:left;
+  float:left;
 }
 
 .right{
@@ -50,18 +45,33 @@ float:left;
 }
 
 #menu {
+  font-family:verdana, arial, helvetica, sans-serif;
 	position: absolute;
+  font-weight:600;
+  font-size:13px;
 	top: 150px;
 	left: 20px;
-	width: 125px;
+	width: 150px;
 	padding: 5px;
 	border: 1px solid;
+}
+
+#menu li{
+  padding-bottom:3px;
 }
 
 #menu ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+}
+
+#menu #selected{
+background:white;
+}
+
+#menu li{
+background:#eee;
 }
 
 th {
@@ -82,3 +92,18 @@ a.download {
 .caption{
   width:100px;
   }
+
+.section pre, .section ul, .section h4, .section h3{
+	border-style:solid;
+	border-color:black;
+	border-width:1px;
+	background:white;
+}
+
+.section h4,.section h3{
+  padding-left:5px;
+}
+
+.section ul{
+  margin: 4px;
+}
