@@ -63,12 +63,12 @@ public class SacFileProcessor implements LocalSeismogramProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogram[] process(EventAccessOperations event, 
-			NetworkAccess network, 
-			Channel channel, 
-			RequestFilter[] original, 
-			RequestFilter[] available,
-			LocalSeismogram[] seismograms, 
-			CookieJar cookies) throws Exception {
+				     NetworkAccess network, 
+				     Channel channel, 
+				     RequestFilter[] original, 
+				     RequestFilter[] available,
+				     LocalSeismogram[] seismograms, 
+				     CookieJar cookies) throws Exception {
 	try {
 	    logger.info("Got "+seismograms.length+" seismograms for "+
 			ChannelIdUtil.toString(channel.get_id())+
@@ -111,7 +111,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		// add event since dataset is new
 		Document doc = dataset.getElement().getOwnerDocument();
 
-//		XMLParameter.insert(dataset.getElement(),"event_info", event);
+		//		XMLParameter.insert(dataset.getElement(),"event_info", event);
 		AuditInfo[] audit = new AuditInfo[1];
 		audit[0] = new AuditInfo(System.getProperty("user.name"),
 					 "event loaded via sod.");
@@ -121,7 +121,15 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	    SacTimeSeries sac;
 	    String seisFilename = "";
 	    for (int i=0; i<seismograms.length; i++) {
-		seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
+		if ( seismograms[i].channel_id.site_code.equals("  ")) {
+		    seisFilename = 
+			seismograms[i].channel_id.network_id.network_code+"."+
+			seismograms[i].channel_id.station_code+".."+
+			seismograms[i].channel_id.channel_code;
+		} else {
+		    seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
+		} // end of else
+		
 		File seisFile = new File(eventDirectory, seisFilename); 
 		int n =0;
 		while (seisFile.exists()) {
@@ -149,20 +157,20 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	    try {
 		File outFile = new File(eventDirectory, eventDirName+".dsml");
 		OutputStream fos = new BufferedOutputStream(
-				      new FileOutputStream(outFile));
+							    new FileOutputStream(outFile));
 		dataset.write(fos);
 		fos.close();
 	    } catch(Exception ex) {
 		System.out.println("EXCEPTION CAUGHT WHILE trying to save dataset"
 				   +ex.toString());
 		ex.printStackTrace();
-logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", ex);
+		logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", ex);
 	    }
 	} catch(Exception e) {
 	    
 	    System.out.println("Exception caught while writing to file in SacFileProcess");
-		e.printStackTrace();
-logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
+	    e.printStackTrace();
+	    logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
 	}
 	return seismograms;
     }
