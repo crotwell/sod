@@ -14,7 +14,7 @@
                         </p>
                 </section>
                 <section name="Example">
-                     <p>This snippet of xml shows the use of the legacyExecute
+                     <p>This snippet of XML shows the use of the legacyExecute
                      processor. Instead of doing something useful, we simply
                      use the echo program.
                      </p>
@@ -71,7 +71,7 @@
                         </p>
                         <p>Input and output also causes difficulties. The legacyExecute
                         processor maps the output and error streams from the process
-                        to SODs System.out and System.err, so you can see any output.
+                        to SOD's System.out and System.err, so you can see any output.
                         However, SOD makes no attempt to process this output. So, it
                         is best if the script you run sends any important information
                         to a separate log file. Expect, freely available from http://expect.nist.gov, may

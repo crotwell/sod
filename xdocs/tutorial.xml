@@ -19,20 +19,23 @@
                 href="install.html">installation</a> instructions for details.</p>
         </section>
         <section name="The Strategy File">
-            <p> Sod gets all of the information about what data to retrieve from a XML strategy file.
-                So, in order to use sod, you need to create or modify one. For this example, we will
-                get all data from long period channels from all magnitude 6 or larger earthquakes in
-                January of 2003. We will use the Iris-Ida network, code II, and pick some stations
-                that have a distance of 30 to 60 degrees from the event. We will save the data in
-                SAC format in directories by event.</p>
+            <p> Sod gets all of the information about what data to retrieve from a XML strategy
+                file. So, in order to use sod, you need to create or modify one. For this example,
+                we will get all data from long period channels from all magnitude 6 or larger
+                earthquakes in January of 2003. We will use the Iris-Ida network, code II, and pick
+                some stations that have a distance of 30 to 60 degrees from the event. We will save
+                the data in SAC format in directories by event.</p>
             <p> The main structure of our XML strategy file will look like this. We will fill in
                 each section with the details later. There should a completed copy of this within
                 the examples directory of the SOD distribution.</p>
-            <source> &lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;sod
-                xmlns:xlink="http://www.w3.org/1999/xlink/" &gt; &lt;properties&gt;
-                &lt;/properties&gt; &lt;eventArm&gt; &lt;/eventArm&gt;
-                &lt;networkArm&gt; &lt;/networkArm&gt; &lt;waveFormArm&gt;
-                &lt;/waveformArm&gt; &lt;/sod&gt;</source>
+            <source>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;sod xmlns:xlink="http://www.w3.org/1999/xlink/"&gt; 
+   &lt;properties&gt;&lt;/properties&gt;
+   &lt;eventArm&gt;&lt;/eventArm&gt;
+   &lt;networkArm&gt;&lt;/networkArm&gt;
+   &lt;waveFormArm&gt;&lt;/waveformArm&gt;
+&lt;/sod&gt;</source>
             <p> There are several very important items here, and so you should make sure that these
                 are correct. The &lt;?xml&gt; line is not really part of the sod strategy
                 proper, but does signify that this is an XML file the version of the XML
@@ -47,11 +50,11 @@
                 removeDatabase tells SOD if it should use the information from the database created
                 by a previous SOD run. If it's true, SOD will only get and process event channel
                 pairs that weren't already done by the previous run It can be set like this:</p>
-            <source> &lt;removeDatabase&gt; TRUE&lt;/removeDatabase&gt;</source>
+            <source>&lt;removeDatabase&gt;TRUE&lt;/removeDatabase&gt;</source>
             <p> This would tell SOD to remove the database and start like a fresh run.</p>
             <p> runName controls the name used by all of the status pages that SOD generates.
                 Setting this can be useful to tell several runs apart. </p>
-            <source> &lt;runName&gt; Tutorial Run &lt;/runName&gt;</source>
+            <source>&lt;runName&gt;Tutorial Run&lt;/runName&gt;</source>
             <p> Adding this tells SOD that this run is called "Tutorial Run". </p>
         </section>
         <section name="Earthquakes!">
@@ -59,27 +62,40 @@
                 from the server, and this is specified within the &lt;eventArm&gt; section.
                 We will take earthquakes from anywhere in the world, but do want the magnitude to be
                 at least 6. Here is the eventFinder section to accomplish this.</p>
-            <source> &lt;eventFinder&gt;
-                &lt;name&gt;IRIS_EventDC&lt;/name&gt;
-                &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; &lt;boxArea&gt;
-                &lt;latitudeRange&gt; &lt;unit&gt;DEGREE&lt;/unit&gt;
-                &lt;min&gt;-90&lt;/min&gt; &lt;max&gt;90&lt;/max&gt;
-                &lt;/latitudeRange&gt; &lt;longitudeRange&gt;
-                &lt;unit&gt;DEGREE&lt;/unit&gt;
-                &lt;min&gt;-180&lt;/min&gt;
-                &lt;max&gt;180&lt;/max&gt; &lt;/longitudeRange&gt;
-                &lt;/boxArea&gt; &lt;originDepthRange&gt; &lt;unitRange&gt;
-                &lt;unit&gt;KILOMETER&lt;/unit&gt;
-                &lt;min&gt;0&lt;/min&gt; &lt;max&gt;1000&lt;/max&gt;
-                &lt;/unitRange&gt; &lt;/originDepthRange&gt;
-                &lt;originTimeRange&gt;
-                &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-                &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-                &lt;/originTimeRange&gt; &lt;magnitudeRange&gt;
-                &lt;min&gt;6.0&lt;/min&gt;
-                &lt;max&gt;10.0&lt;/max&gt; &lt;/magnitudeRange&gt;
-                &lt;catalog&gt;&lt;value&gt;PREF&lt;/value&gt;&lt;/catalog&gt;
-                &lt;contributor&gt;IRIS&lt;/contributor&gt; &lt;/eventFinder&gt;</source>
+            <source>
+&lt;eventFinder&gt;
+    &lt;name&gt;IRIS_EventDC&lt;/name&gt;
+    &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; 
+    &lt;boxArea&gt;
+        &lt;latitudeRange&gt; 
+            &lt;unit&gt;DEGREE&lt;/unit&gt;
+            &lt;min&gt;-90&lt;/min&gt; 
+            &lt;max&gt;90&lt;/max&gt;
+        &lt;/latitudeRange&gt; 
+        &lt;longitudeRange&gt;
+            &lt;unit&gt;DEGREE&lt;/unit&gt;
+            &lt;min&gt;-180&lt;/min&gt;
+            &lt;max&gt;180&lt;/max&gt; 
+        &lt;/longitudeRange&gt;
+    &lt;/boxArea&gt;
+    &lt;originDepthRange&gt; 
+        &lt;unitRange&gt;
+            &lt;unit&gt;KILOMETER&lt;/unit&gt;
+            &lt;min&gt;0&lt;/min&gt; 
+            &lt;max&gt;1000&lt;/max&gt;
+        &lt;/unitRange&gt; 
+    &lt;/originDepthRange&gt;
+    &lt;originTimeRange&gt;
+        &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+        &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
+    &lt;/originTimeRange&gt; 
+    &lt;magnitudeRange&gt;
+        &lt;min&gt;6.0&lt;/min&gt;
+        &lt;max&gt;10.0&lt;/max&gt; 
+    &lt;/magnitudeRange&gt;
+    &lt;catalog&gt;PREF&lt;/catalog&gt;
+    &lt;contributor&gt;IRIS&lt;/contributor&gt; 
+&lt;/eventFinder&gt;</source>
             <p> You will notice that there are quite a lot of extra items here that aren't directly
                 related to our query. They will not eliminate any events, and will make it easier to
                 modify later. The basics are that we are connecting to the IRIS_EventDC server,
@@ -105,19 +121,25 @@
                 are duplicates even in a single catalog, and this removes them. The processor just
                 prints out a line every time an event arrives. The last item generates the html
                 status pages for events. This finishes the event arm.</p>
-            <source> &lt;removeEventDuplicate/&gt; &lt;printLineEventProcess/&gt;
-                &lt;eventStatusTemplate&gt; &lt;eventConfig
-                xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/&gt;
-                &lt;/eventStatusTemplate&gt; &lt;/eventArm&gt;</source>
+            <source>
+&lt;removeEventDuplicate/&gt; 
+&lt;printLineEventProcess/&gt;
+&lt;eventStatusTemplate&gt; 
+    &lt;eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/&gt;
+&lt;/eventStatusTemplate&gt;</source>
         </section>
         <section name="Networks and Channels">
             <p>Before betting any data, we must choose some channels within the network arm. Here is
                 the network arm that gets long period channels from stations within the II network.</p>
-            <source> &lt;networkArm&gt; &lt;networkFinder&gt;
-                &lt;name&gt;IRIS_NetworkDC&lt;/name&gt;
-                &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; &lt;refreshInterval&gt;
-                &lt;unit&gt;DAY&lt;/unit&gt;
-                &lt;value&gt;2&lt;/value&gt; &lt;/refreshInterval&gt; &lt;/networkFinder&gt;</source>
+            <source>
+&lt;networkFinder&gt;
+    &lt;name&gt;IRIS_NetworkDC&lt;/name&gt;
+    &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; 
+    &lt;refreshInterval&gt;
+        &lt;unit&gt;DAY&lt;/unit&gt;
+        &lt;value&gt;2&lt;/value&gt; 
+    &lt;/refreshInterval&gt; 
+&lt;/networkFinder&gt;</source>
             <p> Here we connect to the IRIS_NetworkDC server within the edu/iris/dmc domain. We will
                 also go back and look for new channels every 2 days. In our current example this
                 will not matter, because the entire run will complete in a shorter time. However,
@@ -125,7 +147,7 @@
                 there may very well be new stations that come online during a sod run.</p>
             <p> Next we will select the networks that we are interested in. This will select just
                 the II network.</p>
-            <source> &lt;networkCode&gt;II&lt;/networkCode&gt;</source>
+            <source>&lt;networkCode&gt;II&lt;/networkCode&gt;</source>
             <p> If we wished to select more than one network, we could have wrapped several
                 networkCode elements within a &lt;networkOR&gt; to allow them to all match.
                 Care should be taken as you may say "I want II and IU networks" and be tempted to
@@ -137,40 +159,56 @@
                 process by eliminating stations that were not active during January. The station
                 subsetter below will make sure that the station's effective time overlaps the time
                 range for our event selection.</p>
-            <source> &lt;stationEffectiveTimeOverlap&gt;
-                &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-                &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt; &lt;/stationEffectiveTimeOverlap&gt;</source>
+            <source>
+&lt;stationEffectiveTimeOverlap&gt;
+    &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+    &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt; 
+&lt;/stationEffectiveTimeOverlap&gt;</source>
             <p> The next level of subsetting is the Site level. Sites in the Fissures/DHI model
                 roughly correspond to location ids in SEED. In order to avoid getting data from more
                 than one site per station, we will specify that the site must be active during
                 January and that its code must be either space-space or 00. We use both a logical
                 site id subsetter as well as a site subsetter.</p>
-            <source> &lt;siteAND&gt; &lt;siteOR&gt; &lt;siteCode&gt;
-                &lt;/siteCode&gt; &lt;siteCode&gt;00&lt;/siteCode&gt;
-                &lt;/siteOR&gt; &lt;siteEffectiveTimeOverlap&gt;
-                &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-                &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-                &lt;/siteEffectiveTimeOverlap&gt; &lt;/siteAND&gt;</source>
+            <source>
+&lt;siteAND&gt;
+    &lt;siteOR&gt; 
+        &lt;siteCode&gt;  &lt;/siteCode&gt; 
+        &lt;siteCode&gt;00&lt;/siteCode&gt;
+    &lt;/siteOR&gt; 
+    &lt;siteEffectiveTimeOverlap&gt;
+        &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+        &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
+    &lt;/siteEffectiveTimeOverlap&gt; 
+&lt;/siteAND&gt;</source>
             <p> Finally, we will actually select channels. At this point we can eliminate all but
                 the long period channels. We also want to eliminate LOG channels and include an
                 effective time overlap to lessen the amount of data that must be processed. Lastly,
                 we will use a printlineChannelProcessor to print out the name of each successful channel.</p>
-            <source> &lt;channelAND&gt; &lt;bandCode&gt;L&lt;/bandCode&gt;
-                &lt;channelNOT&gt; &lt;gainCode&gt;O&lt;/gainCode&gt;
-                &lt;/channelNOT&gt; &lt;channelEffectiveTimeOverlap&gt;
-                &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
-                &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
-                &lt;/channelEffectiveTimeOverlap&gt; &lt;/channelAnd&gt;
-                &lt;printlineChannelProcessor/&gt; &lt;/networkArm&gt;</source>
+            <source>
+&lt;channelAND&gt; 
+    &lt;bandCode&gt;L&lt;/bandCode&gt;
+    &lt;channelNOT&gt;
+        &lt;gainCode&gt;O&lt;/gainCode&gt;
+    &lt;/channelNOT&gt; 
+    &lt;channelEffectiveTimeOverlap&gt;
+        &lt;startTime&gt;20030101T00:00:00.001Z&lt;/startTime&gt;
+        &lt;endTime&gt;20030131T23:59:59.999Z&lt;/endTime&gt;
+    &lt;/channelEffectiveTimeOverlap&gt; 
+&lt;/channelAnd&gt;
+&lt;printlineChannelProcessor/&gt;</source>
         </section>
         <section name="Waveforms">
             <p> The final section involves the combination of event and network/channel information
                 to produce waveforms. Here we can make use of both the event and station location to
                 do distance calculations. The following begins the waveform arm and uses a event
                 station subsetter to limit the event to station distance to be between 30 and 60 degrees.</p>
-            <source> &lt;waveFormArm&gt; &lt;distanceRange&gt;
-                &lt;unit&gt;DEGREE&lt;/unit&gt;
-                &lt;min&gt;30&lt;/min&gt; &lt;max&gt;60&lt;/max&gt; &lt;/distanceRange&gt;</source>
+            <source>
+&lt;waveFormArm&gt; 
+    &lt;distanceRange&gt;
+        &lt;unit&gt;DEGREE&lt;/unit&gt;
+        &lt;min&gt;30&lt;/min&gt; 
+        &lt;max&gt;60&lt;/max&gt; 
+    &lt;/distanceRange&gt;</source>
             <p> At this point we open the local seismogram arm, which processes on a channel by
                 channel basis. SOD also allows a motion vector arm, which will allow the processing
                 to act on the three components simultaneously.</p>
@@ -180,23 +218,32 @@
                 See the <a href="http://www.seis.sc.edu/software/TauP">TauP Toolkit</a> for more
                 information. We will use 1 minute before the first P arrival to 20 minutes after the
                 first S arrival within the prem model.</p>
-            <source> &lt;localSeismogramArm&gt; &lt;phaseRequest&gt;
-                &lt;model&gt;prem&lt;/model&gt;
-                &lt;beginPhase&gt;ttp&lt;/beginPhase&gt; &lt;beginOffset&gt;
-                &lt;unit&gt;SECOND&lt;/unit&gt;
-                &lt;value&gt;-60&lt;/value&gt; &lt;/beginOffset&gt;
-                &lt;endPhase&gt;tts&lt;/endPhase&gt; &lt;endOffset&gt;
-                &lt;unit&gt;MINUTE&lt;/unit&gt;
-                &lt;value&gt;20&lt;/value&gt; &lt;/endOffset&gt; &lt;/phaseRequest&gt;</source>
+            <source>
+&lt;localSeismogramArm&gt; 
+    &lt;phaseRequest&gt;
+        &lt;model&gt;prem&lt;/model&gt;
+        &lt;beginPhase&gt;ttp&lt;/beginPhase&gt; 
+        &lt;beginOffset&gt;
+            &lt;unit&gt;SECOND&lt;/unit&gt;
+            &lt;value&gt;-60&lt;/value&gt; 
+        &lt;/beginOffset&gt;
+        &lt;endPhase&gt;tts&lt;/endPhase&gt; 
+        &lt;endOffset&gt;
+            &lt;unit&gt;MINUTE&lt;/unit&gt;
+            &lt;value&gt;20&lt;/value&gt; 
+        &lt;/endOffset&gt; 
+    &lt;/phaseRequest&gt;</source>
             <p> We then choose the particular data center that we wish to get data from, the
                 IRIS_PondDataCenter which is again in the edu/iris/dmc domain.</p>
-            <source> &lt;fixedDataCenter&gt;
-                &lt;name&gt;IRIS_PondDataCenter&lt;/name&gt;
-                &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; &lt;/fixedDataCenter&gt;</source>
+            <source>
+&lt;fixedDataCenter&gt;
+    &lt;name&gt;IRIS_PondDataCenter&lt;/name&gt;
+    &lt;dns&gt;edu/iris/dmc&lt;/dns&gt; 
+&lt;/fixedDataCenter&gt;</source>
             <p> Next the available data subsetter allows checking on the availability of data before
                 asking for the actual data. In this case, we will simply say that some data must
                 exist by using the someCoverage element.</p>
-            <source> &lt;someCoverage/&gt;</source>
+            <source>&lt;someCoverage/&gt;</source>
             <p> At this point sod will request and retrieve the actual data. The last items will
                 print a line saying how many seismograms were received for each request, and then
                 save the data in SAC format in a directory. Due to gaps in the original recording,
@@ -209,13 +256,16 @@
                 will name the directories with Event_ followed by the time of the event as
                 year_Jday_hour_minute_second. All that remains is to close the local seismogram arm,
                 waveform arm, and sod tags.</p>
-            <source> &lt;printlineSeismogramProcess/&gt;
-                &lt;saveSeismogramToFile&gt;
+            <source>
+            &lt;printlineSeismogramProcess/&gt;
+            &lt;saveSeismogramToFile&gt;
                 &lt;fileType&gt;sac&lt;/fileType&gt;
                 &lt;dataDirectory&gt;POND_II&lt;/dataDirectory&gt;
-                &lt;eventDirLabel&gt;Event_&lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;
-                &lt;/eventDirLabel&gt; &lt;/saveSeismogramToFile&gt;
-                &lt;/localSeismogramArm&gt; &lt;/waveFormArm&gt; &lt;/sod&gt;</source>
+                &lt;eventDirLabel&gt;Event_&lt;originTime&gt;yyyy_DDD_HH_mm_ss&lt;/originTime&gt;&lt;/eventDirLabel&gt; 
+            &lt;/saveSeismogramToFile&gt;
+        &lt;/localSeismogramArm&gt; 
+    &lt;/waveFormArm&gt; 
+&lt;/sod&gt;</source>
         </section>
     </body>
 </document>

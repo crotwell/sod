@@ -36,27 +36,24 @@
     &lt;someCoverage/&gt;
     &lt;printlineSeismogramProcess/&gt;
   &lt;/localSeismogramArm&gt;
-&lt;/waveformArm&gt;
-                </source>
+&lt;/waveformArm&gt;</source>
                 <p>
                 This waveform arm asks for sixty seconds before the p wave to 20 minutes after its arrival from IRIS's BUD data center and prints out information about the waveforms it receives only after checking that the data it received at least covers part of the request.  If any of the available data subsetters reject some data, SOD periodically goes back to the server and checks for new data.  Through this mechanism its possible to get an event right as it pops into the event server, and quickly grab data from stations that are reporting in real time and have data available for the new event.  Stations that take a little longer to get their data into the servers will get their data processed as the retries get back to it.  
         </p>
         </section>
         <section name="Deciding when data will never arrive">
                 <p>
-                        The retry system for available data subsetters described in the previous section is great for real time data, but at some point SOD needs to give up on a particular piece of data.  Not every station is going to have data for every event in a run.  To handle this contingency, SOD uses the &lt;maxRetryDelay&gt; in the properties section of its config file.  The value of this property determines how long SOD will check for available data for an event after it has occurred.  By default the value is 180 days.
+                        The retry system for available data subsetters described in the previous section is great for real time data, but at some point SOD needs to give up on a particular piece of data.  Not every station is going to have data for every event in a run.  To handle this contingency, SOD uses the &lt;maxRetryDelay&gt; in the properties section of its strategy file.  The value of this property determines how long SOD will check for available data for an event after it has occurred.  By default the value is 180 days.
                         </p>
                         <source>
-                                
 &lt;properties&gt;
   &lt;maxRetryDelay&gt; 
     &lt;unit&gt;DAY&lt;/unit&gt;
     &lt;value&gt;5&lt;/value&gt;
   &lt;/maxRetryDelay&gt;
-&lt;/properties&gt;
-                        </source>
+&lt;/properties&gt;</source>
                         <p>
-                                The preceding snippet of a config file defines a &lt;maxRetryDelay&gt; of 5 days.  So if an event occurs on Monday, SOD will immediately go out and try to get data for the event.  For stations without any data, SOD will keep trying periodically until Saturday.  At this point, the stations that didn't get any data will be moved from the retry bin into the reject bin and SOD will get on with its life.
+                                The preceding snippet of a strategy file defines a &lt;maxRetryDelay&gt; of 5 days.  So if an event occurs on Monday, SOD will immediately go out and try to get data for the event.  For stations without any data, SOD will keep trying periodically until Saturday.  At this point, the stations that didn't get any data will be moved from the retry bin into the reject bin and SOD will get on with its life.
                         </p>
         </section>
         <section name="Salvaging the data that exists">
@@ -73,11 +70,10 @@
     &lt;/postEventWait&gt;
   &lt;/availableDataOR&gt;
   &lt;someCoverage/&gt;
-&lt;/availableDataAND&gt;
-                                    </source>
+&lt;/availableDataAND&gt;</source>
                         <p>
                                 First look at the section in the &lt;availableDataOR&gt;.  It specifies a subsetter that will pass if there is full coverage <em>or</em> if 4 days have passed since the event has occurred.  This is then combined with &lt;someCoverage/&gt; in the 
-&lt;availableDataAND&gt;.  This means that when the OR passes, there must also be some data.  Putting this all together means that SOD will wait 4 days for full coverage of the data, and after that point, it'll be happy with just some.  Combined with the 5 day maximum retry wait from the previous section, SOD will give up completely if no data shows up by the fifth day. this allows for a more fine grained data request.
+&lt;availableDataAND&gt;.  This means that when the OR passes, there must also be some data.  Putting this all together means that SOD will wait 4 days for full coverage of the data, and after that point, it'll be happy with just some.  Combined with the 5 day maximum retry wait from the previous section, SOD will give up completely if no data shows up by the fifth day. This allows for a more fine grained data request.
                         </p>
                 </section>
         </section>

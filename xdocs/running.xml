@@ -65,7 +65,7 @@
                     want to miss it) it can use this database to pick up where it left off and keep
                     truckin'. However, if you start SOD and its database is sitting there from a
                     previous completed run, it'll just think it died unexpectedly and check its
-                    database to see what work remains. If the config file gets the same events and
+                    database to see what work remains. If the strategy file gets the same events and
                     channels, SOD will declare all work finished and quit immediately. To remedy
                     this, there is a property called Remove Database set in both weed.xml and
                     tutorial.xml that tells SOD to wipe its database before starting up. As long as
