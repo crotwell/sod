@@ -280,17 +280,17 @@
         </element>
     </define>
     <define name="recordSectionDisplayGenerator">
-         <element name="recordSectionDisplayGenerator">
+        <element name="recordSectionDisplayGenerator">
             <xsd:annotation>
                 <summary>Generates the recordsection display for each event</summary>
-                <description>Reads the dsml file created by the saveSeismogramToFile processor
-                and generates the recordsection image file</description>
+                <description>Reads the dsml file created by the saveSeismogramToFile processor and
+                    generates the recordsection image file</description>
                 <example>
                     <recordSectionDisplayGenerator/>
                 </example>
             </xsd:annotation>
             <empty/>
-         </element>
+        </element>
     </define>
     <define name="externalWaveformProcess">
         <element name="externalWaveformProcess">
@@ -450,15 +450,17 @@
                     <data type="string"/>
                 </element>
             </optional>
-            <element name="seismogramConfig">
-                <element name="template">
-                    <data type="string">
-                        <xsd:annotation>
-                            <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
-                        </xsd:annotation>
-                    </data>
+            <optional>
+                <element name="seismogramConfig">
+                    <element name="template">
+                        <data type="string">
+                            <xsd:annotation>
+                                <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
+                            </xsd:annotation>
+                        </data>
+                    </element>
                 </element>
-            </element>
+            </optional>
             <optional>
                 <element name="prefix">
                     <data type="string"/>
@@ -547,4 +549,3 @@
         </element>
     </define>
 </grammar>
-
