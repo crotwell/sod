@@ -40,7 +40,7 @@ Events (sorted by region name)
 <li><a href="index.html"><runName/></a></li>
 <li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
 <li>
-<a href="location.html">Events</a>
+<a href="time.html">Events</a>
 </li>
 <li>
 <a href="networks.html">Networks</a>
