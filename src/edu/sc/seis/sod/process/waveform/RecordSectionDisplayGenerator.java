@@ -164,16 +164,19 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             SQLException {
         int recSecId = -1;
         int eventId = eventAccess.getDBId(event);
-        if(!eventRecordSection.imageExists(eventId, fileName)) {
-            recSecId = eventRecordSection.insert(eventId, fileName);
+        String base = Start.getRunProps().getStatusBaseDir();
+        String dir = saveSeisToFile.getLabel(event);
+        new File(base + "/" + dir).mkdirs();
+        String fullName = dir + "/" + fileName;
+        if(!eventRecordSection.imageExists(eventId, fullName)) {
+            recSecId = eventRecordSection.insert(eventId, fullName);
         } else {
-            recSecId = eventRecordSection.getRecSecId(eventId, fileName);
+            recSecId = eventRecordSection.getRecSecId(eventId, fullName);
         }
-        File parentDir = saveSeisToFile.getEventDirectory(event);
         RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
         rsDisplay.add(dataSeis);
         try {
-            File outPNG = new File(parentDir, fileName);
+            File outPNG = new File(base + "/" + fullName);
             rsDisplay.outputToPNG(outPNG, new Dimension(500, 500));
             HashMap seisToPixelMap = rsDisplay.getPixelMap();
             for(int j = 0; j < dataSeis.length; j++) {
