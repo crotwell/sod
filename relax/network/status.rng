@@ -11,11 +11,6 @@
     </define>
     <define name="networkStatusTemplate">
             <element name="networkInfoTemplateGenerator">
-                    <optional>
-                        <element name="fileDir">
-                            <data type="string"/>
-                        </element>
-                    </optional>
                     <element name="netConfig">
                             <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
                     </element>
