@@ -6,26 +6,14 @@
 
 package edu.sc.seis.sod.editor;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfTemplate;
-import com.lowagie.text.pdf.PdfWriter;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
-import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
-import edu.sc.seis.fissuresUtil.display.VerticalSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.exceptionHandler.FilterReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,35 +30,15 @@ import org.omg.CORBA.COMM_FAILURE;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import java.io.FileNotFoundException;
 
 
 
 public class SodGUIEditor extends SimpleGUIEditor {
-    private static int leftMargin = 50, rightMargin = 50,
-        topMargin = 50, bottomMargin = 50;
-
-    public void printPane(JComponent comp) throws FileNotFoundException, DocumentException{
-        Document document = new Document(PageSize.LETTER);
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
-        document.open();
-        int pageW = (int)PageSize.LETTER.width();
-        int pageH = (int)PageSize.LETTER.height();
-        PdfContentByte cb = writer.getDirectContent();
-        // layer for SeismogramDisplay
-        PdfTemplate template = cb.createTemplate(pageW, pageH);
-        Graphics2D compGraphics = template.createGraphics(pageW, pageH);
-        compGraphics.translate(rightMargin, topMargin);
-        comp.print(compGraphics);
-        // step 5: we close the document
-        document.close();
-    }
-
     static {
         GlobalExceptionHandler.registerWithAWTThread();
     }
 
-    SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
+    public SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
 
         List ignoreList = new ArrayList();
