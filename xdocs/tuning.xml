@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author>Philip Crotwell</author>
+    <title>Tuning SOD</title>
+  </properties>
+
+<body>
+
+<section name="Tuning SOD">
+<ul>
+  <li>sod.event.QueryIncrement<br/>
+Setting this property (value and unit) to the smallest amount of time that is 
+very liely to get an event every time will speed up processing of early results
+as it limits the amount of per event work that sod must do at startup.
+  </li>
+</ul>
+
+</section>
+</body>
+</document>
+
