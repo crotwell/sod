@@ -275,9 +275,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
         File outFile;
         if (ds.getEvent() != null) {
-            outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()));
+            outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()), fileType);
         } else {
-            outFile = dsToXML.save(ds, dataDirectory);
+            outFile = dsToXML.save(ds, dataDirectory, fileType);
         }
         logger.debug("DSML saved to "+outFile.getName());
         Runtime runtime = Runtime.getRuntime();
