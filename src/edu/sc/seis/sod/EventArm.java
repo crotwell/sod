@@ -93,6 +93,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());*/
     }
 
+
+    
+
     /**
      * Describe <code>processEventArm</code> method here.
      *
@@ -101,18 +104,20 @@ public class EventArm extends SodExceptionSource implements Runnable{
     public void processEventArm() throws Exception{
 
 	if(eventChannelFinder != null) {
-
+	    eventChannelFinder.setEventArm(this);
 	    Thread thread = new Thread(eventChannelFinder);
 	    thread.start();
 	} else {
 
 	    System.out.println("EventChannelFinder is NULL");
 	}
+
 	if(eventFinderSubsetter == null) return;
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
-	String[] searchTypes = new String[1];
-	searchTypes[0] = "%";
+	String[] searchTypes;
+
+
 
 	EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
        
@@ -135,11 +140,14 @@ public class EventArm extends SodExceptionSource implements Runnable{
 
 	    minMagnitude = -99.0f;
 	    maxMagnitude = 99.0f;
-
+	    searchTypes = new String[1];
+	    searchTypes[0] = "%";
+	    
 	} else {
 	    
 	    minMagnitude = eventFinderSubsetter.getMagnitudeRange().getMinMagnitude().value;
 	    maxMagnitude = eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value;
+	    searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
 	}
 	    
 	System.out.println("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
