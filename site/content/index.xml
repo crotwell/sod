@@ -30,57 +30,65 @@
                         <p class="about">Please read the <a href="walkthrough.html">walkthrough</a>
                                 document for an simple tutorial using SOD to get SAC data from the
                                 IRIS DMC. Also, to see the status pages for a live SOD run at USC, please see our <a href="sodcam.html">Live SOD-cam.</a></p>
-                        <p class="about">Send any comments, good or bad, to 
-						<script type="text/javascript">
-						//<![CDATA[
-						function hiveware_enkoder(){var i,j,x,y,x=
-						"x=\"783d2235466e647e6c3b39683578783d5c2232483d7571387474782a366b6e6573372a" +
-						"3d5c5c5c227a32386361706b2e393f24323b3f65287834352b7a39393235293b3f382b3735" +
-						"663d346b6f5e243d38217228673e393438673b7b693d307a35243639383d303b693c386c3f" +
-						"3568386e35782e6c6778633835673470656e356e2a7a346767693874396730656a683b7637" +
-						"6a3738386374692b2b383d433766387636297b6a6b2a32383637392d3d782e2b2b3d393837" +
-						"3f376368377a3f7a676134652b723739307577436f347d3465363464756465417b34763434" +
-						"67742d742869322a333539673f39292d322b3d7b39397736703b69393f2929356638673b28" +
-						"34383d68716a3c75396538683b742a33322936636b3839363f386a2b3d72323d3636386567" +
-						"39343b6b3e7a3237382a37792b39306e67343d29352753353a70697674726629373834376a" +
-						"3d696e672d656b3438352d7a2e6672343f343b653930346f6d432b7d7b3835753977686133" +
-						"2d3f7a34723564384334673075776f64756876323938647565286a387476353a387436297d" +
-						"795c222a6b3935343b6a3d65762e332b3438616c28782e673d216837636861724138387174" +
-						"2a74283029293738386b3f3b783d782e333536663d73756273746b3e393737722831293b7a" +
-						"306e6535793d27273b3467706965666f7228693434766a3d3d303b693c3868666b2d782e6c" +
-						"656e3f383833346774683b692b7d3335382b3d36297b7b2d3f673b792b3d782e347a307538" +
-						"737562737434657764757228692c3334393b7674293b7d666f2a3635386b7228693d332e33" +
-						"6468353b693c782e2b3d2135326c656e6774637b3f7b35683b692b3d396430757736297b79" +
-						"2b355e2464753d782e737576383d687462737472282a6c7b383f692c33293b2b3d5c5c5c22" +
-						"367d793d792e29363b793d737562737429323d272772286a293b223b6a3d6576616c28782e" +
-						"636861724174283029293b783d782e7375627374722831293b793d27273b666f7228693d30" +
-						"3b693c782e6c656e6774683b692b3d3130297b792b3d782e73756273747228692c35293b7d" +
-						"666f7228693d353b693c782e6c656e6774683b692b3d3130297b792b3d782e737562737472" +
-						"28692c35293b7d793d792e737562737472286a293b\";y='';for(i=0;i<x.length;i+=2)" +
-						"{y+=unescape('%'+x.substr(i,2));}y";
-						while(x=eval(x));}hiveware_enkoder();
-						//]]>
-						</script>
-						</p>
+                        <p class="about">Send any comments, good or bad, to
+                        <script type="text/javascript">
+                        //<![CDATA[
+                        function hiveware_enkoder(){var i,j,x,y,x=
+                        "x=\"783d2235466e647e6c3b39683578783d5c2232483d7571387474782a366b6e6573372a" +
+                        "3d5c5c5c227a32386361706b2e393f24323b3f65287834352b7a39393235293b3f382b3735" +
+                        "663d346b6f5e243d38217228673e393438673b7b693d307a35243639383d303b693c386c3f" +
+                        "3568386e35782e6c6778633835673470656e356e2a7a346767693874396730656a683b7637" +
+                        "6a3738386374692b2b383d433766387636297b6a6b2a32383637392d3d782e2b2b3d393837" +
+                        "3f376368377a3f7a676134652b723739307577436f347d3465363464756465417b34763434" +
+                        "67742d742869322a333539673f39292d322b3d7b39397736703b69393f2929356638673b28" +
+                        "34383d68716a3c75396538683b742a33322936636b3839363f386a2b3d72323d3636386567" +
+                        "39343b6b3e7a3237382a37792b39306e67343d29352753353a70697674726629373834376a" +
+                        "3d696e672d656b3438352d7a2e6672343f343b653930346f6d432b7d7b3835753977686133" +
+                        "2d3f7a34723564384334673075776f64756876323938647565286a387476353a387436297d" +
+                        "795c222a6b3935343b6a3d65762e332b3438616c28782e673d216837636861724138387174" +
+                        "2a74283029293738386b3f3b783d782e333536663d73756273746b3e393737722831293b7a" +
+                        "306e6535793d27273b3467706965666f7228693434766a3d3d303b693c3868666b2d782e6c" +
+                        "656e3f383833346774683b692b7d3335382b3d36297b7b2d3f673b792b3d782e347a307538" +
+                        "737562737434657764757228692c3334393b7674293b7d666f2a3635386b7228693d332e33" +
+                        "6468353b693c782e2b3d2135326c656e6774637b3f7b35683b692b3d396430757736297b79" +
+                        "2b355e2464753d782e737576383d687462737472282a6c7b383f692c33293b2b3d5c5c5c22" +
+                        "367d793d792e29363b793d737562737429323d272772286a293b223b6a3d6576616c28782e" +
+                        "636861724174283029293b783d782e7375627374722831293b793d27273b666f7228693d30" +
+                        "3b693c782e6c656e6774683b692b3d3130297b792b3d782e73756273747228692c35293b7d" +
+                        "666f7228693d353b693c782e6c656e6774683b692b3d3130297b792b3d782e737562737472" +
+                        "28692c35293b7d793d792e737562737472286a293b\";y='';for(i=0;i<x.length;i+=2)" +
+                        "{y+=unescape('%'+x.substr(i,2));}y";
+                        while(x=eval(x));}hiveware_enkoder();
+                        //]]>
+                        </script>
+                        </p>
                 </section>
                 <section name="News">
-                        <table id="entry">
-						<th>09 June 2004</th>
-						<tr>
-								<td>
-										<p>SOD 2.0 Beta 4 is now available.  You can get it <a href="download.html">here.</a></p>
-								</td>
-						</tr>
-				</table>
-				 <table id="entry">
-					   <th>31 May 2004</th>
-					   <tr>
-							   <td>
-									   <p>The third beta of SOD 2.0.  It's available <a href="download.html">here.</a>  To see a long running SOD run in action, checkout the <a href="sodcam.html">live SOD-cam</a>!</p>
-							   </td>
-					   </tr>
-			   </table>
-			   <table id="entry">
+                <table id="entry">
+                        <th>10 June 2004</th>
+                        <tr>
+                                <td>
+                                        <p>SOD 2.0 Beta 5 is now available.  Get it <a href="download.html">here.</a></p>
+                                </td>
+                        </tr>
+                </table>
+                <table id="entry">
+                        <th>09 June 2004</th>
+                        <tr>
+                                <td>
+                                        <p>SOD 2.0 Beta 4 is now available.  You can get it <a href="download.html">here.</a></p>
+                                </td>
+                        </tr>
+                </table>
+                 <table id="entry">
+                       <th>31 May 2004</th>
+                       <tr>
+                               <td>
+                                       <p>The third beta of SOD 2.0.  It's available <a href="download.html">here.</a>  To see a long running SOD run in action, checkout the <a href="sodcam.html">live SOD-cam</a>!</p>
+                               </td>
+                       </tr>
+               </table>
+               <table id="entry">
                                 <th>24 May 2004</th>
                                 <tr>
                                         <td>
