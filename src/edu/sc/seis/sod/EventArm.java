@@ -107,6 +107,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         while(!done){
             String source = eventFinderSubsetter.getSourceName();
             String dns =  eventFinderSubsetter.getDNSName();
+            logger.debug("DNS for events is " + dns + " source is " + source);
             EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
             MicroSecondDate queryStart = getQueryStart(reqTimeRange, source, dns);
             MicroSecondDate queryEnd = getQueryEnd(queryStart, reqTimeRange.getEndMSD());
@@ -174,7 +175,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
                 Start.getEventQueue().push(eventFinderSubsetter.getDNSName(),
                                            eventFinderSubsetter.getSourceName(),
                                                (EventAccess)((CacheEvent)event).getEventAccess(),
-                                               origin);
+                                           origin);
             }else{
                 change(event, RunStatus.FAILED);
             }
@@ -250,13 +251,20 @@ public class EventArm extends SodExceptionSource implements Runnable{
             if(eventFinderSubsetter.getDepthRange() != null) {
                 minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
                 maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
+                logger.debug("depth range for event search is in subsetter, min of " + minDepth + " max of " + maxDepth);
+            }else{
+                logger.debug("Using default depth range for event search");
             }
             if(eventFinderSubsetter.getMagnitudeRange() != null) {
                 MagnitudeRange magRange = eventFinderSubsetter.getMagnitudeRange();
                 minMag = magRange.getMinMagnitude().value;
                 maxMag = magRange.getMaxMagnitude().value;
                 searchTypes = magRange.getSearchTypes();
+                logger.debug("mag range is in subsetter, min of " + minMag + " max of " + maxMag);
+            }else{
+                logger.debug("Using default mag ranges for event search");
             }
+            logger.debug("Searching over area " + area + " in catalogs " + catalogs[0] + " from contributors " + contributors[0]);
         }
         
         public EventAccess[] query(TimeRange tr) throws Exception{
