@@ -1,9 +1,7 @@
 package edu.sc.seis.sod.database;
 
 public class Status {
-    private  Status (int status){
-        this.status = status;
-    }
+    private  Status (int status){ this.status = status; }
     
     public static Status getById(int status) {
         switch(status) {
@@ -27,14 +25,14 @@ public class Status {
                 return AWAITING_FINAL_STATUS;
             case 9:
                 return SOD_FAILURE;
+            case 10:
+                return WAITING_ON_EVENTARM;
             default:
                 return COMPLETE_SUCCESS;
         }
     }
     
-    public int getId() {
-        return this.status;
-    }
+    public int getId() { return this.status;  }
     
     public String toString() {
         switch(status) {
@@ -58,6 +56,8 @@ public class Status {
                 return "AWAITING_FINAL_STATUS";
             case 9:
                 return "SOD_FAILURE";
+            case 10:
+                return "WAITING_ON_EVENT_ARM";
             default:
                 return "COMPLETE_SUCCESS";
         }
@@ -83,6 +83,8 @@ public class Status {
     public final static Status AWAITING_FINAL_STATUS = new Status(8);
     
     public final static Status SOD_FAILURE = new Status(9);
+    
+    public final static Status WAITING_ON_EVENTARM = new Status(10);
     
     private int status;
 }// Status
