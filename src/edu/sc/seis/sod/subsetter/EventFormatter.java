@@ -30,6 +30,13 @@ public class EventFormatter extends Template implements EventTemplate{
         filizeResults = filize;
     }
     
+    public static String getDefaultResult(EventAccessOperations event) {
+        if(defaultFormatter == null) defaultFormatter = new EventFormatter();
+        return defaultFormatter.getResult(event);
+    }
+
+    private static EventFormatter defaultFormatter;
+    
     protected Object textTemplate(final String text) {
         return new EventTemplate(){
             public String getResult(EventAccessOperations ev) { return text; }
