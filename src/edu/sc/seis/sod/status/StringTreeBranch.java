@@ -15,6 +15,11 @@ public class StringTreeBranch extends StringTree {
     public StringTreeBranch(Object name, boolean boo, StringTree[] branches) {
         super(name, boo);
         this.branches = branches;
+        for (int i = 0; i < branches.length; i++) {
+            if (branches[i] == null) {
+                throw new NullPointerException("branches["+i+"] is NULL");
+            }
+        }
     }
 
     public String toString() {
