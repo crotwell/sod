@@ -37,18 +37,23 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
      * @param cookies a <code>CookieJar</code> value
      */
     public void process(NetworkAccess network, Channel channel, CookieJar cookies) {
-	try {
-	    FileWriter fwriter = new FileWriter("_my_temp_", true);
-	    BufferedWriter bwriter = new BufferedWriter(fwriter);
-	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
-	    bwriter.write(ChannelIdUtil.toString(channel.get_id()), 0, ChannelIdUtil.toString(channel.get_id()).length());
-	    bwriter.newLine();
-	    bwriter.close();
-	} catch(Exception e) {
+	if (filename != null) {
+	    try {
+		FileWriter fwriter = new FileWriter(filename, true);
+		BufferedWriter bwriter = new BufferedWriter(fwriter);
+		bwriter.write(ChannelIdUtil.toString(channel.get_id()), 0, ChannelIdUtil.toString(channel.get_id()).length());
+		bwriter.newLine();
+		bwriter.close();
+	    } catch(Exception e) {
 	    
-	    System.out.println("Exception caught while writing to file in PrintLineChannelProcess");
-	}
+		System.out.println("Exception caught while writing to file in PrintLineChannelProcess");
+	    }
+	} else {
+	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
+	} // end of else
 	
     }
+
+    String filename = null;
    
 }// PrintlineChannelProcessor
