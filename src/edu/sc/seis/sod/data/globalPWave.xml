@@ -28,8 +28,8 @@ n<?xml version="1.0"?>
 
 <!-- postgres or hsqldb or hsqldb memory only
           <value>edu.sc.seis.sod.database.PostgresDbManager</value>
-          <value>edu.sc.seis.sod.database.HSQLDbManager</value>
-          <value>edu.sc.seis.sod.database.HSQLMemoryDbManager</value>
+          <value>edu.sc.seis.sod.database.HSqlDbManager</value>
+          <value>edu.sc.seis.sod.database.HSqlMemoryDbManager</value>
 -->
 <property>
           <name>edu.sc.seis.sod.databasetype</name>
