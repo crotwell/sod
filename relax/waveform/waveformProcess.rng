@@ -691,6 +691,29 @@
                     <empty/>
                 </element>
             </optional>
+            <optional>
+                <element name="phaseNameMappings">
+                    <oneOrMore>
+                        <element name="mapping">
+                            <element name="pattern">
+                                <data type="string"/>
+                            </element>
+                            <element name="replacement">
+                                <data type="string"/>
+                            </element>
+                        </element>
+                    </oneOrMore>
+                </element>
+            </optional>
+            <optional>
+                <element name="phaseFlags">
+                    <oneOrMore>
+                        <element name="phase">
+                            <data type="string"/>
+                        </element>
+                    </oneOrMore>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="legacyExecute">
