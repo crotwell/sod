@@ -47,7 +47,7 @@ public class XMLWritingTourist implements Tourist {
         if(!ne.equals(lastForm) && lastForm != null && !leftLast) {
             write("\n");
         }
-        if(ne.getAnnotation().hasExampleFromAnnotation()) {
+        if(waitToLeave == null && ne.getAnnotation().hasExampleFromAnnotation()) {
             String example = ne.getAnnotation().getExample(true);
             indentAndWrite(example.replaceAll("\n", "\n" + getCurIndent())
                     + "\n");
@@ -63,7 +63,7 @@ public class XMLWritingTourist implements Tourist {
     public void leave(NamedElement ne) {
         depth--;
         if(ne.equals(lastForm)) {
-            replaceClose(" /" + close + "\n");
+            replaceClose("/" + close + "\n");
         } else {
             indentAndWrite(open + "/" + ne.getName() + close + "\n");
         }
