@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import java.awt.Dimension;
+import java.io.File;
 
 public class SeismogramImageProcess implements LocalSeismogramProcess {
 
@@ -116,7 +118,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                     public void run(){
                         logger.debug("writing " + picFileName);
                         try {
-                            bsd.outputToPNG(picFileName);
+                            bsd.outputToPNG(new File(picFileName), dimension);
                         } catch (Throwable e) {
                             GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
                         }
@@ -126,6 +128,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
 
         return seismograms;
     }
+
+    private static Dimension dimension = new Dimension(500, 200);
+
 }
 
 
