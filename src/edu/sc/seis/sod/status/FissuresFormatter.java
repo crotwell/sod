@@ -203,6 +203,10 @@ public class FissuresFormatter {
         return formatDateForFile(new MicroSecondDate(origin.origin_time));
     }
 
+    public static String fancyFormat(Date d) {
+        return fancyFormat.format(d);
+    }
+
     public static MicroSecondDate now() {
         return ClockUtil.now();
     }
@@ -227,6 +231,8 @@ public class FissuresFormatter {
     public static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
 
     public static SimpleDateFormat mediumFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
+    private static SimpleDateFormat fancyFormat = new SimpleDateFormat("EEEE, d MMMM yyyy");
     static {
         yearDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         longFileFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
