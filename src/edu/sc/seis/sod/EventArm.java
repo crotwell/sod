@@ -26,6 +26,8 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.cache.EventLoader;
+import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCQueryTime;
@@ -136,6 +138,7 @@ public class EventArm implements Runnable {
                         logger.debug("Found " + events.length
                                 + " events between " + queryStart + " and "
                                 + queryEnd);
+                        
                         //Scarab: Sod8
                         //We have the source and dns here. If we wanted to go
                         //back to the server to refresh the events instead of
@@ -210,9 +213,10 @@ public class EventArm implements Runnable {
                     numEvents = eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                               Standing.IN_PROG)).length;
                 }
-                if(numEvents < 2) { return; }
+                if(numEvents < 10) { return; }
                 try {
-                    Thread.sleep(10000);
+                    logger.debug("EventArm waitForProcessing: sleeping 5 seconds");
+                    Thread.sleep(5000);
                 } catch(InterruptedException e) {}
             }
         }
@@ -255,13 +259,11 @@ public class EventArm implements Runnable {
                 cached[counter] = (CacheEvent)uncached[counter];
             } else {
                 cached[counter] = new CacheEvent(uncached[counter]);
+                
                 // preload cache
-                cached[counter].get_attributes();
-                try {
-                    cached[counter].get_preferred_origin();
-                } catch(NoPreferredOrigin e) {
-                    // oh well...
-                }
+                EventLoader backLoader = new EventLoader(cached[counter]);
+                WorkerThreadPool.getDefaultPool().invokeLater(backLoader);
+                
             }
         }
         return cached;
