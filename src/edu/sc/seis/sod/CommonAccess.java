@@ -53,7 +53,7 @@ public class CommonAccess {
     
     public LogMonitorAdapter getLF5Adapter(){
         if(adapter == null){
-            adapter = LogMonitorAdapter.newInstance(LogMonitorAdapter.LOG4J_LOG_LEVELS);
+            adapter = LogMonitorAdapter.newInstance(RunStatus.DEFAULT_STATUS);
         }
         return adapter;
     }
