@@ -36,8 +36,8 @@ public class OriginPointDistance extends AbstractOriginPoint implements OriginSu
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMin().convertTo(UnitImpl.DEGREE).get_value() <= distaz.delta &&
-            getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.delta) {
+        if (getMin().convertTo(UnitImpl.DEGREE).get_value() <= distaz.getDelta() &&
+            getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getDelta()) {
             return true;
         } else {
             return false;
