@@ -24,7 +24,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         testOutputLoc(baseDir + '/' + loc);
     }
 
-    private static String testOutputLoc(String loc) throws IOException  {
+    public static String testOutputLoc(String loc) throws IOException  {
         File outFile = new File(loc);
         outFile.getCanonicalFile().getParentFile().mkdirs();
         return loc;
