@@ -24,27 +24,27 @@ public class LogFactor5NetworkStatus implements NetworkStatus{
     public LogFactor5NetworkStatus(Element config){}
     
     public void change(NetworkAccess networkAccess, RunStatus newStatus) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.NetworkAccess", newStatus,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.NetworkAccess", newStatus.getLogLevel(),
                                                            newStatus.toString() + " " + NetworkIdUtil.toString(networkAccess.get_attributes().get_id()));
     }
     
     public void change(Station station, RunStatus newStatus) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Station", newStatus,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Station", newStatus.getLogLevel(),
                                                            newStatus.toString() + " " + StationIdUtil.toString(station.get_id()));
     }
     
     public void change(Site site, RunStatus newStatus) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Site", newStatus,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Site", newStatus.getLogLevel(),
                                                            newStatus.toString() + " " + SiteIdUtil.toString(site.get_id()));
     }
     
     public void change(Channel channel, RunStatus newStatus) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Channel", newStatus,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm.Channel", newStatus.getLogLevel(),
                                                            newStatus.toString() + " " + ChannelIdUtil.toString(channel.get_id()));
     }
     
     public void setArmStatus(String status) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm", RunStatus.GENERIC_STATUS,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm", RunStatus.GENERIC_STATUS.getLogLevel(),
                                                            status);
     }
 }

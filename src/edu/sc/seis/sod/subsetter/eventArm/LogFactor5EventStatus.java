@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
@@ -18,13 +18,15 @@ public class LogFactor5EventStatus implements EventStatus{
     public LogFactor5EventStatus(Element config){}
     
     public void setArmStatus(String status) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", RunStatus.GENERIC_STATUS,
-                                                           status);
+        log("Event Arm", RunStatus.GENERIC_STATUS.getLogLevel(), status);
     }
     
     public void change(EventAccessOperations event, RunStatus status) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm.Events", status,
-                                                           status + ": " + DisplayUtils.getEventInfo(event));
+        log("Event Arm.Events", status.getLogLevel(), status + ": " + CacheEvent.getEventInfo(event));
+    }
+    
+    private static void log(String category, LogLevel level, String message){
+        CommonAccess.getCommonAccess().getLF5Adapter().log(category, level, message);
     }
 }
 
