@@ -302,6 +302,8 @@ public class NetworkArm {
                 }else if(!failures.contains(channels[i].my_site)){
                     change(channels[i].my_site, RunStatus.FAILED);
                     failures.add(channels[i].my_site);
+                    // fail all channels in a failed site, just for status pages
+                    change(channels[i], RunStatus.FAILED);
                 }
             }
         } catch(Exception e) {
@@ -351,10 +353,11 @@ public class NetworkArm {
             Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
 
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
-                change(channels[subCounter], RunStatus.NEW);
                 if(!isSameSite(site, channels[subCounter].my_site)){
                     continue;
-                }else if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
+                }
+                change(channels[subCounter], RunStatus.NEW);
+                if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
                     int dbid = networkDatabase.putChannel(siteDbObject,
                                                           channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
