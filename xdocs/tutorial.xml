@@ -7,7 +7,7 @@
         <section name="Introduction">
             <p> This is a short tutorial designed to show the basics of SOD using a  raw XML strategy file. For an easier introduction that uses a GUI editor to
                 hide the complexities of XML, see the <a href="walkthrough.html">Strategy via
-                Editor</a> document. This tutorial does not exploit all the features of SOD, but is
+                Editor</a> document. If you've never seen XML before, check out our <a href="xmlIntro.html">crash course</a>.  This tutorial does not exploit all the features of SOD, but is
                 rather simple. Once the basics are understood, it is not difficult to add a little here
                 and there and come up with a sophisticated processing system.</p>
             <p> Both this tutorial and SOD in general should be considered a work in progress.
