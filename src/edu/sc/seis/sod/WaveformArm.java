@@ -234,13 +234,21 @@ public class WaveformArm implements Runnable {
             return;
         } // end of if ()
         //cache the channelInformation.
-        int pairId;
+        int pairId = -1;
         synchronized(evChanStatus){
-            pairId = evChanStatus.put(ev.getDbId(), chan.getDbId(),
-                                      Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                 Standing.INIT));
+            try{
+                //getPairId to see if it exists
+                evChanStatus.getPairId(ev.getDbId(), chan.getDbId());
+            }
+            catch (NotFound e){//pairId doesn't exist.  Putting it in the database.
+                pairId = evChanStatus.put(ev.getDbId(), chan.getDbId(),
+                                          Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                     Standing.INIT));
+            }
         }
-        invokeLaterAsCapacityAllows(new LocalSeismogramWaveformWorkUnit(pairId));
+        if (pairId != -1){
+            invokeLaterAsCapacityAllows(new LocalSeismogramWaveformWorkUnit(pairId));
+        }
         retryIfNeededAndAvailable();
     }
 
@@ -369,8 +377,8 @@ public class WaveformArm implements Runnable {
                 }
             }
             if (workUnit != null){
-//                System.out.println("putting workunit for pairId "
-//                                  + pairIds[i] + " in pool");
+                //                System.out.println("putting workunit for pairId "
+                //                                  + pairIds[i] + " in pool");
                 pool.invokeLater(workUnit);
             }
         }
@@ -524,7 +532,6 @@ public class WaveformArm implements Runnable {
     private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
         public LocalSeismogramWaveformWorkUnit(int pairId){
             this.pairId = pairId;
-            //System.out.println("pairId " + pairId + " added to pool");
         }
 
         public void run(){
