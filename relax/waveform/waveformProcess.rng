@@ -6,8 +6,8 @@
     </start>
     <include href="../base/include/eventLabel.rng"/>
     <include href="../base/include/quantity.rng"/>
-    <include href="../base/include/phaseWindow.rng"/>
     <include href="../base/include/range.rng"/>
+    <include href="../base/include/seismogramImage.rng"/>
     <define name="seismogramProcess">
         <choice>
             <xsd:annotation>
@@ -624,96 +624,7 @@
             <xsd:annotation>
                 <summary>Make images of the processed seismograms</summary>
             </xsd:annotation>
-            <optional>
-                <element name="phaseWindow">
-                    <ref name="phaseWindow"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="fileDir">
-                    <externalRef href="../base/externalRef/anyXML.rng"/>
-                </element>
-            </optional>
-            <optional>
-                <choice>
-                    <element name="seismogramConfig">
-                        <element name="template">
-                            <data type="string">
-                                <xsd:annotation>
-                                    <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
-                                </xsd:annotation>
-                            </data>
-                        </element>
-                    </element>
-                    <element name="outputLocationCreators">
-                        <element name="eventDir">
-                            <externalRef href="../base/externalRef/anyXML.rng"/>
-                        </element>
-                        <element name="stationDir">
-                            <externalRef href="../base/externalRef/anyXML.rng"/>
-                        </element>
-                        <element name="picName">
-                            <externalRef href="../base/externalRef/anyXML.rng"/>
-                        </element>
-                    </element>
-                </choice>
-            </optional>
-            <optional>
-                <element name="prefix">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="putDataInCookieJar">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="fileType">
-                    <choice>
-                        <value>png</value>
-                        <value>pdf</value>
-                    </choice>
-                </element>
-            </optional>
-            <optional>
-                <element name="dimension">
-                    <element name="width">
-                        <data type="integer"/>
-                    </element>
-                    <element name="height">
-                        <data type="integer"/>
-                    </element>
-                </element>
-            </optional>
-            <optional>
-                <element name="showOnlyFirstArrivals">
-                    <empty/>
-                </element>
-            </optional>
-            <optional>
-                <element name="phaseNameMappings">
-                    <oneOrMore>
-                        <element name="mapping">
-                            <element name="pattern">
-                                <data type="string"/>
-                            </element>
-                            <element name="replacement">
-                                <data type="string"/>
-                            </element>
-                        </element>
-                    </oneOrMore>
-                </element>
-            </optional>
-            <optional>
-                <element name="phaseFlags">
-                    <oneOrMore>
-                        <element name="phase">
-                            <data type="string"/>
-                        </element>
-                    </oneOrMore>
-                </element>
-            </optional>
+            <ref name="seismogramImageBase"/>
         </element>
     </define>
     <define name="legacyExecute">

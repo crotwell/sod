@@ -2,6 +2,7 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
+    <include href="../base/include/seismogramImage.rng"/>
     <start>
         <ref name="waveformVectorProcess"/>
     </start>
@@ -25,6 +26,7 @@
               are treaded as if they are in a ANDWaveformProcessWrapper -->
             <externalRef href="waveformProcess.rng"/>
             <ref name="external"/>
+            <ref name="vectorImageProcess"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -228,6 +230,11 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="vectorImageProcess">
+        <element name="vectorImageProcess">
+            <ref name="seismogramImageBase"/>
         </element>
     </define>
 </grammar>
