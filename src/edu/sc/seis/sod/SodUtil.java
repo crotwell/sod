@@ -54,6 +54,7 @@ public class SodUtil {
 	    Class subsetterSubclass = 
 		Class.forName(packageName+"."+
 			      tagName);
+	    System.out.println("IN sod UTIL "+packageName+"."+tagName);	
 	    Constructor constructor = 
 		subsetterSubclass.getConstructor(constructorArgTypes);
 	    Object[] constructorArgs = new Object[1];
@@ -64,7 +65,8 @@ public class SodUtil {
 	    return (SodElement)obj;
 	} catch (InvocationTargetException e) {
 	    // occurs if the constructor throws an exception
-	    // don't repackage ConfigurationException
+	    // don't repackage ConfigurationExceptioN
+	    e.printStackTrace();
 	    Throwable subException = e.getTargetException();
 	    if (subException instanceof ConfigurationException) {
 		throw (ConfigurationException)subException;
@@ -155,7 +157,30 @@ public class SodUtil {
     }
 
     public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)  throws ConfigurationException {
-	return null;
+	NodeList children = config.getChildNodes();
+	Node node;
+	float minLatitude = 0;
+	float maxLatitude = 0 ;
+	float minLongitude = 0 ;
+	float maxLongitude = 0;
+	for(int i = 0; i < children.getLength(); i++) {
+		node = children.item(i);
+		if(node instanceof Element) {
+			
+			Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod");
+			if(obj instanceof LatitudeRange) { 
+				minLatitude = ((LatitudeRange)obj).getMinValue();
+				maxLatitude = ((LatitudeRange)obj).getMaxValue();
+			} else if(obj instanceof LongitudeRange) {
+	
+				minLongitude = ((LongitudeRange)obj).getMinValue();
+				maxLongitude = ((LongitudeRange)obj).getMaxValue();
+			}
+
+		}
+		
+	}
+	return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
 
     public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)  throws ConfigurationException {
@@ -183,17 +208,25 @@ public class SodUtil {
 
 	/** returns the nested text in the tag **/
 	public static String getNestedText(Element config) {
+		System.out.println("The element name in sod util is "+config.getTagName());
 		String rtnValue = null;
 		NodeList children = config.getChildNodes();
 		Node node;
+
+		System.out.println("The length of the children is "+children.getLength());
 		for(int i = 0; i < children.getLength(); i++) {
 			
 			node = children.item(i);
-			if (node instanceof Text){ 
+			if (node instanceof Text){
+				System.out.println("In sodUtil textnode value is  "+node.getNodeValue());
 				rtnValue =  node.getNodeValue();
+				//break;
+			}
+			else if(node instanceof Element) { 
+				System.out.println("in sod util tag name is "+((Element)node).getTagName());
+				rtnValue = getNestedText((Element)node);
 				break;
 			}
-			else rtnValue = getNestedText((Element)node);		
 		}		
 		return rtnValue;
 	}
