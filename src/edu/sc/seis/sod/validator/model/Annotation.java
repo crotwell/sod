@@ -40,7 +40,7 @@ public class Annotation {
     public String getSummary() {
         return summary;
     }
-    
+
     public boolean hasSummary() {
         return summary != null;
     }
@@ -59,7 +59,7 @@ public class Annotation {
     }
 
     public String getExample(boolean htmlize) {
-        if(example.equals("") || example == null) {
+        if(example == null || example.equals("")) {
             XMLWritingTourist tourist = new XMLWritingTourist();
             TourGuide guide = new MinimalVisitGuide(formProvider.getForm());
             guide.lead(tourist);
@@ -103,14 +103,11 @@ public class Annotation {
 
     private boolean hasExampleFromAnnotation = false;
 
-    private String summary, desc;
-
-    private String example = "";
+    private String summary, desc, example;
 
     private FormProvider formProvider;
 
     private boolean include = false;
 
     public static boolean DEFAULT_HTMLIZE = true;
-
 }
