@@ -61,8 +61,8 @@ public class LinearDistanceMagnitudeRange extends DistanceRange implements Event
 							 station.my_location.latitude,
 							 station.my_location.longitude);
 	if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-	    if(origin.magnitudes[0].value >= magnitudeRange.getMinMagnitude().value &&
-	       origin.magnitudes[0].value <= magnitudeRange.getMaxMagnitude().value) {
+	    double resultantMagnitude = magnitudeRange.getMinMagnitude().value + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxMagnitude().value - magnitudeRange.getMinMagnitude().value)/(getMinDistance().value - getMaxDistance().value);
+	     if(origin.magnitudes[0].value >= resultantMagnitude) {
 		return true;
 	    } 
 	} 
