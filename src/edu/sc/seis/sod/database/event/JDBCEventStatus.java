@@ -43,7 +43,6 @@ public class JDBCEventStatus extends SodJDBC{
                                                 Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                            Standing.IN_PROG).getAsShort());
         getAllOfEventArmStatus = conn.prepareStatement(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
-        getAllOrderByDate  = conn.prepareStatement("SELECT DISTINCT originid, origin_time, origineventid FROM origin ORDER BY origin_time DESC");
     }
 
     public void restartCompletedEvents() throws SQLException {
@@ -77,7 +76,7 @@ public class JDBCEventStatus extends SodJDBC{
 
 
     public StatefulEvent[] getAll() throws SQLException {
-        return get("SELECT eventid FROM eventaccess", "eventid");
+        return get("SELECT event_id FROM eventaccess", "event_id");
     }
 
     public StatefulEvent[] get(String query, String idLoc) throws SQLException{
@@ -99,21 +98,6 @@ public class JDBCEventStatus extends SodJDBC{
             }
         }
         return (StatefulEvent[])evs.toArray(new StatefulEvent[evs.size()]);
-    }
-
-    public CacheEvent[] getAllOrderedByDate() throws SQLException{
-        List events = new ArrayList();
-        ResultSet rs = getAllOrderByDate.executeQuery();
-        while(rs.next()){
-            try {
-                events.add(eventAccessTable.getEvent(rs.getInt("origineventid")));
-            } catch (NotFound e) {
-                //shouldn't happen, I just got this id
-                CommonAccess.handleException(e, "trouble getting event from id");
-            }
-        }
-        CacheEvent[] evs = new CacheEvent[events.size()];
-        return (CacheEvent[])events.toArray(evs);
     }
 
     public Status getStatus(int dbId) throws SQLException, NotFound{
