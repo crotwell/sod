@@ -92,7 +92,7 @@ public class EventSorter{
     }
 
     public synchronized StatefulEvent[] getSortedEvents() throws SQLException{
-        if(query == null) return evStatus.getAll();
+        if(query == null){ return evStatus.getAll(); }
         return evStatus.get(query, "origin_event_id");
     }
 
