@@ -180,7 +180,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	System.out.println("At the start of the process eventArm");
 	//getThreadGroup().list();
 
-	EventConfigDb eventConfigDb = new EventConfigDb();
+	ConfigDatabase eventConfigDb = DatabaseManager.getDatabaseManager(props, "hsqldb").getConfigDatabase();
 	edu.iris.Fissures.Time startTime = eventConfigDb.getTime();
 	System.out.println("At the start of the process eventArm after instantiaing eventConfigDb");
 	//getThreadGroup().list();
@@ -255,7 +255,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	//	Start.getEventQueue().setSourceAlive(false);
 	System.out.println("At the end of the Process Event Arm");
 	//getThreadGroup().list();
-	eventConfigDb.close();
+	//eventConfigDb.close();
 	System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$exiting as evetnArm is finished");
 	//System.exit(0);
 
