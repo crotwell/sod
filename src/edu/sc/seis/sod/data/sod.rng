@@ -16977,9 +16977,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <element name="unit">
-                        <ref name="timeUnit4"/>
-                    </element>
+                    <ref name="timeUnit4"/>
                     <element name="value">
                         <data type="double"/>
                     </element>
@@ -17014,9 +17012,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <element name="unit">
-                        <ref name="timeUnit7"/>
-                    </element>
+                    <ref name="timeUnit7"/>
                     <element name="value">
                         <data type="double"/>
                     </element>
@@ -17051,9 +17047,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <element name="unit">
-                        <ref name="timeUnit2"/>
-                    </element>
+                    <ref name="timeUnit2"/>
                     <element name="value">
                         <data type="double"/>
                     </element>
@@ -17088,9 +17082,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <element name="unit">
-                        <ref name="timeUnit3"/>
-                    </element>
+                    <ref name="timeUnit3"/>
                     <element name="value">
                         <data type="double"/>
                     </element>
