@@ -144,7 +144,9 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>Filter</summary>
-                <description>Applies a butterworth filter to the seismograms. </description>
+                <description>Applies a butterworth filter to the seismograms.
+                The filterType can be CAUSAL or NONCAUSAL or TWOPASS, with the
+                last two being equivalent.</description>
                 <example>
                 <filter>
                    <lowFreqCorner><value>50</value><unit>SECOND</unit></lowFreqCorner>
@@ -172,7 +174,11 @@
                 <data type="int"/>
             </element>
             <element name="filterType">
-                <data type="string"/>
+                <choice>
+                    <value>NONCAUSAL</value>
+                    <value>CAUSAL</value>
+                    <value>TWOPASS</value>
+                 </choice>
             </element>
         </element>
     </define>
@@ -207,11 +213,16 @@
     <define name="taper">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
-                <summary>Apply a cosine taper.</summary>
-                <description>Applys a taper to the seismograms.</description>
+                <summary>Apply a taper.</summary>
+                <description>Applys a taper to the seismograms. The type can be
+                one of HANNING, HAMMIN or COSINE, with HANNING the default. The
+                width is given as a fraction of the seismogram length, and so
+                should be &lt; 0.5 as otherwise the begin and end taper will
+                overlap each other. 0.05 is the default.</description>
                 <example>
                    <taper>
                        <width>.05</width>
+                       <type>HANNING</type>
                    </taper>
                 </example>
             </xsd:documentation>
@@ -220,6 +231,15 @@
             <optional>
                 <element name="width">
                     <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="type">
+                    <choice>
+                        <value>HANNING</value>
+                        <value>HAMMING</value>
+                        <value>COSINE</value>
+                    </choice>
                 </element>
             </optional>
         </element>
@@ -246,7 +266,9 @@
             <xsd:documentation xml:lang="en">
                 <summary>Saves seismograms in files. </summary>
                 <description>The seismograms are written to data files in the
-                given direcctory. Always returns true unless there is an error.
+                given directory. Also writes out a dsml file for use in GEE and
+                other fissures tools that support datasets. Always returns true
+                unless there is an error.
                 </description>
                 <example>
                     <saveSeismogramToFile>
@@ -261,7 +283,10 @@
         </xsd:annotation>
         <element name="saveSeismogramToFile">
             <element name="fileType">
-                <data type="string"/>
+                <choice>
+                    <value>SAC</value>
+                    <value>MSEED</value>
+                </choice>
             </element>
             <optional>
                 <element name="prefix">
@@ -277,6 +302,23 @@
         </element>
     </define>
     <define name="externalSeismogramProcess">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Runs an externally defined java processor. </summary>
+                <description>This runs the java processor defined in the given
+                class, which must implement the
+                edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess
+                interface.
+                </description>
+                <example>
+                    <externalSeismogramProcess>
+                        <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <extraParam>1.7</extraParam>
+                    </externalSeismogramProcess>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="externalSeismogramProcess">
             <element name="classname">
                 <data type="string"/>
@@ -287,6 +329,18 @@
         </element>
     </define>
     <define name="printlineSeismogramProcess">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Prints a line to std out for each seismogram processed.</summary>
+                <description>This simply prints a line to standard out for each
+                seismogram to be processed. It can be used as a simple status
+                monitor.
+                </description>
+                <example>
+                    <printlineSeismogramProcess/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="printlineSeismogramProcess">
             <empty/>
         </element>
