@@ -117,7 +117,8 @@ public class FissuresFormatter {
     }
 
     public static boolean isNull(Object obj) {
-        if(obj == null) throw new NullPointerException();
+        if(obj == null) return true;
+        //if(obj == null) throw new NullPointerException();
         return false;
     }
 
