@@ -28,7 +28,7 @@ Maps only update once every two minutes
 </tr>
 <channels>
 <statusFilter>
-   <status>Passed</status>
+   <status>SUCCESS</status>
 </statusFilter>
 <channel><tr>
 <td>
@@ -43,7 +43,7 @@ Maps only update once every two minutes
 
 <channels>
 <statusFilter>
-   <notStatus>Passed</notStatus>
+   <notStatus>SUCCESS</notStatus>
 </statusFilter>
 <channel><tr>
 <td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>
