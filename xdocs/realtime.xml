@@ -7,7 +7,7 @@
 <body>
 <section name="Realtime SOD">
         <p>
-                Unlike a SOD run gathering historical data, a run that gets piping fresh data has a few extra things to take into consideration.  For the most part, a real time run needs to ensure that it gives the data enough time to trickle in from various stations after the event occurs before trying to process the data.  Several configurations in SOD work together to allow you to specify how SOD should wait for data to arrive.
+                Unlike a SOD run gathering historical data, a run that gets piping fresh data has a few extra things to take into consideration.  Mainly a real time run needs to ensure that it gives the data enough time to trickle in from various stations after the event occurs before trying to process the data.  If not, SOD will declare there is no data for a particular station for an event even though there will be in a few hours.  Several tactics in SOD work together to allow you to specify how SOD should wait for data to arrive.
         </p>
         <section name="Available Data Subsetters">
         <p>
@@ -58,7 +58,7 @@
         </section>
         <section name="Salvaging the data that exists">
                 <p>
-                        But wait!  What if you want full coverage if you can get it, but you'll take some coverage if its available?  Under the system as it is currently defined, it must be one or the other.  However, there are a couple other available data subsetters that can help in this circumstance.  First are the available data logicals.  Like most subsetters, available data has AND, OR, NOT, and XOR versions to allow the combination of subsetter pieces.  The second piece that allows for greater specification of what coverage you want is the &lt;postEventWait&gt; subsetter.  This is a subsetter that takes a time interval and when that time interval (starting with the event) has passed, the subsetter will pass.  This is more easily explained in an example, so here goes:
+                        But wait!  What if you want full coverage if you can get it, but you'll take some coverage if its available?  Under the system as it is currently defined, it must be one or the other.  However, there are a couple other available data subsetters that can help in this circumstance.  First are the available data logicals.  Like most subsetters, available data has AND, OR, and NOT versions to allow the combination of subsetter pieces.  The second piece that allows for greater specification of what coverage you want is the &lt;postEventWait&gt; subsetter.  This is a subsetter that takes a time interval and when that time interval (starting with the event) has passed, the subsetter will pass.  This is more easily explained in an example, so here goes:
                         </p>
                         <source>
 &lt;availableDataAND&gt;
