@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCEventChannelStatus extends SodJDBC{
+
     public JDBCEventChannelStatus() throws SQLException{
         this(ConnMgr.createConnection());
     }

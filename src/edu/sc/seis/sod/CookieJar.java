@@ -10,12 +10,17 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
+import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.IteratorTool;
 import org.apache.velocity.tools.generic.MathTool;
@@ -38,10 +43,15 @@ import org.apache.velocity.tools.generic.RenderTool;
 
 public class CookieJar {
 
-    public CookieJar (EventChannelPair ecp){
-        context = getChannelContext(ecp.getEvent(), ecp.getChannel());
-        context.put("sod_cookieJar", this); // needed for eval and recurse velocity tool
-        context.put("status", ecp.getStatus());
+    public CookieJar (EventChannelPair ecp) throws SQLException {
+        if (jdbcCookie == null) {
+            jdbcCookie = new JDBCEventChannelCookieJar();
+        }
+        memoryContext = getChannelContext(ecp.getEvent(), ecp.getChannel());
+        memoryContext.put("sod_cookieJar", this); // needed for eval and recurse velocity tool
+        memoryContext.put("status", ecp.getStatus());
+        context = new JDBCVelocityContext(ecp, jdbcCookie, memoryContext);
+        ((Context)memoryContext.get("sod_site_context")).put(ChannelIdUtil.toString(ecp.getChannel().get_id()), context);
     }
 
     /**
@@ -49,7 +59,7 @@ public class CookieJar {
      *
      * @return    a  VelocityContext
      */
-    public VelocityContext getContext() {
+    public Context getContext() {
         return context;
     }
 
@@ -61,10 +71,17 @@ public class CookieJar {
         context.put(key, value);
     }
 
-    VelocityContext context;
+    Context context;
 
-    public static VelocityContext getChannelContext(EventAccessOperations event,
-                                                    Channel channel) {
+    /** this holds items that are not perisent and can be recreated from the
+     * EventChannelPair. */
+    Context memoryContext;
+
+    static JDBCEventChannelCookieJar jdbcCookie = null;
+
+
+    public static Context getChannelContext(EventAccessOperations event,
+                                            Channel channel) {
         VelocityContext siteContext = getSiteContext(event, channel.my_site);
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
         if ( ! siteContext.containsKey(chanIdStr)) {
@@ -72,10 +89,15 @@ public class CookieJar {
             chanContext.put("channel_code", channel.get_code());
             chanContext.put("channel_id", channel.get_id());
             chanContext.put("sod_channel", channel);
+            // I don't like putting this in the channel context,
+            // but it is needed to put the database backed context for the
+            // channel into the site context for use by other channels in the
+            // site
+            chanContext.put("sod_site_context", siteContext);
             siteContext.put(chanIdStr, chanContext);
             ((Collection)siteContext.get("allChanIds")).add(chanIdStr);
         }
-        return (VelocityContext)siteContext.get(chanIdStr);
+        return (Context)siteContext.get(chanIdStr);
 
     }
 

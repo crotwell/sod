@@ -5,14 +5,15 @@
  */
 
 package edu.sc.seis.sod.subsetter.waveformArm;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
+import java.sql.SQLException;
 
 
 
@@ -30,8 +31,13 @@ public class MockECP{
     }
 
     public static EventChannelPair getECP(CacheEvent ev, Channel chan){
+        try {
         return new EventChannelPair( new EventDbObject(0, ev),
                                     new ChannelDbObject(0, chan), null, 0);
+        } catch (SQLException e) {
+            GlobalExceptionHandler.handle("Cannot create EventChannelPair", e);
+            return null;
+        }
     }
 
 }

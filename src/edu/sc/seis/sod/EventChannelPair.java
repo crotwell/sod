@@ -12,16 +12,17 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
+import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 public class EventChannelPair{
     public EventChannelPair(EventDbObject event, ChannelDbObject chan,
-                            WaveformArm owner, int pairId){
+                            WaveformArm owner, int pairId) throws SQLException {
         this(event, chan, owner, pairId, null);
     }
 
     public EventChannelPair(EventDbObject event, ChannelDbObject chan,
-                            WaveformArm owner, int pairId, Status status){
+                            WaveformArm owner, int pairId, Status status) throws SQLException {
         this.event = event;
         this.chan = chan;
         this.owner = owner;
@@ -43,7 +44,7 @@ public class EventChannelPair{
      */
     public void update(Status status){
         this.status = status;
-        cookieJar.getContext().put("status", status);
+        cookieJar.put("status", status.toString());
         owner.setStatus(this);
 
     }

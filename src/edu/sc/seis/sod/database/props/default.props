@@ -15,7 +15,11 @@ eventchannelretry.create=CREATE TABLE eventchannelretry( pairid int, \
                                                          numfailure int DEFAULT 0, \
                                                          retry_time timestamp, \
                                                          PRIMARY KEY (pairid))
-
+eventchannelcookiejar.create=CREATE TABLE eventchannelcookiejar( pairid int, \
+                                                                 name varchar, \
+                                                                 value double, \
+                                                                 valuestring varchar, \
+                                                                 UNIQUE (pairid, name))
 
 EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
 EventChannelSeq.nextVal=SELECT NEXTVAL ('EventChannelSeq')
