@@ -54,8 +54,6 @@
                                 <min>6.0</min>
                                 <max>10.0</max>
                         </magnitudeRange>
-                        <catalog>PREF</catalog>
-                        <contributor>IRIS</contributor>
                 </eventFinder>
                 <removeEventDuplicate/>
                 <printLineEventProcess/>
