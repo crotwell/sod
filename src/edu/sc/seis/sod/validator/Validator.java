@@ -101,7 +101,6 @@ public class Validator {
                     + ex.getLineNumber() + ". ";
             errorMessage += "The validator says '"
                     + ex.getLocalizedMessage() + "'\n\n";
-            errorMessage += "If you think SOD will be ok with this strategy file, just wait 10 seconds.  SOD will start anyway...";
         }
     };
 
