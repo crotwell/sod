@@ -44,7 +44,7 @@
                 <max>1000</max>
             </originDepthRange>
             <originTimeRange>
-                <startTime>20040701T00:00:00.001Z</startTime>
+                <startTime>20040801T00:00:00.001Z</startTime>
                 <endTime>20050131T23:59:59.999Z</endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -255,13 +255,9 @@
                 <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>
-                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-            </localSeismogramTemplateGenerator>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         </motionVectorArm>
-        <waveformEventTemplateGenerator>
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
             <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
