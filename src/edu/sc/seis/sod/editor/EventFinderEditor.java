@@ -5,9 +5,16 @@
  */
 
 package edu.sc.seis.sod.editor;
+import edu.sc.seis.fissuresUtil.cache.NSEventDC;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.Box;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
+import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,15 +25,44 @@ import org.w3c.dom.NodeList;
 public class EventFinderEditor implements EditorPlugin{
     public EventFinderEditor(SodGUIEditor owner){ this.owner = owner; }
 
-    public JComponent getGUI(Element element) throws Exception {
+    public JComponent getGUI(final Element element) throws Exception {
         Box b = Box.createVerticalBox();
         b.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
+
+        // deal with servers
+        Box serverBox = Box.createHorizontalBox();
+        serverBox.setBorder(new TitledBorder("Server"));
+        b.add(serverBox);
+        ServerNameDNS current = new ServerNameDNS(XPathAPI.selectSingleNode(element, "name/text()").getNodeValue(),
+                                                  XPathAPI.selectSingleNode(element, "dns/text()").getNodeValue());
+        JComboBox combo = new JComboBox(new Object[] { current});
+        serverBox.add(combo);
+        combo.addItemListener(new ItemListener() {
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == e.SELECTED) {
+                            ServerNameDNS selected = (ServerNameDNS)e.getItem();
+                            try {
+                                XPathAPI.selectSingleNode(element, "name/text()").setNodeValue(selected.name);
+                                XPathAPI.selectSingleNode(element, "dns/text()").setNodeValue(selected.dns);
+                            } catch (TransformerException ex) {
+                                // oh well?
+                                GlobalExceptionHandler.handle("Can't update server in XML", ex);
+                            }
+                        }
+                    }
+                });
+        Thread t = new Thread(new ServerLoader(combo, current));
+        t.start();
+
         NodeList children = element.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if(n instanceof Element){
                 Element el = (Element)n;
-                if(el.getTagName().equals("catalog")){
+                if (el.getTagName().equals("name") || el.getTagName().equals("dns")) {
+                    // skip as we deal with the server above
+                    continue;
+                } else if(el.getTagName().equals("catalog")){
                     i++;
                     while(i < children.getLength() && !(children.item(i) instanceof Element)){
                         i++;
@@ -59,5 +95,36 @@ public class EventFinderEditor implements EditorPlugin{
 
     private SodGUIEditor owner;
 
+    class ServerNameDNS {
+        ServerNameDNS(String name, String dns) {
+            this.name = name;
+            this.dns = dns;
+        }
+        public String toString() {
+            return dns+" "+name;
+        }
+        String name;
+        String dns;
+    }
+
+    class ServerLoader implements Runnable {
+        ServerLoader(JComboBox combo, ServerNameDNS defaultServer) {
+            this.defaultServer = defaultServer;
+            this.combo = combo;
+        }
+        public void run() {
+            System.out.println("fisName: "+owner.getProperties().getProperty("edu.sc.seis.sod.nameServiceCorbaLoc"));
+            FissuresNamingService fname = new FissuresNamingService(owner.getProperties());
+            fname.setNameServiceCorbaLoc(owner.getProperties().getProperty("edu.sc.seis.sod.nameServiceCorbaLoc"));
+            NSEventDC[] eventServers = fname.getAllEventDC();
+            for (int i = 0; i < eventServers.length; i++) {
+                combo.addItem(new ServerNameDNS(eventServers[i].getServerName(),
+                                                eventServers[i].getServerDNS()));
+            }
+        }
+        ServerNameDNS defaultServer;
+        JComboBox combo;
+    }
 }
+
 
