@@ -12,7 +12,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Status;
 
-public interface NetworkArmMonitor extends SodElement {
+public interface NetworkMonitor extends SodElement {
     public void setArmStatus(String status) throws Exception;
 
     public void change(Station station, Status s);

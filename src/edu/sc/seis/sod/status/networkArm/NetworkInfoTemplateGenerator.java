@@ -22,7 +22,7 @@ import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.networkArm.ChannelsInStationTemplate;
-import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
+import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.networkArm.StationsInNetworkTemplate;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
+public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     private String fileDir, netsOutputFileName, stasOutputFileName, sitesOutputFileName, chansOutputFileName;
     private NetworkFormatter netFormatter;
     private StationFormatter staFormatter;
