@@ -143,6 +143,9 @@ public class FissuresFormatter {
         if (origin == null) {
             throw new NullPointerException("origin is null");
         }
+        if (origin.my_location == null) {
+            throw new NullPointerException("origin.my_location is null");
+        }
         return getDistance(station.my_location, origin.my_location);
     }
 
