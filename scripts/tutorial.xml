@@ -41,9 +41,13 @@
 		        <name>sod.event.RefreshInterval.value</name>
 		        <value>6</value>
 		</property>
+	        <property>
+			<name>sod.event.RefreshInterval.unit</name>
+			<value>MINUTE</value>
+		</property>
 		<property>
-		        <name>sod.event.RefreshInterval.unit</name>
-		        <value>MINUTE</value>
+			<name>edu.sc.seis.sod.waveformarm.threads</name>
+			<value>1</value>
 		</property>
         </properties>
         <eventArm>
@@ -90,10 +94,6 @@
                 <eventStatusTemplate>
 			<!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-		</eventStatusTemplate>
-                <eventStatusTemplate>
-			<!--<fileDir>status</fileDir>-->
-                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
 		</eventStatusTemplate>
                 <eventStatusTemplate>
 			<!--<fileDir>status</fileDir>-->
