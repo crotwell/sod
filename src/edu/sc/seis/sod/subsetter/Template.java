@@ -1,9 +1,3 @@
-/**
- * Template.java
- *
- * @author Created by Charles Groves
- */
-
 package edu.sc.seis.sod.subsetter;
 
 import java.util.ArrayList;
@@ -25,16 +19,18 @@ public abstract class Template{
     private void parse(NodeList nl){
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeType() == Node.TEXT_NODE) pieces.add(n.getNodeValue());
+            if(n.getNodeType() == Node.TEXT_NODE) pieces.add(textTemplate(n.getNodeValue()));
             else if(isInterpreted(n.getNodeName()))
                 pieces.add(getInterpreter(n.getNodeName(), (Element)n));
             else{
+                pieces.add(textTemplate("<" + n.getNodeName()));
+                addAttributes(n);
                 if(n.getChildNodes().getLength() == 0){
-                    pieces.add("<" + n.getNodeName() + getAttrString(n) + "/>");
+                    pieces.add(textTemplate("/>"));
                 }else{
-                    pieces.add("<" + n.getNodeName()+ getAttrString(n) + ">");
+                    pieces.add(textTemplate(">"));
                     parse(n.getChildNodes());
-                    pieces.add("</" + n.getNodeName() + ">");
+                    pieces.add(textTemplate("</" + n.getNodeName() + ">"));
                 }
             }
         }
@@ -44,9 +40,29 @@ public abstract class Template{
     
     protected void setUp(){}
     
+    protected abstract Object textTemplate(String text);
+    
     protected abstract Object getInterpreter(String tag, Element el);
     
     protected abstract boolean isInterpreted(String tag);
+    
+    private int addAttributes(Node n){
+        pieces.add(textTemplate(getAttrString(n)));
+        int numChild = n.getChildNodes().getLength();
+        int attrCount = 0;
+        for (int i = 0; i < numChild && childName(i, n).equals("attribute"); i++) {
+            Element attr = (Element)n.getChildNodes().item(i);
+            pieces.add(textTemplate(" " + attr.getAttribute("name") + "=\""));
+            parse(attr.getChildNodes());
+            pieces.add(textTemplate("\""));
+            n.removeChild(attr);
+        }
+        return attrCount;
+    }
+    
+    private static String childName(int i, Node n){
+        return n.getChildNodes().item(i).getNodeName();
+    }
     
     private String getAttrString(Node n){
         String result = "";
@@ -58,18 +74,10 @@ public abstract class Template{
         return result;
     }
     
-    public String getResults(){
-        StringBuffer buf = new StringBuffer("");
-        Iterator it = pieces.iterator();
-        while(it.hasNext())  buf.append(it.next());
-        return buf.toString();
-    }
-    
-    public String toString(){ return getResults(); }
-    
     private String template = "";
     
     protected List pieces = new ArrayList();
     
     private static Logger logger = Logger.getLogger(Template.class);
 }
+
