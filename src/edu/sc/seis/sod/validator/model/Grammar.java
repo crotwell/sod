@@ -20,7 +20,6 @@ public class Grammar {
     public List getDefs() {
         List defs = new ArrayList();
         defs.addAll(this.defs.values());
-        defs.add(start);
         return defs;
     }
 
@@ -32,16 +31,15 @@ public class Grammar {
 
     public String getLoc() { return filename;}
 
-    public Form getRoot(){ return start.getForm(); }
-
-    public void addStart(Definition d){
-        if(start == null){ start = d; }
-        else{ start = start.combineWith(d); }
-    }
+    public Form getRoot(){ return getDef("").getForm(); }
 
     public void add(Definition d){
-        //TODO handle combines
         defs.put(d.getName(), d);
+    }
+
+    public void add(String name, Definition d){
+        //TODO handle combines
+        defs.put(name, d);
     }
 
     public boolean equals(Object o){
@@ -55,13 +53,11 @@ public class Grammar {
     public int hashCode(){ return filename.hashCode(); }
 
     public Definition getDef(String name){
-        if(name == null){ return start; }
         return (Definition)defs.get(name);
     }
 
     public String toString(){ return "Grammar " + filename; }
 
-    private Definition start;
     private String filename;
     private Map defs = new HashMap();
 }
