@@ -10,7 +10,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.*;
-
+import java.util.*;
 import org.w3c.dom.*;
 
 
@@ -90,12 +90,14 @@ public class PhaseInteraction implements EventStationSubsetter {
 	tauPPath.clearPhaseNames();
 	tauPPath.parsePhaseList(phaseName);
 	UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-	originDepth = origin.my_location.depth.value;
-	if(!originUnit.equals(UnitImpl.KILOMETER)) {
-	    originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
-	}
-	tauPPath.setSourceDepth(origin.my_location.depth.value);
+	originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
+	tauPPath.setSourceDepth(originDepth);
+
 	eventStationDistance = SphericalCoords.distance(origin.my_location.latitude, 
+							origin.my_location.longitude,
+							station.my_location.latitude,
+							station.my_location.longitude);
+	double azimuth =  SphericalCoords.azimuth(origin.my_location.latitude, 
 							origin.my_location.longitude,
 							station.my_location.latitude,
 							station.my_location.longitude);
@@ -103,15 +105,15 @@ public class PhaseInteraction implements EventStationSubsetter {
 	//	System.out.println("The eventStation Distance is "+eventStationDistance);
 	tauPPath.calculate(eventStationDistance); 
 	Arrival[] arrivals = tauPPath.getArrivals();
-	Arrival requiredArrival = getRequiredArrival(arrivals);
-	if(requiredArrival == null) return false;
-	TimeDist[] timeDist = requiredArrival.getPath();
-	System.out.println("The Distance in degrees is "+requiredArrival.getDistDeg()+"actual = "+timeDist[timeDist.length-1].dist*180/Math.PI);
+	Arrival[] requiredArrivals = getRequiredArrival(arrivals);
+	if(requiredArrivals.length == 0) return false;
+	//TimeDist[] timeDist = requiredArrival.getPath();
+	//System.out.println("The Distance in degrees is "+requiredArrival.getDistDeg()+"actual = "+timeDist[timeDist.length-1].dist*180/Math.PI);
+	
 	if(phaseInteractionType instanceof Relative) {
-	    return handleRelativePathInteraction(timeDist, 0, timeDist.length, eventStationDistance, requiredArrival.getDistDeg());
+	    return handleRelativePathInteraction(requiredArrivals, eventStationDistance);
 	} else {
-	    throw new ConfigurationException("Absolute Area for PhaseInteraction is Not Implemented");
-		//return handlePierceAbsolutePhaseInteraction(requiredTimeDist);
+	    return handleAbsolutePhaseInteraction(requiredArrivals, azimuth, origin, "PATH");
 	}
     }
 
@@ -127,76 +129,92 @@ public class PhaseInteraction implements EventStationSubsetter {
 	tauPPierce.clearPhaseNames();
 	tauPPierce.parsePhaseList(phaseName);
 	UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-	originDepth = origin.my_location.depth.value;
-	if(!originUnit.equals(UnitImpl.KILOMETER)) {
-	    originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
-	}
-	tauPPierce.setSourceDepth(origin.my_location.depth.value);
+	originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
+	tauPPierce.setSourceDepth(originDepth);
 	eventStationDistance = SphericalCoords.distance(origin.my_location.latitude, 
 							origin.my_location.longitude,
 							station.my_location.latitude,
 							station.my_location.longitude);
+	double azimuth =  SphericalCoords.azimuth(origin.my_location.latitude, 
+						  origin.my_location.longitude,
+						  station.my_location.latitude,
+						  station.my_location.longitude);
 	//	System.out.println("The depth of the origin is "+originDepth);
 	//	System.out.println("The eventStation Distance is "+eventStationDistance);
 	tauPPierce.calculate(eventStationDistance); 
 	Arrival[] arrivals = tauPPierce.getArrivals();
-	Arrival requiredArrival = getRequiredArrival(arrivals);
-	if(requiredArrival != null) {
+	Arrival[] requiredArrivals = getRequiredArrival(arrivals);
+	if(requiredArrivals.length != 0) {
 	    //	    System.out.println("Got the Required Arrival");
-	    TimeDist[] timeDist = requiredArrival.getPierce();
-	    TimeDist requiredTimeDist = getRequiredTimeDist(timeDist);
-	    if(requiredTimeDist == null) return false;
+	    //TimeDist[] timeDist = requiredArrival.getPierce();
+	    //TimeDist requiredTimeDist = getRequiredTimeDist(timeDist);
+	    //if(requiredTimeDist == null) return false;
 	    //	    System.out.println("Got the Required Time Dist ");
 	    if(phaseInteractionType instanceof Relative) {
-		return handlePierceRelativePhaseInteraction(requiredTimeDist, eventStationDistance);
+		return handlePierceRelativePhaseInteraction(requiredArrivals, eventStationDistance);
 	    } else {
-		throw new ConfigurationException("Absolute Area for PhaseInteraction is Not Implemented");
-		//return handlePierceAbsolutePhaseInteraction(requiredTimeDist);
+		//throw new ConfigurationException("Absolute Area for PhaseInteraction is Not Implemented");
+		return handleAbsolutePhaseInteraction(requiredArrivals, azimuth, origin, "PIERCE");
 	    }
 	} else return false;
 
 
     }
     
-    public boolean handlePierceRelativePhaseInteraction(TimeDist timeDist, double eventStationDistance) throws Exception{
+    public boolean handlePierceRelativePhaseInteraction(Arrival[] requiredArrivals, double eventStationDistance) throws Exception{
 	
 	
-	QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth, UnitImpl.KILOMETER);;
-	QuantityImpl minDepth;
-	QuantityImpl maxDepth;
-	QuantityImpl timeDistDistance = new QuantityImpl(timeDist.dist*180/Math.PI, UnitImpl.DEGREE);
-	QuantityImpl minDistance;
-	QuantityImpl maxDistance;
-	//	System.out.println("Must check depthRange and Distance Range Now");
-	if(((Relative)phaseInteractionType).getDepthRange() != null) {
+	for(int counter = 0; counter < requiredArrivals.length; counter++) {
+	    TimeDist[] timeDistArray = requiredArrivals[counter].getPierce();
+	    TimeDist timeDist = getRequiredTimeDist(timeDistArray);
+	    QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth, UnitImpl.KILOMETER);;
+	    QuantityImpl minDepth;
+	    QuantityImpl maxDepth;
+	    QuantityImpl timeDistDistance = new QuantityImpl(timeDist.dist*180/Math.PI, UnitImpl.DEGREE);
+	    QuantityImpl minDistance;
+	    QuantityImpl maxDistance;
+	    //	System.out.println("Must check depthRange and Distance Range Now");
+	    if(((Relative)phaseInteractionType).getDepthRange() != null) {
 	    
-	    minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
-	    maxDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
-	} else {
-	    minDepth = timeDistDepth;
+		minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
+		maxDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
+	    } else {
+		minDepth = timeDistDepth;
 	    maxDepth = timeDistDepth;
-	}
-	if(((Relative)phaseInteractionType).getDistanceRange() != null) {
-	    if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
-		timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.KILOMETER);
 	    }
-	    minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMinDistance();
-	    maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMaxDistance();
+	    if(((Relative)phaseInteractionType).getDistanceRange() != null) {
+		if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
+		    timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.KILOMETER);
+		}
+		minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMinDistance();
+		maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMaxDistance();
 		
-	} else {
-	    minDistance = timeDistDistance;
-	    maxDistance = timeDistDistance;
-	}
+	    } else {
+		minDistance = timeDistDistance;
+		maxDistance = timeDistDistance;
+	    }
+	    
+	    if(minDepth.lessThanEqual(timeDistDepth) && maxDepth.greaterThanEqual(timeDistDepth)) {
+		if(minDistance.lessThanEqual(timeDistDistance) && maxDistance.greaterThanEqual(timeDistDistance)) {
+		    return  true;
+		}
+	    }//end of if checking for depth.
+	}//end of for(int counter = 0; ........)
+	return false;
+    }
+
+    public boolean handleRelativePathInteraction(Arrival[] requiredArrivals, double eventStationDistance) throws Exception {
 	
-	if(minDepth.lessThanEqual(timeDistDepth) && maxDepth.greaterThanEqual(timeDistDepth)) {
-	    if(minDistance.lessThanEqual(timeDistDistance) && maxDistance.greaterThanEqual(timeDistDistance)) {
-		return  true;
+	for(int counter = 0; counter < requiredArrivals.length; counter++) {
+
+	    TimeDist[] timeDistArray = requiredArrivals[counter].getPath();
+	    if( checkForRelativePathInteraction(timeDistArray, 0,timeDistArray.length, eventStationDistance, requiredArrivals[counter].getDistDeg()) ) {
+		return true;
 	    }
 	}
 	return false;
     }
-
-    public boolean handleRelativePathInteraction(TimeDist[] timeDistArray, int start, int end, double eventStationDistance, double totalDistance) throws Exception {
+    public boolean checkForRelativePathInteraction(TimeDist[] timeDistArray, int start, int end, double eventStationDistance, double totalDistance) throws Exception {
 	
 	System.out.println("The length of the path array is "+timeDistArray.length);
 	//for(int i = 0; i < timeDistArray.length; i++) {
@@ -249,34 +267,63 @@ public class PhaseInteraction implements EventStationSubsetter {
 	    }
 	    if(end < start) { return false;}
 	    else if(minDistance.greaterThan(timeDistDistance)) {
-		return handleRelativePathInteraction(timeDistArray,mid, end, eventStationDistance, totalDistance);
+		return checkForRelativePathInteraction(timeDistArray,mid, end, eventStationDistance, totalDistance);
 	    } else if(maxDistance.lessThan(timeDistDistance)) {
-		return handleRelativePathInteraction(timeDistArray, start, mid, eventStationDistance, totalDistance);
+		return checkForRelativePathInteraction(timeDistArray, start, mid, eventStationDistance, totalDistance);
 	    } else return false;
   
 	    //}	   
     }
     
-    public boolean handlePierceAbsolutePhaseInteraction(TimeDist timeDist) throws Exception {
+    public boolean handleAbsolutePhaseInteraction(Arrival[] requiredArrivals, double azimuth, Origin origin, String type) throws Exception {
 	
-	QuantityImpl timeDistDepth = new QuantityImpl(timeDist.depth, UnitImpl.KILOMETER);;
-	QuantityImpl minDepth;
-	QuantityImpl maxDepth;
-	if(((Absolute)phaseInteractionType).getDepthRange() != null) {
-	    minDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMinDepth();
-	    maxDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMaxDepth();
-	} else {
-	    minDepth = timeDistDepth;
-	    maxDepth = timeDistDepth;
-	}
-	if(minDepth.lessThanEqual(timeDistDepth) && maxDepth.greaterThanEqual(timeDistDepth)) {
-	    return  true;
-	}
+	edu.iris.Fissures.Area area = ((Absolute)phaseInteractionType).getArea();
+	
+	for(int i = 0; i < requiredArrivals.length; i++) {
+	    TimeDist[] timeDist;
+	    if(type.equals("PIERCE")) {
+		timeDist = requiredArrivals[i].getPierce();
+	    } else {
+		timeDist = requiredArrivals[i].getPath();
+	    }
+
+	    azimuth = checkForLongway(requiredArrivals[i].getDistDeg(), azimuth);
+	    for(int counter = 0; counter < timeDist.length; counter++) {
+		QuantityImpl timeDistDepth = new QuantityImpl(timeDist[0].depth, UnitImpl.KILOMETER);;
+		QuantityImpl minDepth;
+		QuantityImpl maxDepth;
+		if(((Absolute)phaseInteractionType).getDepthRange() != null) {
+		    minDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMinDepth();
+		    maxDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMaxDepth();
+		} else {
+		    minDepth = timeDistDepth;
+		    maxDepth = timeDistDepth;
+		}
+		if(minDepth.lessThanEqual(timeDistDepth) && maxDepth.greaterThanEqual(timeDistDepth)) {
+		    if(area == null || area instanceof GlobalArea) return true;
+		    double tLat = SphericalCoords.latFor(origin.my_location.latitude,
+							 origin.my_location.longitude,
+							 timeDist[counter].depth,
+							 azimuth);
+		    double tLon =  SphericalCoords.lonFor(origin.my_location.latitude,
+							  origin.my_location.longitude,
+							  timeDist[counter].depth,
+							  azimuth);
+		    if(area instanceof BoxArea) {
+			
+			BoxArea boxArea = (BoxArea) area;
+			if( tLat >= boxArea.min_latitude && 
+			    tLat <= boxArea.max_latitude &&
+			    tLon >= boxArea.min_longitude &&
+			    tLon <= boxArea.max_longitude) {
+			    return true;
+			}
+		    }//end of if area instanceof BoxArea.
+		} //end of if checking for depth.
+	    }//end of for(int counter = 0.........
+	}//end of for(int i= 0; i < requiredArrivals.length; i++)
 	return false;
     }
-
-  
-
 
     public TimeDist getRequiredTimeDist(TimeDist[] timeDist) {
 	
@@ -302,25 +349,35 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     }
     
-    public Arrival getRequiredArrival(Arrival[] arrivals) {
+    public Arrival[] getRequiredArrival(Arrival[] arrivals) {
 	
-	Arrival requiredArrival = null;
+	ArrayList arrayList = new ArrayList();
 	for(int counter = 0; counter < arrivals.length; counter++) {
 	    
 	    String arrivalName = arrivals[counter].getName();
 	    if(phaseName.startsWith("tt")) {
 		if(phaseName.equals("tts") && arrivalName.toUpperCase().startsWith("S")) {
-		    requiredArrival = arrivals[counter];
+		    arrayList.add(arrivals[counter]);
 		} else if(phaseName.equals("ttp") && arrivalName.toUpperCase().startsWith("P")) {
-		    requiredArrival = arrivals[counter];
+		    arrayList.add(arrivals[counter]);
 		} 
 	    } else if(phaseName.equals(arrivalName)) {
-		requiredArrival = arrivals[counter];
+		arrayList.add(arrivals[counter]);
 	    }
 	  
 	}
-	
-	return requiredArrival;
+	Arrival[] requiredArrivals = new Arrival[arrayList.size()];
+	requiredArrivals = (Arrival[]) arrayList.toArray(requiredArrivals);
+	return requiredArrivals;
+    }
+
+    public double checkForLongway(double distance, double azimuth) {
+
+	while(distance > 360) distance = distance - 360;
+	if(distance > 180) {
+	    azimuth = azimuth + 180;
+	}
+	return azimuth;
     }
 
     private String modelName = null;

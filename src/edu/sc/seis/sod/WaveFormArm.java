@@ -56,7 +56,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    if(eventAccess != null) {
-		System.out.println("The number of Wave Form Threads are -------->  "+Thread.activeCount());
 		if(createNewThread()) {
 		    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 								     eventStationSubsetter,

@@ -89,7 +89,7 @@ public class PhaseRequest implements RequestGenerator{
 	tauPTime.clearPhaseNames();
 	tauPTime.parsePhaseList(beginPhase.getPhase()+" "+endPhase.getPhase());
 	UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-	originDepth = origin.my_location.depth.convertTo(UnitImpl.KILOMETER).value;
+	originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
 	
 	tauPTime.setSourceDepth(originDepth);
 	tauPTime.calculate(SphericalCoords.distance(origin.my_location.latitude, 
