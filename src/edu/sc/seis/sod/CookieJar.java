@@ -75,12 +75,12 @@ public class CookieJar {
 
     /** this holds items that are not perisent and can be recreated from the
      * EventChannelPair. */
-    Context memoryContext;
+    VelocityContext memoryContext;
 
     static JDBCEventChannelCookieJar jdbcCookie = null;
 
 
-    public static Context getChannelContext(EventAccessOperations event,
+    public static VelocityContext getChannelContext(EventAccessOperations event,
                                             Channel channel) {
         VelocityContext siteContext = getSiteContext(event, channel.my_site);
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
@@ -97,7 +97,7 @@ public class CookieJar {
             siteContext.put(chanIdStr, chanContext);
             ((Collection)siteContext.get("allChanIds")).add(chanIdStr);
         }
-        return (Context)siteContext.get(chanIdStr);
+        return (VelocityContext)siteContext.get(chanIdStr);
 
     }
 
@@ -195,4 +195,5 @@ public class CookieJar {
 
 
 }// CookieJar
+
 
