@@ -4,7 +4,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.bag.ResponseGain;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -18,13 +17,13 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 8894 2004-05-25 00:51:30Z crotwell $
+ * @version $Id: ResponseGain.java 9089 2004-06-07 15:44:11Z crotwell $
  */
 
-public class ResponseGainProcessor implements LocalSeismogramProcess {
+public class ResponseGain implements LocalSeismogramProcess {
 
-    public ResponseGainProcessor (Element config) {
-        responseGain = new ResponseGain(Start.getNetworkArm().getFinder());
+    public ResponseGain (Element config) {
+        responseGain = new edu.sc.seis.fissuresUtil.bag.ResponseGain(Start.getNetworkArm().getFinder());
     }
 
     public LocalSeismogramResult process(EventAccessOperations event,
@@ -41,6 +40,6 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
         return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
     }
 
-    ResponseGain responseGain;
+    edu.sc.seis.fissuresUtil.bag.ResponseGain responseGain;
 
 }// ResponseGainProcessor
