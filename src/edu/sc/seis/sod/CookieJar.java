@@ -18,8 +18,8 @@ public class CookieJar {
 
     public CookieJar (EventAccessOperations event, Channel channel){
         context = new VelocityContext();
-        context.put("sod.event", event);
-        context.put("sod.channel", channel);
+        context.put("sod_event", event);
+        context.put("sod_channel", channel);
     }
 
     public Object get(String key) {
