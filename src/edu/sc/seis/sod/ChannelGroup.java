@@ -49,18 +49,25 @@ public class ChannelGroup {
 		return false;
 	}
 	public static ChannelGroup[] group(Channel[] channels,List failures)  {
-		loadDefaultRules(defaultConfigFileLoc);
+		if(defaultRules == null) {
+			loadDefaultRules(defaultConfigFileLoc);
+		}
 		return applyRules(channels,defaultRules,failures);
 	}
 	public static ChannelGroup[] group(Channel[] channels,Element[] additionalRules,List failures)  {
+		if(defaultRules == null) {
+			loadDefaultRules(defaultConfigFileLoc);
+		}
 		int ruleCount = defaultRules.length + additionalRules.length;
 		Element[] allRules = new Element[ruleCount];
 		for(int j=0;j<additionalRules.length;j++) {
 			allRules[j] = additionalRules[j];
 		}
+		if(defaultRules != null) {
 		for(int k=additionalRules.length;k<ruleCount;k++) {
 			allRules[k] = defaultRules[k-additionalRules.length];
 		}
+	}
 		return applyRules(channels,allRules,failures);
 	}
 	private static ChannelGroup[] applyRules(Channel[] channels, Element[] rules,List failures){
