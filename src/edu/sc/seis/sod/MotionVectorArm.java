@@ -111,7 +111,7 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                   Standing.REJECT));
-            failLogger.info(ecp);
+            failLogger.info(ecp + ": " + passed.toString());
         }
     }
 
