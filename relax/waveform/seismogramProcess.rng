@@ -358,13 +358,49 @@
         </element>
     </define>
     <define name="forkProcess">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Forks the processing of seismograms.</summary>
+                <description>This forks the processing of the seismograms so that
+                more than one sequence of processing steps can be applied to the
+                data independently. The fork processor returns the original input
+                seismograms, but the success boolean of the enclosed processors.
+                </description>
+                <example>
+                    <forkProcess>
+                       <rTrend/>
+                       <saveSeismogramToFile>
+                          <fileType>sac</fileType>
+                          <dataDirectory>rTrendData</dataDirectory>
+                          <eventDirLabel>
+                              Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                          </eventDirLabel>
+                       </saveSeismogramToFile>
+                    </forkProcess>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="forkProcess">
-            <zeroOrMore>
+            <oneOrMore>
                 <ref name="seismogramProcess"/>
-            </zeroOrMore>
+            </oneOrMore>
         </element>
     </define>
     <define name="alwaysSuccess">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Executes a subprocessor, but always returns true.</summary>
+                <description>This executes the enclosed processor, but always returns
+                a success regardless of whether the enclosed processor succeeded or
+                failed.
+                </description>
+                <example>
+                    <alwaysSuccess>
+                        <xyz/>
+                    </alwaysSuccess>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="alwaysSuccess">
             <ref name="seismogramProcess"/>
         </element>
