@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
+<x/>
 		<property>
 			<name>sod.start.RunName</name>
 			<value>Tutorial Test Run</value>
@@ -87,6 +88,14 @@
                         <catalog>WHDF</catalog>
                         <contributor>NEIC</contributor>
                 </eventFinder>
+                <originPointDistance>
+                   <latitude>35</latitude>
+                   <longitude>-82</longitude>
+                   <unit>DEGREE</unit>
+                   <min>30</min>
+                   <max>100</max>
+                </originPointDistance>
+
                 <eventStatusTemplate>
 			<!--<fileDir>status</fileDir>-->
 			<eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
