@@ -167,6 +167,7 @@ public class Start{
 
     public void start() throws Exception {
         startTime = ClockUtil.now();
+        IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
         NodeList children = docElement.getChildNodes();
@@ -197,7 +198,7 @@ public class Start{
                 }
             }
         }
-        IndexTemplate indexTemplate = new IndexTemplate();
+        indexTemplate.registerMapWithEventArm();
     }
 
     public static Properties getProperties() {return props; }
