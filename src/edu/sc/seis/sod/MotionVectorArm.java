@@ -417,7 +417,7 @@ public class MotionVectorArm implements Subsetter {
             while(retries < MAX_RETRY) {
                 try {
                     id[i] = dataCenter.queue_seismograms(rf[i]);
-                    logger.info("request id: " + id);
+                    logger.info("request id: " + id[i]);
                 } catch(org.omg.CORBA.SystemException e) {
                     retries++;
                     logger.debug("after failed queue_seismograms, retries="
@@ -446,9 +446,6 @@ public class MotionVectorArm implements Subsetter {
             int retries = 0;
             int MAX_RETRY = 5;
             while(status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
-                try {
-                    Thread.sleep(30 * 1000);
-                } catch(InterruptedException ex) {}
                 while(retries < MAX_RETRY) {
                     try {
                         status = dataCenter.request_status(id[i]);
@@ -472,6 +469,11 @@ public class MotionVectorArm implements Subsetter {
                             return (LocalSeismogram[][])null;
                         }
                     }
+                }
+                if (status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
+                    try {
+                        Thread.sleep(30 * 1000);
+                    } catch(InterruptedException ex) {}
                 }
             }
             if(status.equals(LocalSeismogramArm.DATA_RETRIEVED)) {
@@ -508,7 +510,7 @@ public class MotionVectorArm implements Subsetter {
         }
         return localSeismograms;
     }
-
+    
     private static void handle(EventVectorPair ecp, Stage stage, Throwable t) {
         if(t instanceof org.omg.CORBA.SystemException) {
             ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
