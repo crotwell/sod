@@ -33,8 +33,8 @@ public class EventStatusTemplateEditor implements EditorPlugin{
 
     public JComponent getGUI(Element element) throws Exception {
         Box panel = Box.createHorizontalBox();
-        panel.setBorder(new TitledBorder("EventStatusTemplate"));
-        final JComboBox box = new JComboBox(new String[]{"Depth", "Time", "Magnitude"});
+        panel.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
+        final JComboBox box = new JComboBox(visibleValues);
         Node n = XPathAPI.selectSingleNode(element, "eventConfig/@xlink:href");
         final Attr xlink = (Attr)n;
         box.addActionListener(new ActionListener(){
