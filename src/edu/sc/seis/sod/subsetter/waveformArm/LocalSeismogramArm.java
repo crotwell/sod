@@ -180,6 +180,14 @@ public class LocalSeismogramArm implements Subsetter{
 	    
 	    MicroSecondDate after = new MicroSecondDate();
 	    logger.debug("After getting seismograms "+after.subtract(before));
+
+	    for (int i=0; i<localSeismograms.length; i++) {
+		if (localSeismograms[i] == null) {
+		    logger.error("Got null in seismogram array "+ChannelIdUtil.toString(channel.get_id()));
+		    return;
+		}
+	    } // end of for (int i=0; i<localSeismograms.length; i++)
+	    
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
 	}
     }
