@@ -9,6 +9,7 @@ import java.io.*;
 import javax.swing.*;
 import org.w3c.dom.*;
 
+import edu.sc.seis.fissuresUtil.exceptionHandler.FilterReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
@@ -26,11 +27,20 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.COMM_FAILURE;
 import org.xml.sax.SAXException;
 
 
 
 public class SimpleGUIEditor extends CommandLineEditor {
+
+    static {
+        List ignoreList = new ArrayList();
+        // silently eat CommFailure
+        ignoreList.add(COMM_FAILURE.class);
+        GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
+        GlobalExceptionHandler.registerWithAWTThread();
+    }
 
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
