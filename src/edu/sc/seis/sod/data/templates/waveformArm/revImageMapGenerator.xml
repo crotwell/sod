@@ -14,6 +14,22 @@
 <title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
 $velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
 <style media="all">@import "../../../main.css";</style>
+<script language="JavaScript">
+function flipImage(imgName,imgSrc,parentImgSrc) {
+var parentImage = document.images[imgName];
+parentImage.src = imgSrc;
+parentImage.usemap = "";
+parentImage.onClick="swap(imgName,parentImgSrc)";
+}
+function swap(imgName,parentImgSrc) {
+var originalImage = document.images[imgName];
+originalImage.src = parentImgSrc;
+var prefix = "#map";
+originalImage.usemap = prefix.concat(imgName);
+originalImage.onClick = "return;";
+}
+
+</script>
 </head>
 <body>
 <div id="Header">
@@ -97,6 +113,7 @@ $fissures.formatMagnitude($m),
 <h2>Seismograms</h2>
 <table>
 #set ( $count = 0)
+#set ( $clickableWidth = 10)
 #foreach ($chanId in $allChanIds)
 #set ( $chanContext = $sod_cookieJar.get($chanId) )
 #set ( $flagData_P = $sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_P"))
@@ -116,19 +133,19 @@ $!chanContext.sod_phaseStoN_ttp.when</td>
 #set ($pImage = ${fissures.filize($pLoc, $extension)})
 #set ($sImage = ${fissures.filize($sLoc, $extension)})
 <a>
-<img src="${originalImgLoc}" USEMAP="#map${count}"/>
+<img name="${count}" id="${count}" src="${originalImgLoc}" USEMAP="#map${count}" />
 </a>
 <map name="map${count}">
-#set ($flag_P_LB_X = (${flagData_P.getFlagLoc()} - 10) )
-#set ($flag_P_UB_X = (${flagData_P.getFlagLoc()} + 10) )
+#set ($flag_P_LB_X = (${flagData_P.getFlagLoc()} - ${clickableWidth}) )
+#set ($flag_P_UB_X = (${flagData_P.getFlagLoc()} + ${clickableWidth}) )
 #set ($flag_P_LB_Y = ${flagData_P.getFlagBottom()} )
 #set ($flag_P_UB_Y = ${flagData_P.getFlagTop()} )
-<area shape="rectangle" coords="${flag_P_LB_X},${flag_P_UB_Y},${flag_P_UB_X},${flag_P_LB_Y}" href="${pImage}"/>
-#set ($flag_S_LB_X = (${flagData_S.getFlagLoc()} - 10) )
-#set ($flag_S_UB_X = (${flagData_S.getFlagLoc()} + 10) )
+<area shape="rectangle" coords="${flag_P_LB_X},${flag_P_UB_Y},${flag_P_UB_X},${flag_P_LB_Y}" href="javascript:flipImage('${count}','${pImage}','${originalImgLoc}')"/>
+#set ($flag_S_LB_X = (${flagData_S.getFlagLoc()} - ${clickableWidth}) )
+#set ($flag_S_UB_X = (${flagData_S.getFlagLoc()} + ${clickableWidth}) )
 #set ($flag_S_LB_Y = ${flagData_S.getFlagBottom()} )
 #set ($flag_S_UB_Y = ${flagData_S.getFlagTop()} )
-<area shape="rectangle" coords="${flag_S_LB_X},${flag_S_UB_Y},${flag_S_UB_X},${flag_S_LB_Y}" href="${sImage}"/>
+<area shape="rectangle" coords="${flag_S_LB_X},${flag_S_UB_Y},${flag_S_UB_X},${flag_S_LB_Y}" href="javascript:flipImage('${count}','${sImage}','${originalImgLoc}')"/>
 </map>
 
 #set ( $count = $count + 1)
