@@ -22,11 +22,6 @@ public class RunProperties{
             statusDir = SodUtil.getText(statusBaseChild);
         }
 
-        Element taupModelChild = SodUtil.getElement(el, "TauPModel");
-        if(taupModelChild != null){
-            tauPModel = SodUtil.getText(taupModelChild);
-        }
-
         Element eventQueryChild = SodUtil.getElement(el, "eventQueryIncrement");
         if(eventQueryChild != null){
             eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
@@ -73,8 +68,6 @@ public class RunProperties{
 
     public String getStatusBaseDir(){ return statusDir; }
 
-    public String getTauPModel(){ return tauPModel; }
-
     public int getNumWaveformWorkerThreads(){ return numWorkers; }
 
     public boolean reopenEvents(){ return reopenEvents; }
@@ -92,7 +85,6 @@ public class RunProperties{
 
     private String runName = "Your Sod";
     private String statusDir = "status";
-    private String tauPModel = "prem";
 
     private int numWorkers = 1;
 
