@@ -62,7 +62,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         this.networkArm = networkArm;
         addSodExceptionListener(sodExceptionListener);
         this.sodExceptionListener = sodExceptionListener;
-        pool = new ThreadPool(threadPoolSize, this);
+        pool = new ThreadPool(threadPoolSize);
     }
     
     private void  restoreDb()  throws InvalidDatabaseStateException{
@@ -140,7 +140,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                                 logger.debug("The sites effective time does not overlap the event time");
                                 continue;
                             } // end of if ()
-
+                            
                             ChannelDbObject[] successfulChannels =
                                 networkArm.getSuccessfulChannels(networks[netcounter], sites[sitecounter]);
                             logger.debug("got " + successfulChannels.length + " SuccessfulChannels");
@@ -164,8 +164,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                                 synchronized(connection) {
                                     
                                     //cache the channelInformation.
-                                    channelDbObjectMap.put( (new Integer(successfulChannels[counter].getDbId())).toString(),
-                                                           successfulChannels[counter]);
+                                    channelDbCache.put( new Integer(successfulChannels[counter].getDbId()),
+                                                       successfulChannels[counter]);
                                     
                                     //push the channel to the waveformQueue.
                                     Start.getWaveformQueue().push(eventid,
@@ -477,19 +477,11 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      * new work from the ThreadPool, finishes the work and again looks for new work
      *  until it is signaled to stop looking for new work.
      */
-    
-    class ThreadWorker extends Thread {
+    private class ThreadWorker extends Thread {
         
-        ThreadWorker(ThreadPool pool) {
+        public ThreadWorker(ThreadPool pool) {
             this.pool = pool;
         }
-        
-        boolean finished = false;
-        ThreadPool pool;
-        
-        /**
-         * used to signal the end of new work.
-         */
         
         public void finish() {
             finished = true;
@@ -498,17 +490,17 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         
         public void run() {
             Runnable work = pool.getWork();
-            
             while ( ! finished && work != null) {
                 work.run();
-                ///getThreadGroup().list();
                 work = pool.getWork();
                 
             } // end of while ( ! finished)
-            //getThreadGroup().list();
             logger.debug("EXITING THE RUN METHOD OF WORKER");
-            
         }
+        
+        private boolean finished = false;
+        
+        private ThreadPool pool;
     }
     
     
@@ -519,10 +511,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      * when there is no more new work.
      *
      */
-    
     private class ThreadPool {
-        ThreadPool(int n, WaveFormArm waveformArm) {
-            this.waveformArm = waveformArm;
+        ThreadPool(int n) {
             for (int i=0; i< (n); i++) {
                 Thread t = new ThreadWorker(this);
                 t.setName("waveFormArm Worker Thread"+i);
@@ -551,62 +541,41 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         }
         
         public synchronized Runnable getWork() {
-            long waveformid = Start.getWaveformQueue().pop();
-            if(waveformid == -1) return null;
-            int eventid = Start.getWaveformQueue().getWaveformEventId(waveformid);
-            int channelid = Start.getWaveformQueue().getWaveformChannelId(waveformid);
-            
-            Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+            long id = Start.getWaveformQueue().pop();
+            if(id == -1) return null;
+            int eventId = Start.getWaveformQueue().getWaveformEventId(id);
+            int channelId = Start.getWaveformQueue().getWaveformChannelId(id);
+            Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventId, channelId),
                                                Status.PROCESSING, "just after being popped");
-            
-            EventAccessOperations eventAccess = null;
-            EventDbObject eventDbObject = null;
-            ChannelDbObject channelDbObject = null;
-            logger.debug("BEFORE get event access");
-            
-            //EventAccessOperations
-            eventAccess =
-                Start.getEventQueue().getEventAccess(eventid);
-            logger.debug("AFTER get evemt access");
-            Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+            EventAccessOperations eventAccess = Start.getEventQueue().getEventAccess(eventId);
+            Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventId, channelId),
                                                Status.PROCESSING, "got eventAccess");
-            
-            //EventDbObject
-            eventDbObject = new EventDbObject(eventid, eventAccess);
-            //ChannelDbObject channelDbObject = null;
-            if( ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString())) != null) {
+            EventDbObject eventDbObject = new EventDbObject(eventId, eventAccess);
+            ChannelDbObject channelDbObject = null;
+            Integer key = new Integer(channelId);
+            if( channelDbCache.containsKey(key)) {
                 logger.debug("******** Channnel already in the hasmamp");
-                channelDbObject = ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString()));
-                Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
-                                                   Status.PROCESSING, "got channeldbobject from map");
+                channelDbObject = (ChannelDbObject)channelDbCache.get(key);
                 
             } else {
-                channelDbObject = new ChannelDbObject(channelid, networkArm.getChannel(channelid));
+                channelDbObject = new ChannelDbObject(channelId, networkArm.getChannel(channelId));
+                channelDbCache.put(key, channelDbObject);
             }
-            //  setFinalStatus(eventDbObject, channelDbObject,
-            //      Status.PROCESSING, "still didnot even form the waveformThread Runnable");
-            //networkArm.getChannel(networkid);
-            NetworkAccess networkAccess = null;
-            NetworkDbObject networkDbObject = null;
-            ChannelDbObject[] paramChannels = new ChannelDbObject[1];
-            int siteid =
-                networkArm.getSiteDbId(channelid);
+            Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventId, channelId),
+                                               Status.PROCESSING, "got channeldbobject");
+            int siteid = networkArm.getSiteDbId(channelId);
             int stationid = networkArm.getStationDbId(siteid);
             int networkid = networkArm.getNetworkDbId(stationid);
-            //NetworkAccess
-            networkAccess = networkArm.getNetworkAccess(networkid);
-            //NetworkDbObject
-            networkDbObject = new NetworkDbObject(networkid, networkAccess);
-            //ChannelDbObject[] paramChannels = new ChannelDbObject[1];
-            paramChannels[0] = channelDbObject;
-            return new WaveFormArmThread(eventDbObject, eventStationSubsetter,
-                                         localSeismogramArm, networkDbObject,
-                                         paramChannels, waveformArm,
-                                         sodExceptionListener);
+            NetworkAccess networkAccess  = networkArm.getNetworkAccess(networkid);
+            NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
+            ChannelDbObject[] paramChannels = {channelDbObject};
+            return new WaveFormArmProcessor(eventDbObject, eventStationSubsetter,
+                                            localSeismogramArm, networkDbObject,
+                                            paramChannels, WaveFormArm.this,
+                                            sodExceptionListener);
         }
         
         public void join() {
-            
             Iterator it = pool.iterator();
             while(it.hasNext()) {
                 try {
@@ -625,7 +594,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                     wait();
                 } catch (InterruptedException e) { }
             }
-            
             finished = true;
             Iterator it = pool.iterator();
             while (it.hasNext()) {
@@ -641,10 +609,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             
         }
         
-        
         private boolean finished = false;
-        
-        private WaveFormArm waveformArm;
     }
     
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
@@ -657,9 +622,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     
     private SodExceptionListener sodExceptionListener;
     
-    private HashMap channelDbObjectMap = new HashMap();
+    private HashMap channelDbCache = new HashMap();
     
     private static Logger logger = Logger.getLogger(WaveFormArm.class);
-    
 }
-
