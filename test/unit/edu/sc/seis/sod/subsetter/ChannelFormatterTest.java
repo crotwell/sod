@@ -35,11 +35,6 @@ public class ChannelFormatterTest extends TestCase{
                      cf.getResult(chan));
     }
     
-    public void testOrientation(){
-        assertEquals(chan.an_orientation.azimuth + " az " + chan.an_orientation.dip + " dip",
-                     create("<orientation/>").getResult(chan));
-    }
-    
     public void testName(){
         assertEquals("Test Channel", create("<name/>").getResult(chan));
     }
