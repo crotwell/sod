@@ -25,21 +25,25 @@ public class MenuTemplate extends Template implements GenericTemplate{
     }
 
     public Object getTemplate(String tag, final Element el){
-        if (tag.equals("relativePath")){
-            return new AllTypeTemplate(){
-                public String getResult(){
-                    Node firstChild = el.getFirstChild();
-                    String absPathTo = fileDir + '/' + firstChild.getNodeValue();
-                    if(el.getFirstChild() instanceof Element){
-                        Element el = (Element)firstChild;
-                        absPathTo = ((AllTypeTemplate)getCommonTemplate(el.getNodeName(),
-                                                                        el)).getResult();
-                    }
-                    return SodUtil.getRelativePath(pathFrom, absPathTo, "/");
-                }
-            };
-        }
+        if (tag.equals("relativePath")){ return new RelativePath(el, pathFrom);}
         return getCommonTemplate(tag, el);
+    }
+
+    public class RelativePath extends AllTypeTemplate{
+        public RelativePath(Element el, String pathFrom){
+            Node firstChild = el.getFirstChild();
+            String absPathTo = fileDir + '/' + firstChild.getNodeValue();
+            if(el.getFirstChild() instanceof Element){
+                el = (Element)firstChild;
+                absPathTo = ((GenericTemplate)getCommonTemplate(el.getNodeName(),
+                                                                el)).getResult();
+            }
+            path = SodUtil.getRelativePath(pathFrom, absPathTo, "/");
+        }
+
+        public String getResult() { return path; }
+
+        private String path;
     }
 
     /**
@@ -64,7 +68,5 @@ public class MenuTemplate extends Template implements GenericTemplate{
         }
         return buf.toString();
     }
-
-
 }
 
