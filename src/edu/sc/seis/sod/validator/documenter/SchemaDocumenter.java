@@ -29,7 +29,6 @@ public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
         StAXModelBuilder handler = new StAXModelBuilder("../../relax/sod.rng");
-        relaxBase = "../../relax/";
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
         ve.init();
@@ -47,7 +46,7 @@ public class SchemaDocumenter {
         Iterator it = defs.iterator();
         while(it.hasNext()) {
             Definition cur = (Definition)it.next();
-            //if(makePath(cur).startsWith("waveform/requestSubsetter/breqFastRequest")) {
+            //if(makePath(cur).startsWith("network/station")) {
                 render(c, ve, cur, transformer);
                 System.out.print(".");
             //}
@@ -97,15 +96,13 @@ public class SchemaDocumenter {
 
     public static String makePath(Definition def) {
         String rngLoc = def.getGrammar().getLoc();
-        String path = rngLoc.substring(relaxBase.length(), rngLoc.length() - 4);
+        String path = rngLoc.substring(rngLoc.indexOf("relax") + 6, rngLoc.length() - 4);
         path += "/" + def.getName();
         if(def.getName().equals("")) {
             path += "start";
         }
         return path;
     }
-
-    static String relaxBase = "";
 
     static Set writtenFiles = new HashSet();
 
