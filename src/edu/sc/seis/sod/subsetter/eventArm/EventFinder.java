@@ -207,7 +207,7 @@ public class EventFinder extends AbstractSource implements SodElement {
     }
 
 
-    private FissuresNamingServiceImpl fissuresNamingService = null;
+    private FissuresNamingService fissuresNamingService = null;
 
     private EventDCOperations eventDC = null;
 

@@ -14,23 +14,23 @@ import org.apache.log4j.*;
 /**
  * This subsetter specifies the networkFinder.
  * <pre>
- * 	&lt;networkFinder&gt;
- *		&lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
- *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
- *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
- *		&lt;refreshInterval&gt;
- *			&lt;unit&gt;MINUTE&lt;/unit&gt;
- *			&lt;value&gt;30&lt;/value&gt;
- *		&lt;/refreshInterval&gt;
- *	&lt;/networkFinder&gt;
+ *  &lt;networkFinder&gt;
+ *      &lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
+ *      &lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
+ *      &lt;dns&gt;edu/sc/seis&lt;/dns&gt;
+ *      &lt;refreshInterval&gt;
+ *          &lt;unit&gt;MINUTE&lt;/unit&gt;
+ *          &lt;value&gt;30&lt;/value&gt;
+ *      &lt;/refreshInterval&gt;
+ *  &lt;/networkFinder&gt;
  *
  *                     (or)
- * 
- * 	&lt;networkFinder&gt;
- *		&lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
- *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
- *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
- *	&lt;/networkFinder&gt;
+ *
+ *  &lt;networkFinder&gt;
+ *      &lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
+ *      &lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
+ *      &lt;dns&gt;edu/sc/seis&lt;/dns&gt;
+ *  &lt;/networkFinder&gt;
  * </pre>
  */
 
@@ -41,18 +41,18 @@ public class NetworkFinder extends AbstractSource{
      * @param element an <code>Element</code> value
      */
     public NetworkFinder (Element element) throws Exception{
-	super(element);
-	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	    fissuresNamingService = commonAccess.getFissuresNamingService();
-	    
-	    dns = getDNSName();
-	    objectName = getSourceName();
-	    Element subElement = SodUtil.getElement(element,"refreshInterval");
-	    if(subElement != null) {
-	    	Object obj = SodUtil.load(subElement, "edu.sc.seis.sod.subsetter");
-	    	refreshInterval = (RefreshInterval)obj;
-	    } else refreshInterval = null;	
-	
+    super(element);
+        CommonAccess commonAccess = CommonAccess.getCommonAccess();
+        fissuresNamingService = commonAccess.getFissuresNamingService();
+
+        dns = getDNSName();
+        objectName = getSourceName();
+        Element subElement = SodUtil.getElement(element,"refreshInterval");
+        if(subElement != null) {
+            Object obj = SodUtil.load(subElement, "edu.sc.seis.sod.subsetter");
+            refreshInterval = (RefreshInterval)obj;
+        } else refreshInterval = null;
+
     }
 
     /**
@@ -62,21 +62,21 @@ public class NetworkFinder extends AbstractSource{
      */
     public NetworkDC getNetworkDC() throws Exception{
 
-	    return fissuresNamingService.getNetworkDC(dns, objectName);	
+        return fissuresNamingService.getNetworkDC(dns, objectName);
 
     }
 
     public RefreshInterval getRefreshInterval() {
 
-	return this.refreshInterval;
+    return this.refreshInterval;
     }
 
-    private FissuresNamingServiceImpl fissuresNamingService = null;
+    private FissuresNamingService fissuresNamingService = null;
 
     private String dns = null;
 
     private String objectName = null;
 
     private RefreshInterval refreshInterval;
-        
+
 }// NetworkFinder

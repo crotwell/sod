@@ -6,7 +6,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfSeismogramDC.DataCenter;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.AbstractSource;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
@@ -22,9 +22,9 @@ import edu.sc.seis.sod.SodElement;
  * @version
  */
 
-public class FixedDataCenter 
-    extends AbstractSource 
-    implements SodElement, SeismogramDCLocator 
+public class FixedDataCenter
+    extends AbstractSource
+    implements SodElement, SeismogramDCLocator
 {
 
     /**
@@ -33,13 +33,13 @@ public class FixedDataCenter
      * @param element an <code>Element</code> value
      */
     public FixedDataCenter (Element element) throws Exception{
-	super(element);
-	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	    fissuresNamingService = commonAccess.getFissuresNamingService();
-	    
-	    dns = getDNSName();
-	    objectName = getSourceName();
-        dataCenter = fissuresNamingService.getSeismogramDC(dns, objectName);	
+    super(element);
+        CommonAccess commonAccess = CommonAccess.getCommonAccess();
+        fissuresNamingService = commonAccess.getFissuresNamingService();
+
+        dns = getDNSName();
+        objectName = getSourceName();
+        dataCenter = fissuresNamingService.getSeismogramDC(dns, objectName);
     }
 
     /**
@@ -47,19 +47,19 @@ public class FixedDataCenter
      *
      * @return a <code>DataCenter</code> value
      */
-    public DataCenter getSeismogramDC(EventAccessOperations event, 
-                                      NetworkAccess network, 
-                                      Station station, 
+    public DataCenter getSeismogramDC(EventAccessOperations event,
+                                      NetworkAccess network,
+                                      Station station,
                                       CookieJar cookies) throws Exception{
         return dataCenter;
     }
 
     private DataCenter dataCenter;
 
-   private FissuresNamingServiceImpl fissuresNamingService = null;
+   private FissuresNamingService fissuresNamingService = null;
 
    private String dns = null;
 
    private String objectName = null;
-        
+
 }// FixedDataCenter
