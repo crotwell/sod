@@ -234,7 +234,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         eventDirName = eventDirName.replace(' ', '_');
         eventDirName = eventDirName.replace(',', '_');
         eventDirName = eventDirName.replace('/', '_');
-        eventDirName = eventDirName.replace('\\', '_');
+//        eventDirName = eventDirName.replace('\\', '_');
         eventDirName = eventDirName.replace(':', '_');
         File eventDirectory = new File(dataDirectory, eventDirName);
         if ( ! eventDirectory.exists()) {
