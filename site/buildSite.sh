@@ -1,5 +1,7 @@
 echo 'clearing out previous build'
 rm -r generatedSite
+mkdir generatedSite
+chmod 0755 generatedSite
 echo 'Generating html from xml'
 java org.apache.xalan.xslt.Process -in allPages.xml -xsl allPageGenerator.xsl
 echo 'Copying over included stuff'
