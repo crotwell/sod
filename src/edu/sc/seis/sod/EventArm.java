@@ -83,8 +83,9 @@ public class EventArm implements Runnable{
 	try {
 	    processEventArm();
 	} catch(Exception e) {
-
+	    
 	    System.out.println("Exception caught while processing the EventArm");
+	    e.printStackTrace();
 	}
 	Start.getEventQueue().setSourceAlive(false);
 	System.out.println("The number of events in the eventQueue are "
