@@ -14,6 +14,7 @@ Events (sorted by time)
 <h1>Events</h1>
 <h2>Status:</h2>
 <status/><br/>
+<h2>Successful events sorted by time:</h2>
 <table>
 <tr id="title">
 <td>Location</td>
@@ -31,7 +32,6 @@ Events (sorted by time)
 </table>
 <h2>Map:</h2>
 <img src="eventMap.png"/>
-<h2>Successful events sorted by time:</h2>
 </div>
 <div id="Menu">
 <ul>
