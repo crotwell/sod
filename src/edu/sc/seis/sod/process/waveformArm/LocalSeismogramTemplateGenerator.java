@@ -155,5 +155,9 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         return eventFormatter.getResult(event) + '/'
             + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
     }
+
+    public SeismogramImageProcess getSeismogramImageProcess(){
+        return seismoImageProcess;
+    }
 }
 
