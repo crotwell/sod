@@ -131,7 +131,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         }
 
-        saveInDataSet(event, channel, seismograms);
+        saveInDataSet(event, channel, seismograms, fileType);
 
         boolean found = false;
         Iterator it = masterDSNames.iterator();
@@ -193,24 +193,24 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
                          childName);
         masterDSWriter.close();
 
-//      //create temporary dataset with new information to be merged into master dataset
-//      DataSet tempMasterDS = createTempDataSet("Temp Master");
-//      File tempMasterDSFile = new File(dataDirectory, DataSetToXMLStAX.createFileName(tempMasterDS));
-//      StAXFileWriter staxWriter = new StAXFileWriter(tempMasterDSFile);
-//      XMLStreamWriter tempWriter = staxWriter.getStreamWriter();
-//      dsToXML.writeDataSetStartElement(tempWriter);
-//      dsToXML.insertDSInfo(tempWriter, tempMasterDS, dataDirectory, SeismogramFileTypes.SAC);
-//      dsToXML.writeRef(tempWriter,
-//                       getRelativeURLString(masterDSFile, childDataset),
-//                       childName);
-//      XMLUtil.writeEndElementWithNewLine(tempWriter);
-//      staxWriter.close();
-//
-//      XMLUtil.mergeDocs(masterDSFile, tempMasterDSFile, datasetRef, dataSetEl);
-//
-//      if (tempMasterDSFile.exists()){
-//          tempMasterDSFile.delete();
-//      }
+        //      //create temporary dataset with new information to be merged into master dataset
+        //      DataSet tempMasterDS = createTempDataSet("Temp Master");
+        //      File tempMasterDSFile = new File(dataDirectory, DataSetToXMLStAX.createFileName(tempMasterDS));
+        //      StAXFileWriter staxWriter = new StAXFileWriter(tempMasterDSFile);
+        //      XMLStreamWriter tempWriter = staxWriter.getStreamWriter();
+        //      dsToXML.writeDataSetStartElement(tempWriter);
+        //      dsToXML.insertDSInfo(tempWriter, tempMasterDS, dataDirectory, SeismogramFileTypes.SAC);
+        //      dsToXML.writeRef(tempWriter,
+        //                       getRelativeURLString(masterDSFile, childDataset),
+        //                       childName);
+        //      XMLUtil.writeEndElementWithNewLine(tempWriter);
+        //      staxWriter.close();
+        //
+        //      XMLUtil.mergeDocs(masterDSFile, tempMasterDSFile, datasetRef, dataSetEl);
+        //
+        //      if (tempMasterDSFile.exists()){
+        //          tempMasterDSFile.delete();
+        //      }
     }
 
     //purely a debugging venture
@@ -230,7 +230,8 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
-                                                 LocalSeismogramImpl[] seismograms)
+                                                 LocalSeismogramImpl[] seismograms,
+                                                 SeismogramFileTypes fileType)
         throws CodecException,
         IOException,
         NoPreferredOrigin,
@@ -304,6 +305,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         lastDataSetFileModTime = dataSetFile.lastModified();
         return urlDSS;
 
+    }
+
+    protected File getParentDirectory() {
+        return dataDirectory;
     }
 
     protected File getEventDirectory(EventAccessOperations event)
