@@ -374,17 +374,17 @@
         <choice>
             <element name="channelCode">
                 <data type="string">
-                    <param name="pattern">[A-Z]{3}</param>
+                    <param name="pattern">[A-Z0-9]{3}</param>
                 </data>
             </element>
             <element name="bandCode">
-                <ref name="channelCodeUtil"/>
+                <ref name="channelCodeChar"/>
             </element>
             <element name="gainCode">
-                <ref name="channelCodeUtil"/>
+                <ref name="channelCodeChar"/>
             </element>
             <element name="orientationCode">
-                <ref name="channelCodeUtil"/>
+                <ref name="channelCodeChar"/>
             </element>
             <element name="sampling">
                 <optional>
@@ -409,7 +409,7 @@
                                 <value>HOUR</value>
                                 <value>DAY</value>
                                 <value>WEEK</value>
-                                <value>YEAR</value>
+                                <value>FORTNIGHT</value>
                             </choice>
                         </element>
                         <element name="value">
@@ -477,6 +477,11 @@
             </element>
         </choice>
     </define>
+    <define name="channelCodeChar">
+        <data type="string">
+            <param name="pattern">[A-Z0-9]{1}</param>
+        </data>
+    </define>
     <define name="range">
         <element name="unit">
             <choice>
@@ -505,11 +510,6 @@
                 <data type="double"/>
             </element>
         </optional>
-    </define>
-    <define name="channelCodeUtil">
-        <data type="string">
-            <param name="pattern">[A-Z]{1}</param>
-        </data>
     </define>
     <define name="network">
         <choice>
