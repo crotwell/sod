@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveFromArm;
+package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
@@ -20,11 +20,13 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 public class NullSeismogramDCLocator
-    extends AbstractSource 
     implements SodElement, SeismogramDCLocator 
  {
+     public NullSeismogramDCLocator() {
+    }
+
     public NullSeismogramDCLocator(Element element) throws Exception{
-        super(element);
+
     }
     
     public DataCenter getSeismogramDC(EventAccessOperations event, 
