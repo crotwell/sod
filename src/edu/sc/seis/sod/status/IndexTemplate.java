@@ -86,6 +86,8 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer(new StreamSource(xslFileName));
         transformer.transform(new StreamSource(configFileLoc), new StreamResult(new FileOutputStream(htmlFile)));
+        new File(xslFileName).delete();
+        new File(statusDir + "/xmlverbatim.xsl").delete();
     }
 
 
