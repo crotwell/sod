@@ -57,7 +57,6 @@ public class HSqlDbQueue implements Queue {
     public void deleteTimeConfig() {
 	//if(Start.GET_NEW_EVENTS == true)  
 	{
-	    System.out.println("The GET NEW EVNETS IS SET TO BRE TRUE SO START FROM THE BEGINNING");
 	    eventDatabase.deleteTimeConfig();
 	}
 
@@ -108,16 +107,12 @@ public class HSqlDbQueue implements Queue {
 	try {
 	    //if(waitFlag){  
 	    while(getLength() > 4) {
-		System.out.println("&*********************&&&&&&&&&&&&&&&&&&& Waiting in push ");
-		System.out.println("Before Wait push of queue");
 		wait();
-		System.out.println("After Wait push of queue");
 	    }
 	} catch(InterruptedException ie) {}
 
 
 
-	System.out.println ("In the method push of the Queue the serverName "+serverName);
  	EventAccess eventAccess = obj;//(EventAccess) ((CacheEvent)obj).getEventAccess();
 	Origin origin = originObj;
 	String name = eventAccess.get_attributes().name;
@@ -125,14 +120,12 @@ public class HSqlDbQueue implements Queue {
 	float lon = origin.my_location.longitude;
 	float depth = (float)origin.my_location.depth.value;
 
-	System.out.println("Before the method object to String");
 	String eventAccessIOR = null;
 	try {
 	    eventAccessIOR = orb.object_to_string(eventAccess);
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}
-	System.out.println("THE IOR: "+eventAccessIOR);
 	edu.iris.Fissures.Time origin_time = origin.origin_time;
 	int dbid = eventDatabase.put(serverName,
 				     serverDNS,
@@ -142,14 +135,12 @@ public class HSqlDbQueue implements Queue {
 				     depth,
 				     origin_time,
 				     eventAccessIOR);
-	System.out.println("&&&&&&&&&&&&&&&&&    &&&&&&&&&&& &&&&&&   &&&&&&&&&The dbid that is obtained is "+dbid);
 	notifyAll();
 	
 
     }
 
     public synchronized void setFinalStatus(EventAccess eventAccess, Status status) {
-	System.out.println("UPDATING THE STATUS");
 	
 	int dbid = eventDatabase.get(eventAccess);
 	Status st = eventDatabase.getStatus(dbid);
@@ -159,7 +150,6 @@ public class HSqlDbQueue implements Queue {
 	}
 
 	eventDatabase.updateStatus(dbid, status);
-	System.out.println("Notifying in  updateStatus ");
 
 	notifyAll();
 
@@ -222,15 +212,11 @@ public class HSqlDbQueue implements Queue {
 	    EventDC eventDC = getEventDC(dbid);
 	    edu.iris.Fissures.IfEvent.EventFinder finder = eventDC.a_finder();
 	    EventAccess[] eventAccess = finder.get_by_name(eventDatabase.getEventName(dbid));
-	    System.out.println("THE OBJECT DOESNOT EXIST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	    System.out.println("######################################################################################");
-	    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%% Object doesnot exist the length is "+eventAccess.length);
 	    for(int counter = 0; counter < eventAccess.length; counter++) {
 		int checkdbid = -1;
 		if((checkdbid = eventDatabase.get(eventAccess[counter])) != -1) {
 		    if(checkdbid == dbid) {
 			//update the ior corresponding to the dbid and return the object.
-			System.out.println("The dbid that matched is "+checkdbid);
 			org.omg.CORBA.ORB orb = null;
 			try {
 			    orb = CommonAccess.getCommonAccess().getORB();
@@ -267,12 +253,6 @@ public class HSqlDbQueue implements Queue {
 	int reopenProcessing = eventDatabase.getCount(Status.RE_OPEN_PROCESSING);
 	int numSuccessful = eventDatabase.getCount(Status.COMPLETE_SUCCESS);
 	int reopenSuccessful = eventDatabase.getCount(Status.RE_OPEN_SUCCESS);
-	System.out.println("THE NUMBER OF EVENTS THAT ARE NEW :::::::::::::::::::: "+numNew);
-	System.out.println("THE NUMBER OF EVENTS THAT ARE PROCESSED :::::::::::::: "+numProcessing);
-	System.out.println("THE NUMBER OF SUCCESSFUL EVENTS ARE :::::::::::::::::: "+numSuccessful);
-	System.out.println("THE NUMBER REOPEN ARE ::::::::::: "+reopen);
-	System.out.println("THE NUMBER REOPEN PROCESSED :::::: "+reopenProcessing);
-	System.out.println("THE NUMBER REOPEN SUCCESSFUL ::::: "+reopenSuccessful);
 	return (numNew + numProcessing + reopen + reopenProcessing);
     }
 
@@ -288,7 +268,6 @@ public class HSqlDbQueue implements Queue {
      */
     public synchronized void setSourceAlive(boolean value) {
 	this.sourceAlive = value;
-	System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SET SOURCE ALIVE = "+sourceAlive);
 	notifyAll();
     }
     
@@ -306,7 +285,6 @@ public class HSqlDbQueue implements Queue {
     public  synchronized void waitForProcessing() {
 	if(getLength() > 4) {
 	    waitFlag = true;
-	    System.out.println("Wait flag is set to be true");
 	}
     }
 
@@ -316,12 +294,8 @@ public class HSqlDbQueue implements Queue {
 	if(numSuccessful > 0) {
 	    eventDatabase.delete(status);
 	    notifyAll();
-	    //getLength();
-	    //System.exit(0);
 	}
-	System.out.println("DELETING THE RECORD FROM THE DATABSE");
 
-	//System.exit(0);
     }
 
     private edu.iris.Fissures.IfEvent.EventDC getEventDC(int dbid) {
@@ -348,8 +322,6 @@ public class HSqlDbQueue implements Queue {
 	}
 	String ior = eventDatabase.getObject(dbid);
 	if(ior == null)  {
-		System.out.println("As the IOR is null returning NULL "+dbid);
-		System.exit(0);
 		return null;
 	}
 	org.omg.CORBA.Object obj = orb.string_to_object(ior);
