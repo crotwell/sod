@@ -4,6 +4,7 @@
     <start>
         <element name="mostBasicWrapper">
             <externalRef href="mostBasic.rng"/>
+            <externalRef href="mostBasic.rng"/>
         </element>
     </start>
 </grammar>
