@@ -86,9 +86,15 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
     public boolean overlaps(edu.iris.Fissures.TimeRange range) {
 	MicroSecondDate rangeStartDate = 
 	    new MicroSecondDate(range.start_time);
-	MicroSecondDate rangeEndDate = 
-	    new MicroSecondDate(range.end_time);
+	MicroSecondDate rangeEndDate;
 
+	if (range.end_time.date_time.equals(edu.iris.Fissures.TIME_UNKNOWN.value)) {
+	    rangeEndDate = new MicroSecondDate(TimeUtils.future);
+	} else {
+	    rangeEndDate = 
+		new MicroSecondDate(range.end_time);
+	} // end of else
+	
 	if (maxDate == null && minDate == null) {
 	    return true;
 	} else if (maxDate == null && minDate.before(rangeEndDate)) {
@@ -97,6 +103,8 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 	    return true;
 	} else if(rangeStartDate.after(maxDate) 
 		  || rangeEndDate.before(minDate) ) {
+	    System.out.println("EffectiveTimeOverlap false"+
+			       rangeStartDate+" "+rangeEndDate+" "+minDate+" "+maxDate+"  "+range.end_time.date_time);
 	    return false;
 	} else {
 	    return true;
