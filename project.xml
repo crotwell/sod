@@ -19,11 +19,11 @@
 SOD automates the most tedious data selection, downloading and routine processing tasks, shortening the time between idea and science.
 </description>
   
-  <url>http://www.seis.sc.edu/software/${pom.id}</url>
+  <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
   <siteAddress>www.seis.sc.edu</siteAddress>
-  <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.id}</siteDirectory>
+  <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.artifactId}</siteDirectory>
   <distributionSite>www.seis.sc.edu</distributionSite>
-  <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository/${pom.id}</distributionDirectory>
+  <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository/${pom.artifactId}</distributionDirectory>
   <mailingList>
     <name>fissures-dev</name>
     <subscribe>majordomo@iris.washington.edu</subscribe>
@@ -32,8 +32,8 @@ SOD automates the most tedious data selection, downloading and routine processin
 
   <repository>
     <connection>scm:cvs:local:anonymous@cvs.seis.sc.edu:/opt/local/Internal/CvsR
-oot:${pom.id}</connection>
-        <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/${pom.id}</url>
+oot:${pom.artifactId}</connection>
+        <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/${pom.artifactId}</url>
     </repository>
 
 
