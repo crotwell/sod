@@ -17,7 +17,11 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class FixedDataCenter extends AbstractSource implements SodElement{
+public class FixedDataCenter 
+    extends AbstractSource 
+    implements SodElement, SeismogramDCLocator 
+{
+
     /**
      * Creates a new <code>FixedDataCenter</code> instance.
      *
