@@ -28,6 +28,11 @@
             <name>Strategy File via Editor</name>
         </page>
         <page>
+            <source>../xdocs/xmlIntro.xml</source>
+            <destination>xmlIntro.html</destination>
+            <name>Into to XML</name>
+        </page>
+        <page>
             <source>../xdocs/tutorial.xml</source>
             <destination>tutorial.html</destination>
             <name>Strategy File via XML</name>
