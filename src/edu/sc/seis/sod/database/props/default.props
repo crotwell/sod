@@ -1,10 +1,9 @@
 eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition smallint, \
                                              PRIMARY KEY( eventid ))
-eventquerytimes.create=CREATE TABLE eventquerytimes (starttime timestamp, \
-                                                    endtime timestamp, \
-                                                    server varchar, \
-                                                    dns varchar, \
-                                                    UNIQUE (server, dns))
+querytimes.create=CREATE TABLE querytimes (query_time timestamp, \
+                                           server varchar, \
+                                           dns varchar, \
+                                           UNIQUE (server, dns))
 eventchannelstatus.create=CREATE TABLE eventchannelstatus( pairid int, \
                                                            eventid int, \
                                                            channelid int, \
