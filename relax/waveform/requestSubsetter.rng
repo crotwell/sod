@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="request"/>
@@ -10,7 +9,6 @@
         <choice>
             <ref name="requestAND"/>
             <ref name="requestOR"/>
-            <ref name="requestXOR"/>
             <ref name="requestNOT"/>
             <ref name="requestPrint"/>
             <ref name="breqFastRequest"/>
@@ -21,21 +19,18 @@
     <define name="requestAND">
         <element name="requestAND">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between Request subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
-                    <example>
-                        <requestAND>
-                            <requestPrint/>
-                            <externalRequest>
-                                <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
-                                <someTag/>
-                                <someOtherTag/>
-                            </externalRequest>
-                        </requestAND>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches all enclosed requests</summary>
+                <description>The output is the logical AND of the outputs of all included requests. This means that
+                it will evaluate to true only if all the enclosed requests evaluate to true.  The requests after the
+                first false outputted are not evaluated.</description>
+                <example>
+                    <requestAND>
+                        <requestPrint/>
+                        <externalRequest>
+                            <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequest</classname>
+                        </externalRequest>
+                    </requestAND>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="request"/>
@@ -45,57 +40,28 @@
     <define name="requestOR">
         <element name="requestOR">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between Request subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputted are not evaluated. </description>
-                    <example>
-                        <requestOR>
-                            <requestPrint/>
-                            <passRequest/>
-                        </requestOR>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches at least one enclosed request</summary>
+                <description>The output is the logical OR of the outputs of all included requests. This means that
+                it will evaluate to true if at least one of the enclosed requests evaluates to true.  The requests after the
+                first true outputted are not evaluated.</description>
+                <example>
+                    <requestOR>
+                        <requestPrint/>
+                        <passRequest/>
+                    </requestOR>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="request"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="requestXOR">
-        <element name="requestXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between Request subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of all included
-                        subsetters. </description>
-                    <example>
-                        <requestXOR>
-                            <requestPrint/>
-                            <externalRequest>
-                                <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
-                            </externalRequest>
-                        </requestXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="request"/>
-            <ref name="request"/>
-        </element>
-    </define>
     <define name="requestNOT">
         <element name="requestNOT">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an Request subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetters. </description>
-                    <example>
-                        <requestNOT>
-                            <requestPrint/>
-                        </requestNOT>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches the negated output of the enclosed request</summary>
+                <description>The output is the logical NOT of the output of the included request. This mean that it will
+                evaluate to false if the enclosed request evaluates to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="request"/>
         </element>
@@ -103,13 +69,9 @@
     <define name="requestPrint">
         <element name="requestPrint">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Prints the Request and returns true. </summary>
-                    <description> Mainly useful for debugging, prints out the request. </description>
-                    <example>
-                        <requestPrint/>
-                    </example>
-                </xsd:documentation>
+                <summary>Prints the Request and returns true</summary>
+                <description>This prints out the request, and it always returns true. This is mainly useful for
+                    debugging purposes.</description>
             </xsd:annotation>
             <empty/>
         </element>
@@ -117,41 +79,22 @@
     <define name="breqFastRequest">
         <element name="breqFastRequest">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>Creates a breqfast request and saves it to a file and returns true. </summary>
-                    <description> Mainly useful for accessing data that is not available via
-                        Fissures/DHI, such as restricted PASSCAL datasets or data from datacenters
-                        that have a breqfast system but not DHI seismogram servers. Of course the
-                        network information must be available to SOD. As this subsetter always
-                        returns true, processing will continue past this point. In most cases, the
-                        whole reason to generate breqfast requests is that it is the only way to get
-                        the data, and so there is not much point in proceeding down the waveform
-                        arm. So you will generally want to wrap the breqFastRequest in a
-                        requestNOT so that the return value is false. This will
-                        allow SOD to proceed to the next piece of work and avoid the wasted time in
-                        going to the server to get data. </description>
-                    <example>
-                        <breqFastRequest>
-                            <dataDirectory>RUSH_breqfast</dataDirectory>
-                            <label>
-                                <originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </label>
-                            <name>Jenny Seismologist</name>
-                            <inst>Univ. of Example</inst>
-                            <mail>Dept. of Seismology., Main St. MyTown AA, USA</mail>
-                            <email>joe@seis.example.edu</email>
-                            <phone>555-867-5309</phone>
-                            <fax>none</fax>
-                            <media>Electronic</media>
-                            <altmedia1>Electronic</altmedia1>
-                            <altmedia2>Electronic</altmedia2>
-                            <quality>b</quality>
-                        </breqFastRequest>
-                    </example>
-                </xsd:documentation>
+                <summary>Creates a breqfast request and saves it to a file and returns true</summary>
+                <description>Mainly useful for accessing data that is not available via Fissures/DHI, such as restricted
+                    PASSCAL datasets or data from datacenters that have a breqfast system but not DHI seismogram
+                    servers. Of course the network information must be available to SOD. As this subsetter always
+                    returns true, processing will continue past this point. In most cases, the whole reason to generate
+                    breqfast requests is that it is the only way to get the data, and so there is not much point in
+                    proceeding down the waveform arm. So you will generally want to wrap the breqFastRequest in a
+                    requestNOT so that the return value is false. This will allow SOD to proceed to the next piece of
+                    work and avoid the wasted time in going to the server to get data.</description>
             </xsd:annotation>
             <element name="dataDirectory">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>RUSH_breqfast</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <optional>
                 <element name="label">
@@ -159,47 +102,85 @@
                 </element>
             </optional>
             <element name="name">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Jenny Seismologist</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="inst">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Univ. of Example</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="mail">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Dept. of Seismology., Main St. MyTown AA, USA</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="email">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>joe@seis.example.edu</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="phone">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>555-867-5309</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="fax">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>none</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="media">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="altmedia1">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="altmedia2">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>Electronic</example>
+                    </xsd:annotation>
+                </data>
             </element>
             <element name="quality">
-                <data type="string"/>
+                <data type="string">
+                    <xsd:annotation>
+                        <example>b</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </element>
     </define>
     <define name="PASS">
         <element name="passRequest">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Always returns true. </summary>
-                    <description> Simple subsetter that always returns true, useful for testing. </description>
-                    <example>
-                        <passRequest/>
-                    </example>
-                </xsd:documentation>
+                <summary> Always returns true. </summary>
+                <description> Simple subsetter that always returns true, useful for testing. </description>
+                <example>
+                    <passRequest/>
+                </example>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="request"/>
@@ -208,6 +189,16 @@
     </define>
     <define name="external">
         <element name="externalRequest">
+            <xsd:annotation>
+                <summary>Use a request subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements Request, SOD calls
+                    accept() on the class for every event-channel pair.</description>
+                <example>
+                    <externalRequest>
+                        <className>edu.somewhere.seis.sodExt.subsetter.request.MyRequest</className>
+                    </externalRequest>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

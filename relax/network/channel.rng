@@ -124,7 +124,7 @@
             <xsd:annotation>
                 <summary>Matches at least one enclosed Channel subsetter</summary>
                 <description>The output is the logical OR of the outputs of all included Channeel subsetters. This means
-                    that it will evaluate to true if at least one of the enclosed Channel subsetters evaluate to true.
+                    that it will evaluate to true if at least one of the enclosed Channel subsetters evaluates to true.
                     The subsetters after the first true outputted are not evaluated.</description>
                 <example>
                     <channelOR>

@@ -7,11 +7,13 @@
     </start>
     <define name="eventChannel">
         <choice>
+            <xsd:annotation>
+                <summary>Tactics for selecting channels for events</summary>
+            </xsd:annotation>
             <ref name="embeddedEventStation"/>
             <ref name="embeddedChannel"/>
             <ref name="eventChannelAND"/>
             <ref name="eventChannelOR"/>
-            <ref name="eventChannelXOR"/>
             <ref name="eventChannelNOT"/>
             <ref name="PASS"/>
             <ref name="external"/>
@@ -21,11 +23,11 @@
         <element name="embeddedEventStation">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event station subsetter to be embedded within a event
-                        channel subsetter. </summary>
-                    <description> Allows an event station subsetter to be embedded within a event
+                    <summary>Allows an event station subsetter to be embedded within a event
+                        channel subsetter</summary>
+                    <description>Allows an event station subsetter to be embedded within a event
                         channel subsetter. The is most often used within an EventChannel logical
-                        subsetter. </description>
+                        subsetter.</description>
                     <example>
                         <embeddedEventStation>
                             <distanceRange>
@@ -43,9 +45,9 @@
         <element name="embeddedChannel">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows a Channel subsetter to be embedded within an EventChannel. </summary>
-                    <description> Allows a Channel subsetter to be embedded within an EventChannel.
-                        This is most often used within a EventChannel logical. </description>
+                    <summary>Allows a Channel subsetter to be embedded within an EventChannel</summary>
+                    <description>Allows a Channel subsetter to be embedded within an EventChannel.
+                        This is most often used within a EventChannel logical.</description>
                     <example>
                         <embeddedChannel>
                             <sampling>
@@ -67,9 +69,10 @@
         <element name="eventChannelAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between EventChannel subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
+                    <summary>Matches all enclosed EventChannel subsetters</summary>
+                    <description>The output is the logical AND of the outputs of all included EventChannel subsetters. This
+                        means that it will evaluate to true only if all the enclosed EventChannel subsetters evaluate to
+                        true. The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <eventChannelAND>
                             <embeddedEventStation>
@@ -94,9 +97,10 @@
         <element name="eventChannelOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between EventChannel subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputted are not evaluated. </description>
+                    <summary>Matches at least one enclosed EventChannel subsetter</summary>
+                    <description>The output is the logical OR of the outputs of all included EventChannel subsetters. This
+                        means that it will evaluate to true if at least one of the enclosed EventChannel subsetters evaluate
+                        to true. The subsetters after the first true outputted are not evaluated.</description>
                     <example>
                         <eventChannelOR>
                             <embeddedEventStation>
@@ -117,39 +121,14 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="eventChannelXOR">
-        <element name="eventChannelXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between EventChannel subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of included
-                        subsetters. </description>
-                    <example>
-                        <eventChannelXOR>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </eventChannelXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="eventChannel"/>
-            <ref name="eventChannel"/>
-        </element>
-    </define>
     <define name="eventChannelNOT">
         <element name="eventChannelNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an EventChannel subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetter. </description>
+                    <summary>Matches the negated output of the enclosed EventChannel subsetter</summary>
+                    <description>The output is the logical NOT of the output of the enclosed EventChannel subsetter. This
+                        means that it will evaluate to false if the enclosed EventChannel subsetter evaluates to true, and
+                        vice versa.</description>
                     <example>
                         <eventChannelNOT>
                             <embeddedEventStation>
@@ -169,8 +148,9 @@
         <element name="passEventChannel">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Always returns true. </summary>
-                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <summary>Accepts any event-channel pair</summary>
+                    <description>This is a simple subsetter that always returns true for any event-channel pair, which is useful
+                        for testing purposes.</description>
                     <example>
                         <passEventChannel/>
                     </example>
@@ -183,6 +163,16 @@
     </define>
     <define name="external">
         <element name="externalEventChannelSubsetter">
+            <xsd:annotation>
+                <summary>Use an EventChannel subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements EventChannelSubsetter, SOD
+                    calls accept() on the class for every event-channel pair.</description>
+                <example>
+                    <externalEventChannelSubsetter>
+                        <className>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</className>
+                    </externalEventChannelSubsetter>
+                </example>
+            </xsd:annotation>
             <ref name="externalClass"/>
         </element>
     </define>

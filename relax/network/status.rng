@@ -7,6 +7,11 @@
     </start>
     <define name="status">
         <choice>
+            <xsd:annotation>
+                <summary>Outputs information about a networks and their status</summary>
+                <description>Inserting these items in the networkArm outputs information about networks' status in the
+                    network arm.</description>
+            </xsd:annotation>
             <ref name="networkStatusTemplate"/>
             <ref name="externalNetworkMonitor"/>
         </choice>

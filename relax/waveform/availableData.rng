@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <include href="../base/include/quantity.rng"/>
     <start>
@@ -9,13 +8,15 @@
     <include href="../base/include/eventLabel.rng"/>
     <define name="availableData">
         <choice>
+            <xsd:annotation>
+                <summary>Insert summary here</summary>
+            </xsd:annotation>
             <ref name="postEventWait"/>
             <ref name="noGaps"/>
             <ref name="fullCoverage"/>
             <ref name="someCoverage"/>
             <ref name="availableDataAND"/>
             <ref name="availableDataOR"/>
-            <ref name="availableDataXOR"/>
             <ref name="availableDataNOT"/>
             <ref name="PASS"/>
             <ref name="externalAvailable"/>
@@ -24,17 +25,16 @@
     <define name="availableDataAND">
         <element name="availableDataAND">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between AvailableData subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
-                    <example>
-                        <availableDataAND>
-                            <noGaps/>
-                            <fullCoverage/>
-                        </availableDataAND>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches all enclosed AvailableData subsetters</summary>
+                <description>The output is the logical AND of the outputs of all included AvailableData subsetters. This
+                    means that it will evaluate to true only if all the enclosed AvailableData subsetters evaluate to
+                    true. The subsetters after the first false outputted are not evaluated.</description>
+                <example>
+                    <availableDataAND>
+                        <noGaps/>
+                        <fullCoverage/>
+                    </availableDataAND>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="availableData"/>
@@ -44,89 +44,79 @@
     <define name="availableDataOR">
         <element name="availableDataOR">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between AvailableData subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputted are not evaluated. </description>
-                    <example>
-                        <availableDataOR>
-                            <noGaps/>
-                            <fullCoverage/>
-                        </availableDataOR>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches at least one enclosed AvailableData subsetter</summary>
+                <description>The output is the logical OR of the outputs of all included AvailableData subsetters. This means
+                    that it will evaluate to true if at least one of the enclosed AvailableData subsetters evaluate to true.
+                    The subsetters after the first true outputted are not evaluated.</description>
+                <example>
+                    <availableDataOR>
+                        <noGaps/>
+                        <fullCoverage/>
+                    </availableDataOR>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="availableData"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="availableDataXOR">
-        <element name="availableDataXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between AvailableData subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of all included
-                        subsetters. </description>
-                    <example>
-                        <availableDataXOR>
-                            <noGaps/>
-                            <fullCoverage/>
-                        </availableDataXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="availableData"/>
-            <ref name="availableData"/>
-        </element>
-    </define>
     <define name="availableDataNOT">
         <element name="availableDataNOT">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an AvailableData subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetters. </description>
-                    <example>
-                        <availableDataNOT>
-                            <noGaps/>
-                        </availableDataNOT>
-                    </example>
-                </xsd:documentation>
+                <summary>Matches the negated output of the enclosed AvailableData subsetter</summary>
+                <description>The output is the logical NOT of the output of the enclosed AvailableData subsetter. This means
+                    that it will evaluate to false if the enclosed AvailableData subsetter evaluates to true, and vice versa.</description>
+                <example>
+                    <availableDataNOT>
+                        <noGaps/>
+                    </availableDataNOT>
+                </example>
             </xsd:annotation>
             <ref name="availableData"/>
         </element>
     </define>
     <define name="noGaps">
         <element name="noGaps">
+            <xsd:annotation>
+                <summary>Accepts data only if it has no gaps</summary>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="fullCoverage">
         <element name="fullCoverage">
+            <xsd:annotation>
+                <summary>Accepts data only if it spans complete request</summary>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>
     <define name="someCoverage">
         <element name="someCoverage">
+            <xsd:annotation>
+                <summary>Accepts data only if it spans some of original request</summary>
+            </xsd:annotation>            
             <empty/>
         </element>
     </define>
     <define name="postEventWait">
         <element name="postEventWait">
+            <xsd:annotation>
+                <summary>Insert summary here</summary>
+                <description>Insert description here.</description>
+            </xsd:annotation>   
             <ref name="time"/>
         </element>
     </define>
     <define name="PASS">
         <element name="passAvailableData">
             <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Always returns true. </summary>
-                    <description> Simple subsetter that always returns true, useful for testing. </description>
-                    <example>
-                        <passAvailableData/>
-                    </example>
-                </xsd:documentation>
+                <summary>Accepts any available data</summary>
+                <description>This is a simple subsetter that always returns true for any available data, which is useful for
+                        testing purposes.</description>
+                <example>
+                    <passAvailableData/>
+                </example>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="availableData"/>
@@ -134,6 +124,16 @@
         </element>
     </define>
     <define name="externalAvailable">
+            <xsd:annotation>
+                <summary>Use an AvailableData subsetter external to SOD</summary>
+                <description>Attempts to load the class named by classname, and if it implements AvailableDataSubsetter, SOD
+                    calls accept() on the class for every event, channel, and their available data.</description>
+                <example>
+                    <externalAvailableDataSubsetter>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.availableData.MyAvailableDataSubsetter</classname>
+                    </externalAvailableDataSubsetter>
+                </example>
+            </xsd:annotation>
         <element name="externalAvailableDataSubsetter">
             <ref name="externalClass"/>
         </element>

@@ -7,7 +7,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Outputs information about events and their status</summary>
-                <description>Inserting these items in the eventArm outputs information about events status in the event arm.</description>
+                <description>Inserting these items in the eventArm outputs information about events' status in the event arm.</description>
             </xsd:annotation>
             <ref name="externalEventStatus"/>
             <ref name="eventStatusTemplate"/>
