@@ -83,7 +83,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                                                                  "text()");
                 }
             } else if(n.getNodeName().equals("displayConfig")) {
-                sdc = new SeismogramDisplayConfiguration((Element)n);
+                sdc = SeismogramDisplayConfiguration.create((Element)n);
             }
         }
         locator = new SeismogramImageOutputLocator(el);

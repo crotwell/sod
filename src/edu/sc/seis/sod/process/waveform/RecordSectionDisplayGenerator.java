@@ -128,8 +128,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         }
         colors = extractColors(config);
         if(DOMHelper.hasElement(config, "displayConfig")) {
-            displayCreator = new SeismogramDisplayConfiguration(DOMHelper.getElement(config,
-                                                                                     "displayConfig"));
+            displayCreator = SeismogramDisplayConfiguration.create(DOMHelper.getElement(config,
+                                                                                        "displayConfig"));
         }
     }
 

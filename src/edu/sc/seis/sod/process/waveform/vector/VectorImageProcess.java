@@ -38,12 +38,14 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         NodeList nl = el.getChildNodes();
         for(int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeName().equals("verticalDisplayConfig")) {
-                vdc = new SeismogramDisplayConfiguration((Element)n);
+            if(n.getNodeName().equals("displayTemplate")) {
+                SeismogramDisplayConfiguration.create((Element)n);
+            } else if(n.getNodeName().equals("verticalDisplayConfig")) {
+                vdc = SeismogramDisplayConfiguration.create((Element)n);
             } else if(n.getNodeName().equals("eastDisplayConfig")) {
-                edc = new SeismogramDisplayConfiguration((Element)n);
+                edc = SeismogramDisplayConfiguration.create((Element)n);
             } else if(n.getNodeName().equals("northDisplayConfig")) {
-                ndc = new SeismogramDisplayConfiguration((Element)n);
+                ndc = SeismogramDisplayConfiguration.create((Element)n);
             }
         }
     }
