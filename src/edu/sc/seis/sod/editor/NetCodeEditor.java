@@ -87,15 +87,5 @@ public class NetCodeEditor implements EditorPlugin {
 
     protected String[] gains = { "H", "L" };
 
-    class TextItemListener implements ItemListener {
-        TextItemListener(Text text) {
-            this.text = text;
-        }
-        Text text;
-        public void itemStateChanged(ItemEvent e) {
-            Object item = ((JComboBox)e.getSource()).getSelectedItem();
-            text.setNodeValue((String)item);
-        }
-    }
 }
 
