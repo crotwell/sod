@@ -307,13 +307,21 @@
                     <include>*.props</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>src/edu/sc/seis/sod/data</directory>
-                <targetPath>edu/sc/seis/sod/data</targetPath>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
+	    <resource>
+		<directory>scripts</directory>
+		<targetPath>edu/sc/seis/sod/data/configFiles</targetPath>
+		<includes>
+		<include>weed.xml</include>
+		<include>tutorial.xml</include>
+		</includes>
+	    </resource>
+	    <resource>
+		<directory>src/edu/sc/seis/sod/data</directory>
+		<targetPath>edu/sc/seis/sod/data</targetPath>
+		<includes>
+		    <include>**/*</include>
+		</includes>
+	    </resource>
         </resources>
     </build>
     <reports>
