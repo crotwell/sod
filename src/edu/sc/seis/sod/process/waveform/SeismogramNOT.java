@@ -38,7 +38,7 @@ public class SeismogramNOT extends ForkProcess {
             result = processor.process(event, channel, original,
                                        available, copySeismograms(seismograms), cookieJar);
         }
-        return new WaveformResult( ! result.isSuccess(), result.getSeismograms(), new StringTreeBranch(this, ! result.isSuccess(), result.getReason()));
+        return new WaveformResult( result.getSeismograms(), new StringTreeBranch(this, ! result.isSuccess(), result.getReason()));
     }
 }
 
