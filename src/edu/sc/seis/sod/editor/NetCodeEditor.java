@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.editor;
 
+import java.awt.event.ItemListener;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.xml.transform.TransformerException;
@@ -13,6 +14,7 @@ import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import java.awt.event.ItemEvent;
 
 public class NetCodeEditor implements EditorPlugin {
 
@@ -71,6 +73,7 @@ public class NetCodeEditor implements EditorPlugin {
         JComboBox combo = new JComboBox(vals);
         combo.addItem(text.getNodeValue());
         combo.setSelectedItem(text.getNodeValue());
+        combo.addItemListener(new TextItemListener(text));
         return combo;
     }
 
@@ -84,5 +87,15 @@ public class NetCodeEditor implements EditorPlugin {
 
     protected String[] gains = { "H", "L" };
 
+    class TextItemListener implements ItemListener {
+        TextItemListener(Text text) {
+            this.text = text;
+        }
+        Text text;
+        public void itemStateChanged(ItemEvent e) {
+            Object item = ((JComboBox)e.getSource()).getSelectedItem();
+            text.setNodeValue((String)item);
+        }
+    }
 }
 
