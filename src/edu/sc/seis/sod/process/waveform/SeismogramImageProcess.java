@@ -41,24 +41,14 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.FlagData;
 import edu.sc.seis.sod.SodFlag;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.ChannelFormatter;
-import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 public class SeismogramImageProcess implements WaveformProcess {
 
-    public SeismogramImageProcess(String fileDir,
-            EventFormatter eventDirFormatter,
-            StationFormatter stationDirFormatter,
-            ChannelFormatter imageNameFormatter, String prefix)
-            throws Exception {
-        locator = new SeismogramImageOutputLocator(fileDir,
-                                                   eventDirFormatter,
-                                                   stationDirFormatter,
-                                                   imageNameFormatter,
-                                                   prefix);
+    public SeismogramImageProcess(SeismogramImageOutputLocator locator)
+            throws TauModelException {
+        this.locator = locator;
         initTaup();
         putDataInCookieJar = true;
     }
