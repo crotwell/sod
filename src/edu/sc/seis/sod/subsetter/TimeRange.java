@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  */
 
 public abstract class TimeRange implements Subsetter{
-    
+
     /**
      * Creates a new <code>TimeRange</code> instance.
      *
@@ -31,17 +31,6 @@ public abstract class TimeRange implements Subsetter{
         Element childElement = null;
         NodeList children = config.getChildNodes();
         Node node;
-        for (int i=0; i<children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Element) {
-                String tagName = ((Element)node).getTagName();
-                if(tagName.equals("timeRange") ){
-                    childElement =(Element)node;
-                }
-            }
-            
-        }
-        children = childElement.getChildNodes();
         for(int  i = 0; i < children.getLength(); i ++) {
             node = children.item(i);
             if(node instanceof Element) {
@@ -52,32 +41,32 @@ public abstract class TimeRange implements Subsetter{
         }
         timeRange = new MicroSecondTimeRange(startTime, endTime);
     }
-    
+
     public Time getStartTime() { return startTime.getFissuresTime(); }
-    
+
     public Time getEndTime() { return endTime.getFissuresTime(); }
-    
+
     private MicroSecondDate getTime(Element e){
         return new MicroSecondDate(new Time(SodUtil.getNestedText(e), 0));
     }
-    
+
     public edu.iris.Fissures.TimeRange getTimeRange() {
         return new edu.iris.Fissures.TimeRange(getStartTime(), getEndTime());
     }
-    
+
     public String toString(){ return timeRange.toString(); }
-    
+
     public MicroSecondTimeRange getMSTR(){ return timeRange; }
-    
+
     public MicroSecondDate getStartMSD(){ return startTime; }
-    
+
     public MicroSecondDate getEndMSD(){ return endTime; }
-    
+
     private MicroSecondTimeRange timeRange;
-    
+
     private MicroSecondDate startTime;
-    
+
     private MicroSecondDate endTime;
-    
+
     static Logger logger = Logger.getLogger(TimeRange.class);
 }// TimeRange
