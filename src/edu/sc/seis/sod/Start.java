@@ -288,6 +288,7 @@ public class Start {
             }
         }
         if(RUN_ARMS) {
+            new Thread(network, "Network Arm").start();
             new Thread(event, "Event Arm").start();
             new Thread(waveform, "Waveform Arm").start();
         }
