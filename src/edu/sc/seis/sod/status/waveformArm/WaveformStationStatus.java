@@ -13,6 +13,8 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
@@ -38,24 +40,27 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     }
 
     public void update(EventChannelPair ecp) {
-
+        Status status = ecp.getStatus();
+        if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
+            Station station = ecp.getChannel().my_site.my_station;
+            try {
+                int stationDbid = Start.getNetworkArm().getStationDbId(station);
+                VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, stationDbid));
+                context.put("station", station);
+                context.put("networkid", station.get_id().network_id);
+                context.put("network", station.my_network);
+                scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(station.get_id().network_id)+"/"+StationIdUtil.toStringNoDates(station.get_id())+".html",
+                               context);
+            } catch (SQLException e) {
+                GlobalExceptionHandler.handle(e);
+            }
+        }
     }
 
     public void setArmStatus(String status) throws Exception {
     }
 
     public void change(Station station, Status s) {
-        try {
-            int stationDbid = Start.getNetworkArm().getStationDbId(station);
-            VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, stationDbid));
-            context.put("station", station);
-            context.put("networkid", station.get_id().network_id);
-            context.put("network", station.my_network);
-            scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(station.get_id().network_id)+"/"+StationIdUtil.toStringNoDates(station.get_id())+".html",
-                           context);
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle(e);
-        }
     }
 
     public void change(Channel channel, Status s) {
