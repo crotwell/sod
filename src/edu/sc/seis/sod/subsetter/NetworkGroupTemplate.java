@@ -19,47 +19,51 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
     Map networkMap = new HashMap();
     
     public NetworkGroupTemplate(Element el){
-        parse(el);
+		parse(el);
     }
     
     /**if this class has an template for this tag, it creates it using the
-     * passed in element and returns it.  Otherwise it returns null.
-     */
+	 * passed in element and returns it.  Otherwise it returns null.
+	 */
     protected Object getTemplate(String tag, Element el) {
-        if (tag.equals("network")){
-            return new NetworkFormatter(el, this);
-        }
-        return null;
+		if (tag.equals("network")){
+			return new NetworkFormatter(el, this);
+		}
+		return null;
     }
     
     /**
-     *returns an object of the template type that this class uses, and returns
-     * the passed in text when the getResult method of that template type is
-     * called
-     */
+	 *returns an object of the template type that this class uses, and returns
+	 * the passed in text when the getResult method of that template type is
+	 * called
+	 */
     protected Object textTemplate(final String text) {
-        return new NetworkTemplate(){
-            public String getResult(NetworkAccess net){
-                return text;
-            }
-        };
+		return new NetworkTemplate(){
+			public String getResult(NetworkAccess net){
+				return text;
+			}
+		};
     }
     
     public String getResult() {
-        StringBuffer buf = new StringBuffer();
-        Iterator it = networkMap.keySet().iterator();
-        while (it.hasNext()){
-            NetworkAccess cur = (NetworkAccess)it.next();
-            Iterator tempIt = templates.iterator();
-            while (tempIt.hasNext()){
-                buf.append(((NetworkTemplate)tempIt.next()).getResult(cur));
-            }
-        }
-        return buf.toString();
+		StringBuffer buf = new StringBuffer();
+		Iterator it = networkMap.keySet().iterator();
+		synchronized(networkMap){
+			while (it.hasNext()){
+				NetworkAccess cur = (NetworkAccess)it.next();
+				Iterator tempIt = templates.iterator();
+				while (tempIt.hasNext()){
+					buf.append(((NetworkTemplate)tempIt.next()).getResult(cur));
+				}
+			}
+		}
+		return buf.toString();
     }
     
     public void change(NetworkAccess net, RunStatus status){
-        networkMap.put(net, status);
+		synchronized(networkMap){
+			networkMap.put(net, status);
+		}
     }
     
 }
