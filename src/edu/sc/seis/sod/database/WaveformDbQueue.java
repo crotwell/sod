@@ -58,23 +58,16 @@ public class WaveformDbQueue implements WaveformQueue{
 	
 	Connection connection = getConnection();
 	synchronized(connection) {
-	    System.out.println("******************&&&&&&&&&&&*************************&*&&&&& WAITING IN POP");
 	    
 	    int dbid = waveformDatabase.getFirst();
-	    System.out.println("******************&&&&&&&&&&&*************************&*&&&&& ENDED IN POP");
 	     while(dbid == -1 && sourceAlive == true ) {
 		try {
-		    System.out.println("******************&&&&&&&&&&&*************************&*&&&&& WAITING IN POP one");
 		    connection.wait();
-		    System.out.println("******************&&&&&&&&&&&*************************&*&&&&& ENDED IN POP one");
 		} catch(InterruptedException ie) {
 		    ie.printStackTrace();
 		}
-		System.out.println(" BEFORE FIRST AGAIN ");
 		dbid = waveformDatabase.getFirst();
-		System.out.println(" AFTER FIRST AGAIN");
 	    }
-	    System.out.println("The Dbid that is returned is "+dbid);
 	    
 	    return dbid;
 	}
@@ -124,9 +117,6 @@ public class WaveformDbQueue implements WaveformQueue{
 // 	int numNew = waveformDatabase.getCount(Status.NEW);
 // 	int numProcessing = waveformDatabase.getCount(Status.PROCESSING);
 // 	int numSuccessful = waveformDatabase.getCount(Status.COMPLETE_SUCCESS);
-// 	System.out.println("THE NUMBER OF WAVEFORMEVENTCHANNELS THAT ARE NEW :::::::::::::::::::: "+numNew);
-// 	System.out.println("THE NUMBER OF WAVEFORMEVENTCHANNELS THAT ARE PROCESSED :::::::::::::: "+numProcessing);
-// 	System.out.println("THE NUMBER OF WAVEFORMEVENTCHANNELS THAT ARE SUCCESSFUL :::::::::::::::::: "+numSuccessful);
 // 	return (numNew + numProcessing);
 //     }
     
@@ -169,7 +159,6 @@ public class WaveformDbQueue implements WaveformQueue{
 					int stationid,
 					int numChannels,
 					MicroSecondDate date) {
-	System.out.println("In waveform Queue in the method putSiteInfo");
 	return waveformDatabase.putSiteInfo(waveformeventid,
 					    siteid,
 					    stationid,
