@@ -12,7 +12,14 @@
     </define>
     <define name="printLine">
         <element name="printLineEventProcess">
-            <empty/>
+            <optional>
+                <element name="filename"><text/></element>
+            </optional>
+            <optional>
+                <element name="eventFormat">
+                    <externalRef href="../base/externalRef/anyXML.rng"/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="external">
