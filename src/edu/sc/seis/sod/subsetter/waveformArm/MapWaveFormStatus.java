@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Element;
@@ -39,6 +40,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
         mainMap.setEventLayer(eventLayer);
         stationLayer = new StationLayer();
         mainMap.setStationLayer(stationLayer);
+        write();
     }
     
     public void write(){ mainMap.writeMapToPNG(fileLoc); }
@@ -102,5 +104,15 @@ public class MapWaveFormStatus implements WaveFormStatus {
     //
     //        return eventMap;
     //    }
+    
+    public static void main(String[] args){
+        MapWaveFormStatus mwfs = new MapWaveFormStatus("mwfsTest.png");
+        
+        MockFissures mf = new MockFissures();
+        mwfs.add(mf.createFallEvent());
+                                
+        mwfs.write();
+        System.exit(0);
+    }
 }
 
