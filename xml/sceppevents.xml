@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+
+<!-- The event arm decides which events are interesting. This is based purely on the event itself, not the relationship to a particular station, etc. -->
+     <eventArm>
+
+<!-- The event finder is one way of finding out about events. It is for events that have already been stored in a database somewhere, and so could be considered historical in some sense. The event channel is the other method, and it listens for new events. -->
+	   <eventFinder>
+
+<!-- The EventDC will have a name that it is registered under in the naming service. -->
+		<name>ANHINGAEVENTDC</name>
+
+<!-- The EventDC will also be registered under a subdirectory according to its reversed DNS. -->
+		<dns>edu/sc/seis</dns>
+
+<!-- We will take events from anywhere -->
+		<globalArea/>
+
+<!-- Depths from 0 to 1000 kilometers are ok, -->
+		<originDepthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>0</min>
+				<max>1000</max>
+			</unitRange>
+		</originDepthRange>
+
+<!-- Only take events from 1999 and 2003 -->
+		<eventTimeRange>
+		<timeRange>
+			<startTime>1999-01-01T00:00:00Z</startTime>
+			<endTime>2003-01-01T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+
+<!-- Take a minimum of magnitude 3.5 -->
+		<magnitudeRange>
+			<type>mb</type>
+			<min>3.5</min>
+		</magnitudeRange>
+
+<!-- Only events that have a origin from the bigquake catalog. -->
+		<catalog>BIGQUAKE</catalog>
+
+<!-- Only take events that have an origin that came from the NEIC. This is redundant as bigquakes comes from the NEIC. -->
+		<contributor>NEIC</contributor>
+	   </eventFinder>
+
+
+	   <originOR>
+               <originAND>
+		<description>take any global 6.5 or better EQ</description>
+		<magnitudeRange>
+			<type>mb</type>
+			<min>6.5</min>
+		</magnitudeRange>
+		<eventArea>
+                   <globalArea/>
+                </eventArea>
+               </originAND>
+
+               <originAND>
+		<description>take any 4.5 or better EQ in the southeast</description>
+		<eventArea>
+		   <boxArea>
+			<latitudeRange>
+				<min>28</min>
+				<max>38</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-85</min>
+				<max>-75</max>
+			</longitudeRange>
+	           </boxArea>
+		</eventArea>
+		<magnitudeRange>
+			<type>mb</type>
+			<min>4.5</min>
+		</magnitudeRange>
+               </originAND>
+
+               <originAND>
+		<description>take any 3.5 or better EQ in SC roughly. Note that the magnitudeRange here is a bit redundant because we already have a min magnitude of 3.5 in the EventFinder above</description>
+		<eventArea>
+		   <boxArea>
+			<latitudeRange>
+				<min>32</min>
+				<max>35.5</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-83.5</min>
+				<max>-78.5</max>
+			</longitudeRange>
+	           </boxArea>
+		</eventArea>
+		<magnitudeRange>
+			<type>mb</type>
+			<min>3.5</min>
+		</magnitudeRange>
+               </originAND>
+	</originOR>
+
+<!-- Print out a line for each successful event -->
+	<printLineEventProcess/>
+   
+   </eventArm>
+
+   <networkArm>
+	<networkFinder>
+		<description>Connect to the SCEPP networkDC</description>
+		<name>SCEPPNetworkDC</name>
+		<dns>edu/sc/seis</dns>
+	</networkFinder>
+	<networkIDOR>
+		<networkCode><value>SP</value></networkCode>
+	</networkIDOR>
+
+	<networkeffectiveTimeOverlap>
+		<description>Make sure the network was up during the time range we are interested in. Somewhat redundant since we are only getting one network.</description>
+		<effectiveTimeOverlap>
+			<min>1999-01-01T00:00:00Z</min>
+			<max>2003-01-01T00:00:00Z</max>
+		</effectiveTimeOverlap>
+	</networkeffectiveTimeOverlap>
+
+	<stationAND>
+		  <stationArea>
+		    <boxArea>
+			<latitudeRange>
+				<min>32</min>
+				<max>36</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-84</min>
+				<max>-78</max>
+			</longitudeRange>
+		    </boxArea>
+		   </stationArea>
+		<stationeffectiveTimeOverlap>
+			<effectiveTimeOverlap>
+				<min>1999-01-01T00:00:00Z</min>
+				<max>2002-01-01T00:00:00Z</max>
+			</effectiveTimeOverlap>
+		</stationeffectiveTimeOverlap>
+	</stationAND>
+
+	<siteCode><value>00</value></siteCode>
+
+<!-- Accept any channel with B or L band code -->
+	<channelIDOR>
+		<bandCode>B</bandCode>
+		<bandCode>L</bandCode>
+	</channelIDOR>
+
+	<sampling>
+		<min>1</min>
+		<max>40</max>
+		<interval>
+			<unit>SECOND</unit>
+			<value>1</value>
+		</interval>
+	</sampling>
+
+	<printlineChannelProcessor/>
+	
+    </networkArm>
+
+    <waveFormArm>
+	<eventStationOR>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>30</min>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<description>describes magnitude</description>
+					<type>mb</type>
+					<min>5.5</min>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>60</min>
+					<max>90</max>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<type>mb</type>
+					<min>6.0</min>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+	</eventStationOR>
+
+	<fixedDataCenter>
+		<name>SCEPPdatacenter</name>
+		<dns>edu/sc/seis</dns>
+	</fixedDataCenter>
+
+	<phaseRequest>
+		<beginPhase>firstP</beginPhase>
+		<beginOffset>
+			<unit>SECOND</unit>
+			<value>-120</value>
+		</beginOffset>
+		<endPhase>firstS</endPhase>
+		<endOffset>
+			<unit>SECOND</unit>
+			<value>600</value>
+		</endOffset>
+	</phaseRequest>
+
+	<availableDataAND>
+		<nogaps/>
+		<fullCoverage/>
+	</availableDataAND>
+
+	<printlineWaveformProcessor/>
+
+   </waveFormArm>
+</sod>
