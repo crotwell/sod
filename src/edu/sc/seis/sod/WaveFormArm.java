@@ -12,7 +12,6 @@ import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
-import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
@@ -75,7 +74,8 @@ public class WaveFormArm implements Runnable {
             //that all the network information for this particular event is inserted
             //in the waveformDatabase.
             synchronized(eventStatus){
-                eventStatus.setStatus(ev.getEvent(),EventCondition.SUCCESS);
+                eventStatus.setStatus(ev.getEvent(),Status.get(Status.SPECIAL,
+                                                               Status.SUCCESS));
             }
         }
     }
