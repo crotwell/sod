@@ -118,3 +118,7 @@ media=Media
 altmedia1=Alt. Media 1
 altmedia2=Alt. Media 2
 quality=Quality
+
+phaseSignalToNoise=Phase Signal To Noise
+modelName=Model Name
+phaseName=Phase Name

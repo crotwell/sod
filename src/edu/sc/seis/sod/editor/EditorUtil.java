@@ -133,11 +133,15 @@ public class EditorUtil {
                 });
         return spin;
     }
-
+    
     public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
+    		return makeTimeIntervalTwiddler(el, 1, 60);
+    }
+
+    public static JComponent makeTimeIntervalTwiddler(Element el, int min, int max) throws TransformerException{
         Box b = Box.createHorizontalBox();
         Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
-        b.add(EditorUtil.createNumberSpinner(t, 1, 60, 1));
+        b.add(EditorUtil.createNumberSpinner(t, min, max, 1));
         Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
         b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
         b.add(Box.createHorizontalGlue());
