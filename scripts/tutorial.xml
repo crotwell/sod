@@ -96,7 +96,7 @@
                         <contributor>IRIS</contributor>
                 </eventFinder>
 
-                <printLineEventProcessor/>
+                <printLineEventProcess/>
 
                 <eventStatusTemplate>
             <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
