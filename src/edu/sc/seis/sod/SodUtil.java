@@ -154,9 +154,18 @@ public class SodUtil {
     private static Object loadClass(String name, Element config)throws Exception{
         Class[] argTypes = {Element.class};
         Class subsetter = Class.forName(name);
-        Constructor constructor = subsetter.getConstructor(argTypes);
-        Object[] args = {config };
-        return constructor.newInstance(args);
+
+        Constructor constructor= null;
+        try {
+            constructor = subsetter.getConstructor(argTypes);
+            Object[] args = {config };
+            return constructor.newInstance(args);
+        } catch (NoSuchMethodException e) {
+            // no constructor with Element, try empty
+            argTypes = new Class[0];
+            constructor = subsetter.getConstructor(argTypes);
+            return constructor.newInstance(new Object[0]);
+        }
     }
 
     private static String baseName = "edu.sc.seis.sod";
