@@ -5137,6 +5137,9 @@
                     </interleave>
                 </element>
             </element>
+            <element name="recordSectionDisplayGenerator">
+                <empty/>
+            </element>
             <element name="responseGain">
                 <empty/>
             </element>
@@ -5366,6 +5369,9 @@
                         </optional>
                     </interleave>
                 </element>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <empty/>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5597,6 +5603,9 @@
                     </interleave>
                 </element>
             </element>
+            <element name="recordSectionDisplayGenerator">
+                <empty/>
+            </element>
             <element name="responseGain">
                 <empty/>
             </element>
@@ -5826,6 +5835,9 @@
                         </optional>
                     </interleave>
                 </element>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <empty/>
             </element>
             <element name="responseGain">
                 <empty/>
