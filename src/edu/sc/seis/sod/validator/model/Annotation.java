@@ -16,7 +16,7 @@ public class Annotation {
     }
 
     public void setSummary(String summary) {
-        this.summary = summary;
+        this.summary = summary.replaceAll("\n\\s*", " ");
     }
 
     public void setExample(String example) {
