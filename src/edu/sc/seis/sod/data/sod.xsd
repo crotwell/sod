@@ -1024,6 +1024,23 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="eventStatusType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="externalEventStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStatusType">
+                <xsd:sequence>
+                    <xsd:element name="classname" type="xsd:string"/>
+                    <xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <!-- element representing the geographicalRegion and the substitutionGroup is eventAttr which is an abstract element -->
     <xsd:element name="geographicalRegion" type="geographicRegionType" substitutionGroup="eventAttr"/>
@@ -1103,6 +1120,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
     <xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
 
+    <xsd:element name="eventStatus" type="eventStatusType" abstract="true"/>
+    <xsd:element name="externalEventStatus" type="externalEventStatusType" substitutionGroup="eventStatus"/>
+
     <xsd:complexType name="eventArmType">
         <xsd:complexContent>
             <xsd:extension base="armType">
@@ -1113,6 +1133,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     <xsd:element ref="eventAttr" minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="origin" minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="eventProcess" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="eventStatus" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
