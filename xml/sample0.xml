@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+     <eventArm>
+	   <eventFinder>
+		<name>finder</name>
+		<dns>edu/sc/seis</dns>
+		<globalArea/>
+		<depthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</depthRange>
+		<eventTimeRange>
+		<timeRange>
+			<startTime>1999-01-01T00:00:00Z</startTime>
+			<endTime>2000-01-01T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+		<magnitude>
+			<type>mb</type>
+			<min>5</min>
+			<max>10</max>
+		</magnitude>
+		<catalog>unknown</catalog>
+		<contributor>NEIC</contributor>
+	   </eventFinder>
+
+	   <eventAttrAND>
+	   	<seismicRegion><value>10</value></seismicRegion>
+		<geographicalRegion><value>10 20 30 40 50</value></geographicalRegion>
+		<eventAttrOR>
+			<eventAttrNOT>
+				<seismicRegion><value>70 80 100</value></seismicRegion>
+			</eventAttrNOT>
+			<eventAttrXOR>
+				<geographicalRegion><value>10 20 30</value></geographicalRegion>
+				<seismicRegion><value>10 20</value></seismicRegion>
+			</eventAttrXOR>
+		</eventAttrOR>
+		<eventAttrNOT>
+			<eventAttrName>
+				<value>testing</value>
+			</eventAttrName>
+		</eventAttrNOT>
+	   </eventAttrAND>
+	   <originOR>
+		<description>this describes the originOR</description>
+		<magnitude>
+			<type>mb</type>
+			<min>5</min>
+			<max>10</max>
+		</magnitude>
+		<depthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>10</min>
+				<max>100</max>
+			</unitRange>
+		</depthRange>
+		<eventTimeRange>
+		<timeRange>
+			<startTime>2001-01-01T00:00:00Z</startTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+		<eventArea>
+		<boxArea>
+			<latitudeRange>
+				<min>38</min>
+				<max>120</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-90</min>
+				<max>90</max>
+			</longitudeRange>
+		</boxArea>
+		</eventArea>
+		<originAND>
+			<originNOT>
+				<description>this describes the originNOT</description>
+				<magnitude>
+					<description>this describes the magnitude</description>
+					<type>mb</type>
+					<min>7</min>
+					<max>10</max>
+				</magnitude>
+			</originNOT>
+		</originAND>
+	</originOR>
+
+	<externalEventProcess>
+		<class>edu.sc.seis.sod.Test</class>
+		<params>
+			<name>paramone</name>
+			<value>one</value>
+		</params>
+		<params>
+			<name>paramtwo</name>
+			<value>two</value>
+		</params>
+	</externalEventProcess>
+   
+   </eventArm>
+
+</sod>
