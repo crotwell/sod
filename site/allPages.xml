@@ -41,11 +41,16 @@
                 <destination>legacy.html</destination>
                 <name>Legacy Code Considerations</name>
         </page>
-        <page>
-                <source>include/ES_JulAug_2004_preprint.pdf</source>
-                <destination>ES_JulAug_2004_preprint.pdf</destination>
-                <name>SOD Paper(PDF)</name>
-        </page>
+		<page>
+				<source>schemaDocumenter/tagDocs</source>
+				<destination>tagDocs/sod.html</destination>
+				<name>Tag Docs</name>
+		</page>
+		<page>
+				<source>include/ES_JulAug_2004_preprint.pdf</source>
+				<destination>ES_JulAug_2004_preprint.pdf</destination>
+				<name>SOD Paper(PDF)</name>
+		</page>
         <page>
                 <source>../xdocs/sodcam.xml</source>
                 <destination>sodcam.html</destination>
