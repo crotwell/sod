@@ -321,13 +321,13 @@ public class MotionVectorArm implements Subsetter{
 
                 } else {
                     logger.debug("Failed, retrieve data returned no requestFilters ");
-                    localSeismograms = new LocalSeismogram[i][0];
+                    localSeismograms[i] = new LocalSeismogram[0];
                 } // end of else
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="+after.subtract(before));
 
                 LinkedList tempForCast = new LinkedList();
-                for (int j=0; j<localSeismograms.length; j++) {
+                for (int j=0; j<localSeismograms[i].length; j++) {
                     if (localSeismograms[i][j] == null) {
                         ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.REJECT));
                         logger.error("Got null in seismogram array "+ChannelIdUtil.toString(ecp.getChannelGroup().getChannels()[i].get_id()));
