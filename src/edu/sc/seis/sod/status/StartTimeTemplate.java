@@ -17,6 +17,6 @@ public class StartTimeTemplate extends AllTypeTemplate{
 
     public String getResult() { return df.format(Start.getStartTime()); }
 
-    private DateFormat df = new SimpleDateFormat("H:mm M/d/yyyy z");
+    private DateFormat df = new SimpleDateFormat("M/d/yyyy H:mm z");
 }
 
