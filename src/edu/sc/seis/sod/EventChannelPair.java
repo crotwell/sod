@@ -27,7 +27,7 @@ public class EventChannelPair{
         this.owner = owner;
         this.pairId = pairId;
         this.status = status;
-        this.cookieJar = new CookieJar(getEvent(), getChannel());
+        this.cookieJar = new CookieJar(this);
     }
 
     public int getPairId(){ return pairId; }
@@ -43,7 +43,9 @@ public class EventChannelPair{
      */
     public void update(Status status){
         this.status = status;
+        cookieJar.getContext().put("status", status);
         owner.setStatus(this);
+
     }
 
     public boolean equals(Object o){

@@ -37,9 +37,10 @@ import org.apache.velocity.tools.generic.RenderTool;
 
 public class CookieJar {
 
-    public CookieJar (EventAccessOperations event, Channel channel){
-        context = getChannelContext(event, channel);
+    public CookieJar (EventChannelPair ecp){
+        context = getChannelContext(ecp.getEvent(), ecp.getChannel());
         context.put("sod_cookieJar", this); // needed for eval and recurse velocity tool
+        context.put("status", ecp.getStatus());
     }
 
     /**
@@ -155,3 +156,4 @@ public class CookieJar {
     }
 
 }// CookieJar
+
