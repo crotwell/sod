@@ -1,10 +1,6 @@
 package edu.sc.seis.sod;
 import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
-
-import edu.sc.seis.sod.subsetter.*;
-import edu.sc.seis.sod.process.waveFormArm.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -13,8 +9,11 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
+import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.subsetter.Subsetter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.apache.log4j.Logger;
@@ -285,6 +284,7 @@ public class LocalSeismogramArm implements Subsetter{
             MicroSecondDate after = new MicroSecondDate();
             logger.info("After getting seismograms, time taken="+after.subtract(before));
 
+            LinkedList tempForCast = new LinkedList();
             for (int i=0; i<localSeismograms.length; i++) {
                 if (localSeismograms[i] == null) {
                     ecp.update("Failed due to malformed(null) seismograms being returned",  EventChannelCondition.FAILURE);
@@ -301,10 +301,13 @@ public class LocalSeismogramArm implements Subsetter{
                     // fix seis with original id
                     localSeismograms[i].channel_id = ecpChan.get_id();
                 } // end of if ()
+                tempForCast.add(localSeismograms[i]);
             } // end of for (int i=0; i<localSeismograms.length; i++)
+            LocalSeismogramImpl[] tempLocalSeismograms =
+                (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
 
             processLocalSeismogramSubsetter(ecp, infilters, outfilters,
-                                            localSeismograms);
+                                            tempLocalSeismograms);
         } else {
             logger.info("FAIL available data");
             ecp.update("No available data",  EventChannelCondition.NO_AVAILABLE_DATA);
@@ -314,7 +317,7 @@ public class LocalSeismogramArm implements Subsetter{
     public void processLocalSeismogramSubsetter(EventChannelPair ecp,
                                                 RequestFilter[] infilters,
                                                 RequestFilter[] outfilters,
-                                                LocalSeismogram[] localSeismograms) throws Exception {
+                                                LocalSeismogramImpl[] localSeismograms) throws Exception {
         boolean passed;
         synchronized (localSeismogramSubsetter) {
             passed = localSeismogramSubsetter.accept(ecp.getEvent(),
@@ -338,7 +341,7 @@ public class LocalSeismogramArm implements Subsetter{
     public void processSeismograms(EventChannelPair ecp,
                                    RequestFilter[] infilters,
                                    RequestFilter[] outfilters,
-                                   LocalSeismogram[] localSeismograms)
+                                   LocalSeismogramImpl[] localSeismograms)
         throws Exception {
         ecp.update("Starting processing", EventChannelCondition.PROCESSING);
         LocalSeismogramProcess processor;
@@ -379,7 +382,7 @@ public class LocalSeismogramArm implements Subsetter{
     private SeismogramDCLocator seismogramDCLocator=
         new NullSeismogramDCLocator();
 
-    private static Logger logger =Logger.getLogger(LocalSeismogramArm.class);
+    private static final Logger logger =Logger.getLogger(LocalSeismogramArm.class);
 
 }// LocalSeismogramArm
 

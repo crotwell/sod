@@ -71,9 +71,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 seismogramImageConfig.removeChild(tmpEl);
             }
         }
-		if (fileDir == null){
-			fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
-		}
+        if (fileDir == null){
+            fileDir = Start.getProperties().getProperty("sod.start.StatusBaseDirectory", "status");
+        }
         if (fileDir == null || eventFormatter == null || stationFormatter == null || chanFormatter == null){
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
         }
@@ -91,9 +91,13 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event, NetworkAccess network, Channel channel,
-                                     RequestFilter[] original, RequestFilter[] available, LocalSeismogram[] seismograms,
-                                     CookieJar cookies) throws Exception {
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
         logger.debug("process() called");
 
         final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();

@@ -1,12 +1,12 @@
 package edu.sc.seis.sod.process.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.seismogramDC.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.IfEvent.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
+import org.w3c.dom.Element;
 
 /**
  * Removes the trend from the seismogram by subtracting the best least squares
@@ -16,7 +16,7 @@ import org.apache.log4j.*;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 7180 2004-02-17 22:21:52Z groves $
+ * @version $Id: RTrend.java 7456 2004-03-06 19:58:22Z crotwell $
  */
 
 public class RTrend implements LocalSeismogramProcess {
@@ -28,8 +28,8 @@ public class RTrend implements LocalSeismogramProcess {
      * for this Processor
      */
     public RTrend (Element config) {
-    this.config = config;
-    rtrend = new edu.sc.seis.fissuresUtil.bag.RTrend();
+        this.config = config;
+        rtrend = new edu.sc.seis.fissuresUtil.bag.RTrend();
     }
 
     /**
@@ -44,18 +44,18 @@ public class RTrend implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event,
-                     NetworkAccess network,
-                     Channel channel,
-                     RequestFilter[] original,
-                     RequestFilter[] available,
-                     LocalSeismogram[] seismograms,
-                     CookieJar cookies) throws Exception {
-    LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-    for (int i=0; i<seismograms.length; i++) {
-        out[i] = rtrend.apply((LocalSeismogramImpl)seismograms[i]);
-    } // end of for (int i=0; i<seismograms.length; i++)
-    return out;
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
+        LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
+        for (int i=0; i<seismograms.length; i++) {
+            out[i] = rtrend.apply(seismograms[i]);
+        } // end of for (int i=0; i<seismograms.length; i++)
+        return out;
     }
 
     Element config;

@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.Subsetter;
 
 /**
  * LocalSeismogramSubsetter.java
@@ -18,7 +18,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
  */
 
 public interface LocalSeismogramSubsetter extends Subsetter{
-    
+
     /**
      * Describe <code>accept</code> method here.
      *
@@ -32,13 +32,13 @@ public interface LocalSeismogramSubsetter extends Subsetter{
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available,
-			  LocalSeismogram[] seismograms, 
-			  CookieJar cookies) throws Exception;
+    public boolean accept(EventAccessOperations event,
+                          NetworkAccess network,
+                          Channel channel,
+                          RequestFilter[] original,
+                          RequestFilter[] available,
+                          LocalSeismogramImpl[] seismograms,
+                          CookieJar cookies) throws Exception;
 
-    
+
 }// LocalSeismogramSubsetter

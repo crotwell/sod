@@ -1,16 +1,17 @@
 package edu.sc.seis.sod.process.waveFormArm;
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
-
-import edu.sc.seis.sod.*;
-import edu.sc.seis.fissuresUtil.bag.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.seismogramDC.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.IfEvent.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.bag.Cut;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.subsetter.waveFormArm.PhaseRequest;
 import java.util.LinkedList;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
 
 /**
  * Cuts seismograms relative to phases.
@@ -19,7 +20,7 @@ import java.util.LinkedList;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 7391 2004-03-03 21:07:00Z crotwell $
+ * @version $Id: PhaseCut.java 7456 2004-03-06 19:58:22Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -48,13 +49,13 @@ public class PhaseCut implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event,
-                                     NetworkAccess network,
-                                     Channel channel,
-                                     RequestFilter[] original,
-                                     RequestFilter[] available,
-                                     LocalSeismogram[] seismograms,
-                                     CookieJar cookies) throws Exception {
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
         RequestFilter[] cutRequest =
             phaseRequest.generateRequest(event, network, channel, cookies);
         logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
@@ -63,7 +64,7 @@ public class PhaseCut implements LocalSeismogramProcess {
         LinkedList list = new LinkedList();
         for (int i=0; i<seismograms.length; i++) {
             // cut returns null if the time interval doesn't overlap
-            LocalSeismogramImpl tempSeis = cut.apply((LocalSeismogramImpl)seismograms[i]);
+            LocalSeismogramImpl tempSeis = cut.apply(seismograms[i]);
             if (tempSeis != null) {
                 list.add(tempSeis);
             }

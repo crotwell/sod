@@ -1,13 +1,13 @@
 package edu.sc.seis.sod.process.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.seismogramDC.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.sc.seis.fissuresUtil.bag.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.bag.ResponseGain;
+import edu.sc.seis.sod.CookieJar;
+import org.w3c.dom.Element;
 
 /**
  * Applys the overall gain from the response to the seismogram, converting
@@ -18,7 +18,7 @@ import org.apache.log4j.*;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 7180 2004-02-17 22:21:52Z groves $
+ * @version $Id: ResponseGainProcessor.java 7456 2004-03-06 19:58:22Z crotwell $
  */
 
 public class ResponseGainProcessor implements LocalSeismogramProcess {
@@ -30,7 +30,7 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
      * for this Processor
      */
     public ResponseGainProcessor (Element config) {
-	this.config = config;
+        this.config = config;
     }
 
     /**
@@ -45,19 +45,19 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event, 
-				     NetworkAccess network, 
-				     Channel channel, 
-				     RequestFilter[] original, 
-				     RequestFilter[] available,
-				     LocalSeismogram[] seismograms, 
-				     CookieJar cookies) throws Exception {
-	ResponseGain responseGain = new ResponseGain(network);
-	LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-	for (int i=0; i<seismograms.length; i++) {
-	    out[i] = responseGain.apply((LocalSeismogramImpl)seismograms[i]);
-	} // end of for (int i=0; i<seismograms.length; i++)
-	return out;
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
+        ResponseGain responseGain = new ResponseGain(network);
+        LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
+        for (int i=0; i<seismograms.length; i++) {
+            out[i] = responseGain.apply(seismograms[i]);
+        } // end of for (int i=0; i<seismograms.length; i++)
+        return out;
     }
 
     Element config;

@@ -1,17 +1,20 @@
 package edu.sc.seis.sod.process.waveFormArm;
 
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
-
-import java.io.*;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 /**
  * sample xml file
@@ -44,13 +47,13 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public LocalSeismogram[] process(EventAccessOperations event,
-                                     NetworkAccess network,
-                                     Channel channel,
-                                     RequestFilter[] original,
-                                     RequestFilter[] available,
-                                     LocalSeismogram[] seismograms,
-                                     CookieJar cookies) throws IOException, NoPreferredOrigin {
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws IOException, NoPreferredOrigin {
         if (filename != null && filename.length() != 0) {
             FileWriter fwriter = new FileWriter(filename, true);
             BufferedWriter bwriter = new BufferedWriter(fwriter);

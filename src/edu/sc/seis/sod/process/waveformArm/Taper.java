@@ -33,16 +33,16 @@ public class Taper implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event,
-                                     NetworkAccess network,
-                                     Channel channel,
-                                     RequestFilter[] original,
-                                     RequestFilter[] available,
-                                     LocalSeismogram[] seismograms,
-                                     CookieJar cookies) throws Exception {
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {
-            out[i] = taper.apply((LocalSeismogramImpl)seismograms[i]);
+            out[i] = taper.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
         return out;
     }

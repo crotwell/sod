@@ -8,16 +8,17 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveFormArm.SaveSeismogramToFile;
 import edu.sc.seis.sod.status.EventFormatter;
 import java.io.File;
 import java.io.IOException;
@@ -27,11 +28,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 
 /**
  * SacFileProcessor.java
@@ -114,13 +114,13 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event,
-                                     NetworkAccess network,
-                                     Channel channel,
-                                     RequestFilter[] original,
-                                     RequestFilter[] available,
-                                     LocalSeismogram[] seismograms,
-                                     CookieJar cookies) throws Exception {
+    public LocalSeismogramImpl[] process(EventAccessOperations event,
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
 
         logger.info("Got "+seismograms.length+" seismograms for "+
                         ChannelIdUtil.toString(channel.get_id())+
@@ -161,8 +161,8 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
-                                                 LocalSeismogram[] seismograms,
-                                                SeismogramFileTypes seisFileType)
+                                                 LocalSeismogramImpl[] seismograms,
+                                                 SeismogramFileTypes seisFileType)
         throws ConfigurationException,
         CodecException,
         IOException,
@@ -191,11 +191,11 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
             logger.debug("saveInDataset "+i+" "+ChannelIdUtil.toString(seismograms[i].channel_id));
             seismograms[i].channel_id = channel.get_id();
 
-            seisFile = URLDataSetSeismogram.saveAs((LocalSeismogramImpl)seismograms[i],
-                                                      dataDirectory,
-                                                      channel,
-                                                      event,
-                                                  fileType);
+            seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
+                                                   dataDirectory,
+                                                   channel,
+                                                   event,
+                                                   fileType);
             seisURLStr[i] = getRelativeURLString(lastDataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
             seisFileTypeArray[i] = seisFileType;  // all are the same
@@ -204,7 +204,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                                                                seisFileTypeArray,
                                                                lastDataSet);
         for (int i = 0; i < seisURL.length; i++) {
-            urlDSS.addToCache(seisURL[i], seisFileType, (LocalSeismogramImpl)seismograms[i]);
+            urlDSS.addToCache(seisURL[i], seisFileType, seismograms[i]);
         }
 
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.NETWORK_BEGIN,
@@ -229,11 +229,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
     protected File saveDataSet(DataSet ds)
         throws IOException, ParserConfigurationException, ConfigurationException {
 
-        //            File outFile = new File(eventDirectory, eventDirName+".dsml");
-        //            OutputStream fos = new BufferedOutputStream(
-        //                new FileOutputStream(outFile));
-        //            dataset.write(fos);
-        //            fos.close();
         File outFile;
         if (ds.getEvent() != null) {
             outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()));
@@ -373,8 +368,8 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
     SeismogramFileTypes fileType;
 
-    static Category logger =
-        Category.getInstance(SaveSeismogramToFile.class.getName());
+    private static final Logger logger =
+        Logger.getLogger(SaveSeismogramToFile.class);
 
 }// SacFileProcessor
 
