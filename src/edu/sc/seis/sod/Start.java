@@ -9,7 +9,9 @@ import edu.sc.seis.sod.database.JDBCConfig;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.editor.SimpleGUIEditor;
 import edu.sc.seis.sod.status.IndexTemplate;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -65,18 +67,16 @@ public class Start{
      * config file
      */
     public Start (String confFilename, String[] args) throws Exception{
-
         configFileName = confFilename;
-        File configFile = new File(configFileName);
-        checkConfig(configFile);
-
+        ClassLoader cl = getClass().getClassLoader();
+        checkConfig(createInputSource(cl, confFilename));
         try {
-            document = createDoc(createInputSource(confFilename));
+            document = createDoc(createInputSource(cl, confFilename));
         } catch (Exception e) {
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         try {
-            if(!Validator.validate(createInputSource(confFilename))){
+            if(!Validator.validate(createInputSource(cl, confFilename))){
                 logger.info("Invalid config file!");
                 System.err.println();
                 System.err.println("******************************************************************");
@@ -168,10 +168,17 @@ public class Start{
         CommonAccess.getCommonAccess().initORB(args, props);
     }
 
-    private InputSource createInputSource(String loc) throws IOException{
+    public static InputSource createInputSource(ClassLoader cl) throws IOException{
+        return createInputSource(cl, getConfigFileName());
+    }
+
+    public static InputSource createInputSource(ClassLoader cl, String loc) throws IOException{
         InputStream in = null;
         if(loc.startsWith("http:") || loc.startsWith("ftp:")){
             in = new URL(loc).openConnection().getInputStream();
+        }else if(loc.startsWith("jar:")){
+            URL url = TemplateFileLoader.getUrl(cl, loc);
+            in = url.openConnection().getInputStream();
         }else{
             in = new FileInputStream(loc);
         }
@@ -279,9 +286,9 @@ public class Start{
         }
     }
 
-    private void checkConfig(File configFile) throws IOException{
+    private void checkConfig(InputSource is){
         try{
-            String configString = JDBCConfig.getConfigString(configFile);
+            String configString = JDBCConfig.getConfigString(is);
             JDBCConfig dbConfig = new JDBCConfig(configString);
             if (!dbConfig.isSameConfig(configString)){
                 System.err.println("Your config file has changed since your last run.  "
@@ -301,14 +308,18 @@ public class Start{
             BasicConfigurator.configure();
             String confFilename = null;
 
-            for (int i=0; i<args.length-1; i++) {
+            for (int i=0; i<args.length; i++) {
                 if(args[i].equals("-conf") || args[i].equals("-f")) {
                     confFilename = args[i+1];
+                }else if(args[i].equals("-demo")){
+                    confFilename = SimpleGUIEditor.TUTORIAL_LOC;
                 }
             }
 
             if (confFilename == null) {
-                exit("No configuration file given, quiting....");
+                exit("No configuration file given.  Supply a configuration file "+
+                         "using -f <configFile>, or to just see sod run use "+
+                         "-demo.   quiting until that day....");
             }
             Start start = new Start(confFilename, args);
 
@@ -344,7 +355,7 @@ public class Start{
 
 
     public static final String
-        DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
+        DEFAULT_PARSER = "org.apache.xerces.parsers.SAXParser";
 
     private Document document;
 
