@@ -13,6 +13,8 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.subsetter.RefreshInterval;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -101,43 +103,17 @@ public class NetworkArm {
             } // end of else
             
         } else if(sodElement instanceof NetworkArmProcess) {
-            if ( networkArmProcess[0] instanceof NullNetworkProcess) {
-                networkArmProcess[0] = (NetworkArmProcess)sodElement;
-            } else {
-                // must already be a process, add to array
-                NetworkArmProcess[] tmp =
-                    new NetworkArmProcess[networkArmProcess.length+1];
-                System.arraycopy(networkArmProcess, 0, tmp, 0, networkArmProcess.length);
-                tmp[tmp.length-1] = (NetworkArmProcess)sodElement;
-                networkArmProcess = tmp;
-            } // end of else
-        } else if(sodElement instanceof NetworkStatusProcessor) {
-            if ( networkStatusProcess[0] instanceof NullNetworkStatusProcessor) {
-                networkStatusProcess[0] = (NetworkStatusProcessor)sodElement;
-            } else {
-                // must already be a process, add to array
-                NetworkStatusProcessor[] tmp =
-                    new NetworkStatusProcessor[networkStatusProcess.length+1];
-                System.arraycopy(networkStatusProcess, 0, tmp, 0, networkStatusProcess.length);
-                tmp[tmp.length-1] = (NetworkStatusProcessor)sodElement;
-                networkStatusProcess = tmp;
-            } // end of else
+            networkArmProcesses.add(sodElement);
         }
     }
     
-    /**
-     * handles the networkArmProcess.
-     *
-     * @param networkAccess a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @exception Exception if an error occurs
-     */
     public void handleNetworkArmProcess(NetworkAccess networkAccess,
                                         Channel channel,
                                         CookieJar cookieJar) throws Exception{
-        for ( int i=0; i<networkArmProcess.length; i++) {
-            networkArmProcess[i].process(networkAccess, channel, cookieJar);
-        } // end of for ()
+        Iterator it = networkArmProcesses.iterator();
+        while(it.hasNext()){
+            ((NetworkArmProcess)it.next()).process(networkAccess, channel, cookieJar);
+        }
     }
     
     
@@ -237,7 +213,6 @@ public class NetworkArm {
         if(networksBeenChecked && !needsRefresh()) {
             return networkDbObjects;
         }
-        //get from Network.
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
         NetworkDCOperations netDC =
@@ -409,19 +384,18 @@ public class NetworkArm {
     
     
     private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder finderSubsetter = null;
+    
     private NetworkSubsetter attrSubsetter = new NullNetworkSubsetter();
+    
     private StationSubsetter stationSubsetter = new NullStationSubsetter();
+    
     private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
+    
     private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
-    private NetworkArmProcess[] networkArmProcess = {
-        new NullNetworkProcess()
-    };
     
-    private NetworkStatusProcessor[] networkStatusProcess = {
-        new NullNetworkStatusProcessor()
-    };
+    private List networkArmProcesses = new ArrayList();
     
-    //Set to true the first time getSuccessfulNetworks is callsed
+    //Set to true the first time getSuccessfulNetworks is called
     private boolean networksBeenChecked = false;
     
     private NetworkDbObject[] networkDbObjects;
