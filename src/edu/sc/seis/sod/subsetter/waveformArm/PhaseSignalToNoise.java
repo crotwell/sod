@@ -102,6 +102,7 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
     public LongShortTrigger calcTrigger(EventAccessOperations event,
                                         Channel channel,
                                         LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauModelException {
+        if (seismograms.length == 0) { return null; }
         return phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
     }
 
