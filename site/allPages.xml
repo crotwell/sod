@@ -48,11 +48,6 @@
                 <name>Legacy Code Considerations</name>
         </page>
         <page>
-                <source>schemaDocumenter/tagDocs</source>
-                <destination>tagDocs/sod.html</destination>
-                <name>Tag Docs</name>
-        </page>
-        <page>
                 <source>include/ES_JulAug_2004_preprint.pdf</source>
                 <destination>ES_JulAug_2004_preprint.pdf</destination>
                 <name>SOD Paper(PDF)</name>
@@ -63,8 +58,8 @@
                 <name>SOD-cam</name>
         </page>
         <page>
-                <source>content/tagDocHelp.xml</source>
-                <destination>tagDocHelp.html</destination>
+                <source>None</source>
+                <destination>tagDocs/sod/start.html</destination>
                 <name>Strategy File Reference</name>
         </page>
         </menu>
@@ -186,5 +181,13 @@
 </submenu>
         </submenu>
         </menu>
+		<menu name="Don't Show">
+
+        <page>
+                <source>content/tagDocHelp.xml</source>
+                <destination>tagDocHelp.html</destination>
+                <name>Strategy File Reference</name>
+        </page>
+</menu>
 </pages>
 
