@@ -33,12 +33,12 @@ public class PhaseRequestEditor implements EditorPlugin {
         Box botRowB = Box.createHorizontalBox();
         box.add(botRowB);
 
-        topRow.add(new JLabel(EditorUtil.capFirstLetter(element.getTagName())));
+        topRow.add(new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
         topRow.add(Box.createGlue());
 
         modelRow.add(Box.createRigidArea(new Dimension(10, 10)));
-        modelRow.add(new JLabel("Model"));
         Element modelElement = (Element)XPathAPI.selectSingleNode(element, "model");
+        modelRow.add(new JLabel(SimpleGUIEditor.getDisplayName(modelElement.getTagName())));
         modelRow.add(EditorUtil.getComboBox(modelElement, MODEL_NAMES));
 
         JPanel panel = new JPanel();
