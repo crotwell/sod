@@ -26,6 +26,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     private void init() {
 	try {
 		create();
+        if(connection == null) return;
 		getStmt = connection.prepareStatement(" SELECT waveformeventid, waveformchannelid "+
 						      " FROM waveformchanneldb WHERE waveformid = ? ");
 
@@ -853,9 +854,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	delete("waveformchanneldb");
     }
 
-    public Connection getConnection() {
-
-	return this.connection;
+    public Object getConnection() {
+        return this.connection;
     }
    
 
