@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-        <runName>WEED Emulator</runName>
+        	<runName>WEED Emulator</runName>
             <statusBase>status</statusBase>
-                <reopenEvents>TRUE</reopenEvents>
             <eventQueryIncrement>
-        <unit>WEEK</unit>
-        <value>1</value>
-        </eventQueryIncrement>
-            <eventLag>
-        <unit>WEEK</unit>
-        <value>1</value>
-        </eventLag>
+        		<unit>WEEK</unit>
+		        <value>1</value>
+        	</eventQueryIncrement>
             <eventRefreshInterval>
-        <value>6</value>
-        <unit>MINUTE</unit>
-         </eventRefreshInterval>
-             <waveformWorkerThreads>1</waveformWorkerThreads>
-             <removeDatabase>TRUE</removeDatabase>
+				<value>6</value>
+				<unit>MINUTE</unit>
+			</eventRefreshInterval>
+			<eventLag>
+		        <unit>WEEK</unit>
+	    	    <value>1</value>
+    	    </eventLag>
+            <waveformWorkerThreads>1</waveformWorkerThreads>
+			<reopenEvents>TRUE</reopenEvents>
+            <removeDatabase>TRUE</removeDatabase>
         </properties>
         <eventArm>
                 <eventFinder>
