@@ -15,13 +15,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ChannelGroup {
-
     public ChannelGroup(Channel[] channels) {
         this.channels = channels;
     }
 
     public Channel[] getChannels() {
         return channels;
+    }
+
+    public boolean contains(Channel c){
+        for (int i = 0; i < channels.length; i++) {
+            if(channels[i].equals(c)){ return true; }
+        }
+        return false;
     }
 
     /** Attempts to group channels in to groups that are components of
