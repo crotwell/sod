@@ -288,7 +288,7 @@ public class NetworkArm {
         SiteDbObject[] rtnValues = new SiteDbObject[successes.size()];
         rtnValues = (SiteDbObject[]) successes.toArray(rtnValues);
         stationDbObject.siteDbObjects = rtnValues;
-        logger.debug(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
+        logger.debug("GOT "+rtnValues.length+ " SITES");
         statusChanged("Waiting for a request");
         return rtnValues;
     }
