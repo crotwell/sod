@@ -99,14 +99,12 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
     }
 
     public void change(Station station, Status status){
-        logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
         StationsInNetworkTemplate snt = getStationsInNetworkTemplate(station);
         snt.change(station, status);
         getChannelsInStationTemplate(station);
     }
 
     public void change(Channel channel, Status status) {
-        logger.debug("change(channel, status): " + channel.get_code() + ", " + status.toString());
         ChannelsInStationTemplate cst = getChannelsInStationTemplate(channel);
         cst.change(channel, status);
     }
@@ -125,7 +123,6 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
                                                                        + '/'
                                                                        + stasOutputFileName,
                                                                    net));
-                logger.debug("successfully put " + getIDString(net) + "'s StationsInNetworkTemplate in map");
             } catch (IOException e) {
                 CommonAccess.handleException(e, "trouble creating StationsInNetworkTemplate");
             }
@@ -169,11 +166,6 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
             String cur = (String)it.next();
             if (cur.equals(getIDString(station.my_network))){
                 staNet = ((StationsInNetworkTemplate)stationTemplates.get(cur)).getNetwork();
-                logger.debug("found station "
-                                 + station.get_code()
-                                 + "'s network ("
-                                 + staNet.get_attributes().get_code()
-                                 +") in stationTemplates");
             }
         }
         return staNet;

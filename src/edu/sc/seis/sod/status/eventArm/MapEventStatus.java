@@ -6,6 +6,7 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.MapPool;

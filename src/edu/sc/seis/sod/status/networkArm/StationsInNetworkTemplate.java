@@ -49,7 +49,6 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
     }
 
     public void change(Station station, Status status) {
-        logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
         Iterator it = stationListeners.iterator();
         while (it.hasNext()){
             ((StationGroupTemplate)it.next()).change(station, status);

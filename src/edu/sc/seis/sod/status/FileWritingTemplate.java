@@ -15,77 +15,76 @@ import org.w3c.dom.Element;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
-		this.baseDir = baseDir;
-		this.outputLocation = loc;
-		testOutputLoc(baseDir + '/' + loc);
+        this.baseDir = baseDir;
+        this.outputLocation = loc;
+        testOutputLoc(baseDir + '/' + loc);
     }
-	
+
     private static String testOutputLoc(String loc) throws IOException  {
-		File outFile = new File(loc);
-		outFile.getCanonicalFile().getParentFile().mkdirs();
-		return loc;
+        File outFile = new File(loc);
+        outFile.getCanonicalFile().getParentFile().mkdirs();
+        return loc;
     }
-	
+
     public void write(){ w.actIfPeriodElapsed(); }
-	
+
     private static final TimeInterval TWO_MINUTES = new TimeInterval(2, UnitImpl.MINUTE);
-	
+
     private MicroSecondDate lastWriteTime;
-	
+
     public String getResult() {
-		StringBuffer buf = new StringBuffer();
-		Iterator e = templates.iterator();
-		while(e.hasNext()) {
-			Object cur = e.next();
-			buf.append(((GenericTemplate)cur).getResult());
-		}
-		return buf.toString();
+        StringBuffer buf = new StringBuffer();
+        Iterator e = templates.iterator();
+        while(e.hasNext()) {
+            Object cur = e.next();
+            buf.append(((GenericTemplate)cur).getResult());
+        }
+        return buf.toString();
     }
-	
+
     protected Object textTemplate(final String text) {
-		return new GenericTemplate() {
-			public String getResult() { return text; }
-		};
+        return new GenericTemplate() {
+            public String getResult() { return text; }
+        };
     }
-	
+
     public String getOutputLocation(){ return baseDir + '/' + outputLocation; }
-	
+
     public String getFilename()  {
-		return new File(getOutputLocation()).getName();
+        return new File(getOutputLocation()).getName();
     }
-	
+
     protected File getOutputDirectory() {
-		return new File(getOutputLocation()).getParentFile();
+        return new File(getOutputLocation()).getParentFile();
     }
-	
-	protected Object getTemplate(String tag, Element el){
-		if (tag.equals("menu")){
-			try {
-				return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
-			} catch (Exception e) {
-				CommonAccess.handleException("Problem getting template for Menu", e);
-			}
-		}
-		
-		return super.getTemplate(tag, el);
-	}
-	
+
+    protected Object getTemplate(String tag, Element el){
+        if (tag.equals("menu")){
+            try {
+                return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
+            } catch (Exception e) {
+                CommonAccess.handleException("Problem getting template for Menu", e);
+            }
+        }
+
+        return super.getTemplate(tag, el);
+    }
+
     private class Writer extends PeriodicAction{
-		public void act(){
-			logger.debug("writing " + getOutputLocation());
-			File loc = new File(getOutputLocation());
-			try {
-				File temp = File.createTempFile(loc.getName(), null);
-				BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
-				writer.write(getResult());
-				writer.close();
-				loc.delete();
-				temp.renameTo(loc);
-			} catch (IOException e) {}
-		}
+        public void act(){
+            File loc = new File(getOutputLocation());
+            try {
+                File temp = File.createTempFile(loc.getName(), null);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
+                writer.write(getResult());
+                writer.close();
+                loc.delete();
+                temp.renameTo(loc);
+            } catch (IOException e) {}
+        }
     }
-	
-	private String baseDir;
+
+    private String baseDir;
     private Writer w = new Writer();
     private String outputLocation;
     private static Logger logger = Logger.getLogger(FileWritingTemplate.class);

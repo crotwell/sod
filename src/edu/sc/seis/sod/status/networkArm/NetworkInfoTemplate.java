@@ -18,7 +18,6 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
     }
 
     public void write(){
-        logger.debug("queueing " + getOutputDirectory() + "/" + getFilename());
         super.write();
     }
 }

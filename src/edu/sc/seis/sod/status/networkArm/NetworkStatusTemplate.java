@@ -30,8 +30,6 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     }
 
     public void change(NetworkAccess networkAccess, Status status) {
-        logger.debug("change(Network, Status): " + networkAccess.get_attributes().name
-                         + ", " + status.toString());
         Iterator it = networkListeners.iterator();
         while (it.hasNext()){
             NetworkGroupTemplate ngt = (NetworkGroupTemplate)it.next();
@@ -41,7 +39,6 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     }
 
     public void setArmStatus(String status)  {
-        logger.debug("setArmStatus: " + status);
         this.status = status;
         write();
     }
