@@ -8,7 +8,7 @@
     <include href="../base/include/quantity.rng"></include>
     <define name="channel">
         <choice>
-	    <ref name="channelCode"/>
+	    	<ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
             <ref name="orientationCode"/>
@@ -27,6 +27,28 @@
         <data type="string">
             <param name="pattern">[A-Z]{1}</param>
         </data>
+    </define>
+    
+    <define name="channelCodeType">
+        <data type="string">
+            <param name="pattern">[A-Z]{3}</param>
+        </data>
+    </define>
+     <define name="channelCode">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the entire channel code. </summary>
+                <description> Matches a channel code, such as BHZ. See the SEED manual for the list of available code letters. </description>
+                <example>
+                    <channelCode>
+                        <value>BHZ</value>
+                    </channelCode>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelCode">
+            <ref name="channelCodeType"/>
+        </element>
     </define>
     <define name="bandCode">
         <xsd:annotation>
