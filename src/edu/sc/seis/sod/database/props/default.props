@@ -23,3 +23,10 @@ eventchannelcookiejar.create=CREATE TABLE eventchannelcookiejar( pairid int, \
 
 EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
 EventChannelSeq.nextVal=SELECT NEXTVAL ('EventChannelSeq')
+
+version.create=CREATE TABLE version( dbversion varchar, \
+                                     PRIMARY KEY (dbversion) )
+
+networkstatus.create=CREATE TABLE networkstatus( networkid int, status int, \
+                                                 FOREIGN KEY(networkid) \
+                                                 REFERENCES network (net_id))
