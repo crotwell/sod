@@ -76,10 +76,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                                     "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
         dbIdForEventAndChan = conn.prepareStatement("SELECT pairid FROM eventchannelstatus " +
                                                         "WHERE eventid = ? AND channelid = ?");
-        ofStation = conn.prepareStatement("SELECT pairid, eventid, channelid "+
+        ofStation = conn.prepareStatement("SELECT pairid, eventid, channelid, status "+
                                               "FROM channel, site, eventchannelstatus, station "+
                                               "WHERE "+chanJoin+
-                                              " AND station_sta_id = ?");
+                                              " AND station.sta_id = ?");
 
     }
 
