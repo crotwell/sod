@@ -9,11 +9,13 @@ package edu.sc.seis.sod.editor;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.w3c.dom.Element;
-import javax.swing.event.ListSelectionEvent;
 
 public class TagChooser implements EditorPlugin {
 
@@ -34,13 +36,17 @@ public class TagChooser implements EditorPlugin {
         // this is a hack to avoid same-named tags in the eventFinder element
         // need a real fix, but this is ok for short term
         if (element.getParentNode().getNodeName().equals("eventFinder")) {
+            if (editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX) != null) {
+                return editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX).getGUI(element);
+            }
             return editor.getDefaultCompForElement(element);
         }
 
-        Box b = Box.createVerticalBox();
+        Box b = Box.createHorizontalBox();
+        JButton replace = new JButton(new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png")));
         JComboBox combo = new JComboBox(subTypes);
         combo.setSelectedItem(element.getTagName());
-        b.add(combo);
+        b.add(replace);
 
         EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
         JComponent comp;
@@ -73,6 +79,7 @@ public class TagChooser implements EditorPlugin {
 
         public void valueChanged(ListSelectionEvent e) {
             String tagName = (String)((JComboBox)e.getSource()).getSelectedItem();
+
         }
 
         Element current;
