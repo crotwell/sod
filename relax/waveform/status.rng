@@ -1,43 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-        xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-        <start>
-                <choice>
-                        <element name="waveformEventTemplateGenerator">
-                                <optional>
-                                    <element name="fileDir">
-                                        <data type="string"/>
-                                    </element>
-                                </optional>
-                                <element name="waveformConfig">
-                                        <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                                </element>
-                        </element>
-                        <element name="waveformNetworkStatus">
-                                <optional>
-                                    <element name="fileDir">
-                                        <data type="string"/>
-                                    </element>
-                                </optional>
-                                <element name="template">
-                                        <data type="string"/>
-                                </element>
-                                <element name="networkListTemplate">
-                                        <data type="string"/>
-                                </element>
-                        </element>
-                        <element name="waveformStationStatus">
-                                <optional>
-                                    <element name="fileDir">
-                                        <data type="string"/>
-                                    </element>
-                                </optional>
-                                <element name="template">
-                                        <data type="string"/>
-                                </element>
-                        </element>
-                </choice>
-        </start>
-        <include href="../base/include/eventLabel.rng"/>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <choice>
+            <ref name="waveformEvent"/>
+            <ref name="waveformNetwork"/>
+            <ref name="waveformStatus"/>
+        </choice>
+    </start>
+    <define name="waveformEvent">
+        <element name="waveformEventTemplateGenerator">
+            <optional>
+                <element name="fileDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="waveformConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+        </element>
+    </define>
+    <define name ="waveformNetwork">
+            <element name="waveformNetworkStatus">
+                <optional>
+                    <element name="fileDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="template">
+                    <data type="string"/>
+                </element>
+                <element name="networkListTemplate">
+                    <data type="string"/>
+                </element>
+            </element>
+    </define>
+    <define name="waveformStation">
+            <element name="waveformStationStatus">
+                <optional>
+                    <element name="fileDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+    </define>
+    <include href="../base/include/eventLabel.rng"/>
 </grammar>
 
