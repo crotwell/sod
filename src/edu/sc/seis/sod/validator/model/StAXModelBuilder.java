@@ -200,30 +200,12 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         reader.next();
                         note.setSummary(reader.getText());
                     } else if(reader.getLocalName().equals("description")) {
-                        reader.next();
-                        note.setDescription(reader.getText());
+                        note.setDescription(extractSubstructure());
                     } else if(reader.getLocalName().equals("include")) {
                         reader.next();
                         note.setInclude(true);
                     } else if(reader.getLocalName().equals("example")) {
-                        reader.next();
-                        StringBuffer buf = new StringBuffer();
-                        int prevEventType = -1;
-                        while(reader.getEventType() != END_ELEMENT
-                                || !reader.getLocalName().equals("example")) {
-                            int curEventType = reader.getEventType();
-                            //this if-else block takes care of empty tags
-                            if(prevEventType == START_ELEMENT
-                                    && curEventType == END_ELEMENT) {
-                                buf.setCharAt(buf.length() - 1, ' ');
-                                buf.append("/>");
-                            } else {
-                                buf.append(XMLUtil.readEvent(reader));
-                            }
-                            reader.next();
-                            prevEventType = curEventType;
-                        }
-                        String example = buf.toString();
+                        String example = extractSubstructure();
                         example = example.replaceAll("\\t", "        ");
                         int j = 0;
                         for(int i = 0; i < example.length(); i++) {
@@ -244,6 +226,27 @@ public class StAXModelBuilder implements XMLStreamConstants {
             reader.nextTag();
         }
         return note;
+    }
+
+    public String extractSubstructure() throws XMLStreamException {
+        String stopTagName = reader.getLocalName();
+        StringBuffer buf = new StringBuffer();
+        reader.next();
+        int prevEventType = -1;
+        while(reader.getEventType() != END_ELEMENT
+                || !reader.getLocalName().equals(stopTagName)) {
+            int curEventType = reader.getEventType();
+            //this if-else block takes care of empty tags
+            if(prevEventType == START_ELEMENT && curEventType == END_ELEMENT) {
+                buf.setCharAt(buf.length() - 1, ' ');
+                buf.append("/>");
+            } else {
+                buf.append(XMLUtil.readEvent(reader));
+            }
+            reader.next();
+            prevEventType = curEventType;
+        }
+        return buf.toString();
     }
 
     /**
@@ -461,7 +464,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         String curLoc = definedGrammar.getLoc();
         return SodUtil.getAbsolutePath(curLoc, href);
     }
-    
+
     public Form getRoot() {
         return definedGrammar.getRoot();
     }
