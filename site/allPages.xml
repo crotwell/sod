@@ -60,7 +60,7 @@
         <page>
             <source>None</source>
             <destination>tagDocs/sod/start.html</destination>
-            <name>Strategy File Reference</name>
+            <name>Tactic Reference</name>
         </page>
     </menu>
     <menu name="Reference">
@@ -180,11 +180,6 @@
     </menu>
     <menu name="Don't Show">
         <page>
-            <source>../xdocs/tagDocHelp.xml</source>
-            <destination>tagDocHelp.html</destination>
-            <name>Strategy File Reference</name>
-        </page>
-        <page>
             <source>schemaDocs/datatypes/Text.xml</source>
             <destination>tagDocs/datatypes/Text.html</destination>
             <name>Text</name>
@@ -224,6 +219,20 @@
             <destination>tagDocs/datatypes/NonnegativeIntegerDatatype.html</destination>
             <name>Nonnegative Integer</name>
             <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/docs/overview.xml</source>
+            <destination>tagDocs/overview.html</destination>
+            <name>Tactic Docs Overview</name>
+            <base>../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/docs/abstractStructure.xml</source>
+            <destination>tagDocs/abstractStructure.html</destination>
+            <name>Strategy File Reference</name>
+            <base>../</base>
             <menu>Reference</menu>
         </page>
     </menu>
