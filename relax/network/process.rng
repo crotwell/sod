@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <ref name="process"/>
     </start>
     <define name="process">
         <choice>
+            <xsd:annotation>
+                <description>Items that execute on every successful channel</description>
+            </xsd:annotation>
             <ref name="printline"/>
             <ref name="external"/>
-        <ref name="responseWriter"/>
+            <ref name="responseWriter"/>
         </choice>
     </define>
     <define name="responseWriter">
         <element name="responseWriter">
-           <optional>
-               <element name="type" >
-                   <data type="string" />
-               </element>
-           </optional>
-           <element name="directory">
-               <data type="string" />
-           </element>
-           <element name="filePattern">
-               <externalRef href="../base/externalRef/anyXML.rng"/>
-           </element>
+            <element name="directory">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>responses</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+            <element name="filePattern">
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </element>
         </element>
     </define>
     <define name="printline">
         <element name="printlineChannelProcessor">
+            <xsd:annotation>
+                <description>Prints every successful channel to the console</description>
+            </xsd:annotation>
             <empty/>
         </element>
     </define>

@@ -1,367 +1,331 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-		xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-	<start>
-		<ref name="station"/>
-	</start>
-	<include href="../base/include/timeRange.rng"></include>
-	<include href="../base/include/range.rng"/>
-	<define name="station">
-		<choice>
-			<ref name="code"/>
-			<ref name="name"/>
-			<ref name="operator"/>
-			<ref name="depthRange"/>
-			<ref name="effectiveTimeOverlap"/>
-			<ref name="area"/>
-			<ref name="stationPointDistance" />
-			<ref name="stationPointAzimuth" />
-			<ref name="stationPointBackAzimuth" />
-			<ref name="AND"/>
-			<ref name="OR"/>
-			<ref name="XOR"/>
-			<ref name="NOT"/>
-			<ref name="PASS"/>
-		</choice>
-	</define>
-	<define name="code">
-		<element name="stationCode">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches a station code. </summary>
-					<description> Matches a station code. This is a simple string match. </description>
-					<example>
-						<stationCode>ANMO</stationCode>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<data type="string"/>
-		</element>
-	</define>
-	<define name="name">
-		<element name="stationName">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches the name of a station. </summary>
-					<description> Matches the name of a station. This is a simple string comparison, and
-                    so care must be taken for this to be useful. </description>
-					<example>
-						<stationName>
-							<value>South Karori, New Zealand</value>
-						</stationName>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<data type="string"/>
-		</element>
-	</define>
-	<define name="operator">
-		<element name="stationOperator">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches the operator of a station. </summary>
-					<description> Matches the operator of a station. This is a simple string comparison,
-                    and so care must be taken for this to be useful. </description>
-					<example>
-						<stationOperator>
-							<value>Joe Seismologist</value>
-						</stationOperator>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<data type="string"/>
-		</element>
-	</define>
-	<define name="depthRange">
-		<element name="stationDepthRange">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches stations at a range of depths below the surface. </summary>
-					<description> Matches stations at a range of depths below the surface. </description>
-					<example>
-						<stationDepthRange>
-							<unit>METER</unit>
-							<min>100</min>
-							<max>200</max>
-						</stationDepthRange>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="range"/>
-		</element>
-	</define>
-	<define name="effectiveTimeOverlap">
-		<element name="stationEffectiveTimeOverlap">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches if the station effective time overlaps the given time range. </summary>
-					<description> Matches if the station effective time overlaps the given time range.
-                    This is generally used to avoid processing stations that did not yet exist, or
-                    were deactivated before a time range of interest. </description>
-					<example>
-						<stationEffectiveTimeOverlap>
-							<startTime>20020701T00:00:00.001Z</startTime>
-							<endTime>20021030T00:00:00.001Z</endTime>
-						</stationEffectiveTimeOverlap>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="timeRange"/>
-		</element>
-	</define>
-	<define name="area">
-		<element name="stationArea">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches stations that are within a given area. </summary>
-					<description> Matches stations that are within a given area. See the documentation
-                    for Area to see the available area types. </description>
-					<example>
-						<stationArea>
-							<boxArea>
-								<latitudeRange>
-									<min>25</min>
-									<max>35</max>
-								</latitudeRange>
-								<longitudeRange>
-									<min>-80</min>
-									<max>-70</max>
-								</longitudeRange>
-							</boxArea>
-						</stationArea>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<externalRef href="../base/externalRef/area.rng"/>
-		</element>
-	</define>
-	<define name="stationPointDistance">
-		<element name="stationPointDistance">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Distance range from a fixed point. </summary>
-					<description> True if the station is within the
-                                given distance range of the given lat and lon. </description>
-					<example>
-						<stationPointDistance>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-						</stationPointDistance>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<element name="latitude">
-				<data type="double"/>
-			</element>
-			<element name="longitude">
-				<data type="double"/>
-			</element>
-			<ref name="range"/>
-		</element>
-	</define>
-	<define name="stationPointAzimuth">
-		<element name="stationPointAzimuth">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Azimuth (point to station) range from a fixed point. </summary>
-					<description> True if the station is within the
-                                given azimuth range of the given lat and lon. In keeping with
-                                common seismic terminology, azimuth is measured from the point to the station.</description>
-					<example>
-						<stationPointAzimuth>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-						</stationPointAzimuth>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<element name="latitude">
-				<data type="double"/>
-			</element>
-			<element name="longitude">
-				<data type="double"/>
-			</element>
-			<ref name="range"/>
-		</element>
-	</define>
-	<define name="stationPointBackAzimuth">
-		<element name="stationPointBackAzimuth">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Back azimuth (station to point) range from a fixed point. </summary>
-					<description> True if the station is within the
-                                given back azimuth range of the given lat and lon. In keeping with
-                                common seismic terminology, back azimuth is measured from the station to the point. </description>
-					<example>
-						<stationPointBackAzimuth>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-						</stationPointBackAzimuth>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<element name="latitude">
-				<data type="double"/>
-			</element>
-			<element name="longitude">
-				<data type="double"/>
-			</element>
-			<ref name="range"/>
-		</element>
-	</define>
-	<define name="AND">
-		<element name="stationAND">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical AND between station subsetters. </summary>
-					<description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
-					<example>
-						<stationAND>
-							<stationEffectiveTimeOverlap>
-								<startTime>20020701T00:00:00.001Z</startTime>
-								<endTime>20021030T00:00:00.001Z</endTime>
-							</stationEffectiveTimeOverlap>
-							<stationArea>
-								<boxArea>
-									<latitudeRange>
-										<min>25</min>
-										<max>35</max>
-									</latitudeRange>
-									<longitudeRange>
-										<min>-80</min>
-										<max>-70</max>
-									</longitudeRange>
-								</boxArea>
-							</stationArea>
-						</stationAND>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="station"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="OR">
-		<element name="stationOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical OR between station subsetters. </summary>
-					<description> The output is the logical OR of the outputs of all included
-                    subsetters. If the first subsetters returns true then the second is not
-                    evaluated. </description>
-					<example>
-						<stationOR>
-							<stationEffectiveTimeOverlap>
-								<startTime>20020701T00:00:00.001Z</startTime>
-								<endTime>20021030T00:00:00.001Z</endTime>
-							</stationEffectiveTimeOverlap>
-							<stationArea>
-								<boxArea>
-									<latitudeRange>
-										<min>25</min>
-										<max>35</max>
-									</latitudeRange>
-									<longitudeRange>
-										<min>-80</min>
-										<max>-70</max>
-									</longitudeRange>
-								</boxArea>
-							</stationArea>
-						</stationOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="station"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="XOR">
-		<element name="stationXOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical XOR between station subsetters. </summary>
-					<description> The output is the logical XOR of the outputs of all included
-                    subsetters. </description>
-					<example>
-						<stationXOR>
-							<stationEffectiveTimeOverlap>
-								<startTime>20020701T00:00:00.001Z</startTime>
-								<endTime>20021030T00:00:00.001Z</endTime>
-							</stationEffectiveTimeOverlap>
-							<stationArea>
-								<boxArea>
-									<latitudeRange>
-										<min>25</min>
-										<max>35</max>
-									</latitudeRange>
-									<longitudeRange>
-										<min>-80</min>
-										<max>-70</max>
-									</longitudeRange>
-								</boxArea>
-							</stationArea>
-						</stationXOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="station"/>
-			<ref name="station"/>
-		</element>
-	</define>
-	<define name="NOT">
-		<element name="stationNOT">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical NOT of a station subsetter. </summary>
-					<description> The output is the logical NOT of the output of the included EventAttr
-                    subsetter. </description>
-					<example>
-						<stationNOT>
-							<stationArea>
-								<boxArea>
-									<latitudeRange>
-										<min>25</min>
-										<max>35</max>
-									</latitudeRange>
-									<longitudeRange>
-										<min>-80</min>
-										<max>-70</max>
-									</longitudeRange>
-								</boxArea>
-							</stationArea>
-						</stationNOT>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="station"/>
-		</element>
-	</define>
-	<define name="PASS">
-		<element name="passStation">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Always returns true. </summary>
-					<description> Simple subsetter that always returns true, useful for testing. </description>
-					<example>
-						<passStation/>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<zeroOrMore>
-				<ref name="station"/>
-			</zeroOrMore>
-		</element>
-	</define>
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="station"/>
+    </start>
+    <include href="../base/include/timeRange.rng"/>
+    <include href="../base/include/range.rng"/>
+    <include href="../base/include/latLon.rng"/>
+    <define name="station">
+        <choice>
+            <xsd:annotation>
+                <summary>Tactics for selecting stations</summary>
+                <description>This collects all of the subsetters that make
+                    decisions on the contents of a station.</description>
+            </xsd:annotation>
+            <ref name="code"/>
+            <ref name="name"/>
+            <ref name="operator"/>
+            <ref name="depthRange"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="area"/>
+            <ref name="stationPointDistance"/>
+            <ref name="stationPointAzimuth"/>
+            <ref name="stationPointBackAzimuth"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="XOR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+        </choice>
+    </define>
+    <define name="code">
+        <element name="stationCode">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches a station code</summary>
+                    <description>Matches a station code. This is a simple string match.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string">
+                <xsd:annotation>
+                    <example>ANMO</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="name">
+        <element name="stationName">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches the name of a station</summary>
+                    <description> Matches the name of a station. This is a
+                        simple string comparison, and so care must be taken for
+                        this to be useful. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string">
+                <xsd:annotation>
+                    <example>South Karori, New Zealand</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="operator">
+        <element name="stationOperator">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches the operator of a station</summary>
+                    <description> Matches the operator of a station. This is a
+                        simple string comparison, and so care must be taken for
+                        this to be useful. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string">
+                <xsd:annotation>
+                    <example>Joe Seismologist</example>
+                </xsd:annotation>
+            </data>
+        </element>
+    </define>
+    <define name="depthRange">
+        <element name="stationDepthRange">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches stations at a range of depths below the surface</summary>
+                    <description> Matches stations at a range of depths below
+                        the surface. </description>
+                    <example>
+                        <stationDepthRange>
+                            <unit>METER</unit>
+                            <min>100</min>
+                            <max>200</max>
+                        </stationDepthRange>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap">
+        <element name="stationEffectiveTimeOverlap">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches if the station effective time overlaps the
+                        given time range</summary>
+                    <description> Matches if the station effective time overlaps
+                        the given time range. This is generally used to avoid
+                        processing stations that did not yet exist, or were
+                        deactivated before a time range of interest. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="timeRange"/>
+        </element>
+    </define>
+    <define name="area">
+        <element name="stationArea">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches stations that are within a given area</summary>
+                    <description> Matches stations that are within a given area.
+                        See the documentation for Area to see the available area
+                        types. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="stationPointDistance">
+        <element name="stationPointDistance">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Distance range from a fixed point</summary>
+                    <description> True if the station is within the given
+                        distance range of the given lat and lon. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="range"/>
+            <ref name="lat"/>
+            <ref name="lon"/>
+        </element>
+    </define>
+    <define name="stationPointAzimuth">
+        <element name="stationPointAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Azimuth (point to station) range from a fixed point</summary>
+                    <description> True if the station is within the given
+                        azimuth range of the given lat and lon. In keeping with
+                        common seismic terminology, azimuth is measured from the
+                        point to the station.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="range"/>
+            <element name="latitude">
+                <data type="double"/>
+            </element>
+            <element name="longitude">
+                <data type="double"/>
+            </element>
+        </element>
+    </define>
+    <define name="stationPointBackAzimuth">
+        <element name="stationPointBackAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Back azimuth (station to point) range from a fixed point</summary>
+                    <description> True if the station is within the given back
+                        azimuth range of the given lat and lon. In keeping with
+                        common seismic terminology, back azimuth is measured
+                        from the station to the point. </description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="range"/>
+            <element name="latitude">
+                <data type="double"/>
+            </element>
+            <element name="longitude">
+                <data type="double"/>
+            </element>
+        </element>
+    </define>
+    <define name="AND">
+        <element name="stationAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between station subsetters</summary>
+                    <description> The output is the logical AND of the outputs
+                        of all included subsetters. The subsetters after the
+                        first false outputed are not evaluated. </description>
+                    <example>
+                        <stationAND>
+                            <stationEffectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
+                            </stationEffectiveTimeOverlap>
+                            <stationArea>
+                                <boxArea>
+                                    <latitudeRange>
+                                        <min>25</min>
+                                        <max>35</max>
+                                    </latitudeRange>
+                                    <longitudeRange>
+                                        <min>-80</min>
+                                        <max>-70</max>
+                                    </longitudeRange>
+                                </boxArea>
+                            </stationArea>
+                        </stationAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="station"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR">
+        <element name="stationOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between station subsetters</summary>
+                    <description> The output is the logical OR of the outputs of
+                        all included subsetters. If the first subsetters returns
+                        true then the second is not evaluated. </description>
+                    <example>
+                        <stationOR>
+                            <stationEffectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
+                            </stationEffectiveTimeOverlap>
+                            <stationArea>
+                                <boxArea>
+                                    <latitudeRange>
+                                        <min>25</min>
+                                        <max>35</max>
+                                    </latitudeRange>
+                                    <longitudeRange>
+                                        <min>-80</min>
+                                        <max>-70</max>
+                                    </longitudeRange>
+                                </boxArea>
+                            </stationArea>
+                        </stationOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="station"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="XOR">
+        <element name="stationXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between station subsetters</summary>
+                    <description> The output is the logical XOR of the outputs
+                        of all included subsetters. </description>
+                    <example>
+                        <stationXOR>
+                            <stationEffectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
+                            </stationEffectiveTimeOverlap>
+                            <stationArea>
+                                <boxArea>
+                                    <latitudeRange>
+                                        <min>25</min>
+                                        <max>35</max>
+                                    </latitudeRange>
+                                    <longitudeRange>
+                                        <min>-80</min>
+                                        <max>-70</max>
+                                    </longitudeRange>
+                                </boxArea>
+                            </stationArea>
+                        </stationXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="station"/>
+            <ref name="station"/>
+        </element>
+    </define>
+    <define name="NOT">
+        <element name="stationNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of a station subsetter</summary>
+                    <description> The output is the logical NOT of the output of
+                        the included EventAttr subsetter. </description>
+                    <example>
+                        <stationNOT>
+                            <stationArea>
+                                <boxArea>
+                                    <latitudeRange>
+                                        <min>25</min>
+                                        <max>35</max>
+                                    </latitudeRange>
+                                    <longitudeRange>
+                                        <min>-80</min>
+                                        <max>-70</max>
+                                    </longitudeRange>
+                                </boxArea>
+                            </stationArea>
+                        </stationNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="station"/>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passStation">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Always returns true</summary>
+                    <description>Simple subsetter that always returns true,
+                        useful for testing.</description>
+                    <example>
+                        <passStation/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="station"/>
+            </zeroOrMore>
+        </element>
+    </define>
 </grammar>

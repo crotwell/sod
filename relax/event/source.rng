@@ -14,11 +14,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Retrieve events from an EventFinder. </summary>
-                    <description> A Fissures/DHI EventDC service is located via
-                        the name and dns tags. The EventFinder is aquired from
-                        the EventDC, and a query is sent with the given
-                        arguments. The events returned are then sent thrrough
-                        the EventArm for processing. </description>
+                    <description> A Fissures/DHI EventDC service is located via the name and dns
+                        tags. The EventFinder is aquired from the EventDC, and a query is sent with
+                        the given arguments. The events returned are then sent thrrough the EventArm
+                        for processing. </description>
                     <example>
                         <eventFinder>
                             <name>IRIS_EventDC</name>
@@ -36,11 +35,9 @@
                                 </longitudeRange>
                             </boxArea>
                             <originDepthRange>
-                                <unitRange>
-                                    <unit>KILOMETER</unit>
-                                    <min>0</min>
-                                    <max>1000</max>
-                                </unitRange>
+                                <unit>KILOMETER</unit>
+                                <min>0</min>
+                                <max>1000</max>
                             </originDepthRange>
                             <originTimeRange>
                                 <startTime>20030101T00:00:00.001Z</startTime>
@@ -83,13 +80,11 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Name of an event server</summary>
-                    <description>The server's name is used in combination with a
-                        dns value to find an event DC. The name "IRIS_EventDC"
-                        must be used in combination with the "edu/iris/dmc" dns
-                        value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
-                        be used in conjunction with the "edu/berkley/geo/quake"
-                        dns value. The name "SCEPPEventDC" must be used in
-                        conjunction with a DNS value "edu/sc/seis".</description>
+                    <description>The server's name is used in combination with a dns value to find
+                        an event DC. The name "IRIS_EventDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
+                        be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
@@ -106,13 +101,11 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>DNS location of an event server</summary>
-                    <description>The server's dns is used in combination with a
-                        name value to find an event DC. The name "IRIS_EventDC"
-                        must be used in combination with the "edu/iris/dmc" dns
-                        value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
-                        be used in conjunction with the "edu/berkley/geo/quake"
-                        dns value. The name "SCEPPEventDC" must be used in
-                        conjunction with a DNS value "edu/sc/seis"</description>
+                    <description>The server's dns is used in combination with a name value to find
+                        an event DC. The name "IRIS_EventDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
+                        be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>

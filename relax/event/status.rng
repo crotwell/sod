@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink/">
     <start>
         <ref name="status"/>
     </start>
@@ -17,11 +17,25 @@
     </define>
     <define name="mapEventStatus">
         <element name="mapEventStatus">
-            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            <xsd:annotation>
+                <summary>Writes maps with all events on them to a specified location</summary>
+                <description>Writes maps with all events on them to the file specified in the
+                    outputLoc element. The output location is relative to statusBase in the properties.</description>
+            </xsd:annotation>
+            <element name="outputLoc">
+                <text/>
+            </element>
         </element>
     </define>
     <define name="eventStatusTemplate">
         <element name="eventStatusTemplate">
+            <xsd:annotation>
+                <summary>Writes html pages and maps for events</summary>
+                <description>Writes html pages and maps for events based on the template in the href attribute.</description>
+                <example>
+                    <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
+                </example>
+            </xsd:annotation>
             <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
         </element>
     </define>

@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="networkArm">
+            <xsd:annotation>
+                <summary>Selects and proccesses networks, stations, sites and channels</summary>
+                <description>The network arm goes out to the server specified in the network finder,
+                    and retrieves all the networks, stations sites, and channels that that server
+                    knows about that pass the subsetters contained in the arm. It then runs those
+                    successful items through the processors, all the while keeping the network
+                    status items abreast of the process.</description>
+            </xsd:annotation>
             <externalRef href="source.rng"/>
             <optional>
                 <externalRef href="network.rng"/>
