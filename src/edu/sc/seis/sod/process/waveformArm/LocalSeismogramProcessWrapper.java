@@ -18,6 +18,15 @@ public class LocalSeismogramProcessWrapper implements ChannelGroupLocalSeismogra
         this.seisProcess = sp;
     }
 
+    /**
+     * Returns SeisProcess
+     *
+     * @return    a  LocalSeismogramProcess
+     */
+    public LocalSeismogramProcess getSeisProcess() {
+        return seisProcess;
+    }
+
     public LocalSeismogramImpl[][] process(EventAccessOperations event,
                                            ChannelGroup channelGroup,
                                            RequestFilter[][] original,
@@ -30,6 +39,7 @@ public class LocalSeismogramProcessWrapper implements ChannelGroupLocalSeismogra
         }
         return out;
     }
+
 
     LocalSeismogramProcess seisProcess;
 }
