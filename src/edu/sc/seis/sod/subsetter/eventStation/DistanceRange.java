@@ -34,9 +34,9 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
             logger.debug("Distance ok " + dist + " from " + getMin() + " "
                     + getMax());
-            return new StringTreeLeaf("DistanceRange("+getMin()+", "+getMax()+")", true);
+            return new StringTreeLeaf(this, true, "DistanceRange("+getMin()+", "+getMax()+")");
         } else {
-            return new StringTreeLeaf("DistanceRange("+getMin()+", "+getMax()+")", false, dist.toString());
+            return new StringTreeLeaf(this, false,"DistanceRange("+getMin()+", "+getMax()+")"+ dist.toString());
         }
     }
 
