@@ -45,6 +45,33 @@ public class EventChannelGroupPair {
         }
     }
 
+    public boolean equals(Object obj) {
+        if (obj instanceof EventChannelGroupPair) {
+            EventChannelGroupPair other = (EventChannelGroupPair)obj;
+            for (int i = 0; i < pairs.length; i++) {
+                boolean found = false;
+                for (int j = i; j < pairs.length; j++) {
+                    if (pairs[i].equals(other.pairs[j])) {
+                        found = true;
+                        break;
+                    }
+                }
+                if ( ! found) { return false; }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int hashCode() {
+        int code = 1;
+        for (int i = 0; i < pairs.length; i++) {
+            code += 3*pairs[i].hashCode();
+        }
+        return code;
+    }
+
     ChannelGroup channels;
 
     EventChannelPair[] pairs;
