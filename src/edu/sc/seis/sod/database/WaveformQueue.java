@@ -18,17 +18,17 @@ public interface WaveformQueue {
     
     public void push(int waveformeventid, int siteid, int waveformnetworkid);
 
-    public int pop();
+    public long pop();
    
-    public int getWaveformId(int waveformeventid, int waveformnetworkid);
+    public long getWaveformId(int waveformeventid, int waveformnetworkid);
 
-    public void setStatus(int dbid, Status newStatus);
+    public void setStatus(long dbid, Status newStatus);
 
-    public void setStatus(int dbid, Status newStatus, String reason);
+    public void setStatus(long dbid, Status newStatus, String reason);
 
-    public int getWaveformEventId(int dbid);
+    public int getWaveformEventId(long dbid);
 
-    public int getWaveformChannelId(int dbid);
+    public int getWaveformChannelId(long dbid);
 
     // public int getLength();
     
@@ -103,7 +103,7 @@ public interface WaveformQueue {
 
     public void deleteChannelInfo(int waveformeventid, int channelid);
 
-    public int[] getIds();
+    public long[] getIds();
 
     public void clean();
 

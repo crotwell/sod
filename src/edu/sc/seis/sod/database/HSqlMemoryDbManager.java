@@ -20,7 +20,7 @@ public class HSqlMemoryDbManager extends HSqlDbManager{
     }
     
     public String getDatabaseName() {
-        return ".";
+        return "mytest";
     }
 
     public WaveformDatabase getWaveformDatabase() {

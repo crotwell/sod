@@ -34,7 +34,7 @@ public interface WaveformDatabase {
 			   int numChannels,
 			   MicroSecondDate date);
 
-    public int putChannelInfo(int waveformeventid,
+    public long putChannelInfo(int waveformeventid,
 			      int channelid,
 			      int siteid,
 			      MicroSecondDate date);
@@ -71,21 +71,21 @@ public interface WaveformDatabase {
 
     public int unfinishedChannelCount(int waveformeventid, int siteid);
 
-    public int getChannelDbId(int waveformeventid, int waveformchannelid);
+    public long getChannelDbId(int waveformeventid, int waveformchannelid);
 
-    public int getFirst();
+    public long getFirst();
 
-    public void updateStatus(int waveformid, Status newStatus);
+    public void updateStatus(long  waveformid, Status newStatus);
 
-    public void updateStatus(int waveformid, Status newStatus, String reason);
+    public void updateStatus(long waveformid, Status newStatus, String reason);
 
     public void updateStatus(Status status, Status newStatus);
 
-    public int[] getByStatus(Status status);
+    public long[] getByStatus(Status status);
 
-    public int getWaveformEventId(int dbid);
+    public int getWaveformEventId(long dbid);
 
-    public int getWaveformChannelId(int dbid);
+    public int getWaveformChannelId(long dbid);
 
     public void delete(int waveformEventid);
     
@@ -99,7 +99,7 @@ public interface WaveformDatabase {
 
     public void deleteChannelInfo(int waveformeventid, int channelid);
 
-    public int[] getIds();
+    public long[] getIds();
 
     public void clean();
 

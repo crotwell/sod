@@ -26,13 +26,13 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
         networkMap = new HashMap();
         stationMap = new HashMap();
         siteMap = new HashMap();
-        channelMap = new HashMap();
+        channelMap = new TreeMap();
     }
 
     public int putInfo(int waveformeventid, int numNetworks) {
-        String key = Integer.toString(waveformeventid);
+        Long key = new Long((((long)waveformeventid)<<32) + waveformeventid);
         waveformMap.put(key, new Wrapper(0,numNetworks,waveformeventid, waveformeventid));
-        return Integer.parseInt(key);
+        return 0;
     }
 
     public int putNetworkInfo(int waveformeventid,
@@ -40,9 +40,9 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
                               int numStations,
                               MicroSecondDate date) {
 
-        String key = Integer.toString(waveformeventid+networkid);
+        Long key = new Long((((long)waveformeventid)<<32) + networkid);
         networkMap.put(key, new Wrapper(0, numStations, waveformeventid, networkid));
-        return Integer.parseInt(key);
+        return 0;
     }
 
     public int putStationInfo(int waveformeventid,
@@ -50,9 +50,9 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
                               int networkid,
                               int numSites,
                               MicroSecondDate date) {
-        String key = Integer.toString(waveformeventid + stationid);
+        Long key = new Long((((long)waveformeventid)<<32) + stationid);
         stationMap.put(key, new Wrapper(networkid, numSites, waveformeventid, stationid));
-        return Integer.parseInt(key);
+        return 0;
     }
         
 
@@ -61,98 +61,97 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
                            int stationid,
                            int numChannels,
                            MicroSecondDate date) {
-
-        String key = Integer.toString(waveformeventid + siteid);
+        Long key = new Long((((long)waveformeventid)<<32) + siteid);
         siteMap.put(key, new Wrapper(stationid, numChannels, waveformeventid, siteid));
-        return Integer.parseInt(key);
+        return 0;
     }
 
-    public int putChannelInfo(int waveformeventid,
+    public long putChannelInfo(int waveformeventid,
                               int channelid,
                               int siteid,
                               MicroSecondDate date) {
-        String key = Integer.toString(waveformeventid + channelid);
+        Long key = new Long((((long)waveformeventid)<<32) + channelid);
         channelMap.put(key, new Wrapper(siteid, 0, waveformeventid, channelid));
-        return Integer.parseInt(key);
+        return key.longValue();
     }
     
     public void decrementNetworkCount(int waveformeventid) {
+        Long key = new Long((((long)waveformeventid)<<32) + waveformeventid);
         int count = getNetworkCount(waveformeventid) - 1;
-        String key = Integer.toString(waveformeventid);
         Wrapper obj = (Wrapper) waveformMap.get(key);
         obj.count = count;
     }
 
     public void decrementStationCount(int waveformeventid, int networkid) {
+        Long key = new Long((((long)waveformeventid)<<32) + networkid);
         int count = getStationCount(waveformeventid, networkid) - 1;
-        String key = Integer.toString(waveformeventid + networkid);
         Wrapper obj = (Wrapper) networkMap.get(key);
         obj.count = count;
     }
 
     public void decrementSiteCount(int waveformeventid, int stationid) {
+        Long key = new Long((((long)waveformeventid)<<32) + stationid);
         int count = getSiteCount(waveformeventid, stationid) - 1;
-        String key = Integer.toString(waveformeventid + stationid);
         Wrapper obj = (Wrapper) stationMap.get(key);
         obj.count = count;
     }
 
     public void decrementChannelCount(int waveformeventid, int siteid) {
+        Long key = new Long((((long)waveformeventid)<<32) + siteid);
         int count = getChannelCount(waveformeventid, siteid) - 1;
-        String key = Integer.toString(waveformeventid + siteid);
         Wrapper obj = (Wrapper) siteMap.get(key);
         obj.count = count;
     }
 
     public void incrementNetworkCount(int waveformeventid) {
         int count = getNetworkCount(waveformeventid) + 1;
-        String key = Integer.toString(waveformeventid);
+        Long key = new Long((((long)waveformeventid)<<32) + waveformeventid);
         Wrapper obj = (Wrapper) waveformMap.get(key);
         obj.count = count;
     }
 
     public void incrementStationCount(int waveformeventid, int networkid) {
         int count = getStationCount(waveformeventid, networkid) + 1;
-        String key = Integer.toString(waveformeventid + networkid);
+        Long key = new Long((((long)waveformeventid)<<32) + networkid);
         Wrapper obj = (Wrapper) networkMap.get(key);
         obj.count = count;
     }
 
     public void incrementSiteCount(int waveformeventid, int stationid) {
         int count = getSiteCount(waveformeventid, stationid) + 1;
-        String key = Integer.toString(waveformeventid + stationid);
+        Long key = new Long((((long)waveformeventid)<<32) + stationid);
         Wrapper obj = (Wrapper) stationMap.get(key);
         obj.count = count;
     }
 
     public void incrementChannelCount(int waveformeventid, int siteid) {
         int count = getChannelCount(waveformeventid, siteid) + 1;
-        String key =  Integer.toString(waveformeventid + siteid);
+        Long key = new Long((((long)waveformeventid)<<32) + siteid);
         Wrapper obj = (Wrapper) siteMap.get(key);
         obj.count = count;
     }
 
     public int getNetworkCount(int waveformeventid) {
-        String key = Integer.toString(waveformeventid);
+        Long key = new Long((((long)waveformeventid)<<32) + waveformeventid);
         Wrapper obj = (Wrapper) waveformMap.get(key);
         return obj.count;
     }
 
     public int getStationCount(int waveformeventid, int networkid) {
-        String key = Integer.toString(waveformeventid + networkid);
+        Long key = new Long((((long)waveformeventid)<<32) + networkid);
         Wrapper obj = (Wrapper) networkMap.get(key);
         return obj.count;
         
     }
 
     public int getSiteCount(int waveformeventid, int stationid) {
-        String key = Integer.toString(waveformeventid + stationid);
+        Long key = new Long((((long)waveformeventid)<<32) + stationid);
         Wrapper obj = (Wrapper) stationMap.get(key);
         return obj.count;
     }
 
     public int getChannelCount(int waveformeventid, int siteid) {
-        String key = Integer.toString(waveformeventid + siteid);
+        Long key = new Long((((long)waveformeventid)<<32) + siteid);
         Wrapper obj = (Wrapper) siteMap.get(key);
         return obj.count;
     }
@@ -173,31 +172,42 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
         return getChannelCount(waveformeventid, siteid);
     }
 
-    public int getChannelDbId(int waveformeventid, int waveformchannelid) {
-        return (waveformeventid + waveformchannelid);
-    }
+    public long getChannelDbId(int waveformeventid, int waveformchannelid) {
 
-    public int getFirst() {
         Set keySet = channelMap.keySet();
         Iterator iterator = keySet.iterator();
         while(iterator.hasNext()) {
-            String key = (String) iterator.next();
+            Long key = (Long) iterator.next();
             Wrapper obj = (Wrapper) channelMap.get(key);
-            if(obj.status == Status.NEW.getId()) {
-                obj.status = Status.PROCESSING.getId();
-                return Integer.parseInt(key);
+            if(obj.waveformeventid == waveformeventid &&
+               obj.waveformoriginalid == waveformchannelid) {
+                return key.longValue();
             }
         }
         return -1;
     }
 
-    public void updateStatus(int waveformid, Status newStatus) {
-        String key = Integer.toString(waveformid);
+    public long getFirst() {
+        Set keySet = channelMap.keySet();
+        Iterator iterator = keySet.iterator();
+        while(iterator.hasNext()) {
+            Long key = (Long) iterator.next();
+            Wrapper obj = (Wrapper) channelMap.get(key);
+            if(obj.status == Status.NEW.getId()) {
+                obj.status = Status.PROCESSING.getId();
+                return key.longValue();
+            }
+        }
+        return -1;
+    }
+
+    public void updateStatus(long waveformid, Status newStatus) {
+        Long key = new Long(waveformid);
         Wrapper obj = (Wrapper) channelMap.get(key);
         obj.status = newStatus.getId();
     }
 
-    public void updateStatus(int waveformid, Status newStatus, String reason) {
+    public void updateStatus(long waveformid, Status newStatus, String reason) {
         updateStatus(waveformid, newStatus);
     }
 
@@ -212,33 +222,33 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
         }
     }
 
-    public int[] getByStatus(Status status) {
+    public long[] getByStatus(Status status) {
         ArrayList arrayList = new ArrayList();
         Set keySet = channelMap.keySet();
         Iterator iterator = keySet.iterator();
         while(iterator.hasNext()) {
-            String key = (String) iterator.next();
+            Long key = (Long) iterator.next();
             Wrapper obj = (Wrapper) channelMap.get(key);
             if(obj.status == status.getId()) {
-                arrayList.add(new Integer(Integer.parseInt(key)));
+                arrayList.add(key);
             }
         }
-        int[] rtnValues = new int[arrayList.size()];
+        long[] rtnValues = new long[arrayList.size()];
 
         for(int counter = 0; counter < arrayList.size(); counter++) {
-            rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+            rtnValues[counter] = ((Long)arrayList.get(counter)).longValue();
         }
         return rtnValues;
     }
 
-    public int getWaveformEventId(int dbid) {
-        String key = Integer.toString(dbid);
+    public int getWaveformEventId(long dbid) {
+        Long key = new Long(dbid);
         Wrapper wrapper = (Wrapper) channelMap.get(key);
         return wrapper.waveformeventid;
     }
 
-    public int getWaveformChannelId(int dbid) {
-        String key = Integer.toString(dbid);
+    public int getWaveformChannelId(long dbid) {
+        Long key = new Long(dbid);
         Wrapper wrapper = (Wrapper) channelMap.get(key);
         return wrapper.waveformoriginalid;
     }
@@ -267,18 +277,18 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
 
     }
 
-    public int[] getIds() {
+    public long[] getIds() {
         ArrayList arrayList = new ArrayList();
         Set keySet = channelMap.keySet();
         Iterator iterator = keySet.iterator();
         while(iterator.hasNext()) {
-            String key = (String) iterator.next();
-            arrayList.add(new Integer(Integer.parseInt(key)));
+            Long key = (Long) iterator.next();
+            arrayList.add(key);
         }
-        int[] rtnValues = new int[arrayList.size()];
+        long[] rtnValues = new long[arrayList.size()];
 
         for(int counter = 0; counter < arrayList.size(); counter++) {
-            rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+            rtnValues[counter] = ((Long)arrayList.get(counter)).longValue();
         }
         return rtnValues;
     }
@@ -327,7 +337,7 @@ public class MemoryWaveformDatabase extends AbstractWaveformDatabase{
 
     private HashMap siteMap;
     
-    private HashMap channelMap;
+    private Map channelMap;
     
   
 }// MemoryWaveformDatabase

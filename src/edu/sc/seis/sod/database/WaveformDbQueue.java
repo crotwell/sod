@@ -55,12 +55,12 @@ public class WaveformDbQueue implements WaveformQueue{
     }
 
    
-    public int pop() {
+    public long pop() {
 	
         Object connection = getConnection();
         synchronized(connection) {
 	    
-            int dbid = waveformDatabase.getFirst();
+            long dbid = waveformDatabase.getFirst();
             while(dbid == -1 && sourceAlive == true ) {
                 try {
                     connection.wait();
@@ -69,30 +69,30 @@ public class WaveformDbQueue implements WaveformQueue{
                 }
                 dbid = waveformDatabase.getFirst();
             }
-	    
-            return dbid;
+              return dbid;
         }
     }
 
 
-    public synchronized int getWaveformId(int waveformeventid, int waveformnetworkid) {
-        return waveformDatabase.getChannelDbId(waveformeventid,
-                                               waveformnetworkid);
+    public synchronized long getWaveformId(int waveformeventid, int waveformnetworkid) {
+        long rtnValue =  waveformDatabase.getChannelDbId(waveformeventid,
+                                                         waveformnetworkid);
+         return rtnValue;
     }
 
-    public synchronized void setStatus(int dbid, Status newStatus) {
+    public synchronized void setStatus(long dbid, Status newStatus) {
         waveformDatabase.updateStatus(dbid, newStatus);
     }
 
-    public synchronized void setStatus(int dbid, Status newStatus, String reason) {
+    public synchronized void setStatus(long dbid, Status newStatus, String reason) {
         waveformDatabase.updateStatus(dbid, newStatus, reason);
     }
 
-    public synchronized int getWaveformEventId(int dbid) {
+    public synchronized int getWaveformEventId(long dbid) {
         return waveformDatabase.getWaveformEventId(dbid);
     }
     
-    public synchronized int getWaveformChannelId(int dbid) {
+    public synchronized int getWaveformChannelId(long dbid) {
         return waveformDatabase.getWaveformChannelId(dbid);
     }
 
@@ -261,7 +261,7 @@ public class WaveformDbQueue implements WaveformQueue{
 	waveformDatabase.deleteChannelInfo(waveformeventid, channelid);
     }
 
-    public synchronized int[] getIds() {
+    public synchronized long[] getIds() {
 	return waveformDatabase.getIds();
     }
 

@@ -345,7 +345,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	return false;
     }
   
-    public int putChannelInfo(int waveformeventid, 
+    public long putChannelInfo(int waveformeventid, 
 			      int channelid,
 			      int siteid, 
 			      MicroSecondDate date) {
@@ -615,7 +615,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
     
    
-    public int getChannelDbId(int waveformeventid, int waveformchannelid) {
+    public long getChannelDbId(int waveformeventid, int waveformchannelid) {
 
 	try {
 	    getIdStmt.setInt(1, waveformeventid);
@@ -630,7 +630,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	return -1;
     }
 
-    public int getFirst() {
+    public long getFirst() {
 	try {
 	    getByStatusStmt.setInt(1, Status.NEW.getId());
 	    ResultSet rs = null;
@@ -649,15 +649,15 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	
     }
 
-    public void updateStatus(int waveformid, Status newStatus) {
+    public void updateStatus(long waveformid, Status newStatus) {
 	updateStatus(waveformid, newStatus, "");
     }
 
-    public void updateStatus(int waveformid, Status newStatus, String reason) {
+    public void updateStatus(long waveformid, Status newStatus, String reason) {
 	try {
 	   updateStatusStmt.setInt(1, newStatus.getId());
 	   updateStatusStmt.setString(2, reason);
-	   updateStatusStmt.setInt(3, waveformid);
+	   updateStatusStmt.setInt(3, (int)waveformid);
 	   updateStatusStmt.executeUpdate();
 	} catch(SQLException sqle) {
 		sqle.printStackTrace();
@@ -674,7 +674,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	}
     }
 
-    public int[] getByStatus(Status status) {
+    public long[] getByStatus(Status status) {
 	ArrayList arrayList = new ArrayList();
 	try {
 		getByStatusStmt.setInt(1, status.getId());
@@ -685,7 +685,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	} catch(SQLException sqle) {
 		sqle.printStackTrace();
 	}
-	int[] rtnValues = new int[arrayList.size()];
+	long[] rtnValues = new long[arrayList.size()];
 	for(int counter = 0; counter < arrayList.size(); counter++) {
 		rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
 	}
@@ -693,10 +693,10 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     }
 
 
-    public int getWaveformEventId(int dbid) {
+    public int getWaveformEventId(long dbid) {
 	
 	try {
-	    getStmt.setInt(1, dbid);
+	    getStmt.setInt(1, (int)dbid);
 	    ResultSet rs = getStmt.executeQuery();
 	    if(rs.next()) {
 		return rs.getInt("waveformeventid");
@@ -707,9 +707,9 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	return -1;
     }
     
-    public int getWaveformChannelId(int dbid) {
+    public int getWaveformChannelId(long dbid) {
 	try {
-	    getStmt.setInt(1, dbid);
+	    getStmt.setInt(1, (int)dbid);
 	    ResultSet rs = getStmt.executeQuery();
 	    if(rs.next()) {
 		return rs.getInt("waveformchannelid");
@@ -787,7 +787,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	}
     }
 
-    public int[] getIds(int eventid) {
+    public long[] getIds(int eventid) {
 	ArrayList arrayList = new ArrayList();
 	try {
 	    getIdsStmt.setInt(1, Status.COMPLETE_SUCCESS.getId());
@@ -800,19 +800,19 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
-	int[] rtnValues = new int[arrayList.size()];
+	long[] rtnValues = new long[arrayList.size()];
 	for(int counter = 0; counter < arrayList.size(); counter++) {
 	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
 	}
 	return rtnValues;
     }
 
-    public int[] getIds() {
+    public long[] getIds() {
 	int[] eventids = getUnfinishedEvents();
-	int[] rtnValues = new  int[0];
+	long[] rtnValues = new  long[0];
 	for(int counter = 0; counter < eventids.length; counter++) {
-		int[] ids = getIds(eventids[counter]);
-		int[] tmp = new int[rtnValues.length + ids.length];
+		long[] ids = getIds(eventids[counter]);
+		long[] tmp = new long[rtnValues.length + ids.length];
 		System.arraycopy(rtnValues, 0, tmp, 0, rtnValues.length);
 		System.arraycopy(ids, 0, tmp, rtnValues.length, ids.length);
 		rtnValues = tmp;
