@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>SOD - Using SOD's Tactic Reference</title>
+    </properties>
+    <body>
+        <section name="What is the Tactic Reference?">
+            <p>The tactic reference contains a page for every tactic that can go into SOD. If you
+                want to extend and improve your SOD runs, it's the place to find pieces of SOD that
+                do what you want.</p>
+        </section>
+        <section name="What is a tactic?">
+            <p>A tactic is a single operation in SOD. A SOD strategy file consists of multiple
+                tactics that tell SOD how to gather and process data.</p>
+        </section>
+        <section name="What's in each tactic's page?">
+            <p> Each tactic's page consists of four major sections: a description of the tactic's
+                uses, an example of the tactic's structure, an abstract description of the tactic's
+                structure, and a list of all of the tactics that contain this tactic. </p>
+            <section name="Description">
+                <p> Each page starts with the name of the tactic followed by its description. The
+                    description contains a general idea of what the tactic does, common usages, and
+                    references to other tactics that use this one.</p>
+            </section>
+            <section name="Example">
+                <p>The example shows what an instance of this tactic looks like. You can copy the
+                    example, paste it in the correct place in a strategy file, and SOD will start
+                    using it. It can help to see a base usage of a tactic to modify it for your own purposes.</p>
+            </section>
+            <section name="This consists of">
+                <p>This section describes the exact structure of the current tactic. It's important
+                    enough to get its own page explaining it <a href="abstractStructure.html">here</a>.</p>
+            </section>
+            <section name="Places this can be found">
+                <p> This section lists every tactic that contains this tactic. In the case where
+                    this is contained in a choice, the items that can be substituted for this are
+                    listed as well. </p>
+            </section>
+        </section>
+        <section name="How do I find the tactic I want?">
+            <p>So you've got a SOD strategy file that does most of what you want, but you need to
+                refine the data or add another processing step. How do you find the right tactic to
+                insert to get the work done? The menu that runs down the left side of all of the
+                Tactic Reference pages consists of links to each of the tactic pages for the major
+                steps in SOD's operations broken down by arm. If you can identify the step that
+                needs to be refined, just select that one out of the menu and find the appropriate
+                tactic. Lets say the events SOD returns past a certain distance aren't worth
+                processing. Since the problem is solely with the events, that means the event arm
+                needs to be tweaked. After clicking on Origin in the eventArm section of the menu,
+                scanning the various pieces that can go there reveals originPointDistance. By adding
+                an originPointDistance with a small max distance value to the eventArm keeps SOD
+                from processing events that are far away.</p>
+        </section>
+    </body>
+</document>
