@@ -34,6 +34,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	regions = new ParseRegions();
 	String datadirName = getConfig("dataDirectory");
 	this.dataDirectory = new File(datadirName);
+	format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     public boolean accept(EventAccessOperations event, 
