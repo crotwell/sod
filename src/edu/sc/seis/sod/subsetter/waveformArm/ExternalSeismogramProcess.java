@@ -1,12 +1,16 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
+import org.w3c.dom.Element;
 
-import org.w3c.dom.*;
-import edu.sc.seis.sod.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramProcess;
+import edu.sc.seis.sod.SodUtil;
 
 /**
  * ExternalSeismogramProcess.java
@@ -15,7 +19,7 @@ import edu.sc.seis.sod.*;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 2880 2002-11-06 20:26:35Z crotwell $
+ * @version $Id: ExternalSeismogramProcess.java 6408 2003-11-18 19:40:02Z groves $
  */
 
 public class ExternalSeismogramProcess 

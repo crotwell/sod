@@ -7,7 +7,6 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.sod.database.Status;
 
 public interface EventStatus extends SodElement {
     

@@ -1,18 +1,18 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-import edu.sc.seis.sod.subsetter.eventArm.*;
-import edu.sc.seis.TauP.*;
+import org.w3c.dom.Element;
 
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.EventStationSubsetter;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
+import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
 
 /**
  * sample xml

@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
+
 import edu.sc.seis.sod.subsetter.*;
 import java.util.*;
 import org.w3c.dom.*;

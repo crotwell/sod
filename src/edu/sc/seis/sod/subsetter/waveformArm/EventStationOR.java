@@ -1,13 +1,16 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.*;
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
+
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.EventStationSubsetter;
+import edu.sc.seis.sod.WaveFormLogicalSubsetter;
 
 /**
  * This subsetter is used to specify a sequence of EventStationSubsetters. This subsetter is accepted when even one

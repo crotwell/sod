@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.sod.*;
+
 import edu.iris.Fissures.*;
 import edu.iris.Fissures.model.*;
 

@@ -1,11 +1,17 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.OriginSubsetter;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * EventArea.java
@@ -18,7 +24,7 @@ import edu.iris.Fissures.*;
  *
  * This class is used to represent the subsetter EventArea. Event Area implements EventSubsetter
  * and can be any one of GlobalArea or BoxArea or PointDistanceArea or FlinneEngdahlArea.
- * 
+ *
  *<pre>
  * sample xml representation of EventArea are
  *
@@ -39,7 +45,7 @@ import edu.iris.Fissures.*;
  */
 
 
-public class EventArea 
+public class EventArea
     implements OriginSubsetter,SodElement {
     
     /**
@@ -49,15 +55,15 @@ public class EventArea
      * @exception ConfigurationException if an error occurs
      */
     public EventArea (Element config) throws ConfigurationException {
-	NodeList children = config.getChildNodes();
-	for(int i = 0; i < children.getLength() ; i++) {
-		Node node = children.item(i);
-		if(node instanceof Element) {
-			area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "edu.sc.seis.sod");	
-			break;
-		}
-	}
-	
+    NodeList children = config.getChildNodes();
+    for(int i = 0; i < children.getLength() ; i++) {
+        Node node = children.item(i);
+        if(node instanceof Element) {
+            area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "edu.sc.seis.sod");
+            break;
+        }
+    }
+    
     }
 
     /**
@@ -70,19 +76,19 @@ public class EventArea
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) {
-	if(area instanceof edu.iris.Fissures.BoxArea) {
-		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		
-		if(e.my_location.latitude >= boxArea.min_latitude 
-		   && e.my_location.latitude <=boxArea.max_latitude
-		   && e.my_location.longitude >= boxArea.min_longitude
-		   && e.my_location.longitude <= boxArea.max_longitude) {
-		    return true;
-		} else return false;
-	
-	}
-	return true;
-	
+        if(area instanceof edu.iris.Fissures.BoxArea) {
+        edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
+        
+        if(e.my_location.latitude >= boxArea.min_latitude
+           && e.my_location.latitude <=boxArea.max_latitude
+           && e.my_location.longitude >= boxArea.min_longitude
+           && e.my_location.longitude <= boxArea.max_longitude) {
+            return true;
+        } else return false;
+    
+    }
+    return true;
+    
     }
 
     private edu.iris.Fissures.Area area = null;

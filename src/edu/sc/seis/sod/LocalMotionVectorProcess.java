@@ -1,11 +1,10 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.LocalMotionVector;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 
 /**
  * LocalMotionVectorProcessor.java

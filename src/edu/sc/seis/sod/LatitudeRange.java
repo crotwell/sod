@@ -1,8 +1,6 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.*;
-
-import org.w3c.dom.*;
+import org.w3c.dom.Element;
 
 /**
  * Describe class <code>LatitudeRange</code> here.
