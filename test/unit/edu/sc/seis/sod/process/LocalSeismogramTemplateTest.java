@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod.process;
 
+import java.io.*;
+
 import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.CookieJar;
@@ -16,11 +18,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
-import java.io.Writer;
 import junit.framework.TestCase;
 import org.apache.log4j.BasicConfigurator;
 
@@ -41,8 +38,9 @@ public class LocalSeismogramTemplateTest extends TestCase {
             inString += s;
         }
         String out = LocalSeismogramTemplate.getVelocityResult(inString, cookieJar);
-
-        Writer sw = new BufferedWriter(new FileWriter("LocalSeismogramTemplateTest.html"));
+        File outputLoc = new File("LocalSeismogramTemplateTest.html");
+        outputLoc.deleteOnExit();
+        Writer sw = new BufferedWriter(new FileWriter(outputLoc));
 
         sw.write(out);
         sw.close();
