@@ -24,7 +24,7 @@ public class SchemaGrammer {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         saxParserFactory.setNamespaceAware(true);
 
-        InputSource inputSource = new InputSource("../relax/sod.rng");
+        InputSource inputSource = new InputSource("relax/sod.rng");
         grammar = GrammarLoader.loadSchema(inputSource, new OutMsvController(), saxParserFactory);
 
         if (grammar == null) {
