@@ -366,7 +366,7 @@
     </xsd:complexType>
     
     <!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
-    <xsd:complexType name="networkeffectiveTimeOverlapType">
+    <xsd:complexType name="networkEffectiveTimeOverlapType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
@@ -376,7 +376,7 @@
                     Matches if the network overlaps the given time range.
                 </description>
                 <example>
-                    <networkeffectiveTimeOverlap>
+                    <networkEffectiveTimeOverlap>
                         <description>
                             Make sure the network was up during the time range we 
                             are interested in.
@@ -385,7 +385,7 @@
                             <min>20020701T00:00:00.001Z</min>
                             <max>20021030T00:00:00.001Z</max>
                         </effectiveTimeOverlap>
-                    </networkeffectiveTimeOverlap>
+                    </networkEffectiveTimeOverlap>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -465,12 +465,12 @@
                         <networkAttrOwner>
                             <value>Scripps Institution of Oceanography</value>
                         </networkAttrOwner>
-                        <networkeffectiveTimeOverlap>
+                        <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
-                        </networkeffectiveTimeOverlap>
+                        </networkEffectiveTimeOverlap>
                     </networkAttrAND>
                 </example>
             </xsd:documentation>
@@ -500,12 +500,12 @@
                         <networkAttrOwner>
                             <value>Scripps Institution of Oceanography</value>
                         </networkAttrOwner>
-                        <networkeffectiveTimeOverlap>
+                        <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
-                        </networkeffectiveTimeOverlap>
+                        </networkEffectiveTimeOverlap>
                     </networkAttrOR>
                 </example>
             </xsd:documentation>
@@ -534,12 +534,12 @@
                         <networkAttrOwner>
                             <value>Scripps Institution of Oceanography</value>
                         </networkAttrOwner>
-                        <networkeffectiveTimeOverlap>
+                        <networkEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
                                 <max>20021030T00:00:00.001Z</max>
                             </effectiveTimeOverlap>
-                        </networkeffectiveTimeOverlap>
+                        </networkEffectiveTimeOverlap>
                     </networkAttrXOR>
                 </example>
             </xsd:documentation>
@@ -582,6 +582,19 @@
     </xsd:complexType>
     
     <xsd:complexType name="stationCodeType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches a station code.
+            </summary>
+            <description>
+                Matches a station code. This is a simple string match.
+            </description>
+            <example>
+               <stationCode>ANMO</stationCode>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationIDType">
                 <xsd:sequence>
@@ -770,7 +783,13 @@
                 Matches stations at a range of depths below the surface.
             </description>
             <example>
-               
+              <stationDepthRange>
+                 <unitRange>
+                    <unit>METER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                 </unitRange>
+              </stationDepthRange>               
             </example>
 	</xsd:documentation>
       </xsd:annotation>
@@ -785,7 +804,29 @@
     
     
     <!--STATION EFFECTIVE TIME OVERLAP TYPE-->
-    <xsd:complexType name="stationeffectiveTimeOverlapType">
+    <xsd:complexType name="stationEffectiveTimeOverlapType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches if the station effective time overlaps the given time
+                range.
+            </summary>
+            <description>
+                Matches if the station effective time overlaps the given time
+                range. This is generally used to avoid processing stations
+                that did not yet exist, or were deactivated before a time
+                range of interest.
+            </description>
+            <example>
+        <stationEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -795,8 +836,32 @@
         </xsd:complexContent>
     </xsd:complexType>	
     
-    <!-- STATION AREA TYPE -->
     <xsd:complexType name="stationAreaType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches stations that are within a given area.
+            </summary>
+            <description>
+                Matches stations that are within a given area. See the 
+                documentation for Area to see the available area types.
+            </description>
+            <example>
+               <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                                <min>25</min>
+                                <max>35</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                                <min>-80</min>
+                                <max>-70</max>
+                        </longitudeRange>
+                    </boxArea>
+               </stationArea>               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -811,18 +876,34 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between EventAttr subsetters.
+                    Logical AND between station subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all 
-                    included EventAttr subsetters. The subsetters after the
+                    included subsetters. The subsetters after the
                     first false outputed are not evaluated. 
                 </description>
                 <example>
-                    <eventAttrAND>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrAND>
+                    <stationAND>
+        <stationEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
+               <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                                <min>25</min>
+                                <max>35</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                                <min>-80</min>
+                                <max>-70</max>
+                        </longitudeRange>
+                    </boxArea>
+               </stationArea>               
+                    </stationAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -840,18 +921,34 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical OR between EventAttr subsetters.
+                    Logical OR between station subsetters.
                 </summary>
                 <description>
                     The output is the logical OR of the outputs of all 
-                    included EventAttr subsetters. If the first subsetters returns
+                    included subsetters. If the first subsetters returns
                     true then the second is not evaluated. 
                 </description>
                 <example>
-                    <eventAttrOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrOR>
+                    <stationOR>
+        <stationEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
+               <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                                <min>25</min>
+                                <max>35</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                                <min>-80</min>
+                                <max>-70</max>
+                        </longitudeRange>
+                    </boxArea>
+               </stationArea>               
+                    </stationOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -869,17 +966,33 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical XOR between EventAttr subsetters.
+                    Logical XOR between station subsetters.
                 </summary>
                 <description>
                     The output is the logical XOR of the outputs of all 
-                    included EventAttr subsetters.
+                    included subsetters.
                 </description>
                 <example>
-                    <eventAttrXOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrXOR>
+                    <stationXOR>
+        <stationEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
+               <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                                <min>25</min>
+                                <max>35</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                                <min>-80</min>
+                                <max>-70</max>
+                        </longitudeRange>
+                    </boxArea>
+               </stationArea>               
+                    </stationXOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -897,16 +1010,27 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical NOT of an EventAttr subsetter.
+                    Logical NOT of a station subsetter.
                 </summary>
                 <description>
                     The output is the logical NOT of the output of the 
                     included EventAttr subsetter.
                 </description>
                 <example>
-                    <eventAttrNOT>
-                        <geographicRegion><value>47</value></geographicRegion>
-                    </eventAttrNOT>
+                    <stationNOT>
+               <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                                <min>25</min>
+                                <max>35</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                                <min>-80</min>
+                                <max>-70</max>
+                        </longitudeRange>
+                    </boxArea>
+               </stationArea>               
+                    </stationNOT>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -919,35 +1043,22 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--STATION LATITUDE LONGITUDE BOX TYPE-->
-    <xsd:complexType name="stationLatLonBoxType">
-        <xsd:complexContent>
-            <xsd:extension base="stationType">
-                <xsd:sequence>
-                    <xsd:element ref="area"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    
-    <!--SITEID AND TYPE-->
     <xsd:complexType name="siteIDANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between EventAttr subsetters.
+                    Logical AND between siteId subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all 
-                    included EventAttr subsetters. The subsetters after the
+                    included subsetters. The subsetters after the
                     first false outputed are not evaluated. 
                 </description>
                 <example>
-                    <eventAttrAND>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrAND>
+                    <siteIdAND>
+                       <siteCode>  </siteCode>
+                       <siteCode>00</siteCode>
+                    </siteIdAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -965,18 +1076,18 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical OR between EventAttr subsetters.
+                    Logical OR between siteId subsetters.
                 </summary>
                 <description>
                     The output is the logical OR of the outputs of all 
-                    included EventAttr subsetters. If the first subsetters returns
+                    included subsetters. If the first subsetters returns
                     true then the second is not evaluated. 
                 </description>
                 <example>
-                    <eventAttrOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrOR>
+                    <siteIdOR>
+                       <siteCode>  </siteCode>
+                       <siteCode>00</siteCode>
+                    </siteIdOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -989,22 +1100,21 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--SITEID XOR TYPE-->
     <xsd:complexType name="siteIDXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical XOR between EventAttr subsetters.
+                    Logical XOR between siteId subsetters.
                 </summary>
                 <description>
                     The output is the logical XOR of the outputs of all 
-                    included EventAttr subsetters.
+                    included subsetters.
                 </description>
                 <example>
-                    <eventAttrXOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrXOR>
+                    <siteIdXOR>
+                       <siteCode>  </siteCode>
+                       <siteCode>00</siteCode>
+                    </siteIdXOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -1017,21 +1127,20 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--SITEID NOT TYPE-->
     <xsd:complexType name="siteIDNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical NOT of an EventAttr subsetter.
+                    Logical NOT of a siteId subsetter.
                 </summary>
                 <description>
                     The output is the logical NOT of the output of the 
-                    included EventAttr subsetter.
+                    included subsetter.
                 </description>
                 <example>
-                    <eventAttrNOT>
-                        <geographicRegion><value>47</value></geographicRegion>
-                    </eventAttrNOT>
+                    <siteIdNOT>
+                       <siteCode>00</siteCode>
+                    </siteIdNOT>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -1060,6 +1169,26 @@
     
     <!-- SITE DEPTH RANGE TYPE -->
     <xsd:complexType name="siteDepthRangeType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches sites at a range of depths below the surface.
+            </summary>
+            <description>
+                Matches sites at a range of depths below the surface. This
+                might be used to separate surface sites from borehole sites.
+            </description>
+            <example>
+              <siteDepthRange>
+                 <unitRange>
+                    <unit>METER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                 </unitRange>
+              </siteDepthRange>               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -1071,7 +1200,29 @@
     
     
     <!--SITE EFFECTIVE TIME OVERLAP TYPE-->
-    <xsd:complexType name="siteeffectiveTimeOverlapType">
+    <xsd:complexType name="siteEffectiveTimeOverlapType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches if the site effective time overlaps the given time
+                range.
+            </summary>
+            <description>
+                Matches if the site effective time overlaps the given time
+                range. This is generally used to avoid processing sites
+                that did not yet exist, or were deactivated before a time
+                range of interest.
+            </description>
+            <example>
+        <siteEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </siteEffectiveTimeOverlap>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -1503,7 +1654,29 @@
     </xsd:complexType>
     
     <!--CHANNEL EFFECTIVE TIME OVERLAP TYPE-->
-    <xsd:complexType name="channeleffectiveTimeOverlapType">
+    <xsd:complexType name="channelEffectiveTimeOverlapType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches if the channel effective time overlaps the given time
+                range.
+            </summary>
+            <description>
+                Matches if the channel effective time overlaps the given time
+                range. This is generally used to avoid processing channels
+                that did not yet exist, or were deactivated before a time
+                range of interest.
+            </description>
+            <example>
+        <channelEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                        <min>20020701T00:00:00.001Z</min>
+                        <max>20021030T00:00:00.001Z</max>
+                </effectiveTimeOverlap>
+        </channelEffectiveTimeOverlap>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelType">
                 <xsd:sequence>
@@ -1592,7 +1765,7 @@
     <xsd:element name="networkAttr" type="networkAttrType" abstract="true"/>
     <xsd:element name="networkAttrName" type="networkAttrNameType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrOwner" type="networkAttrOwnerType" substitutionGroup="networkAttr"/>
-    <xsd:element name="networkeffectiveTimeOverlap" type="networkeffectiveTimeOverlapType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkEffectiveTimeOverlap" type="networkEffectiveTimeOverlapType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrAND" type="networkAttrANDType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrOR" type="networkAttrORType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrXOR" type="networkAttrXORType" substitutionGroup="networkAttr"/>
@@ -1611,10 +1784,9 @@
     <xsd:element name="stationName" type="stationNameType" substitutionGroup="station"/>
     <xsd:element name="stationOperator" type="stationOperatorType" substitutionGroup="station"/>
     <xsd:element name="stationDepthRange" type="stationDepthRangeType" substitutionGroup="station"/>
-    <xsd:element name="stationeffectiveTimeOverlap" type="stationeffectiveTimeOverlapType" substitutionGroup="station"/>
+    <xsd:element name="stationEffectiveTimeOverlap" type="stationEffectiveTimeOverlapType" substitutionGroup="station"/>
     <!-- element representing eventArea -->
     <xsd:element name="stationArea" type="stationAreaType" substitutionGroup="station"/>
-    <xsd:element name="stationLatLonBox" type="stationLatLonBoxType" substitutionGroup="station"/>
     <xsd:element name="stationAND" type="stationANDType" substitutionGroup="station"/>
     <xsd:element name="stationOR" type="stationORType" substitutionGroup="station"/>
     <xsd:element name="stationXOR" type="stationXORType" substitutionGroup="station"/>
@@ -1631,7 +1803,7 @@
     <!-- ELEMENT DECLARATIONS FOR SITE TYPE -->
     <xsd:element name="site" type="siteType" abstract="true"/>
     <xsd:element name="siteDepthRange" type="siteDepthRangeType" substitutionGroup="site"/>
-    <xsd:element name="siteeffectiveTimeOverlap" type="siteeffectiveTimeOverlapType" substitutionGroup="site"/>
+    <xsd:element name="siteEffectiveTimeOverlap" type="siteEffectiveTimeOverlapType" substitutionGroup="site"/>
     <!-- element representing siteArea -->
     <xsd:element name="siteArea" type="siteAreaType" substitutionGroup="site"/>
     <xsd:element name="siteAND" type="siteANDType" substitutionGroup="site"/>
@@ -1652,7 +1824,7 @@
     <!-- ELEMENT DECLARATIONS FOR CHANNEL TYPE -->
     <xsd:element name="channel" type="channelType" abstract="true"/>
     <xsd:element name="sampling" type="samplingType" substitutionGroup="channel"/>
-    <xsd:element name="channeleffectiveTimeOverlap" type="channeleffectiveTimeOverlapType" substitutionGroup="channel"/>
+    <xsd:element name="channelEffectiveTimeOverlap" type="channelEffectiveTimeOverlapType" substitutionGroup="channel"/>
     <xsd:element name="orientationRange" type="orientationRangeType" substitutionGroup="channel"/>
     <xsd:element name="orientationAzimuthRange" type="orientationAzimuthRangeType" substitutionGroup="channel"/>
     <xsd:element name="orientationDipRange" type="orientationDipRangeType" substitutionGroup="channel"/>
