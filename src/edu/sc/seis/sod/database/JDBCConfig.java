@@ -23,37 +23,52 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 
 public class JDBCConfig extends SodJDBC {
 
-    public JDBCConfig(String config) throws SQLException, IOException{
+    public JDBCConfig(Connection conn) throws SQLException, IOException{
         conn = ConnMgr.createConnection();
         if (!DBUtil.tableExists("config", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("config.create"));
-            stmt.executeUpdate("INSERT INTO config (configString) values ('"
-                                   + config
-                                   + "')");
         }
         getConfig = prepare("SELECT configString FROM config");
     }
+    
+    public JDBCConfig(String config) throws SQLException, IOException{
+        this(ConnMgr.createConnection());
+        try {
+            isSameConfig(config);
+        } catch (NotFound e) {
+            // database is empty, so insert
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("INSERT INTO config (configString) values ('"
+                               + config
+                               + "')");
+        }
+    }
 
-    public boolean isSameConfig(String config) throws NotFound, SQLException{
+    public String getCurrentConfig()  throws NotFound, SQLException {
         ResultSet rs = getConfig.executeQuery();
         if (rs.next()){
             String val = rs.getString("configString");
-            return val.equals(config);
+            return val;
         }
         throw new NotFound("There is no config stored in the database");
     }
 
-    public static String getConfigString(File configFile) throws IOException{
-        return getConfigString(new BufferedReader(new FileReader(configFile)));
+    public boolean isSameConfig(String config) throws NotFound, SQLException{
+        String val = getCurrentConfig();
+        return val.equals(config);
     }
 
-    public static String getConfigString(InputSource is) throws IOException{
+    public static String extractConfigString(File configFile) throws IOException{
+        return extractConfigString(new BufferedReader(new FileReader(configFile)));
+    }
+
+    public static String extractConfigString(InputSource is) throws IOException{
         InputStreamReader isr = new InputStreamReader(is.getByteStream());
-        return getConfigString(new BufferedReader(isr));
+        return extractConfigString(new BufferedReader(isr));
     }
 
-    private static String getConfigString(BufferedReader r1) throws IOException{
+    private static String extractConfigString(BufferedReader r1) throws IOException{
         StringBuffer buf = new StringBuffer();
         String line;
         while((line = r1.readLine()) != null){ buf.append(line); }
