@@ -37,6 +37,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.FlagData;
 import edu.sc.seis.sod.SodFlag;
@@ -75,17 +76,11 @@ public class SeismogramImageProcess implements WaveformProcess {
             } else if(n.getNodeName().equals("phaseWindow")) {
                 phaseWindow = new PhaseWindow((Element)n);
             } else if(n.getNodeName().equals("seismogramConfig")) {
-                Element seismogramImageConfig = TemplateFileLoader.getTemplate((Element)n);
-                Node tmpEl = SodUtil.getElement(seismogramImageConfig,
-                                                "outputLocation");
-                Node tmpEl2 = SodUtil.getElement((Element)tmpEl, "eventDir");
-                eventFormatter = new EventFormatter((Element)tmpEl2);
-                tmpEl2 = SodUtil.getElement((Element)tmpEl, "stationDir");
-                stationFormatter = new StationFormatter((Element)tmpEl2);
-                seismogramImageConfig.removeChild(tmpEl);
-                tmpEl = SodUtil.getElement(seismogramImageConfig, "picName");
-                chanFormatter = new ChannelFormatter((Element)tmpEl);
-                seismogramImageConfig.removeChild(tmpEl);
+                Element config = TemplateFileLoader.getTemplate((Element)n);
+                parseOutputLocationCreators(SodUtil.getElement(config,
+                                                               "outputLocation"));
+            } else if(n.getNodeName().equals("outputLocationCreators")) {
+                parseOutputLocationCreators((Element)n);
             } else if(n.getNodeName().equals("modelName")) {
                 modelName = SodUtil.getNestedText((Element)n);
             } else if(n.getNodeName().equals("prefix")) {
@@ -102,6 +97,16 @@ public class SeismogramImageProcess implements WaveformProcess {
         if(fileDir == null || eventFormatter == null
                 || stationFormatter == null || chanFormatter == null) { throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig"); }
         initTaup();
+    }
+
+    private void parseOutputLocationCreators(Element parent)
+            throws ConfigurationException {
+        eventFormatter = new EventFormatter(SodUtil.getElement(parent,
+                                                               "eventDir"));
+        stationFormatter = new StationFormatter(SodUtil.getElement(parent,
+                                                                   "stationDir"));
+        chanFormatter = new ChannelFormatter(SodUtil.getElement(parent,
+                                                                "picName"));
     }
 
     private void initTaup() throws TauModelException {
