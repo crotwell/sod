@@ -46,8 +46,14 @@ public class CommonAccess {
      * @exception Exception if an error occurs
      */
     public FissuresNamingServiceImpl getFissuresNamingService() throws Exception{
+	if (fissuresNamingService == null) {
+	    fissuresNamingService = new FissuresNamingServiceImpl(getORB());
+	    java.util.Properties props = System.getProperties();
+	    if ( props.containsKey(NAME_SERVICE_PROP)) {
+		fissuresNamingService.setNameServiceCorbaLoc((String)props.get(NAME_SERVICE_PROP));
+	    } // end of if ()
+	} // end of if (fissuresNamingService == null)
 
-	FissuresNamingServiceImpl fissuresNamingService = new FissuresNamingServiceImpl(getORB());
 	return fissuresNamingService;
 
     }
@@ -93,6 +99,11 @@ public class CommonAccess {
     private static CommonAccess commonAccess = new CommonAccess();
 
     private org.omg.CORBA_2_3.ORB orb = null;
+
+    FissuresNamingServiceImpl fissuresNamingService;
+
+    static final String NAME_SERVICE_PROP = 
+	"edu.sc.seis.sod.nameServiceCorbaLoc";
 
     static Category logger = 
         Category.getInstance(CommonAccess.class.getName());
