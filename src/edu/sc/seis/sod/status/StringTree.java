@@ -1,35 +1,25 @@
-/**
- * StringTree.java
- *
- * @author Created by Omnicore CodeGuide
- */
-
 package edu.sc.seis.sod.status;
 
 public abstract class StringTree {
 
-    public StringTree(Object name, boolean boo) {
-        this.name = name;
-        this.boo = boo;
+    public StringTree(String actorName, boolean status) {
+        this.actorName = actorName;
+        this.status = status;
     }
 
     public String toString() {
-        return name+":"+( boo ? OK : FAIL );
-    }
-
-    public Object getName() {
-        return name;
+        return actorName + ":" + (status ? OK : FAIL);
     }
 
     public boolean isSuccess() {
-        return boo;
+        return status;
     }
 
-    protected Object name;
+    protected String actorName;
 
-    protected boolean boo;
+    protected boolean status;
 
     public static final String OK = "OK";
+
     public static final String FAIL = "FAIL";
 }
-
