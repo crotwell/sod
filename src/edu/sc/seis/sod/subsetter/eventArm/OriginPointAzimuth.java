@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSubsetter{
@@ -38,9 +39,12 @@ public class OriginPointAzimuth extends AbstractOriginPoint implements OriginSub
             getMax().convertTo(UnitImpl.DEGREE).get_value() % 360 >= distaz.getAz() % 360 ) {
             return true;
         } else {
+            logger.debug("reject azimuth "+origin+" az="+distaz.getAz());
             return false;
         }
     }
+
+    private static final Logger logger = Logger.getLogger(OriginPointAzimuth.class);
 
 }
 

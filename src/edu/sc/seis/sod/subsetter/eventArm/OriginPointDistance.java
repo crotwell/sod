@@ -11,9 +11,8 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class OriginPointDistance extends AbstractOriginPoint implements OriginSubsetter{
 
@@ -40,9 +39,12 @@ public class OriginPointDistance extends AbstractOriginPoint implements OriginSu
             getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.getDelta()) {
             return true;
         } else {
+            logger.debug("reject distance "+origin+" distaz="+distaz.getDelta());
             return false;
         }
     }
+
+    private static final Logger logger = Logger.getLogger(OriginPointDistance.class);
 
 }
 
