@@ -1,6 +1,8 @@
 import os, sys, signal
 sys.path.append("../../devTools/maven")
-import ProjectParser, sodScriptBuilder, mavenExecutor, depCopy
+import ProjectParser, sodScriptBuilder, depCopy
+sys.path.append('../')
+import sodBuilder
 
 def signal_handler(signal, frame):
     sys.exit(0)
@@ -10,13 +12,10 @@ def main(argv):
     startdir = os.path.abspath('.')
     command = 'sod.bat'
     config = 'revtest.xml'
+    proj = ProjectParser.ProjectParser('../project.xml')
+    sodBuilder.build(proj)
     if len(argv) > 0: command = argv[0]
     if len(argv) > 1: config = argv[1]
-    proj = ProjectParser.ProjectParser('../project.xml')
-    allProj = [ProjectParser.ProjectParser('../../fissures/project.xml'),
-               ProjectParser.ProjectParser('../../fissuresUtil/project.xml'),
-               proj]
-    for proj in allProj: mavenExecutor.mavenExecutor(proj).jarinst()
     print 'built %s scripts' % len(sodScriptBuilder.buildAll(proj))
     depCopy.copy(proj)
     os.chdir(startdir)
