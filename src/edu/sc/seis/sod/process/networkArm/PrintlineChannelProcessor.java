@@ -34,7 +34,7 @@ public class PrintlineChannelProcessor implements NetworkProcess {
             bwriter.newLine();
             bwriter.close();
         } else {
-            System.out.println("PRINTLINE CHANNEL PROCESSOR"+ChannelIdUtil.toString(channel.get_id()));
+            System.out.println("Channel: "+ChannelIdUtil.toString(channel.get_id()));
         } // end of else
 
     }
