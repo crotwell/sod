@@ -30,7 +30,7 @@ public class MockECP{
     }
 
     public static EventChannelPair getECP(CacheEvent ev, Channel chan){
-        return new EventChannelPair(null, new EventDbObject(0, ev),
+        return new EventChannelPair( new EventDbObject(0, ev),
                                     new ChannelDbObject(0, chan), null, 0);
     }
 
