@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<html>
+<header><title>$fissures.formatNetwork($station.get_id().network_id) Stations in the waveform arm</title></header>
+<body>
+<table>
+<tr>
+<td><b>Time</b></td>
+<td><b>Time</b></td>
+<td><b>Magnitude</b></td>
+<td><b>Depth</b></td>
+<td><b>Latitude</b></td>
+<td><b>Longitude</b></td>
+<td><b>Distance</b></td>
+<td><b>Azimuth</b></td>
+<td><b>Back Azimuth</b></td>
+</tr>
+#foreach ( $event in $station_events )
+#set ( $origin = $event.get_preferred_origin() )
+<tr>
+<td>$FERegion.getRegionName(${event.get_attributes().region})</td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $event.get_preferred_origin().getTime())</td>
+<td>
+#foreach ($m in $origin.Magnitudes)
+$fissures.formatMagnitude($m),
+#end</td>
+<td>$fissures.formatQuantity($fissures.getDepth($origin.location))</td>
+<td>$fissures.getLatitude($origin.location)</td>
+<td>$fissures.getLongitude($origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getDistance($station.location, $origin.location))</td>
+<td>$fissures.formatQuantity($fissures.getAzimuth($station.location, $origin.location))</td>
+<td>$fissures.formatQuantity($fissures.getBackAzimuth($station.location, $origin.location))</td>
+</tr>
+#end
+</table>
+</body>
+</html>
