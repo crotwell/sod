@@ -69,7 +69,9 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
             }
         } else {
             try {
-                System.out.println((Runtime.getRuntime().freeMemory()/1024/1024)+"/"+(Runtime.getRuntime().totalMemory()/1024/1024)+" "+
+                System.out.println((Runtime.getRuntime().freeMemory()/1024/1024)+"/"+
+                                       (Runtime.getRuntime().totalMemory()/1024/1024)+"/"+
+                                       (Runtime.getRuntime().maxMemory()/1024/1024)+" "+
                                        "Got "+seismograms.length+" seismograms for "+
                                        ChannelIdUtil.toStringNoDates(channel.get_id())+
                                        " for event in "+
