@@ -52,12 +52,13 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         boolean b = true;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for (int i = 0; b && i < channelGroup.getChannels().length; i++) {
+            LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
             LocalSeismogramResult result = process.process(event,
-                                                             channelGroup.getChannels()[i],
-                                                             original[i],
-                                                             available[i],
-                                                             ForkProcess.copySeismograms(seismograms[i]),
-                                                             cookieJar);
+                                                           channelGroup.getChannels()[i],
+                                                           original[i],
+                                                           available[i],
+                                                           copies,
+                                                           cookieJar);
             out[i] = result.getSeismograms();
             reason[i] = result.getReason();
             b &= result.isSuccess();

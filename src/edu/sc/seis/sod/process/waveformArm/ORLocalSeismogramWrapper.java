@@ -50,6 +50,9 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
                                                      LocalSeismogramImpl[][] seismograms,
                                                      CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
+        for (int i = 0; i < seismograms.length; i++) {
+            out[i] = seismograms[i];
+        }
         boolean b = false;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for (int i = 0; b == false && i < channelGroup.getChannels().length; i++) {
