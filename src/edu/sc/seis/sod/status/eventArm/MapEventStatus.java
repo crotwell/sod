@@ -10,6 +10,7 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
@@ -37,8 +38,8 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventA
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("Trouble creating event status db for use in map", e);
         }
-        fileLoc = element.getAttribute("xlink:href");
-        if(addToEventArm)Start.getEventArm().add(this);
+        fileLoc = FileWritingTemplate.getBaseDirectoryName() + '/' + element.getAttribute("xlink:href");
+        if(addToEventArm){Start.getEventArm().add(this);}
         actIfPeriodElapsed();
     }
 
