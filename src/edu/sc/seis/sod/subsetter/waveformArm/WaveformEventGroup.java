@@ -4,9 +4,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.subsetter.eventArm.EventGroupTemplate;
 import edu.sc.seis.sod.subsetter.eventArm.EventTemplate;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,17 +14,16 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveFormStatus{
     public WaveformEventGroup(){
         useDefaultConfig();
     }
-
+    
     public WaveformEventGroup(Element el) {
         parse(el);
     }
-
+    
     public Object getTemplate(String tag, Element el) {
         if(tag.equals("channelCount")) return new EventChannelStatus(el);
         try {
@@ -37,18 +36,18 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
         }
         return super.getTemplate(tag, el);
     }
-
+    
     public void update(EventChannelPair ecp) throws Exception {
         Iterator it = ecpListeners.iterator();
         while(it.hasNext())((WaveFormStatus)it.next()).update(ecp);
         super.change(ecp.getEvent(), null);
     }
-
+    
     public void useDefaultConfig(){
         templates.add(new EventChannelStatus(null));
         templates.add("\n");
     }
-
+    
     private class EventChannelStatus implements EventTemplate, WaveFormStatus{
         public EventChannelStatus(Element el){
             ecpListeners.add(this);
@@ -56,31 +55,19 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 NodeList nl = el.getChildNodes();
                 for (int i = 0; i < nl.getLength(); i++) {
                     String curNode = nl.item(i).getNodeName();
-                    if(curNode.equals("COMPLETE_SUCCESS")){
-                        monitoredStatus.add(Status.COMPLETE_SUCCESS);
-                    }else if(curNode.equals("COMPLETE_REJECT")){
-                        monitoredStatus.add(Status.COMPLETE_REJECT);
+                    if(curNode.equals("SUCCESS")){
+                        monitoredStatus.add(EventChannelCondition.SUCCESS);
+                    }else if(curNode.equals("FAILURE")){
+                        monitoredStatus.add(EventChannelCondition.FAILURE);
                     }else if(curNode.equals("NEW")){
-                        monitoredStatus.add(Status.NEW);
+                        monitoredStatus.add(EventChannelCondition.NEW);
                     }else if(curNode.equals("PROCESSING")){
-                        monitoredStatus.add(Status.PROCESSING);
-                    }else if(curNode.equals("RE_OPEN")){
-                        monitoredStatus.add(Status.RE_OPEN);
-                    }else if(curNode.equals("RE_OPEN_PROCESSING")){
-                        monitoredStatus.add(Status.RE_OPEN_PROCESSING);
-                    }else if(curNode.equals("RE_OPEN_SUCCESS")){
-                        monitoredStatus.add(Status.RE_OPEN_SUCCESS);
-                    }else if(curNode.equals("AWAITING_FINAL_STATUS")){
-                        monitoredStatus.add(Status.AWAITING_FINAL_STATUS);
-                    }else if(curNode.equals("SOD_FAILURE")){
-                        monitoredStatus.add(Status.SOD_FAILURE);
-                    }else if(curNode.equals("RE_OPEN_REJECT")){
-                        monitoredStatus.add(Status.RE_OPEN_REJECT);
+                        monitoredStatus.add(EventChannelCondition.SUBSETTER_PASSED);
                     }
                 }
-            }else monitoredStatus.add(Status.COMPLETE_SUCCESS);
+            }else monitoredStatus.add(EventChannelCondition.SUCCESS);
         }
-
+        
         public void update(EventChannelPair ecp) {
             if(monitoredStatus.contains(ecp.getStatus())){
                 Integer cur = new Integer(0);
@@ -91,18 +78,18 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 evChans.put(ecp.getEvent(), cur);
             }
         }
-
+        
         public String getResult(EventAccessOperations ev) {
             if(evChans.containsKey(ev))
                 return ((Integer)evChans.get(ev)).toString();
             else
                 return "0";
         }
-
+        
         private List monitoredStatus =  new ArrayList();
-
+        
         private Map evChans = new HashMap();
     }
-
+    
     private List ecpListeners = new ArrayList();
 }
