@@ -418,6 +418,6 @@ public class EventArm extends SodExceptionSource implements Runnable{
 
     private Properties props;
 
-    static Category logger =
+    private static Category logger =
         Category.getInstance(EventArm.class.getName());
 }// EventArm
