@@ -10,17 +10,16 @@ import edu.sc.seis.sod.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.AllTextTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
-import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
 import edu.sc.seis.sod.status.Template;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import org.w3c.dom.Element;
 
@@ -52,40 +51,33 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
      */
     protected Object textTemplate(final String text) {
         return new StationTemplate(){
-            public String getResult(Station sta){
-                return text;
-            }
+            public String getResult(Station sta){ return text; }
         };
     }
 
     public String getResult(EventAccessOperations ev) {
         Status status = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
-        Set successfulStations = new HashSet();
-        Set unsuccessfulStations = new HashSet();
         try {
-            EventChannelPair[] ecps = evStatus.getAll(ev);
-            for (int i = 0; i < ecps.length; i++) {
-                Station cur = ecps[i].getChannel().my_site.my_station;
-                if(ecps[i].getStatus().equals(status)){
-                    successfulStations.add(cur);
-                    unsuccessfulStations.remove(cur);
-                }else if(!successfulStations.contains(cur)){
-                    unsuccessfulStations.add(cur);
+            Station[] stations;
+            synchronized(evStatus){
+                if(success){
+                    stations = evStatus.getOfStatus(status, ev);
+                }else{
+                    stations = evStatus.getNotOfStatus(status, ev);
                 }
             }
-        } catch(Exception e) { GlobalExceptionHandler.handle(e); }
-        StringBuffer buf = new StringBuffer();
-        Iterator it;
-        if(success){ it = successfulStations.iterator();  }
-        else { it = unsuccessfulStations.iterator(); }
-        while(it.hasNext()){
-            Station cur = (Station)it.next();
-            Iterator templateIt = templates.iterator();
-            while(templateIt.hasNext()){
-                buf.append(((StationTemplate)templateIt.next()).getResult(cur));
+            StringBuffer buf = new StringBuffer();
+            for (int i = 0; i < stations.length; i++) {
+                Iterator templateIt = templates.iterator();
+                while(templateIt.hasNext()){
+                    buf.append(((StationTemplate)templateIt.next()).getResult(stations[i]));
+                }
             }
-        } // don't do anything otherwise
-        return buf.toString();
+            return buf.toString();
+        } catch(Exception e) {
+            GlobalExceptionHandler.handle(e);
+            return "Event formatting threw an exception.  See the errors page for more details.";
+        }
     }
 
     public void setEvent(EventAccessOperations ev){ this.ev = ev; }
