@@ -65,6 +65,9 @@ public class RunProperties{
         if(SodUtil.isTrue(el, "removeDatabase")){
             removeDatabase = true;
         }
+        if(!SodUtil.isTrue(el, "makeIndexPage")){
+            doIndex = false;
+        }
     }
 
     public TimeInterval getMaxRetryDelay() { return maxRetry; }
@@ -90,6 +93,8 @@ public class RunProperties{
     public String getEventChannelPairProcessing(){
         return evChanPairProc;
     }
+    
+    public boolean doIndex(){ return doIndex; }
 
     public static final TimeInterval NO_TIME = new TimeInterval(0, UnitImpl.SECOND);
     public static final TimeInterval ONE_WEEK = new TimeInterval(7, UnitImpl.DAY);
@@ -109,6 +114,7 @@ public class RunProperties{
 
     private boolean reopenEvents = false;
     private boolean removeDatabase = false;
+    private boolean doIndex = true;
 
     public static final String AT_LEAST_ONCE = "atLeastOnce";
     public static final String AT_MOST_ONCE = "atMostOnce";
