@@ -22,10 +22,10 @@ public abstract class AbstractGenitorForm extends AbstractForm implements Genito
         this.child = child.copyWithNewParent(this);
     }
 
-    public boolean isAncestorOf(Form f){
+    public boolean isAncestorOf(Form f, Form root){
         if(getChild().equals(f)){ return true; }
-        else if(!ModelWalker.isSelfReferential(this)) {
-            return getChild().isAncestorOf(f);
+        else if(!ModelWalker.isSelfReferential(this, root)) {
+            return getChild().isAncestorOf(f, root);
         }
         return false;
     }
@@ -33,7 +33,7 @@ public abstract class AbstractGenitorForm extends AbstractForm implements Genito
     public Form getChild() { return child.getForm(); }
 
     public void accept(Tourist visitor){
-        if(!ModelWalker.isSelfReferential(this)){ getChild().accept(visitor);  }
+        if(!ModelWalker.isSelfReferential(this, null)){ getChild().accept(visitor);  }
     }
 
     private FormProvider child;
