@@ -133,8 +133,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
         saveInDataSet(event, channel, seismograms);
 
-
-        //TODO begin stuff that uh needs to be moved
         boolean found = false;
         Iterator it = masterDSNames.iterator();
         while (it.hasNext()) {
@@ -146,7 +144,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             masterDSNames.add(lastDataSet.getName());
             updateMasterDataSet(dataSetFile, lastDataSet.getName());
         }
-        //TODO end stuff that uh needs to be moved
 
         return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
@@ -188,24 +185,32 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
     protected void updateMasterDataSet(File childDataset, String childName)
         throws FileNotFoundException, XMLStreamException, IOException{
 
-        //create temporary dataset with new information to be merged into master dataset
-        DataSet tempMasterDS = createTempDataSet("Temp Master");
-        File tempMasterDSFile = new File(dataDirectory, DataSetToXMLStAX.createFileName(tempMasterDS));
-        StAXFileWriter staxWriter = new StAXFileWriter(tempMasterDSFile);
-        XMLStreamWriter tempWriter = staxWriter.getStreamWriter();
-        dsToXML.writeDataSetStartElement(tempWriter);
-        dsToXML.insertDSInfo(tempWriter, tempMasterDS, dataDirectory, SeismogramFileTypes.SAC);
-        dsToXML.writeRef(tempWriter,
+        //the merging code has been rendered useless since the advent of the newlines
+        //after end elements, So I'm just going to do it this way since I know this works.
+        StAXFileWriter masterDSWriter = XMLUtil.openXMLFileForAppending(masterDSFile);
+        dsToXML.writeRef(masterDSWriter.getStreamWriter(),
                          getRelativeURLString(masterDSFile, childDataset),
                          childName);
-        tempWriter.writeEndElement();
-        staxWriter.close();
+        masterDSWriter.close();
 
-        XMLUtil.mergeDocs(masterDSFile, tempMasterDSFile, datasetRef, dataSetEl);
-
-        if (tempMasterDSFile.exists()){
-            tempMasterDSFile.delete();
-        }
+//      //create temporary dataset with new information to be merged into master dataset
+//      DataSet tempMasterDS = createTempDataSet("Temp Master");
+//      File tempMasterDSFile = new File(dataDirectory, DataSetToXMLStAX.createFileName(tempMasterDS));
+//      StAXFileWriter staxWriter = new StAXFileWriter(tempMasterDSFile);
+//      XMLStreamWriter tempWriter = staxWriter.getStreamWriter();
+//      dsToXML.writeDataSetStartElement(tempWriter);
+//      dsToXML.insertDSInfo(tempWriter, tempMasterDS, dataDirectory, SeismogramFileTypes.SAC);
+//      dsToXML.writeRef(tempWriter,
+//                       getRelativeURLString(masterDSFile, childDataset),
+//                       childName);
+//      XMLUtil.writeEndElementWithNewLine(tempWriter);
+//      staxWriter.close();
+//
+//      XMLUtil.mergeDocs(masterDSFile, tempMasterDSFile, datasetRef, dataSetEl);
+//
+//      if (tempMasterDSFile.exists()){
+//          tempMasterDSFile.delete();
+//      }
     }
 
     //purely a debugging venture
@@ -266,7 +271,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
                                                         channel,
                                                         event,
                                                         fileType);
-            System.out.println(dataSetFile);
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
             seisFileTypeArray[i] = fileType;  // all are the same
@@ -286,7 +290,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
                                 channel.get_id().network_id.begin_time.date_time);
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
                                 channel.get_id().begin_time.date_time);
-        System.out.println("before add URLDSS and Channel");
         lastDataSet.addDataSetSeismogram(urlDSS, audit);
         dsToXML.writeURLDataSetSeismogram(lastDataSetStaxWriter.getStreamWriter(),
                                           urlDSS,
@@ -298,7 +301,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         dsToXML.writeParameter(lastDataSetStaxWriter.getStreamWriter(),
                                DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
                                channel);
-        System.out.println("after add URLDSS and Channel");
         lastDataSetFileModTime = dataSetFile.lastModified();
         return urlDSS;
 
@@ -373,7 +375,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             dsToXML.insertDSInfo(writer, dataset, eventDirectory, fileType);
             dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
             dsToXML.writeParameter(writer, DataSet.EVENT, event);
-            writer.writeEndElement();
+            XMLUtil.writeEndElementWithNewLine(writer);
             staxWriter.close();
         }
 
