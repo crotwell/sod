@@ -17,17 +17,17 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class DistanceRange implements SodElement{
+public class DistanceRangeSubsetter implements SodElement{
 
     /**
      * Creates a new <code>DistanceRange</code> instance.
      *
      * @param config an <code>Element</code> value
      */
-    public DistanceRange (Element config) throws ConfigurationException{
-	    processConfig(config);
+    public DistanceRangeSubsetter (Element config) throws ConfigurationException{
+        processConfig(config);
     }
-    
+
     /**
      * Describe <code>processConfig</code> method here.
      *
@@ -35,24 +35,24 @@ public class DistanceRange implements SodElement{
      * @exception ConfigurationException if an error occurs
      */
     public void processConfig(Element config) throws ConfigurationException{
-	
-	NodeList childNodes = config.getChildNodes();
-	Element unitRangeElement = null;
-	Node node;
-	for(int counter = 0; counter < childNodes.getLength(); counter++) {
 
-	    node = childNodes.item(counter);
-	    if(node instanceof Element) {
-		
-		String tagName = ((Element)node).getTagName();
-		if(tagName.equals("distanceRange")) unitRangeElement = (Element)node;
-		
-	    }
+    NodeList childNodes = config.getChildNodes();
+    Element unitRangeElement = null;
+    Node node;
+    for(int counter = 0; counter < childNodes.getLength(); counter++) {
 
-	}
-	
-	unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
-	
+        node = childNodes.item(counter);
+        if(node instanceof Element) {
+
+        String tagName = ((Element)node).getTagName();
+        if(tagName.equals("distanceRange")) unitRangeElement = (Element)node;
+
+        }
+
+    }
+
+    unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "edu.sc.seis.sod.subsetter");
+
     }
 
     /**
@@ -62,10 +62,10 @@ public class DistanceRange implements SodElement{
      */
     public edu.iris.Fissures.UnitRange  getDistanceRange() {
 
-	return unitRange;
+    return unitRange;
 
     }
- 
+
     /**
      * Describe <code>getMinDistance</code> method here.
      *
@@ -73,7 +73,7 @@ public class DistanceRange implements SodElement{
      */
     public Quantity getMinDistance() {
 
-	return new QuantityImpl(getDistanceRange().min_value, getDistanceRange().the_units);
+    return new QuantityImpl(getDistanceRange().min_value, getDistanceRange().the_units);
 
     }
 
@@ -84,10 +84,10 @@ public class DistanceRange implements SodElement{
      * @return a <code>Quantity</code> value
      */
     public Quantity getMaxDistance() {
-	
-	return new QuantityImpl(getDistanceRange().max_value, getDistanceRange().the_units);
+
+    return new QuantityImpl(getDistanceRange().max_value, getDistanceRange().the_units);
     }
-    
+
     private edu.iris.Fissures.UnitRange unitRange = null;
-        
+
 }// DistanceRange
