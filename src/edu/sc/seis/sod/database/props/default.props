@@ -1,4 +1,4 @@
-eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition int, \
+eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition smallint, \
                                              PRIMARY KEY( eventid ))
 eventquerytimes.create=CREATE TABLE eventquerytimes (starttime timestamp, \
                                                     endtime timestamp, \
@@ -16,7 +16,7 @@ eventchannelretry.create=CREATE TABLE eventchannelretry( pairid int, \
                                                          numfailure int DEFAULT 0, \
                                                          retry_time timestamp, \
                                                          PRIMARY KEY (pairid))
-                                    
+
 
 EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
 EventChannelSeq.nextVal=SELECT NEXTVAL ('EventChannelSeq')
