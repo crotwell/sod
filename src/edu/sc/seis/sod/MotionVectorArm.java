@@ -1,6 +1,6 @@
 /**
  * MotionVectorArm.java
- * 
+ *
  * @author Created by Omnicore CodeGuide
  */
 package edu.sc.seis.sod;
@@ -62,7 +62,7 @@ public class MotionVectorArm implements Subsetter {
             processes.add(new ANDWaveformProcessWrapper((WaveformProcess)sodElement));
         } else {
             logger.warn("Unknown tag in MotionVectorArm config. "
-                    + sodElement.getClass().getName());
+                            + sodElement.getClass().getName());
         } // end of else
     }
 
@@ -144,7 +144,7 @@ public class MotionVectorArm implements Subsetter {
                     //********************************************************
                     dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
                                                            ecp.getChannelGroup()
-                                                                   .getChannels()[0],
+                                                               .getChannels()[0],
                                                            infilters[0],
                                                            ecp.getCookieJar());
                 } catch(Throwable e) {
@@ -153,31 +153,31 @@ public class MotionVectorArm implements Subsetter {
                 }
             }
             RequestFilter[][] outfilters = new RequestFilter[ecp.getChannelGroup()
-                    .getChannels().length][];
+                .getChannels().length][];
             for(int i = 0; i < outfilters.length; i++) {
                 logger.debug("Trying available_data for "
-                        + ChannelIdUtil.toString(infilters[0][0].channel_id)
-                        + " from " + infilters[0][0].start_time.date_time
-                        + " to " + infilters[0][0].end_time.date_time);
+                                 + ChannelIdUtil.toString(infilters[0][0].channel_id)
+                                 + " from " + infilters[0][0].start_time.date_time
+                                 + " to " + infilters[0][0].end_time.date_time);
                 int retries = 0;
                 int MAX_RETRY = 5;
                 while(retries < MAX_RETRY) {
                     try {
                         logger.debug("before available_data call retries="
-                                + retries);
+                                         + retries);
                         outfilters[i] = dataCenter.available_data(infilters[i]);
                         logger.debug("after successful available_data call retries="
-                                + retries);
+                                         + retries);
                         break;
                     } catch(org.omg.CORBA.SystemException e) {
                         retries++;
                         logger.debug("after failed available_data call retries="
-                                + retries + " " + e.toString());
+                                         + retries + " " + e.toString());
                         if(retries < MAX_RETRY) {
                             // sleep is 10 seconds times num retries
                             int sleepTime = 10 * retries;
                             logger.info("Caught CORBA exception, sleep for "
-                                    + sleepTime + " then retry..." + retries, e);
+                                            + sleepTime + " then retry..." + retries, e);
                             try {
                                 Thread.sleep(sleepTime * 1000); // change
                                 // seconds to
@@ -195,12 +195,12 @@ public class MotionVectorArm implements Subsetter {
                 }
                 if(outfilters[i].length != 0) {
                     logger.debug("Got available_data for "
-                            + ChannelIdUtil.toString(outfilters[i][0].channel_id)
-                            + " from " + outfilters[i][0].start_time.date_time
-                            + " to " + outfilters[i][0].end_time.date_time);
+                                     + ChannelIdUtil.toString(outfilters[i][0].channel_id)
+                                     + " from " + outfilters[i][0].start_time.date_time
+                                     + " to " + outfilters[i][0].end_time.date_time);
                 } else {
                     logger.debug("No available_data for "
-                            + ChannelIdUtil.toString(infilters[i][0].channel_id));
+                                     + ChannelIdUtil.toString(infilters[i][0].channel_id));
                 }
             }
             processAvailableDataSubsetter(ecp,
@@ -235,17 +235,17 @@ public class MotionVectorArm implements Subsetter {
             for(int i = 0; i < infilters.length; i++) {
                 for(int j = 0; j < infilters[i].length; j++) {
                     logger.debug("Getting seismograms "
-                            + ChannelIdUtil.toString(infilters[i][j].channel_id)
-                            + " from " + infilters[i][j].start_time.date_time
-                            + " to " + infilters[i][j].end_time.date_time);
+                                     + ChannelIdUtil.toString(infilters[i][j].channel_id)
+                                     + " from " + infilters[i][j].start_time.date_time
+                                     + " to " + infilters[i][j].end_time.date_time);
                 } // end of for (int i=0; i<outFilters.length; i++)
             }
             logger.debug("Using infilters, fix this when DMC fixes server");
             MicroSecondDate before = new MicroSecondDate();
             LocalSeismogram[][] localSeismograms = new LocalSeismogram[ecp.getChannelGroup()
-                    .getChannels().length][0];
+                .getChannels().length][0];
             LocalSeismogramImpl[][] tempLocalSeismograms = new LocalSeismogramImpl[ecp.getChannelGroup()
-                    .getChannels().length][0];
+                .getChannels().length][0];
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(outfilters[i].length != 0) {
                     int retries = 0;
@@ -257,9 +257,9 @@ public class MotionVectorArm implements Subsetter {
                                 localSeismograms[i] = dataCenter.retrieve_seismograms(infilters[i]);
                                 for(int j = 0; j < localSeismograms[i].length; j++) {
                                     if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit)
-                                            .equals(COUNT_SQR)) {
+                                       .equals(COUNT_SQR)) {
                                         logger.debug("NOAMP get seis units="
-                                                + localSeismograms[i][j].y_unit);
+                                                         + localSeismograms[i][j].y_unit);
                                         localSeismograms[i][j].y_unit = UnitImpl.COUNT;
                                     }
                                 }
@@ -269,22 +269,22 @@ public class MotionVectorArm implements Subsetter {
                             }
                             logger.debug("after successful retrieve_seismograms");
                             if(localSeismograms[i].length > 0
-                                    && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id,
-                                                               infilters[i][0].channel_id)) {
+                               && !ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id,
+                                                          infilters[i][0].channel_id)) {
                                 // must be server error
                                 logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
-                                        + ChannelIdUtil.toString(infilters[i][0].channel_id)
-                                        + " seis="
-                                        + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
+                                                + ChannelIdUtil.toString(infilters[i][0].channel_id)
+                                                + " seis="
+                                                + ChannelIdUtil.toString(localSeismograms[i][0].channel_id));
                             }
                             break;
                         } catch(org.omg.CORBA.SystemException e) {
                             retries++;
                             logger.debug("after failed retrieve_seismograms, retries="
-                                    + retries);
+                                             + retries);
                             if(retries < MAX_RETRY) {
                                 logger.info("Caught CORBA exception, retrying..."
-                                                    + retries,
+                                                + retries,
                                             e);
                                 try {
                                     Thread.sleep(1000 * retries);
@@ -305,15 +305,15 @@ public class MotionVectorArm implements Subsetter {
                 } // end of else
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="
-                        + after.subtract(before));
+                                + after.subtract(before));
                 LinkedList tempForCast = new LinkedList();
                 for(int j = 0; j < localSeismograms[i].length; j++) {
                     if(localSeismograms[i][j] == null) {
                         ecp.update(Status.get(Stage.DATA_SUBSETTER,
                                               Standing.REJECT));
                         logger.error("Got null in seismogram array "
-                                + ChannelIdUtil.toString(ecp.getChannelGroup()
-                                        .getChannels()[i].get_id()));
+                                         + ChannelIdUtil.toString(ecp.getChannelGroup()
+                                                                      .getChannels()[i].get_id()));
                         return;
                     }
                     Channel ecpChan = ecp.getChannelGroup().getChannels()[i];
@@ -321,9 +321,9 @@ public class MotionVectorArm implements Subsetter {
                                                ecpChan.get_id())) {
                         // must be server error
                         logger.warn("Channel id in returned seismogram doesn not match channelid in request. req="
-                                + ChannelIdUtil.toString(ecpChan.get_id())
-                                + " seis="
-                                + ChannelIdUtil.toString(localSeismograms[i][j].channel_id));
+                                        + ChannelIdUtil.toString(ecpChan.get_id())
+                                        + " seis="
+                                        + ChannelIdUtil.toString(localSeismograms[i][j].channel_id));
                         // fix seis with original id
                         localSeismograms[i][j].channel_id = ecpChan.get_id();
                     } // end of if ()
@@ -345,9 +345,9 @@ public class MotionVectorArm implements Subsetter {
                                    LocalSeismogramImpl[][] localSeismograms) {
         WaveformVectorProcess processor;
         WaveformVectorResult result = new WaveformVectorResult(true,
-                                                                                         localSeismograms,
-                                                                                         new StringTreeLeaf(this,
-                                                                                                            true));
+                                                               localSeismograms,
+                                                               new StringTreeLeaf(this,
+                                                                                  true));
         Iterator it = processes.iterator();
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformVectorProcess)it.next();
@@ -369,8 +369,8 @@ public class MotionVectorArm implements Subsetter {
             }
         } // end of while (it.hasNext())
         logger.debug("finished with "
-                + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup()
-                        .getChannels()[0].get_id()));
+                         + ChannelIdUtil.toStringNoDates(ecp.getChannelGroup()
+                                                             .getChannels()[0].get_id()));
         if(result.isSuccess()) {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         } else {
