@@ -1,10 +1,10 @@
 /**
  * ANDLocalSeismogramSubsetterWrapper.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.process.waveform.vector;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -27,14 +27,15 @@ public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
         this.process = subsetter;
     }
 
-    public ANDWaveformProcessWrapper(Element config) throws ConfigurationException{
+    public ANDWaveformProcessWrapper(Element config)
+            throws ConfigurationException {
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                process =
-                    (WaveformProcess) SodUtil.load((Element)node, "waveform");
+                process = (WaveformProcess)SodUtil.load((Element)node,
+                                                        "waveform");
                 break;
             }
         }
@@ -44,39 +45,40 @@ public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
         return process;
     }
 
-
     public WaveformVectorResult process(EventAccessOperations event,
-                                                     ChannelGroup channelGroup,
-                                                     RequestFilter[][] original,
-                                                     RequestFilter[][] available,
-                                                     LocalSeismogramImpl[][] seismograms,
-                                                     CookieJar cookieJar) throws Exception {
+                                        ChannelGroup channelGroup,
+                                        RequestFilter[][] original,
+                                        RequestFilter[][] available,
+                                        LocalSeismogramImpl[][] seismograms,
+                                        CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = true;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
-        for (int i = 0; b && i < channelGroup.getChannels().length; i++) {
+        for(int i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
             WaveformResult result = process.process(event,
-                                                           channelGroup.getChannels()[i],
-                                                           original[i],
-                                                           available[i],
-                                                           copies,
-                                                           cookieJar);
+                                                    channelGroup.getChannels()[i],
+                                                    original[i],
+                                                    available[i],
+                                                    copies,
+                                                    channelGroup.getEventChannelPair(channelGroup.getChannels()[i]).getCookieJar());
             out[i] = result.getSeismograms();
             reason[i] = result.getReason();
             b &= result.isSuccess();
         }
-        if (! b) {
-            return new WaveformVectorResult(false, seismograms, new StringTreeBranch(this, false, reason));
-        }
-        return new WaveformVectorResult(true, out, new StringTreeBranch(this, true, reason));
+        if(!b) { return new WaveformVectorResult(false,
+                                                 seismograms,
+                                                 new StringTreeBranch(this,
+                                                                      false,
+                                                                      reason)); }
+        return new WaveformVectorResult(true, out, new StringTreeBranch(this,
+                                                                        true,
+                                                                        reason));
     }
 
     public String toString() {
-        return "ANDWaveformProcessWrapper("+process.toString()+")";
+        return "ANDWaveformProcessWrapper(" + process.toString() + ")";
     }
-
 
     WaveformProcess process;
 }
-
