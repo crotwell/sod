@@ -78,6 +78,11 @@ public class LocalSeismogramArm implements Subsetter{
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramSubsetter) localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramProcess) waveFormArmProcessSubsetter = (LocalSeismogramProcess)sodElement;
+		else {
+		    logger.warn("Unknown tag in LocalSeismogramArm config. "
+				+sodElement);
+		} // end of else
+		
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
