@@ -25,36 +25,36 @@
     <eventArm>
       <eventFinder>
         <name>IRIS_EventDC</name>
-                        <dns>edu/iris/dmc</dns>
-                        <boxArea>
-                                <latitudeRange>
-                                        <unit>DEGREE</unit>
-                                        <min>-90</min>
-                                        <max>90</max>
-                                </latitudeRange>
-                                <longitudeRange>
-                                        <unit>DEGREE</unit>
-                                        <min>-180</min>
-                                        <max>180</max>
-                                </longitudeRange>
-                        </boxArea>
-                        <originDepthRange>
-                                <unitRange>
-                                        <unit>KILOMETER</unit>
-                                        <min>0</min>
-                                        <max>1000</max>
-                                </unitRange>
-                        </originDepthRange>
-                        <originTimeRange>
-                                <startTime>20030101T00:00:00.001Z</startTime>
-                                <endTime>20030131T23:59:59.999Z</endTime>
-                        </originTimeRange>
-                        <magnitudeRange>
-                                <min>6.0</min>
-                                <max>10.0</max>
-                        </magnitudeRange>
-                        <catalog>WHDF</catalog>
-                        <contributor>NEIC</contributor>
+        <dns>edu/iris/dmc</dns>
+        <boxArea>
+            <latitudeRange>
+                <unit>DEGREE</unit>
+                <min>-90</min>
+                <max>90</max>
+            </latitudeRange>
+            <longitudeRange>
+                <unit>DEGREE</unit>
+                <min>-180</min>
+                <max>180</max>
+            </longitudeRange>
+        </boxArea>
+        <originDepthRange>
+            <unitRange>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
+            </unitRange>
+        </originDepthRange>
+        <originTimeRange>
+            <startTime>20030101T00:00:00.001Z</startTime>
+            <endTime>20030131T23:59:59.999Z</endTime>
+        </originTimeRange>
+        <magnitudeRange>
+            <min>6.0</min>
+            <max>10.0</max>
+        </magnitudeRange>
+            <catalog>WHDF</catalog>
+            <contributor>NEIC</contributor>
          </eventFinder>
         <originAND>
             <originOR>
@@ -246,14 +246,14 @@
                 <stationOperator>AAAA</stationOperator>
                 <passStation/>
             </stationOR>
-          <!--  <stationOR>
+            <stationOR>
                 <stationDepthRange>
                         <unit>KILOMETER</unit>
                         <min>0</min>
                         <max>1000</max>
                 </stationDepthRange>
                 <passStation/>
-            </stationOR> -->
+            </stationOR>
             <stationOR>
                 <stationEffectiveTimeOverlap>
                     <startTime>20030101T00:00:00.001Z</startTime>
@@ -327,14 +327,14 @@
                 <siteCode>00</siteCode>
                 <passSite/>
             </siteOR>
-         <!--   <siteOR>
+         <siteOR>
                 <siteDepthRange>
                         <unit>KILOMETER</unit>
                         <min>0</min>
                         <max>1000</max>
                 </siteDepthRange>
                 <passSite/>
-            </siteOR> -->
+            </siteOR>
             <siteOR>
                 <siteEffectiveTimeOverlap>
                     <startTime>20030101T00:00:00.001Z</startTime>
@@ -560,16 +560,6 @@
                 </phaseExists>
                 <passEventStation/>
             </eventStationOR>
-            <eventStationOR>
-                <phaseInteraction>
-                    <phaseExists>
-                        <modelName>prem</modelName>
-                        <phaseName>P</phaseName>
-                    </phaseExists>
-                   <interactionStyle>TOPSIDE REFLECTION</interactionStyle>
-                </phaseInteraction>
-                <passEventStation/>
-            </eventStationOR>
      </eventStationAND>
      <localSeismogramArm>
         <eventChannelAND>
@@ -716,7 +706,7 @@
                     <email>danala@seis.sc.edu</email>
                     <phone>8037778986</phone>
                     <fax>9999999</fax>
-                    <media>asdf</media>
+                    <media>mail</media>
                     <altmedia1>mail</altmedia1>
                     <altmedia2>mail</altmedia2>
                     <quality>excellent</quality>
@@ -747,7 +737,7 @@
     <forkProcess>
         <alwaysSuccess>
             <phaseCut>
-                <phaseRequest>
+            <phaseRequest>
             <model>prem</model>
             <beginPhase>ttp</beginPhase>
             <beginOffset>
