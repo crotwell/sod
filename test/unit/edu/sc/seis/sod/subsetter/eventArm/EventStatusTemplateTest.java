@@ -14,72 +14,78 @@ import junit.framework.TestCase;
 
 public class EventStatusTemplateTest extends TestCase{
     public EventStatusTemplateTest(String name){
-        super(name);
+		super(name);
     }
-
+	
     public void setUp() throws IOException {
-        init("<eventStatusTemplate xlink:href=\"jar:edu/sc/seis/sod/data/basicEventTemplate.xml\" outputLocation=\"test.txt\"/>");
+		init("<eventStatusTemplate>"
+				 + "<fileDir>status</fileDir>"
+				 + "<eventConfig xlink:href=\"jar:edu/sc/seis/sod/data/basicEventTemplate.xml\"/>"
+				 + "</eventStatusTemplate>");
     }
-
+	
     private void init(String config) throws IOException{
-        try {
-            temp = new EventStatusTemplate(XMLConfigUtil.parse(config));
-        }  catch (Exception e) {
-            System.err.println("Unable to open test template file!");
-            e.printStackTrace();
-        }
-        temp.setArmStatus("Setting up");
+		try {
+			temp = new EventStatusTemplate(XMLConfigUtil.parse(config));
+		}  catch (Exception e) {
+			System.err.println("Unable to open test template file!");
+			e.printStackTrace();
+		}
+		temp.setArmStatus("Setting up");
     }
-
+	
     public void testHTMLTemplate() throws IOException {
-        init("<eventStatusTemplate xlink:href=\"jar:edu/sc/seis/sod/data/htmlEventTemplate.xml\" outputLocation=\"test.txt\"/>");
-        assertEquals(plainHTMLOutput, temp.getResult());
+		init("<eventStatusTemplate>"
+				 + "<fileDir>status</fileDir>"
+				 + "<eventConfig xlink:href=\"jar:edu/sc/seis/sod/data/htmlEventTemplate.xml\"/>"
+				 + "</eventStatusTemplate>");
+		assertEquals(plainHTMLOutput, temp.getResult());
     }
-
+	
     public void testNothingAdded(){
-        assertEquals(plainOutput, temp.getResult());
+		assertEquals(plainOutput, temp.getResult());
     }
-
+	
     public void testAddEvent() throws Exception {
-        temp.change(epochEvent, RunStatus.NEW);
-        assertEquals(singleEvent, temp.getResult());
-        temp.change(fallEvent, RunStatus.NEW);
-        assertEquals(twoEvents, temp.getResult());
+		temp.change(epochEvent, RunStatus.NEW);
+		assertEquals(singleEvent, temp.getResult());
+		temp.change(fallEvent, RunStatus.NEW);
+		assertEquals(twoEvents, temp.getResult());
     }
-
+	
     public void testUpdate() throws Exception {
-        temp.change(epochEvent, RunStatus.NEW);
-        temp.change(epochEvent, RunStatus.PASSED);
-        assertEquals(updatedEvent, temp.getResult());
+		temp.change(epochEvent, RunStatus.NEW);
+		temp.change(epochEvent, RunStatus.PASSED);
+		assertEquals(updatedEvent, temp.getResult());
     }
-
+	
     private EventAccessOperations epochEvent = MockEventAccessOperations.createEvent();
     private EventAccessOperations fallEvent = MockEventAccessOperations.createFallEvent();
     private EventStatusTemplate temp;
-
+	
     private String intro =
-        "Event Arm Status:Setting up\n"+
-        "These are the events I'm watching:\n";
-
+		"Event Arm Status:Setting up\n"+
+		"These are the events I'm watching:\n";
+	
     private String outro = "\naren't they grand?";
-
+	
     private String plainOutput =
-        intro +
-        outro;
-
+		intro +
+		outro;
+	
     private String plainHTMLOutput = "<html><header><title font=\"testAttr\">Event Arm</title></header><body>Event Arm Status:Setting up\n" +
-        "These are the events I'm watching:\n\n" +
-        "aren't they grand?<br/>\n"+
-        "And here's a link to a map <img src=\"eventMap.png\" alt=\"Setting up\"/>\n"+
-        "</body></html>";
-
+		"These are the events I'm watching:\n\n" +
+		"aren't they grand?<br/>\n"+
+		"And here's a link to a map <img src=\"eventMap.png\" alt=\"Setting up\"/>\n"+
+		"</body></html>";
+	
     private String alaska = "CENTRAL ALASKA19700101T00:00:00.000";
-
+	
     private String singleEvent = intro + alaska + outro;
-
+	
     private String newBerlin = "GERMANY19900613T12:00:00.000";
-
+	
     private String twoEvents = intro + alaska + newBerlin + outro;
-
+	
     private String updatedEvent =  intro + alaska + outro;
 }
