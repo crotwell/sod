@@ -51,15 +51,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     public void run() {
 	EventAccess eventAccess = null;  
 	try {
-	do
-	{
-	  
-	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
-	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
-	    System.out.println("The name of the event is "+eventAccess.get_attributes().name);
-
-	   
-	    if(eventAccess != null) {
+	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());
+	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
+	    while(eventAccess != null) {
+		logger.debug("The name of the event is "+eventAccess.get_attributes().name);
+		Channel[] successfulChannels = 
+		    networkArm.getSuccessfulChannels();
 		if(createNewThread()) {
 		    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 								     eventStationSubsetter,
@@ -70,10 +67,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 			    
 		    thread.start();
 		}
-	    }
-	    
-	    
-	}while(eventAccess != null);
+		eventAccess = 
+		    EventAccessHelper.narrow(Start.getEventQueue().pop());
+	    }   
 
 	} catch(Exception e) {
 
