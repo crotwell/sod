@@ -9,7 +9,7 @@ public class PostgresDatabase extends AbstractDatabase {
     
     public PostgresDatabase(Connection connection) {
 	super(connection);
-	configDatabase = new PostgresConfigDatabase(connection);
+	configDatabase = new PostgresConfigDatabase(connection, "eventtimeconfig");
     }
     
 	

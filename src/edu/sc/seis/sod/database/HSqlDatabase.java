@@ -27,7 +27,7 @@ public class HSqlDatabase extends AbstractDatabase{
 
     public HSqlDatabase (Connection connection) {
 	super(connection);
-	this.configDatabase = new HSqlConfigDatabase(connection);
+	this.configDatabase = new HSqlConfigDatabase(connection, "eventtimeconfig");
     }
 
     public void create() {

@@ -15,6 +15,7 @@ import org.hsqldb.*;
 public class HSqlNetworkDb extends AbstractNetworkDatabase{
     public HSqlNetworkDb (Connection connection){
 	super(connection);
+	this.configDatabase = new HSqlConfigDatabase(connection, getTimeConfigName());
     }
     
     public void create() {
@@ -30,7 +31,9 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " site_code VARCHAR, "+
 			       " channel_code VARCHAR, "+
 			       " network_time timestamp, "+
+			       " nleapseconds int, "+
 			       " channel_time timestamp, "+
+			       " cleapseconds int, "+
 			       " channelIdIOR VARCHAR)");
 	        
 	} catch(SQLException sqle) {
@@ -38,5 +41,9 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 	}
 
     }
+    public ConfigDatabase getConfigDatabase() {
+	return this.configDatabase;
+    }
+    private ConfigDatabase configDatabase;
     
 }// HSqlNetworkDb

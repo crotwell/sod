@@ -21,15 +21,15 @@ import org.hsqldb.*;
  */
 
 public class HSqlConfigDatabase extends AbstractConfigDatabase{
-    public HSqlConfigDatabase (Connection connection){
-	super(connection);
+    public HSqlConfigDatabase (Connection connection, String tableName){
+	super(connection, tableName);
     }
     
     public  void create() {
 	try {
 	    Statement stmt = connection.createStatement();
 	    try {
-		stmt.executeUpdate("CREATE TABLE timeconfig "+
+		stmt.executeUpdate("CREATE TABLE "+tableName+
 				   "( serverName VARCHAR, "+
 				   " serverDNS VARCHAR, "+
 				   " time timestamp)");

@@ -21,8 +21,9 @@ import java.sql.*;
  */
 
 public abstract class AbstractConfigDatabase implements ConfigDatabase{
-    public AbstractConfigDatabase (Connection connection){
+    public AbstractConfigDatabase (Connection connection, String tableName){
 	this.connection = connection;
+	this.tableName = tableName;
 	init();
     }
     
@@ -33,13 +34,13 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	    create();
 	    Statement stmt = connection.createStatement();
 	    
-	    setTimeStmt = connection.prepareStatement(" INSERT into timeconfig "+
+	    setTimeStmt = connection.prepareStatement(" INSERT into  "+tableName+
 						      " VALUES(?, ? , ? ) ");
-	    updateTimeStmt = connection.prepareStatement(" UPDATE timeconfig set time = ? "+
+	    updateTimeStmt = connection.prepareStatement(" UPDATE "+tableName+" set time = ? "+
 							 " WHERE serverName = ? AND "+
 							 " serverDNS = ? ");
 	    
-	    getTimeStmt = connection.prepareStatement(" SELECT time from timeconfig "+
+	    getTimeStmt = connection.prepareStatement(" SELECT time from "+tableName+
 						      " WHERE serverName = ? AND "+
 						      " serverDNS = ? ");
 	} catch(Exception e) {
@@ -58,7 +59,7 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     }
 
     
-    public void setTime(String serverName,
+    public synchronized void setTime(String serverName,
 			String serverDNS,
 			edu.iris.Fissures.Time time) {
 	try {
@@ -87,7 +88,7 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 //     }
 
 
-    public edu.iris.Fissures.Time getTime(String serverName,
+    public synchronized edu.iris.Fissures.Time getTime(String serverName,
 					  String serverDNS) {
 	try {
 	    getTimeStmt.setString(1, serverName);
@@ -104,7 +105,7 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	}
     }
 
-    public void incrementTime(String serverName,
+    public synchronized void incrementTime(String serverName,
 			      String serverDNS,
 			      int days) {
 	edu.iris.Fissures.Time time = getTime(serverName, serverDNS);
@@ -172,7 +173,9 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	    return null;
 	}
     }
-
+//this close method must be elimintaed the 
+// database manager is responsible for closing 
+// the connection and not the individual databases
     public void close() {
 	try {
 	    connection.close();
@@ -183,6 +186,8 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     }
 
     protected  Connection connection;
+
+    protected String tableName;
 
   //   private String serverDNS;
 

@@ -15,6 +15,7 @@ import java.sql.*;
 public class PostgresNetworkDb extends AbstractNetworkDatabase{
     public PostgresNetworkDb (Connection connection){
 	super(connection);
+	this.configDatabase = new PostgresConfigDatabase(connection, getTimeConfigName());
     }
     
     public void create() {
@@ -30,11 +31,19 @@ public class PostgresNetworkDb extends AbstractNetworkDatabase{
 			       " site_code text, "+
 			       " channel_code text, "+
 			       " network_time timestamp, "+
+			       " nleapseconds int, "+
 			       " channel_time timestamp, "+
+			       " cleapseconds int, "+
 			       " channelIdIOR text)");
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
     }    
+    
+    public ConfigDatabase getConfigDatabase() {
+	return this.configDatabase;
+    }
+    
+    private ConfigDatabase configDatabase;
     
 }// PostgresNetworkDb

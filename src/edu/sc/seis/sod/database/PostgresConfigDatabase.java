@@ -21,15 +21,15 @@ import java.sql.*;
  */
 
 public class PostgresConfigDatabase extends AbstractConfigDatabase{
-    public PostgresConfigDatabase (Connection connection){
-	super(connection);
+    public PostgresConfigDatabase (Connection connection, String tableName){
+	super(connection, tableName);
     }
     
     public  void create() {
 	try {
 	    Statement stmt = connection.createStatement();
 	    try {
-		stmt.executeUpdate("CREATE TABLE timeconfig "+
+		stmt.executeUpdate("CREATE TABLE "+tableName+
 				   "( serverName text, "+
 				   " serverDNS text, "+
 				   " time timestamp)");

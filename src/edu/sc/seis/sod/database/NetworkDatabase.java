@@ -24,13 +24,22 @@ public interface  NetworkDatabase {
 // 		    String channelIdIOR);
 
     public int put(String serverName,
-		    String serverDNS,
-		    Channel channel);
+		   String serverDNS,
+		   Channel channel,
+		   NetworkAccess networkAccess);
     
 
     public int getId(String serverName,
 		     String serverDNS,
 		     Channel channel);
+
+    public void setTime(String serverName, String serverDNS, edu.iris.Fissures.Time time);
+    
+    public edu.iris.Fissures.Time getTime(String serverName, String serverDNS);
+    
+    public void incrementTime(String serverName, String serverDNS, int numDays);
+
+    public Channel[] getChannels();
 
 //     public int get(String serverName,
 // 		   String serverDNS,
