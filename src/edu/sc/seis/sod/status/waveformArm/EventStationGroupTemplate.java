@@ -6,26 +6,27 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.sc.seis.sod.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.AllTextTemplate;
-import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.StationTemplate;
 import edu.sc.seis.sod.status.Template;
+import edu.sc.seis.sod.status.eventArm.EventTemplate;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import org.w3c.dom.Element;
 
-public class EventStationGroupTemplate extends Template implements GenericTemplate{
-    public EventStationGroupTemplate(Element el, EventAccessOperations ev) throws ConfigurationException{
-        setEvent(ev);
+public class EventStationGroupTemplate extends Template implements EventTemplate{
+    public EventStationGroupTemplate(Element el) throws ConfigurationException{
         parse(el);
     }
 
@@ -34,7 +35,11 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, Element el)  throws ConfigurationException {
-        if (tag.equals("station")){ return new EventStationFormatter(el, ev);}
+        if (tag.equals("station")){
+            EventStationFormatter esf = new EventStationFormatter(el);
+            eventStationFormatters.add(esf);
+            return esf;
+        }
         else if(tag.equals("statusFilter")){
             if(SodUtil.getNestedText(el).equals("SUCCESS")){ success = true; }
             return new AllTextTemplate("");
@@ -60,6 +65,10 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
                 if(success){ stations = evStatus.getOfStatus(status, ev); }
                 else{ stations = evStatus.getNotOfStatus(status, ev); }
             }
+            Iterator it = eventStationFormatters.iterator();
+            while(it.hasNext()){
+                ((EventStationFormatter)it.next()).setEvent(ev);
+            }
             StringBuffer buf = new StringBuffer();
             for (int i = 0; i < stations.length; i++) {
                 Iterator templateIt = templates.iterator();
@@ -74,11 +83,7 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
         }
     }
 
-    public void setEvent(EventAccessOperations ev){ this.ev = ev; }
-
-    public String getResult(){ return getResult(ev); }
-
-    private EventAccessOperations ev;
+    private List eventStationFormatters = new ArrayList();
     private boolean success = false;
     private static final Status status = Status.get(Stage.PROCESSOR,
                                                     Standing.SUCCESS);
