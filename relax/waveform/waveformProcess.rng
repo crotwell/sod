@@ -46,6 +46,7 @@
             <ref name="someDataCoverage"/>
             <ref name="noDataGaps"/>
             <ref name="fullDataCoverage"/>
+            <ref name="integrate"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -680,6 +681,18 @@
                     guarantee that there are no gaps in the middle of the request though. To ensure
                     that, combine this processor with a noDataGaps processor in a
                 seismogramAND.</description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="integrate">
+        <element name="integrate">
+            <xsd:annotation>
+                <summary>Integrates the seismograms, changing velocity to displacement for 
+                    example.</summary>
+                <description>This processor integrates each seismogram, using a integration
+                    constant of zero. This can be used to change velocity to displacement.
+                </description>
             </xsd:annotation>
             <empty/>
         </element>
