@@ -30,7 +30,6 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                            "VALUES (? , ?, ?)");
         getPairId = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE eventid = ? and channelid = ?");
         setStatus = conn.prepareStatement("UPDATE eventchannelstatus SET status = ? where pairid = ?");
-        pop = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE status = " + Status.get(Status.SPECIAL, Status.NEW).getAsByte());
         getEventAndChanId = conn.prepareStatement("SELECT eventid, channelid FROM eventchannelstatus WHERE pairid = ?");
     }
 
@@ -91,7 +90,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         setStatus.executeUpdate();
     }
 
-    private PreparedStatement insert, setStatus, getPairId, pop,
+    private PreparedStatement insert, setStatus, getPairId,
         getEventAndChanId;
 
     private JDBCSequence seq;

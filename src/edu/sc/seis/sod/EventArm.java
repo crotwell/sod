@@ -167,8 +167,8 @@ public class EventArm implements Runnable{
     }
 
     private void waitForProcessing() throws SQLException {
-        while(eventStatus.getAll(Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                            Status.IN_PROG)).length > 2) {
+        while(eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                            Standing.IN_PROG)).length > 2) {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {}
@@ -248,24 +248,24 @@ public class EventArm implements Runnable{
     }
 
     public void handle(CacheEvent event) throws Exception{
-        change(event, Status.get(Status.EVENT_ATTR_SUBSETTER,
-                                 Status.IN_PROG));
+        change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
+                                 Standing.IN_PROG));
         EventAttr attr = event.get_attributes();
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
             Origin origin = event.get_preferred_origin();
             if(originSubsetter.accept(event, origin, null)) {
-                change(event, Status.get(Status.PROCESSOR,
-                                         Status.IN_PROG));
+                change(event, Status.get(Stage.PROCESSOR,
+                                         Standing.IN_PROG));
                 process(event);
-                change(event, Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                         Status.IN_PROG));
+                change(event, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                         Standing.IN_PROG));
             }else{
-                change(event, Status.get(Status.EVENT_ORIGIN_SUBSETTER,
-                                         Status.REJECT));
+                change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                         Standing.REJECT));
             }
         }else{
-            change(event, Status.get(Status.EVENT_ATTR_SUBSETTER,
-                                     Status.REJECT));
+            change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
+                                     Standing.REJECT));
         }
     }
 

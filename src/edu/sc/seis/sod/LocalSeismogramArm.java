@@ -97,16 +97,16 @@ public class LocalSeismogramArm implements Subsetter{
                 passed = eventChannel.accept(eventAccess, networkAccess,
                                              channel, null);
             } catch (Throwable e) {
-                handle(ecp, Status.EVENT_CHANNEL_SUBSETTER, e);
+                handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e);
                 return;
             }
         }
         if( passed ) {
-            ecp.update(Status.get(Status.REQUEST_SUBSETTER, Status.IN_PROG));
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
             logger.info("FAIL event channel");
-            ecp.update(Status.get(Status.EVENT_CHANNEL_SUBSETTER,Status.REJECT));
+            ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,Standing.REJECT));
         }
     }
 
@@ -119,7 +119,7 @@ public class LocalSeismogramArm implements Subsetter{
                                                            ecp.getChannel(),
                                                            null);
             } catch (Throwable e) {
-                handle(ecp, Status.REQUEST_SUBSETTER, e);
+                handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
             }
         }
@@ -133,12 +133,12 @@ public class LocalSeismogramArm implements Subsetter{
                 passed = request.accept(ecp.getEvent(), ecp.getNet(), ecp.getChannel(),
                                         infilters, null);
             } catch (Throwable e) {
-                handle(ecp, Status.REQUEST_SUBSETTER, e);
+                handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
             }
         }
         if( passed ) {
-            ecp.update(Status.get(Status.AVAILABLE_DATA_SUBSETTER, Status.IN_PROG));
+            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.IN_PROG));
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
@@ -147,7 +147,7 @@ public class LocalSeismogramArm implements Subsetter{
                                                            ecp.getChannel().my_site.my_station,
                                                            null);
                 } catch (Throwable e) {
-                    handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                    handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                     return;
                 }
             }
@@ -175,7 +175,7 @@ public class LocalSeismogramArm implements Subsetter{
                             dataCenter.reset();
                         }
                     } else {
-                        handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                        handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                         return;
                     }
                 }
@@ -190,7 +190,7 @@ public class LocalSeismogramArm implements Subsetter{
             processAvailableDataSubsetter(ecp,dataCenter,infilters,outfilters);
         } else {
             logger.info("FAIL request subsetter");
-            ecp.update(Status.get(Status.REQUEST_SUBSETTER, Status.REJECT));
+            ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
         }
     }
 
@@ -209,12 +209,12 @@ public class LocalSeismogramArm implements Subsetter{
                                           outfilters,
                                           null);
             } catch (Throwable e) {
-                handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                 return;
             }
         }
         if( passed ) {
-            ecp.update(Status.get(Status.DATA_SUBSETTER, Status.IN_PROG));
+            ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.IN_PROG));
             for (int i=0; i<infilters.length; i++) {
                 logger.debug("Getting seismograms "
                                  +ChannelIdUtil.toString(infilters[i].channel_id)
@@ -236,7 +236,7 @@ public class LocalSeismogramArm implements Subsetter{
                         try {
                             localSeismograms = dataCenter.retrieve_seismograms(infilters);
                         } catch (FissuresException e) {
-                            handle(ecp, Status.DATA_SUBSETTER, e);
+                            handle(ecp, Stage.DATA_SUBSETTER, e);
                             return;
                         }
                         logger.debug("after successful retrieve_seismograms");
@@ -261,7 +261,7 @@ public class LocalSeismogramArm implements Subsetter{
                                 dataCenter.reset();
                             }
                         } else {
-                            handle(ecp, Status.DATA_SUBSETTER, e);
+                            handle(ecp, Stage.DATA_SUBSETTER, e);
                             return;
                         }
                     }
@@ -277,7 +277,7 @@ public class LocalSeismogramArm implements Subsetter{
             LinkedList tempForCast = new LinkedList();
             for (int i=0; i<localSeismograms.length; i++) {
                 if (localSeismograms[i] == null) {
-                    ecp.update(Status.get(Status.DATA_SUBSETTER, Status.REJECT));
+                    ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.REJECT));
                     logger.error("Got null in seismogram array "+ChannelIdUtil.toString(ecp.getChannel().get_id()));
                     return;
                 }
@@ -299,8 +299,8 @@ public class LocalSeismogramArm implements Subsetter{
                                             tempLocalSeismograms);
         } else {
             logger.info("FAIL available data");
-            ecp.update(Status.get(Status.AVAILABLE_DATA_SUBSETTER,
-                                  Status.REJECT));
+            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                  Standing.REJECT));
         }
     }
 
@@ -319,20 +319,20 @@ public class LocalSeismogramArm implements Subsetter{
                                               localSeismograms,
                                               null);
             } catch (Throwable e) {
-                handle(ecp, Status.DATA_SUBSETTER, e);
+                handle(ecp, Stage.DATA_SUBSETTER, e);
                 return;
             }
         }
         if( passed ) {
-            ecp.update(Status.get(Status.PROCESSOR, Status.IN_PROG));
+            ecp.update(Status.get(Stage.PROCESSOR, Standing.IN_PROG));
             try {
                 processSeismograms(ecp, infilters, outfilters, localSeismograms);
             } catch (Throwable e) {
-                handle(ecp, Status.DATA_SUBSETTER, e);
+                handle(ecp, Stage.DATA_SUBSETTER, e);
             }
         } else {
             logger.info("FAIL seismogram subsetter");
-            ecp.update(Status.get(Status.DATA_SUBSETTER, Status.REJECT));
+            ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.REJECT));
         }
 
     }
@@ -355,19 +355,19 @@ public class LocalSeismogramArm implements Subsetter{
                                                          outfilters,
                                                          localSeismograms,
                                                          null);
-                } catch (Throwable e) { handle(ecp, Status.PROCESSOR, e); }
+                } catch (Throwable e) { handle(ecp, Stage.PROCESSOR, e); }
             }
         } // end of while (it.hasNext())
         logger.debug("finished with "+
                          ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()));
-        ecp.update(Status.get(Status.SPECIAL, Status.SUCCESS));
+        ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
     }
 
-    private static void handle(EventChannelPair ecp, int stage, Throwable t){
+    private static void handle(EventChannelPair ecp, Stage stage, Throwable t){
         if(t instanceof org.omg.CORBA.SystemException){
-            ecp.update(t, Status.get(stage, Status.CORBA_FAILURE));
+            ecp.update(t, Status.get(stage, Standing.CORBA_FAILURE));
         }else{
-            ecp.update(t, Status.get(stage, Status.SYSTEM_FAILURE));
+            ecp.update(t, Status.get(stage, Standing.SYSTEM_FAILURE));
         }
     }
 

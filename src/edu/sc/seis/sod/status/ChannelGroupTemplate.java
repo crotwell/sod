@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.Standing;
 
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     private Map channelMap = new HashMap();
@@ -23,7 +24,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
             while(it.hasNext()){
                 Channel curChan = (Channel)it.next();
                 Status status = (Status)channelMap.get(curChan);
-                if ((useStatus.size()==0 && ! notUseStatus.contains(status)) || useStatus.contains(status) ) {
+                if ((useStanding.size()==0 && ! notUseStanding.contains(status.getStanding())) || useStanding.contains(status.getStanding()) ) {
                     Iterator templateIt = templates.iterator();
                     while(templateIt.hasNext()){
                         buf.append(((ChannelTemplate)templateIt.next()).getResult(curChan));
@@ -58,15 +59,11 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
             for (int i = 0; i < nl.getLength(); i++) {
                 if (nl.item(i) instanceof Element) {
                     Element child = (Element)nl.item(i);
-                    Status[] statusArr = Status.getAllForType(SodUtil.getNestedText(child));
+                    String name = SodUtil.getNestedText(child);
                     if (child.getTagName().equals("status")) {
-                        for (int j = 0; j < statusArr.length; j++) {
-                            useStatus.add(statusArr[j]);
-                        }
+                            useStanding.add(Standing.getForName(name));
                     } else if (child.getTagName().equals("notStatus")) {
-                        for (int j = 0; j < statusArr.length; j++) {
-                            notUseStatus.add(statusArr[j]);
-                        }
+                            notUseStanding.add(Standing.getForName(name));
                     }
                 }
             }
@@ -75,8 +72,8 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
         return super.getTemplate(tag, element);
     }
 
-    LinkedList useStatus = new LinkedList();
-    LinkedList notUseStatus = new LinkedList();
+    LinkedList useStanding = new LinkedList();
+    LinkedList notUseStanding = new LinkedList();
 
 }
 

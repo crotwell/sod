@@ -7,6 +7,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -167,8 +168,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             netPutStmt.setTimestamp(4, microSecondDate.getTimestamp());
             netPutStmt.setInt(5, networkId.begin_time.leap_seconds_version);
             netPutStmt.setTimestamp(6, (ClockUtil.now()).getTimestamp());
-            netPutStmt.setInt(7, Status.get(Status.SPECIAL,
-                                            Status.NEW).getAsByte());
+            netPutStmt.setInt(7, (edu.sc.seis.sod.Stage.NETWORK_SUBSETTER.getVal()<<4)+
+                                            Standing.INIT.getVal());
             String networkAccessIor = null; org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
             while (networkAccess instanceof RetryNetworkAccess || networkAccess instanceof CacheNetworkAccess) {
                 if (networkAccess instanceof RetryNetworkAccess) {
@@ -216,8 +217,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             stationPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             stationPutStmt.setInt(4, stationId.begin_time.leap_seconds_version);
             stationPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            stationPutStmt.setInt(6, Status.get(Status.SPECIAL,
-                                                Status.NEW).getAsByte());
+            stationPutStmt.setInt(6, (edu.sc.seis.sod.Stage.NETWORK_SUBSETTER.getVal()<<4)+
+                                            Standing.INIT.getVal());
             stationPutStmt.executeUpdate();
             return getStationDbId(networkDbObject, station);
         } catch(SQLException sqle) {
@@ -264,8 +265,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             sitePutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             sitePutStmt.setInt(4, siteId.begin_time.leap_seconds_version);
             sitePutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            sitePutStmt.setInt(6, Status.get(Status.SPECIAL,
-                                             Status.NEW).getAsByte());
+            sitePutStmt.setInt(6, (edu.sc.seis.sod.Stage.NETWORK_SUBSETTER.getVal()<<4)+
+                                            Standing.INIT.getVal());
             sitePutStmt.executeUpdate();
             return getSiteDbId(stationDbObject,
                                site);
@@ -311,8 +312,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             channelPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             channelPutStmt.setInt(4, channelId.begin_time.leap_seconds_version);
             channelPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            channelPutStmt.setInt(6,  Status.get(Status.SPECIAL,
-                                                 Status.NEW).getAsByte());
+            channelPutStmt.setInt(6,  (edu.sc.seis.sod.Stage.NETWORK_SUBSETTER.getVal()<<4)+
+                                            Standing.INIT.getVal());
             channelPutStmt.executeUpdate();
             return getChannelDbId(siteDbObject,
                                   channel);

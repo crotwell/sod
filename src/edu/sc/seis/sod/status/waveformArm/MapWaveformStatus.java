@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
@@ -63,16 +64,16 @@ public class MapWaveformStatus extends PeriodicAction implements WaveformArmMoni
                     Channel cur = (Channel)it.next();
                     sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
                     Status status = (Status)channelMap.get(cur);
-                    if (status.getType() == Status.REJECT||
-                        status.getType() == Status.CORBA_FAILURE||
-                        status.getType() == Status.SYSTEM_FAILURE){
+                    if (status.getStanding() == Standing.REJECT||
+                        status.getStanding() == Standing.CORBA_FAILURE||
+                        status.getStanding() == Standing.SYSTEM_FAILURE){
                         sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                    cur.my_site.my_station,
                                                                                    AvailableStationDataEvent.DOWN));
                     }
-                    else if (status.getType() == Status.SPECIAL||
-                             status.getType() == Status.IN_PROG||
-                             status.getType() == Status.RETRY){
+                    else if (status.getStanding() == Standing.SUCCESS||
+                             status.getStanding() == Standing.IN_PROG||
+                             status.getStanding() == Standing.RETRY){
                         sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                    cur.my_site.my_station,
                                                                                    AvailableStationDataEvent.UP));

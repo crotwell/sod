@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 
-public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveformArmMonitor{
+public class WaveformEventTemplateGenerator implements EventArmMonitor {
     public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException {
         if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();
@@ -70,9 +70,6 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
     }
 
     public void setArmStatus(String status) {}
-
-    public void update(EventChannelPair ecp) {}
-
 
     private Element config;
 

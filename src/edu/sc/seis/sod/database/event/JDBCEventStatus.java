@@ -15,6 +15,8 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.SodJDBC;
 import java.sql.Connection;
@@ -42,11 +44,11 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
     public void restartCompletedEvents() throws SQLException {
-        CacheEvent[] events = getAll(Status.get(Status.SPECIAL,
-                                                Status.SUCCESS));
+        CacheEvent[] events = getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                Standing.SUCCESS));
         for (int i = 0; i < events.length; i++) {
-            setStatus(events[i], Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                            Status.IN_PROG));
+            setStatus(events[i], Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                            Standing.IN_PROG));
         }
     }
 
@@ -114,7 +116,8 @@ public class JDBCEventStatus extends SodJDBC{
     public Status getStatus(int dbId) throws SQLException, NotFound{
         getStatus.setInt(1, dbId);
         ResultSet rs = getStatus.executeQuery();
-        if(rs.next())return Status.get(rs.getInt("eventcondition"));
+        int val = rs.getInt("eventcondition");
+        if(rs.next())return Status.get(Stage.getFromInt(val>>4), Standing.getFromInt(val&0x0F));
         throw new NotFound("There is no status for that id");
     }
 
@@ -152,8 +155,8 @@ public class JDBCEventStatus extends SodJDBC{
 
     public int getNext() throws SQLException{
         Statement stmt = ConnMgr.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " +Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                                                                                         Status.IN_PROG).getAsByte());
+        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " +Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                                                         Standing.IN_PROG).getAsByte());
         if(rs.next()) return rs.getInt("eventid");
         return -1;
     }

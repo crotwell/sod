@@ -74,8 +74,8 @@ public class WaveformArm implements Runnable {
             //that all the network information for this particular event is inserted
             //in the waveformDatabase.
             synchronized(eventStatus){
-                eventStatus.setStatus(ev.getEvent(),Status.get(Status.SPECIAL,
-                                                               Status.SUCCESS));
+                eventStatus.setStatus(ev.getEvent(),Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                               Standing.SUCCESS));
             }
         }
     }
@@ -134,7 +134,7 @@ public class WaveformArm implements Runnable {
         int pairId;
         synchronized(evChanStatus){
             pairId = evChanStatus.put(ev.getDbId(), chanId,
-                                      Status.get(Status.SPECIAL, Status.NEW));
+                                      Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.INIT));
         }
         invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
         retryIfNeededAndAvailable();
@@ -244,9 +244,9 @@ public class WaveformArm implements Runnable {
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
                 Status stat = ecp.getStatus();
-                if(stat.getType() == Status.CORBA_FAILURE ||
-                       (stat.getStage() == Status.AVAILABLE_DATA_SUBSETTER &&
-                            stat.getType() == Status.REJECT)){
+                if(stat.getStanding() == Standing.CORBA_FAILURE ||
+                       (stat.getStage() == Stage.AVAILABLE_DATA_SUBSETTER &&
+                            stat.getStanding() == Standing.REJECT)){
                     synchronized (eventRetryTable) {
                         eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
                     }
@@ -307,17 +307,17 @@ public class WaveformArm implements Runnable {
         public void run(){
             try{
                 EventChannelPair ecp = extractEventChannelPair();
-                ecp.update(Status.get(Status.EVENT_STATION_SUBSETTER,
-                                      Status.IN_PROG));
+                ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                      Standing.IN_PROG));
                 try {
                     eventStationSubsetter.accept(ecp.getEvent(), ecp.getNet(),
                                                  ecp.getChannel().my_site.my_station,
                                                  null);
                 } catch (Exception e) {
-                    ecp.update(e, Status.get(Status.EVENT_STATION_SUBSETTER,
-                                             Status.SYSTEM_FAILURE));
+                    ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                             Standing.SYSTEM_FAILURE));
                 }
-                ecp.update(Status.get(Status.EVENT_CHANNEL_SUBSETTER, Status.IN_PROG));
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.IN_PROG));
                 localSeismogramArm.processLocalSeismogramArm(ecp);
             }catch(Throwable t){
                 System.err.println("An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu");

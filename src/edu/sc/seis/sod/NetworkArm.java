@@ -202,10 +202,10 @@ public class NetworkArm {
                                                               finder.getDNSName(),
                                                               allNets[i]);
                         networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
-                        change(allNets[i], Status.get(Status.NETWORK_SUBSETTER,
-                                                      Status.SUCCESS));
-                    }else change(allNets[i], Status.get(Status.NETWORK_SUBSETTER,
-                                                        Status.REJECT));
+                        change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                      Standing.SUCCESS));
+                    }else change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                        Standing.REJECT));
                 } // end of if (allNets[counter] != null)
             } catch(Throwable th) {
                 GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
@@ -249,11 +249,11 @@ public class NetworkArm {
                     int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
                     StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
                     arrayList.add(stationDbObject);
-                    change(stations[subCounter], Status.get(Status.NETWORK_SUBSETTER,
-                                                            Status.SUCCESS));
+                    change(stations[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
+                                                            Standing.SUCCESS));
                 }else{
-                    change(stations[subCounter], Status.get(Status.NETWORK_SUBSETTER,
-                                                            Status.REJECT));
+                    change(stations[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
+                                                            Standing.REJECT));
                 }
             }
 
@@ -298,16 +298,16 @@ public class NetworkArm {
                                                                  channels[i].my_site);
                     if(!containsSite(siteDbObject, successes)) {
                         successes.add(siteDbObject);
-                        change(channels[i].my_site, Status.get(Status.NETWORK_SUBSETTER,
-                                                               Status.SUCCESS));
+                        change(channels[i].my_site, Status.get(Stage.NETWORK_SUBSETTER,
+                                                               Standing.SUCCESS));
                     }
                 }else if(!failures.contains(channels[i].my_site)){
-                    change(channels[i].my_site, Status.get(Status.NETWORK_SUBSETTER,
-                                                           Status.REJECT));
+                    change(channels[i].my_site, Status.get(Stage.NETWORK_SUBSETTER,
+                                                           Standing.REJECT));
                     failures.add(channels[i].my_site);
                     // fail all channels in a failed site, just for status pages
-                    change(channels[i], Status.get(Status.NETWORK_SUBSETTER,
-                                                   Status.REJECT));
+                    change(channels[i], Status.get(Stage.NETWORK_SUBSETTER,
+                                                   Standing.REJECT));
                 }
             }
         } catch(Exception e) {
@@ -354,21 +354,21 @@ public class NetworkArm {
                 if(!isSameSite(site, channels[subCounter].my_site)){
                     continue;
                 }
-                change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
-                                                        Status.IN_PROG));
+                change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
+                                                        Standing.IN_PROG));
                 if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
                     int dbid = networkDatabase.putChannel(siteDbObject,
                                                           channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                           channels[subCounter]);
                     successes.add(channelDbObject);
-                    change(channels[subCounter], Status.get(Status.PROCESSOR,
-                                                            Status.IN_PROG));
+                    change(channels[subCounter], Status.get(Stage.PROCESSOR,
+                                                            Standing.IN_PROG));
                     processNetworkArm(networkAccess, channels[subCounter], cookieJar);
-                    change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
-                                                            Status.SUCCESS));
-                }else change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
-                                                              Status.REJECT));
+                    change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
+                                                            Standing.SUCCESS));
+                }else change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
+                                                              Standing.REJECT));
             }
         } catch(Throwable e) {
             CommonAccess.handleException(e, "Problem in method getSuccessfulChannels");
