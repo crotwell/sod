@@ -30,33 +30,35 @@ public class SimpleHTMLNetworkStatus implements NetworkStatus{
         pages[2] = networkPage = new SimpleHTMLPage("Networks", "networks.html", htmlDir);
         pages[3] = stationPage = new SimpleHTMLPage("Stations", "stations.html", htmlDir);
         pages[4] = channelPage = new SimpleHTMLPage("Channels", "channel.html", htmlDir);
-        statusPage.addLinks(pages);
-        sitePage.addLinks(pages);
-        networkPage.addLinks(pages);
-        stationPage.addLinks(pages);
-        channelPage.addLinks(pages);
+        for (int i = 1; i < pages.length; i++) {//all but the status page
+            pages[i].append("Successes", "");
+            pages[i].append("Failures", "");
+        }
+        statusPage.append("Status", "Starting up", 0);
     }
+    
+    
     
     public void setArmStatus(String status) {
         statusPage.clear("Status");
-        statusPage.append("Status", "<b>Status: </b> " + status);
+        statusPage.append("Status", status, 0);
         for (int i = 0; i < pages.length; i++) {
             pages[i].write();
         }
     }
     
     public void change(NetworkAccess network, RunStatus status) {
-        appendToPage(channelPage, status,
+        appendToPage(networkPage, status,
                      NetworkIdUtil.toString(network.get_attributes().get_id()));
     }
     
     public void change(Station station, RunStatus status) {
-        appendToPage(channelPage, status,
+        appendToPage(stationPage, status,
                      StationIdUtil.toString(station.get_id()));
     }
     
     public void change(Site site, RunStatus status) {
-        appendToPage(channelPage, status,
+        appendToPage(sitePage, status,
                      SiteIdUtil.toString(site.get_id()));
     }
     
@@ -66,11 +68,8 @@ public class SimpleHTMLNetworkStatus implements NetworkStatus{
     }
     
     private void appendToPage(SimpleHTMLPage page, RunStatus status, String text){
-        if(status == RunStatus.FAILED){
-            page.append("Failures", text);
-        }else if(status == RunStatus.PASSED){
-            page.append("Successes", text);
-        }
+        if(status == RunStatus.FAILED) page.append("Failures", text, 2);
+        else if(status == RunStatus.PASSED) page.append("Successes", text, 1);
     }
     
     private SimpleHTMLPage channelPage, sitePage, networkPage, stationPage, statusPage;
