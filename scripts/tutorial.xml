@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="file:/C:/cygwin/home/groves/sod/relax/sod.rng" type="xml"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
                 <property>
@@ -55,23 +54,15 @@
                         <catalog>WHDF</catalog>
                         <contributor>NEIC</contributor>
                 </eventFinder>
-                <simpleHTMLEventStatus>
-                        <outputDirectory>status/</outputDirectory>
-                </simpleHTMLEventStatus>
-
-                <mapEventStatus xlink:link="status/eventMap.png"/>
+                <mapEventStatus xlink:href="status/eventMap.png"/>
                 <eventStatusTemplate
-                       outputLocation="status/time.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="status/depth.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="status/location.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
-               <eventStatusTemplate
-                       outputLocation="status/mag.html"
-                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
+                        outputLocation="status/time.html" xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
+                <eventStatusTemplate
+                        outputLocation="status/depth.html" xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
+                <eventStatusTemplate
+                        outputLocation="status/location.html" xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
+                <eventStatusTemplate
+                        outputLocation="status/mag.html" xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
         </eventArm>
         <networkArm>
                 <networkFinder>
@@ -92,7 +83,7 @@
                 </stationEffectiveTimeOverlap>
                 <siteAND>
                         <siteOR>
-                                <siteCode>  </siteCode>
+                                <siteCode/>
                                 <siteCode>00</siteCode>
                         </siteOR>
                         <siteEffectiveTimeOverlap>
@@ -115,9 +106,6 @@
                                 </effectiveTimeOverlap>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
-                <simpleHTMLNetworkStatus>
-                        <outputDirectory>status/</outputDirectory>
-                </simpleHTMLNetworkStatus>
         </networkArm>
         <waveFormArm>
                 <distanceRange>
@@ -151,9 +139,9 @@
                                 </eventDirLabel>
                         </sacFileProcessor>
                 </localSeismogramArm>
-                <simpleHTMLWaveformStatus>
-                        <outputDirectory>status/</outputDirectory>
-                </simpleHTMLWaveformStatus>
+                <waveformEventTemplateGenerator>
+                        <fileLoc>status/<originTime>yyyyMMddHHmmssSSS</originTime>/event.html</fileLoc>
+                        <externalConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+                </waveformEventTemplateGenerator>
         </waveFormArm>
 </sod>
-

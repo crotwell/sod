@@ -30,7 +30,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
     private Map channelMap = new HashMap();
     
     public MapWaveFormStatus(Element element) {
-        this(element.getAttribute("xlink:link"));
+        this(element.getAttribute("xlink:href"));
     }
     
     public MapWaveFormStatus(String fileLoc){
