@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
         <xsl:output method="html"/>
         <xsl:include href="menuGenerator.xsl"/>
+		<xsl:param name="base"/>
         <xsl:template match="/">
                 <xsl:param name="currentPage"/>
                 <xsl:apply-templates select="*">
@@ -16,6 +17,7 @@
                                 <xsl:call-template name="header"/>
                                 <xsl:call-template name="menu">
                                         <xsl:with-param name="currentPage" select="$currentPage"/>
+										<xsl:with-param name="base" select="$base"/>
                                 </xsl:call-template>
                                 <div id="content">
                                         <xsl:apply-templates select="body/*"/>
@@ -33,7 +35,7 @@
                 </div>
         </xsl:template>
         <xsl:template match="section" mode="sub">
-                <div class="subsection">
+                <div class="section">
                         <h4>
                                 <xsl:value-of select="@name"/>
                         </h4>
@@ -65,13 +67,25 @@
                         <!--[if lt IE 7]>
 		<link rel="stylesheet" href="ie7-html.css" type="text/css">
 		<![endif]-->
-                        <link rel="stylesheet" href="main.css" type="text/css"/>
+                        <link rel="stylesheet" type="text/css">
+							<xsl:attribute name="href">
+								<xsl:value-of select="concat($base, 'main.css')"/>
+							</xsl:attribute>	
+						</link>	
                 </head>
         </xsl:template>
         <xsl:template name="header">
                 <div id="header">
-                        <img class="left" src="sodtractor100.jpg"/>
-                        <img class="right" src="seisheader100.jpg"/>
+                        <img class="left">
+						<xsl:attribute name="src">
+								<xsl:value-of select="concat($base, 'images/full-sodlogo-y100.gif')"/>
+						</xsl:attribute>
+						</img>
+                        <img class="right">
+						<xsl:attribute name="src">
+								<xsl:value-of select="concat($base, 'seisheader100.jpg')"/>
+						</xsl:attribute>
+						</img>
                 </div>
         </xsl:template>
         <xsl:template name="footer">

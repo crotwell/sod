@@ -65,6 +65,14 @@
                 </section>
                 <section name="News">
                         <table id="entry">
+                                <th>31 May 2004</th>
+                                <tr>
+                                        <td>
+                                                <p>The third beta of SOD 2.0.  It's available <a href="download.html">here.</a>  To see a long running SOD run in action, checkout the <a href="sodcam.html">live SOD-cam</a>!</p>
+                                        </td>
+                                </tr>
+                        </table>
+                        <table id="entry">
                                 <th>24 May 2004</th>
                                 <tr>
                                         <td>

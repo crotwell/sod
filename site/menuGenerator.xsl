@@ -12,6 +12,7 @@
         </xsl:template>
         <xsl:template match="page" mode="menuGeneration">
                 <xsl:param name="currentPage"/>
+				<xsl:param name="base"/>
                 <li>
                         <xsl:if test="$currentPage = destination/text()">
                                 <xsl:attribute name="id">
@@ -20,7 +21,7 @@
                         </xsl:if>
                         <a>
                                 <xsl:attribute name="href">
-                                        <xsl:value-of select="destination/text()"/>
+                                        <xsl:value-of select="concat($base, destination/text())"/>
                                 </xsl:attribute>
                                 <xsl:value-of select="name/text()"/>
                         </a>
