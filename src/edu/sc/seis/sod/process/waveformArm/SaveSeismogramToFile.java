@@ -79,11 +79,14 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
 
         } // end of if (dataDirectory.exits())
 
-        String dssPrefix =
-            SodUtil.getText(SodUtil.getElement(config, "seismogramPrefix"));
-        if ( dssPrefix != null && dssPrefix.length() != 0) {
-            prefix = dssPrefix;
-        } // end of if (dataDirectory.exits())
+        Element prefixElement = SodUtil.getElement(config, "seismogramPrefix");
+        if (prefixElement != null) {
+            String dssPrefix =
+                SodUtil.getText(prefixElement);
+            if ( dssPrefix != null && dssPrefix.length() != 0) {
+                prefix = dssPrefix;
+            } // end of if (dataDirectory.exits())
+        }
 
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
