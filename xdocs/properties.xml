@@ -48,7 +48,7 @@ Most properties are like this.  The name element specifies which property you're
 <br/>
 <b>sod.start.RunName</b>
 <p>
-This property sets the current sod run name.  It shows up in the html output for the run.  The following example would name the run "Test Run".
+This property sets the current sod run name.  It shows up in the html output for the run.  The following example would name the run "Test Run". If this property isn't set, sod uses the default value, "Your Sod".  No insult intended. 
 </p>
 <source>
 &lt;property&gt;
@@ -59,13 +59,71 @@ This property sets the current sod run name.  It shows up in the html output for
 <br/>
 <b>sod.start.StatusBaseDirectory</b>
 <p>
-StatusBaseDirectory tells sod where to put all of its html status pages.  The example here places all of the status files in c:/status
+StatusBaseDirectory tells sod where to put all of its html status pages.  The example here places all of the status files in c:/status.  If this isn't set, any status pages generated will go in a directory called status in the directory in which sod is run.
 </p>
 <source>
 &lt;property&gt;
 	&lt;name&gt;sod.start.StatusBaseDirectory&lt;/name&gt;
 	&lt;value&gt;c:/status&lt;/value&gt;
 &lt;/property&gt;
+</source>
+<br/>
+<b>sod.start.ReopenEvents</b>
+<p>
+If ReopenEvents' value is true, sod will reprocess all of the events in its existing database again.  If its value is false, it will act like whatever caused it to exit with the current database intact was merely a brief interruption and contine processing events from where it left off.
+</p>
+<source>
+&lt;property&gt;
+	&lt;name&gt;sod.start.ReopenEvents&lt;/name&gt;
+	&lt;value&gt;true&lt;/value&gt;
+&lt;/property&gt;
+</source>
+</subsection>
+<subsection name="Event Arm Properties">
+<br/>
+<b>sod.event.QueryIncrement</b>
+<p>
+The event QueryIncrement controls how many days of events sod asks for per query to the event server.  For optimal performace, set this value to the smallest amount that will reliably return events for your particular event arm configuration.  This particular query increment gets one week of events at a time.  The default query increment is one week.
+</p>
+<source>
+&lt;property&gt;
+	&lt;name&gt;sod.event.QueryIncrement.unit&lt;/name&gt;
+	&lt;value&gt;week&lt;/value&gt;
+&lt;property&gt;
+&lt;property&gt;
+	&lt;name&gt;sod.event.QueryIncrement.value&lt;/name&gt;
+	&lt;value&gt;1&lt;/value&gt;
+&lt;property&gt;
+</source>
+<br/>
+<b>sod.event.Lag</b>
+<p>
+Event lag controls how long after the final date in the event arm configuration sod will wait for tardy events to arrive.  For example, if the catalog you're using usually takes a week to get events ready, set this value to a week.  Sod will wait for that long after the last event time you've asked for for new events to arrive, but it won't get events that have occured after the last time you've set on the event arm.  This example tells sod to wait for two fortnights, or four weeks, for events to show up.  The default lag is one week.
+</p>
+<source>
+&lt;property&gt;
+	&lt;name&gt;sod.event.Lag.unit&lt;/name&gt;
+	&lt;value&gt;fortnight&lt;/value&gt;
+&lt;property&gt;
+&lt;property&gt;
+	&lt;name&gt;sod.event.Lag.value&lt;/name&gt;
+	&lt;value&gt;2&lt;/value&gt;
+&lt;property&gt;
+</source>
+<br/>
+<b>sod.event.RefreshInterval</b>
+<p>
+The event refresh interval is the amount of time sod waits between queries to the event server once it has caught up to real time.  When we write the main sod documentation, the fact that this property is settable is going to be removed and the fact that the default value is 10 minutes will be mentioned in the docs.  
+</p>
+<source>
+&lt;property&gt;
+	&lt;name&gt;sod.event.RefreshInterval.unit&lt;/name&gt;
+	&lt;value&gt;minute&lt;/value&gt;
+&lt;property&gt;
+&lt;property&gt;
+	&lt;name&gt;sod.event.RefreshInterval.value&lt;/name&gt;
+	&lt;value&gt;10&lt;/value&gt;
+&lt;property&gt;
 </source>
 </subsection>
 </section>
