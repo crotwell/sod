@@ -33,7 +33,7 @@ public class EventSorter{
             String ordering = sortType.getAttribute("order");
             if(sortType.getNodeName().equals("addition")){
                 sorter = new Sorter();
-            }else if(sortType.getNodeName().equals("date")){
+            }else if(sortType.getNodeName().equals("time")){
                 sorter = new DateSorter();
             }else if(sortType.getNodeName().equals("magnitude")){
                 sorter = new MagnitudeSorter();
