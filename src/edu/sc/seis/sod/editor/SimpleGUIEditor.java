@@ -327,8 +327,9 @@ public class SimpleGUIEditor extends CommandLineEditor {
         gui.start();
     }
 
-    private FileLoader tutorialLoader = new FileLoader(configFileBase + "tutorial.xml");
     private static final String configFileBase = "jar:edu/sc/seis/sod/data/configFiles/";
+    public static final String TUTORIAL_LOC = configFileBase + "tutorial.xml";
+    private FileLoader tutorialLoader = new FileLoader(TUTORIAL_LOC);
     protected String frameName = "Simple XML Editor GUI";
     private boolean tabs = false;
     private JFrame frame;
