@@ -230,6 +230,7 @@ public class LocalSeismogramArm implements Subsetter{
                             //so try using the queue set of retrieve calls
                                 try {
                                     String id = dataCenter.queue_seismograms(infilters);
+                                    logger.info("request id: " + id);
                                 String status = dataCenter.request_status(id);
                                 while(status.equals(RETRIEVING_DATA)){
                                     try {
