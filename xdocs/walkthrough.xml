@@ -153,6 +153,20 @@ used, and images of the retrieved seismograms.
 </p>
 </section>
 
+<section name="Run SOD">
+<p>
+Although there is a GUI for editing the configuration files, SOD itself is not
+a GUI application. This is done intentionally as SOD will likely be a long running
+background processes, and so command line execution is the perfered way. So, to
+start a SOD run, you need to save the XML configuration file to disk. Then start
+it up with <code>sod.sh -f mysod.xml</code>.
+</p>
+</section>
+
+<section name="WEED">
+<p>
+Now that you have
+</p>
 </section>
 </body>
 </document>
