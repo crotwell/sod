@@ -55,7 +55,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 	    if(connection == null) {
 		String driverName = new String("org.hsqldb.jdbcDriver");
 		Class.forName(driverName).newInstance();
-		connection = DriverManager.getConnection("jdbc:hsqldb:"+getDatabaseName(), "sa", "");
+		connection = DriverManager.getConnection("jdbc:hsqldb:.", "sa", "");
 		
 	    } 
 	    return connection;
