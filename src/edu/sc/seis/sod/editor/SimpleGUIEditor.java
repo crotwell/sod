@@ -5,7 +5,6 @@
  */
 
 package edu.sc.seis.sod.editor;
-import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 import org.w3c.dom.*;
@@ -13,6 +12,10 @@ import org.w3c.dom.*;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
+import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -69,13 +72,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         fileDialog.show();
                         String outfilename = fileDialog.getFile();
                         if (outfilename != null) {
-                            File outfile = new File(outfilename);
-                            try {
-                                save(outfile);
-                            } catch (IOException ex) {
-                                GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
-                            }
+                        File outfile = new File(outfilename);
+                        try {
+                            save(outfile);
+                        } catch (IOException ex) {
+                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
                         }
+                    }
                     }
                 });
         JMenuItem quit = new JMenuItem("Quit");
@@ -85,10 +88,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         System.exit(0);
                     }
                 });
-
+	
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = getDocument();
         if (tabs) {
+			try {
+				props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream( "names.prop" ));
+			}catch(IOException e)
+			{
+				GlobalExceptionHandler.handle("Error in loading names Prop file",e);
+			}
             JTabbedPane tabs = new JTabbedPane();
             frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
             // put each top level sod element in a panel
@@ -96,16 +105,10 @@ public class SimpleGUIEditor extends CommandLineEditor {
             JPanel panel;
             for (int j = 0; j < list.getLength(); j++) {
                 if (list.item(j) instanceof Element) {
-                    NodeList sublist = ((Element)list.item(j)).getChildNodes();
                     Box box = Box.createVerticalBox();
-                    for (int i = 0; i < sublist.getLength(); i++) {
-                        if (sublist.item(i) instanceof Element) {
-                            box.add(getCompForElement((Element)sublist.item(i)));
-                            box.add(Box.createRigidArea(new Dimension(2, 2)));
-                        }
-                    }
+                    box.add(getCompForElement((Element)list.item(j)));
                     box.add(Box.createGlue());
-                    tabs.add(EditorUtil.capFirstLetter(((Element)list.item(j)).getTagName()), box);
+                    tabs.add(props.getProperty(((Element)list.item(j)).getTagName()), box);
                 }
             }
         } else {
@@ -116,15 +119,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
             frame.getContentPane().add(new JScrollPane(box), BorderLayout.CENTER);
         }
         frame.pack();
-
-        Dimension frameSize = frame.getSize();
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Dimension screenSize = tk.getScreenSize();
-        Rectangle usableScreen = getUsableScreen(frame.getGraphicsConfiguration());
-        Point curPoint = new Point((int)(usableScreen.getCenterX() - frameSize.width/2),
-                                       (int)(usableScreen.getCenterY() - frameSize.height/2));
-        frame.setLocation(curPoint);
-
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
@@ -182,7 +176,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 }
             }
         }
-        return EditorUtil.indent(label, box);
+        return indent(label, box);
     }
 
     JComponent getCompForAttributes(Element element) {
@@ -217,6 +211,23 @@ public class SimpleGUIEditor extends CommandLineEditor {
         textField.getDocument().addDocumentListener(textListen);
         return textField;
     }
+
+    /** creates a JPanel with the bottom component slightly indented relative
+     to the bottome one. */
+    public Box indent(JComponent top, JComponent bottom) {
+        Box box = Box.createVerticalBox();
+        Box topRow = Box.createHorizontalBox();
+        box.add(topRow);
+        Box botRow = Box.createHorizontalBox();
+        box.add(botRow);
+
+        topRow.add(top);
+        topRow.add(Box.createGlue());
+        botRow.add(Box.createRigidArea(new Dimension(10, 10)));
+        botRow.add(bottom);
+        botRow.add(Box.createGlue());
+        return box;
+    }
     /**
      *
      */
@@ -227,32 +238,18 @@ public class SimpleGUIEditor extends CommandLineEditor {
         System.out.println("Done editing.");
     }
 
-    private Rectangle getUsableScreen(GraphicsConfiguration graphics){
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Insets insets;
-        Dimension size = tk.getScreenSize();
-        if(graphics != null){
-            insets = tk.getScreenInsets(graphics);
-        }else{
-            JFrame frame = new JFrame();
-            insets = tk.getScreenInsets(frame.getGraphicsConfiguration());
-            frame.dispose();
-        }
-        int width = size.width - insets.left - insets.right;
-        int height = size.height - insets.top - insets.bottom;
-        return new Rectangle(insets.left, insets.top, width, height);
-    }
-
-
     String frameName = "Simple XML Editor GUI";
 
     boolean tabs = false;
 
     JFrame frame;
-
-    private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
+	
+	Properties props = new Properties();
+    
+	private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
 
 
 }
+
 
 
