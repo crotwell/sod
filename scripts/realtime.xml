@@ -202,7 +202,7 @@
         <ORAvailableDataWrapper>
             <someCoverage/>
         </ORAvailableDataWrapper>
-        <ORLocalSeismogramWrapper>
+        <ORWaveformProcessWrapper>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
                 <phaseName>ttp</phaseName>
@@ -224,7 +224,7 @@
                 </longOffsetEnd>
                 <ratio>2</ratio>
             </phaseSignalToNoise>
-        </ORLocalSeismogramWrapper>
+        </ORWaveformProcessWrapper>
         <alwaysSuccess>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
