@@ -172,7 +172,7 @@ public class NetworkArm implements Runnable {
      * NetworkSubsetter and returns the succesful networks as an array of
      * NetworkDbObjects.
      */
-    public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound,
+    public synchronized NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound,
             SQLException, NotFound {
         if(!needsRefresh()) {
             if(netDbs == null) {
@@ -358,7 +358,7 @@ public class NetworkArm implements Runnable {
      * @return a SiteDbObject[] containing all the sites from the station that
      *         pass this network arm's site subsetter
      */
-    public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
+    public synchronized SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
                                              StationDbObject stationDbObject) {
         if(stationDbObject.siteDbObjects != null) { return stationDbObject.siteDbObjects; }
         statusChanged("Getting sites for "
@@ -422,7 +422,7 @@ public class NetworkArm implements Runnable {
      * Obtains the Channels corresponding to the siteDbObject, processes them
      * using the ChannelSubsetter and returns an array of those that pass
      */
-    public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
+    public synchronized ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
                                                    SiteDbObject siteDbObject) {
         if(siteDbObject.channelDbObjects != null) { return siteDbObject.channelDbObjects; }
         statusChanged("Getting channels for " + siteDbObject);
