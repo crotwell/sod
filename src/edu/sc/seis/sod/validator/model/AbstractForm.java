@@ -17,8 +17,12 @@ public abstract class AbstractForm implements Form {
         this.parent = parent;
         ann.setFormProvider(this);
     }
+    
+    public boolean isAncestorOf(Form f){
+        return isAncestorOf(f, null);
+    }
 
-    public boolean isAncestorOf(Form f) {
+    public boolean isAncestorOf(Form f, Form root) {
         return false;
     }
 
@@ -54,9 +58,9 @@ public abstract class AbstractForm implements Form {
         return def;
     }
 
-    public Form deref(Form newParent, Definition def) {
+    public Form deref(Form newParent, Definition newDef) {
         AbstractForm copy = (AbstractForm)copyWithNewParent(newParent);
-        copy.def = def;
+        copy.def = newDef;
         return copy;
     }
 
@@ -82,7 +86,7 @@ public abstract class AbstractForm implements Form {
     }
 
     public void copyGutsOver(AbstractForm copy) {
-        copy.setAnnotation(getAnnotation());
+        copy.setAnnotation(getAnnotation().makeCopyWithNewFormProvider(copy));
         copy.def = getDef();
     }
 
