@@ -75,6 +75,8 @@ public class LocalSeismogramArm implements Subsetter{
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
 		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
+		else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement; 
+   
 	
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramSubsetter) localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
@@ -98,8 +100,6 @@ public class LocalSeismogramArm implements Subsetter{
     public void processLocalSeismogramArm(EventDbObject eventDbObject, 
 					  NetworkDbObject networkDbObject, 
 					  ChannelDbObject channelDbObject, 
-
-					  DataCenter dataCenter,
 					  WaveFormArm waveformArm) throws Exception{
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
@@ -140,7 +140,6 @@ public class LocalSeismogramArm implements Subsetter{
 	processEventChannelSubsetter(eventDbObject, 
 				     networkDbObject, 
 				     channelDbObject, 
-				     dataCenter,
 				     waveformArm);
 	
     }
@@ -153,7 +152,6 @@ public class LocalSeismogramArm implements Subsetter{
     public void processEventChannelSubsetter(EventDbObject eventDbObject,
 					     NetworkDbObject networkDbObject, 
 					     ChannelDbObject channelDbObject,
-					     DataCenter dataCenter,
 					     WaveFormArm waveformArm) throws Exception{
 
 	boolean b;
@@ -176,7 +174,6 @@ public class LocalSeismogramArm implements Subsetter{
 	    processRequestGeneratorSubsetter(eventDbObject, 
 					     networkDbObject, 
 					     channelDbObject, 
-					     dataCenter,
 					     waveformArm
 					     );
 	} else {
@@ -196,14 +193,22 @@ public class LocalSeismogramArm implements Subsetter{
     public void processRequestGeneratorSubsetter(EventDbObject eventDbObject, 
 						 NetworkDbObject networkDbObject, 
 						 ChannelDbObject channelDbObject, 
-						 DataCenter dataCenter,
 						 WaveFormArm waveformArm) 
 	throws Exception
     {
+	
 	RequestFilter[] infilters;
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
+
+	DataCenter dataCenter;
+	synchronized(seismogramDCLocator) {
+	    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
+							     networkAccess,
+							     channel.my_site.my_station,
+							     null);
+	}
 	synchronized (requestGeneratorSubsetter) {
 	    infilters = 
 		requestGeneratorSubsetter.generateRequest(eventAccess, 
@@ -432,9 +437,12 @@ public class LocalSeismogramArm implements Subsetter{
     private LinkedList localSeisProcessList = 
 	new LinkedList();
 
+    private SeismogramDCLocator seismogramDCLocator= null;
+
    
     
     static Category logger = 
 	Category.getInstance(LocalSeismogramArm.class.getName());
     
 }// LocalSeismogramArm
+

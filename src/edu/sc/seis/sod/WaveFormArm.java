@@ -254,7 +254,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
-                else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement; 
+              
 		else if(sodElement instanceof WaveformStatusProcess) waveformStatusProcess = (WaveformStatusProcess)sodElement;
 
 	    } // end of if (node instanceof Element)
@@ -669,10 +669,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	   }
 	    Runnable work = new WaveFormArmThread(eventDbObject, 
 						  eventStationSubsetter,
-						  seismogramDCLocator,
 						  localSeismogramArm,
 						  networkDbObject,
-						  paramChannels, 
+						  paramChannels,
 						  waveformArm,
 						  sodExceptionListener);
 	    return work;
@@ -756,8 +755,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     
     private Element config = null;
 
-    private SeismogramDCLocator seismogramDCLocator= null;
-
+ 
     private SodExceptionListener sodExceptionListener;
 
     private WaveformStatusProcess waveformStatusProcess = new NullWaveformStatusProcess();

@@ -31,7 +31,6 @@ import org.apache.log4j.*;
 public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     public WaveFormArmThread (EventDbObject eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
-			      SeismogramDCLocator seismogramDCLocator, 
 			      LocalSeismogramArm localSeismogramArm,
 			      NetworkDbObject networkAccess,
 			      ChannelDbObject[] successfulChannels, 
@@ -40,7 +39,6 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	this.eventAccess = eventAccess;
 	this.networkAccess = networkAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
-	this.seismogramDCLocator = seismogramDCLocator;
 	this.localSeismogramArm = localSeismogramArm;
 	this.networkArm = networkArm;
 	this.successfulChannels = successfulChannels;
@@ -96,21 +94,14 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 		}
 	    }
 	    if( bESS ) {
-		DataCenter dataCenter;
 		parent.setFinalStatus(eventDbObject,
 				      successfulChannels[counter],
 				      Status.PROCESSING,
 				      "EventStationSubsetterSucceeded");
-		synchronized(seismogramDCLocator) {
-		    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
-								     networkAccess.getNetworkAccess(),
-								     successfulChannels[counter].getChannel().my_site.my_station,
-								     null);
-		}
+	
 		localSeismogramArm.processLocalSeismogramArm(eventDbObject, 
 							     networkAccess, 
 							     successfulChannels[counter], 
-							     dataCenter,
 							     parent);
 /*	Start.getQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
 				     Status.COMPLETE_SUCCESS);*/
@@ -125,8 +116,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
-    private SeismogramDCLocator seismogramDCLocator = null;
-
+   
     private LocalSeismogramArm localSeismogramArm = null;
 
     private NetworkArm networkArm;
