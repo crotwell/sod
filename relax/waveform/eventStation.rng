@@ -50,9 +50,8 @@
         <element name="embeddedOriginSubsetter">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows the embeedding of an origin subsetter into a EventStation
-                        location. </summary>
-                    <description> Allows the embeedding of an origin subsetter into a EventStation
+                    <summary>Allows the embedding of an origin subsetter into a EventStation location</summary>
+                    <description> Allows the embedding of an origin subsetter into a EventStation
                         location. This is mainly used with an AND or OR where one condition only
                         depends on the origin. </description>
                 </xsd:documentation>
@@ -64,9 +63,9 @@
         <element name="embeddedStationSubsetter">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows the embeedding of an station subsetter into a EventStation
+                    <summary> Allows the embedding of an station subsetter into a EventStation
                         location. </summary>
-                    <description> Allows the embeedding of an station subsetter into a EventStation
+                    <description> Allows the embedding of an station subsetter into a EventStation
                         location. This is mainly used with an AND or OR where one condition only
                         depends on the station. </description>
                     <example>
