@@ -45,12 +45,12 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      */
     public LocalSeismogram[] process(EventAccessOperations event,
-            NetworkAccess network,
-            Channel channel,
-            RequestFilter[] original,
-            RequestFilter[] available,
-            LocalSeismogram[] seismograms,
-            CookieJar cookies) {
+                                     NetworkAccess network,
+                                     Channel channel,
+                                     RequestFilter[] original,
+                                     RequestFilter[] available,
+                                     LocalSeismogram[] seismograms,
+                                     CookieJar cookies) {
         if (filename != null && filename.length() != 0) {
             try {
                 FileWriter fwriter = new FileWriter(filename, true);
@@ -58,40 +58,43 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                 String debugStr = "Got "+seismograms.length+" seismograms for "+
                     ChannelIdUtil.toString(channel.get_id())+
                     " for event in "+
-                        regions.getRegionName(event.get_attributes().region)+
+                    regions.getRegionName(event.get_attributes().region)+
                     " at "+event.get_preferred_origin().origin_time.date_time;
                 bwriter.write(debugStr, 0, debugStr.length());
                 bwriter.newLine();
                 bwriter.close();
             } catch(Exception e) {
-                
+
                 logger.warn("Exception caught while writing to file.", e);
             }
         } else {
             try {
-                System.out.println("Got "+seismograms.length+" seismograms for "+
-                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                   " for event in "+
-                                   " at "+event.get_preferred_origin().origin_time.date_time);
+                System.out.println((Runtime.getRuntime().freeMemory()/1024/1024)+"/"+(Runtime.getRuntime().totalMemory()/1024/1024)+" "+
+                                       "Got "+seismograms.length+" seismograms for "+
+                                       ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                       " for event in "+
+                                       regions.getRegionName(event.get_attributes().region)+
+                                       " at "+event.get_preferred_origin().origin_time.date_time);
                 logger.debug("Got "+seismograms.length+" seismograms for "+
-                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                   " for event in "+
-                                   " at "+event.get_preferred_origin().origin_time.date_time);
+                                 ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                 " for event in "+
+                                 regions.getRegionName(event.get_attributes().region)+
+                                 " at "+event.get_preferred_origin().origin_time.date_time);
             } catch (NoPreferredOrigin e) {
                 logger.debug("Got "+seismograms.length+" seismograms for "+
-                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
-                                   " for event without a preferred origin");
+                                 ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                 " for event without a preferred origin");
             } // end of try-catch
         } // end of else
-        
-    return seismograms;
+
+        return seismograms;
     }
-   
+
     ParseRegions regions;
 
     String filename = null;
 
-    static Category logger =
-    Category.getInstance(PrintlineSeismogramProcess.class.getName());
+    static private Logger logger =
+        Logger.getLogger(PrintlineSeismogramProcess.class);
 
 }// PrintlineWaveformProcessor
