@@ -283,7 +283,7 @@ public class Start {
                     network = new NetworkArm(el);
                 } else if(el.getTagName().startsWith("waveform")) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
-                    waveform = new WaveformArm(el, network, poolSize);
+                    waveform = new WaveformArm(el, event, network, poolSize);
                 }
             }
         }
