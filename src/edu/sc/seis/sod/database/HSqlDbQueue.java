@@ -24,14 +24,16 @@ import org.omg.CORBA.*;
 public class HSqlDbQueue implements Queue {
     public HSqlDbQueue (){
 	Properties props = new Properties();
-	eventDatabase = new HSqlDatabase(props);
+	this.props = props;
+	eventDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getEventDatabase();
 	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	delete(Status.COMPLETE_SUCCESS);
     }
 
     public HSqlDbQueue(Properties props) {
-	if(getDatabaseType(props) == 0) eventDatabase = new HSqlDatabase(props);
-	else eventDatabase =  new PostgresDatabase(props);
+	this.props = props;
+	if(getDatabaseType(props) == 0) eventDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getEventDatabase();
+	else eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
 	if(getPersistanceType(props) == 0) {
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	    delete(Status.COMPLETE_SUCCESS);
@@ -294,8 +296,11 @@ public class HSqlDbQueue implements Queue {
     }
 
     public void closeDatabase() {
-	eventDatabase.close();
+	if(getDatabaseType(props) == 0) DatabaseManager.getDatabaseManager(props, "hsqldb").close();
+	else DatabaseManager.getDatabaseManager(props, "postgres").close();
     }
+    
+    Properties props;
     
     private boolean sourceAlive = true;
    

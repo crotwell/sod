@@ -20,8 +20,8 @@ public abstract class AbstractDatabase implements EventDatabase{
 		init();
     }
     
-    public AbstractDatabase (Properties props) {
-	this.props = props;
+    public AbstractDatabase (Connection connection) {
+	this.connection = connection;
 	//	processProperties();
 	init();
     }
@@ -29,10 +29,6 @@ public abstract class AbstractDatabase implements EventDatabase{
 
     public abstract void create();
     
-    public abstract Connection getConnection();
-	
-	
-
     public abstract String getTableName();
 
    
@@ -41,8 +37,7 @@ public abstract class AbstractDatabase implements EventDatabase{
 
 	try {
 		create();
-	    Connection connection = getConnection();
-	    	    putStmt = connection.prepareStatement("INSERT INTO eventconfig(serverName, "+
+	putStmt = connection.prepareStatement("INSERT INTO eventconfig(serverName, "+
 													  " serverDNS, "+
 													  " eventName, "+
 													  " latitude, "+
@@ -318,21 +313,7 @@ public abstract class AbstractDatabase implements EventDatabase{
 	
     }
 
-    public String getDatabaseName() {
-	String value = props.getProperty("edu.sc.seis.sod.databasename");
-	if(value == null) value = "sodDatabase";
-
-	return value;
-    }
-    
-    public String getUserName() {
-	String value = props.getProperty("edu.sc.seis.sod.username");
-	if(value == null) value = "sod";
-
-	return value;
-    }
-
-    
+   
 
     public java.lang.Object getField(int index, int dbid) {
 	try {
@@ -389,16 +370,9 @@ public abstract class AbstractDatabase implements EventDatabase{
         }
 
     }
-
-    public void close() {
-	try {
-	    delete(Status.COMPLETE_SUCCESS);
-	    getConnection().close();
-	} catch(SQLException sqle) {
-	    sqle.printStackTrace();
-	}
-    }
     
+    protected Connection connection;
+
     private PreparedStatement putStmt;
     
     private PreparedStatement getIDStmt;
@@ -420,7 +394,5 @@ public abstract class AbstractDatabase implements EventDatabase{
     private PreparedStatement getStmt;
     
     private PreparedStatement iorUpdateStmt;
-
-    private Properties props;
 
 }// AbstractDatabase

@@ -6,22 +6,15 @@ import java.util.Properties;
 import java.sql.*;
 
 public class PostgresDatabase extends AbstractDatabase {
-	
-    public PostgresDatabase() {
-	
-    }
-    public PostgresDatabase(Properties props) {
-	super(props);
+    
+    public PostgresDatabase(Connection connection) {
+	super(connection);
     }
     
 	
 	public void create() {
 		try {
-			String driverName = "org.postgresql.Driver";
-			Class.forName(driverName).newInstance();
-			
-			connection = DriverManager.getConnection("jdbc:postgresql:"+getDatabaseName(),
-								 getUserName(),	"");
+		    
 			Statement stmt = connection.createStatement();
 			
 			try {
@@ -47,11 +40,7 @@ public class PostgresDatabase extends AbstractDatabase {
 		}
 		
 	}	
-	
-	public Connection getConnection() {
-		return this.connection;		
-	}
-	
+    
 	public String getTableName() {
 		return "eventConfig";	
 	}

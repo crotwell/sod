@@ -22,19 +22,15 @@ import org.omg.CORBA.portable.*;
 
 public class HSqlDatabase extends AbstractDatabase{
     public HSqlDatabase (){
-		
+	
     }
 
-    public HSqlDatabase (Properties props) {
-	super(props);
+    public HSqlDatabase (Connection connection) {
+	super(connection);
     }
 
     public void create() {
 	try {
-	    String driver = "org.hsqldb.jdbcDriver";
-	    Class.forName(driver).newInstance();
-	    
-	    connection = DriverManager.getConnection("jdbc:hsqldb:"+getDatabaseName(), "sa", "");
 	    Statement statement = connection.createStatement();
 	    try {
 		statement.executeUpdate("CREATE TABLE eventconfig "+
@@ -59,16 +55,10 @@ public class HSqlDatabase extends AbstractDatabase{
 			e.printStackTrace();
 		}
 	}
-	
-	public Connection getConnection() {
-		return this.connection;	 
-	}
-	
-	public String getTableName() {
+    public String getTableName() {
 		return "eventconfig";	
 	}
-	
-	private Connection connection;
+    
     
     
 }// HSqlDatabase
