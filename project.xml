@@ -63,6 +63,10 @@
   <dependencies>
 
 <dependency>
+  <id>jing</id>
+  <version>20030619</version>
+</dependency>
+<dependency>
   <id>openmap</id>
   <version>4.5.4</version>
 </dependency>
