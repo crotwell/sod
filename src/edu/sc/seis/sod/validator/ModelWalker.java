@@ -1,10 +1,11 @@
 /**
  * ModelWalker.java
- *
+ * 
  * @author Charles Groves
  */
 
 package edu.sc.seis.sod.validator;
+
 import edu.sc.seis.sod.validator.model.*;
 
 import edu.sc.seis.sod.validator.documenter.SchemaDocumenter;
@@ -13,68 +14,69 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ModelWalker {
-    public static Definition[] getContainingDefs(Form root, Definition def){
+    public static Definition[] getContainingDefs(Form root, Definition def) {
         Set instances = new HashSet();
         getContainingDefs(root, def, instances);
-        return (Definition[])instances.toArray(new Definition[instances.size()]);
+        return (Definition[]) instances.toArray(new Definition[instances.size()]);
     }
 
-    public static void getContainingDefs(Form root, Definition def, Collection accumDefs){
-        if(def.equals(root.getDef())){
-            if(root.getParent() == null){ return ; }
+    public static void getContainingDefs(Form root, Definition def,
+            Collection accumDefs) {
+        if (def.equals(root.getDef())) {
+            if (root.getParent() == null) { return; }
             accumDefs.add(SchemaDocumenter.getNearestDef(root.getParent()));
         }
-        if(!isSelfReferential(root)){
-            if(root instanceof GenitorForm){
-                getContainingDefs(((GenitorForm)root).getChild(), def, accumDefs);
-            }else if(root instanceof MultigenitorForm){
-                MultigenitorForm multiRoot = (MultigenitorForm)root;
+        if (!isSelfReferential(root)) {
+            if (root instanceof GenitorForm) {
+                getContainingDefs(((GenitorForm) root).getChild(), def,
+                        accumDefs);
+            } else if (root instanceof MultigenitorForm) {
+                MultigenitorForm multiRoot = (MultigenitorForm) root;
                 Form[] kids = multiRoot.getChildren();
-                printThisStuff("getContainingDefs loop");
                 for (int i = 0; i < kids.length; i++) {
-                    printThisStuff("i = " + i);
                     getContainingDefs(kids[i], def, accumDefs);
                 }
             }
         }
     }
 
-    public static Form[] getAllInstances(Form root, Definition def){
+    public static Form[] getAllInstances(Form root, Definition def) {
         Set instances = new HashSet();
         getAllInstances(root, def, instances);
-        return (Form[])instances.toArray(new Form[instances.size()]);
+        return (Form[]) instances.toArray(new Form[instances.size()]);
     }
 
-    public static void getAllInstances(Form root, Definition def, Collection accumInstance){
-        if(!isSelfReferential(root)){
-            if(def.equals(root.getDef())){ accumInstance.add(root); }
-            if(root instanceof GenitorForm){
-                getAllInstances(((GenitorForm)root).getChild(), def, accumInstance);
-            }else if(root instanceof MultigenitorForm){
-                MultigenitorForm multiRoot = (MultigenitorForm)root;
+    public static void getAllInstances(Form root, Definition def,
+            Collection accumInstance) {
+        if (!isSelfReferential(root)) {
+            if (def.equals(root.getDef())) {
+                accumInstance.add(root);
+            }
+            if (root instanceof GenitorForm) {
+                getAllInstances(((GenitorForm) root).getChild(), def,
+                        accumInstance);
+            } else if (root instanceof MultigenitorForm) {
+                MultigenitorForm multiRoot = (MultigenitorForm) root;
                 Form[] kids = multiRoot.getChildren();
-                printThisStuff("getAllInstances loop");
                 for (int i = 0; i < kids.length; i++) {
-                    printThisStuff("i = " + i);
                     getAllInstances(kids[i], def, accumInstance);
                 }
             }
         }
     }
 
-    public static Form getInstance(Form root, Definition def){
-        if(root.isFromDef() && root.getDef().equals(def)){ return root; }
-        else if(!isSelfReferential(root)){
-            if(root instanceof GenitorForm){
-                return getInstance(((GenitorForm)root).getChild(), def);
-            }else if(root instanceof MultigenitorForm){
-                MultigenitorForm multiRoot = (MultigenitorForm)root;
+    public static Form getInstance(Form root, Definition def) {
+        if (root.isFromDef() && root.getDef().equals(def)) {
+            return root;
+        } else if (!isSelfReferential(root)) {
+            if (root instanceof GenitorForm) {
+                return getInstance(((GenitorForm) root).getChild(), def);
+            } else if (root instanceof MultigenitorForm) {
+                MultigenitorForm multiRoot = (MultigenitorForm) root;
                 Form[] kids = multiRoot.getChildren();
-                printThisStuff("getInstance loop");
                 for (int i = 0; i < kids.length; i++) {
-                    printThisStuff("i = " + i);
                     Form result = getInstance(kids[i], def);
-                    if(result != null){ return result; }
+                    if (result != null) { return result; }
                 }
 
             }
@@ -82,98 +84,82 @@ public class ModelWalker {
         return null;
     }
 
-    public static boolean isSelfReferential(Form f){
-        if(f.isFromDef()){  return lineageContainsRefTo(f, f.getDef()); }
+    public static boolean isSelfReferential(Form f) {
+        if (f.isFromDef()) { return lineageContainsRefTo(f, f.getDef()); }
         return false;
     }
 
-    public static boolean requiresSelfReferentiality(Form f){
+    public static boolean requiresSelfReferentiality(Form f) {
         if (f.getMin() == 0) return false;
         if (isSelfReferential(f)) return true;
-        if (f instanceof NamedElement){
-            NamedElement el = (NamedElement)f;
+        if (f instanceof NamedElement) {
+            NamedElement el = (NamedElement) f;
             Form kid = el.getChild();
             return requiresSelfReferentiality(kid);
-        } else if (f instanceof Choice){
-            Choice c = (Choice)f;
+        } else if (f instanceof Choice) {
+            Choice c = (Choice) f;
             Form[] kids = c.getChildren();
-            printThisStuff("Choice Loop");
             for (int i = 0; i < kids.length; i++) {
-                printThisStuff("i = " + i);
                 if (!requiresSelfReferentiality(kids[i])) return false;
             }
             return true;
-        } else if (f instanceof Interleave || f instanceof Group){
-            MultigenitorForm multi = (MultigenitorForm)f;
+        } else if (f instanceof Interleave || f instanceof Group) {
+            MultigenitorForm multi = (MultigenitorForm) f;
             Form[] kids = multi.getChildren();
-            printThisStuff("MultigenitorForm Loop");
             for (int i = 0; i < kids.length; i++) {
-                printThisStuff("i = " + i);
-                if (requiresSelfReferentiality(kids[i])) return false;
+                if (requiresSelfReferentiality(kids[i])) { return true; }
             }
-            return true;
+            return false;
         }
         return false;
     }
 
-    public static boolean lineageContainsRefTo(Form f, Definition def){
-        printThisStuff("lineageContainsRefTo "); // + ModelUtil.toString(f));
+    public static boolean lineageContainsRefTo(Form f, Definition def) {
+        return lineageContainsRefTo(f, def, null);
+    }
+
+    public static boolean lineageContainsRefTo(Form f, Definition def, Form root) {
         Form parent = f.getParent();
-        if(parent != null){
-            if(def.equals(parent.getDef())){ return true; }
-            return lineageContainsRefTo(parent, def);
-        }
-        return false;
+        if (parent == null || def == null || f.equals(root)) { return false; }
+        if (def.equals(parent.getDef())) { return true; }
+        return lineageContainsRefTo(parent, def, root);
     }
 
     public static NamedElement getDescendantTowards(NamedElement parent,
-                                                    NamedElement result){
-        printThisStuff("getDescendantTowards ");// + ModelUtil.toString(parent) + ", " + ModelUtil.toString(result));
+            NamedElement result) {
         Form child = parent.getChild();
-        if(child instanceof NamedElement && isTowards(child, result)){
-            return (NamedElement)child;
-        }else if(child instanceof MultigenitorForm){
-            return getDescendantTowards((MultigenitorForm)child, result);
-        }
+        if (child instanceof NamedElement && isTowards(child, result)) {
+            return (NamedElement) child;
+        } else if (child instanceof MultigenitorForm) { return getDescendantTowards(
+                (MultigenitorForm) child, result); }
         return null;
     }
 
     private static NamedElement getDescendantTowards(MultigenitorForm f,
-                                                     NamedElement result){
+            NamedElement result) {
         Form[] kids = f.getChildren();
-        printThisStuff("getDescendantTowards loop");
         for (int i = 0; i < kids.length; i++) {
-            printThisStuff("i = " + i);
-            if(kids[i] instanceof NamedElement && isTowards(kids[i], result)){
-                return (NamedElement)kids[i];
-            }else if(kids[i] instanceof MultigenitorForm){
-                NamedElement subresult = getDescendantTowards((MultigenitorForm)kids[i],
-                                                              result);
-                if(subresult != null){ return subresult; }
+            if (kids[i] instanceof NamedElement && isTowards(kids[i], result)) {
+                return (NamedElement) kids[i];
+            } else if (kids[i] instanceof MultigenitorForm) {
+                NamedElement subresult = getDescendantTowards(
+                        (MultigenitorForm) kids[i], result);
+                if (subresult != null) { return subresult; }
             }
         }
         return null;
     }
 
-    public static boolean isTowards(Form parent, Form result){
+    public static boolean isTowards(Form parent, Form result) {
         return parent.isAncestorOf(result) || parent.equals(result);
     }
 
-    public static NamedElement[] getSiblings(NamedElement brother){
+    public static NamedElement[] getSiblings(NamedElement brother) {
         Form parent = brother.getParent();
-        if(parent == null){ return new NamedElement[]{brother}; }
-        printThisStuff("getSiblings loop");
-        while(! (parent instanceof NamedElement)){
-            printThisStuff("! (parent instanceof NamedElement)");
+        if (parent == null) { return new NamedElement[] { brother }; }
+        while (!(parent instanceof NamedElement)) {
             parent = parent.getParent();
         }
-        return ((NamedElement)parent).getElementalChildren();
+        return ((NamedElement) parent).getElementalChildren();
     }
-
-    public static void printThisStuff(String string){
-        if (isOkayToPrint)
-            System.out.println(string);
-    }
-
-    public static boolean isOkayToPrint = false;
 }
