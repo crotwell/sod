@@ -33,7 +33,7 @@ public abstract class OriginPointEditor implements EditorPlugin{
         Element lonEl = SodUtil.getElement(element, "longitude");
         Text longitude = (Text)XPathAPI.selectSingleNode(element, "longitude/text()");
         latLonBox.add(new JLabel(SodGUIEditor.getDisplayName(lonEl.getTagName())));
-        latLonBox.add(EditorUtil.createNumberSpinner(longitude, -90, 90, 1));
+        latLonBox.add(EditorUtil.createNumberSpinner(longitude, -180, 180, 1));
         latLonBox.add(Box.createHorizontalGlue());
 
         JComponent unitEditor = degreeEditor.getGUI(element);
