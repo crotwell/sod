@@ -19,15 +19,19 @@ $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($n
 <div id="Content">
 <table class="sortable ruler" id="stationtable">
 #set( $extraRows = 20 )
-<tr class="title">
+<th class="title">
 <td>Code</td>
 <td>Name</td>
-</tr>
+<td>Latitude</td>
+<td>Longitude</td>
+</th>
 #foreach ( $sta in $stations.getSuccessful() )
 #set ( $stacode = $sta.get_code())
 <tr>
 <td>$sta.get_code()</td>
 <td><a href="$network.getNetworkAccess().get_attributes().get_code()/$network.getNetworkAccess().get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
+<td>$fissures.getLatitude($sta)</td>
+<td>$fissures.getLongitude($sta)</td>
 </tr>
 #set( $extraRows = $extraRows - 1 )
 #end
