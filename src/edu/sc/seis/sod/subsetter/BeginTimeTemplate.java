@@ -24,6 +24,11 @@ public class BeginTimeTemplate implements GenericTemplate {
         time = new Time();
     }
     
+    public BeginTimeTemplate(Element config, Time time){
+        this(config);
+        setTime(time);
+    }
+    
     public void setTime(Time t){
         time = t;
     }

@@ -2,11 +2,9 @@ package edu.sc.seis.sod.subsetter;
 
 
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.sod.SodUtil;
+import edu.iris.Fissures.Time;
 import edu.sc.seis.sod.subsetter.Template;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -26,7 +24,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         };
     }
     
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, final Element el) {
         if(tag.equals("stationCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
@@ -59,7 +57,23 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                     return chan.get_id().site_code;
                 }
             };
-        }else if(tag.equals("beginTime")) return new ChannelBeginTimeTemplate(el);
+        }
+        else if(tag.equals("beginTime")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, chan.get_id().begin_time);
+                    return btt.getResult();
+                }
+            };
+        }
+        else if(tag.equals("endTime")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, chan.effective_time.end_time);
+                    return btt.getResult();
+                }
+            };
+        }
         else if(tag.equals("beginTimeUnformatted")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
@@ -127,18 +141,6 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
             buf.append(cur.getResult(chan));
         }
         return buf.toString();
-    }
-    
-    private class ChannelBeginTimeTemplate extends BeginTimeTemplate implements ChannelTemplate{
-        
-        public ChannelBeginTimeTemplate(Element config){
-            super(config);
-        }
-        
-        public String getResult(Channel chan){
-            setTime(chan.get_id().begin_time);
-            return getResult();
-        }
     }
     
     ChannelGroupTemplate cgt;

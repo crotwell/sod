@@ -62,7 +62,7 @@ public class StationFormatter extends Template implements StationTemplate{
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
+    protected Object getTemplate(String tag, final Element el) {
         if (tag.equals("name")){
             return new StationTemplate(){
                 public String getResult(Station sta){
@@ -134,7 +134,20 @@ public class StationFormatter extends Template implements StationTemplate{
             };
         }
         else if (tag.equals("beginTime")){
-            return new StationBeginTimeTemplate(el);
+            return new StationTemplate(){
+                public String getResult(Station sta){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, sta.get_id().begin_time);
+                    return btt.getResult();
+                }
+            };
+        }
+        else if (tag.equals("endTime")){
+            return new StationTemplate(){
+                public String getResult(Station sta){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, sta.get_id().begin_time);
+                    return btt.getResult();
+                }
+            };
         }
         else if (tag.equals("beginTimeUnformatted")){
             return new StationTemplate(){
@@ -153,19 +166,6 @@ public class StationFormatter extends Template implements StationTemplate{
         
         return null;
     }
-    
-    private class StationBeginTimeTemplate extends BeginTimeTemplate implements StationTemplate{
-        
-        public StationBeginTimeTemplate(Element config){
-            super(config);
-        }
-        
-        public String getResult(Station station) {
-            setTime(station.get_id().begin_time);
-            return getResult();
-        }
-        
-        
-    }
+
 }
 

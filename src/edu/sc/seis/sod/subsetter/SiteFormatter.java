@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod.subsetter;
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.Time;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -57,9 +58,8 @@ public class SiteFormatter extends Template implements SiteTemplate {
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
-    protected Object getTemplate(String tag, Element el) {
-        Site site = null;
-        
+    protected Object getTemplate(String tag, final Element el) {
+    
         if (tag.equals("siteCode")){
             return new SiteTemplate(){
                 public String getResult(Site site){
@@ -82,7 +82,20 @@ public class SiteFormatter extends Template implements SiteTemplate {
             };
         }
         else if (tag.equals("beginTime")){
-            return new SiteBeginTimeTemplate(el);
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, site.get_id().begin_time);
+                    return btt.getResult();
+                }
+            };
+        }
+        else if (tag.equals("endTime")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    BeginTimeTemplate btt = new BeginTimeTemplate(el, site.effective_time.end_time);
+                    return btt.getResult();
+                }
+            };
         }
         else if (tag.equals("status") && sgt != null){
             return new SiteTemplate(){
@@ -141,17 +154,6 @@ public class SiteFormatter extends Template implements SiteTemplate {
             return "  ";
         }
         else return siteCode;
-    }
-    
-    private class SiteBeginTimeTemplate extends BeginTimeTemplate implements SiteTemplate{
-        public SiteBeginTimeTemplate(Element config){
-            super(config);
-        }
-        
-        public String getResult(Site site){
-            setTime(site.get_id().begin_time);
-            return getResult();
-        }
     }
     
 }
