@@ -233,7 +233,6 @@ public abstract class AbstractDatabase implements EventDatabase{
     public int getFirst(Status status) {
 
 	int[] rtnValues = get(status);
-	System.out.println("THE NUMBER OF RTNVALUES IN GETFIRST(STATUS) ARE "+rtnValues.length);
 	if(rtnValues.length > 0) return rtnValues[0];
 	else return -1;
     }
