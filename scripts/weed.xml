@@ -75,20 +75,14 @@
                       <min>0</min>
                       <max>360</max>
                    </originPointBackAzimuth>
+                   <removeEventDuplicate/>
                 </originAND>
 
+                <printLineEventProcess/>
                 <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
+                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
         </eventStatusTemplate>
-                <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
-                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-        </eventStatusTemplate>
-                <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
-                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
-        </eventStatusTemplate>
+
         </eventArm>
         <networkArm>
                 <networkFinder>
