@@ -2,12 +2,21 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
         <xsl:output method="html"/>
         <xsl:include href="menuGenerator.xsl"/>
+        <xsl:template match="/">
+                <xsl:param name="currentPage"/>
+                <xsl:apply-templates select="*">
+                        <xsl:with-param name="currentPage" select="$currentPage"/>
+                </xsl:apply-templates>
+        </xsl:template>
         <xsl:template match="/document">
+                <xsl:param name="currentPage"/>
                 <html>
                         <xsl:call-template name="head"/>
                         <body>
                                 <xsl:call-template name="header"/>
-                                <xsl:call-template name="menu"/>
+                                <xsl:call-template name="menu">
+                                        <xsl:with-param name="currentPage" select="$currentPage"/>
+                                </xsl:call-template>
                                 <div id="content">
                                         <xsl:apply-templates select="body/*"/>
                                 </div>
@@ -33,12 +42,12 @@
         </xsl:template>
         <xsl:template match="source">
                 <pre>
-                <xsl:copy-of select="text()"/>
+                        <xsl:copy-of select="text()"/>
                 </pre>
         </xsl:template>
         <xsl:template match="source" mode="sub">
                 <pre>
-                <xsl:copy-of select="text()"/>
+                        <xsl:copy-of select="text()"/>
                 </pre>
         </xsl:template>
         <xsl:template match="*">
