@@ -13,8 +13,8 @@
                 <section name="Starting SOD">
                         <section name="Solaris, MacOSX, Linux, etc">
                                 <p>
-                                <code>sod.sh -f examples/tutorial.xml</code><br/><br/>
-                                If you're on a Unix-like OS, use the <tt>sod.sh</tt> script in the bin
+                                <code>bin/sod.sh -f examples/tutorial.xml</code><br/><br/>
+                                If you're on a Unix-like OS, use the <tt>bin/sod.sh</tt> script in the bin
                                 directory. To run it, execute bin/sod.sh with the arguments
                                 <tt>-f <em>strategy_file</em></tt>.
                                 The <tt>-f</tt> option

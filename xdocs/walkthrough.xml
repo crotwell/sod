@@ -202,9 +202,9 @@ a GUI application. This is done intentionally as SOD will likely be a long runni
 background processes, and so command line execution is the preferred way. So, to
 start a SOD run, you need to save the XML strategy file to disk. Then start
 it up with <br/>
-<code>sod.sh -f mysod.xml</code><br/>
+<code>bin/sod.sh -f mysod.xml</code><br/>
  or <br/>
-<code>sod.bat -f mysod.xml</code><br/>
+<code>bin\sod.bat -f mysod.xml</code><br/>
 Once SOD is started, open the
 <code>index.html</code> file within the <code>status</code> directory. You will
 see a map of the events that have been found as well as some statistics about
