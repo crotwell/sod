@@ -103,11 +103,11 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 	    return true;
 	} else if(rangeStartDate.after(maxDate) 
 		  || rangeEndDate.before(minDate) ) {
-	    logger.debug("EffectiveTimeOverlap false"+
+	    logger.debug("EffectiveTimeOverlap false "+
 			       rangeStartDate+" "+rangeEndDate+" "+minDate+" "+maxDate+"  "+range.end_time.date_time);
 	    return false;
 	} else {
-	    logger.debug(range.start_time.date_time+" "+range.end_time.date_time+" overlaps "+
+	    //logger.debug(range.start_time.date_time+" "+range.end_time.date_time+" overlaps "+
 			 minDate+" "+maxDate);
 	    return true;
 	}
