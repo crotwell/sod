@@ -59,7 +59,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
 
     public void failed(int pairId, Status failureType) throws SQLException{
         if(!tableContains(pairId))insert(pairId);
-        updateFailure.setInt(1, failureType.getAsByte());
+        updateFailure.setShort(1, failureType.getAsShort());
         updateFailure.setTimestamp(2, getTimestamp(pairId));
         updateFailure.setInt(3, pairId);
         updateFailure.executeUpdate();

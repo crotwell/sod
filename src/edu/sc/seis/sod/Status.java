@@ -20,12 +20,13 @@ public class Status{
     private Stage stage;
     private Standing standing;
 
-    public byte getAsByte() {
-        return (byte)((getStage().getVal()<<4)+getStanding().getVal());
+    public short getAsShort() {
+        return (byte)((getStage().getVal()<<8)+getStanding().getVal());
     }
 
-    public static Status getFromByte(byte val) {
-        return Status.get(Stage.getFromInt(val>>4), Standing.getFromInt(val&0x0F));
+    public static Status getFromShort(short val) {
+        return Status.get(Stage.getFromInt((val&0xFF00)>>>8),
+                          Standing.getFromInt(val&0xFF));
     }
 
     public static Status get(Stage stage, Standing standing){

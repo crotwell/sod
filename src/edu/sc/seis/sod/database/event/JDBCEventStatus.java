@@ -41,7 +41,7 @@ public class JDBCEventStatus extends SodJDBC{
         updateStatus = conn.prepareStatement("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
         getNextStmt = conn.prepareStatement("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
                                                 Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                           Standing.IN_PROG).getAsByte());
+                                                           Standing.IN_PROG).getAsShort());
         getAllOfEventArmStatus = conn.prepareStatement(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
         getAllOrderByDate  = conn.prepareStatement("SELECT DISTINCT originid, origin_time, origineventid FROM origin ORDER BY origin_time DESC");
     }
@@ -56,7 +56,7 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
     public CacheEvent[] getAll(Status status) throws SQLException {
-        getAllOfEventArmStatus.setInt(1, status.getAsByte());
+        getAllOfEventArmStatus.setShort(1, status.getAsShort());
         return extractEvents(getAllOfEventArmStatus);
     }
 
@@ -120,8 +120,8 @@ public class JDBCEventStatus extends SodJDBC{
         getStatus.setInt(1, dbId);
         ResultSet rs = getStatus.executeQuery();
         if(rs.next()) {
-            byte val = rs.getByte("eventcondition");
-            return Status.getFromByte(val);
+            short val = rs.getShort("eventcondition");
+            return Status.getFromShort(val);
         }
         throw new NotFound("There is no status for that id");
     }
@@ -153,7 +153,7 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
     private void insert(PreparedStatement stmt, int id, Status eventArmStatus) throws SQLException{
-        stmt.setInt(1, eventArmStatus.getAsByte());
+        stmt.setShort(1, eventArmStatus.getAsShort());
         stmt.setInt(2, id);
         stmt.executeUpdate();
     }

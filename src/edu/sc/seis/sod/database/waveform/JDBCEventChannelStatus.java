@@ -85,7 +85,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
     }
 
     public void setStatus(int pairId, Status status) throws SQLException{
-        setStatus.setInt(1, status.getAsByte());
+        setStatus.setShort(1, status.getAsShort());
         setStatus.setInt(2, pairId);
         setStatus.executeUpdate();
     }
