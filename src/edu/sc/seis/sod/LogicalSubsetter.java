@@ -26,7 +26,7 @@ public abstract class LogicalSubsetter implements Subsetter {
     public LogicalSubsetter (Element config) throws ConfigurationException {
         processConfig(config);
     }
-    
+
     /**
      * Describe <code>processConfig</code> method here.
      *
@@ -47,24 +47,26 @@ public abstract class LogicalSubsetter implements Subsetter {
                     // skip description element
                     continue;
                 }
-		
+
                 Object obj = SodUtil.load(subElement, getPackageName());
                 if (obj instanceof Subsetter) {
                     filterList.add((Subsetter)obj);
                 } else {
-                    logger.error("obj not instance of Subsetter "+obj);
+                    throw new ConfigurationException("obj not instance of Subsetter "+obj);
                 } // end of else
-		
+
             } else {
                 if ( node instanceof Text && node.getNodeValue().trim().equals("")) {
                     // don't worry about empty text
+                } else if ( node instanceof Comment) {
+                    // don't worry about comments
                 } else {
-                    logger.error("node not instance of Element "+node);
+                    throw new ConfigurationException("node not instance of Element "+node);
                 } // end of else
             } // end of else
-	    
+
         } // end of for (int i=0; i<children.getSize(); i++)
-	
+
     }
 
 
@@ -81,9 +83,7 @@ public abstract class LogicalSubsetter implements Subsetter {
      */
     protected List filterList = new LinkedList();
 
-
-
-    static Category logger = 
-        Category.getInstance(LogicalSubsetter.class.getName());
+    private static Logger logger =
+        Logger.getLogger(LogicalSubsetter.class);
 
 }// LogicalSubsetter
