@@ -1,0 +1,39 @@
+
+package edu.sc.seis.sod.database;
+
+import edu.iris.Fissures.model.*;
+
+import java.io.*;
+import java.util.*;
+import java.sql.*;
+
+
+
+
+/**
+ * ConfigDatabase.java
+ *
+ *
+ * Created: Thu Sep 12 15:33:59 2002
+ *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version
+ */
+
+public interface ConfigDatabase {
+       
+    public void setTime(edu.iris.Fissures.Time time);
+    
+    public void setServerDNS(String serverDNS);
+
+    public void setServerName(String serverName);
+
+    public edu.iris.Fissures.Time getTime();
+    
+    public void incrementTime(int days);
+   
+    public String getServerDNS();
+
+    public String getServerName();
+
+}// ConfigDatabase
