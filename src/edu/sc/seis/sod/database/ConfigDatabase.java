@@ -22,18 +22,23 @@ import java.sql.*;
 
 public interface ConfigDatabase {
        
-    public void setTime(edu.iris.Fissures.Time time);
+    public void setTime(String serverName,
+			String serverDNS,
+			edu.iris.Fissures.Time time);
     
-    public void setServerDNS(String serverDNS);
+    // public void setServerDNS(String serverDNS);
 
-    public void setServerName(String serverName);
+//     public void setServerName(String serverName);
 
-    public edu.iris.Fissures.Time getTime();
+    public edu.iris.Fissures.Time getTime(String serverName, 
+					  String serverDNS);
     
-    public void incrementTime(int days);
+    public void incrementTime(String serverName,
+			      String serverDNS, 
+			      int days);
    
-    public String getServerDNS();
+    // public String getServerDNS();
 
-    public String getServerName();
+//     public String getServerName();
 
 }// ConfigDatabase

@@ -38,13 +38,13 @@ public class HSqlDatabase extends AbstractDatabase{
 					"(eventid int IDENTITY PRIMARY KEY, "+
 					" serverName VARCHAR, "+
 					" serverDNS VARCHAR, "+
-										" eventName VARCHAR, "+
-										" latitude float, "+
-										" longitude float, "+
-										" depth float, "+
-										" origin_time timestamp, "+
-										" status int, "+
-										" eventAccess VARCHAR)");
+					" eventName VARCHAR, "+
+					" latitude float, "+
+					" longitude float, "+
+					" depth float, "+
+					" origin_time timestamp, "+
+					" status int, "+
+					" eventAccess VARCHAR)");
 			} catch(SQLException sqle) {
 				
 				System.out.println("Table eventconfig is already created");

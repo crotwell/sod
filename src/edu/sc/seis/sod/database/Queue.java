@@ -71,9 +71,14 @@ public interface Queue {
 
     public void closeDatabase();
    
-    public void setTime(edu.iris.Fissures.Time time);
+    public void setTime(String serverName,
+			String serverDNS,
+			edu.iris.Fissures.Time time);
 
-    public edu.iris.Fissures.Time getTime();
+    public edu.iris.Fissures.Time getTime(String serverName,
+					  String serverDNS);
 
-    public void incrementTime(int numDays);
+    public void incrementTime(String serverName,
+			      String serverDNS,
+			      int numDays);
 }

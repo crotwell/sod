@@ -32,6 +32,14 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 	return eventDatabase;
 	
     }
+    
+     public NetworkDatabase getNetworkDatabase() {
+	 if(networkDatabase == null) {
+	     networkDatabase = new HSqlNetworkDb(getConnection());
+	}
+	return networkDatabase;
+    }
+
 
     public Connection getConnection() {
 	try {
@@ -52,6 +60,8 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     private ConfigDatabase eventConfigDb;
     
     private EventDatabase eventDatabase;
+    
+    private NetworkDatabase networkDatabase;
     
     private Connection connection;
     

@@ -304,16 +304,26 @@ public class HSqlDbQueue implements Queue {
 	else DatabaseManager.getDatabaseManager(props, "postgres").close();
     }
 
-    public void setTime(edu.iris.Fissures.Time time) {
-	eventDatabase.setTime(time);
+    public void setTime(String serverName,
+			String serverDNS,
+			edu.iris.Fissures.Time time) {
+	eventDatabase.setTime(serverName,
+			      serverDNS,
+			      time);
     }
 
-    public edu.iris.Fissures.Time getTime() {
-	return eventDatabase.getTime();
+    public edu.iris.Fissures.Time getTime(String serverName,
+					  String serverDNS) {
+	return eventDatabase.getTime(serverName,
+				     serverDNS);
     }
 
-    public void incrementTime(int days) {
-	eventDatabase.incrementTime(days);	
+    public void incrementTime(String serverName,
+			      String serverDNS,
+			      int days) {
+	eventDatabase.incrementTime(serverName,
+				    serverDNS,
+				    days);	
     }
     
     Properties props;

@@ -24,6 +24,8 @@ public  abstract class AbstractDatabaseManager  {
     public abstract ConfigDatabase getConfigDatabase();
 
     public abstract EventDatabase getEventDatabase();
+    
+    public abstract NetworkDatabase getNetworkDatabase();
 
     public void close() {
 	try {

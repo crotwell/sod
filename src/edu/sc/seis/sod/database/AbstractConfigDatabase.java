@@ -34,10 +34,14 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	    Statement stmt = connection.createStatement();
 	    
 	    setTimeStmt = connection.prepareStatement(" INSERT into timeconfig "+
-						      " VALUES(?) ");
-	    updateTimeStmt = connection.prepareStatement(" UPDATE timeconfig set time = ? ");
+						      " VALUES(?, ? , ? ) ");
+	    updateTimeStmt = connection.prepareStatement(" UPDATE timeconfig set time = ? "+
+							 " WHERE serverName = ? AND "+
+							 " serverDNS = ? ");
 	    
-	    getTimeStmt = connection.prepareStatement(" SELECT time from timeconfig");
+	    getTimeStmt = connection.prepareStatement(" SELECT time from timeconfig "+
+						      " WHERE serverName = ? AND "+
+						      " serverDNS = ? ");
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}
@@ -48,21 +52,24 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 			 String serverDNS,
 			 String serverName) {
 	
-
-	this.serverDNS = serverDNS;
-	this.serverName = serverName;
-	setTime(time);
+	setTime(serverName,
+		serverDNS,
+		time);
     }
 
     
-    public void setTime(edu.iris.Fissures.Time time) {
+    public void setTime(String serverName,
+			String serverDNS,
+			edu.iris.Fissures.Time time) {
 	try {
-	    if(getTime() == null) {
+	    if(getTime(serverName, serverDNS) == null) {
 		MicroSecondDate ms = new MicroSecondDate(time);
-		setTimeStmt.setTimestamp(1, ms.getTimestamp());
+		setTimeStmt.setString(1, serverName);
+		setTimeStmt.setString(2, serverDNS);
+		setTimeStmt.setTimestamp(3, ms.getTimestamp());
 		setTimeStmt.executeUpdate();
 	    } else {
-		updateTime(time);
+		updateTime(serverName, serverDNS, time);
 	    }
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -70,18 +77,21 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     }
     
 
-    public void setServerDNS(String serverDNS) {
-	this.serverDNS = serverDNS;
-    }
+   //  public void setServerDNS(String serverDNS) {
+// 	this.serverDNS = serverDNS;
+//     }
 
-    public void setServerName(String serverName) {
+//     public void setServerName(String serverName) {
 
-	this.serverName = serverName;
-    }
+// 	this.serverName = serverName;
+//     }
 
 
-    public edu.iris.Fissures.Time getTime() {
+    public edu.iris.Fissures.Time getTime(String serverName,
+					  String serverDNS) {
 	try {
+	    getTimeStmt.setString(1, serverName);
+	    getTimeStmt.setString(2, serverDNS);
 	    ResultSet rs = getTimeStmt.executeQuery();
 	    if(rs.next()) {
 		MicroSecondDate ms = new MicroSecondDate(rs.getTimestamp("time"));
@@ -94,34 +104,43 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	}
     }
 
-    public void incrementTime(int days) {
-	edu.iris.Fissures.Time time = getTime();
+    public void incrementTime(String serverName,
+			      String serverDNS,
+			      int days) {
+	edu.iris.Fissures.Time time = getTime(serverName, serverDNS);
 	MicroSecondDate microSecondDate = new MicroSecondDate(time);
 	Calendar calendar = Calendar.getInstance();
 	calendar.setTime(microSecondDate);
 	calendar.roll(Calendar.DAY_OF_YEAR, days);
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	time = microSecondDate.getFissuresTime();
-	updateTime(time);
+	updateTime(serverName,
+		   serverDNS,
+		   time);
     }
 
-    private void updateTime(edu.iris.Fissures.Time time) {
+    private void updateTime(String serverName,
+			    String serverDNS,
+			    edu.iris.Fissures.Time time) {
 	try {
 	    MicroSecondDate ms = new MicroSecondDate(time);
+	    
 	    updateTimeStmt.setTimestamp(1, ms.getTimestamp());
+	    updateTimeStmt.setString(2, serverName);
+	    updateTimeStmt.setString(3, serverDNS);
 	    updateTimeStmt.executeUpdate();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
     }
     
-    public String getServerDNS() {
-	return this.serverDNS;
-    }
+  //   public String getServerDNS() {
+// 	return this.serverDNS;
+//     }
 
-    public String getServerName() {
-	return this.serverName;
-    }
+//     public String getServerName() {
+// 	return this.serverName;
+//     }
 
 
     private byte[] getBytes(Object obj) {
@@ -165,9 +184,9 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 
     protected  Connection connection;
 
-    private String serverDNS;
+  //   private String serverDNS;
 
-    private String serverName;
+//     private String serverName;
 
     private PreparedStatement setTimeStmt;
     

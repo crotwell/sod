@@ -37,17 +37,17 @@ public abstract class AbstractDatabase implements EventDatabase{
     private void init() {
 
 	try {
-		create();
-	putStmt = connection.prepareStatement("INSERT INTO eventconfig(serverName, "+
-													  " serverDNS, "+
-													  " eventName, "+
-													  " latitude, "+
-													  " longitude, "+
-													  " depth, "+
-													  " origin_time, "+
-													  " status, "+
-													  " eventAccess)"+
-													  " VALUES(?,?,?,?,?,?,?,?,?)");
+	    create();
+	    putStmt = connection.prepareStatement("INSERT INTO eventconfig(serverName, "+
+						  " serverDNS, "+
+						  " eventName, "+
+						  " latitude, "+
+						  " longitude, "+
+						  " depth, "+
+						  " origin_time, "+
+						  " status, "+
+						  " eventAccess)"+
+						  " VALUES(?,?,?,?,?,?,?,?,?)");
 	    //	    getMaxIdStmt = connection.prepareStatement("SELECT MAX(eventid) FROM eventconfig");
 	    getIDStmt = connection.prepareStatement("SELECT eventid FROM eventconfig WHERE "+
 						    // " serverName = ? AND "+
@@ -57,7 +57,7 @@ public abstract class AbstractDatabase implements EventDatabase{
 						    " longitude = ? AND "+
 						    " depth = ? AND "+
 						    " origin_time = ? "
-						  );
+						    );
 	    getIDArrayStmt = connection.prepareStatement("SELECT eventid FROM eventconfig WHERE "+
 							 " status = ? ");
 	    
@@ -72,13 +72,13 @@ public abstract class AbstractDatabase implements EventDatabase{
 						     " eventid = ? ");
 
 	    countStmt = connection.prepareStatement("SELECT count(eventid) from eventconfig WHERE status = ?");
-
+	    
 	    getStmt = connection.prepareStatement("SELECT eventid, serverName, serverDNS, eventName, latitude, longitude, "+
 						  " depth, origin_time, status, eventAccess FROM eventconfig "+
 						  " WHERE eventid = ? ");
 	    
 	    iorUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET eventAccess = ? WHERE eventid = ?");
-
+	    
 	    statusUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET status = ? WHERE status = ?");
 	    
 	} catch(SQLException sqle) {
@@ -152,36 +152,41 @@ public abstract class AbstractDatabase implements EventDatabase{
 				   edu.iris.Fissures.Time origin_time,
 				   String objectIOR) {
 		try {
+
 			// putStmt.setInt(1, 10);
+
 			int dbid = get(eventName,
-						   lat,
-						   lon,
-						   depth,
-						   origin_time);
+				       lat,
+				       lon,
+				       depth,
+				       origin_time);
+
 			if(dbid != -1) return dbid;
+
 			int index = insert(putStmt,
-							   1,
-							   serverName,
-							   serverDNS,
-							   eventName,
-							   lat,
-							   lon,
-							   depth,
-							   origin_time);
-			putStmt.setInt(index++, Status.NEW.getId());
-			putStmt.setString(index, objectIOR);
-			putStmt.executeUpdate();
-			return get(eventName,
+					   1,
+					   serverName,
+					   serverDNS,
+					   eventName,
 					   lat,
 					   lon,
 					   depth,
 					   origin_time);
+			putStmt.setInt(index++, Status.NEW.getId());
+			putStmt.setString(index, objectIOR);
+			putStmt.executeUpdate();
+			return get(eventName,
+				   lat,
+				   lon,
+				   depth,
+				   origin_time);
 
 		} catch(SQLException sqle) {
-
 			sqle.printStackTrace();
 			return 0;
+
 		}
+
 
 	}
 
@@ -354,7 +359,9 @@ public abstract class AbstractDatabase implements EventDatabase{
                        float lon,
                        float depth,
                        edu.iris.Fissures.Time origin_time) {
+
         try {
+
             stmt.setString(index++, serverName);
             stmt.setString(index++, serverDNS);
             stmt.setString(index++, eventName);
@@ -365,23 +372,33 @@ public abstract class AbstractDatabase implements EventDatabase{
             stmt.setTimestamp(index++, ms.getTimestamp());
             return index;
         } catch(SQLException sqle) {
-
             sqle.printStackTrace();
             return index;
+
         }
 
     }
 
-    public void setTime(edu.iris.Fissures.Time time) {
-	getConfigDatabase().setTime(time);
+    public void setTime(String serverName,
+			String serverDNS,
+			edu.iris.Fissures.Time time) {
+	getConfigDatabase().setTime(serverName,
+				    serverDNS,
+				    time);
     }
 
-    public edu.iris.Fissures.Time getTime() {
-	return getConfigDatabase().getTime();
+    public edu.iris.Fissures.Time getTime(String serverName,
+					  String serverDNS) {
+	return getConfigDatabase().getTime(serverName,
+					   serverDNS);
     }
 
-    public void incrementTime(int numDays) {
-	getConfigDatabase().incrementTime(numDays);
+    public void incrementTime(String serverName,
+			      String serverDNS,
+			      int numDays) {
+	getConfigDatabase().incrementTime(serverName,
+					  serverDNS,
+					  numDays);
     }
     
     protected Connection connection;

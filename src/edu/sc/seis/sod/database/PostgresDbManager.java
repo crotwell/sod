@@ -34,6 +34,13 @@ public class PostgresDbManager extends AbstractDatabaseManager{
 	
     }
 
+    public NetworkDatabase getNetworkDatabase() {
+	if(networkDatabase == null) {
+	    networkDatabase = new PostgresNetworkDb(getConnection());
+	}
+	return networkDatabase;
+    }
+
     public Connection getConnection() {
 	try {
 	    if(connection == null) {
@@ -55,6 +62,8 @@ public class PostgresDbManager extends AbstractDatabaseManager{
     
     private EventDatabase eventDatabase;
 
+    private NetworkDatabase networkDatabase;
+
     private Connection connection;
-    
+        
 }// PostgresDbManager

@@ -30,7 +30,9 @@ public class PostgresConfigDatabase extends AbstractConfigDatabase{
 	    Statement stmt = connection.createStatement();
 	    try {
 		stmt.executeUpdate("CREATE TABLE timeconfig "+
-				   "( time timestamp)");
+				   "( serverName text, "+
+				   " serverDNS text, "+
+				   " time timestamp)");
 	    } catch(SQLException sqle) {
 		System.out.println("Table timeconfig  is already created");
 	    }

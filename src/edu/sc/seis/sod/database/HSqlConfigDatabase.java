@@ -30,7 +30,9 @@ public class HSqlConfigDatabase extends AbstractConfigDatabase{
 	    Statement stmt = connection.createStatement();
 	    try {
 		stmt.executeUpdate("CREATE TABLE timeconfig "+
-				   "( time timestamp)");
+				   "( serverName VARCHAR, "+
+				   " serverDNS VARCHAR, "+
+				   " time timestamp)");
 	    } catch(SQLException sqle) {
 		System.out.println("Table timeconfig  is already created");
 	    }

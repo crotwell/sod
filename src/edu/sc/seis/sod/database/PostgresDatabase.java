@@ -36,7 +36,7 @@ public class PostgresDatabase extends AbstractDatabase {
 				sqle.printStackTrace();
 				System.out.println("The table "+getTableName()+" is already created ");
 			}
-			} catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();		
 		}
 		
