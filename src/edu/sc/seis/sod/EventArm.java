@@ -17,7 +17,7 @@ import edu.sc.seis.sod.process.eventArm.EventArmProcess;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
 import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
-import edu.sc.seis.sod.subsetter.eventArm.NullOriginSubsetter;
+import edu.sc.seis.sod.subsetter.eventArm.PassOrigin;
 import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import edu.sc.seis.sod.subsetter.eventArm.OriginTimeRange;
 import java.sql.SQLException;
@@ -446,7 +446,7 @@ public class EventArm implements Runnable{
 
     private EventFinder finder;
 
-    private OriginSubsetter originSubsetter = new NullOriginSubsetter();
+    private OriginSubsetter originSubsetter = new PassOrigin();
 
     private List processors = new ArrayList();
 
