@@ -6,78 +6,24 @@ from optparse import OptionParser
 
 class sodScriptParameters(scriptBuilder.jacorbParameters):
     homeloc = '.'
-    def __init__(self, mods):
+    def __init__(self, mods, mainclass='edu.sc.seis.sod.Start', name='sod'):
         scriptBuilder.jacorbParameters.__init__(self)
         for mod in mods: self.update(mod)
-        self.name = 'sod'
+        self.name = name
         homevar = self.add('SOD_HOME', self.homeloc, 'initial', 1, True)
         libvar = self.getVar('LIB', 'initial')
         libvar.setValue(homevar.interp+'/lib')
-        self.mainclass = 'edu.sc.seis.sod.Start'
+        self.mainclass = mainclass
         self.xOptions['mx']='mx256m'
 
-class queryTimer(sodScriptParameters):
-    def __init__(self, mods):
-        sodScriptParameters.__init__(self, [])
-        for mod in mods: self.update(mod)
-        self.mainclass='edu.sc.seis.sod.QueryTimer'
-        self.name='queryTimer'
-
-class editor(sodScriptParameters):
-    def __init__(self, mods):
-        sodScriptParameters.__init__(self, [])
-        for mod in mods: self.update(mod)
-        self.mainclass='edu.sc.seis.sod.editor.SodGUIEditor'
-        self.name='sodeditor'
-
-class kill(sodScriptParameters):
-    def __init__(self, mods):
-        sodScriptParameters.__init__(self, [])
-        for mod in mods: self.update(mod)
-        self.mainclass='edu.sc.seis.sod.SodKiller'
-        self.name='killSod'
-        
-class schemaDocs(sodScriptParameters):
-    homeloc = '.'
-    def __init__(self, mods):
-        scriptBuilder.jacorbParameters.__init__(self)
-        for mod in mods: self.update(mod)
-        self.name = 'schemaDocumenter'
-        self.mainclass = 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter'
-        self.xOptions['mx']='mx512m'
-
-class eventCircles(sodScriptParameters):
-    def __init__(self, mods):
-        scriptBuilder.jacorbParameters.__init__(self)
-        for mod in mods: self.update(mod)
-        self.name = 'eventCircles'
-        self.mainclass = 'edu.sc.seis.sod.EventCircleGenerator'
-        self.xOptions['mx']='mx512m'
-
-class stationTriangles(sodScriptParameters):
-    def __init__(self, mods):
-        scriptBuilder.jacorbParameters.__init__(self)
-        for mod in mods: self.update(mod)
-        self.name = 'stationTriangles'
-        self.mainclass = 'edu.sc.seis.sod.StationTriangleGenerator'
-        self.xOptions['mx']='mx512m'
-
+genericScripts = {'sod':'edu.sc.seis.sod.Start',
+                  'queryTimer':'edu.sc.seis.sod.QueryTimer',
+                  'sodeditor':'edu.sc.seis.sod.editor.SodGUIEditor',
+                  'killSod':'edu.sc.seis.sod.SodKiller'}
 
 def buildAllScripts(proj):
-    scripts = buildRunScripts(proj)
-    scripts.extend(buildQueryTimerScripts(proj))
-    scripts.extend(buildEditorScripts(proj))
+    scripts = buildManyScripts(proj, genericScripts.keys())
     scripts.extend(buildProfileScripts(proj))
-    scripts.extend(buildKillScripts(proj))
-    scripts.extend(buildEventCircleScripts(proj))
-    scripts.extend(buildStationTriangleScripts(proj))
-    return scripts
-
-def buildRunScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(sodScriptParameters([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(sodScriptParameters([scriptBuilder.windowsParameters()]), proj))
     return scripts
 
 def buildProfileScripts(proj):
@@ -91,46 +37,17 @@ def buildProfileScripts(proj):
     scripts.append(scriptBuilder.build(profileParams, proj))
     return scripts
 
-def buildQueryTimerScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(queryTimer([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(queryTimer([scriptBuilder.windowsParameters()]), proj))
+def buildManyScripts(proj, names):
+    scripts = []
+    for name in names: scripts.extend(buildScripts(proj, name))
     return scripts
 
-def buildEditorScripts(proj):
+def buildScripts(proj, name, main=''):
+    if main == '':main = genericScripts[name]
     scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(editor([]), proj)]
+    scripts = [scriptBuilder.build(sodScriptParameters([], main, name), proj)]
     scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(editor([scriptBuilder.windowsParameters()]), proj))
-    return scripts
-
-def buildKillScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(kill([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(kill([scriptBuilder.windowsParameters()]), proj))
-    return scripts
-
-def buildSchemaDocScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(schemaDocs([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(schemaDocs([scriptBuilder.windowsParameters()]), proj))
-    return scripts
-
-def buildEventCircleScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(eventCircles([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(eventCircles([scriptBuilder.windowsParameters()]), proj))
-    return scripts
-
-def buildStationTriangleScripts(proj):
-    scriptBuilder.setVarSh()
-    scripts = [scriptBuilder.build(stationTriangles([]), proj)]
-    scriptBuilder.setVarWindows()
-    scripts.append(scriptBuilder.build(stationTriangles([scriptBuilder.windowsParameters()]), proj))
+    scripts.append(scriptBuilder.build(sodScriptParameters([scriptBuilder.windowsParameters()], main, name), proj))
     return scripts
 
 def buildJars(sodProj, clean=False):
@@ -163,8 +80,7 @@ def buildInternalDist(proj, name):
 
 def buildExternalDist(proj, name):
     buildJars(proj, True)
-    scripts = buildRunScripts(proj)
-    scripts.extend(buildEditorScripts(proj))
+    scripts = buildManyScripts(proj, ['sod', 'sodeditor'])
     os.chdir('site')
     print 'building docs'
     os.spawnlp(os.P_WAIT, 'buildSite.sh', 'sh', 'buildSite.sh')
