@@ -32,8 +32,8 @@ public final class EventChannelOR extends  WaveformLogicalSubsetter
         while (it.hasNext()) {
             EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
             if (filter.accept(o, channel, cookieJar)) {
-                System.out.println(filter);
-                return true; }
+                return true;
+            }
         }
         return false;
     }
