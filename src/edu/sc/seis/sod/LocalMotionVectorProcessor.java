@@ -6,7 +6,6 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
-import edu.iris.Fissures.util.*;
 
 /**
  * LocalMotionVectorProcessor.java
@@ -23,7 +22,7 @@ public interface LocalMotionVectorProcessor {
 
     public void process(EventAccessOperations event, 
 			Channel channel, 
-			MotionVector[] vectors, 
+			LocalMotionVector vectors, 
 			CookieJar cookies);
     
     

@@ -14,14 +14,15 @@ import org.w3c.dom.*;
 
 public class EventArm {
     public EventArm (Element config){
-	if ( ! config.getTagname().equals("EventArm")) {
-	    throw new IllegalArgument("Configuration element must be a EventArm tag");
+	if ( ! config.getTagName().equals("EventArm")) {
+	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
 	processConfig(config);
     }
 
     protected void processConfig(Element config) {
 	NodeList children = config.getChildNodes();
+	Node node;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
 	} // end of for (int i=0; i<children.getSize(); i++)

@@ -34,6 +34,7 @@
          </javac>
          <copy todir="${build}" >
               <fileset dir="${src}">
+		<include name="edu/sc/seis/sod/sod.prop" />
 		<include name="edu/sc/seis/sod/data" />
 		<include name="edu/sc/seis/sod/data/**" />
               </fileset>
@@ -74,7 +75,7 @@ packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  maxmemory="64m" >
        </target>
 
        <target name="signjar" depends="jar" if="signjarpasswd">
-         <signjar jar="${dist}/lib/dataexplorer.jar" 
+         <signjar jar="${dist}/lib/sod.jar" 
                   alias="scepp" 
                   storepass="${signjarpasswd}"
                   keystore="../KeySigning/SCEPPKeystore"/>

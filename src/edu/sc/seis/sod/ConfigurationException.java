@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
+
 /**
  * ConfigurationException.java
  *
@@ -11,8 +13,7 @@ package edu.sc.seis.sod;
  */
 
 public class ConfigurationException 
-    extends Exception 
-    implements edu.sc.seis.fissuresUtil.WrappedException 
+    extends Exception  implements WrappedException 
 {
 
     public ConfigurationException (){

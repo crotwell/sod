@@ -12,7 +12,7 @@ import edu.iris.Fissures.event.*;
  * @version
  */
 
-public interface EventFilter {
+public interface EventSubsetter {
 
     public boolean accept(EventAccessOperations event, CookieJar cookies);
 

@@ -3,6 +3,10 @@ package edu.sc.seis.sod.subsetter;
 import edu.sc.seis.sod.*;
 import java.util.*;
 import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+import edu.iris.Fissures.*;
+import java.lang.reflect.*;
 
 /**
  * EventAttrAND.java
@@ -15,7 +19,7 @@ import org.w3c.dom.*;
  */
 
 public class EventAttrAND implements EventAttrSubsetter {
-    public EventAttrAND (Element config){
+    public EventAttrAND (Element config) throws ConfigurationException {
 	processConfig(config);
     }
     
@@ -34,25 +38,43 @@ public class EventAttrAND implements EventAttrSubsetter {
 	return true;
     }
 
-    protected void processConfig(Element config) {
+    protected void processConfig(Element config) throws ConfigurationException{
 	NodeList children = config.getChildNodes();
 	Node node;
-	Class[] constructorArgs = new Class[1];
-	constructorArgs[0] = Element.class;
+	Class[] constructorArgTypes = new Class[1];
+	constructorArgTypes[0] = Element.class;
 
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
 	    if (node instanceof Element) {
+		Element subElement = (Element)node;
 		try {
-		    Element subElement = (Element)node;
 		    Class eventAttrSubclass = 
 			Class.forName("edu.sc.seis.sod.subsetter."+
 				      subElement.getTagName());
-
-		    Object obj = eventAttrSubclass.getInstance();
-		} catch (ConfigurationException e) {
+		    Constructor constructor = 
+			eventAttrSubclass.getConstructor(constructorArgTypes);
+		    Object[] constructorArgs = new Object[1];
+		    constructorArgs[0] = subElement;
+		    Object obj = 
+			constructor.newInstance(constructorArgs);
+		    add((EventAttrSubsetter)obj);
+		} catch (InvocationTargetException e) {
+		    // occurs if the constructor throws an exception
 		    // don't repackage ConfigurationException
-		    throw e;
+		    Throwable subException = e.getTargetException();
+		    if (subException instanceof ConfigurationException) {
+			throw (ConfigurationException)subException;
+		    } else if (subException instanceof Exception) {
+			throw new ConfigurationException("Problem creating "+
+						      subElement.getTagName()+
+						      " within "+
+						      config.getTagName(), 
+						      (Exception)subException);
+		    } else {
+			// not an Exception, so must be an Error
+			throw (java.lang.Error)subException;
+		    } // end of else
 		} catch (Exception e) {
 		    throw new ConfigurationException("Problem understanding "+
 						     subElement.getTagName()+
