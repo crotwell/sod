@@ -10,6 +10,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.IfEvent.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
+import java.util.LinkedList;
 
 /**
  * Cuts seismograms relative to phases.
@@ -18,7 +19,7 @@ import org.apache.log4j.*;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 7180 2004-02-17 22:21:52Z groves $
+ * @version $Id: PhaseCut.java 7391 2004-03-03 21:07:00Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -30,9 +31,9 @@ public class PhaseCut implements LocalSeismogramProcess {
      * for this Processor
      */
     public PhaseCut (Element config) throws ConfigurationException {
-	this.config = config;
-	// use existing PhaseRequest class to calculate phase times
-	phaseRequest = new PhaseRequest(config);
+        this.config = config;
+        // use existing PhaseRequest class to calculate phase times
+        phaseRequest = new PhaseRequest(config);
     }
 
     /**
@@ -47,31 +48,35 @@ public class PhaseCut implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogram[] process(EventAccessOperations event, 
-				     NetworkAccess network, 
-				     Channel channel, 
-				     RequestFilter[] original, 
-				     RequestFilter[] available,
-				     LocalSeismogram[] seismograms, 
-				     CookieJar cookies) throws Exception {
-	LocalSeismogramImpl[] out = 
-	    new LocalSeismogramImpl[seismograms.length];
-	RequestFilter[] cutRequest = 
-	    phaseRequest.generateRequest(event, network, channel, cookies);
-	logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
-	Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time), 
-			  new MicroSecondDate(cutRequest[0].end_time));
-	for (int i=0; i<seismograms.length; i++) {
-	    out[i] = cut.apply((LocalSeismogramImpl)seismograms[i]);
-	} // end of for (int i=0; i<seismograms.length; i++)
-	return out;
+    public LocalSeismogram[] process(EventAccessOperations event,
+                                     NetworkAccess network,
+                                     Channel channel,
+                                     RequestFilter[] original,
+                                     RequestFilter[] available,
+                                     LocalSeismogram[] seismograms,
+                                     CookieJar cookies) throws Exception {
+        RequestFilter[] cutRequest =
+            phaseRequest.generateRequest(event, network, channel, cookies);
+        logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
+        Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time),
+                          new MicroSecondDate(cutRequest[0].end_time));
+        LinkedList list = new LinkedList();
+        for (int i=0; i<seismograms.length; i++) {
+            // cut returns null if the time interval doesn't overlap
+            LocalSeismogramImpl tempSeis = cut.apply((LocalSeismogramImpl)seismograms[i]);
+            if (tempSeis != null) {
+                list.add(tempSeis);
+            }
+        } // end of for (int i=0; i<seismograms.length; i++)
+
+        return (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]);
     }
 
     Element config;
 
     PhaseRequest phaseRequest;
 
-    static Category logger = 
-	Category.getInstance(PhaseRequest.class.getName());
+    static Category logger =
+        Category.getInstance(PhaseRequest.class.getName());
 
 }// PhaseCut
