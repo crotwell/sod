@@ -1,4 +1,5 @@
 package edu.sc.seis.sod.process.waveformArm;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -14,24 +15,21 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
 /**
- * Cuts seismograms relative to phases.
- *
- *
- * Created: Wed Nov  6 17:58:10 2002
- *
- * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 8894 2004-05-25 00:51:30Z crotwell $
+ * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
+ * 
+ * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
+ * @version $Id: PhaseCut.java 9982 2004-08-02 16:40:26Z groves $
  */
-
 public class PhaseCut implements LocalSeismogramProcess {
 
     /**
      * Creates a new <code>PhaseCut</code> instance.
-     *
-     * @param config an <code>Element</code> that contains the configuration
-     * for this Processor
+     * 
+     * @param config
+     *            an <code>Element</code> that contains the configuration for
+     *            this Processor
      */
-    public PhaseCut (Element config) throws ConfigurationException {
+    public PhaseCut(Element config) throws ConfigurationException {
         this.config = config;
         // use existing PhaseRequest class to calculate phase times
         phaseRequest = new PhaseRequest(config);
@@ -39,45 +37,57 @@ public class PhaseCut implements LocalSeismogramProcess {
 
     /**
      * Cuts the seismograms based on phase arrivals.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
+     * 
+     * @param event
+     *            an <code>EventAccessOperations</code> value
+     * @param network
+     *            a <code>NetworkAccess</code> value
+     * @param channel
+     *            a <code>Channel</code> value
+     * @param original
+     *            a <code>RequestFilter[]</code> value
+     * @param available
+     *            a <code>RequestFilter[]</code> value
+     * @param seismograms
+     *            a <code>LocalSeismogram[]</code> value
+     * @param cookies
+     *            a <code>CookieJar</code> value
+     * @exception Exception
+     *                if an error occurs
      */
     public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
-        RequestFilter[] cutRequest = phaseRequest.generateRequest(event, channel, cookieJar);
-        logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookieJar) throws Exception {
+        RequestFilter[] cutRequest = phaseRequest.generateRequest(event,
+                                                                  channel,
+                                                                  cookieJar);
+        logger.debug("Cutting from " + cutRequest[0].start_time.date_time
+                + " to " + cutRequest[0].end_time.date_time);
         Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time),
                           new MicroSecondDate(cutRequest[0].end_time));
         LinkedList list = new LinkedList();
-        for (int i=0; i<seismograms.length; i++) {
+        for(int i = 0; i < seismograms.length; i++) {
             // cut returns null if the time interval doesn't overlap
             LocalSeismogramImpl tempSeis = cut.apply(seismograms[i]);
-            if (tempSeis != null) {
+            if(tempSeis != null) {
                 list.add(tempSeis);
             }
         } // end of for (int i=0; i<seismograms.length; i++)
-        if (list.size() != 0) {
-            return new LocalSeismogramResult(true, (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]), new StringTreeLeaf(this, true));
-        } else {
-            return new LocalSeismogramResult(false, seismograms, new StringTreeLeaf(this, false));
-        }
+        if(list.size() != 0) { return new LocalSeismogramResult(true,
+                                                                (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
+                                                                new StringTreeLeaf(this,
+                                                                                   true)); }
+        return new LocalSeismogramResult(false,
+                                         seismograms,
+                                         new StringTreeLeaf(this, false));
     }
 
     Element config;
 
     PhaseRequest phaseRequest;
 
-    static Category logger =
-        Category.getInstance(PhaseRequest.class.getName());
-
+    static Category logger = Category.getInstance(PhaseRequest.class.getName());
 }// PhaseCut
