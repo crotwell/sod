@@ -113,7 +113,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                                                   audit);
 
         try {
-            masterDataSetElement = dsToXML.createDocument(masterDataSet, dataDirectory);
+            // seismogram file type doesn't matter here as no data will be added
+            // directly to master dataset
+            masterDataSetElement = dsToXML.createDocument(masterDataSet, dataDirectory, SeismogramFileTypes.SAC);
             masterDSFile = new File(dataDirectory, dsToXML.createFileName(masterDataSet));
             dsToXML.writeToFile(masterDataSetElement, masterDSFile);
         } catch (IOException e) {
@@ -332,7 +334,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
             lastDataSet = DataSetToXML.load(lastDataSetFile.toURI().toURL());
             dataset = lastDataSet;
         }
-        lastDataSetElement = dsToXML.createDocument(lastDataSet, eventDirectory);
+        lastDataSetElement = dsToXML.createDocument(lastDataSet, eventDirectory, fileType);
         lastDataSetFileModTime = lastDataSetFile.lastModified();
         //dataset = getDataSet(eventDirectory, eventDirName, event);
 
