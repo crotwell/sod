@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
-import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.EventFormatter;
+import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.Template;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,23 +14,33 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 public class EventGroupTemplate extends Template implements GenericTemplate, EventStatus{
-    
-    public EventGroupTemplate(){ this(null); }
+    protected EventGroupTemplate(){sorter = new EventSorter();}
     
     public EventGroupTemplate(Element config){
-        super(config);
+        parse(config);
+    }
+    
+    public static EventGroupTemplate createDefaultTemplate(){
+        EventGroupTemplate egt = new EventGroupTemplate();
+        egt.useDefaultConfig();
+        return egt;
+    }
+    
+    public void parse(Element el){
+        if(el.hasChildNodes() == false) useDefaultConfig();
+        else super.parse(el);
         if(sorter == null) sorter = new EventSorter();
     }
     
     protected void useDefaultConfig(){
         templates.add(new EventFormatter());
+        sorter = new EventSorter();
     }
     
     
     protected Object getTemplate(String tag, Element el) {
         if(el.getNodeName().equals("eventLabel")){
-            gen = new EventFormatter(el);
-            return gen;
+            return new EventFormatter(el);
         }else if(el.getNodeName().equals("sorting")){
             sorter = new EventSorter(el);
             return textTemplate("");
@@ -92,8 +102,6 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
     private List events = new ArrayList();
     
     private Map eventToMonitors = new HashMap();
-    
-    private EventFormatter gen;
     
     private EventSorter sorter;
 }

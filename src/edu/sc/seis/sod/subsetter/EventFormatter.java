@@ -25,7 +25,8 @@ public class EventFormatter extends Template implements EventTemplate{
     }
     
     public EventFormatter(Element config, boolean filize){
-        super(config);
+        if(config == null || config.hasChildNodes() == false) useDefaultConfig();
+        else parse(config);
         filizeResults = filize;
     }
     
@@ -105,6 +106,7 @@ public class EventFormatter extends Template implements EventTemplate{
         while(it.hasNext()){
             name.append(((EventTemplate)it.next()).getResult(event));
         }
+        if(filizeResults) return filize(name.toString());
         return name.toString();
     }
     
@@ -113,7 +115,7 @@ public class EventFormatter extends Template implements EventTemplate{
     }
     
     public static String filize(String fileName){
-        fileName = fileName.replaceAll("[/ :]", "_");
+        fileName = fileName.replaceAll("[ :]", "_");
         return fileName.replaceAll("[\t\n\f\r]", "");
     }
     

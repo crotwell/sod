@@ -1,9 +1,3 @@
-/**
- * ChannelFormatter.java
- *
- * @author Created by Charles Groves
- */
-
 package edu.sc.seis.sod.subsetter;
 
 
@@ -16,9 +10,7 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 
 public class ChannelFormatter extends Template implements ChannelTemplate{
-    public ChannelFormatter(Element el){
-        super(el);
-    }
+    public ChannelFormatter(Element el){ parse(el); }
     
     protected Object textTemplate(final String text) {
         return new ChannelTemplate(){

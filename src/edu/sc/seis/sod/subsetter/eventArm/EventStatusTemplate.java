@@ -3,20 +3,25 @@ package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
-import edu.sc.seis.sod.subsetter.ExternalFileTemplate;
+import edu.sc.seis.sod.subsetter.FileWritingTemplate;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
+import edu.sc.seis.sod.subsetter.TemplateFileLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Element;
 
-public class EventStatusTemplate extends ExternalFileTemplate implements EventStatus{
-    public EventStatusTemplate(Element el)throws IOException{ super(el); }
+public class EventStatusTemplate extends FileWritingTemplate implements EventStatus{
+    public EventStatusTemplate(Element el)throws IOException{
+        super(el.getAttribute("outputLocation"));
+        Element config = TemplateFileLoader.getTemplate(el);
+        parse(config);
+    }
     
     public void setArmStatus(String status) {
         this.status = status;
-        update();
+        write();
     }
     
     public Object getTemplate(String tag, Element el){
@@ -42,16 +47,14 @@ public class EventStatusTemplate extends ExternalFileTemplate implements EventSt
     public void change(EventAccessOperations event, RunStatus status) {
         Iterator it = internalStatusWatchers.iterator();
         while(it.hasNext()) ((EventStatus)it.next()).change(event, status);
-        update();
+        write();
     }
-    
-    public void setUp(){ internalStatusWatchers = new ArrayList(); }
     
     private class StatusFormatter implements GenericTemplate{
         public String getResult(){ return status; }
     }
     
-    private List internalStatusWatchers;
+    private List internalStatusWatchers = new ArrayList();
     
     private String status = "";
 }
