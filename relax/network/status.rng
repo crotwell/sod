@@ -6,35 +6,25 @@
     </start>
     <define name="status">
         <choice>
-            <ref name="simpleHTML"/>
             <ref name="networkStatusTemplate"/>
         </choice>
     </define>
-    <define name="simpleHTML">
-        <element name="simpleHTMLNetworkStatus">
-            <optional>
-                <element name="outputDirectory">
-                    <data type="string"/>
-                </element>
-            </optional>
-        </element>
+    <define name="networkStatusTemplate">
+            <element name="networkInfoTemplateGenerator">
+                    <optional>
+                        <element name="fileDir">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                    <element name="netConfig">
+                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+                    </element>
+                    <element name="stationConfig">
+                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+                    </element>
+                    <element name="channelConfig">
+                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+                    </element>
+           </element>
     </define>
-        <define name="networkStatusTemplate">
-                <element name="networkInfoTemplateGenerator">
-                        <optional>
-                            <element name="fileDir">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                        <element name="netConfig">
-                                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                        </element>
-                        <element name="stationConfig">
-                                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                        </element>
-                        <element name="channelConfig">
-                                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                        </element>
-                </element>
-        </define>
 </grammar>
