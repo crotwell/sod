@@ -1,24 +1,34 @@
 
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.iris.Fissures.AuditInfo;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.sac.*;
-import edu.sc.seis.fissuresUtil.xml.*;
-import edu.sc.seis.sod.*;
+import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
+import edu.sc.seis.fissuresUtil.sac.SacTimeSeries;
+import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
+import edu.sc.seis.fissuresUtil.xml.XMLDataSet;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.LocalSeismogramProcess;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.NameGenerator;
-import edu.iris.Fissures.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.seismogramDC.*;
-import javax.xml.parsers.*;
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
-
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
 
 /**
  * SacFileProcessor.java
@@ -84,51 +94,15 @@ public class SacFileProcessor implements LocalSeismogramProcess {
             } // end of if (dataDirectory.exits())
             String eventDirName = getLabel(event);
 
+            File eventDirectory = getEventDirectory(eventDirName);
 
-            File eventDirectory = new File(dataDirectory, eventDirName);
-            if ( ! eventDirectory.exists()) {
-                if ( ! eventDirectory.mkdirs()) {
-                    throw new ConfigurationException("Unable to create directory."+eventDirectory);
-                } // end of if (!)
-            } // end of if (dataDirectory.exits())
-
-            // load dataset if it already exists
-            File dsFile = new File(eventDirectory, eventDirName+".dsml");
-            XMLDataSet dataset;
-            if (dsFile.exists()) {
-                dataset = XMLDataSet.load(dsFile.toURL());
-            } else {
-                DocumentBuilderFactory factory
-                    = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = factory.newDocumentBuilder();
-                dataset = new XMLDataSet(docBuilder,
-                                         eventDirectory.toURL(),
-                                         "genid"+Math.round(Math.random()*Integer.MAX_VALUE),
-                                         eventDirName,
-                                         System.getProperty("user.name"));
-
-                // add event since dataset is new
-                Document doc = dataset.getElement().getOwnerDocument();
-
-                //      XMLParameter.insert(dataset.getElement(),"event_info", event);
-                AuditInfo[] audit = new AuditInfo[1];
-                audit[0] = new AuditInfo(System.getProperty("user.name"),
-                                         "event loaded via sod.");
-                dataset.addParameter( "event", event, audit);
-            } // end of else
+            XMLDataSet dataset = getDataSet(eventDirectory, eventDirName, event);
 
             SacTimeSeries sac;
             String seisFilename = "";
             for (int i=0; i<seismograms.length; i++) {
-                if ( seismograms[i].channel_id.site_code.equals("  ")) {
-                    seisFilename =
-                        seismograms[i].channel_id.network_id.network_code+"."+
-                        seismograms[i].channel_id.station_code+".."+
-                        seismograms[i].channel_id.channel_code;
-                } else {
-                    seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
-                } // end of else
-
+                seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
+                seisFilename.replace(' ', '.'); // check for space-space site
                 File seisFile = new File(eventDirectory, seisFilename);
                 int n =0;
                 while (seisFile.exists()) {
@@ -136,6 +110,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
                     seisFilename =
                         ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n;
+                    seisFilename.replace(' ', '.'); // check for space-space site
                     seisFile = new File(eventDirectory, seisFilename);
                 } // end of while (seisFile.exists())
                 LocalSeismogramImpl lseis =
@@ -144,31 +119,74 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                            channel,
                                            event.get_preferred_origin());
                 sac.write(seisFile);
-                AuditInfo[] audit = new AuditInfo[1];
-                audit[0] = new AuditInfo(System.getProperty("user.name"),
-                                         "seismogram loaded via sod.");
-                dataset.addSeismogramRef(lseis, seisFile.toURL(),
-                                         seisFilename,
-                                         new Property[0],
-                                         lseis.parm_ids,
-                                         audit);
+//                AuditInfo[] audit = new AuditInfo[1];
+//                audit[0] = new AuditInfo(System.getProperty("user.name"),
+//                                         "seismogram loaded via sod.");
+//                dataset.addSeismogramRef(lseis, seisFile.toURL(),
+//                                         seisFilename,
+//                                         new Property[0],
+//                                         lseis.parm_ids,
+//                                         audit);
             }
-            try {
-                File outFile = new File(eventDirectory, eventDirName+".dsml");
-                OutputStream fos = new BufferedOutputStream(
-                    new FileOutputStream(outFile));
-                dataset.write(fos);
-                fos.close();
-            } catch(Exception ex) {
-                ex.printStackTrace();
-                logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", ex);
-            }
-        } catch(Exception e) {
 
+            File outFile = new File(eventDirectory, eventDirName+".dsml");
+            OutputStream fos = new BufferedOutputStream(
+                new FileOutputStream(outFile));
+            dataset.write(fos);
+            fos.close();
+
+long mbyte = 1024*1024;
+            Runtime runtime = Runtime.getRuntime();
+            String s = "Memory usage: "+runtime.freeMemory()/mbyte+" "+
+                             runtime.totalMemory()/mbyte+"/"+runtime.maxMemory()/mbyte+" Mb";
+            System.out.println(s);
+
+        } catch(Exception e) {
             e.printStackTrace();
             logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
         }
         return seismograms;
+    }
+
+    protected File getEventDirectory(String eventDirName)
+        throws ConfigurationException {
+
+        File eventDirectory = new File(dataDirectory, eventDirName);
+        if ( ! eventDirectory.exists()) {
+            if ( ! eventDirectory.mkdirs()) {
+                throw new ConfigurationException("Unable to create directory."+eventDirectory);
+            } // end of if (!)
+        } // end of if (dataDirectory.exits())
+
+        return eventDirectory;
+    }
+
+    protected XMLDataSet getDataSet(File eventDirectory,
+                                    String eventDirName,
+                                    EventAccessOperations event)
+        throws MalformedURLException, ParserConfigurationException {
+        // load dataset if it already exists
+        File dsFile = new File(eventDirectory, eventDirName+".dsml");
+        XMLDataSet dataset;
+        if (dsFile.exists()) {
+            dataset = XMLDataSet.load(dsFile.toURL());
+        } else {
+            DocumentBuilder docBuilder = XMLDataSet.getDocumentBuilder();
+            dataset = new XMLDataSet(docBuilder,
+                                     eventDirectory.toURL(),
+                                     "genid"+Math.round(Math.random()*Integer.MAX_VALUE),
+                                     eventDirName,
+                                     System.getProperty("user.name"));
+
+            // add event since dataset is new
+            if (event != null) {
+                AuditInfo[] audit = new AuditInfo[1];
+                audit[0] = new AuditInfo(System.getProperty("user.name"),
+                                         "event loaded via sod.");
+                dataset.addParameter( StdDataSetParamNames.EVENT, event, audit);
+            }
+        } // end of else
+        return dataset;
     }
 
     protected String getLabel(EventAccessOperations event) {
