@@ -66,9 +66,9 @@ public class EventArm implements Runnable{
         }
         processConfig(config);
     }
-    
+
     public boolean isAlive(){ return alive; }
-    
+
     public void run() {
         alive = true;
         try {
@@ -79,9 +79,9 @@ public class EventArm implements Runnable{
         logger.debug("Event arm finished");
         alive = false;
     }
-    
+
     public void add(EventStatus monitor){ statusMonitors.add(monitor); }
-    
+
     private void processConfig(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         for (int i=0; i<children.getLength(); i++) {
@@ -104,7 +104,7 @@ public class EventArm implements Runnable{
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
-    
+
     private void getEvents() throws Exception {
         if(eventFinderSubsetter == null) return;
         logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getMSTR());
@@ -165,7 +165,7 @@ public class EventArm implements Runnable{
         }
         logger.debug("Finished processing the event arm.");
     }
-    
+
     private void resetQueryTimeForLag(String server, String dns) {
         try {
             MicroSecondDate curEnd = new MicroSecondDate(queryTimes.getEnd(server, dns));
@@ -175,7 +175,7 @@ public class EventArm implements Runnable{
             throw new RuntimeException("This shouldn't happen.  Something nasty is probably happening to the database now", e);
         }
     }
-    
+
     private void waitForProcessing() throws SQLException {
         while(eventStatus.getAll(EventCondition.PROCESSOR_PASSED).length > 2) {
             try {
@@ -183,7 +183,7 @@ public class EventArm implements Runnable{
             } catch (InterruptedException e) {}
         }
     }
-    
+
     private MicroSecondDate getQueryStart(EventTimeRange reqTimeRange, String source, String dns) {
         MicroSecondDate queryStart = reqTimeRange.getStartMSD();
         try {
@@ -195,7 +195,7 @@ public class EventArm implements Runnable{
         }
         return queryStart;
     }
-    
+
     private MicroSecondDate getQueryEnd(MicroSecondDate queryStart, MicroSecondDate reqEnd) {
         MicroSecondDate queryEnd = queryStart.add(increment);
         if(reqEnd.before(queryEnd)){
@@ -206,7 +206,7 @@ public class EventArm implements Runnable{
         }
         return queryEnd;
     }
-    
+
     private CacheEvent[] cacheEvents(EventAccessOperations[] uncached){
         CacheEvent[] cached = new CacheEvent[uncached.length];
         for(int counter = 0; counter < cached.length; counter++) {
@@ -225,7 +225,7 @@ public class EventArm implements Runnable{
         }
         return cached;
     }
-    
+
     private void handle(CacheEvent[] event) {
         for (int i = 0; i < event.length; i++) {
             try {
@@ -241,7 +241,7 @@ public class EventArm implements Runnable{
             }
         }
     }
-    
+
     /** This exists so that we can try getting more info about an event for the
      * logging without causeing further exceptions. */
     private String bestEffortEventToString(EventAccessOperations event) {
@@ -255,7 +255,7 @@ public class EventArm implements Runnable{
         }
         return s;
     }
-    
+
     public void handle(CacheEvent event) throws Exception{
         change(event, EventCondition.NEW);
         EventAttr attr = event.get_attributes();
@@ -272,7 +272,7 @@ public class EventArm implements Runnable{
             change(event, EventCondition.SUBSETTER_FAILED);
         }
     }
-    
+
     private void change(EventAccessOperations event, EventCondition status) throws Exception{
         eventStatus.setStatus(event, status);
         Iterator it = statusMonitors.iterator();
@@ -282,7 +282,7 @@ public class EventArm implements Runnable{
             }
         }
     }
-    
+
     private void setStatus(String status) throws Exception {
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
@@ -291,15 +291,15 @@ public class EventArm implements Runnable{
             }
         }
     }
-    
-    
+
+
     private void process(EventAccessOperations eventAccess) throws Exception {
         Iterator it = processors.iterator();
         while(it.hasNext()){
             ((EventArmProcess)it.next()).process(eventAccess, null);
         }
     }
-    
+
     /**
      * @returns true if the EventArm's last desired event time + eventArrivalLag
      * is before the current time
@@ -309,7 +309,7 @@ public class EventArm implements Runnable{
         if(quitDate.before(ClockUtil.now()))  return true;
         return false;
     }
-    
+
     private void waitTillRefreshNeeded() throws Exception {
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+ refreshInterval);
@@ -319,7 +319,7 @@ public class EventArm implements Runnable{
             logger.warn("Event arm sleep was interrupted.", ie);
         }
     }
-    
+
     private class Querier{
         public Querier(EventFinder ef) throws ConfigurationException{
             if(ef.getDepthRange() != null) {
@@ -340,10 +340,10 @@ public class EventArm implements Runnable{
             }
             logger.debug("Searching over area " + area + " in catalogs " + catalogs[0] + " from contributors " + contributors[0]);
         }
-        
+
         public CacheEvent[] query(TimeRange tr)
             throws NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
-            
+
             for (int i = 0; i < MAX_RETRY; i++) {
                 try {
                     edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
@@ -364,48 +364,56 @@ public class EventArm implements Runnable{
                     } else {
                         // maybe it will be ok if we retry, log just in case
                         CommonAccess.handleException("Got a corba exception querying, retrying "+i+" of "+MAX_RETRY, e);
+                        try {
+                            // sleep for 1 second just to give things a chance to change
+                            // hope springs eternal...
+                            Thread.sleep(1000);
+                        }
+                        catch (InterruptedException ex) {
+                            // oh well...
+                        }
                     }
                 }
             }
             // should never get here
             throw new RuntimeException();
         }
-        
+
         private static final int MAX_RETRY = 3;
-        
+
         //If the eventFinderSubsetter values for magnitude or depth are null,
         //the default values below are used
         private Quantity minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
         private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
         private String[] searchTypes = { "%" };
         private float minMag = -99.0f, maxMag = 99.0f;
-        
+
         private Area area = eventFinderSubsetter.getArea();
         private String[] catalogs = eventFinderSubsetter.getCatalogs();
         private String[] contributors = eventFinderSubsetter.getContributors();
         private int sequenceMaximum = 10;
         private EventSeqIterHolder holder = new EventSeqIterHolder();
     }
-    
+
     private TimeInterval increment, lag, refreshInterval;
-    
+
     private EventFinder eventFinderSubsetter;
-    
+
     private EventAttrSubsetter eventAttrSubsetter = new NullEventAttrSubsetter();
-    
+
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
-    
+
     private List processors = new ArrayList();
-    
+
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
-    
+
     private Properties props;
-    
+
     private JDBCEventStatus eventStatus;
-    
+
     private JDBCEventQueryTime queryTimes;
-    
+
     private boolean alive;
-    
+
     private static Logger logger = Logger.getLogger(EventArm.class);
 }// EventArm
