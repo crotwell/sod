@@ -1,14 +1,20 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.fissuresUtil.namingService.*;
-
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventDCOperations;
+import edu.iris.Fissures.IfEvent.NotFound;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
+import edu.sc.seis.sod.AbstractSource;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import java.util.ArrayList;
+import org.apache.log4j.Category;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This subsetter specifies the source of eventDC and the parameters required to query for events.
@@ -133,12 +139,20 @@ public class EventFinder extends AbstractSource implements SodElement {
      *
      * @return an <code>EventDC</code> value
      */
-    public EventDCOperations getEventDC() throws Exception{
+    public EventDCOperations forceGetEventDC()
+        throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
+        eventDC = fissuresNamingService.getEventDC(getDNSName(), getSourceName());
+        return eventDC;
+    }
+
+    public EventDCOperations getEventDC()
+        throws org.omg.CosNaming.NamingContextPackage.NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
         if (eventDC == null) {
-            eventDC = fissuresNamingService.getEventDC(getDNSName(), getSourceName());
+            return forceGetEventDC();
         }
         return eventDC;
     }
+
 
     /**
      * Describe <code>getDepthRange</code> method here.

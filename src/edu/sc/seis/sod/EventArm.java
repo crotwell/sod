@@ -22,9 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
@@ -95,7 +99,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
-    private void getEvents() throws Exception{
+    private void getEvents() throws Exception {
         if(eventChannelFinder != null) {
             eventChannelFinder.setEventArm(this);
             Thread thread = new Thread(eventChannelFinder, "EventChannelFinder");
@@ -115,13 +119,35 @@ public class EventArm extends SodExceptionSource implements Runnable{
             EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
             MicroSecondDate queryStart = getQueryStart(reqTimeRange, source, dns);
             MicroSecondDate queryEnd = getQueryEnd(queryStart, reqTimeRange.getEndMSD());
+            int numRetries = 0;
             if(queryEnd.after(queryStart)){
-                EventAccessOperations[] events = querier.query(new TimeRange(queryStart.getFissuresTime(), queryEnd.getFissuresTime()));
-                logger.debug("Found "+events.length+" events between "+ queryStart + " and "+ queryEnd);
-                Start.getEventQueue().setTime(source, dns, queryEnd.getFissuresTime());
-                startEventSubsetter(events);
-                setStatus("Waiting for the wave form queue to process some events before getting more events");
-                Start.getEventQueue().waitForProcessing();
+                boolean needRetry = true;
+                while (needRetry) {
+                    try {
+                        EventAccessOperations[] events = querier.query(new TimeRange(queryStart.getFissuresTime(),
+                                                                                     queryEnd.getFissuresTime()));
+                        logger.debug("Found "+events.length+" events between "+ queryStart + " and "+ queryEnd);
+                        Start.getEventQueue().setTime(source, dns, queryEnd.getFissuresTime());
+                        startEventSubsetter(events);
+                        setStatus("Waiting for the wave form queue to process some events before getting more events");
+                        Start.getEventQueue().waitForProcessing();
+                        needRetry = false;
+                    } catch (org.omg.CORBA.SystemException e) {
+                        // an SystemException signals an error on the server. This should
+                        // go away once the server is fixed/restarted, so we
+                        // log the error and sleep before retrying
+                        numRetries++;
+                        CommonAccess.handleException("Got an UNKNOWN while trying query from "+
+                                                         queryStart.getFissuresTime().date_time+
+                                                         " to "+queryEnd.getFissuresTime().date_time+
+                                                         ", sleep for 1 minute before retrying. Num retries = "+numRetries, e);
+                        try {
+                            Thread.sleep(60*1000);
+                        }
+                        catch (InterruptedException ee) {
+                        }
+                    }
+                }
             }
             TimeInterval queryLength = queryEnd.subtract(queryStart);
             if(queryLength.lessThan(getIncrement())){
@@ -162,19 +188,51 @@ public class EventArm extends SodExceptionSource implements Runnable{
                 cached[counter] = uncached[counter];
             } else {
                 cached[counter] = new CacheEvent(uncached[counter]);
+                // preload cache
+                cached[counter].get_attributes();
+                try {
+                cached[counter].get_preferred_origin();
+                } catch (NoPreferredOrigin e) {
+                    // oh well...
+                }
             }
         }
         return cached;
     }
 
-    private void startEventSubsetter(EventAccessOperations[] event)throws Exception{
+    private void startEventSubsetter(EventAccessOperations[] event) {
         for (int i = 0; i < event.length; i++) {
-            startEventSubsetter(event[i], event[i].get_attributes());
+            try {
+                startEventSubsetter(event[i]);
+            } catch (Exception e) {
+                // problem with this event, log it and go on
+                CommonAccess.handleException("Caught an exception for event "+i+" "+bestEffortEventToString(event[i])+
+                                                 " Continuing with rest of events", e);
+            } catch (Throwable e) {
+                // problem with this event, log it and go on
+                CommonAccess.handleException("Caught an exception for event "+i+" "+bestEffortEventToString(event[i])+
+                                                 " Continuing with rest of events", e);
+            }
         }
     }
 
-    public void startEventSubsetter(EventAccessOperations event, EventAttr attr) throws Exception {
+    /** This exists so that we can try getting more info about an event for the
+     * logging without causeing further exceptions. */
+    private String bestEffortEventToString(EventAccessOperations event) {
+        String s = "";
+        try {
+            Origin o = event.get_preferred_origin();
+            s = " otime="+o.origin_time.date_time;
+            s += " loc="+o.my_location.latitude+", "+o.my_location.longitude;
+        } catch (Throwable e) {
+            s += e;
+        }
+        return s;
+    }
+
+    public void startEventSubsetter(EventAccessOperations event) throws Exception{
         change(event, RunStatus.NEW);
+        EventAttr attr = event.get_attributes();
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
             Origin origin = event.get_preferred_origin();
             if(originSubsetter.accept(event, origin, null)) {
@@ -281,20 +339,38 @@ public class EventArm extends SodExceptionSource implements Runnable{
             logger.debug("Searching over area " + area + " in catalogs " + catalogs[0] + " from contributors " + contributors[0]);
         }
 
-        public EventAccessOperations[] query(TimeRange tr) throws Exception{
-            edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
-            logger.debug("before finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
-            EventAccessOperations[] events =  finder.query_events(area,
-                                                                  minDepth, maxDepth,
-                                                                  tr,
-                                                                  searchTypes, minMag, maxMag,
-                                                                  catalogs,
-                                                                  contributors,
-                                                                  sequenceMaximum, holder);
-            logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
-            events = cacheEvents(events);
-            return events;
+        public EventAccessOperations[] query(TimeRange tr)
+            throws NotFound, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName {
+
+            for (int i = 0; i < MAX_RETRY; i++) {
+                try {
+                    edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
+                    logger.debug("before finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
+                    EventAccessOperations[] events =  finder.query_events(area,
+                                                                          minDepth, maxDepth,
+                                                                          tr,
+                                                                          searchTypes, minMag, maxMag,
+                                                                          catalogs,
+                                                                          contributors,
+                                                                          sequenceMaximum, holder);
+                    logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
+                    events = cacheEvents(events);
+                    return events;
+                } catch (org.omg.CORBA.SystemException e) {
+                    if (i == MAX_RETRY-1) {
+                        // to many retries
+                        throw e;
+                    } else {
+                        // maybe it will be ok if we retry, log just in case
+                        CommonAccess.handleException("Got a corba exception querying, retrying "+i+" of "+MAX_RETRY, e);
+                    }
+                }
+            }
+            // should never get here
+            throw new RuntimeException();
         }
+
+        private static final int MAX_RETRY = 3;
 
         //If the eventFinderSubsetter values for magnitude or depth are null,
         //the default values below are used

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 
 /**
  * Handles the subsetting of the Channels.
@@ -210,7 +211,7 @@ public class NetworkArm {
             if (allNets[i] != null) {
                 CookieJar cookieJar = new CookieJar();
                 cookieJarCache.put(allNets[i], cookieJar);
-                allNets[i] = new RetryNetworkAccess(allNets[i], 2);
+                allNets[i] = new CacheNetworkAccess(new RetryNetworkAccess(allNets[i], 2));
                 if(attrSubsetter.accept(allNets[i].get_attributes(),cookieJar)){
                     int dbid = networkDatabase.putNetwork(finder.getSourceName(),
                                                           finder.getDNSName(),
