@@ -6018,6 +6018,15 @@
             <element name="waveformCountProcessor">
                 <empty/>
             </element>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess">
@@ -6239,6 +6248,15 @@
                 <ref name="seismogramProcess"/>
             </element>
             <element name="waveformCountProcessor">
+                <empty/>
+            </element>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
                 <empty/>
             </element>
         </choice>
@@ -6464,6 +6482,15 @@
             <element name="waveformCountProcessor">
                 <empty/>
             </element>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess2">
@@ -6685,6 +6712,15 @@
                 <ref name="seismogramProcess2"/>
             </element>
             <element name="waveformCountProcessor">
+                <empty/>
+            </element>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
                 <empty/>
             </element>
         </choice>
