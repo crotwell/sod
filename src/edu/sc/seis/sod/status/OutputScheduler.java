@@ -8,6 +8,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,7 +38,11 @@ public class OutputScheduler extends TimerTask{
             runnables.clear();
         }
         for (int i = 0; i < currentRunnables.length; i++) {
-            currentRunnables[i].run();
+            try{
+                currentRunnables[i].run();
+            }catch(Throwable t){
+                GlobalExceptionHandler.handle(t);
+            }
         }
     }
 
