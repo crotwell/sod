@@ -69,9 +69,9 @@ public abstract class Template{
             if(n.getNodeType() == Node.TEXT_NODE) {
                 String s = n.getNodeValue();
                 if (trim) {
-                    s.trim();
+                    s = s.trim();
                     // \s means all whitespace characters
-                    s.replaceAll("\\s", "");
+                    s = s.replaceAll("\\s", "");
                 }
                 addString(s);
             } else if (n.getNodeType() == Node.COMMENT_NODE) {
