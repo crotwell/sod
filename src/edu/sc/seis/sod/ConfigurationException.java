@@ -1,6 +1,6 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
+import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
 
 /**
  * ConfigurationException.java
