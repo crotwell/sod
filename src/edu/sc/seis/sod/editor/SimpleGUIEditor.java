@@ -12,7 +12,6 @@ import org.w3c.dom.*;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
-import edu.sc.seis.sod.CommonAccess;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -20,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -101,13 +102,11 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 if (list.item(j) instanceof Element) {
                     Box box = Box.createVerticalBox();
                     NodeList sublist = ((Element)list.item(j)).getChildNodes();
-                    for (int i = 0; i < sublist.getLength(); i++) {
-                        if (sublist.item(i) instanceof Element) {
-                            box.add(getCompForElement((Element)sublist.item(i)));
-                            box.add(Box.createRigidArea(new Dimension(3, 3)));
-                        }
+                    JComponent[] subComponents = getCompsForNodeList(sublist);
+                    for (int i = 0; i < subComponents.length; i++) {
+                        box.add(subComponents[i]);
+                        box.add(Box.createVerticalStrut(10));
                     }
-                    box.add(Box.createGlue());
                     JPanel panel = new JPanel();
                     panel.setLayout(new BorderLayout());
                     panel.add(box, BorderLayout.NORTH);
@@ -131,6 +130,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         System.exit(0);
                     }
                 });
+    }
+
+    JComponent[] getCompsForNodeList(NodeList nl){
+        List comps = new ArrayList();
+        for (int i = 0; i < nl.getLength(); i++) {
+            if (nl.item(i) instanceof Element) {
+                comps.add(getCompForElement((Element)nl.item(i)));
+            }
+        }
+        return (JComponent[])comps.toArray(new JComponent[comps.size()]);
     }
 
 
@@ -278,6 +287,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
 }
+
 
 
 
