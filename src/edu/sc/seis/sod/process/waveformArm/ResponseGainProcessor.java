@@ -17,23 +17,29 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 7822 2004-03-25 20:34:37Z crotwell $
+ * @version $Id: ResponseGainProcessor.java 8780 2004-05-18 15:54:27Z crotwell $
  */
 
 public class ResponseGainProcessor implements LocalSeismogramProcess {
-    public ResponseGainProcessor (Element config) {}
+
+    public ResponseGainProcessor (Element config) {
+        responseGain = new ResponseGain(Start.getNetworkArm().getFinder());
+    }
 
     public LocalSeismogramImpl[] process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookieJar)
         throws Exception {
-        ResponseGain responseGain = new ResponseGain(Start.getNetworkArm().getFinder());
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {
             out[i] = responseGain.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
         return out;
     }
+
+    ResponseGain responseGain;
+
 }// ResponseGainProcessor
