@@ -14,6 +14,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface StationSubsetter extends Subsetter{
 
-    public boolean accept(Station stations) throws Exception;
+    public boolean accept(Station station) throws Exception;
 
 }// StationSubsetter
