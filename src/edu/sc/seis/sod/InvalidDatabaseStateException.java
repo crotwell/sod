@@ -1,5 +1,4 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
 
 /**
  * InvalidDatabaseStateException.java
@@ -7,11 +6,11 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
  *
  * Created: Mon Jan 27 11:39:50 2003
  *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla </a>$Id: InvalidDatabaseStateException.java 6172 2003-10-22 15:55:01Z groves $
+ * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla </a>$Id: InvalidDatabaseStateException.java 7937 2004-03-31 18:35:44Z crotwell $
  * @version
  */
 
-public class InvalidDatabaseStateException extends Exception implements WrappedException {
+public class InvalidDatabaseStateException extends Exception {
     public InvalidDatabaseStateException (){
 
     }
@@ -21,13 +20,7 @@ public class InvalidDatabaseStateException extends Exception implements WrappedE
     }
 
     public InvalidDatabaseStateException(String s, Throwable e) {
-
     super(s, e);
     }
-
-    public Throwable getCausalException() {
-    return getCause();
-    }
-
 
 }// InvalidDatabaseStateException

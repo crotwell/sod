@@ -1,7 +1,5 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
-
 /**
  * ConfigurationException.java
  *
@@ -13,7 +11,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.WrappedException;
  */
 
 public class ConfigurationException
-    extends Exception  implements WrappedException
+    extends Exception
 {
 
     /**
@@ -41,15 +39,6 @@ public class ConfigurationException
      */
     public ConfigurationException (String s, Throwable e){
         super(s, e);
-    }
-
-    /**
-     * Describe <code>getCausalException</code> method here.
-     *
-     * @return an <code>Exception</code> value
-     */
-    public Throwable getCausalException() {
-        return getCause();
     }
 
 }// ConfigurationException
