@@ -8,6 +8,7 @@
 <li><a><attribute name="href"><relativePath>networks.html</relativePath></attribute>Networks</a></li>
 <li><a><attribute name="href"><relativePath>statusInfo.html</relativePath></attribute>About</a></li>
 <li><a><attribute name="href"><relativePath>Errors/index.html</relativePath></attribute>Errors</a></li>
+<li><a href="http://piglet.seis.sc.edu:8080/wily/Check">Wily</a></li>
 </ul>
 </div>
 </template>
