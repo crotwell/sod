@@ -13,7 +13,6 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.HSqlDbQueue;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Properties;
