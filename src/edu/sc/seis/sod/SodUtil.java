@@ -38,37 +38,6 @@ public class SodUtil {
         return false;
     }
 
-    public static synchronized Object loadExternal(Element config)
-            throws ConfigurationException {
-        try {
-            String classname;
-            Element classNameElement = SodUtil.getElement(config, "classname");
-            classname = getNestedText(classNameElement);
-            Class[] argTypes = {Element.class};
-            Class extClass = Class.forName(classname);
-            Constructor constructor = extClass.getConstructor(argTypes);
-            Object[] args = {config};
-            Object obj = constructor.newInstance(args);
-            return (SodElement)obj;
-        } catch(InvocationTargetException e) {
-            // occurs if the constructor throws an exception
-            // don't repackage ConfigurationExceptioN
-            Throwable subException = e.getTargetException();
-            if(subException instanceof ConfigurationException) {
-                throw (ConfigurationException)subException;
-            } else if(subException instanceof Exception) {
-                throw new ConfigurationException("Problem creating "
-                        + config.getTagName(), (Exception)subException);
-            } else {
-                // not an Exception, so must be an Error
-                throw (java.lang.Error)subException;
-            } // end of else
-        } catch(Exception e) {
-            throw new ConfigurationException("Problem understanding "
-                    + config.getTagName(), e);
-        } // end of try-catch
-    }
-
     public static File makeOutputDirectory(Element config)
             throws ConfigurationException {
         String outputDirName = "html";
@@ -117,24 +86,10 @@ public class SodUtil {
                 return loadFEArea(config);
             }
             // not a known non-sodElement type, so load via reflection
-            //Load for each of the arms....
-            for(int i = 0; i < basePackageNames.length; i++) {
-                String packageName = baseName + "." + basePackageNames[i] + "."
-                        + armName;
-                try {
-                    return loadClass(packageName + "." + tagName, config);
-                } catch(ClassNotFoundException ex) {}//will be handled at the
-                                                     // end
+            if(tagName.startsWith("External")) {
+                return loadExternal(tagName, armName, config);
             }
-            //load for the base packages....
-            for(int i = 0; i < basePackageNames.length; i++) {
-                String packageName = baseName + "." + basePackageNames[i];
-                try {
-                    return loadClass(packageName + "." + tagName, config);
-                } catch(ClassNotFoundException ex) {}//will be handled at the
-                                                     // end
-            }
-            return loadClass(baseName + "." + tagName, config);
+            return loadClass(load(tagName, armName), config);
         } catch(InvocationTargetException e) {
             // occurs if the constructor throws an exception
             // don't repackage ConfigurationException
@@ -154,10 +109,63 @@ public class SodUtil {
         } // end of try-catch
     }
 
-    private static Object loadClass(String name, Element config)
+    private static Class load(String tagName, String armName)
+            throws ClassNotFoundException {
+        //Load for each of the arms....
+        for(int i = 0; i < basePackageNames.length; i++) {
+            String packageName = baseName + "." + basePackageNames[i] + "."
+                    + armName;
+            try {
+                return Class.forName(packageName + "." + tagName);
+            } catch(ClassNotFoundException ex) {}//will be handled at the
+            // end
+        }
+        //load for the base packages....
+        for(int i = 0; i < basePackageNames.length; i++) {
+            String packageName = baseName + "." + basePackageNames[i];
+            try {
+                return Class.forName(packageName + "." + tagName);
+            } catch(ClassNotFoundException ex) {}//will be handled at the
+            // end
+        }
+        return Class.forName(baseName + "." + tagName);
+    }
+
+    /**
+     * loads the class named in the element "classname" in config with config as
+     * a costructor argument. If the loaded class doesnt implement
+     * mustImplement, a configuration exception is thrown
+     */
+    public static synchronized Object loadExternal(String tagName,
+                                                   String armName,
+                                                   Element config)
+            throws Exception {
+        String classname = getNestedText(SodUtil.getElement(config, "classname"));
+        try {
+            Class extClass = Class.forName(classname);
+            Class mustImplement = load(tagName.substring("external".length()),
+                                       armName);
+            Class[] implementedInterfaces = extClass.getInterfaces();
+            for(int i = 0; i < implementedInterfaces.length; i++) {
+                Class curInterface = implementedInterfaces[i];
+                if(curInterface.equals(mustImplement)) {
+                    return loadClass(extClass, config);
+                }
+            }
+            throw new ConfigurationException("External class " + classname
+                    + " does not implement the class it's working with, "
+                    + mustImplement + ".  Make classname implement "
+                    + mustImplement
+                    + " to use it at this point in the strategy file.");
+        } catch(ClassNotFoundException e1) {
+            throw new ConfigurationException("Unable to find external class "
+                    + classname + ".  Make sure it's on the classpath", e1);
+        }
+    }
+
+    private static Object loadClass(Class subsetter, Element config)
             throws Exception {
         Class[] argTypes = {Element.class};
-        Class subsetter = Class.forName(name);
         Constructor constructor = null;
         try {
             constructor = subsetter.getConstructor(argTypes);
@@ -361,11 +369,9 @@ public class SodUtil {
      */
     public static String getText(Element config) {
         NodeList children = config.getChildNodes();
-        Node node;
         for(int i = 0; i < children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Text) {
-                return node.getNodeValue();
+            if(children.item(i) instanceof Text) {
+                return children.item(i).getNodeValue();
             }
         }
         //nothing found, return null
