@@ -4,127 +4,77 @@
         <element name="sod">
             <optional>
                 <element name="properties">
-                    <oneOrMore>
-                        <choice>
-                            <element name="runName">
-                                <text/>
-                            </element>
-                            <element name="statusBase">
-                                <text/>
-                            </element>
-                            <element name="eventQueryIncrement">
-                                <ref name="time7"/>
-                            </element>
-                            <element name="eventRefreshInterval">
-                                <ref name="time7"/>
-                            </element>
-                            <element name="eventLag">
-                                <ref name="time7"/>
-                            </element>
-                            <element name="maxRetryDelay">
-                                <ref name="time7"/>
-                            </element>
-                            <element name="waveformWorkerThreads">
-                                <text/>
-                            </element>
-                            <element name="reopenEvents">
-                                <ref name="trueOrFalse"/>
-                            </element>
-                            <element name="removeDatabase">
-                                <ref name="trueOrFalse"/>
-                            </element>
-                            <element name="eventChannelPairProcessing">
-                                <choice>
-                                    <value>atLeastOnce</value>
-                                    <value>atMostOnce</value>
-                                </choice>
-                            </element>
-                        </choice>
-                    </oneOrMore>
+                    <optional>
+                        <element name="runName">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="statusBase">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="eventQueryIncrement">
+                            <ref name="time7"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="eventRefreshInterval">
+                            <ref name="time7"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="eventLag">
+                            <ref name="time7"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="maxRetryDelay">
+                            <ref name="time7"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="waveformWorkerThreads">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="reopenEvents">
+                            <ref name="trueOrFalse"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="removeDatabase">
+                            <ref name="trueOrFalse"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="eventChannelPairProcessing">
+                            <choice>
+                                <value>atLeastOnce</value>
+                                <value>atMostOnce</value>
+                            </choice>
+                        </element>
+                    </optional>
                 </element>
             </optional>
             <element name="eventArm">
-                <oneOrMore>
-                    <element name="eventFinder">
-                        <optional>
-                            <element name="description">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                        <element name="name">
+                <element name="eventFinder">
+                    <optional>
+                        <element name="description">
                             <data type="string"/>
                         </element>
-                        <element name="dns">
-                            <data type="string"/>
-                        </element>
-                        <choice>
-                            <element name="boxArea">
-                                <element name="latitudeRange">
-                                    <element name="unit">
-                                    <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                    </choice>
-                                    </element>
-                                    <optional>
-                                    <element name="min">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="max">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                </element>
-                                <element name="longitudeRange">
-                                    <element name="unit">
-                                    <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                    </choice>
-                                    </element>
-                                    <optional>
-                                    <element name="min">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="max">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                </element>
-                            </element>
-                            <element name="pointArea">
-                                <element name="latitude">
-                                    <data type="float"/>
-                                </element>
-                                <element name="longitude">
-                                    <data type="float"/>
-                                </element>
+                    </optional>
+                    <element name="name">
+                        <data type="string"/>
+                    </element>
+                    <element name="dns">
+                        <data type="string"/>
+                    </element>
+                    <choice>
+                        <element name="boxArea">
+                            <element name="latitudeRange">
                                 <element name="unit">
                                     <choice>
                                     <value>KILOMETER</value>
@@ -153,14 +103,8 @@
                                     </element>
                                 </optional>
                             </element>
-                            <element name="globalArea">
-                                <empty/>
-                            </element>
-                        </choice>
-                        <optional>
-                            <element name="originDepthRange">
-                                <element name="unitRange">
-                                    <element name="unit">
+                            <element name="longitudeRange">
+                                <element name="unit">
                                     <choice>
                                     <value>KILOMETER</value>
                                     <value>METER</value>
@@ -176,65 +120,135 @@
                                     <value>DEGREE</value>
                                     <value>RADIAN</value>
                                     </choice>
-                                    </element>
-                                    <optional>
+                                </element>
+                                <optional>
                                     <element name="min">
                                     <data type="double"/>
                                     </element>
-                                    </optional>
-                                    <optional>
+                                </optional>
+                                <optional>
                                     <element name="max">
                                     <data type="double"/>
                                     </element>
-                                    </optional>
-                                </element>
-                            </element>
-                        </optional>
-                        <element name="originTimeRange">
-                            <element name="startTime">
-                                <data type="string"/>
-                            </element>
-                            <element name="endTime">
-                                <data type="string"/>
+                                </optional>
                             </element>
                         </element>
-                        <optional>
-                            <element name="magnitudeRange">
-                                <zeroOrMore>
-                                    <element name="magType">
-                                    <data type="string"/>
-                                    </element>
-                                </zeroOrMore>
+                        <element name="pointArea">
+                            <element name="latitude">
+                                <data type="float"/>
+                            </element>
+                            <element name="longitude">
+                                <data type="float"/>
+                            </element>
+                            <element name="unit">
                                 <choice>
-                                    <element name="min">
-                                    <data type="float"/>
-                                    </element>
-                                    <element name="max">
-                                    <data type="float"/>
-                                    </element>
-                                    <group>
-                                    <element name="min">
-                                    <data type="float"/>
-                                    </element>
-                                    <element name="max">
-                                    <data type="float"/>
-                                    </element>
-                                    </group>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
                                 </choice>
                             </element>
-                        </optional>
-                        <zeroOrMore>
-                            <element name="catalog">
-                                <data type="string"/>
+                            <optional>
+                                <element name="min">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="max">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                        </element>
+                        <element name="globalArea">
+                            <empty/>
+                        </element>
+                    </choice>
+                    <optional>
+                        <element name="originDepthRange">
+                            <element name="unitRange">
+                                <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                </element>
+                                <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                </optional>
+                                <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                </optional>
                             </element>
-                        </zeroOrMore>
-                        <zeroOrMore>
-                            <element name="contributor">
-                                <data type="string"/>
-                            </element>
-                        </zeroOrMore>
+                        </element>
+                    </optional>
+                    <element name="originTimeRange">
+                        <element name="startTime">
+                            <data type="string"/>
+                        </element>
+                        <element name="endTime">
+                            <data type="string"/>
+                        </element>
                     </element>
-                </oneOrMore>
+                    <optional>
+                        <element name="magnitudeRange">
+                            <zeroOrMore>
+                                <element name="magType">
+                                    <data type="string"/>
+                                </element>
+                            </zeroOrMore>
+                            <choice>
+                                <element name="min">
+                                    <data type="float"/>
+                                </element>
+                                <element name="max">
+                                    <data type="float"/>
+                                </element>
+                                <group>
+                                    <element name="min">
+                                    <data type="float"/>
+                                    </element>
+                                    <element name="max">
+                                    <data type="float"/>
+                                    </element>
+                                </group>
+                            </choice>
+                        </element>
+                    </optional>
+                    <zeroOrMore>
+                        <element name="catalog">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                    <zeroOrMore>
+                        <element name="contributor">
+                            <data type="string"/>
+                        </element>
+                    </zeroOrMore>
+                </element>
                 <optional>
                     <ref name="origin3"/>
                 </optional>
@@ -372,40 +386,23 @@
                     </choice>
                 </zeroOrMore>
                 <zeroOrMore>
-                    <choice>
-                        <element name="simpleHTMLNetworkStatus">
-                            <optional>
-                                <element name="outputDirectory">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
+                    <element name="networkInfoTemplateGenerator">
+                        <element name="netConfig">
+                            <attribute>
+                                <name ns="http://www.w3.org/1999/xlink/">href</name>
+                            </attribute>
                         </element>
-                        <element name="logFactor5NetworkStatus">
-                            <empty/>
+                        <element name="stationConfig">
+                            <attribute>
+                                <name ns="http://www.w3.org/1999/xlink/">href</name>
+                            </attribute>
                         </element>
-                        <element name="networkInfoTemplateGenerator">
-                            <optional>
-                                <element name="fileDir">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                            <element name="netConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
-                            </element>
-                            <element name="stationConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
-                            </element>
-                            <element name="channelConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
-                            </element>
+                        <element name="channelConfig">
+                            <attribute>
+                                <name ns="http://www.w3.org/1999/xlink/">href</name>
+                            </attribute>
                         </element>
-                    </choice>
+                    </element>
                 </zeroOrMore>
             </element>
             <element name="waveformArm">
@@ -531,58 +528,6 @@
                 </choice>
                 <zeroOrMore>
                     <choice>
-                        <element name="logFactor5WaveFormStatus">
-                            <empty/>
-                        </element>
-                        <element name="simpleHTMLWaveformStatus">
-                            <optional>
-                                <element name="outputDirectory">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="eventDirLabel">
-                                    <interleave>
-                                    <text/>
-                                    <optional>
-                                    <element name="feRegionName">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="feRegionNumber">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="depth">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="magnitude">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="latitude">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="longitude">
-                                    <empty/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="originTime">
-                                    <data type="string"/>
-                                    </element>
-                                    </optional>
-                                    </interleave>
-                                </element>
-                            </optional>
-                        </element>
                         <element name="waveformEventTemplateGenerator">
                             <optional>
                                 <element name="fileDir">
