@@ -127,12 +127,12 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.10beta</version>
+            <version>1.0.12beta</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
             <id>fissuresImpl</id>
-            <version>1.1.8beta</version>
+            <version>1.1.8</version>
             <url>http://www.seis.sc.edu/software/fissuresImpl</url>
         </dependency>
         <dependency>
