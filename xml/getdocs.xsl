@@ -11,6 +11,42 @@
       </head>
       <body>
         <h1>Sod Tag Documentation</h1>
+        <p> <pre>Structure of a SOD configuration file.
+       
+&lt;sod&gt;
+    &lt;eventArm&gt;
+        &lt;<a href="#eventFinderType">eventFinder</a>&gt; or &lt;<a href="#eventChannelFinderType">eventChannelFinder</a>&gt;
+        &lt;<a href="#eventAttrType">eventAttr</a>&gt;
+        &lt;<a href="#originType">origin</a> &gt;
+        &lt;<a href="#eventProcessType">eventProcess</a>&gt;
+    &lt;/eventArm&gt;
+    &lt;networkArm&gt;
+        &lt;<a href="#networkFinderType">networkFinder</a>&gt;
+        &lt;<a href="#networkIDType">networkID</a>&gt;
+        &lt;<a href="#networkAttrType">networkAttr</a>&gt;
+        &lt;<a href="#stationIDType">stationID</a>&gt;
+        &lt;<a href="#stationType">station</a>&gt;
+        &lt;<a href="#siteIDType">siteID</a>&gt;
+        &lt;<a href="#siteType">site</a>&gt;
+        &lt;<a href="#channelIDType">channelID</a>&gt;
+        &lt;<a href="#channelType">channel</a>&gt;
+        &lt;<a href="#networkProcessType">networkProcess</a>&gt;
+    &lt;/networkArm&gt;
+    &lt;waveFormArm&gt;
+        &lt;<a href="#eventStationType">eventStation</a>&gt;
+        &lt;<a href="#dataCenterType">dataCenter</a>&gt;
+        &lt;localSeismogramArm&gt;
+            &lt;<a href="#eventChannelType">eventChannel</a>&gt;
+            &lt;<a href="#requestGeneratorType">requestGenerator</a>&gt;
+            &lt;<a href="#availableDataType">availableData</a>&gt;
+            &lt;<a href="#waveFormType">waveForm</a>&gt;
+            &lt;<a href="#localSeismogramProcessType">localSeismogramProcess</a>&gt;
+        &lt;/localSeismogramArm&gt;
+    &lt;/waveFromArm&gt;
+&lt;sod&gt;
+
+</pre></p>
+       
          <xsl:apply-templates select="xsd:schema" />
       </body>
     </html>
@@ -62,7 +98,7 @@
         <xsl:variable name="subclass" select="@name"/>
         <a href="#{$subclass}">
           <xsl:value-of select="$subclass"/>
-        </a>
+        </a><br/>
         <xsl:text> </xsl:text>
       </xsl:for-each>
     </p>
