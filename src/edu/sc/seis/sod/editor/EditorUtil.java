@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.xml.transform.TransformerException;
+import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,8 +59,13 @@ public class EditorUtil {
 
     public static JComboBox getComboBox(Element element, Object[] vals) throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
+        if (node != null) {
         Text text = (Text)node;
         return getComboBox(element, vals, text.getNodeValue());
+        } else {
+            logger.warn("No text node inside node "+element.getTagName());
+            return getComboBox(element, vals, "");
+        }
     }
 
     public static JComboBox getComboBox(Element element, Object[] vals, Object selected) throws TransformerException {
@@ -81,6 +87,8 @@ public class EditorUtil {
         combo.addItemListener(new TextItemListener(text));
         return combo;
     }
+
+    private static Logger logger = Logger.getLogger(EditorUtil.class);
 
 }
 
