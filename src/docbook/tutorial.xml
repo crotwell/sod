@@ -286,8 +286,8 @@ IRIS_PondDataCenter which is again in the edu/iris/dmc domain.
 The missing item at this point is the time window to ask for data. The usual 
 method is to use predicted phase arrival times to calculate the request. This 
 uses the TauP Toolkit to calculate the times, and so any model and phase from 
-it is acceptable. See the <ulink url="http://www.seis.sc.edu/software/TauP">
-http://www.seis.sc.edu/software/TauP</ulink> for more information. We will use
+it is acceptable. See the <ulink url="http://www.seis.sc.edu/software/TauP"/>
+ for more information. We will use
 1 minute before the first P arrival to 20 minutes after the first S arrival 
 within the prem model.
 </para>
