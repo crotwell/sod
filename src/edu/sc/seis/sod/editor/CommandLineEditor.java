@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.xpath.XPathAPI;
 import org.xml.sax.SAXException;
 
@@ -29,6 +30,11 @@ public class CommandLineEditor {
         this.args = args;
         props = new Properties();
         props.load(this.getClass().getClassLoader().getResourceAsStream(Start.DEFAULT_PROPS));
+        if (props.containsKey("log4j.rootCategory")) {
+            // assume if this property is there, then log4j can be configured
+            // from the props
+            PropertyConfigurator.configure(props);
+        }
         processArgs();
     }
 
@@ -51,6 +57,10 @@ public class CommandLineEditor {
         for (int i = 0; i < args.length; i++) {
             if (i < args.length-1 && args[i].equals("-f")) {
                 setConfigFile(args[i+1]);
+            } else if (i < args.length-1 && args[i].equals("-props")) {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(args[i+1]));
+                props.load(bis);
+                bis.close();
             } else if (args[i].equals("-help")) {
                 help = true;
             }
