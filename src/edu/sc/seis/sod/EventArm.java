@@ -89,7 +89,7 @@ public class EventArm implements Runnable{
             if (node instanceof Element) {
                 Element el = (Element)node;
                 if ((el).getTagName().equals("description")) continue;
-                Object sodElement = SodUtil.load(el, "edu.sc.seis.sod.subsetter.eventArm");
+                Object sodElement = SodUtil.load(el, "eventArm");
                 if(sodElement instanceof EventFinder) {
                     eventFinderSubsetter = (EventFinder)sodElement;
                 }  else if(sodElement instanceof EventAttrSubsetter) {

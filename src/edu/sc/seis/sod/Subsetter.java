@@ -12,13 +12,10 @@ package edu.sc.seis.sod;
 
 public interface Subsetter extends SodElement {
 
-    static final String eventArmPackage
-	= "edu.sc.seis.sod.subsetter.eventArm";
+    static final String eventArmPackage= "eventArm";
 
-    static final String networkArmPackage
-	= "edu.sc.seis.sod.subsetter.networkArm";
+    static final String networkArmPackage = "networkArm";
 
-    static final String waveformArmPackage
-	= "edu.sc.seis.sod.subsetter.waveFormArm";
+    static final String waveformArmPackage  = "waveFormArm";
 
 }// Subsetter

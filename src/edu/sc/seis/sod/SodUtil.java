@@ -60,9 +60,9 @@ public class SodUtil {
             throw new ConfigurationException("Problem understanding "+
                                                  config.getTagName(), e);
         } // end of try-catch
-
+        
     }
-
+    
     public static File makeOutputDirectory(Element config) throws ConfigurationException{
         String outputDirName = "html";
         if(config != null){
@@ -81,18 +81,17 @@ public class SodUtil {
         }
         return htmlDir;
     }
-
-    public static synchronized Object load(Element config, String packageName)
+    
+    public static synchronized Object load(Element config, String armName)
         throws ConfigurationException {
         try {
-            Class[] argTypes = {Element.class};
             String tagName = config.getTagName();
-
+            
             // make sure first letter is upper case
             String firstLetter = tagName.substring(0,1);
             firstLetter = firstLetter.toUpperCase();
             tagName = firstLetter+tagName.substring(1);
-
+            
             // first check for things that are not SodElements
             if (tagName.equals("Unit")) {
                 return loadUnit(config);
@@ -109,12 +108,25 @@ public class SodUtil {
             } else if (tagName.equals("FlinnEngdahlArea")) {
                 return loadFEArea(config);
             }
-
             // not a known non-sodElement type, so load via reflection
-            Class subsetter = Class.forName(packageName+"."+ tagName);
-            Constructor constructor = subsetter.getConstructor(argTypes);
-            Object[] args = {config };
-            return constructor.newInstance(args);
+            //Load for each of the arms....
+            for (int i = 0; i < basePackageNames.length; i++) {
+                String packageName = baseName + "." + basePackageNames[i] + "." + armName;
+                System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + packageName);
+                try {
+                    return loadClass(packageName + "."+ tagName, config);
+                } catch (ClassNotFoundException ex) {}//will be handled at the end
+            }
+            //load for the base packages....
+            for (int i = 0; i < basePackageNames.length; i++) {
+                String packageName = baseName + "." + basePackageNames[i];
+                System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + packageName);
+                try {
+                    return loadClass(packageName + "."+ tagName, config);
+                } catch (ClassNotFoundException ex) {}//will be handled at the end
+            }
+            System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + baseName);
+            return loadClass(baseName + "." + tagName, config);
         } catch (InvocationTargetException e) {
             // occurs if the constructor throws an exception
             // don't repackage ConfigurationException
@@ -135,7 +147,20 @@ public class SodUtil {
                                                  config.getTagName(), e);
         } // end of try-catch
     }
-
+    
+    private static Object loadClass(String name, Element config)throws Exception{
+        Class[] argTypes = {Element.class};
+        Class subsetter = Class.forName(name);
+        Constructor constructor = subsetter.getConstructor(argTypes);
+        Object[] args = {config };
+        return constructor.newInstance(args);
+    }
+    
+    private static String baseName = "edu.sc.seis.sod";
+    
+    private static String[] basePackageNames = { "subsetter", "process",
+            "status" };
+    
     public static edu.iris.Fissures.model.UnitImpl loadUnit(Element config) throws ConfigurationException {
         String unitName = null;
         NodeList children = config.getChildNodes();
@@ -151,12 +176,12 @@ public class SodUtil {
             throw new ConfigurationException("Can't find unit "+unitName, e);
         } // end of try-catch
     }
-
+    
     public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config)  throws ConfigurationException {
         Unit unit = null;
         double min = Double.MIN_VALUE;
         double max = Double.MAX_VALUE;
-
+        
         NodeList children = config.getChildNodes();
         Node node;
         for (int i=0; i < children.getLength(); i++) {
@@ -171,13 +196,13 @@ public class SodUtil {
                 } else if (tagName.equals("max")) {
                     max = Double.parseDouble(getText(subElement));
                 }
-
+                
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
         UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
         return unitRange;
     }
-
+    
     public static edu.iris.Fissures.TimeRange loadTimeRange(Element config)
         throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -199,11 +224,11 @@ public class SodUtil {
         } // end of for (int i=0; i<children.getSize(); i++)
         return new TimeRange(begin, end);
     }
-
+    
     public static edu.iris.Fissures.model.GlobalAreaImpl loadGlobalArea(Element config)  throws ConfigurationException {
         return new GlobalAreaImpl();
     }
-
+    
     public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)  throws ConfigurationException {
         NodeList children = config.getChildNodes();
         Node node;
@@ -214,7 +239,7 @@ public class SodUtil {
         for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
             if(node instanceof Element) {
-                Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod");
+                Object obj = SodUtil.load((Element)node, "");
                 if(obj instanceof LatitudeRange) {
                     minLatitude = ((LatitudeRange)obj).getMinValue();
                     maxLatitude = ((LatitudeRange)obj).getMaxValue();
@@ -223,42 +248,42 @@ public class SodUtil {
                     maxLongitude = ((LongitudeRange)obj).getMaxValue();
                 }
             }
-
+            
         }
         return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
-
+    
     public static edu.iris.Fissures.model.PointDistanceAreaImpl loadPointArea(Element config)  throws ConfigurationException {
         return null;
     }
-
+    
     public static edu.iris.Fissures.model.FlinnEngdahlRegionImpl loadFEArea(Element config)  throws ConfigurationException {
         return null;
     }
-
+    
     /** returns the element with the given name
      */
-
+    
     public static Element getElement(Element config, String elementName) {
-
+        
         NodeList children = config.getChildNodes();
         Node node;
-
+        
         for(int counter = 0; counter < children.getLength(); counter++ ) {
-
+            
             node = children.item(counter);
             if(node instanceof Element ) {
-
+                
                 if(((Element)node).getTagName().equals(elementName)) {
                     //logger.debug("in sodUtil getElement, the element name is "+((Element)node).getTagName());
                     return ((Element)node);
                 }
             }
-
+            
         }
         return null;
     }
-
+    
     /** returns the first text child within the node.
      */
     public static String getText(Element config) {
@@ -273,17 +298,17 @@ public class SodUtil {
         //nothing found, return null
         return null;
     }
-
+    
     /** returns the nested text in the tag **/
     public static String getNestedText(Element config) {
         //logger.debug("The element name in sod util is "+config.getTagName());
         String rtnValue = null;
         NodeList children = config.getChildNodes();
         Node node;
-
+        
         //logger.debug("The length of the children is "+children.getLength());
         for(int i = 0; i < children.getLength(); i++) {
-
+            
             node = children.item(i);
             if (node instanceof Text){
                 //logger.debug("In sodUtil textnode value is  "+node.getNodeValue());
@@ -298,35 +323,35 @@ public class SodUtil {
         }
         return rtnValue;
     }
-	
-		public static String getRelativePath(String fromPath, String toPath, String separator){
-		StringTokenizer fromTok = new StringTokenizer(fromPath, separator);
-		StringTokenizer toTok = new StringTokenizer(toPath, separator);
-		StringBuffer dotBuf = new StringBuffer();
-		StringBuffer pathBuf = new StringBuffer();
-		
-		while (fromTok.countTokens() > 1 || toTok.countTokens() > 1){
-			if (fromTok.countTokens() > 1 && toTok.countTokens() > 1){
-				String fromTmp = fromTok.nextToken();
-				String toTmp = toTok.nextToken();
-				if (!fromTmp.equals(toTmp)){
-					dotBuf.append(".." + separator);
-					pathBuf.append(toTmp + separator);
-				}
-			}
-			else if (fromTok.countTokens() > 1){
-				fromTok.nextToken();
-				dotBuf.append(".." + separator);
-			}
-			else if (toTok.countTokens() > 1){
-				pathBuf.append(toTok.nextToken() + separator);
-			}
-		}
-		
-		pathBuf.append(toTok.nextToken());
-		return dotBuf.toString() + pathBuf.toString();
-	}
-
+    
+    public static String getRelativePath(String fromPath, String toPath, String separator){
+        StringTokenizer fromTok = new StringTokenizer(fromPath, separator);
+        StringTokenizer toTok = new StringTokenizer(toPath, separator);
+        StringBuffer dotBuf = new StringBuffer();
+        StringBuffer pathBuf = new StringBuffer();
+        
+        while (fromTok.countTokens() > 1 || toTok.countTokens() > 1){
+            if (fromTok.countTokens() > 1 && toTok.countTokens() > 1){
+                String fromTmp = fromTok.nextToken();
+                String toTmp = toTok.nextToken();
+                if (!fromTmp.equals(toTmp)){
+                    dotBuf.append(".." + separator);
+                    pathBuf.append(toTmp + separator);
+                }
+            }
+            else if (fromTok.countTokens() > 1){
+                fromTok.nextToken();
+                dotBuf.append(".." + separator);
+            }
+            else if (toTok.countTokens() > 1){
+                pathBuf.append(toTok.nextToken() + separator);
+            }
+        }
+        
+        pathBuf.append(toTok.nextToken());
+        return dotBuf.toString() + pathBuf.toString();
+    }
+    
     public static void loadProperties(Element config, Properties props) {
         NodeList children = config.getChildNodes();
         Node node;
@@ -343,5 +368,5 @@ public class SodUtil {
         }
     }
     private static Logger logger = Logger.getLogger(SodUtil.class);
-
+    
 }// SubsetterUtil

@@ -47,13 +47,13 @@ public class NetworkArm {
             if (node instanceof Element) {
                 Element el = (Element)node;
                 if (el.getTagName().equals("description")){}//skip
-                else loadConfigElement(SodUtil.load(el, packageName));
+                else loadConfigElement(SodUtil.load(el, armName));
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
     
     
-    private static final String packageName =  "edu.sc.seis.sod.subsetter.networkArm";
+    private static final String armName =  "networkArm";
     
     void loadConfigElement(Object sodElement) throws ConfigurationException {
         if(sodElement instanceof edu.sc.seis.sod.subsetter.networkArm.NetworkFinder) {

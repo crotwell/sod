@@ -211,7 +211,7 @@ public class WaveFormArm implements Runnable {
                     // skip description element
                     continue;
                 }
-                Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
+                Object sodElement = SodUtil.load((Element)node,"waveFormArm");
                 if(sodElement instanceof EventStationSubsetter){
                     eventStationSubsetter = (EventStationSubsetter)sodElement;
                 }else if(sodElement instanceof LocalSeismogramArm){

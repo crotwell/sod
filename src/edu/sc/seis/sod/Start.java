@@ -1,7 +1,9 @@
 package edu.sc.seis.sod;
 
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
@@ -9,10 +11,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.w3c.dom.Document;
@@ -21,8 +25,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import java.sql.SQLException;
-import org.apache.log4j.BasicConfigurator;
 
 public class Start{
     /**
@@ -66,6 +68,16 @@ public class Start{
         this.document = document;
         initDocument(args);
     }
+    
+    public static MicroSecondDate getStartTime(){ return startTime; }
+    
+    public static TimeInterval getElapsedTime(){
+        return ClockUtil.now().subtract(startTime);
+    }
+    
+    public static String getRunName(){ return "Your Sod"; }
+    
+    public static MicroSecondDate startTime;
     
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
@@ -137,6 +149,7 @@ public class Start{
     }
     
     public void start() throws Exception {
+        startTime = ClockUtil.now();
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
         NodeList children = docElement.getChildNodes();

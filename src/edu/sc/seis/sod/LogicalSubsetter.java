@@ -53,7 +53,7 @@ public abstract class LogicalSubsetter implements Subsetter {
                     continue;
                 }
 
-                Object obj = SodUtil.load(subElement, getPackageName());
+                Object obj = SodUtil.load(subElement, getArmName());
                 if (obj instanceof Subsetter) {
                     filterList.add((Subsetter)obj);
                 } else {
@@ -80,7 +80,7 @@ public abstract class LogicalSubsetter implements Subsetter {
      *
      * @return a <code>String</code> value
      */
-    public abstract String getPackageName();
+    public abstract String getArmName();
 
     /**
      * Describe variable <code>filterList</code> here.
