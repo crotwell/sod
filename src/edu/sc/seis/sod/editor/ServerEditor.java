@@ -98,10 +98,19 @@ public abstract class ServerEditor {
             return SimpleGUIEditor.getDisplayName(server.getServerDNS()+"/"+server.getServerName());
         }
         public boolean equals(Object o) {
-            return (o instanceof ServerNameDNSWrapper) && server.equals(o);
+            if(this == o){ return true; }
+            if(o instanceof ServerNameDNSWrapper){
+                ServerNameDNSWrapper otherWrapper = (ServerNameDNSWrapper)o;
+                return otherWrapper.getServerDNS().equals(getServerDNS()) &&
+                    otherWrapper.getServerName().equals(getServerName());
+            }
+            return false;
         }
+
         public int hashCode() {
-            return server.hashCode();
+            int result = 37;
+            result = result * 42 + getServerDNS().hashCode();
+            return  result * 42 + getServerName().hashCode();
         }
         private ServerNameDNS server;
     }
