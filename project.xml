@@ -69,29 +69,15 @@ oot:${pom.artifactId}</connection>
     </developers>
 
   <dependencies>
-<!-- hopefully temporary Java3D support -->
     <dependency>
-      <id>j3dcore</id>
-      <version>1.0</version>
-      <jar>j3dcore.jar</jar>
+      <groupId>openorb</groupId>
+      <artifactId>openorb</artifactId>
+      <version>1.3.0</version>
     </dependency>
-<!-- hopefully temporary Java3D support -->
     <dependency>
-      <id>j3dutils</id>
-      <version>1.0</version>
-      <jar>j3dutils.jar</jar>
-    </dependency>
-<!-- hopefully temporary Java3D support -->
-    <dependency>
-      <id>vecmath</id>
-      <version>1.0</version>
-      <jar>vecmath.jar</jar>
-    </dependency>
-
-    <dependency>
-      <id>JacORB</id>
-      <version>1.4.1</version>
-      <url>www.jacorb.org</url>
+      <groupId>openorb</groupId>
+      <artifactId>openorb_notify</artifactId>
+      <version>1.3.0</version>
     </dependency>
     <dependency>
       <id>fissuresUtil</id>
