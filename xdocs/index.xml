@@ -62,6 +62,16 @@
         </section>
         <section name="News">
             <table id="entry">
+                <th>11 October 2004</th>
+                <tr>
+                    <td>
+                        <p>SOD 2.0 is released! You can get it now from <a href="download.html">our
+                                download page</a>. Nothing has changed since RC1, so feel free to
+                            continue using it.</p>
+                    </td>
+                </tr>
+            </table>
+            <table id="entry">
                 <th>29 September 2004</th>
                 <tr>
                     <td>

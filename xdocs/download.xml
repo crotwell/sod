@@ -5,12 +5,21 @@
     </properties>
     <body>
         <section name="Download SOD">
-            <p> SOD is distributed as either a tar file or a zip file. Both contain
-                identical content, so you only need to download the one that is most
-                convenient for you. See the <a href="install.html">INSTALL</a> document for an
-                explanation of the contents. </p>
+            <p> SOD is distributed as either a tar file or a zip file. Both contain identical
+                content, so you only need to download the one that is most convenient for you. See
+                the <a href="install.html">INSTALL</a> document for an explanation of the contents. </p>
             <p>
-                <b>Current Release:</b> Sod 2.0 RC1 <a class="download" href="rc1/sod-2.0rc1.tar">TAR</a>
+                <b>Current Release:</b> Sod 2.0 <a class="download" href="2.0/sod-2.0.tar">TAR</a>
+                <a class="download" href="2.0/sod-2.0.zip">ZIP</a>
+            </p>
+            <p>Released 11 October 2004</p>
+            <p>Changes in 2.0:</p>
+            <ul>
+                <li>Identical to RC1 except for version numbering</li>
+            </ul>
+        </section>
+        <section name="Previous Releases">
+            <p>Sod 2.0 RC1 <a class="download" href="rc1/sod-2.0rc1.tar">TAR</a>
                 <a class="download" href="rc1/sod-2.0rc1.zip">ZIP</a>
             </p>
             <p>Released 29 September 2004</p>
@@ -22,9 +31,7 @@
                 <li>Several new editor widgets</li>
                 <li>Several bug fixes</li>
             </ul>
-        </section>
-        <section name="Previous Releases">
-        <p>Sod 2.0 Beta 8 <a class="download" href="beta8/sod-2.0beta8_3.tar">TAR</a>
+            <p>Sod 2.0 Beta 8 <a class="download" href="beta8/sod-2.0beta8_3.tar">TAR</a>
                 <a class="download" href="beta8/sod-2.0beta8_2.zip">ZIP</a>
             </p>
             <p>Released 29 July 2004</p>
@@ -85,14 +92,15 @@
             <p>Released 31 May 2004</p>
             <p>Changes in 2.0 Beta 3:</p>
             <ul>
-                <li>DSML file output is vastly improved. It requires 10 times less memory and is twice as fast!</li>
-                <li>There is a new postEventWait event subsetter. Check out <a href="realtime.html">these
-                        realtime considerations</a> to see how it works.</li>
+                <li>DSML file output is vastly improved. It requires 10 times less memory and is
+                    twice as fast!</li>
+                <li>There is a new postEventWait event subsetter. Check out <a
+                        href="realtime.html">these realtime considerations</a> to see how it works.</li>
                 <li>SOD will no longer retry event channel pairs until the end of time.</li>
                 <li>SOD will warn you if you're running a new version of SOD on an old database and
                     if you've changed config files between runs on a single database.</li>
-                <li>There is a new removeEventDuplicate subsetter that will keep SOD from processing duplicate
-                    event entries.</li>
+                <li>There is a new removeEventDuplicate subsetter that will keep SOD from processing
+                    duplicate event entries.</li>
                 <li>-demo flag starts SOD on tutorial.xml</li>
             </ul>
             <p> Sod 2.0 Beta 2 <a class="download" href="beta2/sod-beta2.tar">Download</a>
