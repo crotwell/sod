@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author>Philip Crotwell</author>
+    <title>Live SOD-cam</title>
+  </properties>
+
+<body>
+
+<section name="Live at 5, the SOD-cam">
+<p>
+If you are curious to see what the output of a SOD run looks like without
+all the danger of running it locally, have a look at our <a href="http://www.seis.sc.edu/SODcam/status">SOD-cam</a>, which shows the results of a SOD run at
+USC that collects seismograms for events in near real time. The SODcam is long running, so check back as new earthquakes occur.
+</p>
+</section>
+</body>
+</document>
