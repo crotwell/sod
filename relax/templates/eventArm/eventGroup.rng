@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
         xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-        <include href="../base/include/eventLabel.rng"/>
-        <start>
+        <include href="../template.rng"/>
+        <include href="../../base/include/eventLabel.rng"/>
+        <start combine="choice">
                 <element name="events">
-                        <optional>
-                                <ref name="eventLabel"/>
-                        </optional>
-                        <optional>
-                                <element name="sorting">
-                                        <ref name="sortType"/>
-                                </element>
-                        </optional>
+                        <ref name="template"/>
                 </element>
         </start>
+        <define name="templateExtension" combine="choice">
+                <optional>
+                        <element name="eventLabel">
+                        <ref name="eventLabel"/>
+                        </element>
+                </optional>
+                <optional>
+                        <element name="sorting">
+                                <ref name="sortType"/>
+                        </element>
+                </optional>
+        </define>
         <define name="sortType">
                 <choice>
                         <element name="addition">
                                 <ref name="order"/>
                         </element>
-                        <element name="date">
+                        <element name="time">
                                 <ref name="order"/>
                         </element>
                         <element name="magnitude">
