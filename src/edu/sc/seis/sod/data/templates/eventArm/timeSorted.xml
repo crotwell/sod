@@ -20,7 +20,7 @@ Events (sorted by time)
 <h2>Successful events sorted by time:</h2>
 <table>
 <tr id="title">
-<td><a href="location.html">Region</a></td>
+<td>Region</td>
 <td id="selected"><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
@@ -31,7 +31,7 @@ Events (sorted by time)
 <td><magnitude/></td>
 <td><depth/></td>
 </tr>
-</eventLabel><sorting><time/></sorting></events>
+</eventLabel><sorting><time order="descending"/></sorting></events>
 </table>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
