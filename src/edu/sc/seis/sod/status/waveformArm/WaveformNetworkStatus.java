@@ -16,6 +16,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
+import edu.sc.seis.sod.status.AbstractVelocityStatus;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -35,33 +36,10 @@ import org.w3c.dom.NodeList;
 
 
 
-public class WaveformNetworkStatus implements WaveformArmMonitor, NetworkArmMonitor {
+public class WaveformNetworkStatus extends AbstractVelocityStatus implements WaveformArmMonitor, NetworkArmMonitor {
 
     public WaveformNetworkStatus(Element config) throws SQLException, MalformedURLException, IOException {
-        networkArmContext = new NetworkArmContext(CookieJar.getCommonContext());
-        NodeList nl = config.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node n = nl.item(i);
-            if (n instanceof Element) {
-                Element element = (Element)n;
-                if (element.getTagName().equals("fileDir")){
-                    fileDir = SodUtil.getNestedText(element);
-                } else if(n.getNodeName().equals("networkTemplate")) {
-                    networkTemplate = SodUtil.getNestedText(element);
-                }
-            }
-        }
-        if (fileDir == null){
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
-        }
-
-        URL templateURL = TemplateFileLoader.getUrl(this.getClass().getClassLoader(), networkTemplate);
-        BufferedReader read = new BufferedReader(new InputStreamReader(templateURL.openStream()));
-        String line;
-        while ((line = read.readLine()) != null) {
-            template += line+System.getProperty("line.separator");
-        }
-        read.close();
+        super(config);
         if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
     }
 
@@ -80,45 +58,12 @@ public class WaveformNetworkStatus implements WaveformArmMonitor, NetworkArmMoni
     }
 
     public void change(NetworkAccess networkAccess, Status s) {
-        if ( ! scheduled) {
-            scheduled = true;
-            OutputScheduler.getDefault().schedule(new Runnable() {
-                        public void run() {
-                            scheduled = false;
-                            StringWriter out = new StringWriter();
-                            try {
-                                // the new VeocityContext "wrapper" is to help with a possible memory leak
-                                // due to velocity gathering introspection information,
-                                // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
-                                boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(networkArmContext),
-                                                                                                         out,
-                                                                                                         "waveformNetworkStatus",
-                                                                                                         template);
-                                FileWritingTemplate.write(fileDir+"/waveformNetworks.html",
-                                                          out.getBuffer().toString());
-                                System.out.println("Output is: "+out);
-                            } catch (Exception e) {
-                                GlobalExceptionHandler.handle(e);
-                            }
-                        }
-                    });
-        }
+        scheduleOutput("waveformNetworks.html", networkArmContext);
     }
 
     public void change(Site site, Status s) {
     }
 
-    /** so that we don't schedule more than one runnable to unpdate
-     * the networks page, as they would be identical. */
-    private boolean scheduled = false;
-
-    private NetworkArmContext networkArmContext;
-
-    private String fileDir;
-
-    private String networkTemplate;
-
-    private String template = "";
-
 }
+
 
