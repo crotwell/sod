@@ -41,6 +41,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		this.networkArm = networkArm;
 		addSodExceptionListener(sodExceptionListener);
 		this.sodExceptionListener = sodExceptionListener;
+		databaseSodCache = new SodCache();
+		try {
+		    databaseSodCache.create();
+		    System.out.println("relation created");
+		} catch(Exception e) {
+		    System.out.println("relation already created");
+		}
     }
 	
     /**
@@ -55,14 +62,19 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	  
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
+	    System.out.println("The name of the event is "+eventAccess.get_attributes().name);
+	    if(databaseSodCache.get(eventAccess.get_attributes().name)) continue;
+	    databaseSodCache.insert(eventAccess.get_attributes().name, "testing");
+	   
 	    if(eventAccess != null) {
 		if(createNewThread()) {
-			    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
+		    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 								     eventStationSubsetter,
 								     fixedDataCenterSubsetter,
 								     localSeismogramArm,
 								     successfulChannels, this,
 								     sodExceptionListener));
+			    
 		    thread.start();
 		}
 	    }
@@ -122,6 +134,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	notifyAll();
     }
 
+    public String stripColon(String str) {
+
+	String temp = str.replace(':','a');
+	return temp;
+    }
+    
+    private SodCache databaseSodCache;
   
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
 
