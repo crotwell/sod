@@ -54,7 +54,7 @@ n<?xml version="1.0"?>
           <value>false</value>
 </property>
 
-<!-- how frequently sod updates its list of networks/channels, units are minutes -->
+<!-- how frequently sod updates its list of events, units are seconds -->
 <property> 
           <name>edu.sc.seis.sod.database.eventRefreshInterval</name>
           <value>100000</value>
