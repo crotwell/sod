@@ -13,11 +13,10 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
@@ -61,11 +60,17 @@ public class PhaseSignalToNoise extends LongShortSignalToNoise {
             MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
             Arrival[] arrivals  = taupUtil.calcTravelTimes(channel.my_site.my_station, origin, new String[] {phaseName});
             if (arrivals.length == 0) { return false; }
+            LongShortTrigger bestTrigger = null;
             for (int i = 0; i < triggers.length; i++) {
                 double triggerSeconds =
                     triggers[i].getWhen().subtract(originTime).convertTo(UnitImpl.SECOND).get_value();
-                if ( (arrivals[0].getTime() - triggerSeconds) < triggerWindow.get_value()) {
-                    cookieJar.put("sod_phaseStoN_"+phaseName, triggers[i]);
+                if ( Math.abs(arrivals[0].getTime() - triggerSeconds) < triggerWindow.get_value() &&
+                        (bestTrigger == null || triggers[i].getValue() > bestTrigger.getValue())) {
+                    bestTrigger = triggers[i];
+                }
+                if (bestTrigger != null) {
+                    System.out.println("sod_phaseStoN_"+phaseName+"  "+ bestTrigger.getValue()+"  "+ChannelIdUtil.toStringNoDates(channel.get_id())+"  "+event);
+                    cookieJar.put("sod_phaseStoN_"+phaseName, bestTrigger);
                     return true;
                 }
             }
