@@ -15,8 +15,18 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface EventStationSubsetter {
+public interface EventStationSubsetter extends Subsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param station a <code>Station</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Station station, 

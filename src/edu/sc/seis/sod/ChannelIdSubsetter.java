@@ -14,6 +14,14 @@ import edu.iris.Fissures.network.*;
 
 public interface ChannelIdSubsetter extends Subsetter {
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param channelId a <code>ChannelId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(ChannelId channelId, CookieJar cookies) throws Exception;
     
 }// ChannelIdSubsetter

@@ -16,9 +16,21 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
+/**
+ * Describe class <code>WaveFormArm</code> here.
+ *
+ * @author <a href="mailto:">Srinivasa Telukutla</a>
+ * @version 1.0
+ */
 public class WaveFormArm implements Runnable {
 
-	public WaveFormArm(Element config) {
+    /**
+     * Creates a new <code>WaveFormArm</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @param networkArm a <code>NetworkArm</code> value
+     */
+    public WaveFormArm(Element config, NetworkArm networkArm) {
 		System.out.println("WAVE FORM ARM STARTED ");
 		if ( ! config.getTagName().equals("waveFormArm")) {
 		    throw new IllegalArgumentException("Configuration element must be a waveFormArm tag");
@@ -30,23 +42,44 @@ public class WaveFormArm implements Runnable {
 
 		    System.out.println("Configuration Exception caught while processing WaveForm Arm");
 		}
-		
+		this.config = config;
+		this.networkArm = networkArm;
 		Thread thread = new Thread(this);
 		thread.start();	
 	}
 	
+    /**
+     * Describe <code>run</code> method here.
+     *
+     */
     public void run() {
-	while(true){
+	
+	EventAccess eventAccess = null;
+	while(eventAccess == null)
+	{
 	    //	System.out.println("RETRIEVED THE EVENT ACCESS FROM EVENT QUEUE");
+	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
+	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
+	    else System.out.println("Event Access is VALID");
 	    try {
 		Thread.sleep(3000);	
 	    } catch(Exception e){}
-	    EventAccess eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
-	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
-	    else System.out.println("Event Access is VALID");
+	  
+	}
+	try {
+	    if(eventAccess == null){ System.out.println("EventAccess is NULL");System.exit(0);}
+	    processWaveFormArm(eventAccess);
+	} catch(Exception ce) {
+	    ce.printStackTrace();
 	}
     }
 
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     protected void processConfig(Element config) 
 	throws ConfigurationException {
 
@@ -65,22 +98,35 @@ public class WaveFormArm implements Runnable {
 		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	try {
-	    processWaveFormArm();	
-	} catch(Exception e) {
 
-	    System.out.println("Exception caught while processing Waveform Arm");
-	}
     }
 
-    public void processWaveFormArm() throws Exception{
+    /**
+     * Describe <code>processWaveFormArm</code> method here.
+     *
+     * @param eventAccess an <code>EventAccess</code> value
+     * @exception Exception if an error occurs
+     */
+    public void processWaveFormArm(EventAccess eventAccess) throws Exception{
 
-	if(eventStationSubsetter.accept(null, null, null, null)) {
-	    processEventChannelSubsetter();
+	Channel[] successfulChannels = networkArm.getSuccessfulChannels();
+	
+	for(int counter = 0; counter < successfulChannels.length; counter++) {
+	    System.out.println("Calling accept on eventStationSubsetter");
+	    if(eventStationSubsetter == null) System.out.println("NULL");
+	    else System.out.println("NOT NULL");
+	      if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
+		processEventChannelSubsetter();
+	    }
 	}
 	
     }
 
+    /**
+     * Describe <code>processEventChannelSubsetter</code> method here.
+     *
+     * @exception Exception if an error occurs
+     */
     public void processEventChannelSubsetter() throws Exception{
 
 	if(eventChannelSubsetter.accept(null, null, null, null)) {
@@ -88,6 +134,10 @@ public class WaveFormArm implements Runnable {
 	}
     }
 
+    /**
+     * Describe <code>processFixedDataCenter</code> method here.
+     *
+     */
     public void processFixedDataCenter() {
 	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
 	if(dataCenter == null) System.out.println("****** Data Center is NULL ******");
@@ -96,6 +146,10 @@ public class WaveFormArm implements Runnable {
 	
     }
 
+    /**
+     * Describe <code>processRequestGeneratorSubsetter</code> method here.
+     *
+     */
     public void processRequestGeneratorSubsetter() {
 
 	//if(phaseRequestSubsetter.accept(null)) 
@@ -105,12 +159,16 @@ public class WaveFormArm implements Runnable {
 	
     }
     
+    /**
+     * Describe <code>processAvailableDataSubsetter</code> method here.
+     *
+     */
     public void processAvailableDataSubsetter() {
 
  	System.out.println("Successfully iterated through the WaveFormArm");
     }
 
-    private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
+    private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
     private EventChannelSubsetter eventChannelSubsetter = new NullEventChannelSubsetter();
 
@@ -121,6 +179,10 @@ public class WaveFormArm implements Runnable {
     private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
 
     private WaveFormArmProcess waveFormArmProcessSubsetter;
+
+    private NetworkArm networkArm = null;
+    
+    private Element config = null;
 
     static Category logger = 
 	Category.getInstance(WaveFormArm.class.getName());

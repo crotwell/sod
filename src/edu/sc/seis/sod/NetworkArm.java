@@ -22,15 +22,27 @@ import java.util.*;
  */
 
 public class NetworkArm {
+    /**
+     * Creates a new <code>NetworkArm</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public NetworkArm (Element config) throws ConfigurationException {
 	if ( ! config.getTagName().equals("networkArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a NetworkArm tag");
 	}
 	System.out.println("In Network Arm");
-	processConfig(config);
+	this.config = config;
+	//	processConfig(config);
     }
 
-    protected void processConfig(Element config) 
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @exception ConfigurationException if an error occurs
+     */
+    protected void processConfig() 
 	throws ConfigurationException {
 
 	NodeList children = config.getChildNodes();
@@ -57,7 +69,8 @@ public class NetworkArm {
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 	try {
-	    processNetworkArm();	
+	    processNetworkArm();
+
 	} catch(Exception e) {
 
 	    System.out.println("Exception caught while processing Network Arm");
@@ -70,9 +83,14 @@ public class NetworkArm {
      *and checks if the networkId is accepted by the networkIdSubsetter.
      **/
     
+    /**
+     * Describe <code>processNetworkArm</code> method here.
+     *
+     * @exception Exception if an error occurs
+     */
     public void processNetworkArm() throws Exception{
 
-
+	channelList = new ArrayList();
 	NetworkDC netdc = networkFinderSubsetter.getNetworkDC();
         finder = netdc.a_finder();
 	edu.iris.Fissures.IfNetwork.NetworkAccess[] allNets = finder.retrieve_all();
@@ -84,8 +102,17 @@ public class NetworkArm {
 		handleNetworkAttrSubsetter(allNets[counter], attr);
 	    }
 	}
+	successfulChannels = new Channel[channelList.size()];
+	successfulChannels = (Channel[]) channelList.toArray(successfulChannels);
     }
 
+    /**
+     * Describe <code>handleNetworkAttrSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param networkAttr a <code>NetworkAttr</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) throws Exception{
 
 	System.out.println("The stationIdSubsetter is not null");
@@ -98,6 +125,13 @@ public class NetworkArm {
 
     }
 
+    /**
+     * Describe <code>handleStationIdSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param station a <code>Station</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station) throws Exception{
 	
 	if(stationIdSubsetter.accept(station.get_id(), null)) {
@@ -105,6 +139,13 @@ public class NetworkArm {
 	}
     }
 
+    /**
+     * Describe <code>handleStationSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param station a <code>Station</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleStationSubsetter(NetworkAccess networkAccess, Station station) throws Exception{
 	
 	if(stationSubsetter.accept(networkAccess, station, null)) {
@@ -115,6 +156,13 @@ public class NetworkArm {
 	}
     }
 				       
+    /**
+     * Describe <code>handleSiteIdSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleSiteIdSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 	
 	if(siteIdSubsetter.accept(channel.my_site.get_id(), null)) {
@@ -122,6 +170,13 @@ public class NetworkArm {
 	}
     }
 
+    /**
+     * Describe <code>handleSiteSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleSiteSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(siteSubsetter.accept(networkAccess, channel.my_site, null)) {
@@ -129,6 +184,13 @@ public class NetworkArm {
 	}
     }
 
+    /**
+     * Describe <code>handleChannelIdSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleChannelIdSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(channelIdSubsetter.accept(channel.get_id(), null)) {
@@ -137,6 +199,13 @@ public class NetworkArm {
        
     }
     
+    /**
+     * Describe <code>handleChannelSubsetter</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleChannelSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(channelSubsetter.accept(networkAccess, channel, null)) {
@@ -144,11 +213,33 @@ public class NetworkArm {
 	}
     }
 
+    /**
+     * Describe <code>handleNetworkArmProcess</code> method here.
+     *
+     * @param networkAccess a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleNetworkArmProcess(NetworkAccess networkAccess, Channel channel) throws Exception{
-
+	channelList.add(channel);
 	networkArmProcess.process(networkAccess, channel, null);
 
     }
+
+    /**
+     * Describe <code>getSuccessfulChannels</code> method here.
+     *
+     * @return a <code>Channel[]</code> value
+     */
+    public Channel[] getSuccessfulChannels() {
+	try {
+	    processConfig();
+	} catch(Exception e) {}
+	return successfulChannels;
+	
+    }
+    
+    private Element config = null;
 
     private edu.sc.seis.sod.subsetter.networkArm.NetworkFinder networkFinderSubsetter = null;
     private edu.sc.seis.sod.NetworkIdSubsetter networkIdSubsetter = new NullNetworkIdSubsetter(); 
@@ -163,7 +254,12 @@ public class NetworkArm {
 
     private edu.iris.Fissures.IfNetwork.NetworkFinder finder = null;
     private NetworkId[] networkIds; 
+
+    private ArrayList channelList;
+    private  Channel[] successfulChannels = new Channel[0];
     
     static Category logger = 
         Category.getInstance(NetworkArm.class.getName());
+    
+    
     }// NetworkArm

@@ -13,6 +13,14 @@ import edu.iris.Fissures.network.*;
 
 public interface NetworkAttrSubsetter extends Subsetter {
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event a <code>NetworkAttr</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAttr event, CookieJar cookies) throws Exception;
 
     

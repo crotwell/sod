@@ -14,6 +14,12 @@ import edu.iris.Fissures.IfEvent.*;
 
 public interface EventProcess extends Process {
 
+    /**
+     * Describe <code>process</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param cookies a <code>CookieJar</code> value
+     */
     public void process(EventAccessOperations event, CookieJar cookies);
     
 }// EventProcess

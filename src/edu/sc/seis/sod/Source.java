@@ -15,8 +15,18 @@ import edu.sc.seis.fissuresUtil.namingService.*;
 
 public interface Source {
 
+    /**
+     * Describe <code>getDNSName</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getDNSName();
 
+    /**
+     * Describe <code>getSourceName</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getSourceName();
 
  }// Source

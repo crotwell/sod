@@ -16,8 +16,18 @@ import edu.iris.Fissures.event.*;
  * @version
  */
 
-public interface  RequestGenerator {
+public interface  RequestGenerator extends Subsetter{
 
+    /**
+     * Describe <code>generateRequest</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>RequestFilter[]</code> value
+     * @exception Exception if an error occurs
+     */
     public RequestFilter[] generateRequest(EventAccessOperations event, 
 					   NetworkAccess network, 
 					   Channel channel, 

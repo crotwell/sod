@@ -20,18 +20,30 @@ import java.io.*;
  */
 
 public class CommonAccess {
+    
     private CommonAccess (){
 	
 	//return commonAccess();
 	
     }
 
+    /**
+     * Describe <code>getCommonAccess</code> method here.
+     *
+     * @return a <code>CommonAccess</code> value
+     */
     public static CommonAccess getCommonAccess() {
 
 	return commonAccess;
 
     }
 
+    /**
+     * Describe <code>getFissuresNamingService</code> method here.
+     *
+     * @return a <code>FissuresNamingServiceImpl</code> value
+     * @exception Exception if an error occurs
+     */
     public FissuresNamingServiceImpl getFissuresNamingService() throws Exception{
 
 	FissuresNamingServiceImpl fissuresNamingService = new FissuresNamingServiceImpl(orb);
@@ -39,7 +51,13 @@ public class CommonAccess {
 
     }
 
-      protected void init(String[] args) throws ConfigurationException {
+    /**
+     * Describe <code>init</code> method here.
+     *
+     * @param args a <code>String[]</code> value
+     * @exception ConfigurationException if an error occurs
+     */
+    protected void init(String[] args) throws ConfigurationException {
 	this.args = args;
 
 	props = System.getProperties();
@@ -80,6 +98,10 @@ public class CommonAccess {
     }
 
     
+    /**
+     * Describe <code>initORB</code> method here.
+     *
+     */
     protected void initORB() {
 	if (orb == null) {
 	    // return orb;
@@ -96,6 +118,12 @@ public class CommonAccess {
     }
 
      
+    /**
+     * Describe <code>getORB</code> method here.
+     *
+     * @return an <code>org.omg.CORBA_2_3.ORB</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
 	if (orb == null) {
 	    initORB();

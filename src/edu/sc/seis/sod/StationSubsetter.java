@@ -15,6 +15,15 @@ import edu.iris.Fissures.network.*;
 
 public interface StationSubsetter extends Subsetter{
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param network a <code>NetworkAccess</code> value
+     * @param station a <code>Station</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(NetworkAccess network,
 			  Station station,
 			  CookieJar cookies) throws Exception;

@@ -13,12 +13,23 @@ import org.w3c.dom.*;
  */
 
 public class WaveFormLogicalSubsetter extends LogicalSubsetter{
+    /**
+     * Creates a new <code>WaveFormLogicalSubsetter</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public WaveFormLogicalSubsetter (Element config) throws ConfigurationException{
 	
 	super(config);
 
     }
 
+    /**
+     * Describe <code>getPackageName</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getPackageName() {
 
 

@@ -22,6 +22,12 @@ import org.apache.log4j.*;
  */
 
 public class EventArm implements Runnable{
+    /**
+     * Creates a new <code>EventArm</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public EventArm (Element config) throws ConfigurationException {
 	if ( ! config.getTagName().equals("eventArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
@@ -32,6 +38,10 @@ public class EventArm implements Runnable{
 	t.start();	
     }
 
+    /**
+     * Describe <code>run</code> method here.
+     *
+     */
     public void run() {
 	try {
 		processConfig(config);
@@ -42,6 +52,12 @@ public class EventArm implements Runnable{
 	}
     }
 
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     protected void processConfig(Element config) 
 	throws ConfigurationException {
 
@@ -75,6 +91,11 @@ public class EventArm implements Runnable{
 	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());
     }
 
+    /**
+     * Describe <code>processEventArm</code> method here.
+     *
+     * @exception Exception if an error occurs
+     */
     public void processEventArm() throws Exception{
 
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
@@ -108,6 +129,13 @@ public class EventArm implements Runnable{
 	System.out.println("The number of events returned are "+eventAccess.length);
     }
 
+    /**
+     * Describe <code>handleEventAttrSubsetter</code> method here.
+     *
+     * @param eventAccess an <code>EventAccess</code> value
+     * @param eventAttr an <code>EventAttr</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleEventAttrSubsetter(EventAccess eventAccess, EventAttr eventAttr) throws Exception {
 
 	if(eventAttrSubsetter.accept(eventAttr, null)) {
@@ -117,6 +145,13 @@ public class EventArm implements Runnable{
 	}
     }
 
+    /**
+     * Describe <code>handleOriginSubsetter</code> method here.
+     *
+     * @param eventAccess an <code>EventAccess</code> value
+     * @param origin an <code>Origin</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleOriginSubsetter(EventAccess eventAccess, Origin origin) throws Exception{
 
 
@@ -127,6 +162,13 @@ public class EventArm implements Runnable{
 	
     }
 
+    /**
+     * Describe <code>handleEventArmProcess</code> method here.
+     *
+     * @param eventAccess an <code>EventAccess</code> value
+     * @param origin an <code>Origin</code> value
+     * @exception Exception if an error occurs
+     */
     public void handleEventArmProcess(EventAccess eventAccess, Origin origin) throws Exception{
 	//System.out.println("passed THE TEST ************************************************************");
 	Start.getEventQueue().push(eventAccess);

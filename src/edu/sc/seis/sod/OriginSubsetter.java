@@ -13,6 +13,15 @@ import edu.iris.Fissures.IfEvent.*;
  */
 
 public interface OriginSubsetter extends Subsetter{
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param eventAccess an <code>EventAccessOperations</code> value
+     * @param origin an <code>Origin</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAccessOperations eventAccess,
 			  Origin origin, 
 			  CookieJar cookies) throws Exception;

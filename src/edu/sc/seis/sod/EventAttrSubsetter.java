@@ -13,6 +13,14 @@ import edu.iris.Fissures.event.*;
 
 public interface EventAttrSubsetter extends Subsetter {
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAttr</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAttr event, CookieJar cookies) throws Exception;
 
     

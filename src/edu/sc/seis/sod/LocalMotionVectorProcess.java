@@ -20,6 +20,18 @@ import edu.iris.Fissures.*;
 public interface LocalMotionVectorProcess extends WaveFormArmProcess {
 
 
+    /**
+     * Describe <code>process</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channels a <code>Channel[]</code> value
+     * @param original a <code>RequestFilter[]</code> value
+     * @param available a <code>RequestFilter[]</code> value
+     * @param vector a <code>LocalMotionVector</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @exception Exception if an error occurs
+     */
     public void process(EventAccessOperations event, 
 			NetworkAccess network, 
 			Channel[] channels, 

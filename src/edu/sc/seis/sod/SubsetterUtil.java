@@ -14,10 +14,21 @@ import java.lang.reflect.*;
  */
 
 public class SubsetterUtil {
+    /**
+     * Creates a new <code>SubsetterUtil</code> instance.
+     *
+     */
     public SubsetterUtil (){
 	
     }
     
+    /**
+     * Describe <code>load</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @return a <code>SodElement</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public static SodElement load(Element config) 
 	throws ConfigurationException {
 	

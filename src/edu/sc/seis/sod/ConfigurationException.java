@@ -16,21 +16,45 @@ public class ConfigurationException
     extends Exception  implements WrappedException 
 {
 
+    /**
+     * Creates a new <code>ConfigurationException</code> instance.
+     *
+     */
     public ConfigurationException (){
 	
     }
 
+    /**
+     * Creates a new <code>ConfigurationException</code> instance.
+     *
+     * @param s a <code>String</code> value
+     */
     public ConfigurationException (String s){
         super(s);       
     }
 
+    /**
+     * Creates a new <code>ConfigurationException</code> instance.
+     *
+     * @param s a <code>String</code> value
+     * @param e an <code>Exception</code> value
+     */
     public ConfigurationException (String s, Exception e){
         super(s);
         causalException = e;
     }
 
+    /**
+     * Describe variable <code>causalException</code> here.
+     *
+     */
     protected Exception causalException = null;
 
+    /**
+     * Describe <code>getCausalException</code> method here.
+     *
+     * @return an <code>Exception</code> value
+     */
     public Exception getCausalException() {
         return causalException;
     }

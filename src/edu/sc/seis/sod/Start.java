@@ -25,14 +25,31 @@ import javax.xml.parsers.*;
  */
 
 public class Start {
+    /**
+     * Creates a new <code>Start</code> instance.
+     *
+     * @param configFile an <code>InputStream</code> value
+     */
     public Start (InputStream configFile) {
 	this.configFile = configFile;
     }
 
+    /**
+     * Describe <code>init</code> method here.
+     *
+     * @exception ParserConfigurationException if an error occurs
+     * @exception org.xml.sax.SAXException if an error occurs
+     * @exception IOException if an error occurs
+     */
     public void init() throws ParserConfigurationException, org.xml.sax.SAXException, IOException {
 	document = initParser(configFile);
     }
 
+    /**
+     * Describe <code>start</code> method here.
+     *
+     * @exception ConfigurationException if an error occurs
+     */
     public void start() throws ConfigurationException {
 	Element docElement = document.getDocumentElement();
 	logger.info("start "+docElement.getTagName());
@@ -55,9 +72,10 @@ public class Start {
 		    logger.info(subElement.getTagName());
 		    System.out.println("****** START OF NETWOTK ARM *********");
 		    networkArm = new NetworkArm(subElement);
+		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
-		     waveFormArm = new WaveFormArm(subElement);
+		     waveFormArm = new WaveFormArm(subElement, networkArm);
 		    
 		} else {
 		logger.debug("process "+subElement.getTagName());
@@ -67,12 +85,22 @@ public class Start {
 	}
     }
 
+    /**
+     * Describe <code>getEventQueue</code> method here.
+     *
+     * @return an <code>EventQueue</code> value
+     */
     public static EventQueue getEventQueue() {
 
 	return eventQueue;
 
     }
     
+    /**
+     * Describe <code>main</code> method here.
+     *
+     * @param args a <code>String[]</code> value
+     */
     public static void main (String[] args) {
 	try {
             Properties props = System.getProperties();
@@ -171,6 +199,15 @@ public class Start {
 	logger.info("Done.");
     } // end of main ()
 
+    /**
+     * Describe <code>initParser</code> method here.
+     *
+     * @param xmlFile an <code>InputStream</code> value
+     * @return a <code>Document</code> value
+     * @exception ParserConfigurationException if an error occurs
+     * @exception org.xml.sax.SAXException if an error occurs
+     * @exception java.io.IOException if an error occurs
+     */
     protected Document initParser(InputStream xmlFile) 
 	throws ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

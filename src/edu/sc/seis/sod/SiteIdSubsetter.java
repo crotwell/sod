@@ -15,6 +15,14 @@ import edu.iris.Fissures.network.*;
 
 public interface SiteIdSubsetter extends Subsetter {
 
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param id a <code>SiteId</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(SiteId id, CookieJar cookies) throws Exception;
     
 }// SiteIdSubsetter

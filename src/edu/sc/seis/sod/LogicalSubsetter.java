@@ -16,11 +16,23 @@ import org.w3c.dom.*;
  */
 
 public abstract class LogicalSubsetter implements Subsetter {
+    /**
+     * Creates a new <code>LogicalSubsetter</code> instance.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     public LogicalSubsetter (Element config) throws ConfigurationException {
 	processConfig(config);
 	System.out.println(" &&&&&&&&&&&The size of filter list after processing in logicalSubsetter is "+filterList.size());
     }
     
+    /**
+     * Describe <code>processConfig</code> method here.
+     *
+     * @param config an <code>Element</code> value
+     * @exception ConfigurationException if an error occurs
+     */
     protected void processConfig(Element config) throws ConfigurationException{
 	NodeList children = config.getChildNodes();
 	Node node;
@@ -44,8 +56,17 @@ public abstract class LogicalSubsetter implements Subsetter {
     }
 
 
+    /**
+     * Describe <code>getPackageName</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public abstract String getPackageName();
 
+    /**
+     * Describe variable <code>filterList</code> here.
+     *
+     */
     protected List filterList = new LinkedList();
 
 }// LogicalSubsetter

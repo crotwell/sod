@@ -17,6 +17,19 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 
 public interface LocalSeismogramSubsetter {
     
+    /**
+     * Describe <code>accept</code> method here.
+     *
+     * @param event an <code>EventAccessOperations</code> value
+     * @param network a <code>NetworkAccess</code> value
+     * @param channel a <code>Channel</code> value
+     * @param original a <code>RequestFilter[]</code> value
+     * @param available a <code>RequestFilter[]</code> value
+     * @param seismograms a <code>LocalSeismogram[]</code> value
+     * @param cookies a <code>CookieJar</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network, 
 			  Channel channel, 
