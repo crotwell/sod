@@ -63,7 +63,7 @@ public class CookieJar {
     VelocityContext context;
 
     public static VelocityContext getChannelContext(EventAccessOperations event,
-                                                     Channel channel) {
+                                                    Channel channel) {
         VelocityContext siteContext = getSiteContext(event, channel.my_site);
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
         if ( ! siteContext.containsKey(chanIdStr)) {
@@ -79,7 +79,7 @@ public class CookieJar {
     }
 
     public static VelocityContext getSiteContext(EventAccessOperations event,
-                                                  Site site) {
+                                                 Site site) {
         VelocityContext staContext =
             getStationContext(event, site.my_station);
         String siteIdStr = SiteIdUtil.toString(site.get_id());
@@ -95,7 +95,7 @@ public class CookieJar {
     }
 
     public static VelocityContext getStationContext(EventAccessOperations event,
-                                                     Station sta) {
+                                                    Station sta) {
         VelocityContext nContext = getNetworkContext(event, sta.my_network.get_id());
         String staIdStr = StationIdUtil.toString(sta.get_id());
         if ( ! nContext.containsKey(staIdStr)) {
@@ -111,7 +111,7 @@ public class CookieJar {
     }
 
     public static VelocityContext getNetworkContext(EventAccessOperations event,
-                                                     NetworkId netId) {
+                                                    NetworkId netId) {
         VelocityContext eContext = getEventContext(event);
         String netIdStr = NetworkIdUtil.toString(netId);
         if ( ! eContext.containsKey(netIdStr)) {
@@ -125,11 +125,17 @@ public class CookieJar {
 
     }
 
-    public static VelocityContext getEventContext(EventAccessOperations event) {
+    public synchronized static VelocityContext getEventContext(EventAccessOperations event) {
         if ( ! eventContexts.containsKey(event)) {
+            // check size and kill oldest if too big
+            if (eventOrder.size() >= MAX_EVENTS) {
+                EventAccessOperations oldEvent = (EventAccessOperations)eventOrder.getLast();
+                cleanEvent(oldEvent);
+            }
             VelocityContext eContext = new VelocityContext(commonContext);
             eContext.put("sod_event", event);
             eventContexts.put(event, eContext);
+            eventOrder.addFirst(event);
         }
         return (VelocityContext)eventContexts.get(event);
     }
@@ -138,9 +144,13 @@ public class CookieJar {
      * event. Should be called once there is no longer any chance of
      * further processing for an event. */
     public static void cleanEvent(EventAccessOperations event) {
+        eventOrder.remove(event);
         eventContexts.remove(event);
     }
 
+    private static int MAX_EVENTS = 10;
+
+    private static LinkedList eventOrder = new LinkedList();
 
     private static HashMap eventContexts = new HashMap();
 

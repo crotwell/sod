@@ -10,6 +10,7 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Stage;
@@ -26,11 +27,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.w3c.dom.Element;
-import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.MethodInvocationException;
+import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import org.w3c.dom.Element;
 
 public class LocalSeismogramTemplate extends FileWritingTemplate {
 
@@ -76,7 +77,10 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     public static String getVelocityResult(String template, CookieJar cookieJar) {
         try {
             StringWriter out = new StringWriter();
-            boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(cookieJar.getContext(),
+            // the new VeocityContext "wrapper" is to help with a possible memory leak
+            // due to velocity gathering introspection information,
+            // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
+            boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(cookieJar.getContext()),
                                                                     out,
                                                                     "localSeismogramTemplate",
                                                                     template);
