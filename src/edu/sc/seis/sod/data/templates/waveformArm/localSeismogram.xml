@@ -9,11 +9,13 @@
 <html xmlns:xlink="http://www.w3.org/1999/xlink/">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-<title>Seismograms in <station><name/></station> for <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime> Mag <magnitude/></event></title>
+#set ( $station = $sod_channel.getSite().getStation() )
+#set ( $origin = $sod_event.get_preferred_origin() )
+<title>Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
+$velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
 <style media="all">@import "../../main.css";</style>
 </head>
 <body>
-#set ( $station = $sod_channel.getSite().getStation() )
 <div id="Header">
 <a href="../../location.html"> Events</a> >
 <a href="../event.html">
@@ -36,7 +38,6 @@ ${station.getNetworkAttr().get_code()}.${station.get_code()}-$station.getName()
 <tr>
 <td><b>Magnitude</b></td>
 <td>
-#set ( $origin = $sod_event.get_preferred_origin() )
 #foreach ($m in $origin.Magnitudes)
 $fissures.formatMagnitude($m),
 #end</td>
