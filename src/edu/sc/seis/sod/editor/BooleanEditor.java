@@ -51,7 +51,6 @@ public class BooleanEditor implements EditorPlugin{
             }
             b.add(comps[comps.length - 1]);
             String ssType = name.substring(0, name.length() - type.length());
-            System.out.println(ssType);
             Inserter ins = (Inserter)inserters.get(ssType);
             if (ins == null) {
                 ins =new Inserter(ssType, editor);
