@@ -18,7 +18,6 @@
          </eventRefreshInterval>
              <waveformWorkerThreads>1</waveformWorkerThreads>
              <removeDatabase>TRUE</removeDatabase>
-             <eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
         </properties>
         <eventArm>
                 <eventFinder>
@@ -110,7 +109,7 @@
                         </siteEffectiveTimeOverlap>
                 </siteAND>
                 <channelAND>
-                        <bandCode>B</bandCode>
+                        <bandCode>L</bandCode>
                         <channelNOT>
                                 <!-- to prevent LOG channels -->
                                 <gainCode>O</gainCode>
@@ -197,15 +196,12 @@
                                 <!--<fileDir>status</fileDir>-->
                                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
                         </localSeismogramTemplateGenerator>
-                        <waveformCountProcessor/>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
                         <!--<fileDir>status</fileDir>-->
                         <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
-        
         </waveformArm>
-         
 </sod>
 
 
