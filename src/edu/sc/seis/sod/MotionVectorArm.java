@@ -20,7 +20,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveformArm.ANDLocalSeismogramWrapper;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramProcess;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
-import edu.sc.seis.sod.process.waveformArm.ORLocalSeismogramWrapper;
+import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -112,6 +112,8 @@ public class MotionVectorArm implements Subsetter{
                     availData = (ChannelGroupAvailableDataSubsetter)sodElement;
                 } else if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
                     processes.add(sodElement);
+                } else if(sodElement instanceof LocalSeismogramProcess) {
+                    processes.add(new ANDLocalSeismogramWrapper((LocalSeismogramProcess)sodElement));
                 } else {
                     logger.warn("Unknown tag in MotionVectorArm config. " +sodElement.getClass().getName());
                 } // end of else

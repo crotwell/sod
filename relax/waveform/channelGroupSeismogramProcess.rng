@@ -10,14 +10,33 @@
         <choice>
             <externalRef href="seismogramProcess.rng"/>
             <ref name="channelGroupForkProcess" />
+            <ref name="ANDLocalSeismogramWrapper" />
+            <ref name="ORLocalSeismogramWrapper" />
             <ref name="externalChannelGroupSeismogramProcess" />
             <ref name="phaseSignalToNoiseCalculator" />
+         <!-- local seismogramProcesses directly in the motion vector arm
+              are treaded as if they are in a ANDLocalSeismogramWrapper -->
+            <externalRef href="seismogramProcess.rng"/>
         </choice>
     </define>
     <define name="channelGroupForkProcess">
         <element name="channelGroupForkProcess">
             <zeroOrMore>
                 <ref name="channelGroupSeismogramProcess"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="ANDLocalSeismogramWrapper">
+        <element name="ANDLocalSeismogramWrapper">
+            <zeroOrMore>
+                <externalRef href="seismogramProcess.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="ORLocalSeismogramWrapper">
+        <element name="ORLocalSeismogramWrapper">
+            <zeroOrMore>
+                <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>
         </element>
     </define>
