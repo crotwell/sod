@@ -271,8 +271,8 @@ public class LocalSeismogramArm implements Subsetter{
 	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms;
 	    if (outfilters.length != 0) {
-	//	localSeismograms = dataCenter.retrieve_seismograms(infilters);
-		localSeismograms = new LocalSeismogram[0];
+		localSeismograms = dataCenter.retrieve_seismograms(infilters);
+		//localSeismograms = new LocalSeismogram[0];
 	    } else {
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
