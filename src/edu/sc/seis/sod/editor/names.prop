@@ -52,4 +52,5 @@ geographicRegion=Geographic region
 azimuthRange=Azimuth
 backAzimuthRange=Back Azimuth
 unitRange=Range
+distanceRange=Distance
 

@@ -125,7 +125,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("siteEffectiveTimeOverlap", effTime);
         editors.put("channelEffectiveTimeOverlap", effTime);
         editors.put("magnitudeRange", new MagnitudeEditor());
-        editors.put("distanceRange", new DistanceRangeEditor());
+        editors.put("distanceRange", new UnitRangeEditor(ANGLE_UNITS, 0, 180, 5, true));
         editors.put("phaseRequest", new PhaseRequestEditor());
         editors.put("sacFileProcessor", new SacFileEditor(this));
         editors.put("originPointDistance", new OriginPointDistanceEditor());
@@ -184,3 +184,4 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
+
