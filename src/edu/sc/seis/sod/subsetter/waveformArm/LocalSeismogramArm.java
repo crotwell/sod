@@ -158,6 +158,8 @@ public class LocalSeismogramArm implements Subsetter{
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
 	
+	MicroSecondDate b1 = new MicroSecondDate();
+	logger.debug("TIME: before eventChanenlSubsetter "+b1);
 	synchronized (eventChannelSubsetter) {
 	    b = eventChannelSubsetter.accept(eventAccess, 
 					     networkAccess, 
@@ -165,6 +167,8 @@ public class LocalSeismogramArm implements Subsetter{
 					     null);
 	
 	}
+	MicroSecondDate a1 = new MicroSecondDate();
+	logger.debug("TIME: after eventChannelSubsetter "+a1);
 	if( b ) {
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
@@ -201,6 +205,22 @@ public class LocalSeismogramArm implements Subsetter{
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
 
+
+	DataCenter dataCenter;
+	MicroSecondDate b1 = new MicroSecondDate();
+	logger.debug("TIME: before seismogramDCLocator "+b1);
+	synchronized(seismogramDCLocator) {
+	    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
+							     networkAccess,
+							     channel.my_site.my_station,
+							     null);
+	}
+	MicroSecondDate a1 = new MicroSecondDate();
+	logger.debug("TIME: after SeismogramDCLocator "+a1);
+
+	MicroSecondDate b2 = new MicroSecondDate();
+	logger.debug("TIME: before requestGeneratorSubsetter "+b2);
+
 	synchronized (requestGeneratorSubsetter) {
 	    infilters = 
 		requestGeneratorSubsetter.generateRequest(eventAccess, 
@@ -208,7 +228,10 @@ public class LocalSeismogramArm implements Subsetter{
 							  channel, 
 							  null);
 	}
- 
+	MicroSecondDate a2 = new MicroSecondDate();
+	logger.debug("TIME: after requestGeneratorSubsetter "+a2); 
+
+
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
@@ -294,6 +317,8 @@ public class LocalSeismogramArm implements Subsetter{
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
 	
+	MicroSecondDate b1 = new MicroSecondDate();
+	logger.debug("TIME: before availableDataSubsetter "+b1);
 	synchronized (availableDataSubsetter) {
 	    b = availableDataSubsetter.accept(eventAccess, 
 					      networkAccess, 
@@ -302,6 +327,8 @@ public class LocalSeismogramArm implements Subsetter{
 					      outfilters, 
 					      null);
 	}
+	MicroSecondDate a1 = new MicroSecondDate();
+	logger.debug("TIME: after availableDataSubsetter "+a1);
 	if( b ) {
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
@@ -321,11 +348,21 @@ public class LocalSeismogramArm implements Subsetter{
 	    
 	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms;
-	    if (outfilters.length != 0) {
+	    if (outfilters.length != 0) 
+	    {
+		MicroSecondDate beforeOne = new MicroSecondDate();
+		logger.debug("NOW GET SEISMOGRAMS: The date is "+beforeOne);
+		logger.debug("TIME: before retrieveSeismograms "+beforeOne);
 		localSeismograms = dataCenter.retrieve_seismograms(infilters);
+		MicroSecondDate afterOne = new MicroSecondDate();
+		logger.debug("TIME: after retrieveSeismograms "+afterOne);
+		logger.debug("GOT SEISMOGRAMS: "+localSeismograms.length+": "+afterOne); 
 		//localSeismograms = new LocalSeismogram[0];
 	    } else {
-		logger.info("Failed, available data returned no requestFilters ");
+		logger.debug("Failed, available data returned no requestFilters ");
+		logger.debug("TIME: after retrieveSeismograms "+new MicroSecondDate());
+		logger.debug("GOT SEISMOGRAMS: The date is "+ new MicroSecondDate());
+
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
 	    
@@ -387,6 +424,8 @@ public class LocalSeismogramArm implements Subsetter{
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel= channelDbObject.getChannel();
+	MicroSecondDate b1 = new MicroSecondDate();
+	logger.debug("TIME: before localSeismogramSubsetter "+b1);
 	synchronized (localSeismogramSubsetter) {
 	    b = localSeismogramSubsetter.accept(eventAccess, 
 						networkAccess, 
@@ -396,6 +435,9 @@ public class LocalSeismogramArm implements Subsetter{
 						localSeismograms, 
 						null);
 	}
+	
+	MicroSecondDate a1 = new MicroSecondDate();
+	logger.debug("TIME: after LocalSeismogramSubsetter "+a1);
 	if( b ) {
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
@@ -440,6 +482,8 @@ public class LocalSeismogramArm implements Subsetter{
 				   "before waveformArm Processing");
 	LocalSeismogramProcess processor;
 	Iterator it = localSeisProcessList.iterator();
+	MicroSecondDate b1 = new MicroSecondDate();
+	logger.debug("TIME: before localSeismogramProcessor "+b1);
 	while (it.hasNext()) {
 	    processor = (LocalSeismogramProcess)it.next();
 	
@@ -456,6 +500,8 @@ public class LocalSeismogramArm implements Subsetter{
 	} // end of while (it.hasNext())
 	logger.debug("finished with "+
 		     ChannelIdUtil.toStringNoDates(channel.get_id()));
+	MicroSecondDate a1 = new MicroSecondDate();
+	logger.debug("TIME:  after localseismogramProcessor "+a1);	
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.COMPLETE_SUCCESS,
