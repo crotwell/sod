@@ -24,14 +24,21 @@ $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($n
 <th>Name</th>
 <th>Latitude</th>
 <th>Longitude</th>
+<th>Success</th>
+<th>Fail</th>
+<th>Retry</th>
 </tr>
-#foreach ( $sta in $stations.getSuccessful() )
+#foreach ( $staDb in $stations.getSuccessful() )
+#set ($sta = $staDb.getStation() )
 #set ( $stacode = $sta.get_code())
 <tr>
 <td>$sta.get_code()</td>
 <td><a href="$network.getNetworkAccess().get_attributes().get_code()/$network.getNetworkAccess().get_attributes().get_code().${stacode}.html">$fissures.stationName($sta)</a></td>
 <td>$fissures.getLatitude($sta)</td>
 <td>$fissures.getLongitude($sta)</td>
+<td>$stations.getNumSuccessful($staDb)</td>
+<td>$stations.getNumFailed($staDb)</td>
+<td>$stations.getNumRetry($staDb)</td>
 </tr>
 #set( $extraRows = $extraRows - 1 )
 #end

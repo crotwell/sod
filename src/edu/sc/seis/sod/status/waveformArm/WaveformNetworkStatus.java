@@ -5,11 +5,6 @@
  */
 
 package edu.sc.seis.sod.status.waveformArm;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
-import org.apache.velocity.VelocityContext;
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
@@ -22,6 +17,11 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.networkArm.VelocityStationGetter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
+import org.apache.velocity.VelocityContext;
+import org.w3c.dom.Element;
 
 
 
@@ -37,7 +37,8 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     public int getNumDirDeep() { return 1; }
 
     public void update(EventChannelPair ecp) {
-        // do nothing, just want to be a WaveformArmMonitor for loading
+        // update the page for num successes change
+        change(ecp.getChannel().my_site.my_station, ecp.getStatus());
     }
 
     public void setArmStatus(String status) throws Exception {}
