@@ -111,7 +111,6 @@ public abstract class AbstractVelocityStatus  implements WaveformArmMonitor, Net
     /** Schedules the default template (from the <template> element in the config,
      * for output. */
     public void scheduleOutput(final String filename, final Context context) {
-        System.out.println(filename + " being scheduled");
         scheduleOutput(filename, context, template);
     }
 
