@@ -169,7 +169,7 @@
                     calls accept() on the class for every event-channel pair.</description>
                 <example>
                     <externalEventChannelSubsetter>
-                        <className>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</classname>
                     </externalEventChannelSubsetter>
                 </example>
             </xsd:annotation>

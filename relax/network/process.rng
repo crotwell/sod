@@ -50,9 +50,9 @@
                 <description>Attempts to load the class named by classname, and if it implements NetworkProcess, SOD calls
                     process() on the class for every event.</description>
                 <example>
-                    <externalEventProcess>
+                    <externalNetworkProcess>
                         <classname>edu.somewhere.seis.sodExt.process.network.MyNetworkProcess</classname>
-                    </externalEventProcess>
+                    </externalNetworkProcess>
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>

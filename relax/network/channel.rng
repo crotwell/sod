@@ -307,7 +307,7 @@
                     ChannelSubsetter, SOD calls accept() on the class for every channel.</description>
                 <example>
                     <externalChannelSubsetter>
-                        <className>edu.somewhere.seis.sodExt.subsetter.channel.MyChannelSubsetter</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.channel.MyChannelSubsetter</classname>
                     </externalChannelSubsetter>
                 </example>
             </xsd:annotation>

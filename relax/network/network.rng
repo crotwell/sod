@@ -162,7 +162,7 @@
                     calls accept() on the class for every network.</description>
                 <example>
                     <externalNetworkSubsetter>
-                        <className>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</classname>
                     </externalNetworkSubsetter>
                 </example>
             </xsd:annotation>

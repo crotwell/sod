@@ -173,7 +173,7 @@
                     calls accept() on the class for every site.</description>
                 <example>
                     <externalSiteSubsetter>
-                        <className>edu.somewhere.seis.sodExt.subsetter.site.MySiteSubsetter</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.site.MySiteSubsetter</classname>
                     </externalSiteSubsetter>
                 </example>
             </xsd:annotation>

@@ -226,22 +226,6 @@
                 <summary>Accepts an event-station pair if the midPoint is within the area</summary>
                 <description>Accepts an event-station pair if the midPoint between them is within
                     the given area. Areas can be any valid area, including BoxArea, and GlobalArea.</description>
-                <example>
-                    <midPoint>
-                        <boxArea>
-                            <latitudeRange>
-                                <unit>DEGREE</unit>
-                                <min>20</min>
-                                <max>40</max>
-                            </latitudeRange>
-                            <longitudeRange>
-                                <unit>DEGREE</unit>
-                                <min>-75</min>
-                                <max>-85</max>
-                            </longitudeRange>
-                        </boxArea>
-                    </midPoint>
-                </example>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
         </element>
@@ -341,7 +325,7 @@ test suite
                     EventStationSubsetter, SOD calls accept() on the class for every event-station pair.</description>
                 <example>
                     <externalEventStationSubsetter>
-                        <className>edu.somewhere.seis.sodExt.subsetter.eventStation.MyEventStationSubsetter</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.eventStation.MyEventStationSubsetter</classname>
                     </externalEventStationSubsetter>
                 </example>
             </xsd:annotation>

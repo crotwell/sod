@@ -198,7 +198,7 @@
                     accept() on the class for every event-channel pair.</description>
                 <example>
                     <externalRequest>
-                        <className>edu.somewhere.seis.sodExt.subsetter.request.MyRequest</className>
+                        <classname>edu.somewhere.seis.sodExt.subsetter.request.MyRequest</classname>
                     </externalRequest>
                 </example>
             </xsd:annotation>
