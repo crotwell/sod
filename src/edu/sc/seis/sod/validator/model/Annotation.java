@@ -5,7 +5,9 @@
  */
 
 package edu.sc.seis.sod.validator.model;
-import edu.sc.seis.sod.validator.example.*;
+import edu.sc.seis.sod.validator.tour.MinimalVisitGuide;
+import edu.sc.seis.sod.validator.tour.TourGuide;
+import edu.sc.seis.sod.validator.tour.XMLWritingTourist;
 
 public class Annotation {
     public void setDescription(String description) {
@@ -43,9 +45,14 @@ public class Annotation {
 
     public String getExample(boolean htmlize) {
         if (example.equals("") || example == null) {
-            ExampleBuilder eb = new ExampleBuilder(false);
-            eb.write(formProvider.getForm());
-            example = eb.toString();
+            //ExampleBuilder eb = new ExampleBuilder(false);
+            //eb.write(formProvider.getForm());
+            //example = eb.toString();
+            XMLWritingTourist tourist = new XMLWritingTourist();
+            TourGuide guide = new MinimalVisitGuide(formProvider.getForm());
+            guide.lead(tourist);
+            example = tourist.getResult();
+            
         }
         if (htmlize) {
             return getHTMLizedString(example);
