@@ -20,6 +20,23 @@
 </div>
 <div id="Content">
 <h1>Stations in this network</h1>
+<h2>Network Information:</h2>
+<table>
+<network>
+<tr>
+<td><b>Name</b></td>
+<td><name/> (<networkCode/>)</td>
+</tr>
+<tr>
+<td><b>Begin Time</b></td>
+<td><beginTime/></td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td><endTime/></td>
+</tr>
+</network>
+</table>
 <h2>Stations:</h2>
 <table>
 <tr id="title">
