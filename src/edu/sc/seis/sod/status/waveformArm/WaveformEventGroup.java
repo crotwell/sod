@@ -16,14 +16,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveFormStatus{
-    public WaveformEventGroup(){
-        useDefaultConfig();
-    }
-    
-    public WaveformEventGroup(Element el) {
-        parse(el);
-    }
-    
+    public WaveformEventGroup(){ useDefaultConfig(); }
+
+    public WaveformEventGroup(Element el) { parse(el); }
+
     public Object getTemplate(String tag, Element el) {
         if(tag.equals("channelCount")) return new EventChannelStatus(el);
         try {
@@ -36,18 +32,17 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
         }
         return super.getTemplate(tag, el);
     }
-    
+
     public void update(EventChannelPair ecp) throws Exception {
         Iterator it = ecpListeners.iterator();
         while(it.hasNext())((WaveFormStatus)it.next()).update(ecp);
-        super.change(ecp.getEvent(), null);
     }
-    
+
     public void useDefaultConfig(){
         templates.add(new EventChannelStatus(null));
         templates.add("\n");
     }
-    
+
     private class EventChannelStatus implements EventTemplate, WaveFormStatus{
         public EventChannelStatus(Element el){
             ecpListeners.add(this);
@@ -67,7 +62,7 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 }
             }else monitoredStatus.add(EventChannelCondition.SUCCESS);
         }
-        
+
         public void update(EventChannelPair ecp) {
             if(monitoredStatus.contains(ecp.getStatus())){
                 Integer cur = new Integer(0);
@@ -78,18 +73,18 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 evChans.put(ecp.getEvent(), cur);
             }
         }
-        
+
         public String getResult(EventAccessOperations ev) {
             if(evChans.containsKey(ev))
                 return ((Integer)evChans.get(ev)).toString();
             else
                 return "0";
         }
-        
+
         private List monitoredStatus =  new ArrayList();
-        
+
         private Map evChans = new HashMap();
     }
-    
+
     private List ecpListeners = new ArrayList();
 }
