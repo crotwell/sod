@@ -15,6 +15,10 @@ import org.w3c.dom.NodeList;
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
 
+    public MagnitudeRange() {
+        super();
+    }
+
     public MagnitudeRange(Element config) throws ConfigurationException {
         super(config);
         parseSearchTypes(config);
@@ -58,5 +62,5 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
         searchTypes = (String[])types.toArray(new String[types.size()]);
     }
 
-    private String[] searchTypes;
+    private String[] searchTypes = {};
 }// MagnitudeRange
