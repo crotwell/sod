@@ -96,4 +96,7 @@ eventChannelPairProcessing=Event-Channel Pairs Processed
 waveformNetworkStatus=Generate network-centric waveform summary HTML
 waveformStationStatus=Generate station-centric waveform summary HTML
 
-
+refreshInterval=Refresh Interval
+atLeastOnce=At Least Once
+atMostOnce=At Most Once
+removeEventDuplicate=Remove Duplicate Events
