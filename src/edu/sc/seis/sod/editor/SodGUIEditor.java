@@ -116,6 +116,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("breqFastRequest", new BreqFastRequestSubsetterEditor());
 
         editors.put("phaseSignalToNoise", new PhaseSignalToNoiseEditor());
+        
+        editors.put("removeEventDuplicate", new RemoveEventDuplicateEditor());
 
         BooleanEditor bool = new BooleanEditor(this);
         String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "request", "seismogram", "waveformVector"};

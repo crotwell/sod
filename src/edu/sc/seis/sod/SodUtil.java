@@ -494,5 +494,30 @@ public class SodUtil {
         return array;
     }
 
+    public static final UnitImpl[] LENGTH_UNITS = { UnitImpl.KILOMETER,
+                                                    UnitImpl.METER,
+                                                    UnitImpl.CENTIMETER,
+                                                    UnitImpl.NANOMETER,
+                                                    UnitImpl.MICROMETER,
+                                                    UnitImpl.MICRON,
+                                                    UnitImpl.MILLIMETER,
+                                                    UnitImpl.PICOMETER,
+                                                    UnitImpl.INCH,
+                                                    UnitImpl.FOOT,
+                                                    UnitImpl.MILE,
+                                                    UnitImpl.DEGREE,
+                                                    UnitImpl.RADIAN };
+    public static final UnitImpl[] TIME_UNITS = { UnitImpl.HOUR,
+                                                  UnitImpl.NANOSECOND,
+                                                  UnitImpl.MICROSECOND,
+                                                  UnitImpl.MILLISECOND,
+                                                  UnitImpl.SECOND,
+                                                  UnitImpl.MINUTE,
+                                                  UnitImpl.DAY,
+                                                  UnitImpl.WEEK,
+                                                  UnitImpl.FORTNIGHT };
+    
+    public static final UnitImpl[] FREQ_UNITS = { UnitImpl.HERTZ };
+    
     private static Logger logger = Logger.getLogger(SodUtil.class);
 }// SubsetterUtil

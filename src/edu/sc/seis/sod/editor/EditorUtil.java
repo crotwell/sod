@@ -1,9 +1,8 @@
 /**
  * EditorUtil.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.editor;
 
 import java.awt.Dimension;
@@ -20,13 +19,17 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import edu.iris.Fissures.model.UnitImpl;
 
 public class EditorUtil {
 
-    public static Box getLabeledTextField(Element element) throws TransformerException {
+    public static Box getLabeledTextField(Element element)
+            throws TransformerException {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(element.getTagName()));
         b.add(getTextField((Text)XPathAPI.selectSingleNode(element, "text()")));
@@ -44,8 +47,8 @@ public class EditorUtil {
         return b;
     }
 
-    public static JComponent getLabel(String text){
-        return new JLabel(SimpleGUIEditor.getDisplayName(text)+":");
+    public static JComponent getLabel(String text) {
+        return new JLabel(SimpleGUIEditor.getDisplayName(text) + ":");
     }
 
     public static JTextField getTextField(Text text) {
@@ -58,15 +61,15 @@ public class EditorUtil {
 
     public static String capFirstLetter(String in) {
         char c = in.charAt(0);
-        if ( ! Character.isUpperCase(c)) {
-            return (""+c).toUpperCase()+in.substring(1);
-        }
+        if(!Character.isUpperCase(c)) { return ("" + c).toUpperCase()
+                + in.substring(1); }
         return in;
     }
 
-
-    /** creates a JPanel with the bottom component slightly indented relative
-     to the bottome one. */
+    /**
+     * creates a JPanel with the bottom component slightly indented relative to
+     * the bottome one.
+     */
     public static Box indent(JComponent top, JComponent bottom) {
         Box box = Box.createVerticalBox();
         Box topRow = Box.createHorizontalBox();
@@ -74,7 +77,6 @@ public class EditorUtil {
         box.add(topRow);
         Box botRow = Box.createHorizontalBox();
         box.add(botRow);
-
         topRow.add(top);
         topRow.add(Box.createGlue());
         botRow.add(Box.createRigidArea(new Dimension(10, 1)));
@@ -83,7 +85,8 @@ public class EditorUtil {
         return box;
     }
 
-    public static JComponent getLabeledComboBox(Element element, Object[] vals) throws TransformerException {
+    public static JComponent getLabeledComboBox(Element element, Object[] vals)
+            throws TransformerException {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
         b.add(getComboBox(element, vals));
@@ -91,31 +94,33 @@ public class EditorUtil {
         return b;
     }
 
-
-    public static JComboBox getComboBox(Element element, Object[] vals) throws TransformerException {
+    public static JComboBox getComboBox(Element element, Object[] vals)
+            throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
-        if (node != null) {
+        if(node != null) {
             Text text = (Text)node;
             return getComboBox(element, vals, text.getNodeValue());
         } else {
-            logger.warn("No text node inside node "+element.getTagName());
+            logger.warn("No text node inside node " + element.getTagName());
             return getComboBox(element, vals, "");
         }
     }
 
-    public static JComboBox getComboBox(Element element, Object[] vals, Object selected) throws TransformerException {
+    public static JComboBox getComboBox(Element element,
+                                        Object[] vals,
+                                        Object selected)
+            throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
         Text text = (Text)node;
         JComboBox combo = new JComboBox(vals);
         boolean found = false;
-
-        for (int i = 0; i < vals.length; i++) {
-            if (vals[i].equals(selected)) {
+        for(int i = 0; i < vals.length; i++) {
+            if(vals[i].equals(selected)) {
                 found = true;
                 break;
             }
         }
-        if ( ! found) {
+        if(!found) {
             combo.addItem(selected);
         }
         combo.setSelectedItem(selected);
@@ -123,59 +128,78 @@ public class EditorUtil {
         return combo;
     }
 
-    public static JSpinner createNumberSpinner(Text el, double min, double max, double step) throws TransformerException{
-        return createNumberSpinner(el, new Double(min), new Double(max), new Double(step));
+    public static JSpinner createNumberSpinner(Text el,
+                                               double min,
+                                               double max,
+                                               double step)
+            throws TransformerException {
+        return createNumberSpinner(el,
+                                   new Double(min),
+                                   new Double(max),
+                                   new Double(step));
     }
 
-
-    /** Creates a number spinner with the initial value the Double.parseDouble
-     * of the text in the Text node. The min, max and step are also given. */
+    /**
+     * Creates a number spinner with the initial value the Double.parseDouble of
+     * the text in the Text node. The min, max and step are also given.
+     */
     public static JSpinner createNumberSpinner(final Text text,
                                                Integer min,
                                                Integer max,
-                                               Integer step){
+                                               Integer step) {
         try {
-                final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Integer(text.getNodeValue()),
-                                                                          min, max, step));
-                spin.addChangeListener(new ChangeListener(){
-                            public void stateChanged(ChangeEvent e) {
-                                text.setNodeValue(spin.getValue().toString());
-                            }
-                        });
-                return spin;
-        } catch (RuntimeException e) {
-            logger.warn(text.getNodeValue()+" "+min+" "+max,e);
+            final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Integer(text.getNodeValue()),
+                                                                      min,
+                                                                      max,
+                                                                      step));
+            spin.addChangeListener(new ChangeListener() {
+
+                public void stateChanged(ChangeEvent e) {
+                    text.setNodeValue(spin.getValue().toString());
+                }
+            });
+            return spin;
+        } catch(RuntimeException e) {
+            logger.warn(text.getNodeValue() + " " + min + " " + max, e);
             throw e;
         }
     }
 
-    /** Creates a number spinner with the initial value the Double.parseDouble
-     * of the text in the Text node. The min, max and step are also given. */
+    /**
+     * Creates a number spinner with the initial value the Double.parseDouble of
+     * the text in the Text node. The min, max and step are also given.
+     */
     public static JSpinner createNumberSpinner(final Text text,
                                                Double min,
                                                Double max,
-                                               Double step){
+                                               Double step) {
         try {
             final JSpinner spin = new JSpinner(new SpinnerNumberModel(new Double(text.getNodeValue()),
-                                                                      min, max, step));
-            spin.addChangeListener(new ChangeListener(){
-                        public void stateChanged(ChangeEvent e) {
-                            text.setNodeValue(spin.getValue().toString());
-                        }
-                    });
-            return spin;
+                                                                      min,
+                                                                      max,
+                                                                      step));
+            spin.addChangeListener(new ChangeListener() {
 
-        } catch (RuntimeException e) {
-            logger.warn(text.getNodeValue()+" "+min+" "+max,e);
+                public void stateChanged(ChangeEvent e) {
+                    text.setNodeValue(spin.getValue().toString());
+                }
+            });
+            return spin;
+        } catch(RuntimeException e) {
+            logger.warn(text.getNodeValue() + " " + min + " " + max, e);
             throw e;
         }
     }
 
-    public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
+    public static JComponent makeTimeIntervalTwiddler(Element el)
+            throws TransformerException {
         return makeTimeIntervalTwiddler(el, new Integer(1), null);
     }
 
-    public static JComponent makeTimeIntervalTwiddler(Element el, Integer min, Integer max) throws TransformerException{
+    public static JComponent makeTimeIntervalTwiddler(Element el,
+                                                      Integer min,
+                                                      Integer max)
+            throws TransformerException {
         Box b = Box.createHorizontalBox();
         Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
         b.add(EditorUtil.createNumberSpinner(t, min, max, new Integer(1)));
@@ -185,7 +209,7 @@ public class EditorUtil {
         return b;
     }
 
-    public static JComponent getBoxWithLabel(Element el){
+    public static JComponent getBoxWithLabel(Element el) {
         Box b = Box.createHorizontalBox();
         b.add(Box.createHorizontalStrut(10));
         b.add(new JLabel(SimpleGUIEditor.getDisplayName(el.getTagName())));
@@ -193,8 +217,43 @@ public class EditorUtil {
         return b;
     }
 
+    public static JComponent makeQuantityTwiddler(Element element,
+                                                  UnitImpl[] units)
+            throws DOMException, TransformerException, NoSuchFieldException {
+        return makeQuantityTwiddler(element, units, 0, 10000, 5);
+    }
+
+    public static JComponent makeQuantityTwiddler(Element element,
+                                                  UnitImpl[] units,
+                                                  int min,
+                                                  int max,
+                                                  int step)
+            throws DOMException, TransformerException, NoSuchFieldException {
+        Box b = Box.createHorizontalBox();
+        NodeList kids = element.getChildNodes();
+        String[] unitStrings = new String[units.length];
+        for(int i = 0; i < units.length; i++) {
+            unitStrings[i] = units[i].toString().toUpperCase();
+        }
+        for(int i = 0; i < kids.getLength(); i++) {
+            if(kids.item(i) instanceof Element) {
+                Element el = (Element)kids.item(i);
+                Text text = (Text)XPathAPI.selectSingleNode(el, "text()");
+                if(el.getTagName().equals("unit")) {
+                    JComboBox unitCombo = getComboBox(el, unitStrings, text.getNodeValue());
+                    b.add(unitCombo);
+                    b.add(Box.createHorizontalStrut(10));
+                } else if(el.getTagName().equals("value")) {
+                    JSpinner valueSpinner = createNumberSpinner(text,
+                                                                min,
+                                                                max,
+                                                                step);
+                    b.add(valueSpinner);
+                }
+            }
+        }
+        return b;
+    }
+
     private static Logger logger = Logger.getLogger(EditorUtil.class);
 }
-
-
-
