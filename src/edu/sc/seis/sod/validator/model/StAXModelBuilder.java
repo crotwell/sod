@@ -32,7 +32,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 anyXML.setChild(new Empty(anyXML));
                 Definition start = new Definition("", definedGrammar);
                 start.set(anyXML);
-                definedGrammar.addStart(start);
+                definedGrammar.add(start);
             }else{
                 ClassLoader cl = getClass().getClassLoader();
                 InputSource relaxSource = Start.createInputSource(cl, relaxLoc);
@@ -50,6 +50,14 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 reader.close();
             }
             parsedGrammars.put(relaxLoc, definedGrammar);
+            if(waiters.size() > 0){
+                Iterator it = waiters.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry entry = (Map.Entry)it.next();
+                    definedGrammar.add((String)entry.getKey(),
+                                       definedGrammar.getDef((String)entry.getValue()));
+                }
+            }
         }
     }
 
@@ -58,10 +66,11 @@ public class StAXModelBuilder implements XMLStreamConstants{
             switch (reader.next()) {
                 case START_ELEMENT:
                     String tag = reader.getLocalName();
-                    if(tag.equals("start")){
-                        definedGrammar.addStart(handleDef());
-                    }else if(tag.equals("define")){
-                        definedGrammar.add(handleDef());
+                    if(tag.equals("start") || tag.equals("define")){
+                        Definition def = handleDef();
+                        if(def != null){
+                            definedGrammar.add(def);
+                        }
                     }else if(tag.equals("include")){ handleInclude(); }
                     else{
                         System.out.println("I DON'T THINK THIS SHOULD BE HERE");
@@ -110,7 +119,13 @@ public class StAXModelBuilder implements XMLStreamConstants{
         }
         Definition def = new Definition(name, definedGrammar, combo);
         nextTag();
-        def.set(handleAll());
+        FormProvider result = handleAll();
+        def.set(result);
+        if(result instanceof Ref){
+            Ref ref = (Ref)result;
+            def = ref.getDef();
+            waiters.put(name, ref.getName());
+        }
         return def;
     }
 
@@ -386,6 +401,7 @@ public class StAXModelBuilder implements XMLStreamConstants{
         return defs;
     }
 
+    private Map waiters = new HashMap();
     private XMLStreamReader reader;
     private Grammar definedGrammar;
     private static Map parsedGrammars = new HashMap();
