@@ -170,16 +170,16 @@ public class Start{
                 Element el = (Element)armNodes.item(i);
                 if (el.getTagName().equals("eventArm")) {
                     event = new EventArm(el);
-                    new Thread(event, "Event Arm").start();
                 } else if (el.getTagName().equals("networkArm")) {
                     network = new NetworkArm(el);
                 } else if (el.getTagName().equals("waveformArm")) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, network, poolSize);
-                    new Thread(waveform, "Waveform Arm").start();
                 }
             }
         }
+        new Thread(event, "Event Arm").start();
+        new Thread(waveform, "Waveform Arm").start();
     }
 
     private void handleStartupRunProperties() {
@@ -218,18 +218,23 @@ public class Start{
             }
 
             if (confFilename == null) {
-                System.err.println("No configuration file given, quiting....");
-                return;
+                exit("No configuration file given, quiting....");
             }
             Start start = new Start(confFilename, args);
 
             logger.info("Start start()");
             start.start();
         } catch(Exception e) {
-            GlobalExceptionHandler.handle("Problem in main", e);
+            GlobalExceptionHandler.handle("Problem in main, quiting", e);
+            exit("Problem in main, quiting: "+e.toString());
         }
         logger.info("Done.");
     } // end of main ()
+
+    private static void exit(String reason) {
+        logger.fatal(reason);
+        System.exit(1);
+    }
 
     private static void loadProps(InputStream propStream){
         try {
@@ -241,9 +246,11 @@ public class Start{
         }
     }
 
+
     public static void add(Properties newProps){
         props.putAll(newProps);
     }
+
 
     public static final String
         DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
