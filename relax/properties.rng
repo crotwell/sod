@@ -1,70 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-        xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-        <include href="base/include/quantity.rng"/>
-        <start>
-                <element name="properties">
-                    <interleave>
-                            <optional>
-                                        <element name="runName">
-                                                <text/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="statusBase">
-                                                <text/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="eventQueryIncrement">
-                                                <ref name="time"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="eventRefreshInterval">
-                                                <ref name="time"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="eventLag">
-                                                <ref name="time"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="maxRetryDelay">
-                                                <ref name="time"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="waveformWorkerThreads">
-                                                <text/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="reopenEvents">
-                                                <ref name="trueOrFalse"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="removeDatabase">
-                                                <ref name="trueOrFalse"/>
-                                        </element>
-                            </optional>
-                            <optional>
-                                        <element name="eventChannelPairProcessing">
-                                                <choice>
-                                                        <value>atLeastOnce</value>
-                                                        <value>atMostOnce</value>
-                                                </choice>
-                                        </element>
-                            </optional>
-                    </interleave>
-                </element>
-        </start>
-        <define name="trueOrFalse">
-                <choice>
-                        <value>TRUE</value>
-                        <value>FALSE</value>
-                </choice>
-        </define>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	<include href="base/include/quantity.rng"/>
+	<start>
+		<element name="properties">
+			<interleave>
+				<optional>
+					<element name="runName">
+						<text/>
+					</element>
+				</optional>
+				<optional>
+					<element name="statusBase">
+						<text/>
+					</element>
+				</optional>
+				<optional>
+					<element name="eventQueryIncrement">
+						<ref name="time"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="eventRefreshInterval">
+						<ref name="time"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="eventLag">
+						<ref name="time"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="maxRetryDelay">
+						<ref name="time"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="waveformWorkerThreads">
+						<text/>
+					</element>
+				</optional>
+				<optional>
+					<element name="reopenEvents">
+						<ref name="trueOrFalse"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="removeDatabase">
+						<ref name="trueOrFalse"/>
+					</element>
+				</optional>
+				<optional>
+					<element name="eventChannelPairProcessing">
+						<choice>
+							<value>atLeastOnce</value>
+							<value>atMostOnce</value>
+						</choice>
+					</element>
+				</optional>
+			</interleave>
+		</element>
+	</start>
+	<define name="trueOrFalse">
+		<choice>
+			<value>TRUE</value>
+			<value>FALSE</value>
+		</choice>
+	</define>
 </grammar>
