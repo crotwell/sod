@@ -8,6 +8,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.eventArm.EventTemplate;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -34,7 +35,7 @@ public class EventFormatter extends Template implements EventTemplate{
         if(defaultFormatter == null) defaultFormatter = new EventFormatter();
         return defaultFormatter.getResult(event);
     }
-
+    
     private static EventFormatter defaultFormatter;
     
     protected Object textTemplate(final String text) {
@@ -55,18 +56,18 @@ public class EventFormatter extends Template implements EventTemplate{
         } else if(tag.equals("depth")) {
             return new EventTemplate(){
                 public String getResult(EventAccessOperations ev){
-                    return Integer.toString((int)getOrigin(ev).my_location.depth.value);
+                    return format(getOrigin(ev).my_location.depth.value);
                 }
             };
         } else if(tag.equals("latitude")) {
             return new EventTemplate(){
                 public String getResult(EventAccessOperations ev){
-                    return Integer.toString((int)getOrigin(ev).my_location.latitude);
+                    return format(getOrigin(ev).my_location.latitude);
                 }
             };
         } else if(tag.equals("longitude")) {
             return new EventTemplate(){public String getResult(EventAccessOperations ev){
-                    return Integer.toString((int)getOrigin(ev).my_location.longitude);
+                    return format(getOrigin(ev).my_location.longitude);
                 }
             };
         } else if(tag.equals("magnitude")) {
@@ -80,6 +81,12 @@ public class EventFormatter extends Template implements EventTemplate{
         }
         return null;
     }
+    
+    private static String format(double d){
+        return defaultDecimalFormat.format(d);
+    }
+    
+    private static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
     
     private class RegionName implements EventTemplate{
         public String getResult(EventAccessOperations ev){
@@ -128,7 +135,7 @@ public class EventFormatter extends Template implements EventTemplate{
     
     private static String getMag(EventAccessOperations event){
         Magnitude[] mags = getOrigin(event).magnitudes;
-        if (mags.length > 0)  return "" + (int)mags[0].value;
+        if (mags.length > 0)  return format(mags[0].value);
         throw new IllegalArgumentException("No magnitudes on event");
     }
     
