@@ -1,108 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0"
-    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="../base/include/timeRange.rng"/>
-    <include href="../base/include/range.rng"/>
-    <include href="../base/include/source.rng"/>
-    <start combine="choice">
-        <choice>
-            <ref name="eventFinder"/>
-            <ref name="eventChannelFinder"/>
-        </choice>
-    </start>
-    <define name="eventFinder">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Retrieve events from an EventFinder. </summary>
-                <description> A Fissures/DHI EventDC service is located via the name and dns tags.
-                    The EventFinder is aquired from the EventDC, and a query is sent with the given
-                    arguments. The events returned are then sent thrrough the EventArm for
-                    processing. </description>
-                <example>
-                    <eventFinder>
-                        <name>IRIS_EventDC</name>
-                        <dns>edu/iris/dmc</dns>
-                        <boxArea>
-                            <latitudeRange>
-                                <min>-90</min>
-                                <max>90</max>
-                            </latitudeRange>
-                            <longitudeRange>
-                                <min>-180</min>
-                                <max>180</max>
-                            </longitudeRange>
-                        </boxArea>
-                        <originDepthRange>
-                            <unitRange>
-                                <unit>KILOMETER</unit>
-                                <min>0</min>
-                                <max>1000</max>
-                            </unitRange>
-                        </originDepthRange>
-                        <eventTimeRange>
-                            <timeRange>
-                                <startTime>20020101T00:00:00.001Z</startTime>
-                                <endTime>20020201T00:00:00.001Z</endTime>
-                            </timeRange>
-                        </eventTimeRange>
-                        <magnitudeRange>
-                            <magType>%</magType>
-                            <min>6.0</min>
-                            <max>10.0</max>
-                        </magnitudeRange>
-                        <catalog>
-                            <value>FINGER</value>
-                        </catalog>
-                        <contributor>NEIC</contributor>
-                    </eventFinder>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="eventFinder">
-            <ref name="source"/>
-            <externalRef href="../base/externalRef/area.rng"/>
-            <optional>
-                <element name="originDepthRange">
-                    <ref name="range"/>
+        xmlns="http://relaxng.org/ns/structure/1.0"
+        xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+        <include href="../base/include/timeRange.rng"/>
+        <include href="../base/include/range.rng"/>
+        <include href="../base/include/source.rng"/>
+        <start combine="choice">
+                <choice>
+                        <ref name="eventFinder"/>
+                        <ref name="eventChannelFinder"/>
+                </choice>
+        </start>
+        <define name="eventFinder">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Retrieve events from an EventFinder. </summary>
+                                <description> A Fissures/DHI EventDC service is located via the name
+                                        and dns tags. The EventFinder is aquired from the EventDC,
+                                        and a query is sent with the given arguments. The events
+                                        returned are then sent thrrough the EventArm for processing. </description>
+                                <example>
+                                        <eventFinder>
+                                                <name>IRIS_EventDC</name>
+                                                <dns>edu/iris/dmc</dns>
+                                                <boxArea>
+                                                  <latitudeRange>
+                                                  <min>-90</min>
+                                                  <max>90</max>
+                                                  </latitudeRange>
+                                                  <longitudeRange>
+                                                  <min>-180</min>
+                                                  <max>180</max>
+                                                  </longitudeRange>
+                                                </boxArea>
+                                                <originDepthRange>
+                                                  <unitRange>
+                                                  <unit>KILOMETER</unit>
+                                                  <min>0</min>
+                                                  <max>1000</max>
+                                                  </unitRange>
+                                                </originDepthRange>
+                                                <eventTimeRange>
+                                                  <timeRange>
+                                                  <startTime>20020101T00:00:00.001Z</startTime>
+                                                  <endTime>20020201T00:00:00.001Z</endTime>
+                                                  </timeRange>
+                                                </eventTimeRange>
+                                                <magnitudeRange>
+                                                  <magType>%</magType>
+                                                  <min>6.0</min>
+                                                  <max>10.0</max>
+                                                </magnitudeRange>
+                                                <catalog>
+                                                  <value>FINGER</value>
+                                                </catalog>
+                                                <contributor>NEIC</contributor>
+                                        </eventFinder>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="eventFinder">
+                        <ref name="source"/>
+                        <externalRef href="../base/externalRef/area.rng"/>
+                        <optional>
+                                <element name="originDepthRange">
+                                        <element name="unitRange">
+                                                <ref name="range"/>
+                                        </element>
+                                </element>
+                        </optional>
+                        <element name="eventTimeRange">
+                                <ref name="timeRange"/>
+                        </element>
+                        <optional>
+                                <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+                        </optional>
+                        <zeroOrMore>
+                                <externalRef href="catalog.rng"/>
+                        </zeroOrMore>
+                        <zeroOrMore>
+                                <externalRef href="contributor.rng"/>
+                        </zeroOrMore>
                 </element>
-            </optional>
-            <element name="eventTimeRange">
-                <ref name="timeRange"/>
-            </element>
-            <optional>
-                <externalRef href="../base/externalRef/magnitudeRange.rng"/>
-            </optional>
-            <zeroOrMore>
-                <externalRef href="catalog.rng"/>
-            </zeroOrMore>
-            <zeroOrMore>
-                <externalRef href="contributor.rng"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="eventChannelFinder">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary> Listens for event notifications from an event channel. </summary>
-                <description> A Fissures/DHI EventDC service is located via the name and dns tags.
-                    The EventChannelFinder is aquired from the EventDC, and sod registers as a
-                    listener for event notifications with the event channel with the given name. As
-                    events are received, they are sent through the EventArm for processing. </description>
-                <example>
-                    <eventChannelFinder>
-                        <name>IRIS_EventDC</name>
-                        <dns>edu/iris/dmc</dns>
-                        <eventchannelname>TestEventChannel</eventchannelname>
-                    </eventChannelFinder>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <element name="eventChannelFinder">
-            <ref name="source"/>
-            <element name="eventchannelname">
-                <data type="string"/>
-            </element>
-        </element>
-    </define>
+        </define>
+        <define name="eventChannelFinder">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Listens for event notifications from an event channel. </summary>
+                                <description> A Fissures/DHI EventDC service is located via the name
+                                        and dns tags. The EventChannelFinder is aquired from the
+                                        EventDC, and sod registers as a listener for event
+                                        notifications with the event channel with the given name. As
+                                        events are received, they are sent through the EventArm for
+                                        processing. </description>
+                                <example>
+                                        <eventChannelFinder>
+                                                <name>IRIS_EventDC</name>
+                                                <dns>edu/iris/dmc</dns>
+                                                <eventchannelname>TestEventChannel</eventchannelname>
+                                        </eventChannelFinder>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="eventChannelFinder">
+                        <ref name="source"/>
+                        <element name="eventchannelname">
+                                <data type="string"/>
+                        </element>
+                </element>
+        </define>
 </grammar>
