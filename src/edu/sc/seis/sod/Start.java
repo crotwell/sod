@@ -51,7 +51,9 @@ public class Start{
                 System.err.println();
                 System.err.println("******************************************************************");
                 System.err.println();
-                System.err.println("Invalid config file! Abandon all hope ye who continue running SOD!");
+                System.err.println("Invalid config file! ");
+                System.err.println();
+                System.err.println("     All hope abandon, ye who enter in!");
                 System.err.println();
                 System.err.println("******************************************************************");
                 System.err.println();
@@ -63,6 +65,19 @@ public class Start{
                     catch (InterruptedException e) {
                     }
                 }
+
+                System.err.println();
+                System.err.println();
+                System.err.println("And lo! towards us coming in a boat");
+                System.err.println("  An old man, hoary with the hair of eld,");
+                System.err.println("  Crying: \"Woe unto you, ye souls depraved!");
+                System.err.println("");
+                System.err.println("Hope nevermore to look upon the heavens;");
+                System.err.println("  I come to lead you to the other shore,");
+                System.err.println("  To the eternal shades in heat and frost.");
+                System.err.println();
+                System.err.println();
+
                 System.err.println(" ...a brave soul trudges on.");
             }else{
                 logger.info("Valid config file");
