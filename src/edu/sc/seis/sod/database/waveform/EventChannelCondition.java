@@ -35,6 +35,7 @@ public class EventChannelCondition{
     public static final EventChannelCondition SUCCESS = new EventChannelCondition(5, "Success");
     public static final EventChannelCondition FAILURE = new EventChannelCondition(6, "Failed");
     public static final EventChannelCondition SUBSETTER_STARTED = new EventChannelCondition(7, "SubsetterStarted");
+    public static final EventChannelCondition RETRY = new EventChannelCondition(8, "Retry");
     
     
     public static final EventChannelCondition[] statii = { NEW, SUBSETTER_PASSED,
