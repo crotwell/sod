@@ -18,10 +18,14 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 
 public class CommonAccess {
     private CommonAccess (){}
+    
+    public static ClassLoader getLoader(){
+        return getCommonAccess().getClass().getClassLoader();
+    }
 
     public static CommonAccess getCommonAccess() { return commonAccess; }
 
-    public FissuresNamingService getFissuresNamingService() throws ConfigurationException {
+    public FissuresNamingService getFissuresNamingService(){
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingService(getORB());
             java.util.Properties props = System.getProperties();
