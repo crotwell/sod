@@ -84,11 +84,11 @@ public class ChannelGrouper {
 			}
 			if(rules != null) {
 				for(int ruleCnt = 0;ruleCnt < rules.length;ruleCnt++) {
+					NodeList children = rules[ruleCnt].getChildNodes();
 					boolean accept = true;
-					if(accept) {
-						NodeList children = rules[ruleCnt].getChildNodes();
-						for (int i=0; i<children.getLength(); i++) {
-							Node node = children.item(i);
+					for (int i=0; i<children.getLength(); i++) {
+						Node node = children.item(i);
+						if(accept) {
 							if(node instanceof Element) {
 								Element el = (Element) node;
 								if(el.getTagName().equals("threeCharacterRule")) {
