@@ -13,6 +13,7 @@ import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
+import edu.sc.seis.sod.subsetter.TabularSection;
 import java.io.File;
 import org.w3c.dom.Element;
 
@@ -22,8 +23,8 @@ public class SimpleHTMLEventStatus implements EventStatus{
         page = new SimpleHTMLPage("Event Arm Status",
                                   new File(htmlDir, "eventArm.html"));
         page.append("Status", "Starting up",0);
-        page.append("Successes", "",1);
-        page.append("Failures", "",2);
+        page.add(successes);
+        page.add(failures);
     }
     
     public void setArmStatus(String status) {
@@ -34,12 +35,27 @@ public class SimpleHTMLEventStatus implements EventStatus{
     
     public void change(EventAccessOperations event, RunStatus status) {
         if(status == RunStatus.FAILED){
-            page.append("Failures", CacheEvent.getEventInfo(event), 2);
+            failures.append(CacheEvent.getEventInfo(event), parse(event));
         }else if(status == RunStatus.PASSED){
-            page.append("Successes", CacheEvent.getEventInfo(event), 1);
+            successes.append(CacheEvent.getEventInfo(event), parse(event));
         }
         page.write();
     }
+    
+    public static String[] parse(EventAccessOperations e){
+        String[] items = new String[4];
+        items[0] = CacheEvent.getEventInfo(e, CacheEvent.LOC);
+        items[1] = CacheEvent.getEventInfo(e, CacheEvent.TIME);
+        items[2] = CacheEvent.getEventInfo(e, CacheEvent.MAG);
+        items[3] = CacheEvent.getEventInfo(e, CacheEvent.DEPTH + " " + CacheEvent.DEPTH_UNIT);
+        return items;
+    }
+    
+    private String[] eventColumns = { "Location", "Time", "Magnitude", "Depth"};
+    
+    private TabularSection successes = new TabularSection("Successes", eventColumns);
+    
+    private TabularSection failures = new TabularSection("Failures", eventColumns);
     
     SimpleHTMLPage page;
 }
