@@ -24,8 +24,10 @@ public class ChannelGroup {
         }
         // didn't find by object equals, check for ids
         for(int i=0;i<channels.length;i++) {
-            logger.warn("Found two channels with same id that are not equals()"+ChannelIdUtil.toString(c.get_id()));
-            if(ChannelIdUtil.areEqual(channels[i].get_id(), c.get_id())) return true;
+            if(ChannelIdUtil.areEqual(channels[i].get_id(), c.get_id())) {
+                logger.warn("Found two channels with same id that are not equals()"+ChannelIdUtil.toString(c.get_id()));
+                return true;
+            }
         }
         return false;
     }
@@ -34,5 +36,6 @@ public class ChannelGroup {
     private static final Logger logger = Logger.getLogger(ChannelGroup.class);
 
 }
+
 
 
