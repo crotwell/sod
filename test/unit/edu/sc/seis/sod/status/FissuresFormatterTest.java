@@ -23,7 +23,7 @@ public class FissuresFormatterTest extends TestCase{
     }
 
     public void testNetworkYear(){
-        assertEquals("XX1969", FissuresFormatter.formatNetworkYear(chan.get_id().network_id));
+        assertEquals("XX1970", FissuresFormatter.formatNetworkYear(chan.get_id().network_id));
     }
 
     private Channel chan;
