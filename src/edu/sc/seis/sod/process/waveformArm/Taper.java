@@ -11,10 +11,17 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.SodUtil;
 
 public class Taper implements LocalSeismogramProcess {
     public Taper (Element config) {
-        taper = new edu.sc.seis.fissuresUtil.bag.Taper();
+        Element widthElement = SodUtil.getElement(config, "width");
+        if (widthElement != null) {
+            float width = Float.parseFloat(SodUtil.getText(widthElement));
+            taper = new edu.sc.seis.fissuresUtil.bag.Taper(width);
+        } else {
+            taper = new edu.sc.seis.fissuresUtil.bag.Taper();
+        }
     }
 
     public LocalSeismogramImpl[] process(EventAccessOperations event,

@@ -96,7 +96,11 @@
     </define>
     <define name="taper">
         <element name="taper">
-            <empty/>
+            <optional>
+                <element name="width">
+                    <data type="float"/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="responseGainProcessor">
