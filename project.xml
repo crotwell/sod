@@ -61,12 +61,16 @@
     </developer>
   </developers>
   <dependencies>
-    <dependency>
-      <groupId>jcalendar</groupId>
-      <artifactId>jcalendar</artifactId>
-      <version>0.6.1beta</version>
-    </dependency>
 
+<dependency>
+  <id>openmap</id>
+  <version>4.5.4</version>
+</dependency>
+<dependency>
+  <groupId>jcalendar</groupId>
+  <artifactId>jcalendar</artifactId>
+  <version>0.6.1beta</version>
+</dependency>
     <dependency>
       <groupId>JacORB</groupId>
       <artifactId>JacORB</artifactId>
