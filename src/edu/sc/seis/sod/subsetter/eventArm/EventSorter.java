@@ -32,7 +32,21 @@ public class EventSorter{
         }
     }
 
-    private String makeExtraClause(List statii){
+    protected String makeExtraClause(Element status){
+        List statii = new ArrayList();
+        if(SodUtil.getNestedText(status).equals("SUCCESS")){
+            statii.add( Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                   Standing.SUCCESS));
+            statii.add(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                  Standing.IN_PROG));
+
+        }else if(SodUtil.getNestedText(status).equals("FAILED")){
+            statii.add(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                  Standing.REJECT));
+        }else if(SodUtil.getNestedText(status).equals("IN PROGRESS")){
+            statii.add(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                  Standing.IN_PROG));
+        }
         String extraClause = " and eventcondition IN (";
         Iterator it = statii.iterator();
         boolean first = true;
@@ -41,7 +55,7 @@ public class EventSorter{
             else{ extraClause += ", "; }
             extraClause += " " + ((Status)it.next()).getAsShort();
         }
-        extraClause += ") and eventid = origin_event_id ";
+        extraClause += ") ";
         return extraClause;
     }
 
@@ -50,37 +64,22 @@ public class EventSorter{
             Element sortType = (Element)config.getFirstChild();
             String extraClause = "";
             if(config.getElementsByTagName("status").getLength() > 0){
-                List statii = new ArrayList();
-                Element status = (Element)config.getElementsByTagName("status").item(0);
-                if(SodUtil.getNestedText(status).equals("SUCCESS")){
-                    statii.add( Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                           Standing.SUCCESS));
-                    statii.add(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                          Standing.IN_PROG));
-
-                }else if(SodUtil.getNestedText(status).equals("FAILED")){
-                    statii.add(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                          Standing.REJECT));
-                }else if(SodUtil.getNestedText(status).equals("IN PROGRESS")){
-                    statii.add(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                          Standing.IN_PROG));
-                }
-                extraClause = makeExtraClause(statii);
+                extraClause = makeExtraClause((Element)config.getElementsByTagName("status").item(0));
             }
             String query = null;
             if(sortType.getNodeName().equals("time")){
                 query = "SELECT DISTINCT eventid, time_stamp, eventcondition FROM origin, time, eventstatus " +
-                    "WHERE origin_time_id = time_id" + extraClause +
+                    "WHERE origin_time_id = time_id" + extraClause + "and eventid = origin_event_id " +
                     " ORDER BY time_stamp";
             }else if(sortType.getNodeName().equals("magnitude")){
                 query = "SELECT DISTINCT eventid, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
                     "WHERE magnitudevalue = (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
-                    extraClause +
+                    extraClause + "and eventid = origin_event_id " +
                     " ORDER BY  magnitudevalue";
             }else if(sortType.getNodeName().equals("depth")){
                 query = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
                     "WHERE quantity_value = (SELECT quantity_value FROM quantity WHERE quantity_id = (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
-                    extraClause +
+                    extraClause + "and eventid = origin_event_id " +
                     " ORDER BY  quantity_value";
             }
             if(query != null){
