@@ -199,12 +199,22 @@
                                     <data type="string"/>
                                     </element>
                                 </zeroOrMore>
-                                <element name="min">
+                                <choice>
+                                    <element name="min">
                                     <data type="float"/>
-                                </element>
-                                <element name="max">
+                                    </element>
+                                    <element name="max">
                                     <data type="float"/>
-                                </element>
+                                    </element>
+                                    <group>
+                                    <element name="min">
+                                    <data type="float"/>
+                                    </element>
+                                    <element name="max">
+                                    <data type="float"/>
+                                    </element>
+                                    </group>
+                                </choice>
                             </element>
                         </optional>
                         <zeroOrMore>
@@ -789,12 +799,22 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                        <group>
+                            <element name="min">
+                                <data type="float"/>
+                            </element>
+                            <element name="max">
+                                <data type="float"/>
+                            </element>
+                        </group>
+                    </choice>
                 </element>
                 <ref name="range4"/>
             </element>
@@ -980,12 +1000,22 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                        <group>
+                            <element name="min">
+                                <data type="float"/>
+                            </element>
+                            <element name="max">
+                                <data type="float"/>
+                            </element>
+                        </group>
+                    </choice>
                 </element>
                 <ref name="range8"/>
             </element>
@@ -1171,12 +1201,22 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                        <group>
+                            <element name="min">
+                                <data type="float"/>
+                            </element>
+                            <element name="max">
+                                <data type="float"/>
+                            </element>
+                        </group>
+                    </choice>
                 </element>
                 <ref name="range"/>
             </element>
@@ -1362,12 +1402,22 @@
                             <data type="string"/>
                         </element>
                     </zeroOrMore>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                        <group>
+                            <element name="min">
+                                <data type="float"/>
+                            </element>
+                            <element name="max">
+                                <data type="float"/>
+                            </element>
+                        </group>
+                    </choice>
                 </element>
                 <ref name="range2"/>
             </element>
@@ -1562,12 +1612,22 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                    <group>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                    </group>
+                </choice>
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
@@ -1772,12 +1832,22 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                    <group>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                    </group>
+                </choice>
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
@@ -1982,12 +2052,22 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                    <group>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                    </group>
+                </choice>
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
@@ -2192,12 +2272,22 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                    <group>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                    </group>
+                </choice>
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
@@ -2402,12 +2492,22 @@
                         <data type="string"/>
                     </element>
                 </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                    <group>
+                        <element name="min">
+                            <data type="float"/>
+                        </element>
+                        <element name="max">
+                            <data type="float"/>
+                        </element>
+                    </group>
+                </choice>
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">

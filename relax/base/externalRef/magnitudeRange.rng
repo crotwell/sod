@@ -23,12 +23,22 @@
                     <data type="string"/>
                 </element>
             </zeroOrMore>
-            <element name="min">
-                <data type="float"/>
-            </element>
-            <element name="max">
-                <data type="float"/>
-            </element>
+            <choice>
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+                <group>
+                    <element name="min">
+                        <data type="float"/>
+                    </element>
+                    <element name="max">
+                        <data type="float"/>
+                    </element>
+                </group>
+            </choice>
         </element>
     </start>
 </grammar>
