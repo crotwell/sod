@@ -16,12 +16,10 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamException;
 import org.xml.sax.InputSource;
-import sun.security.action.GetPropertyAction;
 import edu.sc.seis.sod.validator.Validator;
 import edu.sc.seis.sod.validator.model.Annotation;
 import edu.sc.seis.sod.validator.model.Form;
 import edu.sc.seis.sod.validator.model.GenitorForm;
-import edu.sc.seis.sod.validator.model.ModelUtil;
 import edu.sc.seis.sod.validator.model.MultigenitorForm;
 import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 
@@ -32,6 +30,7 @@ public class ExampleValidator {
         StAXModelBuilder modelBuilder = new StAXModelBuilder(exampleContainingSchemaLoc);
         Form root = modelBuilder.getRoot().getForm();
         Annotation[] anns = findUniqueAnnotations(root);
+        System.out.println(anns.length + " examples to be validated");
         validate(anns, root, 0, anns.length);
     }
 
