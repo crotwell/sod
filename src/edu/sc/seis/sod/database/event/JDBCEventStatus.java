@@ -8,7 +8,6 @@ import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -29,14 +28,15 @@ public class JDBCEventStatus extends SodJDBC{
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
         }
-        getStatus = conn.prepareStatement("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
-        putEvent = conn.prepareStatement("INSERT into eventstatus (eventcondition, eventid) " +
+        getStatus = prepare("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
+        putEvent = prepare("INSERT into eventstatus (eventcondition, eventid) " +
                                              "VALUES (?, ?)");
-        updateStatus = conn.prepareStatement("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
-        getNextStmt = conn.prepareStatement("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
+        updateStatus = prepare("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
+        getNextStmt = prepare("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
                                                 Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                            Standing.IN_PROG).getAsShort());
-        getAllOfEventArmStatus = conn.prepareStatement(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
+        getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
+        getAll = prepare("SELECT eventid, eventcondition FROM eventstatus");
     }
 
     public void restartCompletedEvents() throws SQLException {
@@ -70,17 +70,20 @@ public class JDBCEventStatus extends SodJDBC{
 
 
     public StatefulEvent[] getAll() throws SQLException {
-        return get("SELECT event_id FROM eventaccess", "event_id");
+        return get(getAll);
     }
 
-    public StatefulEvent[] get(String query, String idLoc) throws SQLException{
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
+    public PreparedStatement prepare(String query) throws SQLException{
+        return conn.prepareStatement(query);
+    }
+
+    public StatefulEvent[] get(PreparedStatement prep) throws SQLException{
+        ResultSet rs = prep.executeQuery();
         List evs = new ArrayList();
         while(rs.next()){
             try {
-                CacheEvent ev = eventAccessTable.getEvent(rs.getInt(idLoc));
-                Status stat = getStatus(rs.getInt(idLoc));
+                CacheEvent ev = eventAccessTable.getEvent(rs.getInt("eventid"));
+                Status stat = Status.getFromShort(rs.getShort("eventcondition"));
                 try {
                     evs.add(new StatefulEvent(ev, stat));
                 } catch (NoPreferredOrigin e) {
@@ -146,7 +149,7 @@ public class JDBCEventStatus extends SodJDBC{
 
     private PreparedStatement getStatus, putEvent, updateStatus,
         getAllOfEventArmStatus, getAllOfWaveformArmStatus,
-        getWaveformStatus, getAllOrderByDate, getNextStmt;
+        getWaveformStatus, getAllOrderByDate, getNextStmt, getAll;
 
     private Connection conn;
 }
