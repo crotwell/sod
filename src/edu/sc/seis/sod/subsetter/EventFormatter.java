@@ -103,7 +103,12 @@ public class EventFormatter extends Template implements EventTemplate{
         }
         
         public String getResult(EventAccessOperations ev){
-            return sdf.format(new MicroSecondDate(getOrigin(ev).origin_time));
+            try{
+                return sdf.format(new MicroSecondDate(getOrigin(ev).origin_time));
+            }catch(NumberFormatException e){
+                System.out.println("Offending date_time: " + getOrigin(ev).origin_time.date_time);
+                throw e;
+            }
         }
         
         private SimpleDateFormat sdf;
