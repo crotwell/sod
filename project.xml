@@ -7,7 +7,7 @@
   <organization>
     <name>Seismology at the University of South Carolina</name>
     <url>http://www.seis.sc.edu</url>
-    <logo>http://www.seis.sc.edu/images/header.gif</logo>
+    <logo>http://www.seis.sc.edu/software/wily/header.gif</logo>
   </organization>
   <inceptionYear>2002</inceptionYear>
   <package>edu.sc.seis.sod</package>
