@@ -44,7 +44,7 @@ The main structure of our xml file will look like this. We will fill in
 each section with the details later. 
 </para>
 <programlisting>
-&lt;sod  xmlns="http://www.seis.sc.edu/xschema/sod/1.0"
+&lt;sod:sod  xmlns:sod="http://www.seis.sc.edu/xschema/sod/1.0"
     xsi:schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0 http://www.seis.sc.edu/xschema/sod/1.0/sod.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
 
@@ -56,16 +56,16 @@ each section with the details later.
     &lt;/networkArm&gt;
     &lt;waveFormArm&gt;
     &lt;/waveFromArm&gt;
-&lt;/sod&gt;
+&lt;/sod:sod&gt;
 </programlisting>
 <para>
 There are several very important items here, and so you sound make sure that 
-these are correct. The three attributes of the &lt;sod&gt; tag: 
-xmlns, xsi:schemaLocation, and xmlns:xsi, allow the xml parser to find the
+these are correct. The three attributes of the &lt;sod:sod&gt; tag: 
+xmlns:sod, xsi:schemaLocation, and xmlns:xsi, allow the xml parser to find the
 definition of the sod configuration file structure. First, the xmlns:xsi
 attribute associates the XMLSchema-instance namespace with the shorthand xsi
 prefix. The xsi:schemaLocation attribute gives a hint as to where to find
-the definitions of the sod tags. Lastly, the xmlns attribute says that we are
+the definitions of the sod tags. Lastly, the xmlns:sod attribute says that we are
 using the xml namespace for sod. Understanding how these work is not really
 important, but having them in your configuration file is very important. Sod
 will refuse to run if they are not there or wrong.

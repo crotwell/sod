@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<sod xmlns="http://www.seis.sc.edu/xschema/sod/1.0"
+<sod:sod xmlns:sod="http://www.seis.sc.edu/xschema/sod/1.0"
      xsi:schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0 http://www.seis.sc.edu/xschema/sod/1.0/sod.xsd"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 
@@ -156,4 +156,4 @@
 
     </localSeismogramArm>
    </waveFormArm>
-</sod>
+</sod:sod>
