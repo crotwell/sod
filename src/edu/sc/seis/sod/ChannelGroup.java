@@ -25,7 +25,9 @@ public class ChannelGroup {
 
     public boolean contains(Channel c){
         for (int i = 0; i < channels.length; i++) {
-            if(channels[i].equals(c)){ return true; }
+            if(ChannelIdUtil.areEqual(channels[i].get_id(), c.get_id())) {
+                return true;
+            }
         }
         return false;
     }
