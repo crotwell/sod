@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
-        <include href="phaseRequest.rng"/>
     <start>
         <element name="motionVectorArm">
             <optional>
                 <externalRef href="eventChannelGroup.rng"/>
             </optional>
             <element name="requestGeneratorWrapper">
-                <element name="phaseRequest">
-                    <ref name="phaseRequest"/>
-                </element>
+            <externalRef href="phaseRequest.rng"/>
             </element>
             <optional>
                 <externalRef href="channelGroupRequestSubsetter.rng"/>
