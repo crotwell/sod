@@ -13,6 +13,7 @@
             <ref name="ANDLocalSeismogramWrapper" />
             <ref name="ORLocalSeismogramWrapper" />
             <ref name="externalChannelGroupSeismogramProcess" />
+            <ref name="channelGroupLegacyExecute" />
             <ref name="channelGroupFork" />
             <ref name="channelGroupAND" />
             <ref name="channelGroupOR" />
@@ -67,6 +68,38 @@
             <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="channelGroupLegacyExecute">
+        <element name="channelGroupLegacyExecute">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Executes an external program.</summary>
+                <description>The channelGroupLegacyExecute processor is capable of running existing
+                        command line programs. It does this by passing the filenames
+                        of the seismograms saved by a earlier SaveSeismogramToFile
+                        processor to a program started with Runtime.exec().
+                </description>
+                <example>
+                    <channelGroupLegacyExecute>
+                        <command>echo</command>
+                    </channelGroupLegacyExecute>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+            <optional>
+                <element name="prefix">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="command">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="workingDirectory">
+                    <data type="string"/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="channelGroupFork">
