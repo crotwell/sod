@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <author>Charlie Groves</author>
+        <title>SOD - Introduction to XML</title>
+    </properties>
+    <body>
+        <section name="What is XML">
+            <p>XML stands for the eXtensible Markup Language. It's a textual format that structures
+                data. It was designed by the W3C. You can see their information about XML <a href="http://www.w3.org/XML/">here</a>.</p>
+        </section>
+        <section name="How does SOD use XML?">
+            <p>SOD's strategy files are stored in XML. The textual format of XML means that they're
+                editable by text editors like vi, emacs or even Notepad on Windows. </p>
+        </section>
+        <section name="What do I need to know about XML to use SOD?">
+            <p>Nothing for basic usage. You can use SOD's GUI editor to change settings in the
+                tutorial strategy files distributed with SOD. To actually change the tactics SOD
+                uses though, you'll need to edit the strategy files in a text editor. To do this,
+                it's best to have some understanding of the structure of XML so that you understand
+                what you're editing, and you understand what the error messages mean if something
+                goes wrong. SOD only uses a subset of XML in its builtin processors and subsetters.
+                There are no attributes, namespaces, and other more arcane features of XML in
+                SOD(though you're certainly welcome to use these features in your external
+                processors if you like). If you read through the first six examples <a
+                href="http://www.zvon.org/xxl/XMLTutorial/Output/example1.html">here</a> you should
+                know enough about XML to understand the structure SOD strategy files.</p>
+        </section>
+    </body>
+</document>
