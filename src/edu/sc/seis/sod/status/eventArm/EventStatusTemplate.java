@@ -85,7 +85,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
     }
 
     public void change(EventAccessOperations event, Status status) {
-        if(!addedToWaveformArm){
+        if(!addedToWaveformArm && Start.getWaveformArm() != null){
             Start.getWaveformArm().addStatusMonitor(this);
             addedToWaveformArm = true;
         }
