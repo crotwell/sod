@@ -39,7 +39,7 @@ public class EditorUtil {
         return b;
     }
 
-    public static JLabel getLabel(String text) {
+    public static JComponent getLabel(String text){
         return new JLabel(SimpleGUIEditor.getDisplayName(text)+":");
     }
 
@@ -145,7 +145,6 @@ public class EditorUtil {
     }
 
     private static Logger logger = Logger.getLogger(EditorUtil.class);
-
 }
 
 
