@@ -5,6 +5,7 @@ import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
 import java.io.IOException;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
 /**
@@ -24,7 +25,7 @@ public class CommonAccess {
         handleException(reason, t);
     }
     public static void handleException(String reason, Throwable t) {
-        logger.error(reason, t);
+        GlobalExceptionHandler.handle(reason, t);
     }
 
     public static CommonAccess getCommonAccess() { return commonAccess; }
