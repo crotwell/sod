@@ -87,6 +87,7 @@ public class PhaseSignalToNoise  implements WaveformProcess {
         if (seismograms.length == 0 ) {
             return new WaveformResult(seismograms, new StringTreeLeaf(this, false, "no seismograms"));
         }
+        try {
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
@@ -100,6 +101,12 @@ public class PhaseSignalToNoise  implements WaveformProcess {
             return new WaveformResult(seismograms,
                                              new StringTreeLeaf(this, false, "trigger is null"));
         }
+
+        } catch (PhaseNonExistent e) {
+            // no phase at this distance, just fail
+            return new WaveformResult(seismograms,
+                                      new StringTreeLeaf(this, false, "Phase does not exist", e));
+        }
     }
 
     /** This method exists to make the trigger available to other subsetters
@@ -111,7 +118,7 @@ public class PhaseSignalToNoise  implements WaveformProcess {
         // find the first seismogram with a non-null trigger, probably the first
         // that overlaps the timewindow, and return it.
         for (int i = 0; i < seismograms.length; i++) {
-            LongShortTrigger trigger =
+           LongShortTrigger trigger =
                 phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[i]);
             if (trigger != null) { return trigger; }
         }
