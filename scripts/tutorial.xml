@@ -152,6 +152,10 @@
                                 <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                                 </eventDirLabel>
                         </saveSeismogramToFile>
+                		<localSeismogramTemplateGenerator>
+                				<fileDir>status</fileDir>
+                				<seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
+                		</localSeismogramTemplateGenerator>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
                 		<fileDir>status</fileDir>
@@ -159,3 +163,4 @@
                 </waveformEventTemplateGenerator>
         </waveFormArm>
 </sod>
+
