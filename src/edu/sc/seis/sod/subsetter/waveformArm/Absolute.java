@@ -1,17 +1,13 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.sc.seis.sod.subsetter.*;
-import edu.sc.seis.TauP.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.model.*;
-
-import java.util.*;
-import org.w3c.dom.*;
+import edu.iris.Fissures.Area;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.DepthRange;
 
 /**
  * sample xml
@@ -80,8 +76,8 @@ public class Absolute extends PhaseInteractionType {
 			node = nodeList.item(counter);
 			if(node instanceof Element) {
 				Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter");
-				if(obj instanceof edu.iris.Fissures.Area) area = (edu.iris.Fissures.Area)obj;
-				else if(obj instanceof edu.sc.seis.sod.subsetter.DepthRange) depthRange = (edu.sc.seis.sod.subsetter.DepthRange)obj;
+				if(obj instanceof Area) area = (Area)obj;
+				else if(obj instanceof DepthRange) depthRange = (DepthRange)obj;
 			}
 
 		}
@@ -99,9 +95,9 @@ public class Absolute extends PhaseInteractionType {
 
 	}
 
-	private edu.iris.Fissures.Area area = null;
+	private Area area = null;
 
-	private edu.sc.seis.sod.subsetter.DepthRange depthRange = null;
+	private DepthRange depthRange = null;
 
 	private Element config;
 }//Absolute
