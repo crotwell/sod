@@ -180,6 +180,10 @@ public class CookieJar {
         eventContexts.remove(event);
     }
 
+    public static VelocityContext getCommonContext() {
+        return commonContext;
+    }
+
     private static int MAX_EVENTS = 10;
 
     private static LinkedList eventOrder = new LinkedList();
