@@ -4,6 +4,7 @@
         <include href="base/include/quantity.rng"/>
         <start>
                 <element name="properties">
+                    <interleave>
                             <optional>
                                         <element name="runName">
                                                 <text/>
@@ -57,6 +58,7 @@
                                                 </choice>
                                         </element>
                             </optional>
+                    </interleave>
                 </element>
         </start>
         <define name="trueOrFalse">
