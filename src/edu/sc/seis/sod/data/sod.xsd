@@ -3661,6 +3661,29 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <!-- REQUEST SUBSETTER NOT TYPE -->
+    <xsd:complexType name="requestPrintType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Prints the Request and returns true.
+                </summary>
+                <description>
+                    Mainly useful for debugging, prints out the request.
+                </description>
+                <example>
+                    <requestPrint/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
 
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
 
@@ -4039,6 +4062,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="requestSubsetterOR" type="requestSubsetterORType" substitutionGroup="requestSubsetter"/>
     <xsd:element name="requestSubsetterXOR" type="requestSubsetterXORType" substitutionGroup="requestSubsetter"/>
     <xsd:element name="requestSubsetterNOT" type="requestSubsetterNOTType" substitutionGroup="requestSubsetter"/>
+    <xsd:element name="requestPrint" type="requestPrintType" substitutionGroup="requestSubsetter"/>
     <xsd:element name="breqFastRequestSubsetter" type="breqfastRequestSubsetterType" substitutionGroup="requestSubsetter"/>
 
     <!-- ELEMENT DECLARATIONS FOR AVAILABLE DATA TYPE -->
