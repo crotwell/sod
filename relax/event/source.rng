@@ -8,7 +8,6 @@
         <start combine="choice">
                 <choice>
                         <ref name="eventFinder"/>
-                        <ref name="eventChannelFinder"/>
                 </choice>
         </start>
         <define name="eventFinder">
@@ -81,32 +80,6 @@
                         <zeroOrMore>
                                 <externalRef href="contributor.rng"/>
                         </zeroOrMore>
-                </element>
-        </define>
-        <define name="eventChannelFinder">
-                <xsd:annotation>
-                        <xsd:documentation xml:lang="en">
-                                <summary> Listens for event notifications from an event channel. </summary>
-                                <description> A Fissures/DHI EventDC service is located via the name
-                                        and dns tags. The EventChannelFinder is aquired from the
-                                        EventDC, and sod registers as a listener for event
-                                        notifications with the event channel with the given name. As
-                                        events are received, they are sent through the EventArm for
-                                        processing. </description>
-                                <example>
-                                        <eventChannelFinder>
-                                                <name>IRIS_EventDC</name>
-                                                <dns>edu/iris/dmc</dns>
-                                                <eventchannelname>TestEventChannel</eventchannelname>
-                                        </eventChannelFinder>
-                                </example>
-                        </xsd:documentation>
-                </xsd:annotation>
-                <element name="eventChannelFinder">
-                        <ref name="source"/>
-                        <element name="eventchannelname">
-                                <data type="string"/>
-                        </element>
                 </element>
         </define>
 </grammar>
