@@ -145,9 +145,9 @@ public class Start implements SodExceptionListener {
     public static void main (String[] args) {
         try {
             Properties props = System.getProperties();
-            props.put("org.omg.CORBA.ORBClass", "com.ooc.CORBA.ORB");
-            props.put("org.omg.CORBA.ORBSingletonClass",
-                      "com.ooc.CORBA.ORBSingleton");
+//            props.put("org.omg.CORBA.ORBClass", "com.ooc.CORBA.ORB");
+//            props.put("org.omg.CORBA.ORBSingletonClass",
+//                      "com.ooc.CORBA.ORBSingleton");
 
             // get some defaults
             String propFilename=
