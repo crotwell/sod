@@ -23,7 +23,17 @@ public class Annotation{
         return getExample(DEFAULT_HTMLIZE);
     }
 
+    public void setFormProvider(FormProvider fp){
+        formProvider = fp;
+    }
+
     public String getExample(boolean htmlize){
+        if (example.equals("")){
+            ExampleBuilder eb = new ExampleBuilder(htmlize);
+            htmlize = false; //since the exampleBuilder handles htmlization, we don't need to
+            eb.write(formProvider.getForm());
+            example = eb.toString();
+        }
         if (htmlize){
             return getHTMLizedString(example);
         }
@@ -48,7 +58,8 @@ public class Annotation{
     }
 
     private String summary, desc;
-    private String example; // = generateExample(the tag);
+    private String example = "";
+    private FormProvider formProvider;
 
     public static boolean DEFAULT_HTMLIZE = true;
 }
