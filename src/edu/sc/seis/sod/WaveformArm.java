@@ -238,7 +238,7 @@ public class WaveformArm implements Runnable {
                         }
                     }
                     if(pairGroup == null){
-                        GlobalExceptionHandler.handle("WaveformArm unable to match up a channel with a group that must've previously existed",
+                        GlobalExceptionHandler.handle("WaveformArm unable to match up a channel with a group that must've previously existed, ecp id="+pairId+"  groups.length="+groups.length+"  ecp="+ecp,
                                                       new RuntimeException());
                         return null;
                     }
