@@ -88,6 +88,22 @@ public class JDBCNetworkUnifier{
         return out;
     }
 
+    public JDBCNetwork getNetworkDb() {
+        return netDb;
+    }
+
+    public JDBCChannel getChannelDb() {
+        return chanDb;
+    }
+
+    public JDBCSite getSiteDb() {
+        return siteDb;
+    }
+
+    public JDBCStation getStationDb() {
+        return stationDb;
+    }
+
     private JDBCNetwork netDb;
     private JDBCChannel chanDb;
     private JDBCSite siteDb;
