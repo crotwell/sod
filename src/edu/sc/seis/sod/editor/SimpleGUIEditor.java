@@ -106,10 +106,11 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         FileDialog fileDialog = new FileDialog(frame, "Load a SOD config file");
                         fileDialog.setDirectory(".");
                         fileDialog.show();
+                        String infileDir = fileDialog.getDirectory();
                         String inFile = fileDialog.getFile();
                         if (inFile != null) {
                             try {
-                                setConfigFile(inFile);
+                                setConfigFile(infileDir + "/" + inFile);
                                 loadGUI();
                             } catch (Exception ex) {
                                 GlobalExceptionHandler.handle("Unable to open "+inFile, ex);
