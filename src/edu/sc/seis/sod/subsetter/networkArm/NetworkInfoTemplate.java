@@ -26,14 +26,10 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
 
     public void changeStatus(RunStatus status) throws IOException {
         this.status = status;
-        try {
-            write();
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble writing file " + getFilename());
-        }
+        write();
     }
 
-    public void write() throws IOException{
+    public void write(){
         logger.debug("queueing " + getOutputDirectory() + "/" + getFilename());
         super.write();
     }
