@@ -8,6 +8,7 @@ package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.CommonAccess;
@@ -93,12 +94,14 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     }
     
     public void change(NetworkAccess net, RunStatus status) throws IOException{
+        if (net == null) logger.debug("network is null!");
         netTemplate.change(net, status);
         getStationsInNetworkTemplate(net);
     }
     
     public void change(Station station, RunStatus status) throws IOException {
         logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
+        if (station == null) logger.debug("station is null!");
         StationsInNetworkTemplate snt = getStationsInNetworkTemplate(station);
         snt.change(station, status);
         getSitesInStationTemplate(station);
@@ -106,6 +109,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     
     public void change(Site site, RunStatus status) throws IOException {
         logger.debug("change(site, status): " + SiteFormatter.formatSiteCode(site.get_code()) + ", " + status.toString());
+        if (site == null) logger.debug("site is null!");
         SitesInStationTemplate sst = getSitesInStationTemplate(site);
         sst.change(site, status);
         getChannelsInSiteTemplate(site);
@@ -113,6 +117,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     
     public void change(Channel channel, RunStatus status) throws IOException {
         logger.debug("change(channel, status): " + channel.get_code() + ", " + status.toString());
+        if (channel == null) logger.debug("channel is null!");
         ChannelsInSiteTemplate cst = getChannelsInSiteTemplate(channel);
         cst.change(channel, status);
     }
@@ -124,7 +129,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net){
         if (!contains(net)){
             try {
-                stationTemplates.put(net.get_attributes().name + net.get_attributes().get_id().begin_time.date_time,
+                stationTemplates.put(getIDString(net),
                                      new StationsInNetworkTemplate(staConfig,
                                                                    fileDir
                                                                        + '/'
@@ -132,12 +137,14 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                                                                        + '/'
                                                                        + stasOutputFileName,
                                                                    net));
+                logger.debug("successfully put " + getIDString(net) + "'s StationsInNetworkTemplate in map");
             } catch (IOException e) {
                 CommonAccess.handleException(e, "trouble creating StationsInNetworkTemplate");
             }
         }
-        return (StationsInNetworkTemplate)stationTemplates.get(net.get_attributes().name
-                                                                   + net.get_attributes().get_id().begin_time.date_time);
+        StationsInNetworkTemplate snt = (StationsInNetworkTemplate)stationTemplates.get(getIDString(net));
+        if (snt == null) logger.debug("StationsInNetworkTemplate is null!");
+        return snt;
     }
     
     public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station){
@@ -147,8 +154,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     public SitesInStationTemplate getSitesInStationTemplate(Station station){
         if (!contains(station)){
             try {
-                siteTemplates.put(station.name
-                                      + station.get_id().begin_time.date_time,
+                siteTemplates.put(getIDString(station),
                                   new SitesInStationTemplate(siteConfig,
                                                              fileDir
                                                                  + '/'
@@ -162,8 +168,9 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                 CommonAccess.handleException(e, "trouble creating SitesInStationTemplate");
             }
         }
-        return (SitesInStationTemplate)siteTemplates.get(station.name
-                                                             + station.get_id().begin_time.date_time);
+        SitesInStationTemplate sst = (SitesInStationTemplate)siteTemplates.get(getIDString(station));
+        if (sst == null) logger.debug("SitesInStationTemplate is null!");
+        return sst;
     }
     
     public SitesInStationTemplate getSitesInStationTemplate(Site site){
@@ -173,9 +180,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     public ChannelsInSiteTemplate getChannelsInSiteTemplate(Site site){
         if (!contains(site)){
             try {
-                channelTemplates.put(site.my_station.my_network.get_code()
-                                         + site.my_station.get_code() + site.get_code()
-                                         + site.get_id().begin_time.date_time,
+                channelTemplates.put(getIDString(site),
                                      new ChannelsInSiteTemplate(chanConfig,
                                                                 fileDir
                                                                     + '/'
@@ -191,15 +196,8 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                 CommonAccess.handleException(e, "trouble creating ChannelsInSiteTemplate");
             }
         }
-        ChannelsInSiteTemplate cst = (ChannelsInSiteTemplate)channelTemplates.get(site.my_station.my_network.get_code()
-                                                                                      + site.my_station.get_code()
-                                                                                      + site.get_code()
-                                                                                      + site.get_id().begin_time.date_time);
-        if (cst == null) logger.debug("ChannelsInSiteTemplate for "
-                                          + site.my_station.get_code()
-                                          + '.'
-                                          +site.get_code()
-                                          + " is null!");
+        ChannelsInSiteTemplate cst = (ChannelsInSiteTemplate)channelTemplates.get(getIDString(site));
+        if (cst == null) logger.debug("ChannelsInSiteTemplate is null!");
         return cst;
     }
     
@@ -210,9 +208,9 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     public NetworkAccess getNetworkFromStation(Station station){
         NetworkAccess staNet = null;
         Iterator it = stationTemplates.keySet().iterator();
-        while (it.hasNext() && staNet == null){
+       while (it.hasNext() && staNet == null){
             String cur = (String)it.next();
-            if (cur.equals(station.my_network.name + station.my_network.get_id().begin_time.date_time)){
+            if (cur.equals(getIDString(station.my_network))){
                 staNet = ((StationsInNetworkTemplate)stationTemplates.get(cur)).getNetwork();
                 logger.debug("found station "
                                  + station.get_code()
@@ -221,23 +219,45 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                                  +") in stationTemplates");
             }
         }
+        if (staNet == null) logger.debug("network for station is null!");
         return staNet;
     }
     
     public boolean contains(NetworkAccess net){
-        return stationTemplates.containsKey(net.get_attributes().name
-                                                + net.get_attributes().get_id().begin_time.date_time);
+        return stationTemplates.containsKey(getIDString(net));
     }
     
     public boolean contains(Station sta){
-        return siteTemplates.containsKey(sta.name + sta.get_id().begin_time.date_time);
+        if (sta == null) logger.debug("station is null!");
+        return siteTemplates.containsKey(getIDString(sta));
     }
     
     public boolean contains(Site site){
-        return channelTemplates.containsKey(site.my_station.my_network.get_code()
-                                                + site.my_station.get_code()
-                                                + site.get_code()
-                                                + site.get_id().begin_time.date_time);
+        if (site == null) logger.debug("site is null!");
+        return channelTemplates.containsKey(getIDString(site));
+    }
+    
+    private String getIDString(NetworkAccess net){
+        return getIDString(net.get_attributes());
+    }
+    
+    private String getIDString(NetworkAttr netAttr){
+        return netAttr.name
+            + netAttr.get_id().begin_time.date_time
+            + netAttr.effective_time.end_time.date_time;
+    }
+    
+    private String getIDString(Station sta){
+        return sta.name + sta.get_id().begin_time.date_time
+            + sta.effective_time.end_time.date_time;
+    }
+    
+    private String getIDString(Site site){
+        return site.my_station.my_network.get_code()
+            + site.my_station.get_code()
+            + site.get_code()
+            + site.get_id().begin_time.date_time
+            + site.effective_time.end_time.date_time;
     }
     
     public void setArmStatus(String status)  throws IOException {
