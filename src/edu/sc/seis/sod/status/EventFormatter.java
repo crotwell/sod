@@ -10,14 +10,22 @@ import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import java.sql.SQLException;
+import edu.sc.seis.fissuresUtil.database.NotFound;
 
 public class EventFormatter extends Template implements EventTemplate{
 
@@ -94,8 +102,56 @@ public class EventFormatter extends Template implements EventTemplate{
             return new Time(SodUtil.getText((el)));
         } else if(tag.equals("eventStatus")) {
             return new EventStatusFormatter();
+        }else if(tag.equals("waveformChannels")){
+            try {
+                return new EventChannelQuery(SodUtil.getNestedText(el));
+            } catch (NoSuchFieldException e) {
+                GlobalExceptionHandler.handle("Unknown standing name passed into event formatter",
+                                              e);
+            }
         }
         return super.getCommonTemplate(tag, el);
+    }
+
+    private class EventChannelQuery implements EventTemplate{
+        public EventChannelQuery(String standing) throws NoSuchFieldException{
+            Standing s = Standing.getForName(standing);
+            if(s.equals(Standing.SUCCESS)){
+                statii.add(Status.get(Stage.PROCESSOR, s));
+            }else if(s.equals(Standing.REJECT)){
+                statii.add(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, s));
+                statii.add(Status.get(Stage.EVENT_STATION_SUBSETTER, s));
+                statii.add(Status.get(Stage.REQUEST_SUBSETTER, s));
+            }else if(s.equals(Standing.RETRY)){
+                statii.add(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
+                statii.add(Status.get(Stage.DATA_SUBSETTER, s));
+            }
+        }
+
+        public String getResult(EventAccessOperations ev) {
+            int count = 0;
+            synchronized(statusTable){
+                Iterator it = statii.iterator();
+                while(it.hasNext()){
+                    try {
+                        count += statusTable.getAll(ev, (Status)it.next()).length;
+                    } catch (Exception e) { GlobalExceptionHandler.handle(e); }
+                }
+            }
+            return "" + count;
+        }
+
+        private List statii = new ArrayList();
+    }
+
+    private static JDBCEventChannelStatus statusTable;
+
+    static{
+        try {
+            statusTable = new JDBCEventChannelStatus();
+        } catch (SQLException e) {
+            GlobalExceptionHandler.handle(e);
+        }
     }
 
     private String format(double d){
