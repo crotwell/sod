@@ -34,29 +34,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         frameName = "SOD Editor";
         setTabbed(true);
         initEditors();
-        //JPanel sodPanel = new JPanel();
-        //sodPanel.setName("Sod");
-        //getTabPane().add(sodPanel);
-        //sodPanel.setLayout(new BorderLayout());
-        //final JButton go = new JButton("GO!");
-        //sodPanel.add(go, BorderLayout.SOUTH);
-        //final TextAreaStatusDisplay statusDisp = new TextAreaStatusDisplay();
-        //sodPanel.add(new JScrollPane(statusDisp.getTextArea()), BorderLayout.CENTER);
-        //go.addActionListener(new ActionListener() {
-        //                  public void actionPerformed(ActionEvent e) {
-        //                    try {
-        //                      go.setText("Going...");
-        //                    start = new Start(getDocument());
-        //                  start.start();
-        //                start.getEventArm().add(statusDisp);
-        //              start.getWaveformArm().addStatusMonitor(statusDisp);
-        //        } catch (Throwable t) {
-        //          GlobalExceptionHandler.handle("Problem starting SOD", t);
-        //        go.setText("Gone.  :(");
-        //  }
-        //}
-        //});
-        //
     }
 
     JComponent getCompForElement(Element element) {
