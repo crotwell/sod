@@ -93,7 +93,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	/*Start.getEventQueue().pop();
 	Start.getEventQueue().pop();
 	Start.getEventQueue().pop();
-	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());*/
+	logger.debug("event QueueLength is "+Start.getEventQueue().getLength());*/
     }
 
 
@@ -112,11 +112,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    thread.start();
 	} else {
 
-	    System.out.println("EventChannelFinder is NULL");
+	    logger.debug("EventChannelFinder is NULL");
 	}
 
 	if(eventFinderSubsetter == null) return;
-	System.out.println("Event Finder Subsetrter is not null");
+	logger.debug("Event Finder Subsetrter is not null");
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
 	String[] searchTypes;
@@ -154,38 +154,41 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
 	}
 	    
-	System.out.println("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
+	logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
 	for (int i=0; i<searchTypes.length; i++) {
-        System.out.println("magnitudes "+searchTypes[i]);
+        logger.debug("magnitudes "+searchTypes[i]);
 	} // end of for (int i=0; i<searchTypes.length; i++)
-	System.out.println("mag "+minMagnitude+" "+maxMagnitude);
+	logger.debug("mag "+minMagnitude+" "+maxMagnitude);
 
 	String[] catalogs = eventFinderSubsetter.getCatalogs();
 	String[] contributors = eventFinderSubsetter.getContributors();
 	for(int counter = 0;  counter < catalogs.length; counter++) {
-	    System.out.println("catalog = "+catalogs[counter]);
+	    logger.debug("catalog = "+catalogs[counter]);
 	}
 
 	for(int counter = 0; counter < contributors.length; counter++) {
-	    System.out.println("contributor = "+contributors[counter]);
+	    logger.debug("contributor = "+contributors[counter]);
 	}
 
 	EventConfigDb eventConfigDb = new EventConfigDb();
 	edu.iris.Fissures.Time startTime = eventConfigDb.getTime();
-	if(startTime == null) {
-	    System.out.println("time is not stored in the database so store it");
-	    startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
-	    eventConfigDb.setTime(startTime);
-	}
+// 	if(startTime == null) {
+// 	    logger.debug("time is not stored in the database so store it");
+// 	    startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
+// 	    eventConfigDb.setTime(startTime);
+// 	}
 
-	
+	if(startTime == null) {
+	    startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
+	    logger.debug("The start time immediate is "+new MicroSecondDate(startTime));
+	}
 	edu.iris.Fissures.Time endTime = calculateEndTime(startTime, 
 							  eventFinderSubsetter.getEventTimeRange().getEndTime());
 	while(!isFinished(endTime, eventFinderSubsetter.getEventTimeRange().getEndTime())) {
 	    
 	    edu.iris.Fissures.TimeRange timeRange = new edu.iris.Fissures.TimeRange(startTime, endTime);
-	    System.out.println("The start time is "+new MicroSecondDate(startTime));
-	    System.out.println("The end Time is "+new MicroSecondDate(endTime));
+	    logger.debug("The start time is "+new MicroSecondDate(startTime));
+	    logger.debug("The end Time is "+new MicroSecondDate(endTime));
 	 
 
 	    
@@ -203,7 +206,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 				    eventSeqIterHolder
 				    );
 	    
-	    System.out.println("The number of events returned are "+eventAccessOrig.length);
+	    logger.debug("The number of events returned are "+eventAccessOrig.length);
 	    Thread.sleep(5000);
 	    EventAccessOperations[] eventAccess = 
 		new EventAccessOperations[eventAccessOrig.length];
@@ -216,10 +219,13 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    }
 	    startTime = eventConfigDb.getTime();
 	    if(startTime == null) {
-		System.out.println("times is not stored in the database so store it");
+		logger.debug("times is not stored in the database so store it");
 		startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
 
 		eventConfigDb.setTime(startTime);
+		eventConfigDb.incrementTime(1);
+		startTime = eventConfigDb.getTime();
+		eventConfigDb.incrementTime(1);
 	    } else {
 		//here delete all the events in the queue from the 
 		//previous day that are successful or failed
@@ -278,7 +284,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * @exception Exception if an error occurs
      */
     public void handleEventArmProcess(EventAccessOperations eventAccess, Origin origin) throws Exception{
-	System.out.println("PUSHING the event to the queue");
+	logger.debug("PUSHING the event to the queue");
 	Start.getEventQueue().push(eventFinderSubsetter.getDNSName(),
 				   eventFinderSubsetter.getSourceName(), 
 				   (EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
@@ -291,10 +297,13 @@ public class EventArm extends SodExceptionSource implements Runnable{
 						    edu.iris.Fissures.Time givenEndTime) {
 	
 	MicroSecondDate microSecondDate = new MicroSecondDate(startTime);
+        logger.debug("The microcsedon startDate is "+microSecondDate);
 	Calendar calendar = Calendar.getInstance();
 	calendar.setTime(microSecondDate);
-	calendar.roll(Calendar.DAY_OF_MONTH, 1);
+	logger.debug("The microSeoncDate after Increment is "+new MicroSecondDate(calendar.getTime()));
+	calendar.roll(Calendar.DAY_OF_YEAR, 1);
 	microSecondDate = new MicroSecondDate(calendar.getTime());
+	logger.debug("The microSeoncDate after Increment is "+microSecondDate);
 	MicroSecondDate endDate = new MicroSecondDate(givenEndTime);
 	if(endDate.before(microSecondDate)) return givenEndTime;
 	return microSecondDate.getFissuresTime();
