@@ -17,6 +17,7 @@
                         <ref name="availableDataXOR"/>
                         <ref name="availableDataNOT"/>
                         <ref name="breqFastAvailableData"/>
+                        <ref name="PASS"/>
                 </choice>
         </define>
         <define name="availableDataAND">
@@ -157,6 +158,22 @@
         <define name="postEventWait">
                 <element name="postEventWait">
                         <ref name="time"/>
+                </element>
+        </define>
+        <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passAvailableData/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passAvailableData">
+                        <zeroOrMore>
+                                <ref name="availableData"/>
+                        </zeroOrMore>
                 </element>
         </define>
 </grammar>
