@@ -14,7 +14,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Status;
@@ -47,10 +46,7 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if (n.getNodeName().equals("fileDir")){
-                fileDir = n.getFirstChild().getNodeValue();
-            }
-            else if (n.getNodeName().equals("netConfig")){
+            if (n.getNodeName().equals("netConfig")){
                 netConfig = TemplateFileLoader.getTemplate((Element)n);
 
                 Node tmpEl = SodUtil.getElement(netConfig, "filename");
@@ -83,16 +79,7 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
                 chanConfig.removeChild(tmpEl);
             }
         }
-        if (fileDir == null){
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
-        }
-        if (fileDir == null || netFormatter == null || staFormatter == null || netConfig == null
-            || staConfig == null || chanConfig == null || netsOutputFileName == null
-            || stasOutputFileName == null || chansOutputFileName == null){
-            throw new IllegalArgumentException(
-                "The configuration element must contain a fileDir, netConfig, stationConfig, and chanConfig.");
-        }
-
+        fileDir = FileWritingTemplate.getBaseDirectoryName();
         netTemplate = new NetworkStatusTemplate(netConfig, fileDir ,netsOutputFileName);
     }
 
