@@ -61,7 +61,7 @@ public class LocalSeismogramArm implements Subsetter{
         }
         processConfig(config);
     }
-    
+
     /**
      * Describe <code>processConfig</code> method here.
      *
@@ -70,7 +70,7 @@ public class LocalSeismogramArm implements Subsetter{
      */
     protected void processConfig(Element config)
         throws ConfigurationException {
-        
+
         NodeList children = config.getChildNodes();
         Node node;
         for (int i=0; i<children.getLength(); i++) {
@@ -81,31 +81,35 @@ public class LocalSeismogramArm implements Subsetter{
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
-                if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
-                else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
-                else if(sodElement instanceof RequestSubsetter) requestSubsetter = (RequestSubsetter)sodElement;
-                else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement;
-                    
-                    
-                else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
-                else if(sodElement instanceof LocalSeismogramSubsetter) localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
-                else if(sodElement instanceof LocalSeismogramProcess) {
+                if(sodElement instanceof EventChannelSubsetter) {
+                    eventChannelSubsetter = (EventChannelSubsetter)sodElement;
+                } else if(sodElement instanceof RequestGenerator)  {
+                    requestGeneratorSubsetter = (RequestGenerator)sodElement;
+                } else if(sodElement instanceof RequestSubsetter)  {
+                    requestSubsetter = (RequestSubsetter)sodElement;
+                } else if(sodElement instanceof SeismogramDCLocator)  {
+                    seismogramDCLocator = (SeismogramDCLocator)sodElement;
+                } else if(sodElement instanceof AvailableDataSubsetter)  {
+                    availableDataSubsetter = (AvailableDataSubsetter)sodElement;
+                } else if(sodElement instanceof LocalSeismogramSubsetter)  {
+                    localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
+                } else if(sodElement instanceof LocalSeismogramProcess) {
                     localSeisProcessList.add(sodElement);
                 } else {
                     logger.warn("Unknown tag in LocalSeismogramArm config. "
                                     +sodElement);
                 } // end of else
-                
-                
+
+
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
-        
+
     }
-    
+
     /**
      * Starts the processing of the localSeismogramArm.
      */
-    
+
     public void processLocalSeismogramArm(EventDbObject eventDbObject,
                                           NetworkDbObject networkDbObject,
                                           ChannelDbObject channelDbObject,
@@ -123,9 +127,9 @@ public class LocalSeismogramArm implements Subsetter{
         if(chanEnd.before(chanBegin)) {
             chanEnd = TimeUtils.future;
         }
-        
+
         MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
-        
+
         // don't bother with channel if effective time does not
         // overlap event time
         EventEffectiveTimeOverlap eventOverlap =
@@ -138,8 +142,8 @@ public class LocalSeismogramArm implements Subsetter{
                                        "channel EffectiveTime doesnot overlap event");
             return;
         } // end of if ()
-        
-        
+
+
         waveformArm.setFinalStatus(eventDbObject,
                                    channelDbObject,
                                    Status.PROCESSING,
@@ -148,9 +152,9 @@ public class LocalSeismogramArm implements Subsetter{
                                      networkDbObject,
                                      channelDbObject,
                                      waveformArm);
-        
+
     }
-    
+
     /**
      * handles eventChannelSubsetter
      *
@@ -160,12 +164,12 @@ public class LocalSeismogramArm implements Subsetter{
                                              NetworkDbObject networkDbObject,
                                              ChannelDbObject channelDbObject,
                                              WaveFormArm waveformArm) throws Exception{
-        
+
         boolean b;
         EventAccessOperations eventAccess = eventDbObject.getEventAccess();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Channel channel = channelDbObject.getChannel();
-        
+
         MicroSecondDate b1 = new MicroSecondDate();
         logger.debug("TIME: before eventChanenlSubsetter "+b1);
         synchronized (eventChannelSubsetter) {
@@ -173,7 +177,7 @@ public class LocalSeismogramArm implements Subsetter{
                                              networkAccess,
                                              channel,
                                              null);
-            
+
         }
         MicroSecondDate a1 = new MicroSecondDate();
         logger.debug("TIME: after eventChannelSubsetter "+a1);
@@ -195,8 +199,8 @@ public class LocalSeismogramArm implements Subsetter{
                                        "EventChannelSubsetterfailed");
         }
     }
-    
-    
+
+
     /**
      * handles requestGenerator Subsetter.
      *
@@ -206,13 +210,13 @@ public class LocalSeismogramArm implements Subsetter{
                                                  ChannelDbObject channelDbObject,
                                                  WaveFormArm waveformArm)
         throws Exception {
-        
+
         RequestFilter[] infilters;
         EventAccessOperations eventAccess = eventDbObject.getEventAccess();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Channel channel = channelDbObject.getChannel();
-        
-        
+
+
         DataCenter dataCenter;
         MicroSecondDate b1 = new MicroSecondDate();
         logger.debug("TIME: before seismogramDCLocator "+b1);
@@ -224,10 +228,10 @@ public class LocalSeismogramArm implements Subsetter{
         }
         MicroSecondDate a1 = new MicroSecondDate();
         logger.debug("TIME: after SeismogramDCLocator "+a1);
-        
+
         MicroSecondDate b2 = new MicroSecondDate();
         logger.debug("TIME: before requestGenerator "+b2);
-        
+
         synchronized (requestGeneratorSubsetter) {
             infilters =
                 requestGeneratorSubsetter.generateRequest(eventAccess,
@@ -237,20 +241,20 @@ public class LocalSeismogramArm implements Subsetter{
         }
         MicroSecondDate a2 = new MicroSecondDate();
         logger.debug("TIME: after requestGenerator "+a2);
-        
-        
+
+
         waveformArm.setFinalStatus(eventDbObject,
                                    channelDbObject,
                                    Status.PROCESSING,
                                    "requestgeneratorSubsettterCompleted");
-        
+
         processRequestSubsetter(eventDbObject,
                                 networkDbObject,
                                 channelDbObject,
                                 infilters,
                                 waveformArm);
     }
-    
+
     /**
      * handles RequestSubsetter
      *
@@ -265,7 +269,7 @@ public class LocalSeismogramArm implements Subsetter{
         EventAccessOperations eventAccess = eventDbObject.getEventAccess();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Channel channel = channelDbObject.getChannel();
-        
+
         synchronized (requestSubsetter) {
             b = requestSubsetter.accept(eventAccess,
                                         networkAccess,
@@ -278,7 +282,7 @@ public class LocalSeismogramArm implements Subsetter{
                                        channelDbObject,
                                        Status.PROCESSING,
                                        "requestSubsetterCompleted");
-            
+
             DataCenter dataCenter;
             synchronized(seismogramDCLocator) {
                 dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess,
@@ -286,14 +290,25 @@ public class LocalSeismogramArm implements Subsetter{
                                                                  channel.my_site.my_station,
                                                                  null);
             }
-            
-            RequestFilter[] outfilters;
-            try {
-                outfilters = dataCenter.available_data(infilters);
-            } catch (org.omg.CORBA.SystemException e) {
-                // retry ?
-                logger.info("Caught CORBA exception, retrying once...", e);
-                outfilters = dataCenter.available_data(infilters);
+
+            RequestFilter[] outfilters = null;
+            int retries = 5;
+            while(retries > 0) {
+                try {
+                    outfilters = dataCenter.available_data(infilters);
+                    break;
+                } catch (org.omg.CORBA.SystemException e) {
+                    // retry ?
+                    if (retries > 0) {
+                        logger.info("Caught CORBA exception, retrying..."+retries, e);
+                        retries--;
+                        try {
+                            Thread.sleep(10);
+                        } catch(InterruptedException ex) {}
+                    } else {
+                        throw e;
+                    }
+                }
             }
             processAvailableDataSubsetter(eventDbObject,
                                           networkDbObject,
@@ -310,8 +325,8 @@ public class LocalSeismogramArm implements Subsetter{
                                        "requestSubsetterFailed");
         }
     }
-    
-    
+
+
     /**
      * handles availableDataSubsetter
      *
@@ -328,7 +343,7 @@ public class LocalSeismogramArm implements Subsetter{
         EventAccessOperations eventAccess = eventDbObject.getEventAccess();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Channel channel = channelDbObject.getChannel();
-        
+
         MicroSecondDate b1 = new MicroSecondDate();
         logger.debug("TIME: before availableDataSubsetter "+b1);
         synchronized (availableDataSubsetter) {
@@ -346,7 +361,7 @@ public class LocalSeismogramArm implements Subsetter{
                                        channelDbObject,
                                        Status.PROCESSING,
                                        "availableDataSubsetterCompleted");
-            
+
             logger.debug("BEFORE getting seismograms "+infilters.length);
             for (int i=0; i<infilters.length; i++) {
                 logger.debug("Getting seismograms "
@@ -357,7 +372,7 @@ public class LocalSeismogramArm implements Subsetter{
                                  +infilters[i].end_time.date_time);
             } // end of for (int i=0; i<outFilters.length; i++)
             logger.debug("Using infilters, fix this when DMC fixes server");
-            
+
             MicroSecondDate before = new MicroSecondDate();
             LocalSeismogram[] localSeismograms;
             if (outfilters.length != 0) {
@@ -378,11 +393,11 @@ public class LocalSeismogramArm implements Subsetter{
                 logger.debug("Failed, available data returned no requestFilters ");
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
-            
-            
+
+
             MicroSecondDate after = new MicroSecondDate();
             logger.info("After getting seismograms, time taken="+after.subtract(before));
-            
+
             for (int i=0; i<localSeismograms.length; i++) {
                 if (localSeismograms[i] == null) {
                     waveformArm.setFinalStatus(eventDbObject,
@@ -401,9 +416,9 @@ public class LocalSeismogramArm implements Subsetter{
                     // fix seis with original id
                     localSeismograms[i].channel_id = channel.get_id();
                 } // end of if ()
-                
+
             } // end of for (int i=0; i<localSeismograms.length; i++)
-            
+
             processLocalSeismogramSubsetter(eventDbObject,
                                             networkDbObject,
                                             channelDbObject,
@@ -419,11 +434,11 @@ public class LocalSeismogramArm implements Subsetter{
                                        "AvailableDataSubsetterFailed");
         }
     }
-    
+
     /**
      * handles LocalSeismogramSubsetter.
      */
-    
+
     public void processLocalSeismogramSubsetter (EventDbObject eventDbObject,
                                                  NetworkDbObject networkDbObject,
                                                  ChannelDbObject channelDbObject,
@@ -431,8 +446,8 @@ public class LocalSeismogramArm implements Subsetter{
                                                  RequestFilter[] outfilters,
                                                  LocalSeismogram[] localSeismograms,
                                                  WaveFormArm waveformArm) throws Exception {
-        
-        
+
+
         boolean b;
         EventAccessOperations eventAccess = eventDbObject.getEventAccess();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
@@ -448,7 +463,7 @@ public class LocalSeismogramArm implements Subsetter{
                                                 localSeismograms,
                                                 null);
         }
-        
+
         MicroSecondDate a1 = new MicroSecondDate();
         logger.debug("TIME: after LocalSeismogramSubsetter "+a1);
         if( b ) {
@@ -470,13 +485,13 @@ public class LocalSeismogramArm implements Subsetter{
                                        Status.COMPLETE_REJECT,
                                        "LocalSeismogramSubsetterFailed");
         }
-        
+
     }
-    
+
     /**
      * processes the seismograms obtained from the seismogram server.
      */
-    
+
     public void processSeismograms(EventDbObject eventDbObject,
                                    NetworkDbObject networkDbObject,
                                    ChannelDbObject channelDbObject,
@@ -498,7 +513,7 @@ public class LocalSeismogramArm implements Subsetter{
         logger.debug("TIME: before localSeismogramProcessor "+b1);
         while (it.hasNext()) {
             processor = (LocalSeismogramProcess)it.next();
-            
+
             synchronized (processor) {
                 localSeismograms =
                     processor.process(eventAccess,
@@ -519,34 +534,34 @@ public class LocalSeismogramArm implements Subsetter{
                                    Status.COMPLETE_SUCCESS,
                                    "successful");
     }
-    
+
     TimeInterval maxEventOffset = new TimeInterval(7, UnitImpl.DAY);
-    
+
     private EventChannelSubsetter eventChannelSubsetter =
         new NullEventChannelSubsetter();
-    
+
     private RequestGenerator requestGeneratorSubsetter =
         new NullRequestGenerator();
-    
+
     private RequestSubsetter requestSubsetter =
         new NullRequestSubsetter();
-    
+
     private AvailableDataSubsetter availableDataSubsetter =
         new NullAvailableDataSubsetter();
-    
+
     private LocalSeismogramSubsetter localSeismogramSubsetter =
         new NullLocalSeismogramSubsetter();
-    
+
     private LinkedList localSeisProcessList =
         new LinkedList();
-    
+
     private SeismogramDCLocator seismogramDCLocator=
         new NullSeismogramDCLocator();
-    
-    
-    
+
+
+
     static Category logger =
         Category.getInstance(LocalSeismogramArm.class.getName());
-    
+
 }// LocalSeismogramArm
 
