@@ -27,6 +27,7 @@
             <ref name="seismogramOR"/>
             <ref name="seismogramXOR"/>
             <ref name="seismogramNOT"/>
+            <ref name="waveformCountProcessor"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -349,6 +350,11 @@
                     <data type="string"/>
                 </element>
             </optional>
+        </element>
+        </define>
+    <define name="waveformCountProcessor">
+        <element name="waveformCountProcessor">
+            <empty/>
         </element>
     </define>
 </grammar>
