@@ -92,6 +92,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
         editors.put("originDepthRange", new UnitRangeEditor(DISTANCE_UNITS, true));
+        editors.put("linearDistanceMagnitudeRange", new LinearDistanceMagnitudeEditor(this, DISTANCE_UNITS, true));
         editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new  UnitRangeEditor(ANGLE_UNITS, -90, 90, 5, false));
         editors.put("longitudeRange", new UnitRangeEditor(ANGLE_UNITS, -180, 180, 5, false));
