@@ -9,8 +9,8 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public class EventStatusTemplate extends FileWritingTemplate implements
-        EventArmMonitor, WaveformArmMonitor {
+        EventMonitor, WaveformMonitor {
 
     public EventStatusTemplate(Element el) throws IOException, SAXException,
             ParserConfigurationException, ConfigurationException {

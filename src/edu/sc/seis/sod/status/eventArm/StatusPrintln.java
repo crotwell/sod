@@ -12,7 +12,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.Status;
 
-public class StatusPrintln implements EventArmMonitor{
+public class StatusPrintln implements EventMonitor{
     public StatusPrintln(Element config){}
 
     public void setArmStatus(String status) {
