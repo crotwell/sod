@@ -248,6 +248,36 @@ public class WaveformArm implements Runnable {
         if(retryUnit != null){ invokeLaterAsCapacityAllows(retryUnit); }
     }
 
+    public EventChannelGroupPair getEventChannelGroupPair(EventChannelPair ecp) {
+        try {
+            Channel[] chans = evChanStatus.getAllChansForSite(ecp.getPairId());
+            ChannelGroup[] groups = ChannelGroup.group(chans, new ArrayList());
+            ChannelGroup pairGroup = null;
+            for (int i = 0; i < groups.length; i++) {
+                if(groups[i].contains(ecp.getChannel())){
+                    pairGroup = groups[i];
+                    break;
+                }
+            }
+            if(pairGroup == null){
+                return null;
+            }
+            int[] pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
+            EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
+            synchronized(evChanStatus){
+                for (int i = 0; i < pairIds.length; i++) {
+                    pairs[i] = evChanStatus.get(pairIds[i], WaveformArm.this);
+                }
+            }
+            return new EventChannelGroupPair(pairs);
+        } catch (SQLException e) {
+            GlobalExceptionHandler.handle(e);
+        } catch (NotFound e) {
+            GlobalExceptionHandler.handle(e);
+        }
+        return null;
+    }
+
     private WaveformWorkUnit getNextRetry() throws SQLException {
         int pairId;
         synchronized (eventRetryTable) {
