@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="eventLabel">
+        <interleave>
+            <zeroOrMore>
+                <text/>
+            </zeroOrMore>
+            <optional>
+                <element name="separator">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="feRegionName">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="feRegionNumber">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="depth">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="magnitude">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="latitude">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="longitude">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="originTime">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </interleave>
+    </define>
+</grammar>

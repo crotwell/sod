@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="latitude">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="longitude">
+        <element name="longitude">
+            <data type="float"/>
+        </element>
+    </define>
+</grammar>

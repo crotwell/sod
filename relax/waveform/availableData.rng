@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="availableData"/>
+    </start>
+    <include href="../base/include/eventLabel.rng"/>
+    <define name="availableData">
+        <choice>
+            <ref name="nogaps"/>
+            <ref name="fullCoverage"/>
+            <ref name="someCoverage"/>
+            <ref name="availableDataAND"/>
+            <ref name="availableDataOR"/>
+            <ref name="availableDataXOR"/>
+            <ref name="availableDataNOT"/>
+            <ref name="breqFastAvailableData"/>
+        </choice>
+    </define>
+    <define name="availableDataAND">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical AND between AvailableData subsetters. </summary>
+                <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                <example>
+                    <availableDataAND>
+                        <nogaps/>
+                        <fullCoverage/>
+                    </availableDataAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="availableDataAND">
+            <oneOrMore>
+                <ref name="availableData"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="availableDataOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical OR between AvailableData subsetters. </summary>
+                <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                <example>
+                    <availableDataOR>
+                        <nogaps/>
+                        <fullCoverage/>
+                    </availableDataOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="availableDataOR">
+            <oneOrMore>
+                <ref name="availableData"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="availableDataXOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical XOR between AvailableData subsetters. </summary>
+                <description> The output is the logical XOR of the outputs of all included
+                    subsetters. </description>
+                <example>
+                    <availableDataXOR>
+                        <nogaps/>
+                        <fullCoverage/>
+                    </availableDataXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="availableDataXOR">
+            <ref name="availableData"/>
+            <ref name="availableData"/>
+        </element>
+    </define>
+    <define name="availableDataNOT">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical NOT of an AvailableData subsetter. </summary>
+                <description> The output is the logical NOT of the output of the included
+                    subsetters. </description>
+                <example>
+                    <availableDataNOT>
+                        <nogaps/>
+                    </availableDataNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="availableDataNOT">
+            <ref name="availableData"/>
+        </element>
+    </define>
+    <define name="nogaps">
+        <element name="noGaps">
+            <empty/>
+        </element>
+    </define>
+    <define name="fullCoverage">
+        <element name="fullCoverage">
+            <empty/>
+        </element>
+    </define>
+    <define name="someCoverage">
+        <element name="someCoverage">
+            <empty/>
+        </element>
+    </define>
+    <define name="breqFastAvailableData">
+        <element name="breqFastAvailableData">
+            <element name="dataDirectory">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="label">
+                    <ref name="eventLabel"/>
+                </element>
+            </optional>
+            <element name="name">
+                <data type="string"/>
+            </element>
+            <element name="inst">
+                <data type="string"/>
+            </element>
+            <element name="mail">
+                <data type="string"/>
+            </element>
+            <element name="email">
+                <data type="string"/>
+            </element>
+            <element name="phone">
+                <data type="string"/>
+            </element>
+            <element name="fax">
+                <data type="string"/>
+            </element>
+            <element name="media">
+                <data type="string"/>
+            </element>
+            <element name="altmedia1">
+                <data type="string"/>
+            </element>
+            <element name="altmedia2">
+                <data type="string"/>
+            </element>
+            <element name="quality">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+</grammar>

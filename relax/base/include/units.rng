@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" >
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="unit">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>HERTZ</value>
+                <value>NANOSECOND</value>
+                <value>MICROSECOND</value>
+                <value>MILLISECOND</value>
+                <value>SECOND</value>
+                <value>MINUTE</value>
+                <value>HOUR</value>
+                <value>DAY</value>
+                <value>YEAR</value>
+                <value>AMPERE</value>
+                <value>COULOMB</value>
+                <value>VOLT</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+                <value>COUNT</value>
+                <value>RADIAN_PER_SECOND</value>
+                <value>SQUARE_METER</value>
+                <value>SQUARE_CENTIMETER</value>
+                <value>CUBIC_METER</value>
+                <value>CUBIC_CENTIMETER</value>
+                <value>LITER</value>
+                <value>GRAM</value>
+                <value>KILOGRAM</value>
+                <value>DENSITY</value>
+                <value>GRAM_PER_CUBIC_CENTIMETER</value>
+                <value>KILOGRAM_PER_CUBIC_METER</value>
+                <value>VELOCITY</value>
+                <value>METER_PER_SECOND</value>
+                <value>CENTIMETER_PER_SECOND</value>
+                <value>KILOMETER_PER_SECOND</value>
+                <value>MILLIMETER_PER_SECOND</value>
+                <value>MICROMETER_PER_SECOND</value>
+                <value>MICRON_PER_SECOND</value>
+                <value>NANOMETER_PER_SECOND</value>
+                <value>ACCELERATION</value>
+                <value>METER_PER_SECOND_PER_SECOND</value>
+                <value>CENTIMETER_PER_SECOND_PER_SECOND</value>
+                <value>KILOMETER_PER_SECOND_PER_SECOND</value>
+                <value>MILLIMETER_PER_SECOND_PER_SECOND</value>
+                <value>MICROMETER_PER_SECOND_PER_SECOND</value>
+                <value>MICRON_PER_SECOND_PER_SECOND</value>
+                <value>NANOMETER_PER_SECOND_PER_SECOND</value>
+                <value>FORCE</value>
+                <value>NEWTON</value>
+                <value>JOULE</value>
+                <value>DYNE</value>
+                <value>ENERGY</value>
+            </choice>
+        </element>
+    </define>
+    <define name="lengthUnit">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+    </define>
+    <define name="timeUnit">
+        <element name="unit">
+            <choice>
+                <value>NANOSECOND</value>
+                <value>MICROSECOND</value>
+                <value>MILLISECOND</value>
+                <value>SECOND</value>
+                <value>MINUTE</value>
+                <value>HOUR</value>
+                <value>DAY</value>
+                <value>YEAR</value>
+            </choice>
+        </element>
+    </define>
+</grammar>

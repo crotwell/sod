@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="channel"/>
+    </start>
+    <include href="../base/include/quantity.rng"></include>
+    <define name="channel">
+        <choice>
+            <ref name="bandCode"/>
+            <ref name="gainCode"/>
+            <ref name="orientationCode"/>
+            <ref name="sampling"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="orientationRange"/>
+            <ref name="orientationAzimuthRange"/>
+            <ref name="orientationDipRange"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="XOR"/>
+            <ref name="NOT"/>
+        </choice>
+    </define>
+    <define name="channelCodeUtil">
+        <data type="string">
+            <param name="pattern">[A-Z]{1}</param>
+        </data>
+    </define>
+    <define name="bandCode">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches a band code in a channel code. </summary>
+                <description> Matches a band code in a channel code, such as B for broadband and L
+                    for long period. See the SEED manual for the list of available code letters. </description>
+                <example>
+                    <bandCode>
+                        <value>B</value>
+                    </bandCode>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="bandCode">
+            <ref name="channelCodeUtil"/>
+        </element>
+    </define>
+    <define name="gainCode">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches a band code in a channel code. </summary>
+                <description> Matches a gain code in a channel code, such as H for high gain and L
+                    for low gain. See the SEED manual for the list of available code letters. </description>
+                <example>
+                    <gainCode>
+                        <value>H</value>
+                    </gainCode>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="gainCode">
+            <ref name="channelCodeUtil"/>
+        </element>
+    </define>
+    <define name="orientationCode">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches a orientation code in a channel code. </summary>
+                <description> Matches a orientation code in a channel code, such as Z for vertical
+                    and N for north. See the SEED manual for the list of available code letters. </description>
+                <example>
+                    <orientationCode>
+                        <value>Z</value>
+                    </orientationCode>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="orientationCode">
+            <ref name="channelCodeUtil"/>
+        </element>
+    </define>
+    <define name="AND">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical AND between channel subsetters. </summary>
+                <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                <example>
+                    <channelAND>
+                        <channeleffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </channeleffectiveTimeOverlap>
+                        <sampling>
+                            <min>1</min>
+                            <max>40</max>
+                            <interval>
+                                <unit>SECOND</unit>
+                                <value>1</value>
+                            </interval>
+                        </sampling>
+                    </channelAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelAND">
+            <oneOrMore>
+                <ref name="channel"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical OR between channel subsetters. </summary>
+                <description> The output is the logical OR of the outputs of all included
+                    subsetters. If the first subsetters returns true then the second is not
+                    evaluated. </description>
+                <example>
+                    <channelOR>
+                        <channeleffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </channeleffectiveTimeOverlap>
+                        <sampling>
+                            <min>1</min>
+                            <max>40</max>
+                            <interval>
+                                <unit>SECOND</unit>
+                                <value>1</value>
+                            </interval>
+                        </sampling>
+                    </channelOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelOR">
+            <oneOrMore>
+                <ref name="channel"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="XOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical XOR between channel subsetters. </summary>
+                <description> The output is the logical XOR of the outputs of all included
+                    subsetters. </description>
+                <example>
+                    <channelXOR>
+                        <channeleffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </channeleffectiveTimeOverlap>
+                        <sampling>
+                            <min>1</min>
+                            <max>40</max>
+                            <interval>
+                                <unit>SECOND</unit>
+                                <value>1</value>
+                            </interval>
+                        </sampling>
+                    </channelXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelXOR">
+            <ref name="channel"/>
+            <ref name="channel"/>
+        </element>
+    </define>
+    <define name="NOT">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical NOT of an channel subsetter. </summary>
+                <description> The output is the logical NOT of the output of the included subsetter. </description>
+                <example>
+                    <channelNOT>
+                        <sampling>
+                            <min>1</min>
+                            <max>40</max>
+                            <interval>
+                                <unit>SECOND</unit>
+                                <value>1</value>
+                            </interval>
+                        </sampling>
+                    </channelNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelNOT">
+            <ref name="channel"/>
+        </element>
+    </define>
+    <define name="sampling">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches if the sampling rate of the channel is within the range. </summary>
+                <description> Matches if the sampling rate of the channel is within the range. Both
+                    the min and max are optional, although at least one must be given to have any
+                    effect. </description>
+                <example>
+                    <sampling>
+                        <min>1</min>
+                        <max>40</max>
+                        <interval>
+                            <unit>SECOND</unit>
+                            <value>1</value>
+                        </interval>
+                    </sampling>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="sampling">
+            <optional>
+                <element name="min">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <element name="interval">
+            <ref name="time"></ref>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches if the channel effective time overlaps the given time range. </summary>
+                <description> Matches if the channel effective time overlaps the given time range.
+                    This is generally used to avoid processing channels that did not yet exist, or
+                    were deactivated before a time range of interest. </description>
+                <example>
+                    <channelEffectiveTimeOverlap>
+                        <effectiveTimeOverlap>
+                            <min>20020701T00:00:00.001Z</min>
+                            <max>20021030T00:00:00.001Z</max>
+                        </effectiveTimeOverlap>
+                    </channelEffectiveTimeOverlap>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="channelEffectiveTimeOverlap">
+            <externalRef href="../base/externalRef/effectiveTime.rng"/>
+        </element>
+    </define>
+    <define name="orientationRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches an orientation of a channel. </summary>
+                <description> The match is true if the channel's orientation is with the offset of
+                    the given azimuth and dip. The offset, as well as the azimuth and dip are given
+                    in degrees. </description>
+                <example>
+                    <orientationRange>
+                        <azimuth>45</azimuth>
+                        <dip>0</dip>
+                        <maxOffset>20</maxOffset>
+                    </orientationRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="orientationRange">
+            <element name="azimuth">
+                <data type="float"/>
+            </element>
+            <element name="dip">
+                <data type="float"/>
+            </element>
+            <element name="maxOffset">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="orientationAzimuthRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the azimuth of a channel. </summary>
+                <description> The match is true if azimuth of the channel's orientation is with the
+                    the given azimuth range. The min and max are given in degrees. </description>
+                <example>
+                    <orientationAzimuthRange>
+                        <min>-10</min>
+                        <max>10</max>
+                    </orientationAzimuthRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="orientationAzimuthRange">
+            <element name="min">
+                <data type="float"/>
+            </element>
+            <element name="max">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="orientationDipRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the dip of a channel. </summary>
+                <description> The match is true if the dip of the channel's orientation is with the
+                    the given dip range. The min and max are given in degrees. </description>
+                <example>
+                    <orientationDipRange>
+                        <min>-10</min>
+                        <max>10</max>
+                    </orientationDipRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="orientationDipRange">
+            <element name="min">
+                <data type="float"/>
+            </element>
+            <element name="max">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+</grammar>

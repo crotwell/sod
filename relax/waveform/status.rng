@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <choice>
+            <element name="logFactor5WaveFormStatus">
+                <empty/>
+            </element>
+            <element name="simpleHTMLWaveformStatus">
+                <optional>
+                    <element name="outputDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <ref name="eventLabel"/>
+                    </element>
+                </optional>
+            </element>
+        </choice>
+    </start>
+    <include href="../base/include/eventLabel.rng"></include>
+</grammar>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0">
+    <include href="../include/latLon.rng"/>
+    <include href="../include/range.rng"></include>
+    <start combine="choice">
+        <choice>
+            <ref name="boxArea"/>
+            <ref name="pointArea"/>
+            <element name="globalArea">
+                <empty/>
+            </element>
+        </choice>
+    </start>
+    <define name="boxArea">
+        <element name="boxArea">
+            <externalRef href="latitudeRange.rng"/>
+            <externalRef href="longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="pointArea">
+        <element name="pointArea">
+            <ref name="latitude"/>
+            <ref name="longitude"/>
+            <ref name="range"/>
+        </element>
+    </define>
+</grammar>

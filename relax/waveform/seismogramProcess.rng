@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="seismogramProcess"/>
+    </start>
+    <include href="../base/include/eventLabel.rng"></include>
+    <define name="seismogramProcess">
+        <choice>
+            <ref name="printlineSeismogramProcess"/>
+            <ref name="sacFileProcessor"/>
+            <ref name="responseGainProcessor"/>
+            <ref name="phaseCut"/>
+            <ref name="rMean"/>
+            <ref name="rTrend"/>
+            <ref name="externalSeismogramProcess"/>
+        </choice>
+    </define>
+    <define name="phaseCut">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Cuts seismograms relative to predicted phase arrival times. </summary>
+                <description> Cuts seismogras relative to offsets from phase arrival time predicted
+                    by TauP for the model. </description>
+                <example>
+                    <phaseCut>
+                        <model>prem</model>
+                        <beginPhase>P</beginPhase>
+                        <beginOffset>
+                            <unit>SECOND</unit>
+                            <value>-100</value>
+                        </beginOffset>
+                        <endPhase>P</endPhase>
+                        <endOffset>
+                            <unit>SECOND</unit>
+                            <value>-100</value>
+                        </endOffset>
+                    </phaseCut>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="phaseCut">
+            <externalRef href="phaseRequest.rng"/>
+        </element>
+    </define>
+    <define name="rMean">
+        <element name="rMean">
+            <empty/>
+        </element>
+    </define>
+    <define name="rTrend">
+        <element name="rTrend">
+            <empty/>
+        </element>
+    </define>
+    <define name="responseGainProcessor">
+        <element name="responseGainProcessor">
+            <empty/>
+        </element>
+    </define>
+    <define name="sacFileProcessor">
+        <element name="sacFileProcessor">
+            <element name="dataDirectory">
+                <data type="string"/>
+            </element>
+            <element name="eventDirLabel">
+                <ref name="eventLabel"/>
+            </element>
+        </element>
+    </define>
+    <define name="externalSeismogramProcess">
+        <element name="externalSeismogramProcess">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <optional>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </optional>
+        </element>
+    </define>
+    <define name="printlineSeismogramProcess">
+        <element name="printlineSeismogramProcess">
+            <empty/>
+        </element>
+    </define>
+</grammar>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="source">
+        <optional>
+            <element name="description">
+                <data type="string"/>
+            </element>
+        </optional>
+        <element name="name">
+            <data type="string"/>
+        </element>
+        <element name="dns">
+            <data type="string"/>
+        </element>
+    </define>
+</grammar>

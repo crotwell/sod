@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <include href="units.rng"/>
+    <define name="range">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Subsetter based on the distance from the event to station. </summary>
+                <description> This accepts event station pairs where the distance between the
+                    preferred origin to the station is within the range given. </description>
+                <example>
+                    <distanceRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </distanceRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <ref name="lengthUnit"/>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+</grammar>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="eventArm">
+            <oneOrMore>
+                <externalRef href="source.rng"/>
+            </oneOrMore>
+            <optional>
+                <externalRef href="attr.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="origin.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="process.rng"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <externalRef href="status.rng"/>
+            </zeroOrMore>
+        </element>
+    </start>
+</grammar>

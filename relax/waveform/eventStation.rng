@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="eventStation"/>
+    </start>
+    <include href="../base/include/range.rng"/>
+    <define name="eventStation">
+        <choice>
+            <ref name="distanceRange"/>
+            <ref name="embeddedOriginSubsetter"/>
+            <ref name="embeddedStationSubsetter"/>
+            <ref name="azimuthRange"/>
+            <ref name="backAzimuthRange"/>
+            <ref name="linearDistanceMagnitudeRange"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="XOR"/>
+            <ref name="NOT"/>
+            <ref name="phaseExists"/>
+            <ref name="phaseInteraction"/>
+        </choice>
+    </define>
+    <define name="distanceRange">
+        <element name="distanceRange">
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="embeddedOriginSubsetter">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows the embeedding of an origin subsetter into a EventStation location. </summary>
+                <description> Allows the embeedding of an origin subsetter into a EventStation
+                    location. This is mainly used with an AND or OR where one condition only depends
+                    on the origin. </description>
+                <example>
+                    <embeddedOriginSubsetter>
+                        <magnitudeRange>
+                            <min>5.5</min>
+                        </magnitudeRange>
+                    </embeddedOriginSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="embeddedOriginSubsetter">
+            <externalRef href="../event/origin.rng"/>
+        </element>
+    </define>
+    <define name="embeddedStationSubsetter">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows the embeedding of an station subsetter into a EventStation
+                    location. </summary>
+                <description> Allows the embeedding of an station subsetter into a EventStation
+                    location. This is mainly used with an AND or OR where one condition only depends
+                    on the station. </description>
+                <example>
+                    <embeddedStationSubsetter>
+                        <stationDepthRange>
+                            <unitRange>
+                                <unit>METER</unit>
+                                <min>100</min>
+                                <max>200</max>
+                            </unitRange>
+                        </stationDepthRange>
+                    </embeddedStationSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="embeddedStationSubsetter">
+            <externalRef href="../network/station.rng"/>
+        </element>
+    </define>
+    <define name="azimuthRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Subsetter based on the azimuth from the event to station. </summary>
+                <description> This accepts event station pairs where the azimuth from the preferred
+                    origin to the station is within the range given in degrees. </description>
+                <example>
+                    <azimuthRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </azimuthRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="azimuthRange">
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="backAzimuthRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Subsetter based on the back azimuth from the station to the event. </summary>
+                <description> This accepts event station pairs where the azimuth from the station to
+                    the preferred origin is within the range given in degrees. </description>
+                <example>
+                    <backAzimuthRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </backAzimuthRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="backAzimuthRange">
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="linearDistanceMagnitudeRange">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Accepts event stations pairs above a linear threshold of magnitude with
+                    distance. </summary>
+                <description> If the magnitude of the event is greater than or equal to the linear
+                    interpolation at the event station distance, then the event statino pair is
+                    accepted. To reverse and take events smaller than the linear interpolation,
+                    enclose this in an EventStationNOT. </description>
+                <example>
+                    <linearDistanceMagnitudeRange>
+                        <magnitudeRange>
+                            <magType>mb</magType>
+                            <magType>M</magType>
+                            <min>5.5</min>
+                        </magnitudeRange>
+                        <unit>DEGREE</unit>
+                        <min>30</min>
+                        <max>90</max>
+                    </linearDistanceMagnitudeRange>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="linearDistanceMagnitudeRange">
+            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="AND">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical AND between EventStation subsetters. </summary>
+                <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                <example>
+                    <eventStationAND>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                        <backAzimuthRange>
+                            <min>30</min>
+                            <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="eventStationAND">
+            <oneOrMore>
+                <ref name="eventStation"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical OR between EventStation subsetters. </summary>
+                <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true output are not evaluated. </description>
+                <example>
+                    <eventStationOR>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                        <backAzimuthRange>
+                            <min>30</min>
+                            <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="eventStationOR">
+            <oneOrMore>
+                <ref name="eventStation"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="XOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical XOR between EventStation subsetters. </summary>
+                <description> The output is the logical XOR of the outputs of all included
+                    subsetters. </description>
+                <example>
+                    <eventStationXOR>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                        <backAzimuthRange>
+                            <min>30</min>
+                            <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="eventStationXOR">
+            <ref name="eventStation"/>
+            <ref name="eventStation"/>
+        </element>
+    </define>
+    <define name="NOT">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical NOT of an EventStation subsetter. </summary>
+                <description> The output is the logical NOT of the output of the included subsetter. </description>
+                <example>
+                    <eventStationNOT>
+                        <distanceRange>
+                            <unit>DEGREE</unit>
+                            <min>40</min>
+                        </distanceRange>
+                    </eventStationNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="eventStationNOT">
+            <ref name="eventStation"/>
+        </element>
+    </define>
+    <define name="phaseExists">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Accepts a event-station pair if the given phase exists. </summary>
+                <description> Accepts a event-station pair if the given phase exists. </description>
+                <example>
+                    <phaseExists>
+                        <modelName>prem</modelName>
+                        <phaseName>P</phaseName>
+                    </phaseExists>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="phaseExists">
+            <zeroOrMore>
+                <element name="modelName">
+                    <data type="string"/>
+                </element>
+            </zeroOrMore>
+            <element name="phaseName">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="phaseTurnInteraction">
+        <choice>
+            <value>TOPSIDE REFLECTION</value>
+            <value>BOTTOMSIDE REFLECTION</value>
+            <value>TURNPOINT</value>
+            <value>UPGOING S TO P CONVERSION</value>
+            <value>UPGOING P TO S CONVERSION</value>
+            <value>DOWNGOING S TO P CONVERSION</value>
+            <value>DOWNGOING P TO S CONVERSION</value>
+            <value>PATH</value>
+        </choice>
+    </define>
+    <define name="phaseInteraction">
+        <element name="phaseInteraction">
+            <ref name="phaseExists"/>
+            <element name="interactionStyle">
+                <ref name="phaseTurnInteraction"/>
+            </element>
+            <zeroOrMore>
+                <element name="interactionNumber">
+                    <data type="positiveInteger"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <choice>
+                    <ref name="phaseInteractionRelative"/>
+                    <ref name="phaseInteractionAbsolute"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="phaseInteractionRelative">
+        <element name="relative">
+            <element name="reference">
+                <choice>
+                    <value>EVENT</value>
+                    <value>STATION</value>
+                </choice>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/area.rng"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="depthRange">
+                    <ref name="range"/>
+                </element>
+            </zeroOrMore>
+            <zeroOrMore>
+                <element name="distanceRange">
+                    <ref name="range"/>
+                </element>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="phaseInteractionAbsolute">
+        <element name="absolute">
+            <empty/>
+        </element>
+    </define>
+</grammar>

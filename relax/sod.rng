@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <start>
+        <element name="sod">
+            <optional>
+                <element name="properties">
+                    <oneOrMore>
+                        <element name="property">
+                            <element name="name">
+                                <data type="string"/>
+                            </element>
+                            <element name="value">
+                                <data type="string"/>
+                            </element>
+                        </element>
+                    </oneOrMore>
+                </element>
+            </optional>
+            <externalRef href="event/arm.rng"/>
+            <externalRef href="network/arm.rng"/>
+            <externalRef href="waveform/arm.rng"/>
+        </element>
+    </start>
+</grammar>
