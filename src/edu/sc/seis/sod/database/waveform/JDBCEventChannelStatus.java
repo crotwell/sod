@@ -184,9 +184,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         int evId = eventTable.getDBId(ev);
         eventsOfStatus.setInt(1, status.getAsShort());
         eventsOfStatus.setInt(2, evId);
-        ResultSet rs = eventsOfStatus.executeQuery();
-        rs.next();
-        return rs.getInt(1);
+        try {
+            ResultSet rs = eventsOfStatus.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("RUNNING THE SQL " + eventsOfStatus.toString(), e);
+        }
     }
 
     public int getNum(PreparedStatement stmt, EventAccessOperations ev, int stationDbId) throws NotFound, SQLException {
@@ -263,7 +267,11 @@ public class JDBCEventChannelStatus extends SodJDBC{
     public void setStatus(int pairId, Status status) throws SQLException{
         setStatus.setInt(1, status.getAsShort());
         setStatus.setInt(2, pairId);
-        setStatus.executeUpdate();
+        try {
+            setStatus.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("RUNNING THE SQL " + setStatus.toString(), e);
+        }
     }
 
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
