@@ -13,7 +13,7 @@ def buildInternal(proj, name):
     configs = []
     for item in os.listdir('scripts'):
         if item.endswith('.xml'): configs.append(item)
-    extras = [('scripts/' + item, 'bin/' + item) for item in configs]
+    extras = [('scripts/' + item, 'examples/' + item) for item in configs]
     extras.extend([('scripts/yjpagent.dll', 'yjpagent.dll'),
               ('scripts/cwg.prop', 'cwg.prop'),
               ('scripts/logs', 'logs', False)])
@@ -27,8 +27,8 @@ def buildExternal(proj, name):
     print 'building docs'
     os.spawnlp(os.P_WAIT, 'buildSite.sh', 'sh', 'buildSite.sh')
     os.chdir('..')
-    extras = [('scripts/tutorial.xml', 'docs/tutorial.xml'),
-              ('scripts/weed.xml', 'docs/weed.xml'),
+    extras = [('scripts/tutorial.xml', 'examples/tutorial.xml'),
+              ('scripts/weed.xml', 'examples/weed.xml'),
               ('site/generatedSite', 'docs')]
     zip = zipfile.ZipFile(name + ".zip", 'w')
     tar = tarfile.open(name + '.tar', 'w')
