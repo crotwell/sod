@@ -7,6 +7,10 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
+/**
+ * sample xml file
+ * &lt;longPeriod/&gt;
+ */
 
 public class LongPeriod implements ChannelIdSubsetter {
 

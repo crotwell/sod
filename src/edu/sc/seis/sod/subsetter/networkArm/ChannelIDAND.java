@@ -7,14 +7,21 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
+
+
 /**
- * ChannelIDAND.java
  *
+ *channelIDAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
  *
- * Created: Thu Mar 14 14:02:33 2002
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;channelIDAND&gt;
+ *      &lt;broadband/&gt;
+ *      &lt;longPeriod/&gt;
+ * &lt;/channelIDAND&gt;
+ * </bold></pre></body>
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
 
 public class ChannelIDAND 

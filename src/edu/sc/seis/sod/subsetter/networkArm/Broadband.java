@@ -7,6 +7,10 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
+/** 
+ * sample xml file
+ * &lt;broadband/&gt;
+ */
 
 public class Broadband implements ChannelIdSubsetter {
 

@@ -8,14 +8,17 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * StationIDXOR.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *stationIDXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ *the max value of the sequence is unLimited.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;stationIDXOR&gt;
+ *&lt;/stationIDXOR&gt;
+ * </bold></pre></body>
  */
+
 
 public class StationIDXOR 
     extends  NetworkLogicalSubsetter 

@@ -8,13 +8,18 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * ChannelIDXOR.java
  *
+ *channelIDXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 2 and
+ * the max value of the sequence is 2.
  *
- * Created: Thu Mar 14 14:02:33 2002
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;channelIDXOR&gt;
+ *      &lt;broadband/&gt;
+ *      &lt;longPeriod/&gt;
+ * &lt;/channelIDXOR&gt;
+ * </bold></pre></body>
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
 
 public class ChannelIDXOR 

@@ -15,7 +15,27 @@ import edu.iris.Fissures.*;
  *
  * @author <a href="mailto:">Philip Crotwell</a>
  * @version
+ *
+ * This class is used to represent the subsetter StationArea. Station Area implements StationSubsetter
+ * and can be any one of GlobalArea or BoxArea or PointDistanceArea or FlinneEngdahlArea.
+ * 
+ * sample xml representation of StationArea are
+ *
+ *
+  *              &lt;stationArea&gt;
+ *                           &lt;boxArea&gt;
+ *                                    &lt;latitudeRange&gt;
+ *                                                   &lt;min&gt;30&lt;/min&gt;
+ *                                                   &lt;max&gt;33&lt;/max&gt;
+ *                                    &lt;/latitudeRange&gt;
+ *                                    &lt;longitudeRange&gt;
+ *                                                   &lt;min&gt;-100&lt;/min&gt;
+ *                                                   &lt;max&gt;100&lt;/max&gt;
+ *                                    &lt;/longitudeRange&gt;
+ *                           &lt;/boxArea&gt;
+ *              &lt;/stationArea&gt;
  */
+
 
 public class StationArea 
     implements StationSubsetter,SodElement {
@@ -31,7 +51,6 @@ public class StationArea
 			break;
 		}
 	}
-
 	
     }
 
@@ -39,10 +58,6 @@ public class StationArea
 	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {
 		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		System.out.println("min_latitude is "+boxArea.min_latitude);
-		System.out.println("max_latitude is "+boxArea.max_latitude);
-		System.out.println("min_longitude is "+boxArea.min_longitude);
-		System.out.println("max_longitude is "+boxArea.max_longitude);
 		System.out.println("actual_latitude is "+e.my_location.latitude);
 		System.out.println("actual_longitude is "+e.my_location.longitude);
 		

@@ -8,13 +8,15 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * SiteXOR.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *siteXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ *the max value of the sequence is unLimited.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;siteXOR&gt;
+ *&lt;/siteXOR&gt;
+ * </bold></pre></body>
  */
 
 public class SiteXOR 

@@ -8,14 +8,30 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * NetworkAttrOR.java
  *
+ *networkAttrOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ *the max value of the sequence is unLimited.
+ * 
+ * sample xml file
+ *<body><pre><bold>
+ * &lt;networkAttrOR&gt;
+ *	&lt;networkeffectiveTimeOverlap&gt;
+ *		&lt;effectiveTimeOverlap&gt;
+ *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *              &lt;/effectiveTimeOverlap&gt;
+ *	&lt;/networkeffectiveTimeOverlap&gt;
+ *	&lt;networkeffectiveTimeOverlap&gt;
+ *		&lt;effectiveTimeOverlap&gt;
+ *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *			&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *              &lt;/effectiveTimeOverlap&gt;
+ *	&lt;/networkeffectiveTimeOverlap&gt;
+ * &lt;/networkAttrOR&gt;
+ * </bold></pre></body>
  *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
+
 
 public class NetworkAttrOR 
     extends  NetworkLogicalSubsetter 

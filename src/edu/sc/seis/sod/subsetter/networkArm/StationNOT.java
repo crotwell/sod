@@ -8,13 +8,27 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * StationNOT.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *stationNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ *the max value of the sequence is 1.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;stationNOT&gt;
+ *               &lt;stationArea&gt;
+ *		    &lt;boxArea&gt;
+ *			&lt;latitudeRange&gt;
+ *				&lt;min&gt;20&lt;/min&gt;
+ *				&lt;max&gt;40&lt;/max&gt;
+ *			&lt;/latitudeRange&gt;
+ *			&lt;longitudeRange&gt;
+ *				&lt;min&gt;-100&lt;/min&gt;
+ *				&lt;max&gt;-80&lt;/max&gt;
+ *			&lt;/longitudeRange&gt;
+ *		    &lt;/boxArea&gt;
+ *		&lt;/stationArea&gt;
+ *&lt;/stationNOT&gt;
+ * </bold></pre></body>
  */
 
 public class StationNOT 

@@ -8,13 +8,15 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * SiteNOT.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *siteNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ *the max value of the sequence is 1.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;siteNOT&gt;
+ *&lt;/siteNOT&gt;
+ * </bold></pre></body>
  */
 
 public class SiteNOT 

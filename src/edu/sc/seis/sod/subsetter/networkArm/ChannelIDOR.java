@@ -8,13 +8,18 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * ChannelIDOR.java
  *
+ *channelIDOR contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
  *
- * Created: Thu Mar 14 14:02:33 2002
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;channelIDOR&gt;
+ *      &lt;broadband/&gt;
+ *      &lt;longPeriod/&gt;
+ * &lt;/channelIDOR&gt;
+ * </bold></pre></body>
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
 
 public class ChannelIDOR 

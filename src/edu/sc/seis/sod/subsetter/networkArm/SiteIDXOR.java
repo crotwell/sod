@@ -8,14 +8,19 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * SiteIDXOR.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *siteIDXOR contains a sequence of channelSubsetters. The minimum value of the sequence is 2 and
+ *the max value of the sequence is 2.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;siteIDXOR&gt;
+ *	&lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
+ *	&lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
+ *&lt;/siteIDXOR&gt;
+ * </bold></pre></body>
  */
+
 
 public class SiteIDXOR 
     extends  NetworkLogicalSubsetter 

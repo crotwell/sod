@@ -7,14 +7,35 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
+
 /**
- * StationAND.java
  *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *stationAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ *the max value of the sequence is unLimited.
+ *  
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;stationAND&gt;
+ *               &lt;stationArea&gt;
+ *		    &lt;boxArea&gt;
+ *			&lt;latitudeRange&gt;
+ *				&lt;min&gt;20&lt;/min&gt;
+ *				&lt;max&gt;40&lt;/max&gt;
+ *			&lt;/latitudeRange&gt;
+ *			&lt;longitudeRange&gt;
+ *				&lt;min&gt;-100&lt;/min&gt;
+ *				&lt;max&gt;-80&lt;/max&gt;
+ *			&lt;/longitudeRange&gt;
+ *		    &lt;/boxArea&gt;
+ *		&lt;/stationArea&gt;
+ *		&lt;stationeffectiveTimeOverlap&gt;
+ *			&lt;effectiveTimeOverlap&gt;
+ *				&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
+ *				&lt;max&gt;2000-01-01T00:00:00Z&lt;/max&gt;
+ *			&lt;/effectiveTimeOverlap&gt;
+ *		&lt;/stationeffectiveTimeOverlap&gt;
+ *&lt;/stationAND&gt;
+ * </bold></pre></body>
  */
 
 public class StationAND 

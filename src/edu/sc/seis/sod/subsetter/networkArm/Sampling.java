@@ -9,6 +9,22 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
+/** 
+ * sample xml file<br>
+ * <body>
+ * <pre>
+ * <bold>
+ * 	&lt;sampling&gt;
+ *		&lt;min&gt;1&lt;/min&gt;
+ *		&lt;max&gt;40&lt;/max&gt;
+ *		&lt;interval&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;1&lt;/value&gt;
+ *		&lt;/interval&gt;
+ *	&lt;/sampling&gt;
+ * </bold></pre></body>
+ */
+
 public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
 	public Sampling(Element config) {

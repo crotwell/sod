@@ -8,13 +8,17 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * ChannelIDNOT.java
  *
+ *channelIDNOT contains a sequence of channelSubsetters. The minimum value of the sequence is 1 and
+ * the max value of the sequence is 1.
  *
- * Created: Thu Mar 14 14:02:33 2002
+ * sample xml file
+ *<body><pre><bold>
+ *&lt;channelIDNOT&gt;
+ *      &lt;broadband/&gt;
+ * &lt;/channelIDNOT&gt;
+ * </bold></pre></body>
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
 
 public class ChannelIDNOT 
