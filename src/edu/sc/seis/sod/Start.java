@@ -68,7 +68,7 @@ public class Start implements SodExceptionListener {
 		} else if (subElement.getTagName().equals("eventArm")) {
 		    System.out.println("Starting the EVent Arm");
 		    logger.info(subElement.getTagName());
-		    eventArm = new EventArm(subElement, this);
+		    eventArm = new EventArm(subElement, this, this.props);
 		    Thread eventArmThread = new Thread(eventArm);
 		     eventArmThread.start();
 			    System.out.println("******************* EVENT ARM THREAD JOINED SO CAN EXIT");
@@ -169,6 +169,8 @@ public class Start implements SodExceptionListener {
 		}
 	    } // end of if (commandlineProps)
 
+	    Start.props = props;
+	    eventQueue = new HSqlDbQueue(props);
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -278,7 +280,7 @@ public class Start implements SodExceptionListener {
 
     EventArm eventArm;
 
-    private static Queue eventQueue = new HSqlDbQueue();
+    private static Queue eventQueue; //= new HSqlDbQueue();
     
     NetworkArm networkArm;
 
