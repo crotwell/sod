@@ -35,8 +35,7 @@ def main(argv):
                         doTheWork = True
     else: doTheWork = True
     if doTheWork:
-        build.buildScripts(proj, 'schemaDocumenter', 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter')
-        depCopy.copy(proj)
+        build.buildScripts(proj, 'schemaDocumenter', 'edu.sc.seis.sod.validator.documenter.SchemaDocumenter', True)
         print 'starting schemaDocumenter' 
         if os.environ.has_key('OS') and os.environ['OS'] == 'Windows_NT':
             os.spawnlp(os.P_WAIT, 'schemaDocumenter.bat', 'cmd', 'schemaDocumenter.bat')
