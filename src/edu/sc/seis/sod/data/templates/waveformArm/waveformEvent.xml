@@ -38,13 +38,7 @@
 <div id="Menu">
 <ul>
 <li>
-<a href="../location.html">Events</a><br />
-<ul>
-<li><a href="../location.html" id="Submenu">Location</a></li>
-<li><a href="../time.html" id="Submenu">Time</a></li>
-<li><a href="../mag.html" id="Submenu">Magnitude</a></li>
-<li><a href="../depth.html" id="Submenu">Depth</a></li>
-</ul>
+<a href="../location.html">Events</a>
 </li>
 </ul>
 </div>

@@ -18,10 +18,10 @@ Events (sorted by location name)
 <h2>Successful events sorted by location:</h2>
 <table>
 <tr id="title">
-<td id="selected">Location</td>
-<td>Time</td>
-<td>Magnitude</td>
-<td>Depth</td>
+<td id="selected"><a href="location.html">Location</a></td>
+<td><a href="time.html">Time</a></td>
+<td><a href="mag.html">Magnitude</a></td>
+<td><a href="depth.html">Depth</a></td>
 </tr>
 <events><eventLabel><tr>
 <td id="Selected"><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
@@ -37,13 +37,7 @@ Events (sorted by location name)
 <div id="Menu">
 <ul>
 <li>
-<a href="location.html">Events</a><br />
-<ul>
-<li><a href="location.html" id="Submenu">Location</a></li>
-<li><a href="time.html" id="Submenu">Time</a></li>
-<li><a href="mag.html" id="Submenu">Magnitude</a></li>
-<li><a href="depth.html" id="Submenu">Depth</a></li>
-</ul>
+<a href="location.html">Events</a>
 </li>
 </ul>
 </div>
