@@ -6,12 +6,12 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.iris.Fissures.Location;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class AbstractOriginPoint extends edu.sc.seis.sod.subsetter.DistanceRangeSubsetter {
+public class AbstractOriginPoint extends DistanceRangeSubsetter {
 
     public AbstractOriginPoint (Element config) throws Exception{
         super(config);
