@@ -39,6 +39,9 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
         if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
     }
 
+    public int getNumDirDeep() { return 2; }
+
+
     public void update(EventChannelPair ecp) {
         Status status = ecp.getStatus();
         if (status.getStage().equals(Stage.PROCESSOR) && status.getStanding().equals(Standing.SUCCESS)) {
