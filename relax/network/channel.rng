@@ -26,13 +26,13 @@
     </define>
     <define name="channelCodeUtil">
         <data type="string">
-            <param name="pattern">[A-Z]{1}</param>
+            <param name="pattern">[A-Z0-9]{1}</param>
         </data>
     </define>
 
     <define name="channelCodeType">
         <data type="string">
-            <param name="pattern">[A-Z]{3}</param>
+            <param name="pattern">[A-Z0-9]{3}</param>
         </data>
     </define>
      <define name="channelCode">
