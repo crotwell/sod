@@ -51,6 +51,7 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventS
             map.setEventLayer(events);
         }
         if(addToEventArm)Start.getEventArm().add(this);
+        actIfPeriodElapsed();
     }
 
     public void change(EventAccessOperations event, EventCondition status){
