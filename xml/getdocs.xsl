@@ -36,6 +36,7 @@ simple ones.</p>
 Structure of a SOD configuration file. 
         <pre>
 &lt;sod&gt;
+    &lt;<a href="#propertiesType">properties</a>&gt;
     &lt;eventArm&gt;
         &lt;<a href="#eventFinderType">eventFinder</a>&gt; or &lt;<a href="#eventChannelFinderType">eventChannelFinder</a>&gt;
         &lt;<a href="#eventAttrType">eventAttr</a>&gt;
