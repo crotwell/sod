@@ -233,7 +233,7 @@ public class MotionVectorArm implements Subsetter {
             }
         }
         if(passed) {
-            ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.IN_PROG));
+            ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 for(int j = 0; j < infilters[i].length; j++) {
                     logger.debug("Getting seismograms "
@@ -276,7 +276,7 @@ public class MotionVectorArm implements Subsetter {
                                                      localSeismograms[i] = dataCenter.retrieve_queue(id);
                                                  }
                                              } catch(FissuresException ex) {
-                                                 handle(ecp, Stage.DATA_SUBSETTER, ex);
+                                                 handle(ecp, Stage.DATA_RETRIEVAL, ex);
                                                  return;
                                              }
                                          }
@@ -292,7 +292,7 @@ public class MotionVectorArm implements Subsetter {
                                     }
                                 }
                             } catch(FissuresException e) {
-                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                handle(ecp, Stage.DATA_RETRIEVAL, e);
                                 return;
                             }
                             logger.debug("after successful retrieve_seismograms");
@@ -322,7 +322,7 @@ public class MotionVectorArm implements Subsetter {
                                     dataCenter.reset();
                                 }
                             } else {
-                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                handle(ecp, Stage.DATA_RETRIEVAL, e);
                                 return;
                             }
                         }
@@ -337,7 +337,7 @@ public class MotionVectorArm implements Subsetter {
                 LinkedList tempForCast = new LinkedList();
                 for(int j = 0; j < localSeismograms[i].length; j++) {
                     if(localSeismograms[i][j] == null) {
-                        ecp.update(Status.get(Stage.DATA_SUBSETTER,
+                        ecp.update(Status.get(Stage.DATA_RETRIEVAL,
                                               Standing.REJECT));
                         logger.error("Got null in seismogram array "
                                          + ChannelIdUtil.toString(ecp.getChannelGroup()

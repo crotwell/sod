@@ -132,7 +132,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
 
     public static Status[] SERVER_FAIL_STATUS = {
         Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
-            Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
+            Status.get(Stage.DATA_RETRIEVAL, Standing.CORBA_FAILURE),
             Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE) };
 
     private static long BASE_DELAY =  84375;//this * 2^10 = 86400000, or the number of millis in a day

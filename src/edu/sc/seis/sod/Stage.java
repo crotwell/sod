@@ -22,7 +22,7 @@ public class Stage implements Serializable {
     static final public Stage EVENT_CHANNEL_SUBSETTER   = new Stage(4, "Event channel subsetter");
     static final public Stage REQUEST_SUBSETTER         = new Stage(5, "Request subsetter");
     static final public Stage AVAILABLE_DATA_SUBSETTER  = new Stage(6, "Available data subsetter");
-    static final public Stage DATA_SUBSETTER            = new Stage(7, "Data subsetter");
+    static final public Stage DATA_RETRIEVAL            = new Stage(7, "Data retrieval");
     static final public Stage PROCESSOR                 = new Stage(8, "Processor" );
     static final public Stage EVENT_CHANNEL_POPULATION  = new Stage(9, "Event Channel Population");
 
@@ -34,7 +34,7 @@ public class Stage implements Serializable {
             EVENT_CHANNEL_SUBSETTER,
             REQUEST_SUBSETTER,
             AVAILABLE_DATA_SUBSETTER,
-            DATA_SUBSETTER ,
+            DATA_RETRIEVAL ,
             PROCESSOR,
             EVENT_CHANNEL_POPULATION
     };

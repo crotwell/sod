@@ -218,7 +218,7 @@ public class LocalSeismogramArm implements Subsetter {
             }
         }
         if(passed.isSuccess()) {
-            ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.IN_PROG));
+            ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms "
                                  + ChannelIdUtil.toString(infilters[i].channel_id)
@@ -255,7 +255,7 @@ public class LocalSeismogramArm implements Subsetter {
                                         localSeismograms = dataCenter.retrieve_queue(id);
                                     }
                                 } catch(FissuresException ex) {
-                                    handle(ecp, Stage.DATA_SUBSETTER, ex);
+                                    handle(ecp, Stage.DATA_RETRIEVAL, ex);
                                     return;
                                 }
                             }
@@ -271,7 +271,7 @@ public class LocalSeismogramArm implements Subsetter {
                                     }
                                 }
                             } catch(FissuresException e) {
-                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                handle(ecp, Stage.DATA_RETRIEVAL, e);
                                 return;
                             }
                         }
@@ -301,7 +301,7 @@ public class LocalSeismogramArm implements Subsetter {
                                 dataCenter.reset();
                             }
                         } else {
-                            handle(ecp, Stage.DATA_SUBSETTER, e);
+                            handle(ecp, Stage.DATA_RETRIEVAL, e);
                             return;
                         }
                     }
@@ -316,7 +316,7 @@ public class LocalSeismogramArm implements Subsetter {
             LinkedList tempForCast = new LinkedList();
             for(int i = 0; i < localSeismograms.length; i++) {
                 if(localSeismograms[i] == null) {
-                    ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.REJECT));
+                    ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.REJECT));
                     logger.error("Got null in seismogram array "
                                      + ChannelIdUtil.toString(ecp.getChannel().get_id()));
                     return;
