@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -24,6 +25,17 @@ public class EditorUtil {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(element.getTagName()));
         b.add(getTextField((Text)XPathAPI.selectSingleNode(element, "text()")));
+        return b;
+    }
+
+    public static Box getLabeledTextField(Attr attr) {
+        Box b = Box.createHorizontalBox();
+        b.add(getLabel(attr.getName()));
+        JTextField textField = new JTextField();
+        textField.setText(attr.getNodeValue());
+        TextListener textListen = new TextListener(attr);
+        textField.getDocument().addDocumentListener(textListen);
+        b.add(textField);
         return b;
     }
 
