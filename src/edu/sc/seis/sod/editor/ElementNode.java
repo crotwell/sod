@@ -6,11 +6,12 @@
 
 package edu.sc.seis.sod.editor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ElementNode {
+public class ElementNode implements Serializable{
     public ElementNode(String name) {
         this.name = name;
     }
