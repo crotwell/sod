@@ -66,6 +66,10 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         return new ChannelGroupLocalSeismogramResult(true, out);
     }
 
+    public String toString() {
+        return "ANDLocalSeismogramWrapper("+process.toString()+")";
+    }
+
 
     LocalSeismogramProcess process;
 }

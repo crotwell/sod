@@ -54,6 +54,12 @@ public class AlwaysSuccess implements LocalSeismogramProcess {
         return new LocalSeismogramResult(true, result.getSeismograms());
     }
 
+
+    public String toString() {
+        return "AlwaysSuccess("+localSeisProcess.toString()+")";
+    }
+
+
     LocalSeismogramProcess localSeisProcess;
 
     private static final Logger logger = Logger.getLogger(AlwaysSuccess.class);

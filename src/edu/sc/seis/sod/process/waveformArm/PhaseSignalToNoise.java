@@ -117,6 +117,11 @@ public class PhaseSignalToNoise  implements LocalSeismogramProcess {
         return phaseName;
     }
 
+
+    public String toString() {
+        return "PhaseSignalToNoise("+getPhaseName()+")";
+    }
+
     protected SimplePhaseStoN phaseStoN;
 
     protected float ratio = 1.0f;

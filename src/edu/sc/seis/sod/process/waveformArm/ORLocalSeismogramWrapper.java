@@ -67,6 +67,10 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
         return ChannelGroupLocalSeismogramResult.FAIL;
     }
 
+    public String toString() {
+        return "ORLocalSeismogramWrapper("+subsetter.toString()+")";
+    }
+
     LocalSeismogramProcess subsetter;
 }
 

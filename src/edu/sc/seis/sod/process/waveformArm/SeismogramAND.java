@@ -46,5 +46,17 @@ public class SeismogramAND extends ForkProcess {
         }
     }
 
+
+    public String toString() {
+        String s = "SeismogramAND(";
+        Iterator it = localSeisProcessList.iterator();
+        while (it.hasNext()) {
+            s+=it.next().toString()+",";
+        }
+        s = s.substring(0, s.length()-1);
+        s+=")";
+        return s;
+    }
+
 }
 

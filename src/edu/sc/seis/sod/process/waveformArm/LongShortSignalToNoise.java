@@ -68,6 +68,11 @@ public class LongShortSignalToNoise implements LocalSeismogramProcess {
         return (LongShortTrigger[])out.toArray(new LongShortTrigger[0]);
     }
 
+
+    public String toString() {
+        return "LongShortSignalToNoise";
+    }
+
     LongShortStoN sToN;
 
     TimeInterval longTime = new TimeInterval(100, UnitImpl.SECOND);
