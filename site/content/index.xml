@@ -65,6 +65,14 @@
                 </section>
                 <section name="News">
                 <table id="entry">
+				<th>9 July 2004</th>
+				<tr>
+						<td>
+								<p>We're releasing another beta along the road to Sod 2.0 today.  It's available <a href="download.html">here</a>.  This one adds a new processor and a new subsetter in additional to the usual bug fixes.</p>
+						</td>
+				</tr>
+		</table>
+                <table id="entry">
 				<th>15 June 2004</th>
 				<tr>
 						<td>
