@@ -1113,29 +1113,8 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- abstractType networkID -->
-    <xsd:complexType name="networkIDType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Abstract superclass of all NetworkId subsetters.
-                </summary>
-                <description>
-                    This is a place holder for NetworkId subsetters. See the
-                    list of known subclasses for subsetters that can be used.
-                </description>
-                <example>
-
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
     <!--abstractType networkAttr -->
-    <xsd:complexType name="networkAttrType" abstract="true">
+    <xsd:complexType name="networkType" abstract="true">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
@@ -1143,27 +1122,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                 </summary>
                 <description>
                     This is a place holder for NetworkAttr subsetters. See the
-                    list of known subclasses for subsetters that can be used.
-                </description>
-                <example>
-
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- abstractType stationID -->
-    <xsd:complexType name="stationIDType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Abstract superclass of all StationId subsetters.
-                </summary>
-                <description>
-                    This is a place holder for StationId subsetters. See the
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
@@ -1197,27 +1155,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- abstractType siteID -->
-    <xsd:complexType name="siteIDType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Abstract superclass of all SiteId subsetters.
-                </summary>
-                <description>
-                    This is a place holder for SiteId subsetters. See the
-                    list of known subclasses for subsetters that can be used.
-                </description>
-                <example>
-
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
     <!--abstracType site -->
     <xsd:complexType name="siteType" abstract="true">
         <xsd:annotation>
@@ -1227,27 +1164,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                 </summary>
                 <description>
                     This is a place holder for Site subsetters. See the
-                    list of known subclasses for subsetters that can be used.
-                </description>
-                <example>
-
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="subsetterType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- abstractType channelID -->
-    <xsd:complexType name="channelIDType" abstract="true">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Abstract superclass of all ChannelId subsetters.
-                </summary>
-                <description>
-                    This is a place holder for ChannelId subsetters. See the
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
@@ -3382,35 +3298,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
-    <!-- EMBEDDED CHANNELID TYPE -->
-    <xsd:complexType name="embeddedChannelIDType">
-      <xsd:annotation>
-    <xsd:documentation xml:lang="en">
-            <summary>
-                Allows a ChannelId subsetter to be embedded within an
-        EventChannel.
-            </summary>
-            <description>
-                Allows a ChannelId subsetter to be embedded within an
-        EventChannel. This is most often used within a EventChannel
-                logical.
-            </description>
-            <example>
-               <embeddedChannel>
-                  <bandCode>B</bandCode>
-               </embeddedChannel>
-            </example>
-    </xsd:documentation>
-      </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="eventChannelType">
-                <xsd:sequence>
-                    <xsd:element ref="channelID" />
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
 
     <!-- EVENT CHANNEL AND TYPE -->
     <xsd:complexType name="eventChannelANDType">
@@ -4106,7 +3993,6 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
     <xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
     <xsd:element name="embeddedEventStation" type="embeddedEventStationType" substitutionGroup="eventChannel"/>
-    <xsd:element name="embeddedChannelID" type="embeddedChannelIDType" substitutionGroup="eventChannel"/>
     <xsd:element name="embeddedChannel" type="embeddedChannelType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelAND" type="eventChannelANDType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
