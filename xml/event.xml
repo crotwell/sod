@@ -15,81 +15,59 @@
 				<max>100</max>
 			</longitudeRange>
 		</boxArea>
-		<depthRange>
+		<originDepthRange>
 			<unitRange>
 				<unit>KILOMETER</unit>
 				<min>10</min>
 				<max>100</max>
 			</unitRange>
-		</depthRange>
+		</originDepthRange>
 		<eventTimeRange>
 		<timeRange>
 			<startTime>1999-01-01T00:00:00Z</startTime>
-			<endTime>2002-01T00:00:00Z</endTime>
+			<endTime>2002-01-01T00:00:00Z</endTime>
 		</timeRange>
 		</eventTimeRange>
 		<magnitudeRange>
 			<magType>mb</magType>
+                        <magType>mb</magType>
+                        <magType>mb</magType>
 			<min>5</min>
 			<max>10</max>
 		</magnitudeRange>
-		<catalog>BIGQUAKE</catalog>
-		<contributor>NEIC</contributor>
+		<catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+                <catalog><value>BIGQUAKE</value></catalog>
+		<contributor><value>NEIC</value></contributor>
 	   </eventFinder>
 
 	   <eventAttrAND>
-		<seismicRegion><value>0 10 20 30 40 50</value></seismicRegion>
+		<seismicRegion><value>10 0 20 30 40 50</value></seismicRegion>
 		<eventAttrOR>
 			<eventAttrNOT>
 				<seismicRegion><value>70 80 100</value></seismicRegion>
 			</eventAttrNOT>
 		</eventAttrOR>
 	   </eventAttrAND>
-	   <originOR>
-		<magnitudeRange>
-			<magType>mb</magType>
-			<min>5</min>
-			<max>10</max>
-		</magnitudeRange>
-		<depthRange>
-			<unitRange>
-				<unit>KILOMETER</unit>
-				<min>10</min>
-				<max>100</max>
-			</unitRange>
-		</depthRange>
-		<eventTimeRange>
-		<timeRange>
-			<startTime>2001-01-01T00:00:00Z</startTime>
-			<endTime>2002-01-01T00:00:00Z</endTime>
-		</timeRange>
-		</eventTimeRange>
-		<eventArea>
-		<boxArea>
-			<latitudeRange>
-				<min>38</min>
-				<max>120</max>
-			</latitudeRange>
-			<longitudeRange>
-				<min>-90</min>
-				<max>90</max>
-			</longitudeRange>
-		</boxArea>
-		</eventArea>
+	   <originAND>
 		<originAND>
-			<originNOT>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+                        <catalog><value>BIGQUAKE</value></catalog>
+		</originAND>
+                <originArrayAND>
+                 	<originNOT>
 				<magnitudeRange>
 					<magType>mb</magType>
 					<min>7</min>
 					<max>10</max>
 				</magnitudeRange>
 			</originNOT>
-		</originAND>
-	</originOR>
+                 </originArrayAND>
 
+	</originAND>
+    
 	<printLineEventProcess/>
    
    </eventArm>
-   <waveFormArm>
-   </waveFormArm>
 </sod>
