@@ -69,7 +69,6 @@ oot:${pom.artifactId}</connection>
     </developers>
 
   <dependencies>
-<!--
     <dependency>
       <groupId>openorb</groupId>
       <artifactId>openorb</artifactId>
@@ -80,7 +79,7 @@ oot:${pom.artifactId}</connection>
       <artifactId>openorb_notify</artifactId>
       <version>1.3.0</version>
     </dependency>
--->
+<!--
     <dependency>
       <groupId>OB</groupId>
       <artifactId>OB</artifactId>
@@ -108,26 +107,32 @@ oot:${pom.artifactId}</connection>
         <jnlp.jar>true</jnlp.jar>
       </properties>
     </dependency>
+-->
 
     <dependency>
       <id>fissuresUtil</id>
       <version>1.0Beta</version>
+      <url>http://www.seis.sc.edu/software/fissuresUtil</url>
     </dependency>
     <dependency>
       <id>fissuresImpl</id>
       <version>1.1Beta</version>
+      <url>http://www.seis.sc.edu/software/fissuresImpl</url>
     </dependency>
     <dependency>
       <id>fissuresIDL</id>
       <version>1.0</version>
+      <url>http://www.seis.sc.edu/software/fissuresIDL</url>
     </dependency>
     <dependency>
       <id>SeedCodec</id>
       <version>1.0Beta</version>
+      <url>http://www.seis.sc.edu/software/SeedCodec</url>
     </dependency>
     <dependency>
       <id>TauP</id>
       <version>1.1.4</version>
+      <url>http://www.seis.sc.edu/software/TauP</url>
     </dependency>
     <dependency>
       <id>junit</id>
@@ -138,22 +143,27 @@ oot:${pom.artifactId}</connection>
     <dependency>
       <id>hsqldb</id>
       <version>1.7.1</version>
+      <url>http://hsqldb.sourceforge.net</url>
     </dependency>
     <dependency>
       <id>xerces</id>
       <version>2.0.2</version>
+      <url>http://xml.apache.org/xerces2-j/index.html</url>
     </dependency>
     <dependency>
       <id>xml-apis</id>
       <version>2.0.2</version>
+      <url>http://xml.apache.org/xalan-j/index.html</url>
     </dependency>
     <dependency>
       <id>xalan</id>
       <version>2.3.1</version>
+      <url>http://xml.apache.org/xalan-j/index.html</url>
     </dependency>
     <dependency>
       <id>log4j</id>
       <version>1.2.6</version>
+      <url>http://jakarta.apache.org/log4j/docs/index.html</url>
     </dependency>
   </dependencies>
 
