@@ -15,6 +15,7 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.SodJDBC;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,9 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class JDBCEventStatus extends SodJDBC{
     public JDBCEventStatus() throws SQLException{
@@ -70,20 +69,20 @@ public class JDBCEventStatus extends SodJDBC{
     }
 
 
-    public ConditionEvent[] getAll() throws SQLException {
+    public StatefulEvent[] getAll() throws SQLException {
         return get("SELECT eventid FROM eventaccess", "eventid");
     }
 
-    public ConditionEvent[] get(String query, String idLoc) throws SQLException{
+    public StatefulEvent[] get(String query, String idLoc) throws SQLException{
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(query);
         List evs = new ArrayList();
         while(rs.next()){
             try {
                 CacheEvent ev = ea.getEvent(rs.getInt(idLoc));
-                EventCondition cond = getStatus(rs.getInt(idLoc));
+                Status stat = getStatus(rs.getInt(idLoc));
                 try {
-                    evs.add(new ConditionEvent(ev, cond));
+                    evs.add(new StatefulEvent(ev, stat));
                 } catch (NoPreferredOrigin e) {
                     GlobalExceptionHandler.handle("impossible, the cache event must have a preferred origin", e);
                 }
@@ -92,7 +91,7 @@ public class JDBCEventStatus extends SodJDBC{
                                            e);
             }
         }
-        return (ConditionEvent[])evs.toArray(new ConditionEvent[evs.size()]);
+        return (StatefulEvent[])evs.toArray(new StatefulEvent[evs.size()]);
     }
 
     public CacheEvent[] getAllOrderedByDate() throws SQLException{
@@ -110,10 +109,10 @@ public class JDBCEventStatus extends SodJDBC{
         return (CacheEvent[])events.toArray(evs);
     }
 
-    public EventCondition getStatus(int dbId) throws SQLException, NotFound{
+    public Status getStatus(int dbId) throws SQLException, NotFound{
         getStatus.setInt(1, dbId);
         ResultSet rs = getStatus.executeQuery();
-        if(rs.next())return EventCondition.getByNumber(rs.getInt("eventcondition"));
+        if(rs.next())return Status.get(rs.getInt("eventcondition"));
         throw new NotFound("There is no status for that id");
     }
 
