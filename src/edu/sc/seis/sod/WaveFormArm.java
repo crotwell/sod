@@ -44,13 +44,13 @@ public class WaveFormArm implements Runnable {
     public void run() {
         try {
             waitForInitialEvent();
-            while(Start.getEventArm().isAlive()){
+            do{
                 populateEventChannelDb();
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {}
                 retryIfNeededAndAvailable();
-            }
+            } while(Start.getEventArm().isAlive());
             logger.info("Waveform arm done.");
         } catch(Throwable e) {
             CommonAccess.handleException("Problem running waveform arm", e);
@@ -386,3 +386,4 @@ public class WaveFormArm implements Runnable {
     private int poolLineCapacity = 100, retryNum;
     private Object retryNumLock = new Object();
 }
+
