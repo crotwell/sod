@@ -118,13 +118,13 @@ public class PhaseRequest implements RequestGenerator{
 	    if(arrivalStartTime != -100.0 && arrivalEndTime != -100.0) break; 
 
 	}
-	System.out.println("originDpeth "+originDepth);
+	/*System.out.println("originDpeth "+originDepth);
 	System.out.println("distance "+SphericalCoords.distance(origin.my_location.latitude, 
-						    origin.my_location.longitude,
-						    channel.my_site.my_station.my_location.latitude,
-							       channel.my_site.my_station.my_location.longitude));
+		 				    origin.my_location.longitude,
+			 			    channel.my_site.my_station.my_location.latitude,
+				 			       channel.my_site.my_station.my_location.longitude));
 	System.out.println("arrivalStartTime = "+arrivalStartTime);
-	System.out.println("arrivalEndTime = "+arrivalEndTime);
+	System.out.println("arrivalEndTime = "+arrivalEndTime);*/
 	edu.iris.Fissures.Time originTime = origin.origin_time;
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
 	TimeInterval bInterval = new TimeInterval(beginOffset.getValue()+arrivalStartTime, UnitImpl.SECOND);

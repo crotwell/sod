@@ -69,7 +69,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
      * @return a <code>Magnitude</code> value
      */
     public Magnitude getMinMagnitude() {
-
+	
 	return new Magnitude(magType.getType(), getMinValue(), null);
 	
     }

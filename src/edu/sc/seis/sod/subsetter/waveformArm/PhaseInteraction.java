@@ -28,7 +28,22 @@ public class PhaseInteraction implements EventStationSubsetter {
      *
      * @param config an <code>Element</code> value
      */
-    public PhaseInteraction (Element config){
+    public PhaseInteraction (Element config) throws ConfigurationException{
+
+	Element element = SodUtil.getElement(config,"modelName");
+	if(element != null) modelName = SodUtil.getNestedText(element);
+	element = SodUtil.getElement(config,"phaseName");
+	if(element != null) phaseName = SodUtil.getNestedText(element);
+	element = SodUtil.getElement(config,"interactionStyle");
+	if(element != null) interactionStyle = SodUtil.getNestedText(element);
+	element = SodUtil.getElement(config, "interactionNumber");
+	if(element != null) interactionNumber = Integer.parseInt(SodUtil.getNestedText(element));
+	element = SodUtil.getElement(config, "relative");
+	if(element != null) phaseInteractionType = (PhaseInteractionType) SodUtil.load(element, "edu.sc.seis.sod.subsetter.waveFormArm");
+	element = SodUtil.getElement(config, "absolute");
+	if(element != null) phaseInteractionType = (PhaseInteractionType) SodUtil.load(element, "edu.sc.seis.sod.subsetter.waveFormArm");
+	
+
     }
     
     /**
@@ -43,5 +58,16 @@ public class PhaseInteraction implements EventStationSubsetter {
     public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) {
 	return true;
     }
+
+    private String modelName = null;
+    
+    private String phaseName = null;
+
+    private String interactionStyle = null;
+
+    private int interactionNumber = -1;
+
+    private PhaseInteractionType phaseInteractionType = null;
+  
 
 }// PhaseInteraction
