@@ -429,24 +429,22 @@
                                 <empty/>
                             </element>
                             <element name="phaseCut">
-                                <element name="phaseRequest">
-                                    <optional>
+                                <optional>
                                     <element name="model">
                                     <data type="string"/>
                                     </element>
-                                    </optional>
-                                    <element name="beginPhase">
+                                </optional>
+                                <element name="beginPhase">
                                     <data type="string"/>
-                                    </element>
-                                    <element name="beginOffset">
+                                </element>
+                                <element name="beginOffset">
                                     <ref name="time"/>
-                                    </element>
-                                    <element name="endPhase">
+                                </element>
+                                <element name="endPhase">
                                     <data type="string"/>
-                                    </element>
-                                    <element name="endOffset">
+                                </element>
+                                <element name="endOffset">
                                     <ref name="time"/>
-                                    </element>
                                 </element>
                             </element>
                             <element name="rMean">

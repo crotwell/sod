@@ -4,7 +4,8 @@
     <start>
         <ref name="seismogramProcess"/>
     </start>
-    <include href="../base/include/eventLabel.rng"></include>
+    <include href="../base/include/eventLabel.rng"/>
+    <include href="phaseRequest.rng"/>
     <define name="seismogramProcess">
         <choice>
             <ref name="printlineSeismogramProcess"/>
@@ -41,7 +42,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="phaseCut">
-            <externalRef href="phaseRequest.rng"/>
+            <ref name="phaseRequest"/>
         </element>
     </define>
     <define name="rMean">
