@@ -17,6 +17,7 @@ import org.apache.log4j.*;
 
 public class NetworkFinder extends AbstractSource{
     public NetworkFinder (Element element){
+	super(element);
 	try{
 	    System.out.println("Now the source NetworkSource must be built");
 	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
@@ -25,14 +26,16 @@ public class NetworkFinder extends AbstractSource{
 	    
 	    if(fissuresNamingService == null) System.out.println("NULLLLL");
 	    else System.out.println("NOT NULLLLL");
+	    System.out.println("The dns name is "+getDNSName());
+	    System.out.println("The object name is "+getSourceName());
+
 	} catch(Exception e) {
-
+	    
 	    e.printStackTrace();
-
+	    
 	}
 	
     }
     
-    
-    
+        
 }// NetworkFinder
