@@ -145,6 +145,11 @@
       <url>http://www.seis.sc.edu/software/TauP</url>
     </dependency>
     <dependency>
+      <id>mockFissures</id>
+      <version>0.1</version>
+      <type>test</type>
+    </dependency>
+    <dependency>
       <id>junit-addons</id>
       <version>1.3</version>
       <type>test</type>
