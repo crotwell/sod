@@ -23,7 +23,7 @@ public abstract class ServerEditor {
         this.owner = owner;
         this.fisName = new FissuresNamingService(owner.getProperties());
         fisName.setNameServiceCorbaLoc(getOwner().getProperties()
-                .getProperty("edu.sc.seis.sod.nameServiceCorbaLoc"));
+                .getProperty(FissuresNamingService.CORBALOC_PROP));
     }
 
     public SodGUIEditor getOwner() {

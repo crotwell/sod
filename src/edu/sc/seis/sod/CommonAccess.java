@@ -30,7 +30,7 @@ public class CommonAccess {
             fissuresNamingService = new FissuresNamingService(getORB());
             java.util.Properties props = System.getProperties();
             if ( props.containsKey(NAME_SERVICE_PROP)) {
-                fissuresNamingService.setNameServiceCorbaLoc((String)props.get(NAME_SERVICE_PROP));
+                fissuresNamingService.setNameServiceCorbaLoc((String)props.get(FissuresNamingService.CORBALOC_PROP));
             } // end of if ()
         } // end of if (fissuresNamingService == null)
 
@@ -63,9 +63,6 @@ public class CommonAccess {
     private org.omg.CORBA_2_3.ORB orb = null;
 
     FissuresNamingService fissuresNamingService;
-
-    static final String NAME_SERVICE_PROP =
-        "edu.sc.seis.sod.nameServiceCorbaLoc";
 
     private static Logger logger = Logger.getLogger(CommonAccess.class);
 
