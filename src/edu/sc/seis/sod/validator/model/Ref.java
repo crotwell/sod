@@ -43,6 +43,7 @@ public class Ref implements FormProvider{
 
     public void setAnnotation(Annotation ann) {
         this.ann = ann;
+        ann.setFormProvider(this);
     }
 
 

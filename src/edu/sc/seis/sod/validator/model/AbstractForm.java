@@ -39,7 +39,10 @@ public abstract class AbstractForm implements Form {
         return copy;
     }
 
-    public void setAnnotation(Annotation ann){ this.ann = ann; }
+    public void setAnnotation(Annotation ann){
+        this.ann = ann;
+        ann.setFormProvider(this);
+    }
 
     public Annotation getAnnotation(){ return ann; }
 
