@@ -236,9 +236,9 @@
             <optional>
                 <element name="type">
                     <choice>
-                        <value>hanning</value>
-                        <value>hamming</value>
-                        <value>cosine</value>
+                        <value>HANNING</value>
+                        <value>HAMMING</value>
+                        <value>COSINE</value>
                     </choice>
                 </element>
             </optional>
