@@ -154,7 +154,7 @@
                         <max>90</max>
                     </latitudeRange>
                     <longitudeRange>
-                        <min>-180</max>
+                        <min>-180</min>
                         <max>180</max>
                     </longitudeRange>
                 </boxArea>
