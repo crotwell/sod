@@ -101,6 +101,7 @@ public class WaveFormArm implements Runnable {
                               StationDbObject station, EventDbObject ev) throws Exception{
         if ( ! overlap.overlaps(station.getStation())) {
             logger.debug("The stations effective time does not overlap the event time");
+
             return;
         } // end of if ()
         SiteDbObject[] sites = networkArm.getSuccessfulSites(net, station);
@@ -119,11 +120,15 @@ public class WaveFormArm implements Runnable {
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
         logger.debug(ExceptionReporterUtils.getMemoryUsage()+" got " + chans.length + " SuccessfulChannels");
         for(int i = 0; i < chans.length; i++) {
-            startChannel(chans[i], ev);
+            startChannel(overlap, chans[i], ev);
         }
     }
 
-    private void startChannel(ChannelDbObject chan, EventDbObject ev)throws Exception{
+    private void startChannel(EventEffectiveTimeOverlap overlap, ChannelDbObject chan, EventDbObject ev)throws Exception{
+        if ( !overlap.overlaps(chan.getChannel())) {
+            logger.debug("The channel effective time does not overlap the event time");
+            return;
+        } // end of if ()
         int chanId = chan.getDbId();
         //cache the channelInformation.
         channelDbCache.put( new Integer(chanId), chan);
