@@ -6,18 +6,13 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.*;
-
 import org.w3c.dom.*;
 
 /**
- * Contributor.java
- *
- *
- * Created: Tue Apr  2 13:34:59 2002
- *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
+ * This tag is used to specify the value of the catalog.
+ * &lt;contributor&gt;&lt;value&gt;NEIC&lt;/value&gt;&lt;/contributor&gt;
  */
+
 
 public class Contributor implements OriginSubsetter{
     /**
@@ -45,6 +40,11 @@ public class Contributor implements OriginSubsetter{
     }
 
 
+    /**
+     * Describe <code>getContributor</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getContributor() {
 
 	return SodUtil.getNestedText(config);

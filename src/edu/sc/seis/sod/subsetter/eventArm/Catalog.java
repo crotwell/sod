@@ -11,14 +11,10 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * Catalog.java
- *
- *
- * Created: Tue Apr  2 13:34:59 2002
- *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
+ * This tag is used to specify the value of the catalog.
+ * &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
  */
+
 
 public class Catalog implements OriginSubsetter{
     /**
@@ -46,6 +42,11 @@ public class Catalog implements OriginSubsetter{
 	return false;
     }
 
+    /**
+     * Describe <code>getCatalog</code> method here.
+     *
+     * @return a <code>String</code> value
+     */
     public String getCatalog() {
 
 	return SodUtil.getNestedText(config);

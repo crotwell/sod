@@ -6,16 +6,20 @@ import org.w3c.dom.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
-
 /**
- * EventAttrNOT.java
+ * This subsetter is used to specify a negation of EventAttrSubsetter. This subsetter is accepted only when the included
+ * subsetter is false.
+ * &lt;eventAttrNOT&gt;
+ *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
+ * &lt;/eventAttrNOT&gt;
  *
+ *                                   (or)
  *
- * Created: Thu Mar 14 14:02:33 2002
+ * &lt;eventAttrNOT&gt;
+ * &lt;/eventAttrNOT&gt;
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
  */
+
 
 public class EventAttrNOT 
     extends EventLogicalSubsetter 

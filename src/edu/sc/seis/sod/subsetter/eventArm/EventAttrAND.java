@@ -8,15 +8,24 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * EventAttrAND.java
+ * This subsetter is used to specify a sequence of EventAttrSubsetters. This subsetter is accepted only when all the
+ * subsetters forming the sequence are accepted.
+ * &lt;eventAttrAND&gt;
+ *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
+ *            &lt;geographicRegion&gt;&lt;value&gt;162 258 324 404&lt;value/&gt;&lt;&lt;geographicRegion&gt;
+ * &lt;/eventAttrAND&gt;
  *
+ *                                   (or)
  *
- * Created: Thu Mar 14 14:02:33 2002
+ *  &lt;eventAttrAND&gt;
+ *            &lt;seismicRegion&gt;&lt;value&gt;10 20 30 40&lt;value/&gt;&lt;&lt;seismicRegion&gt;
+ * &lt;/eventAttrAND&gt;
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *                                   (or)
+ * &lt;eventAttrAND&gt;
+ * &lt;/eventAttrAND&gt;
+ *
  */
-
 public class EventAttrAND 
     extends EventLogicalSubsetter 
     implements EventAttrSubsetter {
