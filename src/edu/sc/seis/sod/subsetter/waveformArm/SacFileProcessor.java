@@ -222,10 +222,9 @@ public class SacFileProcessor implements LocalSeismogramProcess {
             outFile = dsToXML.save(ds, dataDirectory);
         }
         logger.debug("DSML saved to "+outFile.getName());
-        long mbyte = 1024*1024;
         Runtime runtime = Runtime.getRuntime();
-        String s = "Memory usage: "+runtime.freeMemory()/mbyte+" "+
-            runtime.totalMemory()/mbyte+"/"+runtime.maxMemory()/mbyte+" Mb";
+        String s = "Memory usage: "+
+            edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils.getMemoryUsage();
         System.out.println(s);
         return outFile;
     }
