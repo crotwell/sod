@@ -47,6 +47,11 @@
 				<name>Tag Docs</name>
 		</page>
 		<page>
+				<source>content/tagDocHelp.xml</source>
+				<destination>tagDocHelp.html</destination>
+				<name>Tag Doc Help</name>
+		</page>
+		<page>
 				<source>include/ES_JulAug_2004_preprint.pdf</source>
 				<destination>ES_JulAug_2004_preprint.pdf</destination>
 				<name>SOD Paper(PDF)</name>
