@@ -6,7 +6,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Element;
 
 
-public class IndexTemplate extends FileWritingTemplate implements WaveformArmMonitor{
+public class IndexTemplate extends FileWritingTemplate implements WaveformMonitor{
     public IndexTemplate() throws IOException {
         this(FileWritingTemplate.getBaseDirectoryName());
     }

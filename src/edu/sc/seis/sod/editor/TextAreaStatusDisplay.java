@@ -11,13 +11,13 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.JTextArea;
 
-public class TextAreaStatusDisplay implements EventArmMonitor, WaveformArmMonitor {
+public class TextAreaStatusDisplay implements EventMonitor, WaveformMonitor {
     TextAreaStatusDisplay() {
         this.area  = new JTextArea();
         area.setLineWrap(true);

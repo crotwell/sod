@@ -23,11 +23,11 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.networkArm.NetworkArmContext;
-import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 
-public abstract class AbstractVelocityStatus implements WaveformArmMonitor,
-        NetworkArmMonitor {
+public abstract class AbstractVelocityStatus implements WaveformMonitor,
+        NetworkMonitor {
 
     public AbstractVelocityStatus(Element config) throws SQLException,
             MalformedURLException, IOException {
