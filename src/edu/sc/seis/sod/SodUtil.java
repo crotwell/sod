@@ -75,14 +75,13 @@ public class SodUtil {
     }
     
     public static File makeOutputDirectory(Element config) throws ConfigurationException{
-        if(config == null){
-            System.out.println("CONFIG IS NULL");
-        }
         String outputDirName = "html";
-        Element outputElement = SodUtil.getElement(config, "outputDirectory");
-        if(outputElement != null){
-            if(SodUtil.getText(outputElement) != null){
-                outputDirName = SodUtil.getText(outputElement);
+        if(config != null){
+            Element outputElement = SodUtil.getElement(config, "outputDirectory");
+            if(outputElement != null){
+                if(SodUtil.getText(outputElement) != null){
+                    outputDirName = SodUtil.getText(outputElement);
+                }
             }
         }
         File htmlDir = new File(outputDirName);
