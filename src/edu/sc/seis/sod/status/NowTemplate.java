@@ -13,5 +13,5 @@ public class NowTemplate extends AllTypeTemplate{
         return df.format(ClockUtil.now());
     }
 
-    private DateFormat df = new SimpleDateFormat("H:mm:ss.S M/d/yyyy z");
+    private DateFormat df = new SimpleDateFormat("M/d/yyyy H:mm:ss.S z");
 }
