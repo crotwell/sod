@@ -53,8 +53,10 @@ public class VectorForkProcess implements WaveformVectorProcess {
         WaveformVectorResult result = new WaveformVectorResult(seismograms,
                                                                new StringTreeLeaf(this,
                                                                                   true));
+        logger.info("start vectorFork");
         while(it.hasNext() && result.isSuccess()) {
             WaveformVectorProcess processor = (WaveformVectorProcess)it.next();
+            logger.info("vectorFork processing "+processor.getClass().getName());
             synchronized(processor) {
                 result = processor.process(event,
                                            channelGroup,
@@ -79,5 +81,7 @@ public class VectorForkProcess implements WaveformVectorProcess {
         return out;
     }
 
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(VectorForkProcess.class);
+    
     private List processes = new ArrayList();
 }
