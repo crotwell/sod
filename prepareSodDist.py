@@ -20,6 +20,10 @@ def buildInternal(proj, name=None):
 def buildExternal(proj, name=None):
     scripts=buildSodScripts.buildSodScripts(proj)
     scripts.extend(buildSodScripts.buildEditorScripts(proj))
+    os.chdir('site')
+    print 'building docs'
+    os.spawnlp(os.P_WAIT, 'buildSite.sh', 'sh', 'buildSite.sh')
+    os.chdir('..')
     extras = [('scripts/tutorial.xml', 'docs/tutorial.xml'),
               ('scripts/weed.xml', 'docs/weed.xml'),
               ('site/generatedSite', 'docs')]
