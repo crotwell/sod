@@ -185,9 +185,9 @@
     </menu>
     <menu name="Don't Show">
         <page>
-            <source>schemaDocs/datatypes/Text.xml</source>
+            <source>schemaDocs/datatypes/AnyText.xml</source>
             <destination>tagDocs/datatypes/Text.html</destination>
-            <name>Text</name>
+            <name>SOD - Text</name>
             <base>../../</base>
             <menu>Reference</menu>
         </page>
@@ -201,7 +201,7 @@
         <page>
             <source>schemaDocs/datatypes/AnyText.xml</source>
             <destination>tagDocs/datatypes/AnyText.html</destination>
-            <name>Text</name>
+            <name>SOD - Text</name>
             <base>../../</base>
             <menu>Reference</menu>
         </page>
