@@ -6,27 +6,26 @@
 
 package edu.sc.seis.sod.editor;
 
+import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
+import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.CommonAccess;
-import java.util.HashMap;
-import javax.swing.JComponent;
-import javax.xml.transform.TransformerException;
 import org.w3c.dom.Element;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.iris.Fissures.IfSeismogramDC.DataCenter;
+import javax.swing.JComponent;
 
-public class FixedDataCenterEditor implements EditorPlugin {
+public class FixedDataCenterEditor extends ServerEditor implements EditorPlugin{
+    public FixedDataCenterEditor(SodGUIEditor owner){ super(owner); }
 
-    public JComponent getGUI(Element element) throws TransformerException {
-        return null;
+    protected ServerNameDNS getServerNameDNS(String name, String dns, FissuresNamingService fisName) {
+        return new NSSeismogramDC(name, dns, fisName);
     }
 
-    private HashMap map;
 
-    protected void loadFromNameService() throws ConfigurationException {
-        FissuresNamingService fisname = CommonAccess.getCommonAccess().getFissuresNamingService();
-        //DataCenter[] allDC = fisname.getAllObjects("SeismogramDC", null);
+    protected ServerNameDNS[] getAllServers(FissuresNamingService fisName) {
+        return fisName.getAllSeismogramDC();
     }
 
+    public JComponent getGUI(Element element) throws Exception {
+        return getServerBox(element);
+    }
 }
 
