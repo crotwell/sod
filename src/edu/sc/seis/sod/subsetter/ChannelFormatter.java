@@ -56,7 +56,7 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("siteCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return SiteFormatter.formatSiteCode(chan.get_id().site_code);
+                    return chan.get_id().site_code;
                 }
             };
         }else if(tag.equals("beginTime")) return new ChannelBeginTimeTemplate(el);

@@ -13,6 +13,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.NetworkStatus;
 import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.NetworkFormatter;
 import edu.sc.seis.sod.subsetter.SiteFormatter;
 import edu.sc.seis.sod.subsetter.StationFormatter;
@@ -192,7 +193,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
         }
         return (ChannelsInSiteTemplate)channelTemplates.get(site.my_station.my_network.get_code()
                                                                 + site.my_station.get_code()
-                                                                + SiteFormatter.formatSiteCode(site.get_code())
+                                                                + EventFormatter.filize(site.get_code())
                                                                 + site.get_id().begin_time.date_time);
     }
 
@@ -229,7 +230,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     public boolean contains(Site site){
         return channelTemplates.containsKey(site.my_station.my_network.get_code()
                                                 + site.my_station.get_code()
-                                                + SiteFormatter.formatSiteCode(site.get_code())
+                                                + EventFormatter.filize(site.get_code())
                                                 + site.get_id().begin_time.date_time);
     }
 

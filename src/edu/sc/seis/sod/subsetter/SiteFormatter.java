@@ -63,7 +63,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
         if (tag.equals("siteCode")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return formatSiteCode(site.get_id().site_code);
+                    return site.get_id().site_code;
                 }
             };
         }
@@ -137,8 +137,8 @@ public class SiteFormatter extends Template implements SiteTemplate {
     }
     
     public static String formatSiteCode(String siteCode){
-        if (siteCode == null || siteCode.equals("") || siteCode.equals("  ")){
-            return "__";
+        if (siteCode == null || siteCode.equals("")){
+            return "  ";
         }
         else return siteCode;
     }
