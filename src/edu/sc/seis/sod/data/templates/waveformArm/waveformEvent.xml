@@ -18,8 +18,8 @@ window.onload=function(){
 </head>
 <body>
 <div id="Header">
-<a href="../../event.html"> Events</a> >
-<event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
+<a href="../../event.html"> Events</a>
+<event><feRegionName/> <originTime>yyyy-MM-dd HH:mm:ss</originTime></event>
 </div>
 <div id="Content">
 <h1>Station information for this event</h1>
@@ -32,7 +32,7 @@ window.onload=function(){
 </tr>
 <tr>
 <td><b>Time</b></td>
-<td><originTime>MM/dd/yyyy HH:mm:ss ZZZ</originTime></td>
+<td><originTime>yyyy-MM-dd HH:mm:ss ZZZ</originTime></td>
 </tr>
 <tr>
 <td><b>Magnitude</b></td>
