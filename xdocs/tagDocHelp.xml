@@ -1,33 +1,40 @@
 <?xml version="1.0"?>
 <document>
-        <properties>
-                <title>SOD - Help for Tag Docs</title>
-        </properties>
-        <body>
-                <section name="Any number of times">
-<p>
-	This indicates that whatever item is next to this can appear any number of times, from 0 to infinity.   So if a choice has this next to it, you can use as many of the items in the choice as you want, as many times as you want.
-</p>
-                </section>
-                <section name="At Least Once">
-<p>
-This indicates the item this is associated with can appear as many times as you want, as long as it appears once.  
-</p>
-                </section>
-                <section name="choice">
-<p>
-A choice says the you can use one of the items inside of it.  	The items inside of a choice are the ones closest to the dashed lined coming out of the choice.  If the choice is followed by 'optional' that means you can use one of the items inside of it, but you can also leave these out.  If choice is followed by 'at least once' you must select one item out of the choice, but you can also select six items out of the choice, or you can select the same item 12 times.  Any combination works.  If the choice is followed by "any number of times" it works like it has optional and at least once on it.  You can ignore the choice entirely, or you can use the items in it over and over again.
-</p>
-                </section>
-                <section name="group">
-<p>
-This indicates the items inside the group(the ones next to the black vertical line) must appear together and in the order given.  The group can be 'optional' meaning you can take or leave the whole block.  It can be 'at least one' meaning you have to have at least one of it, and you can have as many more copies after the first that you like.  'any number of times' following it is like having both 'optional' and 'at least once'.  You can leave it out, or you can have it six times, or you can use it once.
-</p>
-                </section>
-                <section name="optional">
-<p>
-If an item has 'optional' showing up after it, you can include it in your SOD config file or you can leave it out entirely.
-</p>
-                </section>
-        </body>
+    <properties>
+        <title>SOD - Help for Tag Docs</title>
+    </properties>
+    <body>
+        <section name="Any number of times">
+            <p> This indicates that whatever item is next to this can appear any number of times,
+                from 0 to infinity. So if a choice has this next to it, you can use as many of the
+                items in the choice as you want, as many times as you want.</p>
+        </section>
+        <section name="At Least Once">
+            <p> This indicates the item this is associated with can appear as many times as you
+                want, as long as it appears once.</p>
+        </section>
+        <section name="choice">
+            <p> A choice says the you can use one of the items inside of it. The items inside of a
+                choice are the ones closest to the dashed lined coming out of the choice. If the
+                choice is followed by 'optional' that means you can use one of the items inside of
+                it, but you can also leave these out. If choice is followed by 'at least once' you
+                must select one item out of the choice, but you can also select six items out of the
+                choice, or you can select the same item 12 times. Any combination works. If the
+                choice is followed by "any number of times" it works like it has optional and at
+                least once on it. You can ignore the choice entirely, or you can use the items in it
+                over and over again.</p>
+        </section>
+        <section name="group">
+            <p> This indicates the items inside the group(the ones next to the black vertical line)
+                must appear together and in the order given. The group can be 'optional' meaning you
+                can take or leave the whole block. It can be 'at least one' meaning you have to have
+                at least one of it, and you can have as many more copies after the first that you
+                like. 'any number of times' following it is like having both 'optional' and 'at
+                least once'. You can leave it out, or you can have it six times, or you can use it once.</p>
+        </section>
+        <section name="optional">
+            <p> If an item has 'optional' showing up after it, you can include it in your SOD strategy
+                file or you can leave it out entirely.</p>
+        </section>
+    </body>
 </document>
