@@ -16,16 +16,7 @@
 <h2>Events to date:</h2>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
-<div id="Menu">
-<ul>
-<li><a href="index.html"><runName/></a></li>
-<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
-<li><a href="time.html">Events</a></li>
-<li><a href="networks.html">Networks</a></li>
-<li><a href="statusInfo.html">About</a></li>
-<li><a href="Errors/index.html">Errors</a></li>
-</ul>
-</div>
+<menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
 <div id="footer">
 <h2>Page last generated:</h2><now/>
 </div>

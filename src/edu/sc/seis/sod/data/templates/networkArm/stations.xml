@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<template>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
 <outputLocation>networks/<networkCode/>-<firstWord/></outputLocation>
 <filename>stations.html</filename>
 <html>
@@ -38,22 +38,7 @@
 </stations>
 </table>
 </div>
-<div id="Menu">
-<ul>
-<li>
-<a href="../../index.html"><runName/></a>
-</li>
-<li>
-<a href="../../config.html">Configuration</a>
-</li>
-<li>
-<a href="../../time.html">Events</a>
-</li>
-<li>
-<a href="../../networks.html">Networks</a>
-</li>
-</ul>
-</div>
+<menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
 <div id="footer">
 <h2>Page last generated:</h2><now/>
 </div>

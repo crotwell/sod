@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<div id="Menu">
+<ul>
+<li><a><attribute name="href"><relativePath xlink:href="status/index.html"/></attribute><runName/></a></li>
+<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
+<li><a><attribute name="href"><relativePath xlink:href="status/time.html"/></attribute>Events</a></li>
+<li><a><attribute name="href"><relativePath xlink:href="status/networks.html"/></attribute>Networks</a></li>
+<li><a><attribute name="href"><relativePath xlink:href="status/statusInfo.html"/></attribute>About</a></li>
+<li><a><attribute name="href"><relativePath xlink:href="status/Errors/index.html"/></attribute>Errors</a></li>
+</ul>
+</div>
+</template>
+
