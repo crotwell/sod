@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-<x/>
         <property>
             <name>sod.start.RunName</name>
             <value>Tutorial Test Run</value>
@@ -52,11 +51,11 @@
         </property>
         <property>
                 <name>sod.waveform.maxRetryDelay.value</name>
-                <value>6</value>
+                <value>16</value>
         </property>
-            <property>
+        <property>
             <name>sod.waveform.maxRetryDelay.unit</name>
-            <value>MINUTE</value>
+            <value>DAY</value>
         </property>
         </properties>
         <eventArm>
