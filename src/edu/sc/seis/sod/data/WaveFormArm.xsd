@@ -1027,7 +1027,7 @@
     <!-- element representing the process -->waw
     <xsd:element name="printlineSeismogramProcess" type="printLineSeismogramProcessorType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="sacFileProcessor" type="sacSeismogramProcessType" substitutionGroup="seismogramProcess"/>
-    
+    <xsd:element name="responseGainProcessor" type="responseGainProcessType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
