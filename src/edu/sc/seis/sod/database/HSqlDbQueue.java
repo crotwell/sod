@@ -13,9 +13,11 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.database.HSqlDbQueue;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /**
  * HSqlDbQueue.java
@@ -93,11 +95,9 @@ public class HSqlDbQueue implements Queue {
         else return 0;
     }
     
-    public void push(java.lang.Object obj) {}
     /**
      * inserts the obj at the end of the queue.
      *
-     * @param obj a <code>java.lang.Object</code> value to be inserted into the queue.
      */
     public synchronized void push(String serverDNS,
                                   String serverName,
@@ -109,15 +109,6 @@ public class HSqlDbQueue implements Queue {
         } catch(edu.sc.seis.sod.ConfigurationException cfe) {
             cfe.printStackTrace();
         }
-        try {
-            //if(waitFlag){
-            while(getLength() > 4) {
-                wait();
-            }
-        } catch(InterruptedException ie) {}
-        
-        
-        
         EventAccess eventAccess = obj;//(EventAccess) ((CacheEvent)obj).getEventAccess();
         Origin origin = originObj;
         String name = eventAccess.get_attributes().name;
@@ -172,42 +163,20 @@ public class HSqlDbQueue implements Queue {
      * @return a <code>java.lang.Object</code> value
      */
     public synchronized int pop() {
-        int dbid;
-        //if(Start.RE_OPEN_EVENTS == true) {
-        //  dbid = eventDatabase.getFirst(Status.RE_OPEN);
-        //  } else {
-        dbid = eventDatabase.getFirst(Status.NEW);
-        // }
+        int dbId = eventDatabase.getFirst(Status.NEW);
         
-        while((getLength() == 0 && sourceAlive == true)  ||
-                  (dbid == -1 && sourceAlive == true)){
+        logger.debug("DBId: " + dbId + " SourceAlive: " + sourceAlive);
+        while(dbId == -1 && sourceAlive){
             try {
                 wait();
-                if(dbid == -1) {
-                    // if(Start.RE_OPEN_EVENTS == true) {
-                    // dbid = eventDatabase.getFirst(Status.RE_OPEN);
-                    //  } else {
-                    dbid = eventDatabase.getFirst(Status.NEW);
-                    // }
-                }
-            } catch(InterruptedException ie) {
-                ie.printStackTrace();
-            }
+                dbId = eventDatabase.getFirst(Status.NEW);
+            } catch(InterruptedException ie) { }
             
         }
-        //if(Start.RE_OPEN_EVENTS == true) {
-        eventDatabase.updateStatus(dbid, Status.PROCESSING);
-        //} else {
-        //  eventDatabase.updateStatus(dbid, Status.RE_OPEN_PROCESSING);
-        //}
-        return dbid;
-        //  EventAccess eventAccess = getEventAccess(dbid);
-        //  if(getLength() <= 4){
-        //      waitFlag = false;
-        //      notifyAll();
-        //  }
-        
-        //  return new CacheEvent(eventAccess);
+        if(dbId != -1){
+            eventDatabase.updateStatus(dbId, Status.PROCESSING);
+        }
+        return dbId;
     }
     
     private org.omg.CORBA.Object reValidate(int dbid, org.omg.CORBA.Object obj) {
@@ -289,7 +258,9 @@ public class HSqlDbQueue implements Queue {
     
     public  synchronized void waitForProcessing() {
         if(getLength() > 4) {
-            waitFlag = true;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {}
         }
     }
     
@@ -398,6 +369,8 @@ public class HSqlDbQueue implements Queue {
     private PreparedStatement putStmt;
     
     private PreparedStatement getStmt;
+    
+    private static Logger logger = Logger.getLogger(HSqlDbQueue.class);
     
     private PreparedStatement getMaxIdStmt;
     
