@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -26,7 +26,7 @@ public class NoGaps implements AvailableDataSubsetter, SodElement{
      * @param config an <code>Element</code> value
      */
     public NoGaps (Element config){
-    
+        
     }
     
     /**
@@ -41,40 +41,40 @@ public class NoGaps implements AvailableDataSubsetter, SodElement{
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations event,
-              NetworkAccess network,
-              Channel channel,
-              RequestFilter[] original,
-              RequestFilter[] available,
-              CookieJar cookies) {
-
-    boolean ok = true;
-    logger.debug("original length="+original.length+"  available legnth="+available.length);
-    for(int counter = 0; counter < original.length; counter++) {
-        ok = false;
-        MicroSecondDate originalStartDate =
-        new MicroSecondDate(original[counter].start_time);
-        MicroSecondDate originalEndDate =
-        new MicroSecondDate(original[counter].end_time);
-        for(int subcounter = 0; subcounter < available.length; subcounter++) {
-        MicroSecondDate availableStartDate = new MicroSecondDate(available[subcounter].start_time);
-        MicroSecondDate availableEndDate = new MicroSecondDate(available[subcounter].end_time);
-        logger.debug(originalStartDate+" "+originalEndDate+" - "+availableStartDate+" "+availableEndDate);
-
-        if(( originalStartDate.after(availableStartDate) || originalStartDate.equals(availableStartDate))
-           && (originalEndDate.before(availableEndDate) || originalEndDate.equals(availableEndDate))) {
-            ok = true;
-            break;
+                          NetworkAccess network,
+                          Channel channel,
+                          RequestFilter[] original,
+                          RequestFilter[] available,
+                          CookieJar cookies) {
+        
+        boolean ok = true;
+        logger.debug("original length="+original.length+"  available legnth="+available.length);
+        for(int counter = 0; counter < original.length; counter++) {
+            ok = false;
+            MicroSecondDate originalStartDate =
+                new MicroSecondDate(original[counter].start_time);
+            MicroSecondDate originalEndDate =
+                new MicroSecondDate(original[counter].end_time);
+            for(int subcounter = 0; subcounter < available.length; subcounter++) {
+                MicroSecondDate availableStartDate = new MicroSecondDate(available[subcounter].start_time);
+                MicroSecondDate availableEndDate = new MicroSecondDate(available[subcounter].end_time);
+                logger.debug(originalStartDate+" "+originalEndDate+" - "+availableStartDate+" "+availableEndDate);
+                
+                if(( originalStartDate.after(availableStartDate) || originalStartDate.equals(availableStartDate))
+                   && (originalEndDate.before(availableEndDate) || originalEndDate.equals(availableEndDate))) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (ok == false) {
+                logger.debug("NoGaps fail");
+                return false;
+            } // end of if (ok == false)
         }
-        }
-        if (ok == false) {
-        logger.debug("NoGaps fail");
-        return false;
-        } // end of if (ok == false)
+        return true;
     }
-    return true;
-    }
-
-    static Category logger =
-    Category.getInstance(NoGaps.class.getName());
+    
+    private static Logger logger =
+        Logger.getLogger(NoGaps.class);
     
 }// NoGaps
