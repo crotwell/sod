@@ -103,18 +103,6 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         return formatter.format(d);
     }
     
-    private class BeginTimeTemplate implements ChannelTemplate{
-        public BeginTimeTemplate(Element config){
-            sdf = new SimpleDateFormat(SodUtil.getNestedText(config));
-        }
-        
-        public String getResult(Channel chan) {
-            return sdf.format(new MicroSecondDate(chan.get_id().begin_time));
-        }
-        
-        SimpleDateFormat sdf;
-    }
-    
     public String getResult(Channel chan) {
         StringBuffer buf = new StringBuffer();
         Iterator it = templates.iterator();
