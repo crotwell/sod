@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
+import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ChannelGroup;
@@ -78,8 +79,9 @@ public class JDBCEventChannelStatus extends SodJDBC {
                 + "WHERE sta_id NOT IN ("
                 + "SELECT DISTINCT sta_id FROM channel, site, eventchannelstatus "
                 + stationsOfStatusWhere + ")");
+        SQLLoader networkSQLLoader = new SQLLoader("edu/sc/seis/fissuresUtil/database/props/network/default.props");
         channelsForPair = conn.prepareStatement("SELECT "
-                + JDBCChannel.getNeededForChannel()
+                + networkSQLLoader.getContext().get("channel_neededForChannel")
                 + " FROM channel, eventchannelstatus "
                 + "WHERE pairid = ? AND "
                 + "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
