@@ -4,18 +4,16 @@ import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 
-public final class StationXOR extends  StationLogicalSubsetter
-    implements StationSubsetter {
+public final class StationXOR extends StationLogicalSubsetter implements
+        StationSubsetter {
 
-    public StationXOR (Element config) throws ConfigurationException {
+    public StationXOR(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public boolean accept(Station e) throws Exception{
-
-        StationSubsetter filterA = (StationSubsetter)filterList.get(0);
-        StationSubsetter filterB = (StationSubsetter)filterList.get(1);
-        return ( filterA.accept(e) != filterB.accept(e));
+    public boolean accept(Station e) throws Exception {
+        StationSubsetter filterA = (StationSubsetter)subsetters.get(0);
+        StationSubsetter filterB = (StationSubsetter)subsetters.get(1);
+        return (filterA.accept(e) != filterB.accept(e));
     }
-
 }// StationXOR

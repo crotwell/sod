@@ -31,6 +31,25 @@
             <ref name="externalStationSubsetter"/>
         </choice>
     </define>
+    <define name="stationLogical">
+        <choice>
+            <ref name="code"/>
+            <ref name="name"/>
+            <ref name="operator"/>
+            <ref name="depthRange"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="area"/>
+            <ref name="stationPointDistance"/>
+            <ref name="stationPointAzimuth"/>
+            <ref name="stationPointBackAzimuth"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+            <ref name="externalStationSubsetter"/>
+            <externalRef href="network.rng"/>
+        </choice>
+    </define>
     <define name="code">
         <element name="stationCode">
             <xsd:annotation>
@@ -175,7 +194,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="station"/>
+                <ref name="stationLogical"/>
             </oneOrMore>
         </element>
     </define>
@@ -209,7 +228,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="station"/>
+                <ref name="stationLogical"/>
             </oneOrMore>
         </element>
     </define>
@@ -217,9 +236,9 @@
         <element name="stationNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed Station subsetter</summary>
-                <description>CHANGE The output is the logical NOT of the output of the enclosed Station
-                    subsetter. This means that it will evaluate to false if the enclosed Station
-                    subsetter evaluates to true, and vice versa.</description>
+                <description>CHANGE The output is the logical NOT of the output of the enclosed
+                    Station subsetter. This means that it will evaluate to false if the enclosed
+                    Station subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="station"/>
         </element>

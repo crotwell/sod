@@ -12,8 +12,8 @@ public final class SiteNOT extends SiteLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Site e) {
-        Iterator it = filterList.iterator();
+    public boolean accept(Site e) throws Exception {
+        Iterator it = subsetters.iterator();
         if(it.hasNext()) {
             SiteSubsetter filter = (SiteSubsetter)it.next();
             if(filter.accept(e)) { return false; }

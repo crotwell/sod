@@ -13,7 +13,7 @@ public final class ChannelAND extends  ChannelLogicalSubsetter
     }
 
     public boolean accept(Channel e) throws Exception{
-        Iterator it = filterList.iterator();
+        Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
             if ( !filter.accept(e)) { return false; }

@@ -30,6 +30,27 @@
             <ref name="externalChannelSubsetter"/>
         </choice>
     </define>
+    <define name="channelLogical">
+        <choice>
+            <ref name="channelCode"/>
+            <ref name="bandCode"/>
+            <ref name="gainCode"/>
+            <ref name="orientationCode"/>
+            <ref name="sampling"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="orientationRange"/>
+            <ref name="orientationAzimuthRange"/>
+            <ref name="orientationDipRange"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+            <ref name="externalChannelSubsetter"/>
+            <externalRef href="site.rng"/>
+            <externalRef href="station.rng"/>
+            <externalRef href="network.rng"/>
+        </choice>
+    </define>
     <define name="singleLetterOrNumber">
         <data type="string">
             <xsd:annotation>
@@ -59,10 +80,9 @@
         <element name="bandCode">
             <xsd:annotation>
                 <summary>Matches the band code of a channel</summary>
-                <description>Matches the band code of a channel, such as B for broadband and L
-                    for long period. See the <a
-                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the
-                    list of available code letters.</description>
+                <description>Matches the band code of a channel, such as B for broadband and L for
+                    long period. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED
+                        manual</a> for the list of available code letters.</description>
             </xsd:annotation>
             <ref name="singleLetterOrNumber"/>
         </element>
@@ -73,7 +93,7 @@
                 <summary>Matches a gain code in a channel code</summary>
                 <description>Matches a gain code in a channel code, such as H for high gain and L
                     for low gain. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED
-                    manual</a> for the list of available code letters.</description>
+                        manual</a> for the list of available code letters.</description>
                 <example>
                     <gainCode>H</gainCode>
                 </example>
@@ -86,9 +106,8 @@
             <xsd:annotation>
                 <summary>Matches a orientation code in a channel code</summary>
                 <description>Matches a orientation code in a channel code, such as Z for vertical
-                    and N for north. See the <a
-                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the
-                    list of available code letters.</description>
+                    and N for north. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm"
+                        >SEED manual</a> for the list of available code letters.</description>
                 <example>
                     <orientationCode>Z</orientationCode>
                 </example>
@@ -122,7 +141,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channel"/>
+                <ref name="channelLogical"/>
             </oneOrMore>
         </element>
     </define>
@@ -152,7 +171,7 @@
                 </example>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="channel"/>
+                <ref name="channelLogical"/>
             </oneOrMore>
         </element>
     </define>
@@ -172,7 +191,8 @@
             <xsd:annotation>
                 <summary>Matches if the sampling rate of the channel is within the range</summary>
                 <description>Matches if the sampling rate of the channel is within the range. Both
-                    the min and max are optional, although at least one must be given to have any effect</description>
+                    the min and max are optional, although at least one must be given to have any
+                    effect</description>
                 <example>
                     <sampling>
                         <min>1</min>

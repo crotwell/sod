@@ -11,9 +11,9 @@ public final class SiteXOR extends SiteLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Site site) {
-        SiteSubsetter filterA = (SiteSubsetter)filterList.get(0);
-        SiteSubsetter filterB = (SiteSubsetter)filterList.get(1);
+    public boolean accept(Site site) throws Exception {
+        SiteSubsetter filterA = (SiteSubsetter)subsetters.get(0);
+        SiteSubsetter filterB = (SiteSubsetter)subsetters.get(1);
         return (filterA.accept(site) != filterB.accept(site));
     }
 }// SiteXOR

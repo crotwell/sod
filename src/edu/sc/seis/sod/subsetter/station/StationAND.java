@@ -13,7 +13,7 @@ public final class StationAND extends StationLogicalSubsetter implements
     }
 
     public boolean accept(Station e) throws Exception {
-        Iterator it = filterList.iterator();
+        Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             StationSubsetter filter = (StationSubsetter)it.next();
             if(!filter.accept(e)) { return false; }

@@ -5,10 +5,10 @@
             <zeroOrMore>
                 <element name="rule">
                     <optional>
-                        <ref name="network"/>
+                        <ref name="network5"/>
                     </optional>
                     <optional>
-                        <ref name="station"/>
+                        <ref name="station3"/>
                     </optional>
                     <optional>
                         <ref name="site"/>
@@ -27,116 +27,1491 @@
             </zeroOrMore>
         </element>
     </start>
-    <define name="singleLetterOrNumber">
-        <data type="string">
-            <param name="pattern">[A-Z0-9]{1}</param>
-        </data>
+    <define name="AND6">
+        <element name="channelAND">
+            <oneOrMore>
+                <ref name="channelLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND5">
+        <element name="stationAND">
+            <oneOrMore>
+                <ref name="stationLogical4"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND4">
+        <element name="stationAND">
+            <oneOrMore>
+                <ref name="stationLogical3"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND2">
+        <element name="stationAND">
+            <oneOrMore>
+                <ref name="stationLogical2"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND7">
+        <element name="siteAND">
+            <oneOrMore>
+                <ref name="siteLogical2"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND">
+        <element name="stationAND">
+            <oneOrMore>
+                <ref name="stationLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND3">
+        <element name="siteAND">
+            <oneOrMore>
+                <ref name="siteLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channelCode">
+        <element name="channelCode">
+            <data type="string">
+                <param name="pattern">[A-Z0-9]{3}</param>
+            </data>
+        </element>
     </define>
     <define name="lon">
         <element name="longitude">
             <data type="float"/>
         </element>
     </define>
-    <define name="station">
+    <define name="lon4">
+        <element name="longitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="lon3">
+        <element name="longitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="lon2">
+        <element name="longitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="siteLogical">
         <choice>
-            <element name="stationCode">
-                <data type="string"/>
-            </element>
-            <element name="stationName">
-                <data type="string"/>
-            </element>
-            <element name="stationOperator">
-                <data type="string"/>
-            </element>
-            <element name="stationDepthRange">
-                <ref name="range"/>
-            </element>
-            <element name="stationEffectiveTimeOverlap">
-                <element name="startTime">
-                    <ref name="time3"/>
-                </element>
-                <element name="endTime">
-                    <ref name="time3"/>
-                </element>
-            </element>
-            <element name="stationArea">
+            <ref name="code3"/>
+            <ref name="depthRange4"/>
+            <ref name="effectiveTimeOverlap4"/>
+            <ref name="area4"/>
+            <ref name="AND3"/>
+            <ref name="OR7"/>
+            <ref name="NOT7"/>
+            <ref name="PASS7"/>
+            <ref name="externalSiteSubsetter2"/>
+            <ref name="station4"/>
+            <ref name="network8"/>
+        </choice>
+    </define>
+    <define name="siteLogical2">
+        <choice>
+            <ref name="code5"/>
+            <ref name="depthRange6"/>
+            <ref name="effectiveTimeOverlap7"/>
+            <ref name="area6"/>
+            <ref name="AND7"/>
+            <ref name="OR3"/>
+            <ref name="NOT3"/>
+            <ref name="PASS3"/>
+            <ref name="externalSiteSubsetter"/>
+            <ref name="station2"/>
+            <ref name="network3"/>
+        </choice>
+    </define>
+    <define name="depthRange2">
+        <element name="stationDepthRange">
+            <ref name="range4"/>
+        </element>
+    </define>
+    <define name="depthRange5">
+        <element name="stationDepthRange">
+            <ref name="range3"/>
+        </element>
+    </define>
+    <define name="depthRange4">
+        <element name="siteDepthRange">
+            <element name="unit">
                 <choice>
-                    <element name="boxArea">
-                        <element name="latitudeRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                        <element name="longitudeRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </element>
-                    <element name="globalArea">
-                        <empty/>
-                    </element>
+                    <value>KILOMETER</value>
+                    <value>METER</value>
+                    <value>CENTIMETER</value>
+                    <value>NANOMETER</value>
+                    <value>MICROMETER</value>
+                    <value>MICRON</value>
+                    <value>MILLIMETER</value>
+                    <value>PICOMETER</value>
+                    <value>INCH</value>
+                    <value>FOOT</value>
+                    <value>MILE</value>
+                    <value>DEGREE</value>
+                    <value>RADIAN</value>
                 </choice>
             </element>
-            <element name="stationPointDistance">
-                <ref name="range"/>
-                <ref name="lat"/>
-                <ref name="lon"/>
+            <optional>
+                <element name="min">
+                    <data type="double"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <data type="double"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="depthRange6">
+        <element name="siteDepthRange">
+            <element name="unit">
+                <choice>
+                    <value>KILOMETER</value>
+                    <value>METER</value>
+                    <value>CENTIMETER</value>
+                    <value>NANOMETER</value>
+                    <value>MICROMETER</value>
+                    <value>MICRON</value>
+                    <value>MILLIMETER</value>
+                    <value>PICOMETER</value>
+                    <value>INCH</value>
+                    <value>FOOT</value>
+                    <value>MILE</value>
+                    <value>DEGREE</value>
+                    <value>RADIAN</value>
+                </choice>
             </element>
-            <element name="stationPointAzimuth">
-                <ref name="range"/>
-                <ref name="lat"/>
-                <ref name="lon"/>
+            <optional>
+                <element name="min">
+                    <data type="double"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <data type="double"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="depthRange">
+        <element name="stationDepthRange">
+            <ref name="range"/>
+        </element>
+    </define>
+    <define name="depthRange3">
+        <element name="stationDepthRange">
+            <ref name="range2"/>
+        </element>
+    </define>
+    <define name="stationPointBackAzimuth4">
+        <element name="stationPointBackAzimuth">
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
+        </element>
+    </define>
+    <define name="stationPointBackAzimuth2">
+        <element name="stationPointBackAzimuth">
+            <ref name="range4"/>
+            <ref name="lat4"/>
+            <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="stationPointBackAzimuth3">
+        <element name="stationPointBackAzimuth">
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
+        </element>
+    </define>
+    <define name="stationPointBackAzimuth">
+        <element name="stationPointBackAzimuth">
+            <ref name="range"/>
+            <ref name="lat"/>
+            <ref name="lon"/>
+        </element>
+    </define>
+    <define name="OR2">
+        <element name="stationOR">
+            <oneOrMore>
+                <ref name="stationLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR5">
+        <element name="stationOR">
+            <oneOrMore>
+                <ref name="stationLogical3"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR6">
+        <element name="stationOR">
+            <oneOrMore>
+                <ref name="stationLogical4"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR3">
+        <element name="siteOR">
+            <oneOrMore>
+                <ref name="siteLogical2"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR7">
+        <element name="siteOR">
+            <oneOrMore>
+                <ref name="siteLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR4">
+        <element name="stationOR">
+            <oneOrMore>
+                <ref name="stationLogical2"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR">
+        <element name="channelOR">
+            <oneOrMore>
+                <ref name="channelLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="site">
+        <choice>
+            <ref name="code3"/>
+            <ref name="depthRange4"/>
+            <ref name="effectiveTimeOverlap4"/>
+            <ref name="area4"/>
+            <ref name="AND3"/>
+            <ref name="OR7"/>
+            <ref name="NOT7"/>
+            <ref name="PASS7"/>
+            <ref name="externalSiteSubsetter2"/>
+        </choice>
+    </define>
+    <define name="site2">
+        <choice>
+            <ref name="code5"/>
+            <ref name="depthRange6"/>
+            <ref name="effectiveTimeOverlap7"/>
+            <ref name="area6"/>
+            <ref name="AND7"/>
+            <ref name="OR3"/>
+            <ref name="NOT3"/>
+            <ref name="PASS3"/>
+            <ref name="externalSiteSubsetter"/>
+        </choice>
+    </define>
+    <define name="bandCode">
+        <element name="bandCode">
+            <ref name="singleLetterOrNumber"/>
+        </element>
+    </define>
+    <define name="gainCode">
+        <element name="gainCode">
+            <ref name="singleLetterOrNumber"/>
+        </element>
+    </define>
+    <define name="network5">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
             </element>
-            <element name="stationPointBackAzimuth">
-                <ref name="range"/>
-                <ref name="lat"/>
-                <ref name="lon"/>
+            <element name="networkName">
+                <data type="string"/>
             </element>
-            <element name="stationAND">
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time9"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time9"/>
+                </element>
+            </element>
+            <element name="networkAND">
                 <oneOrMore>
-                    <ref name="station"/>
+                    <ref name="network5"/>
                 </oneOrMore>
             </element>
-            <element name="stationOR">
+            <element name="networkOR">
                 <oneOrMore>
-                    <ref name="station"/>
+                    <ref name="network5"/>
                 </oneOrMore>
             </element>
-            <element name="stationNOT">
-                <ref name="station"/>
+            <element name="networkNOT">
+                <ref name="network5"/>
             </element>
-            <element name="passStation">
+            <element name="passNetwork">
                 <zeroOrMore>
-                    <ref name="station"/>
+                    <ref name="network5"/>
                 </zeroOrMore>
             </element>
-            <element name="externalStationSubsetter">
+            <element name="externalNetworkSubsetter">
                 <element name="classname">
                     <data type="string"/>
                 </element>
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml3"/>
+                        <ref name="xml8"/>
                     </choice>
                 </oneOrMore>
             </element>
         </choice>
+    </define>
+    <define name="network6">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time10"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time10"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network6"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network6"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network6"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network6"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml10"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network8">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time12"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time12"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network8"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network8"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network8"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network8"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml13"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network4">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time5"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time5"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network4"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network4"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network4"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network4"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml5"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network7">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time11"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time11"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network7"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network7"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network7"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network7"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml12"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network2">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time2"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time2"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network2"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network2"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network2"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network2"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml2"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="network3">
+        <choice>
+            <element name="networkCode">
+                <data type="string"/>
+            </element>
+            <element name="networkName">
+                <data type="string"/>
+            </element>
+            <element name="networkOwner">
+                <data type="string"/>
+            </element>
+            <element name="networkEffectiveTimeOverlap">
+                <element name="startTime">
+                    <ref name="time4"/>
+                </element>
+                <element name="endTime">
+                    <ref name="time4"/>
+                </element>
+            </element>
+            <element name="networkAND">
+                <oneOrMore>
+                    <ref name="network3"/>
+                </oneOrMore>
+            </element>
+            <element name="networkOR">
+                <oneOrMore>
+                    <ref name="network3"/>
+                </oneOrMore>
+            </element>
+            <element name="networkNOT">
+                <ref name="network3"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network3"/>
+                </zeroOrMore>
+            </element>
+            <element name="externalNetworkSubsetter">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml4"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="stationPointDistance">
+        <element name="stationPointDistance">
+            <ref name="range"/>
+            <ref name="lat"/>
+            <ref name="lon"/>
+        </element>
+    </define>
+    <define name="stationPointDistance3">
+        <element name="stationPointDistance">
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
+        </element>
+    </define>
+    <define name="stationPointDistance4">
+        <element name="stationPointDistance">
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
+        </element>
+    </define>
+    <define name="stationPointDistance2">
+        <element name="stationPointDistance">
+            <ref name="range4"/>
+            <ref name="lat4"/>
+            <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="sampling">
+        <element name="sampling">
+            <optional>
+                <element name="min">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="max">
+                    <data type="integer"/>
+                </element>
+            </optional>
+            <element name="interval">
+                <ref name="time13"/>
+            </element>
+        </element>
+    </define>
+    <define name="orientationRange">
+        <element name="orientationRange">
+            <element name="azimuth">
+                <data type="float"/>
+            </element>
+            <element name="dip">
+                <data type="float"/>
+            </element>
+            <element name="maxOffset">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="operator2">
+        <element name="stationOperator">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="operator4">
+        <element name="stationOperator">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="operator">
+        <element name="stationOperator">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="operator3">
+        <element name="stationOperator">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code6">
+        <element name="stationCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code4">
+        <element name="stationCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code2">
+        <element name="stationCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code3">
+        <element name="siteCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code5">
+        <element name="siteCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="code">
+        <element name="stationCode">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="stationLogical3">
+        <choice>
+            <ref name="code4"/>
+            <ref name="name3"/>
+            <ref name="operator4"/>
+            <ref name="depthRange5"/>
+            <ref name="effectiveTimeOverlap5"/>
+            <ref name="area5"/>
+            <ref name="stationPointDistance4"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointBackAzimuth4"/>
+            <ref name="AND4"/>
+            <ref name="OR5"/>
+            <ref name="NOT5"/>
+            <ref name="PASS5"/>
+            <ref name="externalStationSubsetter3"/>
+            <ref name="network6"/>
+        </choice>
+    </define>
+    <define name="stationLogical4">
+        <choice>
+            <ref name="code2"/>
+            <ref name="name2"/>
+            <ref name="operator3"/>
+            <ref name="depthRange3"/>
+            <ref name="effectiveTimeOverlap3"/>
+            <ref name="area3"/>
+            <ref name="stationPointDistance3"/>
+            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointBackAzimuth3"/>
+            <ref name="AND5"/>
+            <ref name="OR6"/>
+            <ref name="NOT6"/>
+            <ref name="PASS6"/>
+            <ref name="externalStationSubsetter4"/>
+            <ref name="network7"/>
+        </choice>
+    </define>
+    <define name="stationLogical2">
+        <choice>
+            <ref name="code6"/>
+            <ref name="name4"/>
+            <ref name="operator2"/>
+            <ref name="depthRange2"/>
+            <ref name="effectiveTimeOverlap2"/>
+            <ref name="area2"/>
+            <ref name="stationPointDistance2"/>
+            <ref name="stationPointAzimuth2"/>
+            <ref name="stationPointBackAzimuth2"/>
+            <ref name="AND2"/>
+            <ref name="OR4"/>
+            <ref name="NOT4"/>
+            <ref name="PASS4"/>
+            <ref name="externalStationSubsetter2"/>
+            <ref name="network4"/>
+        </choice>
+    </define>
+    <define name="stationLogical">
+        <choice>
+            <ref name="code"/>
+            <ref name="name"/>
+            <ref name="operator"/>
+            <ref name="depthRange"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="area"/>
+            <ref name="stationPointDistance"/>
+            <ref name="stationPointAzimuth"/>
+            <ref name="stationPointBackAzimuth"/>
+            <ref name="AND"/>
+            <ref name="OR2"/>
+            <ref name="NOT2"/>
+            <ref name="PASS2"/>
+            <ref name="externalStationSubsetter"/>
+            <ref name="network2"/>
+        </choice>
+    </define>
+    <define name="station">
+        <choice>
+            <ref name="code"/>
+            <ref name="name"/>
+            <ref name="operator"/>
+            <ref name="depthRange"/>
+            <ref name="effectiveTimeOverlap"/>
+            <ref name="area"/>
+            <ref name="stationPointDistance"/>
+            <ref name="stationPointAzimuth"/>
+            <ref name="stationPointBackAzimuth"/>
+            <ref name="AND"/>
+            <ref name="OR2"/>
+            <ref name="NOT2"/>
+            <ref name="PASS2"/>
+            <ref name="externalStationSubsetter"/>
+        </choice>
+    </define>
+    <define name="station2">
+        <choice>
+            <ref name="code6"/>
+            <ref name="name4"/>
+            <ref name="operator2"/>
+            <ref name="depthRange2"/>
+            <ref name="effectiveTimeOverlap2"/>
+            <ref name="area2"/>
+            <ref name="stationPointDistance2"/>
+            <ref name="stationPointAzimuth2"/>
+            <ref name="stationPointBackAzimuth2"/>
+            <ref name="AND2"/>
+            <ref name="OR4"/>
+            <ref name="NOT4"/>
+            <ref name="PASS4"/>
+            <ref name="externalStationSubsetter2"/>
+        </choice>
+    </define>
+    <define name="station3">
+        <choice>
+            <ref name="code4"/>
+            <ref name="name3"/>
+            <ref name="operator4"/>
+            <ref name="depthRange5"/>
+            <ref name="effectiveTimeOverlap5"/>
+            <ref name="area5"/>
+            <ref name="stationPointDistance4"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointBackAzimuth4"/>
+            <ref name="AND4"/>
+            <ref name="OR5"/>
+            <ref name="NOT5"/>
+            <ref name="PASS5"/>
+            <ref name="externalStationSubsetter3"/>
+        </choice>
+    </define>
+    <define name="station4">
+        <choice>
+            <ref name="code2"/>
+            <ref name="name2"/>
+            <ref name="operator3"/>
+            <ref name="depthRange3"/>
+            <ref name="effectiveTimeOverlap3"/>
+            <ref name="area3"/>
+            <ref name="stationPointDistance3"/>
+            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointBackAzimuth3"/>
+            <ref name="AND5"/>
+            <ref name="OR6"/>
+            <ref name="NOT6"/>
+            <ref name="PASS6"/>
+            <ref name="externalStationSubsetter4"/>
+        </choice>
+    </define>
+    <define name="effectiveTimeOverlap3">
+        <element name="stationEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time6"/>
+            </element>
+            <element name="endTime">
+                <ref name="time6"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap4">
+        <element name="siteEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time7"/>
+            </element>
+            <element name="endTime">
+                <ref name="time7"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap6">
+        <element name="channelEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time13"/>
+            </element>
+            <element name="endTime">
+                <ref name="time13"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap5">
+        <element name="stationEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time8"/>
+            </element>
+            <element name="endTime">
+                <ref name="time8"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap7">
+        <element name="siteEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time14"/>
+            </element>
+            <element name="endTime">
+                <ref name="time14"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap">
+        <element name="stationEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time3"/>
+            </element>
+            <element name="endTime">
+                <ref name="time3"/>
+            </element>
+        </element>
+    </define>
+    <define name="effectiveTimeOverlap2">
+        <element name="stationEffectiveTimeOverlap">
+            <element name="startTime">
+                <ref name="time15"/>
+            </element>
+            <element name="endTime">
+                <ref name="time15"/>
+            </element>
+        </element>
+    </define>
+    <define name="externalSiteSubsetter2">
+        <element name="externalSiteSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml7"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="externalSiteSubsetter">
+        <element name="externalSiteSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml15"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channel">
+        <choice>
+            <ref name="channelCode"/>
+            <ref name="bandCode"/>
+            <ref name="gainCode"/>
+            <ref name="orientationCode"/>
+            <ref name="sampling"/>
+            <ref name="effectiveTimeOverlap6"/>
+            <ref name="orientationRange"/>
+            <ref name="orientationAzimuthRange"/>
+            <ref name="orientationDipRange"/>
+            <ref name="AND6"/>
+            <ref name="OR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+            <ref name="externalChannelSubsetter"/>
+        </choice>
+    </define>
+    <define name="area2">
+        <element name="stationArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area3">
+        <element name="stationArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area6">
+        <element name="siteArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area4">
+        <element name="siteArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area5">
+        <element name="stationArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="area">
+        <element name="stationArea">
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </element>
+    </define>
+    <define name="orientationCode">
+        <element name="orientationCode">
+            <ref name="singleLetterOrNumber"/>
+        </element>
+    </define>
+    <define name="PASS6">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station4"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS7">
+        <element name="passSite">
+            <zeroOrMore>
+                <ref name="site"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passChannel">
+            <zeroOrMore>
+                <ref name="channel"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS2">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS3">
+        <element name="passSite">
+            <zeroOrMore>
+                <ref name="site2"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS4">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station2"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="PASS5">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station3"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="stationPointAzimuth">
+        <element name="stationPointAzimuth">
+            <ref name="range"/>
+            <ref name="lat"/>
+            <ref name="lon"/>
+        </element>
+    </define>
+    <define name="stationPointAzimuth2">
+        <element name="stationPointAzimuth">
+            <ref name="range4"/>
+            <ref name="lat4"/>
+            <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="stationPointAzimuth3">
+        <element name="stationPointAzimuth">
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
+        </element>
+    </define>
+    <define name="stationPointAzimuth4">
+        <element name="stationPointAzimuth">
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
+        </element>
+    </define>
+    <define name="channelLogical">
+        <choice>
+            <ref name="channelCode"/>
+            <ref name="bandCode"/>
+            <ref name="gainCode"/>
+            <ref name="orientationCode"/>
+            <ref name="sampling"/>
+            <ref name="effectiveTimeOverlap6"/>
+            <ref name="orientationRange"/>
+            <ref name="orientationAzimuthRange"/>
+            <ref name="orientationDipRange"/>
+            <ref name="AND6"/>
+            <ref name="OR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+            <ref name="externalChannelSubsetter"/>
+            <ref name="site2"/>
+            <ref name="station"/>
+            <ref name="network"/>
+        </choice>
+    </define>
+    <define name="NOT">
+        <element name="channelNOT">
+            <ref name="channel"/>
+        </element>
+    </define>
+    <define name="NOT2">
+        <element name="stationNOT">
+            <ref name="station"/>
+        </element>
+    </define>
+    <define name="NOT7">
+        <element name="siteNOT">
+            <ref name="site"/>
+        </element>
+    </define>
+    <define name="NOT6">
+        <element name="stationNOT">
+            <ref name="station4"/>
+        </element>
+    </define>
+    <define name="NOT3">
+        <element name="siteNOT">
+            <ref name="site2"/>
+        </element>
+    </define>
+    <define name="NOT5">
+        <element name="stationNOT">
+            <ref name="station3"/>
+        </element>
+    </define>
+    <define name="NOT4">
+        <element name="stationNOT">
+            <ref name="station2"/>
+        </element>
+    </define>
+    <define name="orientationAzimuthRange">
+        <element name="orientationAzimuthRange">
+            <element name="min">
+                <data type="float"/>
+            </element>
+            <element name="max">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="singleLetterOrNumber">
+        <data type="string">
+            <param name="pattern">[A-Z0-9]{1}</param>
+        </data>
+    </define>
+    <define name="externalStationSubsetter">
+        <element name="externalStationSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml3"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="externalStationSubsetter4">
+        <element name="externalStationSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml11"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="externalStationSubsetter3">
+        <element name="externalStationSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml9"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="externalStationSubsetter2">
+        <element name="externalStationSubsetter">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <oneOrMore>
+                <choice>
+                    <text/>
+                    <ref name="xml6"/>
+                </choice>
+            </oneOrMore>
+        </element>
     </define>
     <define name="range">
         <element name="unit">
@@ -167,7 +1542,94 @@
             </element>
         </optional>
     </define>
-    <define name="xml2">
+    <define name="range4">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+    <define name="range3">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+    <define name="range2">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
+    <define name="xml14">
         <element>
             <anyName/>
             <oneOrMore>
@@ -176,12 +1638,12 @@
                         <anyName/>
                     </attribute>
                     <text/>
-                    <ref name="xml2"/>
+                    <ref name="xml14"/>
                 </choice>
             </oneOrMore>
         </element>
     </define>
-    <define name="xml3">
+    <define name="xml7">
         <element>
             <anyName/>
             <oneOrMore>
@@ -190,7 +1652,105 @@
                         <anyName/>
                     </attribute>
                     <text/>
-                    <ref name="xml3"/>
+                    <ref name="xml7"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml13">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml13"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml6">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml6"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml15">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml15"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml5">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml5"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml10">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml10"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml11">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml11"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml12">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml12"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -209,6 +1769,62 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml8">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml8"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml3">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml3"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml2">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml2"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml9">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml9"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml">
         <element>
             <anyName/>
@@ -223,113 +1839,384 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="site">
-        <choice>
-            <element name="siteCode">
+    <define name="externalChannelSubsetter">
+        <element name="externalChannelSubsetter">
+            <element name="classname">
                 <data type="string"/>
             </element>
-            <element name="siteDepthRange">
-                <element name="unit">
-                    <choice>
-                        <value>KILOMETER</value>
-                        <value>METER</value>
-                        <value>CENTIMETER</value>
-                        <value>NANOMETER</value>
-                        <value>MICROMETER</value>
-                        <value>MICRON</value>
-                        <value>MILLIMETER</value>
-                        <value>PICOMETER</value>
-                        <value>INCH</value>
-                        <value>FOOT</value>
-                        <value>MILE</value>
-                        <value>DEGREE</value>
-                        <value>RADIAN</value>
-                    </choice>
-                </element>
-                <optional>
-                    <element name="min">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="double"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="siteEffectiveTimeOverlap">
-                <element name="startTime">
-                    <ref name="time4"/>
-                </element>
-                <element name="endTime">
-                    <ref name="time4"/>
-                </element>
-            </element>
-            <element name="siteArea">
+            <oneOrMore>
                 <choice>
-                    <element name="boxArea">
-                        <element name="latitudeRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                        <element name="longitudeRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </element>
-                    <element name="globalArea">
-                        <empty/>
-                    </element>
+                    <text/>
+                    <ref name="xml14"/>
                 </choice>
-            </element>
-            <element name="siteAND">
-                <oneOrMore>
-                    <ref name="site"/>
-                </oneOrMore>
-            </element>
-            <element name="siteOR">
-                <oneOrMore>
-                    <ref name="site"/>
-                </oneOrMore>
-            </element>
-            <element name="siteNOT">
-                <ref name="site"/>
-            </element>
-            <element name="passSite">
-                <zeroOrMore>
-                    <ref name="site"/>
-                </zeroOrMore>
-            </element>
-            <element name="externalSiteSubsetter">
-                <element name="classname">
-                    <data type="string"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="time15">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
-                <oneOrMore>
-                    <choice>
-                        <text/>
-                        <ref name="xml4"/>
-                    </choice>
-                </oneOrMore>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
             </element>
         </choice>
     </define>
-    <define name="time2">
+    <define name="time8">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time9">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time7">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time12">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time11">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time10">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time5">
         <choice>
             <data type="string"/>
             <element name="earlier">
@@ -431,24 +2318,162 @@
             <element name="now">
                 <empty/>
             </element>
-            <interleave>
-                <element name="unit">
-                    <choice>
-                        <value>HOUR</value>
-                        <value>NANOSECOND</value>
-                        <value>MICROSECOND</value>
-                        <value>MILLISECOND</value>
-                        <value>SECOND</value>
-                        <value>MINUTE</value>
-                        <value>DAY</value>
-                        <value>WEEK</value>
-                        <value>FORTNIGHT</value>
-                    </choice>
+        </choice>
+    </define>
+    <define name="time2">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
-                <element name="value">
-                    <data type="float"/>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
-            </interleave>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time6">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
+    </define>
+    <define name="time14">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="time3">
@@ -555,156 +2580,124 @@
             </element>
         </choice>
     </define>
-    <define name="channel">
+    <define name="time13">
         <choice>
-            <element name="channelCode">
-                <data type="string">
-                    <param name="pattern">[A-Z0-9]{3}</param>
-                </data>
-            </element>
-            <element name="bandCode">
-                <ref name="singleLetterOrNumber"/>
-            </element>
-            <element name="gainCode">
-                <ref name="singleLetterOrNumber"/>
-            </element>
-            <element name="orientationCode">
-                <ref name="singleLetterOrNumber"/>
-            </element>
-            <element name="sampling">
-                <optional>
-                    <element name="min">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <element name="interval">
-                    <ref name="time"/>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
-            <element name="channelEffectiveTimeOverlap">
-                <element name="startTime">
-                    <ref name="time"/>
-                </element>
-                <element name="endTime">
-                    <ref name="time"/>
-                </element>
-            </element>
-            <element name="orientationRange">
-                <element name="azimuth">
-                    <data type="float"/>
-                </element>
-                <element name="dip">
-                    <data type="float"/>
-                </element>
-                <element name="maxOffset">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationAzimuthRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
                 </element>
             </element>
-            <element name="orientationDipRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+            <element name="now">
+                <empty/>
             </element>
-            <element name="channelAND">
-                <oneOrMore>
-                    <ref name="channel"/>
-                </oneOrMore>
-            </element>
-            <element name="channelOR">
-                <oneOrMore>
-                    <ref name="channel"/>
-                </oneOrMore>
-            </element>
-            <element name="channelNOT">
-                <ref name="channel"/>
-            </element>
-            <element name="passChannel">
-                <zeroOrMore>
-                    <ref name="channel"/>
-                </zeroOrMore>
-            </element>
-            <element name="externalChannelSubsetter">
-                <element name="classname">
-                    <data type="string"/>
-                </element>
-                <oneOrMore>
+            <interleave>
+                <element name="unit">
                     <choice>
-                        <text/>
-                        <ref name="xml"/>
+                        <value>HOUR</value>
+                        <value>NANOSECOND</value>
+                        <value>MICROSECOND</value>
+                        <value>MILLISECOND</value>
+                        <value>SECOND</value>
+                        <value>MINUTE</value>
+                        <value>DAY</value>
+                        <value>WEEK</value>
+                        <value>FORTNIGHT</value>
                     </choice>
-                </oneOrMore>
-            </element>
+                </element>
+                <element name="value">
+                    <data type="float"/>
+                </element>
+            </interleave>
         </choice>
+    </define>
+    <define name="name3">
+        <element name="stationName">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="name4">
+        <element name="stationName">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="name">
+        <element name="stationName">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="name2">
+        <element name="stationName">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="orientationDipRange">
+        <element name="orientationDipRange">
+            <element name="min">
+                <data type="float"/>
+            </element>
+            <element name="max">
+                <data type="float"/>
+            </element>
+        </element>
+    </define>
+    <define name="lat4">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="lat3">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
     </define>
     <define name="lat">
         <element name="latitude">
             <data type="float"/>
         </element>
     </define>
-    <define name="network">
-        <choice>
-            <element name="networkCode">
-                <data type="string"/>
-            </element>
-            <element name="networkName">
-                <data type="string"/>
-            </element>
-            <element name="networkOwner">
-                <data type="string"/>
-            </element>
-            <element name="networkEffectiveTimeOverlap">
-                <element name="startTime">
-                    <ref name="time2"/>
-                </element>
-                <element name="endTime">
-                    <ref name="time2"/>
-                </element>
-            </element>
-            <element name="networkAND">
-                <oneOrMore>
-                    <ref name="network"/>
-                </oneOrMore>
-            </element>
-            <element name="networkOR">
-                <oneOrMore>
-                    <ref name="network"/>
-                </oneOrMore>
-            </element>
-            <element name="networkNOT">
-                <ref name="network"/>
-            </element>
-            <element name="passNetwork">
-                <zeroOrMore>
-                    <ref name="network"/>
-                </zeroOrMore>
-            </element>
-            <element name="externalNetworkSubsetter">
-                <element name="classname">
-                    <data type="string"/>
-                </element>
-                <oneOrMore>
-                    <choice>
-                        <text/>
-                        <ref name="xml2"/>
-                    </choice>
-                </oneOrMore>
-            </element>
-        </choice>
+    <define name="lat2">
+        <element name="latitude">
+            <data type="float"/>
+        </element>
     </define>
 </grammar>

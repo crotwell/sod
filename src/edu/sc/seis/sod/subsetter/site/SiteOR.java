@@ -11,8 +11,8 @@ public final class SiteOR extends SiteLogicalSubsetter implements SiteSubsetter 
         super(config);
     }
 
-    public boolean accept(Site e) {
-        Iterator it = filterList.iterator();
+    public boolean accept(Site e) throws Exception {
+        Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             SiteSubsetter filter = (SiteSubsetter)it.next();
             if(filter.accept(e)) { return true; }
