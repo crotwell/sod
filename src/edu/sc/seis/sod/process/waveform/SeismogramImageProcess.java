@@ -37,18 +37,14 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
-import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.FlagData;
 import edu.sc.seis.sod.SodFlag;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 public class SeismogramImageProcess implements WaveformProcess {
@@ -58,11 +54,11 @@ public class SeismogramImageProcess implements WaveformProcess {
             StationFormatter stationDirFormatter,
             ChannelFormatter imageNameFormatter, String prefix)
             throws Exception {
-        this.fileDir = fileDir;
-        eventFormatter = eventDirFormatter;
-        stationFormatter = stationDirFormatter;
-        chanFormatter = imageNameFormatter;
-        this.prefix = prefix;
+        locator = new SeismogramImageOutputLocator(fileDir,
+                                                   eventDirFormatter,
+                                                   stationDirFormatter,
+                                                   imageNameFormatter,
+                                                   prefix);
         initTaup();
         putDataInCookieJar = true;
     }
@@ -71,42 +67,18 @@ public class SeismogramImageProcess implements WaveformProcess {
         NodeList nl = el.getChildNodes();
         for(int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeName().equals("fileDir")) {
-                fileDir = n.getFirstChild().getNodeValue();
-            } else if(n.getNodeName().equals("phaseWindow")) {
+            if(n.getNodeName().equals("phaseWindow")) {
                 phaseWindow = new PhaseWindow((Element)n);
-            } else if(n.getNodeName().equals("seismogramConfig")) {
-                Element config = TemplateFileLoader.getTemplate((Element)n);
-                parseOutputLocationCreators(SodUtil.getElement(config,
-                                                               "outputLocation"));
-            } else if(n.getNodeName().equals("outputLocationCreators")) {
-                parseOutputLocationCreators((Element)n);
             } else if(n.getNodeName().equals("modelName")) {
                 modelName = SodUtil.getNestedText((Element)n);
-            } else if(n.getNodeName().equals("prefix")) {
-                prefix = SodUtil.getNestedText((Element)n);
-            } else if(n.getNodeName().equals("fileType")) {
-                defaultFileType = SodUtil.getNestedText((Element)n);
             } else if(n.getNodeName().equals("putDataInCookieJar")) {
                 putDataInCookieJar = true;
+            } else if(n.getNodeName().equals("dimension")) {
+                dims = SodUtil.loadDimensions((Element)n);
             }
         }
-        if(fileDir == null) {
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
-        }
-        if(fileDir == null || eventFormatter == null
-                || stationFormatter == null || chanFormatter == null) { throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig"); }
+        locator = new SeismogramImageOutputLocator(el);
         initTaup();
-    }
-
-    private void parseOutputLocationCreators(Element parent)
-            throws ConfigurationException {
-        eventFormatter = new EventFormatter(SodUtil.getElement(parent,
-                                                               "eventDir"));
-        stationFormatter = new StationFormatter(SodUtil.getElement(parent,
-                                                                   "stationDir"));
-        chanFormatter = new ChannelFormatter(SodUtil.getElement(parent,
-                                                                "picName"));
     }
 
     private void initTaup() throws TauModelException {
@@ -128,7 +100,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                        channel,
                        original,
                        seismograms,
-                       defaultFileType,
+                       locator.getFileType(),
                        cookieJar);
     }
 
@@ -225,10 +197,7 @@ public class SeismogramImageProcess implements WaveformProcess {
             flags[i] = new SodFlag(flagTime, arrivals[i].getName(), bsd);
             bsd.add(flags[i]);
         }
-        final String picFileName = FissuresFormatter.filize(fileDir + '/'
-                + eventFormatter.getResult(event) + '/'
-                + stationFormatter.getResult(channel.my_site.my_station) + '/'
-                + prefix + chanFormatter.getResult(channel) + "." + fileType);
+        final String picFileName = locator.getLocation(event, channel, fileType);
         SwingUtilities.invokeAndWait(new Runnable() {
 
             public void run() {
@@ -237,8 +206,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                     if(fileType.equals(PDF)) {
                         bsd.outputToPDF(new File(picFileName));
                     } else {
-                        bsd.outputToPNG(new File(picFileName),
-                                        DEFAULT_DIMENSION);
+                        bsd.outputToPNG(new File(picFileName), dims);
                     }
                     if(putDataInCookieJar) {
                         if(!pairsInserted.add(new Integer(cookieJar.getEventChannelPair()
@@ -256,11 +224,11 @@ public class SeismogramImageProcess implements WaveformProcess {
                             String phase = arrivals[i].getName();
                             FlagData flagData = flags[i].getFlagData();
                             if(phase.startsWith("P") && pLeft-- > 0) {
-                                cookieJar.put(prefix + COOKIE_KEY + "P",
-                                              flagData);
+                                cookieJar.put(locator.getPrefix() + COOKIE_KEY
+                                        + "P", flagData);
                             } else if(phase.startsWith("S") && sLeft-- > 0) {
-                                cookieJar.put(prefix + COOKIE_KEY + "S",
-                                              flagData);
+                                cookieJar.put(locator.getPrefix() + COOKIE_KEY
+                                        + "S", flagData);
                             }
                         }
                     }
@@ -278,23 +246,13 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private boolean putDataInCookieJar = false;
 
+    private SeismogramImageOutputLocator locator;
+
     private TauPUtil tauP;
 
     private PhaseWindow phaseWindow = null;
 
     private String modelName = "iasp91";
-
-    private String fileDir;
-
-    private EventFormatter eventFormatter = new EventFormatter(true);
-
-    private StationFormatter stationFormatter = new StationFormatter();
-
-    private ChannelFormatter chanFormatter = new ChannelFormatter();
-
-    private String prefix = "";
-
-    private String defaultFileType = PNG;
 
     private boolean relativeTime = false;
 
@@ -313,6 +271,8 @@ public class SeismogramImageProcess implements WaveformProcess {
     private static final int NUM_S_TO_MARK = 1;
 
     private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
+
+    private Dimension dims = DEFAULT_DIMENSION;
 
     private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
 }
