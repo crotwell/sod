@@ -57,6 +57,15 @@ public class HTMLOutlineTourist implements Tourist {
         result.append("</b>");
     }
 
+    public void visit(Value v) {
+        genericVisit(v);
+        String output = "<b>" + v.getValue() + "</b>";
+        if(v.getParent() instanceof MultigenitorForm){ 
+            output = "<div>" + output + "</div>\n"; 
+        }
+        result.append(output);
+    }
+
     public void visit(Empty e) {}
 
     public void visit(Group g) {
@@ -100,19 +109,25 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(NamedElement ne) {
         genericVisit(ne);
+        if(ne.getChild() instanceof Empty){
+            result.append("&lt;" + getName(ne) + "/&gt;");
+        }else{
         result.append("&lt;" + getName(ne) + "&gt;");
         if(!isData(ne.getChild())) {
             appendIfChildren = " " + getCardinality(ne) + "<div>\n";
+        }
         }
     }
 
     public void leave(NamedElement ne) {
         appendIfNoChildren = " " + getCardinality(ne) + "<div/>";
-        if(!isData(ne.getChild())) {
-            appendIfChildren = "</div>\n&lt;/" + getName(ne) + "&gt;<div/>\n";
-        } else {
-            appendIfChildren = "&lt;/" + getName(ne) + "&gt; "
-                    + getCardinality(ne) + "<div/>\n";
+        if(!(ne.getChild() instanceof Empty)){
+            if(!isData(ne.getChild())) {
+                appendIfChildren = "</div>\n&lt;/" + getName(ne) + "&gt;<div/>\n";
+            } else {
+                appendIfChildren = "&lt;/" + getName(ne) + "&gt; "
+                        + getCardinality(ne) + "<div/>\n";
+            }  
         }
         genericLeave(ne);
     }
@@ -133,11 +148,6 @@ public class HTMLOutlineTourist implements Tourist {
         genericVisit(t);
         result.append("<b><a href=\"" + getDatatypeHREF(t)
                 + "\">Any Text</a></b>");
-    }
-
-    public void visit(Value v) {
-        genericVisit(v);
-        result.append("<div>\"<b>" + v.getValue() + "\"</b></div>\n");
     }
 
     public void visit(NotAllowed na) {}
