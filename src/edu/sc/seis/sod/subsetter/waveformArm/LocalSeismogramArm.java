@@ -117,22 +117,23 @@ public class LocalSeismogramArm implements Subsetter{
 
 	MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
 
-	TimeInterval day = new TimeInterval(1, UnitImpl.DAY);
 	logger.info("channelbeginTime is "+chanBegin);
 	logger.info("channelendTime is "+chanEnd);
-	logger.info("originTime is "+originTime);
-	logger.info("originTime incr is "+ originTime.add(day));
 						 
-	if (chanBegin.after(originTime.add(day))
-	    || chanEnd.before(originTime)) {
-	    // channel doesn't overlap origin
-	    logger.info("fail "+ChannelIdUtil.toString(channel.get_id())+" doesn't everlap originTime="+originTime+" endTime="+chanEnd+" begin="+chanBegin);
+    // don't bother with channel if effective time does not
+    // overlap event time
+    EventEffectiveTimeOverlap eventOverlap = 
+        new EventEffectiveTimeOverlap(eventAccess); 
+    if ( ! eventOverlap.overlaps(channel)) {
+	    logger.info("fail "+ChannelIdUtil.toString(channel.get_id())+" doesn't everlap originTime="+originTime+" plus "+eventOverlap.getOffset()+" endTime="+chanEnd+" begin="+chanBegin);
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
 				       Status.COMPLETE_REJECT,
 				       "channel EffectiveTime doesnot overlap event");
-	    return;
-	}
+        return;
+    } // end of if ()
+                    
+
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
@@ -421,6 +422,7 @@ public class LocalSeismogramArm implements Subsetter{
 				   "successful");
     }
 
+	TimeInterval maxEventOffset = new TimeInterval(7, UnitImpl.DAY);
 
     private EventChannelSubsetter eventChannelSubsetter = 
 	new NullEventChannelSubsetter();
