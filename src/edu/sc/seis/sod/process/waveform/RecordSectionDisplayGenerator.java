@@ -40,6 +40,8 @@ import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
+import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
@@ -147,40 +149,40 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar)
-            throws ParserConfigurationException, IOException,
-            IncomprehensibleDSMLException, UnsupportedFileTypeException,
-            ConfigurationException, NotFound, SQLException,
-            InterruptedException, NoPreferredOrigin {
-        try {
-            saveSeisToFile = getSaveSeismogramToFile();
-            DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
-                    .toURI()
-                    .toURL());
-            String[] dataSeisNames = ds.getDataSetSeismogramNames();
-            DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
-            for(int i = 0; i < dataSeisNames.length; i++) {
-                dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
-            }
-            String regionName = ParseRegions.getInstance()
-                    .getRegionName(event.get_attributes().region);
-            String dateTime = event.get_preferred_origin().origin_time.date_time;
-            String msg = "Got " + dss.length
-                    + " DataSetSeismograms from DSML file for event in "
-                    + regionName + " at " + dateTime;
-            logger.debug(msg);
-            if(displayOption.equals("BEST")) {
-                outputBestRecordSection(event, dss);
-            } else {
-                outputAllRecordSections(event, dss);
-            }
-        } catch(IOException e) {
-            logger.debug("Problem opening dsml file in RecordSectionDisplayGenerator",
-                         e);
-            throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
-                    + e);
+                                  CookieJar cookieJar) throws Exception {
+        saveSeisToFile = getSaveSeismogramToFile();
+        DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
+                .toURI()
+                .toURL());
+        String[] dataSeisNames = ds.getDataSetSeismogramNames();
+        DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
+        for(int i = 0; i < dataSeisNames.length; i++) {
+            dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
+        }
+        String regionName = ParseRegions.getInstance()
+                .getRegionName(event.get_attributes().region);
+        String dateTime = event.get_preferred_origin().origin_time.date_time;
+        String msg = "Got " + dss.length
+                + " DataSetSeismograms from DSML file for event in "
+                + regionName + " at " + dateTime;
+        logger.debug(msg);
+        if(displayOption.equals("BEST")) {
+            outputBestRecordSection(event, wrap(dss, ds));
+        } else {
+            outputAllRecordSections(event, dss);
         }
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss, DataSet ds)
+            throws Exception {
+        MemoryDataSetSeismogram[] memDss = new MemoryDataSetSeismogram[dss.length];
+        for(int i = 0; i < memDss.length; i++) {
+            memDss[i] = new MemoryDataSetSeismogram(((URLDataSetSeismogram)dss[i]).getSeismograms(),
+                                                    ds,
+                                                    dss[i].getName());
+        }
+        return memDss;
     }
 
     public double getIdealSpacing() {
