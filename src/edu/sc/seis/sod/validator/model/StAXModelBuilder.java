@@ -6,20 +6,19 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import java.io.IOException;
 import java.util.*;
+
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.xml.sax.InputSource;
 
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.validator.model.datatype.AnyText;
-import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
-import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
-import edu.sc.seis.sod.validator.model.datatype.Token;
-import java.io.IOException;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import org.xml.sax.InputSource;
+import edu.sc.seis.sod.validator.model.datatype.*;
 
 public class StAXModelBuilder implements XMLStreamConstants {
     public StAXModelBuilder(String relaxLoc) throws XMLStreamException,
@@ -170,7 +169,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 break;
             }
         }
-        if(kids.size() == 0) { return null; }//Hopefully an attribute called handleAll
+        if (kids.size() == 0) { return null; }//Hopefully an attribute called
+                                              // handleAll
         if (kids.size() == 1) { return (FormProvider) kids.get(0); }
         Group g = new Group(1, 1);
         Iterator it = kids.iterator();
@@ -263,7 +263,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
                     + " not allowed directly in cardinality tag");
         }
         FormProvider result = handleAll();
-       
+
         //set cardinality on substructure
         if (min == 0) {
             result.setMin(min);
@@ -309,7 +309,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
         Attribute result = new Attribute(1, 1, name);
         result.setAnnotation(handleAnn());
         FormProvider child = handleAll();
-        if(child == null) { child = new Text(); } //An empty attribute has text as a value
+        if (child == null) {
+            child = new Text();
+        } //An empty attribute has text as a value
         result.setChild(child);
         nextTag();
         return result;
@@ -431,7 +433,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new FloatDatatype();
             } else if (type.equals("string")) {
                 return new AnyText();
-            } else if (type.equals("double")) { return new DoubleDatatype(); }
+            } else if (type.equals("double")) {
+                return new DoubleDatatype();
+            } else if (type.equals("integer")) { return new IntegerDatatype();}
             return new Token();
         }
         return null;
