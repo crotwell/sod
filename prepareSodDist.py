@@ -20,6 +20,7 @@ def buildInternal(proj, name):
     buildDist(proj, scripts, name, extras)
 
 def buildExternal(proj, name):
+    buildSod.clean(proj)
     scripts=buildSodScripts.buildSodScripts(proj)
     scripts.extend(buildSodScripts.buildEditorScripts(proj))
     os.chdir('site')
