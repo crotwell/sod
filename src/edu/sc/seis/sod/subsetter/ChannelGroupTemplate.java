@@ -39,7 +39,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
     }
     
     public String getStatus(Channel chan){
-        return (String)channelMap.get(chan);
+        return channelMap.get(chan).toString();
     }
     
     public Object getTemplate(String tag, Element element){
