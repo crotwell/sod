@@ -36,9 +36,7 @@ public class EventStationGroupTemplate extends Template implements GenericTempla
     protected Object getTemplate(String tag, Element el)  throws ConfigurationException {
         if (tag.equals("station")){ return new EventStationFormatter(el, ev);}
         else if(tag.equals("statusFilter")){
-            if(SodUtil.getNestedText(el).equals("SUCCESS")){
-                success = true;
-            }
+            if(SodUtil.getNestedText(el).equals("SUCCESS")){ success = true; }
             return new AllTextTemplate("");
         }
         return getCommonTemplate(tag, el);

@@ -32,13 +32,9 @@ public class EventStationFormatter extends StationFormatter{
     }
 
     public Object getTemplate(String name, Element el){
-        if(name.equals("numSuccess")){
-            return new SuccessfulQuery();
-        }else if(name.equals("numFailed")){
-            return new FailedQuery();
-        }else if(name.equals("numRetry")){
-            return new RetryQuery();
-        }
+        if(name.equals("numSuccess")){ return new SuccessfulQuery(); }
+        else if(name.equals("numFailed")){ return new FailedQuery(); }
+        else if(name.equals("numRetry")){ return new RetryQuery(); }
         return super.getTemplate(name, el);
     }
 
@@ -125,4 +121,5 @@ public class EventStationFormatter extends StationFormatter{
 
     private EventAccessOperations ev;
 }
+
 
