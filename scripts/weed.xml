@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-<x/>
 		<property>
 			<name>sod.start.RunName</name>
 			<value>Tutorial Test Run</value>
@@ -196,6 +195,16 @@
                           </longitudeRange>
                      </boxArea>
                 </midPoint>
+		<azimuthRange>
+			<unit>DEGREE</unit>
+			<min>30</min>
+			<max>180</max>
+		</azimuthRange>
+		<backAzimuthRange>
+			<unit>DEGREE</unit>
+			<min>30</min>
+			<max>180</max>
+		</backAzimuthRange>
             </eventStationAND>
                 <localSeismogramArm>
                         <phaseRequest>
