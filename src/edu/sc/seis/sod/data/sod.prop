@@ -1,0 +1,36 @@
+#
+# for Log4J
+#
+#log4j.rootCategory=debug, R, C, E
+log4j.rootCategory=info, R, C, E
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.File=Sod.log
+log4j.appender.R.MaxFileSize=10000KB
+log4j.appender.R.MaxBackupIndex=100
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+log4j.appender.E=org.apache.log4j.RollingFileAppender
+log4j.appender.E.File=Sod_Error.log
+log4j.appender.E.MaxFileSize=10000KB
+log4j.appender.E.MaxBackupIndex=3
+log4j.appender.E.layout=org.apache.log4j.PatternLayout
+log4j.appender.E.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.E.Threshold=warn
+
+log4j.appender.C=org.apache.log4j.ConsoleAppender
+log4j.appender.C.layout=org.apache.log4j.PatternLayout
+log4j.appender.C.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.C.Threshold=warn
+
+
+#
+# get the name serivce
+# The format for a corbaloc for a naming service is
+#    corbaloc:iiop:host.domain:port/NameService
+# You should put your own choices for host.domain and port
+#
+# for pooh
+#edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+# for iris
+edu.sc.seis.sod.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
