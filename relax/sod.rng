@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="sod">
+            <xsd:annotation>
+                <summary>The root of all SOD tactics</summary>
+                <description>
+                    <a href="../overview.html">Overview</a>
+                </description>
+            </xsd:annotation>
             <optional>
-                    <externalRef href="properties.rng"></externalRef>
+                <externalRef href="properties.rng"/>
             </optional>
             <externalRef href="event/arm.rng"/>
             <externalRef href="network/arm.rng"/>
