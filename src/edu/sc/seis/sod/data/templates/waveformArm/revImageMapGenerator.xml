@@ -12,7 +12,7 @@
 #set ( $station = $sod_channel.getSite().getStation() )
 #set ( $origin = $sod_event.get_preferred_origin() )
 <title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
-$velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
+$velocity_date.format($stdDateFormatStr, $sod_event.get_preferred_origin().getTime())</title>
 <style media="all">@import "../../../main.css";</style>
 <script language="JavaScript">
 function flipImage(imgName,imgSrc,parentImgSrc) {
@@ -36,7 +36,7 @@ originalImage.onClick = "return;";
 <a href="../../../event.html"> Events</a> >
 <a href="../event.html">
 $FERegion.getRegionName(${sod_event.get_attributes().region})
-$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</a> >
+$velocity_date.format($stdDateFormatStr, $sod_event.get_preferred_origin().getTime())</a> >
 ${station.getNetworkAttr().get_code()}.${station.get_code()}-$station.getName()
 </div>
 <div id="Content">
@@ -49,7 +49,7 @@ ${station.getNetworkAttr().get_code()}.${station.get_code()}-$station.getName()
 </tr>
 <tr>
 <td><b>Time</b></td>
-<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</td>
+<td>$velocity_date.format($stdDateFormatStr, $sod_event.get_preferred_origin().getTime())</td>
 </tr>
 <tr>
 <td><b>Magnitude</b></td>
@@ -103,11 +103,11 @@ $fissures.formatMagnitude($m),
 </tr>
 <tr>
 <td><b>Begin Time</b></td>
-<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeBegin($station.EffectiveTime))</td>
+<td>$velocity_date.format($stdDateFormatStr, $fissures.getRangeBegin($station.EffectiveTime))</td>
 </tr>
 <tr>
 <td><b>End Time</b></td>
-<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeEnd($station.EffectiveTime))</td>
+<td>$velocity_date.format($stdDateFormatStr, $fissures.getRangeEnd($station.EffectiveTime))</td>
 </tr>
 </table>
 <h2>Seismograms</h2>

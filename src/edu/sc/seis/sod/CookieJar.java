@@ -88,7 +88,7 @@ public class CookieJar {
 
 
     public static VelocityContext getChannelContext(EventAccessOperations event,
-                                            Channel channel) {
+                                                    Channel channel) {
         VelocityContext siteContext = getSiteContext(event, channel.my_site);
         String chanIdStr = ChannelIdUtil.toString(channel.get_id());
         if ( ! siteContext.containsKey(chanIdStr)) {
@@ -200,7 +200,7 @@ public class CookieJar {
         commonContext.put("velocity_number", new NumberTool());
         commonContext.put("velocity_iterator", new IteratorTool());
         commonContext.put("velocity_render", new RenderTool());
-
+        commonContext.put("stdDateFormatStr", "yyyy-MM-dd HH:mm:ss ZZZ");
     }
 
     private static final Logger logger = Logger.getLogger(CookieJar.class);

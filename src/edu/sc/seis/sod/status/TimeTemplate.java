@@ -30,7 +30,7 @@ public class TimeTemplate implements GenericTemplate {
     public static SimpleDateFormat createSDF(Element el){
         String nestedText = SodUtil.getNestedText(el);
         if (nestedText != null) return new SimpleDateFormat(nestedText);
-        return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss z");
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
     }
 
     public void setTime(Time t){ time = new MicroSecondDate(t); }
