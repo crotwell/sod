@@ -17,11 +17,7 @@ import org.w3c.dom.Element;
 public class NetworkInfoTemplateGeneratorEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws Exception {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
-        panel.add(new JLabel());
-        return panel;
+        return new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName()));
     }
 
 }
