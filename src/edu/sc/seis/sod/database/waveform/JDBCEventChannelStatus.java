@@ -41,7 +41,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
         chanTable = new JDBCChannel(conn);
         eventTable = new JDBCEventAccess(conn);
         insert = conn.prepareStatement("INSERT into eventchannelstatus (pairid, eventid, channelid) "
-                + "VALUES (? , ?, ?)");
+                                           + "VALUES (? , ?, ?)");
         ofEventAndPair = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE eventid = ? and channelid = ?");
         setStatus = conn.prepareStatement("UPDATE eventchannelstatus SET status = ? where pairid = ?");
         all = conn.prepareStatement("SELECT * FROM eventchannelstatus");
@@ -50,38 +50,38 @@ public class JDBCEventChannelStatus extends SodJDBC {
         ofStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
         eventsOfStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
         String chanJoin = "channelid = chan_id AND "
-                + "channel.site_id = site.site_id AND "
-                + "site.sta_id = station.sta_id";
+            + "channel.site_id = site.site_id AND "
+            + "site.sta_id = station.sta_id";
         String stationsBase = "SELECT DISTINCT "
-                + JDBCStation.getNeededForStation()
-                + " FROM channel, site, eventchannelstatus, station ";
+            + JDBCStation.getNeededForStation()
+            + " FROM channel, site, eventchannelstatus, station ";
         stations = conn.prepareStatement(stationsBase + "WHERE " + chanJoin
-                + " AND eventid = ?");
+                                             + " AND eventid = ?");
         String stationsOfStatusWhere = "WHERE " + chanJoin + " AND "
-                + "eventid = ? AND " + "status = ?";
+            + "eventid = ? AND " + "status = ?";
         stationsOfStatus = conn.prepareStatement(stationsBase
-                + stationsOfStatusWhere);
+                                                     + stationsOfStatusWhere);
         stationsNotOfStatus = conn.prepareStatement("SELECT "
-                + JDBCStation.getNeededForStation()
-                + " FROM station "
-                + "WHERE sta_id NOT IN ("
-                + "SELECT DISTINCT sta_id FROM channel, site, eventchannelstatus "
-                + stationsOfStatusWhere + ")");
+                                                        + JDBCStation.getNeededForStation()
+                                                        + " FROM station "
+                                                        + "WHERE sta_id NOT IN ("
+                                                        + "SELECT DISTINCT sta_id FROM channel, site, eventchannelstatus "
+                                                        + stationsOfStatusWhere + ")");
         channelsForPair = conn.prepareStatement("SELECT "
-                + JDBCChannel.getNeededForChannel()
-                + " FROM channel, eventchannelstatus "
-                + "WHERE pairid = ? AND "
-                + "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
+                                                    + JDBCChannel.getNeededForChannel()
+                                                    + " FROM channel, eventchannelstatus "
+                                                    + "WHERE pairid = ? AND "
+                                                    + "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
         dbIdForEventAndChan = conn.prepareStatement("SELECT pairid FROM eventchannelstatus "
-                + "WHERE eventid = ? AND channelid = ?");
+                                                        + "WHERE eventid = ? AND channelid = ?");
         ofStation = conn.prepareStatement("SELECT pairid, eventid, channelid, status "
-                + "FROM channel, site, eventchannelstatus, station "
-                + "WHERE "
-                + chanJoin + " AND station.sta_id = ?");
+                                              + "FROM channel, site, eventchannelstatus, station "
+                                              + "WHERE "
+                                              + chanJoin + " AND station.sta_id = ?");
         ofStationStatus = conn.prepareStatement("SELECT pairid, eventid, channelid, status "
-                + "FROM channel, site, eventchannelstatus, station "
-                + "WHERE "
-                + chanJoin + " AND station.sta_id = ?" + " AND status = ?");
+                                                    + "FROM channel, site, eventchannelstatus, station "
+                                                    + "WHERE "
+                                                    + chanJoin + " AND station.sta_id = ?" + " AND status = ?");
     }
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException {
@@ -97,7 +97,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public int[] getPairs(EventAccessOperations ev, ChannelGroup cg)
-            throws NotFound, SQLException {
+        throws NotFound, SQLException {
         int evDbid = eventTable.getDBId(ev);
         int[] channelDbIds = new int[cg.getChannels().length];
         for(int i = 0; i < cg.getChannels().length; i++) {
@@ -112,7 +112,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public int[] getPairs(EventChannelGroupPair group) throws SQLException,
-            NotFound {
+        NotFound {
         return getPairs(group.getEvent(), group.getChannelGroup());
     }
 
@@ -129,14 +129,14 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public Station[] getNotOfStatus(Status status, EventAccessOperations ev)
-            throws SQLException {
+        throws SQLException {
         return executeGetStationsOfStatus(stationsNotOfStatus,
                                           status.getAsShort(),
                                           ev);
     }
 
     public Station[] getOfStatus(Status status, EventAccessOperations ev)
-            throws SQLException {
+        throws SQLException {
         return executeGetStationsOfStatus(stationsOfStatus,
                                           status.getAsShort(),
                                           ev);
@@ -153,14 +153,14 @@ public class JDBCEventChannelStatus extends SodJDBC {
         }
         stations.setInt(1, evDbId);
         return chanTable.getSiteTable()
-                .getStationTable()
-                .extractAll(stations.executeQuery());
+            .getStationTable()
+            .extractAll(stations.executeQuery());
     }
 
     private Station[] executeGetStationsOfStatus(PreparedStatement stmt,
                                                  int status,
                                                  EventAccessOperations ev)
-            throws SQLException {
+        throws SQLException {
         int evDbId;
         try {
             evDbId = eventTable.getDBId(ev);
@@ -172,8 +172,8 @@ public class JDBCEventChannelStatus extends SodJDBC {
         stmt.setInt(1, evDbId);
         stmt.setInt(2, status);
         return chanTable.getSiteTable()
-                .getStationTable()
-                .extractAll(stmt.executeQuery());
+            .getStationTable()
+            .extractAll(stmt.executeQuery());
     }
 
     public int put(EventChannelPair ecp) throws SQLException {
@@ -181,7 +181,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public int put(EventAccessOperations event, Channel chan, Status stat)
-            throws SQLException {
+        throws SQLException {
         int eventId = eventTable.put(event, null, null, null);
         int chanId = chanTable.put(chan);
         return put(eventId, chanId, stat);
@@ -210,13 +210,13 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public EventChannelPair[] getAllForStation(int stationId)
-            throws SQLException {
+        throws SQLException {
         ofStation.setInt(1, stationId);
         return extractECPs(ofStation.executeQuery());
     }
 
     public EventChannelPair[] getSuccessfulForStation(int stationId)
-            throws SQLException {
+        throws SQLException {
         ofStationStatus.setInt(1, stationId);
         ofStationStatus.setShort(2, Status.get(Stage.PROCESSOR,
                                                Standing.SUCCESS).getAsShort());
@@ -224,12 +224,12 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public EventChannelPair[] getAll(EventAccessOperations ev)
-            throws SQLException, NotFound {
+        throws SQLException, NotFound {
         return getAll(eventTable.getDBId(ev));
     }
 
     public int getNum(PreparedStatement stmt, EventAccessOperations ev)
-            throws NotFound, SQLException {
+        throws NotFound, SQLException {
         int evId = eventTable.getDBId(ev);
         stmt.setInt(1, evId);
         try {
@@ -266,18 +266,18 @@ public class JDBCEventChannelStatus extends SodJDBC {
     }
 
     public EventChannelPair get(int pairId, WaveformArm owner) throws NotFound,
-            SQLException {
+        SQLException {
         ofPair.setInt(1, pairId);
         ResultSet rs = ofPair.executeQuery();
         if(rs.next()) {
             return extractECP(rs, owner);
         }
         throw new NotFound("No such pairId: " + pairId
-                + " in the event channel db");
+                               + " in the event channel db");
     }
 
     private EventChannelPair extractECP(ResultSet rs, WaveformArm owner)
-            throws SQLException, NotFound {
+        throws SQLException, NotFound {
         Status s = Status.getFromShort((short)rs.getInt("status"));
         int eventId = rs.getInt("eventid");
         CacheEvent event = eventTable.getEvent(eventId);
@@ -329,71 +329,78 @@ public class JDBCEventChannelStatus extends SodJDBC {
             setStatus.executeUpdate();
         } catch(SQLException e) {
             throw new RuntimeException("RUNNING THE SQL "
-                    + setStatus.toString(), e);
+                                           + setStatus.toString(), e);
         }
     }
 
     public int[] getSuspendedEventChannelPairs(String processingRule)
-            throws SQLException {
+        throws SQLException {
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.IN_PROG);
         Status processorInit = Status.get(Stage.PROCESSOR, Standing.INIT);
         Status processorSuccess = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
         Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
-                          Stage.EVENT_CHANNEL_SUBSETTER,
-                          Stage.AVAILABLE_DATA_SUBSETTER,
-                          Stage.DATA_SUBSETTER,
-                          Stage.PROCESSOR};
+                Stage.EVENT_CHANNEL_SUBSETTER,
+                Stage.REQUEST_SUBSETTER,
+                Stage.AVAILABLE_DATA_SUBSETTER,
+                Stage.DATA_SUBSETTER,
+                Stage.PROCESSOR};
         Standing[] standings = {Standing.IN_PROG,
-                                Standing.INIT,
-                                Standing.SUCCESS};
+                Standing.INIT,
+                Standing.SUCCESS};
         String query = "SELECT pairid FROM eventchannelstatus WHERE ";
         for(int i = 0; i < stages.length; i++) {
             for(int j = 0; j < standings.length; j++) {
                 if(stages[i] != Stage.DATA_SUBSETTER
-                        || standings[j] != Standing.SUCCESS) {
+                   || standings[j] != Standing.SUCCESS) {
                     Status curStatus = Status.get(stages[i], standings[j]);
                     if(!curStatus.equals(eventStationInit)
-                            || !curStatus.equals(processorSuccess)) {
-                        query += "status = " + curStatus.getAsShort();
-                        if(!curStatus.equals(processorInit)) {
-                            query += " OR ";
-                        }
+                       || !curStatus.equals(processorSuccess)) {
+                        query += " status = " + curStatus.getAsShort();
+                        query += " OR";
+
                     }
                 }
             }
         }
+        // get rid of last OR
+        query = query.substring(0, query.length()-2);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        List pairs = new ArrayList();
-        while(rs.next()) {
-            int pairId = rs.getInt(1);
-            pairs.add(new Integer(pairId));
-            if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
-                setStatus(pairId, Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                             Standing.INIT));
-            } else {
-                try {
-                    Stage currentStage = get(pairId, null).getStatus()
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            List pairs = new ArrayList();
+            while(rs.next()) {
+                int pairId = rs.getInt(1);
+                pairs.add(new Integer(pairId));
+                if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
+                    setStatus(pairId, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                 Standing.INIT));
+                } else {
+                    try {
+                        Stage currentStage = get(pairId, null).getStatus()
                             .getStage();
-                    setStatus(pairId, Status.get(currentStage,
-                                                 Standing.SYSTEM_FAILURE));
-                } catch(NotFound e) {
-                    GlobalExceptionHandler.handle("Could not find event-channel "
+                        setStatus(pairId, Status.get(currentStage,
+                                                     Standing.SYSTEM_FAILURE));
+                    } catch(NotFound e) {
+                        GlobalExceptionHandler.handle("Could not find event-channel "
                                                           + "pair that was just purported "
                                                           + "to exist in the database",
-                                                  e);
+                                                      e);
+                    }
                 }
             }
+            return SodUtil.intArrayFromList(pairs);
+        } catch (SQLException e) {
+            logger.error(query);
+            throw e;
         }
-        return SodUtil.intArrayFromList(pairs);
         //return new int[0];
     }
 
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
-            ofPair, ofStatus, eventsOfStatus, stationsNotOfStatus,
-            stationsOfStatus, channelsForPair, dbIdForEventAndChan, ofStation,
-            ofStationStatus, stations;
+        ofPair, ofStatus, eventsOfStatus, stationsNotOfStatus,
+        stationsOfStatus, channelsForPair, dbIdForEventAndChan, ofStation,
+        ofStationStatus, stations;
 
     private JDBCSequence seq;
 
@@ -422,35 +429,39 @@ public class JDBCEventChannelStatus extends SodJDBC {
 
     public static final Status[] FAILED_STATUS = new Status[] {Status.get(Stage.EVENT_STATION_SUBSETTER,
                                                                           Standing.REJECT),
-                                                               Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.REQUEST_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.REQUEST_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.DATA_SUBSETTER,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.DATA_SUBSETTER,
-                                                                          Standing.REJECT),
-                                                               Status.get(Stage.PROCESSOR,
-                                                                          Standing.SYSTEM_FAILURE),
-                                                               Status.get(Stage.PROCESSOR,
-                                                                          Standing.REJECT)};
+            Status.get(Stage.EVENT_STATION_SUBSETTER,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                       Standing.REJECT),
+            Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.REQUEST_SUBSETTER,
+                       Standing.REJECT),
+            Status.get(Stage.REQUEST_SUBSETTER,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                       Standing.REJECT),
+            Status.get(Stage.DATA_SUBSETTER,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.DATA_SUBSETTER,
+                       Standing.REJECT),
+            Status.get(Stage.PROCESSOR,
+                       Standing.SYSTEM_FAILURE),
+            Status.get(Stage.PROCESSOR,
+                       Standing.REJECT)};
 
     public static final Status[] RETRY_STATUS = new Status[] {Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                                                          Standing.RETRY),
-                                                              Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                                                         Standing.CORBA_FAILURE),
-                                                              Status.get(Stage.DATA_SUBSETTER,
-                                                                         Standing.CORBA_FAILURE),
-                                                              Status.get(Stage.PROCESSOR,
-                                                                         Standing.CORBA_FAILURE)};
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                       Standing.CORBA_FAILURE),
+            Status.get(Stage.DATA_SUBSETTER,
+                       Standing.CORBA_FAILURE),
+            Status.get(Stage.PROCESSOR,
+                       Standing.CORBA_FAILURE)};
+
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(JDBCEventChannelStatus.class);
+
+
 }

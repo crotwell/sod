@@ -1,5 +1,20 @@
 package edu.sc.seis.sod;
 
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
+import edu.sc.seis.sod.database.JDBCConfig;
+import edu.sc.seis.sod.database.JDBCStatus;
+import edu.sc.seis.sod.database.JDBCVersion;
+import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.editor.SimpleGUIEditor;
+import edu.sc.seis.sod.status.IndexTemplate;
+import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,52 +34,38 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.JDBCConfig;
-import edu.sc.seis.sod.database.JDBCStatus;
-import edu.sc.seis.sod.database.JDBCVersion;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import edu.sc.seis.sod.editor.SimpleGUIEditor;
-import edu.sc.seis.sod.status.IndexTemplate;
-import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.validator.Validator;
 
 public class Start {
 
     static {
         GlobalExceptionHandler.add(new Extractor() {
 
-            public boolean canExtract(Throwable throwable) {
-                return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
-            }
+                    public boolean canExtract(Throwable throwable) {
+                        return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
+                    }
 
-            public String extract(Throwable throwable) {
-                String out = "";
-                if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) {
-                    org.apache.velocity.exception.MethodInvocationException mie = (org.apache.velocity.exception.MethodInvocationException)throwable;
-                    out += "Method Name: " + mie.getMethodName() + "\n";
-                    out += "reference Name: " + mie.getReferenceName() + "\n";
-                }
-                return out;
-            }
+                    public String extract(Throwable throwable) {
+                        String out = "";
+                        if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) {
+                            org.apache.velocity.exception.MethodInvocationException mie = (org.apache.velocity.exception.MethodInvocationException)throwable;
+                            out += "Method Name: " + mie.getMethodName() + "\n";
+                            out += "reference Name: " + mie.getReferenceName() + "\n";
+                        }
+                        return out;
+                    }
 
-            public Throwable getSubThrowable(Throwable throwable) {
-                if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) { return ((org.apache.velocity.exception.MethodInvocationException)throwable).getWrappedThrowable(); }
-                return null;
-            }
-        });
+                    public Throwable getSubThrowable(Throwable throwable) {
+                        if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) { return ((org.apache.velocity.exception.MethodInvocationException)throwable).getWrappedThrowable(); }
+                        return null;
+                    }
+                });
         GlobalExceptionHandler.registerWithAWTThread();
     }
 
     /**
      * Creates a new <code>Start</code> instance set to use the XML config
      * file the input stream points to as its configuration
-     * 
+     *
      * @param configFile
      *            an <code>InputStream</code> value pointing to a SOD xml
      *            config file
@@ -94,11 +95,11 @@ public class Start {
         }
         initDocument(args);
     }
-    
+
     private static void informUserOfBadFileAndExit(String confFilename){
         File configFile = new File(confFilename);
         System.err.println("You told SOD to use "
-                + configFile.getAbsolutePath() + " as its strategy file");
+                               + configFile.getAbsolutePath() + " as its strategy file");
         if(configFile.exists()) {
             System.err.println("SOD was unable to open it.  Make sure the file is readable.");
         } else {
@@ -131,15 +132,15 @@ public class Start {
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
         loadProps((Start.class).getClassLoader()
-                .getResourceAsStream(DEFAULT_PROPS));
+                      .getResourceAsStream(DEFAULT_PROPS));
         for(int i = 0; i < args.length - 1; i++) {
             if(args[i].equals("-props")) {
                 // override with values in local directory,
                 // but still load defaults with original name
                 loadProps(new FileInputStream(args[i + 1]));
                 System.out.println("loaded file props from " + args[i + 1]
-                        + "  log4j.rootCategory="
-                        + props.getProperty("log4j.rootCategory"));
+                                       + "  log4j.rootCategory="
+                                       + props.getProperty("log4j.rootCategory"));
             }
         }
         PropertyConfigurator.configure(props);
@@ -162,12 +163,12 @@ public class Start {
     }
 
     public static InputSource createInputSource(ClassLoader cl)
-            throws IOException {
+        throws IOException {
         return createInputSource(cl, getConfigFileName());
     }
 
     public static InputSource createInputSource(ClassLoader cl, String loc)
-            throws IOException {
+        throws IOException {
         InputStream in = null;
         if(loc.startsWith("http:") || loc.startsWith("ftp:")) {
             in = new URL(loc).openConnection().getInputStream();
@@ -178,7 +179,7 @@ public class Start {
             in = new FileInputStream(loc);
         }
         if(in == null) { throw new IOException("Unable to load configuration file "
-                + loc); }
+                                                   + loc); }
         return new InputSource(new BufferedInputStream(in));
     }
 
@@ -199,7 +200,7 @@ public class Start {
     }
 
     public static Document createDoc(InputSource source) throws SAXException,
-            IOException, ParserConfigurationException {
+        IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -209,13 +210,18 @@ public class Start {
     }
 
     public void start() throws Exception {
+
         startTime = ClockUtil.now();
         UpdateChecker check = new UpdateChecker(false);
         handleStartupRunProperties();
         checkDBVersion();
         ClassLoader cl = getClass().getClassLoader();
         checkConfig(createInputSource(cl, getConfigFileName()));
+
+        // this next line sets up the status page for exception reporting, so
+        // it should be as early as possible in the startup sequence
         IndexTemplate indexTemplate = new IndexTemplate();
+
         Element docElement = document.getDocumentElement();
         startArms(docElement.getChildNodes());
         indexTemplate.performRegistration();
@@ -294,12 +300,12 @@ public class Start {
                 try {
                     JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
                     if(runProps.getEventChannelPairProcessing()
-                            .equals(RunProperties.AT_LEAST_ONCE)) {
+                       .equals(RunProperties.AT_LEAST_ONCE)) {
                         suspendedPairs = evChanStatusTable.getSuspendedEventChannelPairs(runProps.getEventChannelPairProcessing());
                     }
                 } catch(Exception e) {
                     GlobalExceptionHandler.handle("Trouble updating status of "
-                            + "existing event-channel pairs", e);
+                                                      + "existing event-channel pairs", e);
                 }
             }
         }
@@ -311,23 +317,23 @@ public class Start {
             if(!dbVersion.getDBVersion().equals(Version.getVersion())) {
                 System.err.println("SOD version: " + Version.getVersion());
                 System.err.println("Database version: "
-                        + dbVersion.getDBVersion());
+                                       + dbVersion.getDBVersion());
                 System.err.println("Your database was created with an older version "
-                        + "of SOD.");
+                                       + "of SOD.");
                 if(Version.hasSchemaChangedSince(dbVersion.getDBVersion())) {
                     allHopeAbandon("There has been a change in the database "
-                            + "structure since the database was created!  "
-                            + "Continuing this sod run is not advisable!!!");
+                                       + "structure since the database was created!  "
+                                       + "Continuing this sod run is not advisable!!!");
                 } else {
                     System.err.println("The structure of the database has not "
-                            + "changed, so SOD may work if there "
-                            + "haven't been significant underlying "
-                            + "changes in SOD. Check "
-                            + "http://www.seis.sc.edu/SOD/download.html "
-                            + "to see the differences between your "
-                            + "running version, " + Version.getVersion()
-                            + ", and the version that created the "
-                            + "database, " + dbVersion.getDBVersion());
+                                           + "changed, so SOD may work if there "
+                                           + "haven't been significant underlying "
+                                           + "changes in SOD. Check "
+                                           + "http://www.seis.sc.edu/SOD/download.html "
+                                           + "to see the differences between your "
+                                           + "running version, " + Version.getVersion()
+                                           + ", and the version that created the "
+                                           + "database, " + dbVersion.getDBVersion());
                 }
             }
         } catch(Exception e) {
@@ -342,7 +348,7 @@ public class Start {
             JDBCConfig dbConfig = new JDBCConfig(configString);
             if(!dbConfig.isSameConfig(configString)) {
                 allHopeAbandon("Your config file has changed since your last run.  "
-                        + "It may not be advisable to continue this SOD run.");
+                                   + "It may not be advisable to continue this SOD run.");
             }
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble checking stored config file",
@@ -356,6 +362,11 @@ public class Start {
 
     public static void main(String[] args) {
         try {
+            // this is not the real exception reporter, but do this to catch
+            // initialization exceptions so they are not lost in the log file
+            SystemOutReporter sysOutReporter = new SystemOutReporter();
+            GlobalExceptionHandler.add(sysOutReporter);
+
             // start up log4j before read props so at least there is some
             // logging
             // later we will use PropertyConfigurator to really configure log4j
@@ -370,12 +381,16 @@ public class Start {
             }
             if(confFilename == null) {
                 exit("No configuration file given.  Supply a configuration file "
-                        + "using -f <configFile>, or to just see sod run use "
-                        + "-demo.   quiting until that day....");
+                         + "using -f <configFile>, or to just see sod run use "
+                         + "-demo.   quiting until that day....");
             }
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
             start.start();
+
+            // Error html dir and output should be set up now, so remove the
+            // Std out reporter
+            GlobalExceptionHandler.remove(sysOutReporter);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
             exit("Problem in main, quiting: " + e.toString());
