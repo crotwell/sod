@@ -133,6 +133,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         throws IOException, ParserConfigurationException, ConfigurationException {
         Document doc = masterDataSetElement.getOwnerDocument();
         Element child = doc.createElement("datasetRef");
+        masterDataSetElement.appendChild(child);
         dsToXML.insertRef(child, childDataset, childName);
         dsToXML.writeToFile(masterDataSetElement, masterDSFile);
     }
