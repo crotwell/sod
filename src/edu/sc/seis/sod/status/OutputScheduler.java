@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 public class OutputScheduler extends TimerTask{
     public OutputScheduler(){
-        t.schedule(this, 10000, ACTION_INTERVAL_MILLIS);
+        t.schedule(this, 10000);
     }
 
     public void schedule(Runnable a){ runnables.add(a); }
@@ -33,7 +33,6 @@ public class OutputScheduler extends TimerTask{
         if(Start.getWaveformArm() != null && Start.getWaveformArm().isFinished()){
             runAll(runnables);
             runAll(onExitRunnables);
-            t.cancel();
             logger.debug("Output Scheduler done.");
 
 
@@ -45,6 +44,8 @@ public class OutputScheduler extends TimerTask{
                 logger.info("Using System.exit(0) only on the mac due to AWT thread not exiting.");
                 System.exit(0);
             }
+        }else{
+            t.schedule(this, ACTION_INTERVAL_MILLIS);
         }
     }
 
