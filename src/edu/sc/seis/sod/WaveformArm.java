@@ -1,10 +1,15 @@
 package edu.sc.seis.sod;
 import java.util.*;
 
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -41,6 +46,8 @@ public class WaveformArm implements Runnable {
         processConfig(config);
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
+        MAX_RETRY_DELAY =  Start.getIntervalProp(new TimeInterval(180, UnitImpl.DAY),
+                                                 "sod.waveform.maxRetryDelay");
     }
 
     public void run() {
@@ -340,8 +347,18 @@ public class WaveformArm implements Runnable {
                 if(stat.getStanding() == Standing.CORBA_FAILURE ||
                        (stat.getStage() == Stage.AVAILABLE_DATA_SUBSETTER &&
                             stat.getStanding() == Standing.REJECT)){
-                    synchronized (eventRetryTable) {
-                        eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
+                    try {
+                        MicroSecondDate oTime =
+                            new MicroSecondDate(ecp.getEvent().get_preferred_origin().origin_time);
+                        if (oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
+                            synchronized (eventRetryTable) {
+                                eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
+                            }
+                        }
+                    } catch (NoPreferredOrigin e) {
+                        // probably never happens???
+                        GlobalExceptionHandler.handle("Trouble getting the preferred origin on an event channel pair to check for retry-ability",
+                                                      e);
                     }
                 }
             } catch (SQLException e) {
@@ -547,6 +564,10 @@ public class WaveformArm implements Runnable {
 
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible
+
+    /** Maxmimun time back from now that it is worth retrying. */
+    private TimeInterval MAX_RETRY_DELAY;
+
     private static Logger logger = Logger.getLogger(WaveformArm.class);
 
     private Set statusMonitors = Collections.synchronizedSet(new HashSet());

@@ -2,54 +2,62 @@
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
 <x/>
-		<property>
-			<name>sod.start.RunName</name>
-			<value>Tutorial Test Run</value>
-		</property>
-		<property>
-			<name>sod.start.StatusBaseDirectory</name>
-			<value>status</value>
-		</property>
-		<property>
-        		<name>sod.start.ReopenEvents</name>
-		        <value>true</value>
-		</property>
+        <property>
+            <name>sod.start.RunName</name>
+            <value>Tutorial Test Run</value>
+        </property>
+        <property>
+            <name>sod.start.StatusBaseDirectory</name>
+            <value>status</value>
+        </property>
+        <property>
+                <name>sod.start.ReopenEvents</name>
+                <value>true</value>
+        </property>
                 <property>
                         <name>edu.sc.seis.sod.databasetype</name>
                         <value>edu.sc.seis.sod.database.HSqlDbManager</value>
                 </property>
-		<!-- amount of time per request to eventFinder -->
-		<property>
-		        <name>sod.event.QueryIncrement.value</name>
-		        <value>1</value>
-		</property>
-		<property>
-		        <name>sod.event.QueryIncrement.unit</name>
-		        <value>week</value>
-		</property>
+        <!-- amount of time per request to eventFinder -->
+        <property>
+                <name>sod.event.QueryIncrement.value</name>
+                <value>1</value>
+        </property>
+        <property>
+                <name>sod.event.QueryIncrement.unit</name>
+                <value>week</value>
+        </property>
                 <!-- number of seconds to wait for events to arrive past the
                      current time. Sod continues this long after the end time-->
                 <property>
                         <name>sod.event.Lag.unit</name>
                         <value>week</value>
                 </property>
-		<property>
-		        <name>sod.event.Lag.value</name>
-		        <value>1</value>
-		</property>
-		<!--  time to wait between queries for events   -->
-		<property>
-		        <name>sod.event.RefreshInterval.value</name>
-		        <value>6</value>
-		</property>
-	        <property>
-			<name>sod.event.RefreshInterval.unit</name>
-			<value>MINUTE</value>
-		</property>
-		<property>
-			<name>edu.sc.seis.sod.waveformarm.threads</name>
-			<value>1</value>
-		</property>
+        <property>
+                <name>sod.event.Lag.value</name>
+                <value>1</value>
+        </property>
+        <!--  time to wait between queries for events   -->
+        <property>
+                <name>sod.event.RefreshInterval.value</name>
+                <value>6</value>
+        </property>
+            <property>
+            <name>sod.event.RefreshInterval.unit</name>
+            <value>MINUTE</value>
+        </property>
+        <property>
+            <name>edu.sc.seis.sod.waveformarm.threads</name>
+            <value>1</value>
+        </property>
+        <property>
+                <name>sod.waveform.maxRetryDelay.value</name>
+                <value>6</value>
+        </property>
+            <property>
+            <name>sod.waveform.maxRetryDelay.unit</name>
+            <value>MINUTE</value>
+        </property>
         </properties>
         <eventArm>
                 <eventFinder>
@@ -96,14 +104,14 @@
                       <min>30</min>
                       <max>100</max>
                    </originPointDistance>
-                   <originPointAzimuth>  
+                   <originPointAzimuth>
                       <latitude>35</latitude>
                       <longitude>-82</longitude>
                       <unit>DEGREE</unit>
                       <min>0</min>
                       <max>360</max>
                    </originPointAzimuth>
-                   <originPointBackAzimuth>  
+                   <originPointBackAzimuth>
                       <latitude>35</latitude>
                       <longitude>-82</longitude>
                       <unit>DEGREE</unit>
@@ -113,17 +121,17 @@
                 </originAND>
 
                 <eventStatusTemplate>
-			<!--<fileDir>status</fileDir>-->
-			<eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
-		</eventStatusTemplate>
+            <!--<fileDir>status</fileDir>-->
+            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
+        </eventStatusTemplate>
                 <eventStatusTemplate>
-			<!--<fileDir>status</fileDir>-->
+            <!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-		</eventStatusTemplate>
+        </eventStatusTemplate>
                 <eventStatusTemplate>
-			<!--<fileDir>status</fileDir>-->
+            <!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
-		</eventStatusTemplate>
+        </eventStatusTemplate>
         </eventArm>
         <networkArm>
                 <networkFinder>
@@ -174,7 +182,7 @@
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
                 </networkInfoTemplateGenerator>
                 <responseWriter>
-                 	<responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
+                    <responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
                  </responseWriter>
         </networkArm>
         <waveformArm>
@@ -203,21 +211,21 @@
                         </fixedDataCenter>
                         <someCoverage/>
                         <printlineSeismogramProcess/>
-                        
+
                         <saveSeismogramToFile>
                                 <fileType>sac</fileType>
                                 <dataDirectory>POND_II</dataDirectory>
                                 <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                                 </eventDirLabel>
                         </saveSeismogramToFile>
-                		<localSeismogramTemplateGenerator>
-                				<!--<fileDir>status</fileDir>-->
-                				<seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-                		</localSeismogramTemplateGenerator>
+                        <localSeismogramTemplateGenerator>
+                                <!--<fileDir>status</fileDir>-->
+                                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
+                        </localSeismogramTemplateGenerator>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
-                		<!--<fileDir>status</fileDir>-->
-                		<waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+                        <!--<fileDir>status</fileDir>-->
+                        <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
         </waveformArm>
 </sod>
