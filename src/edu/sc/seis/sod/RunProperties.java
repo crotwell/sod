@@ -43,6 +43,11 @@ public class RunProperties{
             maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
         }
 
+        Element serverRetryChild = SodUtil.getElement(el, "serverRetryDelay");
+        if(maxRetryChild != null){
+            serverRetryDelay = SodUtil.loadTimeInterval(maxRetryChild);
+        }
+
         Element numWorkersChild = SodUtil.getElement(el, "waveformWorkerThreads");
         if(numWorkersChild != null){
             numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
@@ -58,6 +63,8 @@ public class RunProperties{
     }
 
     public TimeInterval getMaxRetryDelay() { return maxRetry; }
+
+    public TimeInterval getServerRetryDelay(){ return serverRetryDelay; }
 
     public TimeInterval getEventQueryIncrement() { return eventQueryIncrement; }
 
@@ -75,14 +82,16 @@ public class RunProperties{
 
     public boolean removeDatabase(){ return removeDatabase; }
 
-    private static final TimeInterval ONE_WEEK = new TimeInterval(7, UnitImpl.DAY);
-    private static final TimeInterval TEN_MIN = new TimeInterval(10, UnitImpl.MINUTE);
-    private static final TimeInterval DAYS_180 = new TimeInterval(180, UnitImpl.DAY);
+    public static final TimeInterval NO_TIME = new TimeInterval(0, UnitImpl.SECOND);
+    public static final TimeInterval ONE_WEEK = new TimeInterval(7, UnitImpl.DAY);
+    public static final TimeInterval TEN_MIN = new TimeInterval(10, UnitImpl.MINUTE);
+    public static final TimeInterval DAYS_180 = new TimeInterval(180, UnitImpl.DAY);
 
     private TimeInterval eventQueryIncrement = ONE_WEEK;
     private TimeInterval eventLag = ONE_WEEK;
     private TimeInterval eventRefresh = TEN_MIN;
     private TimeInterval maxRetry = DAYS_180;
+    private TimeInterval serverRetryDelay = NO_TIME;
 
     private String runName = "Your Sod";
     private String statusDir = "status";
