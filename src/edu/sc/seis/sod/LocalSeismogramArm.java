@@ -250,8 +250,27 @@ public class LocalSeismogramArm implements Subsetter{
                         try {
                             localSeismograms = dataCenter.retrieve_seismograms(infilters);
                         } catch (FissuresException e) {
-                            handle(ecp, Stage.DATA_SUBSETTER, e);
-                            return;
+                            //maybe the exception is because the server doesn't
+                            //support retrieve_seismograms so try using the
+                            //queue set of retrieve calls
+                            try {
+                                String id = dataCenter.queue_seismograms(infilters);
+                                String status = dataCenter.request_status(id);
+                                while(status.equals(RETRIEVING_DATA)){
+                                    try {
+                                        Thread.sleep(10 * 1000);
+                                    } catch (InterruptedException ex) {}
+                                    status = dataCenter.request_status(id);
+                                }
+                                if(status.equals(DATA_RETRIEVED)){
+                                    localSeismograms = dataCenter.retrieve_queue(id);
+                                }
+                            } catch (FissuresException ex) {
+                                //oh well, queue methods threw fissures ex too.
+                                //Just pass it off to the ex handler.
+                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                return;
+                            }
                         }
                         logger.debug("after successful retrieve_seismograms");
                         if (localSeismograms.length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
@@ -370,6 +389,10 @@ public class LocalSeismogramArm implements Subsetter{
     private LinkedList processes = new LinkedList();
 
     private SeismogramDCLocator dcLocator = new NullSeismogramDCLocator();
+
+    public static final String NO_DATA = "no_data";
+    public static final String DATA_RETRIEVED = "Finished";
+    public static final String RETRIEVING_DATA = "Processing";
 
     private static final Logger logger =Logger.getLogger(LocalSeismogramArm.class);
 }// LocalSeismogramArm
