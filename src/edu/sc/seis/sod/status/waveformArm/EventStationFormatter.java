@@ -26,9 +26,8 @@ import java.sql.SQLException;
 import org.w3c.dom.Element;
 
 public class EventStationFormatter extends StationFormatter{
-    public EventStationFormatter(Element el, EventAccessOperations ev) throws ConfigurationException{
+    public EventStationFormatter(Element el) throws ConfigurationException{
         super(el);
-        this.ev = ev;
     }
 
     public Object getTemplate(String name, Element el){
@@ -37,6 +36,8 @@ public class EventStationFormatter extends StationFormatter{
         else if(name.equals("numRetry")){ return new RetryQuery(); }
         return super.getTemplate(name, el);
     }
+
+    public void setEvent(EventAccessOperations ev){ this.ev = ev; }
 
     private class SuccessfulQuery implements StationTemplate{
         public String getResult(Station station) {
@@ -56,8 +57,6 @@ public class EventStationFormatter extends StationFormatter{
         }
     }
 
-
-
     private int queryStatus(Station s, PreparedStatement stmt){
         int id;
         try {
@@ -74,6 +73,8 @@ public class EventStationFormatter extends StationFormatter{
         }
         return -1;
     }
+
+    private EventAccessOperations ev;
 
     private static JDBCEventChannelStatus evStatus;
     private static JDBCStation stationTable;
@@ -118,8 +119,6 @@ public class EventStationFormatter extends StationFormatter{
             GlobalExceptionHandler.handle(e);
         }
     }
-
-    private EventAccessOperations ev;
 }
 
 
