@@ -113,6 +113,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return ids;
     }
 
+    public int[] getPairs(EventChannelGroupPair group) throws SQLException, NotFound{
+        return getPairs(group.getEvent(), group.getChannelGroup());
+    }
+
     private int getDbId(int evDbid, int channelDbId) throws SQLException {
         dbIdForEventAndChan.setInt(1, evDbid);
         dbIdForEventAndChan.setInt(2, channelDbId);
@@ -296,14 +300,8 @@ public class JDBCEventChannelStatus extends SodJDBC{
     }
 
 
-    public void updateEventChannelStates(String processingRule)
+    public int[] getSuspendedEventChannelPairs(String processingRule)
         throws SQLException, ConfigurationException{
-
-        if (!processingRule.equals(RunProperties.AT_LEAST_ONCE)
-            && !processingRule.equals(RunProperties.AT_MOST_ONCE)){
-            throw new ConfigurationException("SOD does not know how to handle this "
-                                                 + "processing rule: " + processingRule);
-        }
 
         Stage[] stages =  {
             Stage.EVENT_STATION_SUBSETTER,
@@ -334,24 +332,27 @@ public class JDBCEventChannelStatus extends SodJDBC{
         }
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(query);
+        List pairs = new ArrayList();
         while (rs.next()){
-            int curId = rs.getInt(1);
+            int pairId = rs.getInt(1);
+            pairs.add(new Integer(pairId));
             if (processingRule.equals(RunProperties.AT_LEAST_ONCE)){
-                setStatus(curId, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                setStatus(pairId, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                             Standing.INIT));
             }
             else{
                 try {
-                    Stage currentStage = get(curId, null).getStatus().getStage();
-                    setStatus(curId, Status.get(currentStage, Standing.SYSTEM_FAILURE));
+                    Stage currentStage = get(pairId, null).getStatus().getStage();
+                    setStatus(pairId, Status.get(currentStage, Standing.SYSTEM_FAILURE));
                 }catch (NotFound e){
                     GlobalExceptionHandler.handle("Could not find event-channel "
                                                       + "pair that was just purported "
                                                       + "to exist in the database", e);
                 }
             }
-
         }
+        return SodUtil.intArrayFromList(pairs);
+        //return new int[0];
     }
 
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,

@@ -100,17 +100,17 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
         createMasterDS();
 
-        OutputScheduler.getDefault().scheduleForExit(new Runnable(){
-                    public void run() {
-                        if (lastDataSetStaxWriter != null){
-                            try {
-                                lastDataSetStaxWriter.close();
-                            } catch (Exception e) {
-                                GlobalExceptionHandler.handle(e);
-                            }
-                        }
-                    }
-                });
+//        OutputScheduler.getDefault().scheduleForExit(new Runnable(){
+//                    public void run() {
+//                        if (lastDataSetStaxWriter != null){
+//                            try {
+//                                lastDataSetStaxWriter.close();
+//                            } catch (Exception e) {
+//                                GlobalExceptionHandler.handle(e);
+//                            }
+//                        }
+//                    }
+//                });
     }
 
     public LocalSeismogramResult process(EventAccessOperations event,
@@ -161,7 +161,9 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             // seismogram file type doesn't matter here as no data will be added
             // directly to master dataset
             masterDSFile = new File(dataDirectory, DataSetToXMLStAX.createFileName(masterDataSet));
-            dsToXML.createFile(masterDataSet, dataDirectory, masterDSFile, SeismogramFileTypes.SAC);
+            if (!masterDSFile.exists()){
+                dsToXML.createFile(masterDataSet, dataDirectory, masterDSFile, SeismogramFileTypes.SAC);
+            }
         } catch (IOException e) {
             throw new ConfigurationException("Problem trying to create top level dataset", e);
         }catch (XMLStreamException e) {
@@ -292,17 +294,19 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
                                 channel.get_id().begin_time.date_time);
         lastDataSet.addDataSetSeismogram(urlDSS, audit);
-        dsToXML.writeURLDataSetSeismogram(lastDataSetStaxWriter.getStreamWriter(),
+        StAXFileWriter staxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
+        dsToXML.writeURLDataSetSeismogram(staxWriter.getStreamWriter(),
                                           urlDSS,
                                           dataSetFile.getParentFile().toURI().toURL());
 
         lastDataSet.addParameter(DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
                                  channel,
                                  audit);
-        dsToXML.writeParameter(lastDataSetStaxWriter.getStreamWriter(),
+        dsToXML.writeParameter(staxWriter.getStreamWriter(),
                                DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
                                channel);
         lastDataSetFileModTime = dataSetFile.lastModified();
+        staxWriter.close();
         return urlDSS;
 
     }
@@ -372,7 +376,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             dataset = DataSetToXML.load(dataSetFile.toURI().toURL());
         }
         else {
-            dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
             StAXFileWriter staxWriter =
                 new StAXFileWriter(dataSetFile);
             XMLStreamWriter writer = staxWriter.getStreamWriter();
@@ -384,10 +387,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             staxWriter.close();
         }
 
-        if (lastDataSetStaxWriter != null){
-            lastDataSetStaxWriter.close();
-        }
-        lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
+        //if (lastDataSetStaxWriter != null){
+            //lastDataSetStaxWriter.close();
+        //}
+        //lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
         lastDataSet = dataset;
         lastEvent = event;
 
@@ -439,7 +442,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
     static File dataSetFile;
 
-    static StAXFileWriter lastDataSetStaxWriter;
+    //static StAXFileWriter lastDataSetStaxWriter;
 
     static EventAccessOperations lastEvent = null;
 

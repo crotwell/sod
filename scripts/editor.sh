@@ -11,7 +11,7 @@ ISTI_UTIL_TOPLEVEL=${LIB}/isti/jars/isti.util.toplevel-1.0USC.jar
 JDOM=${LIB}/jdom/jars/jdom-b9.jar
 JING=${LIB}/jing/jars/jing-20030619.jar
 OPENMAP=${LIB}/openmap/jars/openmap-4.6.jar
-JCALENDAR=${LIB}/jcalendar/jars/jcalendar-0.6.1beta.jar
+JCALENDAR=${LIB}/jcalendar/jars/jcalendar-0.76.jar
 JACORB=${LIB}/JacORB/jars/JacORB-2.1.jar
 IDL=${LIB}/JacORB/jars/idl-2.1.jar
 ANTLR=${LIB}/JacORB/jars/antlr-2.7.2.jar
@@ -26,12 +26,10 @@ TAUP=${LIB}/TauP/jars/TauP-1.1.4.jar
 MOCKFISSURES=${LIB}/mockFissures/jars/mockFissures-0.2.jar
 JUNIT_ADDONS=${LIB}/junit-addons/jars/junit-addons-1.3.jar
 JUNIT=${LIB}/junit/jars/junit-3.8.1.jar
-MCKOI=${LIB}/mckoi/jars/mckoi-1.0.2.jar
-HSQLDB=${LIB}/hsqldb/jars/hsqldb-1.7.2-rc5.jar
+HSQLDB=${LIB}/hsqldb/jars/hsqldb-1.7.2-rc6b.jar
 XERCES=${LIB}/xerces/jars/xerces-2.4.0.jar
 XML_APIS=${LIB}/xml-apis/jars/xml-apis-2.0.2.jar
 XALAN=${LIB}/xalan/jars/xalan-2.5.1.jar
-EASYMOCK=${LIB}/easyMock/jars/easyMock-1.0.jar
 LOG4J=${LIB}/log4j/jars/log4j-1.2.8.jar
 RNGCONV=${LIB}/rngconv/jars/rngconv-20030225.jar
 MSV=${LIB}/msv/jars/msv-20030807.jar
@@ -47,7 +45,7 @@ JSR173_RI=${LIB}/stax/jars/jsr173_ri-1.0.jar
 NAMESPACE=${LIB}/stax/jars/namespace-1.0.jar
 SOD=${LIB}/sod/jars/sod-1.0Beta.jar
 
-CLASSPATH=${ISTI_UTIL}:${ISTI_UTIL_TOPLEVEL}:${JDOM}:${JING}:${OPENMAP}:${JCALENDAR}:${JACORB}:${IDL}:${ANTLR}:${AVALON_FRAMEWORK}:${CONCURRENT}:${LOGKIT}:${FISSURESUTIL}:${FISSURESIMPL}:${FISSURESIDL}:${SEEDCODEC}:${TAUP}:${MOCKFISSURES}:${JUNIT_ADDONS}:${JUNIT}:${MCKOI}:${HSQLDB}:${XERCES}:${XML_APIS}:${XALAN}:${EASYMOCK}:${LOG4J}:${RNGCONV}:${MSV}:${ISORELAX}:${RELAXNGDATATYPE}:${XSDLIB}:${VELOCITY}:${COMMONS_COLLECTIONS}:${VELOCITY_TOOLS_GENERIC}:${JAX_QNAME}:${JSR173_API}:${JSR173_RI}:${NAMESPACE}:${SOD}
+CLASSPATH=${ISTI_UTIL}:${ISTI_UTIL_TOPLEVEL}:${JDOM}:${JING}:${OPENMAP}:${JCALENDAR}:${JACORB}:${IDL}:${ANTLR}:${AVALON_FRAMEWORK}:${CONCURRENT}:${LOGKIT}:${FISSURESUTIL}:${FISSURESIMPL}:${FISSURESIDL}:${SEEDCODEC}:${TAUP}:${MOCKFISSURES}:${JUNIT_ADDONS}:${JUNIT}:${HSQLDB}:${XERCES}:${XML_APIS}:${XALAN}:${LOG4J}:${RNGCONV}:${MSV}:${ISORELAX}:${RELAXNGDATATYPE}:${XSDLIB}:${VELOCITY}:${COMMONS_COLLECTIONS}:${VELOCITY_TOOLS_GENERIC}:${JAX_QNAME}:${JSR173_API}:${JSR173_RI}:${NAMESPACE}:${SOD}
 
 ${JAVA} -Xmx256m \
 -Djacorb.connection.client.pending_reply_timeout=120000 \
