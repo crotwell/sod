@@ -256,27 +256,17 @@ public class NetworkArm {
     public static String[] getConstrainingNetworkCodes(NetworkSubsetter ns) {
         if(ns == null) {
             return new String[0];
-        } else if(ns instanceof NetworkAND) {
-            NetworkSubsetter[] kids = ((NetworkAND)ns).getSubsetters();
-            List constrainingCodes = new ArrayList();
-            for(int i = 0; i < kids.length; i++) {
-                String[] codes = getConstrainingNetworkCodes(kids[i]);
-                for(int j = 0; j < codes.length; j++) {
-                    constrainingCodes.add(codes[i]);
-                }
-            }
-            return (String[])constrainingCodes.toArray(new String[0]);
         } else if(ns instanceof NetworkOR) {
             NetworkSubsetter[] kids = ((NetworkOR)ns).getSubsetters();
-            List constrainingCodes = new ArrayList();
+            String[] codes = new String[kids.length];
             for(int i = 0; i < kids.length; i++) {
-                String[] codes = getConstrainingNetworkCodes(kids[i]);
-                if(codes.length == 0) { return new String[0]; }
-                for(int j = 0; j < codes.length; j++) {
-                    constrainingCodes.add(codes[j]);
+                if(kids[i] instanceof NetworkCode) {
+                    codes[i] = ((NetworkCode)kids[i]).getCode();
+                } else {
+                    return new String[0];
                 }
             }
-            return (String[])constrainingCodes.toArray(new String[0]);
+            return codes;
         } else if(ns instanceof NetworkCode) {
             return new String[] {((NetworkCode)ns).getCode()};
         } else {
