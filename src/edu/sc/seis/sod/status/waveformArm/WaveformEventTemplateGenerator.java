@@ -5,7 +5,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.apache.log4j.Logger;
 
-public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveFormStatus{
+public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveformArmMonitor{
     public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException {
         if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();

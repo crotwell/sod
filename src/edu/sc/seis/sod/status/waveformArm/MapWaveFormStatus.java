@@ -20,7 +20,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-public class MapWaveFormStatus extends PeriodicAction implements WaveFormStatus {
+public class MapWaveFormStatus extends PeriodicAction implements WaveformArmMonitor {
 
     private String fileLoc;
     private List events = new ArrayList();

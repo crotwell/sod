@@ -5,17 +5,17 @@ import edu.sc.seis.sod.status.*;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Element;
 
-public class WaveformEventTemplate extends FileWritingTemplate implements WaveFormStatus{
+public class WaveformEventTemplate extends FileWritingTemplate implements WaveformArmMonitor{
     public WaveformEventTemplate(Element el, EventAccessOperations event) throws Exception {
         this(TemplateFileLoader.getTemplate(el),
-			 el.getAttribute("fileDir"),
+             el.getAttribute("fileDir"),
              el.getAttribute("outputLocation"),
              event);
     }
@@ -31,7 +31,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
     public void update(EventChannelPair ecp) throws Exception {
         if(ecp.getEvent().equals(event)){
             Iterator it = waveformStatusListeners.iterator();
-            while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
+            while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
             it = channelListeners.iterator();
             while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(), ecp.getStatus());
             write();
@@ -73,3 +73,4 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
 
     private List channelListeners = new ArrayList();
 }
+

@@ -4,7 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class WaveformEventGroup extends EventGroupTemplate implements WaveFormStatus{
+public class WaveformEventGroup extends EventGroupTemplate implements WaveformArmMonitor{
     public WaveformEventGroup(){ useDefaultConfig(); }
 
     public WaveformEventGroup(Element el) { parse(el); }
@@ -32,7 +32,7 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
 
     public void update(EventChannelPair ecp) throws Exception {
         Iterator it = ecpListeners.iterator();
-        while(it.hasNext())((WaveFormStatus)it.next()).update(ecp);
+        while(it.hasNext())((WaveformArmMonitor)it.next()).update(ecp);
     }
 
     private List ecpListeners = new ArrayList();

@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.status.waveFormArm;
 
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Element;
 
-public class WaveformStatusTemplate extends FileWritingTemplate implements WaveFormStatus{
+public class WaveformStatusTemplate extends FileWritingTemplate implements WaveformArmMonitor{
     public WaveformStatusTemplate(Element el)throws IOException {
         super(el.getAttribute("filDir"), el.getAttribute("outputLocation"));
         //TODO get parsing setup
@@ -33,7 +33,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements WaveF
 
     public void update(EventChannelPair ecp) throws Exception{
         Iterator it = eventTemplates.iterator();
-        while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
+        while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
         write();
     }
 
