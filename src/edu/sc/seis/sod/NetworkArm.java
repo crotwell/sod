@@ -356,6 +356,7 @@ public class NetworkArm {
                                                                           channels[subCounter]);
                     successes.add(channelDbObject);
                     processNetworkArm(networkAccess, channels[subCounter], cookieJar);
+                    change(channels[subCounter], RunStatus.PASSED);
                 }else change(channels[subCounter], RunStatus.FAILED);
             }
         } catch(Exception e) {
