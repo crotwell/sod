@@ -7,7 +7,7 @@ import edu.iris.Fissures.network.*;
 
 import org.w3c.dom.*;
 
-public class NetworkCode implements NetworkIdSubsetter,SodElement {
+public class NetworkCode implements NetworkIdSubsetter {
 
 	public NetworkCode(Element config) {
 		System.out.println("The name of the element passed to NetworkCode is "+config.getTagName());
@@ -16,6 +16,7 @@ public class NetworkCode implements NetworkIdSubsetter,SodElement {
 	}
 
 	public boolean accept(NetworkId e, CookieJar cookies) {
+		System.out.println("The network Code that is checked is "+e.network_code);
 		if(e.network_code.equals(SodUtil.getNestedText(config))) return true;
 		else return false;
 

@@ -29,11 +29,11 @@ public class ChannelIDOR
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    ChannelIdSubsetter filter = (ChannelIdSubsetter)it.next();
-	    if ( filter.accept(e, cookies)) {
+	    if (!filter.accept(e, cookies)) {
 		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }// ChannelIDOR

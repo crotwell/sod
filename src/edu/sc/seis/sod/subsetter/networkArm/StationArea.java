@@ -31,7 +31,7 @@ public class StationArea
 			break;
 		}
 	}
-	accept(null, null); //this statement is onlyfor the purpose of testing
+
 	
     }
 
@@ -46,7 +46,7 @@ public class StationArea
 		System.out.println("Area is of type BoxArea");
 	}
 	else System.out.println("The area is null");
-	return false;
+	return true;
     }
 
     private edu.iris.Fissures.Area area = null;

@@ -11,15 +11,18 @@ import org.w3c.dom.*;
 public class SiteCode implements SiteIdSubsetter {
 
 	public SiteCode(Element config) {
-
-		System.out.println("The site code is  "+SodUtil.getNestedText(config));
+	    this.config = config;
+	
 	}
 
 	public boolean accept(SiteId siteId, CookieJar cookies) {
-
-		return true;
+	    System.out.println("The site code is  "+SodUtil.getNestedText(config));
+	    if(siteId.site_code.equals(SodUtil.getNestedText(config))) return true;
+	    else return false;
 
 	}
+
+    private Element config = null;
 
 
 }
