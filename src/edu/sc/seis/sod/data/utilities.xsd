@@ -59,6 +59,20 @@
             <xsd:element name="value" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
+
+    <!-- PROPERTY TYPE -->
+	<xsd:complexType name="propertyType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>	
+
+	<xsd:complexType name="propertySequenceType">
+		<xsd:sequence>
+			<xsd:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
     
     <!-- PROCESS TYPE -->
     <xsd:complexType name="processType" abstract="true">
@@ -294,6 +308,9 @@
     
     <!-- REFRESH INTERVAL element -->
     <xsd:element name="refreshInterval" type="refreshIntervalType"/>
+
+	<!-- PROPERTIES ELEMENT -->
+	<xsd:element name="properties" type="propertySequenceType"/>
     
     <xsd:simpleType name="channelCodeUtilType">
         <xsd:restriction base="xsd:string">
