@@ -383,15 +383,15 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                     RecordSectionDisplay.BOTTOM_CENTER);
             rsDisplay.setTimeBorder(timeBorder,
                                     RecordSectionDisplay.CENTER_LEFT);
-            rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
             rsDisplay.setColors(colors);
         } else {
             rsDisplay = (RecordSectionDisplay)displayCreator.createDisplay();
         }
+        rsDisplay.setAmpConfig(new IndividualizedAmpConfig(new RMeanAmpConfig()));
         CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
                                                                distRange.getMaxDistance());
         boolean swapAxes = false;
-        if(rsDisplay.getSwapAxes()){
+        if(rsDisplay.getSwapAxes()) {
             swapAxes = true;
         }
         custConfig.setSwapAxes(swapAxes);
