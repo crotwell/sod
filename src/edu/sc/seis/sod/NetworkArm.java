@@ -211,7 +211,6 @@ public class NetworkArm {
         if(databaseTime == null || lastDate == null) return false;
         if(refreshInterval == null) return true;
 
-        Date currentDate = Calendar.getInstance().getTime();
         MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
         MicroSecondDate currentTime = new MicroSecondDate(databaseTime);
         TimeInterval timeInterval = currentTime.difference(lastTime);
@@ -470,10 +469,10 @@ public class NetworkArm {
 
     private HashMap cookieJarCache = new HashMap();
 
-    static Category logger =
-        Category.getInstance(NetworkArm.class.getName());
+    private static Logger logger =
+        Logger.getLogger(NetworkArm.class);
 
-    static Category failure = Category.getInstance(NetworkArm.class.getName()+".failure");
+    static Logger failure = Logger.getLogger(NetworkArm.class.getName()+".failure");
 
 
 }// NetworkArm
