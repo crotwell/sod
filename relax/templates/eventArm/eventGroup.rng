@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+        xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+        <include href="../base/include/eventLabel.rng"/>
+        <start>
+                <element name="events">
+                        <optional>
+                                <ref name="eventLabel"/>
+                        </optional>
+                        <optional>
+                                <element name="sorting">
+                                        <ref name="sortType"/>
+                                </element>
+                        </optional>
+                </element>
+        </start>
+        <define name="sortType">
+                <choice>
+                        <element name="addition">
+                                <ref name="order"/>
+                        </element>
+                        <element name="date">
+                                <ref name="order"/>
+                        </element>
+                        <element name="magnitude">
+                                <ref name="order"/>
+                        </element>
+                        <element name="location">
+                                <ref name="order"/>
+                        </element>
+                </choice>
+        </define>
+        <define name="order">
+                <choice>
+                        <empty/>
+                        <attribute name="order">
+                                <choice>
+                                        <value>normal</value>
+                                        <value>reverse</value>
+                                </choice>
+                        </attribute>
+                </choice>
+        </define>
+</grammar>
