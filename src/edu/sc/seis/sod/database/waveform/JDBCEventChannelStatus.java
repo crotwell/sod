@@ -109,8 +109,8 @@ public class JDBCEventChannelStatus extends SodJDBC{
         EventChannelPair cur = new EventChannelPair(new EventDbObject(eventId, event),
                                                     new ChannelDbObject(chanId, chan),
                                                     owner,
-                                                    rs.getInt("pairid"));
-        cur.setStatus(s);
+                                                    rs.getInt("pairid"),
+                                                    s);
         return cur;
     }
 
