@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.database.event.ConditionEvent;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import java.sql.SQLException;
 import org.w3c.dom.Element;
@@ -48,7 +48,7 @@ public class EventSorter{
         }
     }
 
-    public ConditionEvent[] getSortedEvents() throws SQLException{
+    public StatefulEvent[] getSortedEvents() throws SQLException{
         if(query == null) return evStatus.getAll();
         return evStatus.get(query, "origineventid");
     }
