@@ -364,20 +364,23 @@ public class EventArm implements Runnable{
                                                                           contributors,
                                                                           sequenceMaximum, holder);
                     logger.debug("after finder.query_events("+tr.start_time.date_time+" to "+tr.end_time.date_time);
-//                    LinkedList allEvents = new LinkedList();
-//                    for (int j = 0; j < events.length; j++) {
-//                        allEvents.add(events[j]);
-//                    }
-//                    EventSeqIter iterator = holder.value;
-//                    EventAccessSeqHolder eHolder = new EventAccessSeqHolder();
-//                    while(iterator.how_many_remain() > 0) {
-//                        iterator.next_n(sequenceMaximum, eHolder);
-//                        EventAccess[] iterEvents = eHolder.value;
-//                        for (int j = 0; j < iterEvents.length; j++) {
-//                            allEvents.add(iterEvents[j]);
-//                        }
-//                    }
-//                    events = (EventAccessOperations[])allEvents.toArray(new EventAccessOperations[0]);
+                    if (holder.value != null) {
+                        // might be events in the iterator...
+                        LinkedList allEvents = new LinkedList();
+                        for (int j = 0; j < events.length; j++) {
+                            allEvents.add(events[j]);
+                        }
+                        EventSeqIter iterator = holder.value;
+                        EventAccessSeqHolder eHolder = new EventAccessSeqHolder();
+                        while(iterator.how_many_remain() > 0) {
+                            iterator.next_n(sequenceMaximum, eHolder);
+                            EventAccess[] iterEvents = eHolder.value;
+                            for (int j = 0; j < iterEvents.length; j++) {
+                                allEvents.add(iterEvents[j]);
+                            }
+                        }
+                        events = (EventAccessOperations[])allEvents.toArray(new EventAccessOperations[0]);
+                    }
                     return cacheEvents(events);
                 } catch (org.omg.CORBA.SystemException e) {
                     if (i == MAX_RETRY-1) {
