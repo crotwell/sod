@@ -42,5 +42,8 @@
 </li>
 </ul>
 </div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
 </body>
 </html></template>

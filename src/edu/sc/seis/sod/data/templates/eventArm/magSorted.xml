@@ -32,13 +32,16 @@ Events (sorted by magnitude)
 </table>
 <h2>Map:</h2>
 <img src="eventMap.png"/>
-</div>
+Maps only update once every two minutes</div>
 <div id="Menu">
 <ul>
 <li>
 <a href="location.html">Events</a>
 </li>
 </ul>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
 </div>
 </body>
 </html></template>
