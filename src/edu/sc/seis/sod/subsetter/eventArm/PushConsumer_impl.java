@@ -26,10 +26,10 @@ public class PushConsumer_impl extends PushConsumerPOA
 
     public PushConsumer_impl(org.omg.CORBA_2_3.ORB orb, org.omg.PortableServer.POA poa, boolean slow, EventArm eventArm)
     {
-	orb_ = orb;
-	poa_ = poa;
-	slow_ = slow;
-	this.eventArm = eventArm;
+    orb_ = orb;
+    poa_ = poa;
+    slow_ = slow;
+    this.eventArm = eventArm;
     }
 
     // ------------------------------------------------------------------
@@ -39,29 +39,29 @@ public class PushConsumer_impl extends PushConsumerPOA
     public void
     push(Any any)
     {
-	try
-	{
-	    //Extract EventNotify from ANY
-	    EventNotify eventNotify = EventNotifyHelper.extract(any);
-	    eventArm.handleEventAttrSubsetter(eventNotify.the_event, eventNotify.the_event.get_attributes());
-	    //Start.getEventQueue().push(eventNotify.the_event);
+    try
+    {
+        //Extract EventNotify from ANY
+        EventNotify eventNotify = EventNotifyHelper.extract(any);
+        eventArm.startEventSubsetter(eventNotify.the_event, eventNotify.the_event.get_attributes());
+        //Start.getEventQueue().push(eventNotify.the_event);
 
-	}
-	catch(Exception ex)
-	{
+    }
+    catch(Exception ex)
+    {
 
-		ex.printStackTrace();
-	}
-	if(slow_)
-	{
-	    try
-	    {
-		Thread.sleep(2000);
-	    }
-	    catch(InterruptedException e)
-	    {
-	    }
-	}
+        ex.printStackTrace();
+    }
+    if(slow_)
+    {
+        try
+        {
+        Thread.sleep(2000);
+        }
+        catch(InterruptedException e)
+        {
+        }
+    }
     }
 
     public void
@@ -79,7 +79,7 @@ public class PushConsumer_impl extends PushConsumerPOA
         catch(WrongPolicy ex)
         {
             throw new RuntimeException();
-        }         
+        }
 
         try
         {
@@ -100,7 +100,7 @@ public class PushConsumer_impl extends PushConsumerPOA
     public POA
     _default_POA()
     {
-	return poa_;
+    return poa_;
     }
     private EventArm eventArm;
 }
