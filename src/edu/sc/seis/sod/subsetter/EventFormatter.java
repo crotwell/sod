@@ -134,8 +134,10 @@ public class EventFormatter extends Template implements EventTemplate{
     }
     
     public static String filize(String fileName){
+        fileName = fileName.trim();
         fileName = fileName.replaceAll("[ :]", "_");
-        return fileName.replaceAll("[\t\n\f\r]", "");
+        fileName.replaceAll("[\t\n\f\r]", "");
+        return fileName.trim();
     }
     
     private static String getMag(EventAccessOperations event){
