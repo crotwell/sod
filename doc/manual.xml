@@ -56,13 +56,20 @@ waveform.
 <chapter>
 <title>Structure</title>
 <para>
-The Structure of a sod configuration file is shown below.
+The Structure of a sod configuration file is shown below. In general, for 
+each step there are multiple tags that can fufull that function, and those 
+shown below are merely placeholders. In addition to the specialized subsetters,
+ there are also logical subsetters for each type. For example, at the eventAttr
+subsetter location, there are eventAttrAND, eventAttrOR, eventAttrXOR and 
+eventAttrNOT. Each of these logical subsetters take as subtags any subsetter
+of the same type allowing the creation of complex subsetters from the existing
+simple ones.
 </para>
 <programlisting>
 &lt;sod&gt;
     &lt;eventArm&gt;
         &lt;eventFinder&gt; or &lt;eventChannelFinder&gt;
-        &lt;any eventAttr subsetter&gt;
+        &lt;eventAttr&gt;
         &lt;origin&gt;
         &lt;eventProcess&gt;
     &lt;/eventArm&gt;
@@ -89,6 +96,7 @@ The Structure of a sod configuration file is shown below.
             &lt;localSeismogramProcess&gt;
         &lt;/localSeismogramArm&gt;
     &lt;/waveFromArm&gt;
+&lt;sod&gt;
 </programlisting>
 </chapter>
 
@@ -119,7 +127,7 @@ currently edu/iris/dmc.
 <para>
 The serverName is the name of the server within the serverDNS context. 
 For example, the current event server at the DMC is 
-&gt;serverName&lt;IRIS_EventDC&gt;/serverName&lt;. 
+&lt;serverName&gt;IRIS_EventDC&lt;/serverName&gt;. 
 It is possible to have multiple 
 servers within the same serverDNS with different names, and so both serverName
 and serverDNS are required in order to uniquely identify a server.
@@ -148,13 +156,13 @@ of new origins and events.
 <title>Event Finder</title>
 <para>The event finder configuration is given in an &lt;eventFinder&gt; tag, 
 and consists of a serverDNS
-and a serverName entry, both of which allow Fissures/DHI EventDC servers to
+and a serverName entry, both of which allow Fissures DHI EventDC servers to
 be located from a Naming Service, as well as elements to specify a coarse
 level query for events.
 </para>
 <sect3>
 <title>Server DNS and Name</title>
-
+<para>test</para>
 </sect3>
 <sect3>
 <title>Area</title>
