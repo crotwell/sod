@@ -20,7 +20,7 @@ import java.io.IOException;
 public class CommonAccess {
     private CommonAccess (){}
     
-    public void handleException(Throwable t, String reason) {
+    public static void handleException(Throwable t, String reason) {
         logger.error(reason, t);
     }
     

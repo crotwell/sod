@@ -44,7 +44,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                 try {
                     config = TemplateFileLoader.getTemplate((Element)n);
                 } catch (IOException e) {
-                    CommonAccess.getCommonAccess().handleException(e, "trouble getting config template");
+                    CommonAccess.handleException(e, "trouble getting config template");
                 }
             }
         }

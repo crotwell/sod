@@ -24,7 +24,7 @@ public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStat
                 try {
                     config = TemplateFileLoader.getTemplate((Element)n);
                 } catch (IOException e) {
-                    CommonAccess.getCommonAccess().handleException(e, "trouble getting config template");
+                    CommonAccess.handleException(e, "trouble getting config template");
                 }
             }
         }

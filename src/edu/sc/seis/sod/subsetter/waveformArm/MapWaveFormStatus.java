@@ -94,7 +94,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
                     scheduled = new Boolean(false);
                 }
             }catch(Throwable t){
-                CommonAccess.getCommonAccess().handleException(t, "Waveform map updater had a problem");
+                CommonAccess.handleException(t, "Waveform map updater had a problem");
             }
         }
     }
