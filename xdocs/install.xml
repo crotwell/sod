@@ -25,7 +25,7 @@
                 <section name="SOD_HOME">
                     <p>
                         SOD is effectively installed at this point, and you can certainly
-                        run it from within the <tt>sod</tt> directory. However, SOD's scripts
+                        run it from within the <tt>sod</tt> directory with <tt>./bin/sod.sh</tt>. However, SOD's scripts
                         use the SOD_HOME environment variable
                         to find SOD's libraries. In order to run sod from another
                         directory, you can either set SOD_HOME as an environmental
@@ -34,7 +34,7 @@
                     </p>
                     <p>To set it in the script, cd into the bin directory.
                         If you're on a Unix like platform, open up sod.sh in a text editor.
-                        On Windows, open up sod.bat for editing.
+                        On Windows, open up sod.bat for editing. You will also need to edit sodeditor.sh or sodeditor.bat.
                         Near the beginning of these files is the <b>SOD_HOME</b> variable.
                         It's currently set to '../' so you can run SOD from the <tt>sod</tt> directory.
                         Set the value to the path to SOD's directory. For example, if SOD was
