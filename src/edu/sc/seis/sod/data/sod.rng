@@ -1467,7 +1467,7 @@
             <element name="channelGroupRequestSubsetterNOT">
                 <ref name="channelGroupRequestSubsetter"/>
             </element>
-            <element name="passChannelGroupRequestSubsetter">
+            <element name="passChannelGroupRequest">
                 <zeroOrMore>
                     <ref name="channelGroupRequestSubsetter"/>
                 </zeroOrMore>
@@ -6322,10 +6322,8 @@
                 <ref name="channelGroupSeismogramProcess"/>
                 <ref name="channelGroupSeismogramProcess"/>
             </element>
-            <element name="passChannelGroupSeismogramProcess">
-                <zeroOrMore>
-                    <ref name="channelGroupSeismogramProcess"/>
-                </zeroOrMore>
+            <element name="channelGroupAlwaysSuccess">
+                <ref name="channelGroupSeismogramProcess"/>
             </element>
             <choice>
                 <ref name="seismogramProcess"/>
