@@ -8,9 +8,18 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.SodJDBC;
 
+/** This table stores a pairid, a number of failures, and the time of the next
+ * retry.  The time of the next retry is set to ClockUtil.future() whenever
+ * a retry is attempted on a pairid.  You can see which retries have succeeded by
+ * joining on all pairids with a retry_time of future and a status of success in
+ * EventChannelStatus
+ */
 public class JDBCEventChannelRetry extends SodJDBC{
     public JDBCEventChannelRetry() throws SQLException{
         Connection conn = ConnMgr.createConnection();
@@ -18,51 +27,73 @@ public class JDBCEventChannelRetry extends SodJDBC{
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventchannelretry.create"));
         }
-        insertFailure = conn.prepareStatement("INSERT into eventchannelretry (pairid, numfailure) VALUES (?, ?)");
-        updateFailure = conn.prepareStatement("UPDATE eventchannelretry SET status = ?, numfailure = numfailure + 1, retry_time = ? WHERE pairid = ?");
+        insert = conn.prepareStatement("INSERT into eventchannelretry (pairid, numfailure) VALUES (?, ?)");
+        updateFailure = conn.prepareStatement("UPDATE eventchannelretry SET numfailure = numfailure + 1, retry_time = ? WHERE pairid = ?");
         selectPair = conn.prepareStatement("SELECT numfailure FROM eventchannelretry WHERE pairid = ?");
-        selectNext = conn.prepareStatement("SELECT pairid, retry_time FROM eventchannelretry " +
-                                               "WHERE status != -1 "+
-                                               " ORDER BY retry_time DESC");
-        clearAll = conn.prepareStatement("DELETE FROM eventchannelretry");
-        updateStatus = conn.prepareStatement("UPDATE eventchannelretry SET status = ? WHERE pairid = ?");
+        selectNext = conn.prepareStatement("SELECT TOP 1 pairid, retry_time FROM eventchannelretry " +
+                                               "WHERE retry_time < ?");
+        selectNext.setTimestamp(1, ClockUtil.future().getTimestamp());
+        selectRemainingAvailData = conn.prepareStatement("SELECT TOP 1 pairid, retry_time FROM eventchannelretry, eventchannelstatus " +
+                                                             "WHERE retry_time < ? AND "+
+                                                             "status = ?");
+        selectRemainingCorbaFailures = conn.prepareStatement("SELECT TOP 1 pairid, retry_time FROM eventchannelretry, eventchannelstatus " +
+                                                             "WHERE retry_time < ? AND "+
+                                                             "status IN (?, ?, ?)");
+        startRetry = conn.prepareStatement("UPDATE eventchannelretry SET retry_time = ? WHERE pairid = ?");
     }
 
-    private PreparedStatement insertFailure, updateFailure, selectPair, selectNext,
-        clearAll, updateStatus;
+    private PreparedStatement insert, updateFailure, selectPair, selectNext,
+        startRetry, selectRemainingAvailData, selectRemainingCorbaFailures;
 
-    public void clear() throws SQLException {
-        clearAll.executeUpdate();
+    public boolean availableDataRetriesRemain() throws SQLException {
+        selectRemainingAvailData.setTimestamp(1, ClockUtil.future().getTimestamp());
+        selectRemainingAvailData.setInt(2, Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY).getAsShort());
+        ResultSet rs = selectRemainingAvailData.executeQuery();
+        return rs.next();
+    }
+
+    public boolean serverFailureRetriesRemain() throws SQLException {
+        selectRemainingCorbaFailures.setTimestamp(1, ClockUtil.future().getTimestamp());
+        for (int i = 0; i < SERVER_FAIL_STATUS.length; i++) {
+            selectRemainingCorbaFailures.setInt(i + 1, SERVER_FAIL_STATUS[i].getAsShort());
+        }
+        ResultSet rs = selectRemainingCorbaFailures.executeQuery();
+        return rs.next();
     }
 
     public static TimeInterval getRetryDelay(int numFailures) {
-        if(numFailures <= 0) throw new IllegalArgumentException("Failures must be greater than or equal to 1");
+        if(numFailures <= 0) {
+            throw new IllegalArgumentException("Failures must be greater than or equal to 1");
+        }
         long millis = BASE_DELAY;
-        for(int i = numFailures; i > 1; i--) millis *= 2;
+        for(int i = numFailures; i > 1; i--){ millis *= 2; }
         TimeInterval retryDelay = new TimeInterval(millis, UnitImpl.MILLISECOND);
-        if(retryDelay.greaterThan(MAX_DELAY)) return MAX_DELAY;
+        if(retryDelay.greaterThan(MAX_DELAY)){ return MAX_DELAY;}
         return retryDelay;
     }
 
 
     public int next() throws SQLException {
         ResultSet rs = selectNext.executeQuery();
-        while(rs.next()){
-            if(rs.getTimestamp("retry_time").after(ClockUtil.now())){ continue;}
-            else{
-                updateStatus.setInt(1, -1);
-                updateStatus.setInt(2, rs.getInt("pairid"));
-                updateStatus.executeUpdate();
+        if(rs.next()){
+            if(! rs.getTimestamp("retry_time").after(ClockUtil.now())){
+                startRetry.setTimestamp(1, ClockUtil.future().getTimestamp());
+                startRetry.setInt(2, rs.getInt("pairid"));
+                startRetry.executeUpdate();
                 return rs.getInt("pairid");
             }
         }
         return -1;
     }
 
-    public void failed(int pairId, Status failureType) throws SQLException{
-        if(!tableContains(pairId))insert(pairId);
-        updateFailure.setShort(1, failureType.getAsShort());
-        updateFailure.setTimestamp(2, getTimestamp(pairId));
+    public void addRetry(int pairId, Status failureType) throws SQLException{
+        if(!tableContains(pairId)){insert(pairId);}
+        updateRetry(pairId, failureType.getAsShort(), getTimestamp(pairId));
+    }
+
+    private void updateRetry(int pairId, short failType, Timestamp retryTime) throws SQLException{
+        updateFailure.setShort(1, failType);
+        updateFailure.setTimestamp(2, retryTime);
         updateFailure.setInt(3, pairId);
         updateFailure.executeUpdate();
     }
@@ -82,14 +113,13 @@ public class JDBCEventChannelRetry extends SodJDBC{
     }
 
     private void insert(int pairId) throws SQLException {
-        insertFailure.setInt(1, pairId);
-        insertFailure.setInt(2, 0);
-        insertFailure.executeUpdate();
+        insert.setInt(1, pairId);
+        insert.setInt(2, 0);
+        insert.executeUpdate();
     }
 
     private boolean tableContains(int pairId) throws SQLException {
-        if(getNumFailure(pairId) == -1)return false;
-        return true;
+        return getNumFailure(pairId) != -1;
     }
 
     public static void setBaseDelay(TimeInterval base){
@@ -97,6 +127,11 @@ public class JDBCEventChannelRetry extends SodJDBC{
     }
 
     public static void setMaxDelay(TimeInterval delay){ MAX_DELAY = delay; }
+
+    public static Status[] SERVER_FAIL_STATUS = {
+        Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
+            Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
+            Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE) };
 
     private static long BASE_DELAY =  84375;//this * 2^10 = 86400000, or the number of millis in a day
     private static TimeInterval MAX_DELAY = new TimeInterval(1, UnitImpl.DAY);
