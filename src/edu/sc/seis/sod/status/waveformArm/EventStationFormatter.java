@@ -100,15 +100,6 @@ public class EventStationFormatter extends StationFormatter{
     private static JDBCStation stationTable;
     private static PreparedStatement retry, failed, success;
 
-    private static String getStatusRequest(Status[] statii){
-        String request = "( status = " + statii[0].getAsShort();
-        for (int i = 1; i < statii.length; i++) {
-            request += " OR status = " + statii[i].getAsShort();
-        }
-        request += ")";
-        return request;
-    }
-
     static{
         try {
             stationTable = new JDBCStation();
@@ -117,26 +108,12 @@ public class EventStationFormatter extends StationFormatter{
                 "eventid = ? AND " +
                 "eventchannelstatus.channelid = channel.chan_id AND " +
                 "channel.site_id = site.site_id AND site.sta_id = ?";
-            success = evStatus.prepareStatement(baseStatement + " AND status = " + Status.get(Stage.PROCESSOR,
-                                                                                              Standing.SUCCESS).getAsShort());
-            Status[] failedStatus = new Status[]{Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.REJECT),
-                    Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE),
-                    Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.REJECT),
-                    Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.SYSTEM_FAILURE),
-                    Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT),
-                    Status.get(Stage.REQUEST_SUBSETTER, Standing.SYSTEM_FAILURE),
-                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
-                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
-                    Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
-                    Status.get(Stage.DATA_SUBSETTER, Standing.REJECT),
-                    Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE)};
-            failed = evStatus.prepareStatement(baseStatement + " AND " + getStatusRequest(failedStatus));
-            Status[] retryStatus = new Status[]{
-                Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY),
-                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
-                    Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
-                    Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE)};
-            retry = evStatus.prepareStatement(baseStatement + " AND " + getStatusRequest(retryStatus));
+            int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+            success = evStatus.prepareStatement(baseStatement + " AND status = " + pass);
+            String failReq = JDBCEventChannelStatus.getFailedStatusRequest();
+            failed = evStatus.prepareStatement(baseStatement + " AND " + failReq);
+            String retryReq = JDBCEventChannelStatus.getRetryStatusRequest();
+            retry = evStatus.prepareStatement(baseStatement + " AND " + retryReq);
         } catch (SQLException e) {
             GlobalExceptionHandler.handle(e);
         }

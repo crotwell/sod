@@ -205,16 +205,15 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return getAll(eventTable.getDBId(ev));
     }
 
-    public int getNum(EventAccessOperations ev, Status status) throws NotFound, SQLException {
+    public int getNum(PreparedStatement stmt, EventAccessOperations ev) throws NotFound, SQLException {
         int evId = eventTable.getDBId(ev);
-        eventsOfStatus.setInt(1, status.getAsShort());
-        eventsOfStatus.setInt(2, evId);
+        stmt.setInt(1, evId);
         try {
-            ResultSet rs = eventsOfStatus.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
-            throw new RuntimeException("RUNNING THE SQL " + eventsOfStatus.toString(), e);
+            throw new RuntimeException("RUNNING THE SQL " + stmt.toString(), e);
         }
     }
 
@@ -338,7 +337,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
             pairs.add(new Integer(pairId));
             if (processingRule.equals(RunProperties.AT_LEAST_ONCE)){
                 setStatus(pairId, Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                            Standing.INIT));
+                                             Standing.INIT));
             }
             else{
                 try {
@@ -366,6 +365,42 @@ public class JDBCEventChannelStatus extends SodJDBC{
     private JDBCEventAccess eventTable;
     private JDBCChannel chanTable;
     private Connection conn;
+
+    public static String getRetryStatusRequest(){
+        return getStatusRequest(RETRY_STATUS);
+    }
+
+    public static String getFailedStatusRequest(){
+        return getStatusRequest(FAILED_STATUS);
+    }
+
+    public static String getStatusRequest(Status[] statii){
+        String request = "( status = " + statii[0].getAsShort();
+        for (int i = 1; i < statii.length; i++) {
+            request += " OR status = " + statii[i].getAsShort();
+        }
+        request += ")";
+        return request;
+    }
+
+    public static final Status[] FAILED_STATUS = new Status[]{
+        Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.REJECT),
+            Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.REJECT),
+            Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT),
+            Status.get(Stage.REQUEST_SUBSETTER, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
+            Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+            Status.get(Stage.DATA_SUBSETTER, Standing.REJECT),
+            Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE)};
+
+    public static final Status[] RETRY_STATUS = new Status[]{
+        Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.RETRY),
+            Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
+            Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
+            Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE)};
 }
 
 

@@ -18,6 +18,7 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -123,39 +124,38 @@ public class EventFormatter extends Template implements EventTemplate{
     private class EventChannelQuery implements EventTemplate{
         public EventChannelQuery(String standing) throws NoSuchFieldException{
             Standing s = Standing.getForName(standing);
-            if(s.equals(Standing.SUCCESS)){
-                statii.add(Status.get(Stage.PROCESSOR, s));
-            }else if(s.equals(Standing.REJECT)){
-                statii.add(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, s));
-                statii.add(Status.get(Stage.EVENT_STATION_SUBSETTER, s));
-                statii.add(Status.get(Stage.REQUEST_SUBSETTER, s));
-            }else if(s.equals(Standing.RETRY)){
-                statii.add(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
-                statii.add(Status.get(Stage.DATA_SUBSETTER, s));
-            }
+            if(s.equals(Standing.SUCCESS)){ stmt = success; }
+            else if(s.equals(Standing.REJECT)){ stmt = failed; }
+            else if(s.equals(Standing.RETRY)){ stmt = retry; }
         }
 
         public String getResult(EventAccessOperations ev) {
             int count = 0;
-            synchronized(statusTable){
-                Iterator it = statii.iterator();
-                while(it.hasNext()){
-                    try {
-                        count += statusTable.getNum(ev, (Status)it.next());
-                    } catch (Exception e) { GlobalExceptionHandler.handle(e); }
-                }
+            synchronized(evStatus){
+                try {
+                    count = evStatus.getNum(stmt, ev);
+                } catch (Exception e) { GlobalExceptionHandler.handle(e); }
             }
             return "" + count;
         }
 
-        private List statii = new ArrayList();
+        private PreparedStatement stmt;
     }
 
-    private static JDBCEventChannelStatus statusTable;
+    private static JDBCEventChannelStatus evStatus;
+    private static PreparedStatement retry, failed, success;
 
     static{
         try {
-            statusTable = new JDBCEventChannelStatus();
+            evStatus = new JDBCEventChannelStatus();
+            String baseStatement = "SELECT COUNT(*) FROM eventchannelstatus WHERE " +
+                "eventid = ?";
+            int pass = Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort();
+            success = evStatus.prepareStatement(baseStatement + " AND status = " + pass);
+            String failReq = JDBCEventChannelStatus.getFailedStatusRequest();
+            failed = evStatus.prepareStatement(baseStatement + " AND " + failReq);
+            String retryReq = JDBCEventChannelStatus.getRetryStatusRequest();
+            retry = evStatus.prepareStatement(baseStatement + " AND " + retryReq);
         } catch (SQLException e) {
             GlobalExceptionHandler.handle(e);
         }
