@@ -99,8 +99,8 @@ $fissures.formatMagnitude($m),
 #set ( $count = 0)
 #foreach ($chanId in $allChanIds)
 #set ( $chanContext = $sod_cookieJar.get($chanId) )
-#set ( $flagData_P = $sod_cookieJar.get("SeismogramImageProcess_flagPixels_P"))
-#set ( $flagData_S = $sod_cookieJar.get("SeismogramImageProcess_flagPixels_S"))
+#set ( $flagData_P = $sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_P"))
+#set ( $flagData_S = $sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_S"))
 #set ( $channel = $chanContext.get("sod_channel") )
 <tr>
 <td><b>$fissures.formatChannel($channel.get_id())</b><br/>
