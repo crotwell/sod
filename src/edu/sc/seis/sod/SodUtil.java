@@ -6,7 +6,6 @@ import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.UnitRangeImpl;
-import edu.sc.seis.sod.SodUtil;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
