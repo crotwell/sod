@@ -48,8 +48,11 @@ public abstract class Template{
     private void parse(NodeList nl) throws ConfigurationException {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeType() == Node.TEXT_NODE) addString(n.getNodeValue());
-            else{
+            if(n.getNodeType() == Node.TEXT_NODE) {
+                addString(n.getNodeValue());
+            } else if (n.getNodeType() == Node.COMMENT_NODE) {
+                // skip it
+            } else{
                 String name = n.getNodeName();
                 if(name.equals("attribute")) continue;
                 Object template = getTemplate(name, (Element)n);
