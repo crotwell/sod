@@ -69,7 +69,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         }else if(tag.equals("sacDataWritten")){
             return new SacDataWrittenTemplate();
         }else if(tag.equals("lastEvent")){
-            return new LastEventTemplate();
+            return new LastEventTemplate(el);
         }else if(tag.equals("numSuccessfulECP")){
             try {
                 return new NumSuccessfulECPTemplate();
