@@ -156,6 +156,7 @@ public class Start{
 
     public void start() throws Exception {
         startTime = ClockUtil.now();
+        UpdateChecker check = new UpdateChecker(false);
         handleStartupRunProperties();
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();

@@ -8,6 +8,7 @@ package edu.sc.seis.sod.editor;
 
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.UpdateChecker;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +29,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
     public SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
 
+        UpdateChecker check = new UpdateChecker(true);
 
         frameName = "SOD Editor";
         setTabbed(true);
