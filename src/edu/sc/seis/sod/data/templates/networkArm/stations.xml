@@ -10,7 +10,10 @@
 <script type="text/javascript" src="../../sorttable.js"> </script>
 <script type="text/javascript" src="../../tableRuler.js"> </script>
 <script type="text/javascript">
-        window.onload=function(){tableruler();}
+window.onload=function(){
+        tableruler();
+        set_img_dir('../../images/')
+}
 </script>
 </head>
 <body>
