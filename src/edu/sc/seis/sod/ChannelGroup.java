@@ -64,10 +64,10 @@ public class ChannelGroup {
 			allRules[j] = additionalRules[j];
 		}
 		if(defaultRules != null) {
-		for(int k=additionalRules.length;k<ruleCount;k++) {
-			allRules[k] = defaultRules[k-additionalRules.length];
+			for(int k=additionalRules.length;k<ruleCount;k++) {
+				allRules[k] = defaultRules[k-additionalRules.length];
+			}
 		}
-	}
 		return applyRules(channels,allRules,failures);
 	}
 	private static ChannelGroup[] applyRules(Channel[] channels, Element[] rules,List failures){
@@ -257,8 +257,7 @@ public class ChannelGroup {
 			Validator.setSchemaLoc(grouperSchemaLoc);
 			if(!Validator.validate(Start.createInputSource((ChannelGroup.class).getClassLoader(),configFileName))){
 				logger.info("Invalid config file!");
-				System.err.println();
-				System.err.println("Invalid config file! ");
+				throw new SAXException("Invalid config file");
 			}else{
 				Document doc = Start.createDoc(Start.createInputSource((ChannelGroup.class).getClassLoader(),configFileName));
 				NodeList rules = doc.getElementsByTagName("rule");
