@@ -19,9 +19,6 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.JDBCLocation;
-import edu.sc.seis.fissuresUtil.database.JDBCQuantity;
-import edu.sc.seis.fissuresUtil.database.JDBCTime;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.network.JDBCNetwork;
@@ -32,18 +29,15 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 
 public class JDBCNetworkUnifier{
-    public JDBCNetworkUnifier() throws SQLException{
+    public JDBCNetworkUnifier() throws SQLException {
         this(ConnMgr.createConnection());
     }
 
     public JDBCNetworkUnifier(Connection conn) throws SQLException{
-        JDBCTime timeDb = new JDBCTime();
-        this.netDb = new JDBCNetwork(conn, timeDb);
-        JDBCQuantity quantDb = new JDBCQuantity(conn);
-        JDBCLocation locDb = new JDBCLocation(conn, quantDb);
-        this.stationDb = new JDBCStation(conn, locDb, netDb, timeDb);
-        this.siteDb = new JDBCSite(conn, locDb, stationDb, timeDb);
-        this.chanDb = new JDBCChannel(conn, quantDb, siteDb, timeDb);
+        this.chanDb = new JDBCChannel(conn);
+        this.netDb = chanDb.getNetworkTable();
+        this.stationDb = chanDb.getStationTable();
+        this.siteDb = chanDb.getSiteTable();
     }
 
     public ChannelDbObject getChannel(int chanDbId) throws NotFound, SQLException{
