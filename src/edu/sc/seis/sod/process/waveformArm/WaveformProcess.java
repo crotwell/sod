@@ -5,7 +5,6 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 /**
  * LocalSeismogramProcess.java
  *
