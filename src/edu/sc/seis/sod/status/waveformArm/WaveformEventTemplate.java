@@ -3,12 +3,14 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,36 +28,49 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
         super(baseDir, outputLocation);
         this.event = event;
         parse(el);
-        if(Start.getWaveformArm() != null) Start.getWaveformArm().addStatusMonitor(this);
+        if(Start.getWaveformArm() != null) {
+            Start.getWaveformArm().addStatusMonitor(this);
+        }
         write();
     }
 
     public void update(EventChannelPair ecp){
         if(ecp.getEvent().equals(event)){
-            Iterator it = waveformStatusListeners.iterator();
-            while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
-            it = channelListeners.iterator();
-            while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(), ecp.getStatus());
+            if(map != null){
+                map.add(ecp.getEvent(), getOutputDirectory() + "/map.png");
+            }
+            Iterator it = channelListeners.iterator();
+            while(it.hasNext()){
+                ((StationGroupTemplate)it.next()).change(ecp.getChannel().my_site.my_station, ecp.getStatus());
+            }
             write();
         }
     }
 
     protected Object getTemplate(String tag, Element el) throws ConfigurationException {
-        if(tag.equals("channels")) {
-            ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
+        if(tag.equals("stations")) {
+            StationGroupTemplate cgt = new StationGroupTemplate(el);
             channelListeners.add(cgt);
             return cgt;
-        }
-        if(tag.equals("map")){
-            MapWaveformStatus map = new MapWaveformStatus(getOutputDirectory() + "/map.png", pool);
-            map.add(event);
-            waveformStatusListeners.add(map);
-            map.write();
-            return new GenericTemplate(){
-                public String getResult() { return "map.png";}
-            };
-        }
-        if(tag.equals("event")){  return new EventTemplate(el); }
+        }else if(tag.equals("map")){
+            try {
+                synchronized(getClass()){
+                    if(map == null){ map = new MapWaveformStatus(pool); }
+                }
+                map.add(event, getOutputDirectory() + "/map.png");
+                return new GenericTemplate(){
+                    public String getResult() { return "map.png";}
+                };
+            } catch (SQLException e) {
+                GlobalExceptionHandler.handle("Trouble connecting to the event channel status db to create the waveform event channel status map",
+                                              e);
+                return new GenericTemplate(){
+                    public String getResult() {
+                        return "Trouble connecting to the event channel status db to create the map";
+                    }
+                };
+            }
+        }else if(tag.equals("event")){  return new EventTemplate(el); }
         return super.getTemplate(tag, el);
     }
 
@@ -73,9 +88,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
 
     private static MapPool pool = new MapPool(2, new DefaultEventColorizer());
 
-    private List waveformStatusListeners = new ArrayList();
+    private static MapWaveformStatus map;
 
     private List channelListeners = new ArrayList();
 }
-
-
