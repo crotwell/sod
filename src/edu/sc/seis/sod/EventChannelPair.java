@@ -70,7 +70,7 @@ public class EventChannelPair{
 
     public Channel getChannel() { return chan.getChannel(); }
 
-    public CacheEvent getEvent(){ return event.getGetEvent(); }
+    public CacheEvent getEvent(){ return event.getEvent(); }
 
     public NetworkAccess getNet(){ return net.getNetworkAccess(); }
 
