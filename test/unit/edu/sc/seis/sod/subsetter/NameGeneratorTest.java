@@ -86,13 +86,20 @@ public class NameGeneratorTest extends TestCase{
     
     public void testDefaultName(){
         NameGenerator gen = new NameGenerator();
-        assertEquals("CENTRAL ALASKA 19700101T00:00:00.000Z",
+        assertEquals("CENTRAL ALASKA19700101T00:00:00.000",
                      gen.getName(epochInAlaska));
-        assertEquals("GERMANY 19900613T12:00:00.000Z", gen.getName(fallOfWall));
+        assertEquals("GERMANY19900613T12:00:00.000", gen.getName(fallOfWall));
     }
     
     public void testFilize(){
         assertEquals("_test_____", NameGenerator.filize("\t\n test \t\n:/  "));
+    }
+    
+    public void testComplicatedMarkup(){
+        try {
+            NameGenerator gen = new NameGenerator(XMLConfigUtil.parse(complicatedMarkup));
+            assertEquals(complicatedResults, gen.getName(fallOfWall));
+        } catch (IOException e) {} catch (ParserConfigurationException e) {} catch (SAXException e) {}
     }
     
     private static Element createElement(String innards){
@@ -103,18 +110,35 @@ public class NameGeneratorTest extends TestCase{
     }
     
     private static String encase(String innards){
-        return "<eventDirLabel>\n"+innards+"</eventDirLabel>";
+        return "<eventDirLabel>"+innards+"</eventDirLabel>";
     }
+    
+    private String complicatedMarkup =
+        "<eventLabel>    <tr>\n" +
+        "        <td><feRegionName/></td>\n" +
+        "        <td><originTime>yyyyMMdd HH:mm:ss</originTime></td>\n" +
+        "        <td><magnitude/></td>\n" +
+        "        <td><depth/></td>\n" +
+        "    </tr>\n" +
+        "</eventLabel>";
+    
+    private String complicatedResults =
+        "    <tr>\n" +
+        "        <td>GERMANY</td>\n" +
+        "        <td>19900613 12:00:00</td>\n" +
+        "        <td>5</td>\n" +
+        "        <td>10</td>\n" +
+        "    </tr>\n";
     
     private EventAccessOperations epochInAlaska, fallOfWall;
     
-    private String mag = "<magnitude/>\n";
+    private String mag = "<magnitude/>";
     
-    private String depth = "<depth/>\n";
+    private String depth = "<depth/>";
     
-    private String defaultTime = "<originTime>yyyy_DDD_HH_mm_ss</originTime>\n";
+    private String defaultTime = "<originTime>yyyy_DDD_HH_mm_ss</originTime>";
     
-    private String fancyTime = "<originTime>GyyyyDHHmmssSSSa</originTime>\n";
+    private String fancyTime = "<originTime>GyyyyDHHmmssSSSa</originTime>";
     
     private String regionName = "<feRegionName/>";
     
