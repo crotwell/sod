@@ -26,13 +26,13 @@ and new information. Also, please send comments, criticism, complements and
 changes to sod at seis.sc.edu.
 </para>
 <para>
-On to the tutorial! First, you will need to get and install sod. 
+On to the tutorial! First, you will need to get and install sod.
 !!!ADD INSTRUCTIONS!!!
 </para>
 </chapter>
 <chapter><title>The Configuration File</title>
 <para>
-Sod gets all of the configuration information from a xml configuration file. 
+Sod gets all of the configuration information from a xml configuration file.
 So, in order to use sod, you need to create or modify on. For this example,
 we will get all data from long period channels from all magnitude 6 or larger
 earthquakes in January of 2003. We will use the Iris-Ida network, code II,
@@ -41,7 +41,7 @@ and pick some stations that have a distance of 30 to 60 degrees from the event.
 </para>
 <para>
 The main structure of our xml file will look like this. We will fill in
-each section with the details later. 
+each section with the details later.
 </para>
 <programlisting>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -58,12 +58,12 @@ each section with the details later.
 &lt;/sod&gt;
 </programlisting>
 <para>
-There are several very important items here, and so you should make sure that 
-these are correct. The &lt;?xml&gt; line is not really part of the sod 
+There are several very important items here, and so you should make sure that
+these are correct. The &lt;?xml&gt; line is not really part of the sod
 configuration proper, but does signify that this is an xml file the version
 of the xml specification that is used. The &lt;sod&gt; tag surrounds the sod configuration items
-and should be the first tag. The  attribute of the &lt;sod&gt; tag: 
-xmlns:xlink, allows the xml parser to recognize xlinks that are used by several 
+and should be the first tag. The  attribute of the &lt;sod&gt; tag:
+xmlns:xlink, allows the xml parser to recognize xlinks that are used by several
 tags. Understanding how these work is not really
 important, but having it in your configuration file is very important. Sod
 may refuse to run if they are not there or wrong.
@@ -71,12 +71,12 @@ may refuse to run if they are not there or wrong.
 <para>
 The next section is the properties section. This is actually optional, but
 useful configuration items can be set here. Probably the two most important are
-the edu.sc.seis.sod.database.getNewEvents property and the 
-edu.sc.seis.sod.databasename property. The first controls whether or not sod 
+the edu.sc.seis.sod.database.getNewEvents property and the
+edu.sc.seis.sod.databasename property. The first controls whether or not sod
 goes back to look for new events periodically or not. If you are looking for
 events that are recent, and they may not yet be in the server's database,
-then this should be set to true. On the other hand, if you are looking for 
-events from several years ago, there is no point in trying again, and so the 
+then this should be set to true. On the other hand, if you are looking for
+events from several years ago, there is no point in trying again, and so the
 value should be false. The databasename controls the name of the database,
 and with the default database, this will be a file on disk. If you have more
 than one sod running in a single directory, you will need to change this.
@@ -133,20 +133,20 @@ magnitude to be at least 6. Here is the eventFinder section to accomplish this.
 &lt;/eventFinder&gt;
 </programlisting>
 <para>
-You will notice that there are quite a lot of extra items here that aren't 
+You will notice that there are quite a lot of extra items here that aren't
 directly related to our query. They will not eliminate any events, and will
 make it easier to modify later. The basics are that we are connecting to the
 IRIS_EventDC server, which is registered under the edu/iris/dmc domain. We are
-asking for events with January 2003, with a magnitude of 6 or greater, 
+asking for events with January 2003, with a magnitude of 6 or greater,
 anywhere in the world. One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is no way
 to automatically group these related origins into a single event based on
 the information that the DMC has, these origins each appear in separate events.
-So, it is usually wise to pick a particular catalog to avoid duplicate 
+So, it is usually wise to pick a particular catalog to avoid duplicate
 processing.
 </para>
 <para>
-Now that we have our events locally, we could do some subsetting based on the 
+Now that we have our events locally, we could do some subsetting based on the
 origin, but we will assume all of these events are fine. Just to make running
 sod a little more interesting, we will add an event processor. This one just
 prints out a line every time an event arrives. This finishes the event arm.
@@ -177,7 +177,7 @@ within the II network.
 Here we connect to the IRIS_NetworkDC server within the edu/iris/dmc domain.
 We will also go back and look for new channels every 3000 minutes. In our
 current example this will not matter, because the entire run will complete in
-a shorter time. However, for a longer running instance of Sod, and in 
+a shorter time. However, for a longer running instance of Sod, and in
 particular for stations within USArray, there may very well be new stations
 that come online during a sod run.
 </para>
@@ -190,7 +190,7 @@ select just the II network.
 </programlisting>
 <para>
 If we wished to select more than one network, we could have wrapped several
-networkCode elements within a networkOR to allow them to all match. care 
+networkCode elements within a networkOR to allow them to all match. care
 should be taken as you may say "I want II and IU networks" and be tempted to
 use a networkAND, but sod needs to be told "the network code can be II or IU"
 and so networkOR is correct. It is
@@ -234,7 +234,7 @@ both a logical site id subsetter as well as a site subsetter.
 </programlisting>
 <para>
 Finally, we will actually select channels. At this point we can eliminate all
-but the long period channels. We also include an effective time overlap to 
+but the long period channels. We also include an effective time overlap to
 lessen the amount of data that must be processed. Lastly, we will use a
 printlineChannelProcessor to print out the name of each successful channel.
 </para>
@@ -269,26 +269,16 @@ event to station distance to be between 30 and 60 degrees.
 </programlisting>
 <para>
 At this point we open the local seismogram arm, which processes on a channel by
-channel basis. A future version of sod will allow a motion vector arm, which 
-will allow the processing to act on the three components simultaneously. 
-We also choose the particular data center that we wish to get data from, the 
-IRIS_PondDataCenter which is again in the edu/iris/dmc domain. 
-</para>
-<programlisting>
-    &lt;localSeismogramArm&gt;
+channel basis. SOD also allows a motion vector arm, which
+will allow the processing to act on the three components simultaneously.
 
-    &lt;fixedDataCenter&gt;
-      &lt;name&gt;IRIS_PondDataCenter&lt;/name&gt;
-      &lt;dns&gt;edu/iris/dmc&lt;/dns&gt;
-    &lt;/fixedDataCenter&gt;
-</programlisting>
 <para>
-The missing item at this point is the time window to ask for data. The usual 
-method is to use predicted phase arrival times to calculate the request. This 
-uses the TauP Toolkit to calculate the times, and so any model and phase from 
+The missing item at this point is the time window to ask for data. The usual
+method is to use predicted phase arrival times to calculate the request. This
+uses the TauP Toolkit to calculate the times, and so any model and phase from
 it is acceptable. See the <ulink url="http://www.seis.sc.edu/software/TauP"/>
  for more information. We will use
-1 minute before the first P arrival to 20 minutes after the first S arrival 
+1 minute before the first P arrival to 20 minutes after the first S arrival
 within the prem model.
 </para>
 <programlisting>
@@ -306,8 +296,21 @@ within the prem model.
       &lt;/endOffset&gt;
     &lt;/phaseRequest&gt;
 </programlisting>
+</para>
 <para>
-The available data subsetter allows checking on the availability of data before
+We then choose the particular data center that we wish to get data from, the
+IRIS_PondDataCenter which is again in the edu/iris/dmc domain.
+</para>
+<programlisting>
+    &lt;localSeismogramArm&gt;
+
+    &lt;fixedDataCenter&gt;
+      &lt;name&gt;IRIS_PondDataCenter&lt;/name&gt;
+      &lt;dns&gt;edu/iris/dmc&lt;/dns&gt;
+    &lt;/fixedDataCenter&gt;
+</programlisting>
+<para>
+Next the available data subsetter allows checking on the availability of data before
 asking for the actual data. In this case, we will simply say that some data
 must exist by using the someCoverage element.
 </para>
@@ -325,8 +328,8 @@ usually for small time window this does not happen.
 <para>
 The SacFileProcessor allows you to customize the directory naming structure.
 First, the dataDirectory element gives the parent directory into which sod
-will build the actual event directories. Sod will create this directory if it 
-does not exist. Next, the eventDirLabel creates the name of each event's 
+will build the actual event directories. Sod will create this directory if it
+does not exist. Next, the eventDirLabel creates the name of each event's
 subdirectory. We will name the directories with Event_ followed by the time
 of the event as year_Jday_hour_minute_second. All that remains is to close the
 local seismogram arm, waveform arm, and sod tags.
