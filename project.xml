@@ -338,6 +338,7 @@
                     <include>legacyVectorExecute.xml</include>
                     <include>realtime.xml</include>
                     <include>breqfast.xml</include>
+                    <include>passcal_breqfast.xml</include>
                     <include>vector.xml</include>
                 </includes>
             </resource>
