@@ -7,8 +7,15 @@
 
 package edu.sc.seis.sod.database.network;
 
-import edu.iris.Fissures.IfNetwork.*;
-
+import java.sql.Connection;
+import java.sql.SQLException;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -23,8 +30,6 @@ import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class JDBCNetworkUnifier{
     public JDBCNetworkUnifier() throws SQLException{
