@@ -18,7 +18,7 @@ import java.io.*;
      * A example config Element is:<br>
      * <pre>
      * &lt;SacFileProcessor>
-     *    &lt;datadir>research/sodtest/data&lt;/datadir>
+     *    &lt;dataDirectory>research/sodtest/data&lt;/dataDirectory>
      * &lt;/SacFileProcessor>
      * </pre>
  *
@@ -40,7 +40,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	this.config = config;
 	regions = new ParseRegions();
 	String datadirName = 
-	    SodUtil.getText(SodUtil.getElement(config, "datadir"));
+	    SodUtil.getText(SodUtil.getElement(config, "dataDirectory"));
 	this.dataDirectory = new File(datadirName);
     }
 
