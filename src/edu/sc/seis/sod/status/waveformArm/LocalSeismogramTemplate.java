@@ -39,7 +39,7 @@ public class LocalSeismogramTemplate extends Template{
         synchronized(toBeRendered){
             if (!toBeRendered.containsKey(loc)){
                 toBeRendered.put(loc, cj);
-                writer.actIfPeriodElapsed();
+                OutputScheduler.DEFAULT.schedule(writer);
             }
         }
     }
@@ -50,8 +50,8 @@ public class LocalSeismogramTemplate extends Template{
         };
     }
 
-    public class Writer extends PeriodicAction{
-        public void act() {
+    public class Writer implements Runnable{
+        public void run() {
             CookieJar[] jars = new CookieJar[0];
             String[] fileLocs = new String[0];
             synchronized(toBeRendered){
