@@ -21,7 +21,7 @@ public class PostgresDbManager extends AbstractDatabaseManager{
     public ConfigDatabase getConfigDatabase() {
 	//return new EventConfigDb();
 	if(eventConfigDb == null) {
-	    eventConfigDb = new PostgresConfigDatabase(getConnection());
+	    eventConfigDb = new PostgresConfigDatabase(getConnection(), "notused");
 	}
 	return eventConfigDb;
     }

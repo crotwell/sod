@@ -20,7 +20,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
      public ConfigDatabase getConfigDatabase() {
 	//return new EventConfigDb();
 	if(eventConfigDb == null) {
-	    eventConfigDb = new HSqlConfigDatabase(getConnection());
+	    eventConfigDb = new HSqlConfigDatabase(getConnection(), "notused");
 	}
 	return eventConfigDb;
     }
