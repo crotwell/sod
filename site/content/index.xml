@@ -5,17 +5,35 @@
         </properties>
         <body>
                 <section name="About SOD">
-                        <p class="about">SOD (Standing Order for Data) automates the most tedious
-                                data selection, downloading and routine processing tasks, shortening
-                                the time between idea and science. Yes, this information is a little skimpy.</p>
+                        <p class="about">SOD (Standing Order for Data) automates tedious data
+                                selection, downloading and routine processing tasks in seismology
+                                shortening the time between idea and science. </p>
+                        <p class="about">Users first configure SOD with various subsetters that
+                                narrow down the torrent of seismic data available. For example,
+                                SOD's event arm allows the user to specify where events occur, how
+                                large they are, who reported them, and then to build event more
+                                complex and precise expressions using logical AND, OR, and NOT
+                                combinations of any of the smaller pieces. This same subsetting
+                                process is done for seismic networks in the network arm. The
+                                combination of the events that have passed through the event arm and
+                                the channels that have been selected by the network arm are then run
+                                through the waveform arm. This arm allows the user to specify more
+                                subsetting that only makes sense with an event-channel pairing like
+                                how far the earthquake is away from a station, the back azimuth, and
+                                even the amount of data that various servers have for the pairing.
+                                Naturally, each of these pieces can be combined in logical
+                                operations like the event and network arms. After all of this
+                                subsetting has whittled the data down to the interesting stuff, the
+                                waveform processors perform various transformations on the data in
+                                sequence. So several processors can be stacked up to filter the
+                                data, remove the mean, and any other conceivable action. </p>
                 </section>
                 <section name="News">
                         <table id="entry">
-                                <th>10 May 2004</th>
+                                <th>13 May 2004</th>
                                 <tr>
                                         <td>
-                                                <p>This is a test of the "entry" thingy. Do not be
-                                                  alarmed by the weirdness that shall ensue.</p>
+                                                <p>The first beta of SOD 2.0 is available <a href="download.html">here.</a>  More beta releases should follow in the coming weeks.</p>
                                         </td>
                                 </tr>
                         </table>
