@@ -5,6 +5,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCStatus;
+import edu.sc.seis.sod.database.JDBCVersion;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.validator.Validator;
@@ -172,6 +173,7 @@ public class Start{
     public void start() throws Exception {
         startTime = ClockUtil.now();
         UpdateChecker check = new UpdateChecker(false);
+        checkDBVersion();
         handleStartupRunProperties();
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
@@ -215,6 +217,25 @@ public class Start{
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle("Trouble restarting completed events", e);
             }
+        }
+    }
+
+    private void checkDBVersion(){
+        try {
+            JDBCVersion dbVersion = new JDBCVersion();
+            if (!dbVersion.getDBVersion().equals(Version.getVersion())){
+                System.err.println("SOD version: " + Version.getVersion());
+                System.err.println("Database version: " + dbVersion.getDBVersion());
+                System.err.println("Your database was created with an older version "
+                                       + "of SOD.");
+                if (Version.hasSchemaChangedSince(dbVersion.getDBVersion())){
+                    System.err.println("There has been a change in the schema "
+                                           + "since the database was created!  "
+                                           + "Continuing this sod run is not advisable!!!");
+                }
+            }
+        } catch (Exception e) {
+            GlobalExceptionHandler.handle("Trouble checking database version", e);
         }
     }
 
