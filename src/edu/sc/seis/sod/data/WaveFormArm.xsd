@@ -18,6 +18,20 @@
     
     <!-- ABSTRACT TYPE EVENT STATION-->
     <xsd:complexType name="eventStationType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all EventStation subsetters.
+            </summary>
+            <description>
+                This is a place holder for EventStation subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -25,6 +39,20 @@
     
     <!-- ABSTRACT TYPE EVENT CHANNEL-->
     <xsd:complexType name="eventChannelType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all EventChannel subsetters.
+            </summary>
+            <description>
+                This is a place holder for EventChannel subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -32,6 +60,20 @@
     
     <!-- ABSTRACT TYPE REQUEST GENERATOR-->
     <xsd:complexType name="requestGeneratorType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all request generators.
+            </summary>
+            <description>
+                This is a place holder for request generators. See the
+                list of known subclasses for elements that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -39,6 +81,20 @@
     
     <!-- ABSTRACT TYPE AVAILABLE DATA-->
     <xsd:complexType name="availableDataType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all AvailableData subsetters.
+            </summary>
+            <description>
+                This is a place holder for AvailableData subsetters. See the
+                list of known subclasses for subsetters that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -53,6 +109,20 @@
     
     <!-- ABSTRACT TYPE DATA CENTER SOURCE -->
     <xsd:complexType name="dataCenterType" abstract="true">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Abstract superclass of all data centers.
+            </summary>
+            <description>
+                This is a place holder for DataCenters. See the
+                list of known subclasses for elements that can be used.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="sourceType"/>
         </xsd:complexContent>
@@ -64,6 +134,32 @@
     
     <!-- EVENT STATION AND TYPE -->
     <xsd:complexType name="eventStationANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventStation subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventStationAND>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -75,6 +171,32 @@
     
     <!-- EVENT STATION OR TYPE -->	
     <xsd:complexType name="eventStationORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventStation subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first true output are not evaluated. 
+                </description>
+                <example>
+                    <eventStationOR>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -86,6 +208,31 @@
     
     <!-- EVENT STATION XOR TYPE -->
     <xsd:complexType name="eventStationXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventStation subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included subsetters.
+                </description>
+                <example>
+                    <eventStationXOR>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -97,6 +244,27 @@
     
     <!-- EVENT STATION NOT TYPE -->
     <xsd:complexType name="eventStationNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventStation subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included subsetter.
+                </description>
+                <example>
+                    <eventStationNOT>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                    </eventStationNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
@@ -288,9 +456,69 @@
     </xsd:simpleType>
     
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
+      
+    <!-- EMBEDDED EVENT STATION TYPE -->	
+    <xsd:complexType name="embeddedEventStationType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
     
+    <!-- EMBEDDED CHANNEL TYPE -->
+    <xsd:complexType name="embeddedChannelType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="channel" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EMBEDDED CHANNELID TYPE -->
+    <xsd:complexType name="embeddedChannelIDType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelIDType">
+                <xsd:sequence>
+                    <xsd:element ref="channelID" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+  
     <!-- EVENT CHANNEL AND TYPE -->
     <xsd:complexType name="eventChannelANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventChannel subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventChannelAND>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -416,6 +644,32 @@
     
     <!-- AVAILABLE DATA AND TYPE -->
     <xsd:complexType name="availableDataANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventStation subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventStationAND>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="availableDataType">
                 <xsd:sequence>
@@ -493,6 +747,32 @@
     
     <!-- WAVE FORM AND TYPE -->
     <xsd:complexType name="waveFormANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventStation subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventStationAND>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        <backAzimuthRange>
+                           <min>30</min>
+                           <max>45</max>
+                        </backAzimuthRange>
+                    </eventStationAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="waveFormType">
                 <xsd:sequence>
@@ -660,6 +940,8 @@
     
     <!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
     <xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
+    <xsd:element name="embeddedEventStation" type="embeddedEventStationType" substitutionGroup="eventChannel"/>
+    <xsd:element name="embeddedChannel" type="embeddedChannelType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelAND" type="eventChannelANDType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelXOR" type="eventChannelXORType" substitutionGroup="eventChannel"/>
