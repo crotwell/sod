@@ -186,58 +186,98 @@
 			<xsd:enumeration value="UPGOING P TO S CONVERSION"/>	
 			<xsd:enumeration value="DOWNGOING S TO P CONVERSION"/>
 			<xsd:enumeration value="DOWNGOING P TO S CONVERSION"/>
+			<xsd:enumeration value="PATH"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<!-- EVENT STATION PHASE INTERACTION TYPE -->
-	<xsd:complexType name="phaseInteractionType">
+	<!-- ABSTRACT TYPE PHASE TYPE -->
+	<xsd:complexType name="phaseAbstractType"  abstract="true">
 		<xsd:complexContent>
 			<xsd:extension base="eventStationType">
 				<xsd:sequence>
 					<xsd:element name="phaseName" type="xsd:string"/>
 					<xsd:element name="velocityModel" type="xsd:string"/>
-					<xsd:element name="interactionStyle" type="phaseTurnInteractionType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<!-- EVENT STATION PHASE EXISTS TYPE -->
+	<xsd:complexType name="phaseExistsType">
+		<xsd:complexContent>
+			<xsd:extension base="phaseAbstractType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	
+	<!-- EVENT STATION PHASE INTERACTION TYPE -->
+	<xsd:complexType name="phaseInteractionAbstractType"  abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="phaseAbstractType">
+				<xsd:sequence>
+					<xsd:element name="interactionStyle" type="phaseTurnInteractionType"/>	
+					<xsd:element name="interactionNumber" type="xsd:positiveInteger" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- EVENT STATION PHASE AREA INTERACTION TYPE -->
-	<xsd:complexType name="phaseAreaInteractionType">
-		<xsd:complexContent>
-			<xsd:extension base="phaseInteractionType">
-				<xsd:sequence>
-					<xsd:element ref="area"/>
-					<xsd:element name="depthRange">
-						<xsd:complexType>
-							<xsd:sequence>	
-								<xsd:element name="unitRange" type="unitRangeType"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
+	<!-- PHASE RELATIVE ABSOLUTE ABSTRACT TYPE -->
+	<xsd:complexType name="phaseRelativeAbsoluteAbstractType" abstract="true"/>
+		
 
-	<!-- EVENT STATION PHASE DISTANCE INTERACTION TYPE -->
-	<xsd:complexType name="phaseDistanceInteractionType">
+	<!-- PHASE RELATIVE TYPE -->
+	<xsd:complexType name="phaseInteractionRelativeType">
 		<xsd:complexContent>
-			<xsd:extension base="phaseInteractionType">
+			<xsd:extension base="phaseRelativeAbsoluteAbstractType">
 				<xsd:sequence>
-					<xsd:element name="depthRange">
-						<xsd:complexType>
-							<xsd:sequence>	
-								<xsd:element name="unitRange" type="unitRangeType"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element ref="distanceRange"/>
 					<xsd:element name="reference" type="phaseDistanceReferenceType"/>
+					<xsd:element ref="area" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="depthRange" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>	
+								<xsd:element name="unitRange" type="unitRangeType"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element ref="distanceRange" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>	
+	
+	<!-- EVENT STATION PHASE INTERACTION ABSOLUTE TYPE -->
+	<xsd:complexType name="phaseInteractionAbsoluteType">
+		<xsd:complexContent>
+			<xsd:extension base="phaseRelativeAbsoluteAbstractType">
+				<xsd:sequence>
+					<xsd:element ref="area" minOccurs="0"  maxOccurs="0"/>
+					<xsd:element name="depthRange" minOccurs="0" maxOccurs="0">
+						<xsd:complexType>
+							<xsd:sequence>	
+								<xsd:element name="unitRange" type="unitRangeType"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+
+	<!-- EVENT STATION PHASE INTERACTION TYPE -->
+	<xsd:complexType name="phaseInteractionType">
+		<xsd:complexContent>
+			<xsd:extension base="phaseInteractionAbstractType">
+				<xsd:sequence>
+					<xsd:element ref="phaseRelativeAbsolute" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	
+
 	
 	<!-- PHASE DISTANCE REFERENCE TYPE -->
 	<xsd:simpleType name="phaseDistanceReferenceType">
@@ -482,11 +522,15 @@
 	<xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
 	<xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
 	<xsd:element name="linearDistanceMagnitudeRange" type="linearDistanceMagnitudeRangeType" substitutionGroup="eventStation"/>
+
+	<xsd:element name="phaseRelativeAbsolute" type="phaseRelativeAbsoluteAbstractType" abstract="true"/>
+	<xsd:element name="relative" type="phaseInteractionRelativeType" substitutionGroup="phaseRelativeAbsolute"/>
+	<xsd:element name="absolute" type="phaseInteractionAbsoluteType" substitutionGroup="phaseRelativeAbsolute"/>
+	<xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
+	<xsd:element name="phaseExists" type="phaseExistsType" substitutionGroup="eventStation"/>
+
 	<xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
-	<xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
-	<xsd:element name="phaseAreaInteraction" type="phaseAreaInteractionType" substitutionGroup="eventStation"/>
-	<xsd:element name="phaseDistanceInteraction" type="phaseDistanceInteractionType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationXOR" type="eventStationXORType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationNOT" type="eventStationNOTType" substitutionGroup="eventStation"/>
 	
