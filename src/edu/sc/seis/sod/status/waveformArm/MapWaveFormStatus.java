@@ -17,7 +17,7 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.database.waveform.EventChannelCondition;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
 import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
@@ -61,17 +61,17 @@ public class MapWaveFormStatus extends PeriodicAction implements WaveFormStatus 
                 while(it.hasNext()){
                     Channel cur = (Channel)it.next();
                     sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
-                    EventChannelCondition status = (EventChannelCondition)channelMap.get(cur);
-                    if (status == EventChannelCondition.FAILURE ||
-                        status == EventChannelCondition.CORBA_FAILURE||
-                        status == EventChannelCondition.SUBSETTER_FAILED ||
-                        status == EventChannelCondition.NO_AVAILABLE_DATA){
+                    Status status = (Status)channelMap.get(cur);
+                    if (status.getType() == Status.REJECT||
+                        status.getType() == Status.CORBA_FAILURE||
+                        status.getType() == Status.SYSTEM_FAILURE){
                         sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                    cur.my_site.my_station,
                                                                                    AvailableStationDataEvent.DOWN));
                     }
-                    else if (status == EventChannelCondition.SUCCESS ||
-                             status == EventChannelCondition.SUBSETTER_PASSED){
+                    else if (status.getType() == Status.SPECIAL||
+                             status.getType() == Status.IN_PROG||
+                             status.getType() == Status.RETRY){
                         sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
                                                                                    cur.my_site.my_station,
                                                                                    AvailableStationDataEvent.UP));
@@ -119,7 +119,7 @@ public class MapWaveFormStatus extends PeriodicAction implements WaveFormStatus 
             write();
     }
 
-    public boolean add(Channel chan, EventChannelCondition status){
+    public boolean add(Channel chan, Status status){
         synchronized(channelMap){
             if(channelMap.put(chan, status) != status) return true;
         }
@@ -136,7 +136,7 @@ public class MapWaveFormStatus extends PeriodicAction implements WaveFormStatus 
 
     public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
 
-    public EventChannelCondition getStatus(Channel chan){ return (EventChannelCondition)channelMap.get(chan);}
+    public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
 
     public boolean contains(EventAccessOperations ev) {
         return events.contains(ev);
