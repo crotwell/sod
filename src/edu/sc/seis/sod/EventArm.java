@@ -32,12 +32,6 @@ import org.w3c.dom.NodeList;
  */
 
 public class EventArm extends SodExceptionSource implements Runnable{
-    /**
-     * Creates a new <code>EventArm</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public EventArm (Element config, SodExceptionListener sodExceptionListener, Properties props) throws ConfigurationException {
         if ( ! config.getTagName().equals("eventArm")) {
             throw new IllegalArgumentException("Configuration element must be a EventArm tag");
@@ -62,10 +56,6 @@ public class EventArm extends SodExceptionSource implements Runnable{
         logger.debug("Event arm finished");
     }
     
-    /**
-     * This method processes the eventArm configuration
-     *
-     */
     private void processConfig(Element config)
         throws ConfigurationException {
         Start.getEventQueue().setSourceAlive(true);
@@ -108,7 +98,6 @@ public class EventArm extends SodExceptionSource implements Runnable{
         logger.info("Event Finder query is being used");
         logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getMSTR());
         Querier querier = new Querier();
-        System.out.println("created querier");
         boolean done = false;
         while(!done){
             String source = eventFinderSubsetter.getSourceName();
@@ -124,8 +113,13 @@ public class EventArm extends SodExceptionSource implements Runnable{
                 Start.getEventQueue().waitForProcessing();
             }
             TimeInterval queryLength = queryEnd.subtract(queryStart);
-            if(queryLength.lessThan(getIncrement()) && passivateEventArm(reqTimeRange.getEndMSD())){
-                done = true;
+            if(queryLength.lessThan(getIncrement())){
+                if(shouldQuit()){
+                    done = true;
+                }else{
+                    waitTillRefreshNeeded();
+                    Start.getEventQueue().deleteTimeConfig();//Start event search from beginning
+                }
             }
         }
         logger.debug("Finished processing the event arm.");
@@ -148,41 +142,6 @@ public class EventArm extends SodExceptionSource implements Runnable{
             queryEnd = ClockUtil.now();
         }
         return queryEnd;
-    }
-    
-    private class Querier{
-        public Querier() throws ConfigurationException{
-            if(eventFinderSubsetter.getDepthRange() != null) {
-                minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
-                maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
-            }
-            if(eventFinderSubsetter.getMagnitudeRange() != null) {
-                MagnitudeRange magRange = eventFinderSubsetter.getMagnitudeRange();
-                minMag = magRange.getMinMagnitude().value;
-                maxMag = magRange.getMaxMagnitude().value;
-                searchTypes = magRange.getSearchTypes();
-            }
-        }
-        
-        public EventAccess[] query(TimeRange tr) throws Exception{
-            edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
-            return finder.query_events(area, minDepth, maxDepth, tr,
-                                       searchTypes, minMag, maxMag, catalogs,
-                                       contributors, sequenceMaximum, holder);
-        }
-        
-        //If the eventFinderSubsetter values for magnitude or depth are null,
-        //the default values below are used
-        private Quantity minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
-        private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
-        private String[] searchTypes = { "%" };
-        private float minMag = -99.0f, maxMag = 99.0f;
-        
-        private Area area = eventFinderSubsetter.getArea();
-        private String[] catalogs = eventFinderSubsetter.getCatalogs();
-        private String[] contributors = eventFinderSubsetter.getContributors();
-        private int sequenceMaximum = 10;
-        private EventSeqIterHolder holder = new EventSeqIterHolder();
     }
     
     private EventAccessOperations[] cacheEvents(EventAccessOperations[] uncached){
@@ -246,25 +205,17 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
     
     /**
-     * checks to see if the eventArm is done processing for the time interval
-     * specified in the configuration file.
-     * If finished returns true else returns false.
+     * @returns true if the EventArm's last desired event time + eventArrivalLag
+     * is before the current time
      */
-    private boolean isDone(MicroSecondDate queryEnd, MicroSecondDate reqEnd){
-        if(ClockUtil.now().before(queryEnd)){
-            return passivateEventArm(reqEnd);
-        }
+    private boolean shouldQuit(){
+        TimeInterval eventArrivalLag = new TimeInterval(7, UnitImpl.DAY);
+        MicroSecondDate quitDate = eventFinderSubsetter.getEventTimeRange().getEndMSD().add(eventArrivalLag);
+        if(quitDate.before(ClockUtil.now()))  return true;
         return false;
     }
     
-    /***
-     * passivates the eventArm (makes it to sleep) based on the refreshInterval
-     * and quitTime specified in the property file.
-     */
-    private boolean passivateEventArm(MicroSecondDate endDate) {
-        TimeInterval eventArrivalLag = new TimeInterval(7, UnitImpl.DAY);
-        MicroSecondDate quitDate = endDate.add(eventArrivalLag);
-        if(quitDate.before(ClockUtil.now()))  return true;
+    private void waitTillRefreshNeeded() {
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+
                              Start.REFRESH_INTERVAL+" seconds");
@@ -272,15 +223,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
         } catch(InterruptedException ie) {
             logger.warn("Event arm sleep was interrupted.", ie);
         }
-        Start.getEventQueue().deleteTimeConfig();
-        return false;
     }
     
     /**
-     * returns the increment value. This value is specified as a property in the
-     * property file.
+     * returns the increment value. This value is specified as
+     * edu.sc.seis.sod.daystoincrement in the property file.
      */
-    
     private TimeInterval getIncrement() {
         if(increment == null){
             int val = 1;
@@ -293,6 +241,41 @@ public class EventArm extends SodExceptionSource implements Runnable{
             increment = new TimeInterval(val, UnitImpl.DAY);
         }
         return increment;
+    }
+    
+    private class Querier{
+        public Querier() throws ConfigurationException{
+            if(eventFinderSubsetter.getDepthRange() != null) {
+                minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
+                maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
+            }
+            if(eventFinderSubsetter.getMagnitudeRange() != null) {
+                MagnitudeRange magRange = eventFinderSubsetter.getMagnitudeRange();
+                minMag = magRange.getMinMagnitude().value;
+                maxMag = magRange.getMaxMagnitude().value;
+                searchTypes = magRange.getSearchTypes();
+            }
+        }
+        
+        public EventAccess[] query(TimeRange tr) throws Exception{
+            edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
+            return finder.query_events(area, minDepth, maxDepth, tr,
+                                       searchTypes, minMag, maxMag, catalogs,
+                                       contributors, sequenceMaximum, holder);
+        }
+        
+        //If the eventFinderSubsetter values for magnitude or depth are null,
+        //the default values below are used
+        private Quantity minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
+        private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
+        private String[] searchTypes = { "%" };
+        private float minMag = -99.0f, maxMag = 99.0f;
+        
+        private Area area = eventFinderSubsetter.getArea();
+        private String[] catalogs = eventFinderSubsetter.getCatalogs();
+        private String[] contributors = eventFinderSubsetter.getContributors();
+        private int sequenceMaximum = 10;
+        private EventSeqIterHolder holder = new EventSeqIterHolder();
     }
     
     private TimeInterval increment;
@@ -313,4 +296,3 @@ public class EventArm extends SodExceptionSource implements Runnable{
     
     private static Logger logger = Logger.getLogger(EventArm.class);
 }// EventArm
-
