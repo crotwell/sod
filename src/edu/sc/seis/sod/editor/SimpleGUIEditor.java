@@ -131,7 +131,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         loadBreqfast.addActionListener(new FileLoader(configFileBase + "breqfast.xml"));
         fileMenu.add(loadBreqfast);
         JMenuItem loadMovec = new JMenuItem("Open Motion Vector");
-        loadMovec.addActionListener(new FileLoader(configFileBase + "motionvector.xml"));
+        loadMovec.addActionListener(new FileLoader(configFileBase + "vector.xml"));
         fileMenu.add(loadMovec);
 
         JMenuItem loadLegEx = new JMenuItem("Open Legacy Execute");
@@ -139,7 +139,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         fileMenu.add(loadLegEx);
 
         JMenuItem load3CLegEx = new JMenuItem("Open 3C Legacy Execute");
-        load3CLegEx.addActionListener(new FileLoader(configFileBase + "legacyExecuteMoVec.xml"));
+        load3CLegEx.addActionListener(new FileLoader(configFileBase + "legacyVectorExecute.xml"));
         fileMenu.add(load3CLegEx);
 
         JMenuItem loadRealTime = new JMenuItem("Open Real Time");
