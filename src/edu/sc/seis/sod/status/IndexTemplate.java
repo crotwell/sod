@@ -46,6 +46,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             SodUtil.copyFile(down, dirName + "/images/down.gif");
             SodUtil.copyFile(none, dirName + "/images/none.gif");
             SodUtil.copyFile(key, dirName + "/images/mapkey.gif");
+            SodUtil.copyFile(individualKey, dirName + "/images/individualEventMapKey.gif");
             /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
             convertToHTML(dirName);
         } catch (Exception e) {
@@ -121,6 +122,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String down = "jar:edu/sc/seis/sod/data/templates/defaults/down.gif";
     private static String none = "jar:edu/sc/seis/sod/data/templates/defaults/none.gif";
     private static String key = "jar:edu/sc/seis/sod/data/templates/defaults/mapkey.gif";
+    private static String individualKey = "jar:edu/sc/seis/sod/data/templates/defaults/individualEventMapKey.gif";
     private static String eventPageHelp = "jar:edu/sc/seis/sod/data/templates/defaults/eventPageHelp.xml";
     private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
     private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
