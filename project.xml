@@ -255,11 +255,18 @@
         </includes>
       </resource>
       <resource>
-        <directory>src/edu/sc/seis/sod/editor</directory>
-        <targetPath>edu/sc/seis/sod/editor</targetPath>
-        <includes>
-          <include>names.prop</include>
-        </includes>
+	<directory>src/edu/sc/seis/sod/editor</directory>
+	<targetPath>edu/sc/seis/sod/editor</targetPath>
+	<includes>
+	  <include>names.prop</include>
+	</includes>
+      </resource>
+      <resource>
+	<directory>src/edu/sc/seis/sod/database/props</directory>
+	<targetPath>edu/sc/seis/sod/database/props</targetPath>
+	<includes>
+	  <include>*.props</include>
+	</includes>
       </resource>
       <resource>
         <directory>src/edu/sc/seis/sod/data</directory>
