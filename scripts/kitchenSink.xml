@@ -55,8 +55,8 @@
         </magnitudeRange>
             <catalog>WHDF</catalog>
             <contributor>NEIC</contributor>
-         </eventFinder>
-        <originAND>
+      </eventFinder>
+      <originAND>
             <originOR>
                 <removeEventDuplicate/>
                 <passOrigin/>
@@ -235,15 +235,15 @@
         </networkAND>
         <stationAND>
             <stationOR>
-                <stationCode>ANMO</stationCode>
+                <stationCode>AAK</stationCode>
                 <passStation/>
             </stationOR>
             <stationOR>
-                <stationName>AA</stationName>
+                <stationName>ALA ARCHA</stationName>
                 <passStation/>
             </stationOR>
             <stationOR>
-                <stationOperator>AAAA</stationOperator>
+                <stationOperator>none</stationOperator>
                 <passStation/>
             </stationOR>
             <stationOR>
@@ -310,14 +310,14 @@
             </stationOR>
             <stationOR>
                 <stationXOR>
-                    <stationCode>ANMO</stationCode>
-                    <stationCode>ANMO</stationCode>
+                    <stationCode>AAK</stationCode>
+                    <stationCode>AAK</stationCode>
                 </stationXOR>
                 <passStation/>
             </stationOR>
             <stationOR>
                 <stationNOT>
-                    <stationCode>ANMO</stationCode>
+                    <stationCode>AAK</stationCode>
                 </stationNOT>
                 <passStation/>
             </stationOR>
@@ -444,7 +444,7 @@
                 <passChannel/>
             </channelOR>
         </channelAND>
-        <printlineChannelProcessor/>
+         <printlineChannelProcessor/>
         <responseWriter>
             <type>resp</type>
             <directory>responses</directory>
@@ -737,7 +737,6 @@
     <forkProcess>
         <alwaysSuccess>
             <phaseCut>
-            <phaseRequest>
             <model>prem</model>
             <beginPhase>ttp</beginPhase>
             <beginOffset>
@@ -749,7 +748,6 @@
              <unit>SECOND</unit>
              <value>360</value>
             </endOffset>
-         </phaseRequest>
           </phaseCut>
         </alwaysSuccess>
     </forkProcess>
@@ -793,7 +791,7 @@
     <forkProcess>
         <alwaysSuccess>
             <phaseSignalToNoise>
-                <phaseName> </phaseName>
+                <phaseName>P</phaseName>
                 <shortOffsetBegin>
                     <unit>SECOND</unit>
                    <value>100</value>
@@ -872,3 +870,4 @@
         </waveformStationStatus>
     </waveformArm>
  </sod>
+
