@@ -442,6 +442,9 @@
                                     <data type="string"/>
                                 </element>
                             </element>
+                            <element name="waveformCountProcessor">
+                                <empty/>
+                            </element>
                             <element name="externalWaveformMonitor">
                                 <element name="classname">
                                     <data type="string"/>
@@ -542,6 +545,9 @@
                                 <element name="template">
                                     <data type="string"/>
                                 </element>
+                            </element>
+                            <element name="waveformCountProcessor">
+                                <empty/>
                             </element>
                             <element name="externalWaveformMonitor">
                                 <element name="classname">
@@ -5289,9 +5295,6 @@
             <element name="seismogramNOT">
                 <ref name="seismogramProcess3"/>
             </element>
-            <element name="waveformCountProcessor">
-                <empty/>
-            </element>
             <element name="someDataCoverage">
                 <empty/>
             </element>
@@ -5521,9 +5524,6 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess"/>
-            </element>
-            <element name="waveformCountProcessor">
-                <empty/>
             </element>
             <element name="someDataCoverage">
                 <empty/>
@@ -5755,9 +5755,6 @@
             <element name="seismogramNOT">
                 <ref name="seismogramProcess4"/>
             </element>
-            <element name="waveformCountProcessor">
-                <empty/>
-            </element>
             <element name="someDataCoverage">
                 <empty/>
             </element>
@@ -5987,9 +5984,6 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess2"/>
-            </element>
-            <element name="waveformCountProcessor">
-                <empty/>
             </element>
             <element name="someDataCoverage">
                 <empty/>
