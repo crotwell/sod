@@ -88,11 +88,18 @@ public class PhaseSignalToNoise  implements LocalSeismogramProcess {
             return new LocalSeismogramResult(seismograms, new StringTreeLeaf(this, false, "no seismograms"));
         }
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
-        if (trigger != null && trigger.getValue() > ratio) {
-            cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
-            return new LocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
+        if (trigger != null) {
+            if (trigger.getValue() > ratio) {
+                cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
+                return new LocalSeismogramResult(seismograms,
+                                                 new StringTreeLeaf(this, true));
+            }
+            return new LocalSeismogramResult(seismograms,
+                                             new StringTreeLeaf(this, false, "trigger="+trigger.getValue()+" < "+ratio));
+        } else {
+            return new LocalSeismogramResult(seismograms,
+                                             new StringTreeLeaf(this, false, "trigger is null"));
         }
-        return new LocalSeismogramResult(seismograms, new StringTreeLeaf(this, false, "trigger="+trigger.getValue()+" < "+ratio));
     }
 
     /** This method exists to make the trigger available to other subsetters
