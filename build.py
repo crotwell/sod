@@ -8,10 +8,10 @@ sys.path.append("../devTools/maven")
 import ProjectParser, mavenExecutor, scriptBuilder, depCopy, distBuilder, utils
 os.chdir(startdir)
 
-class sodScriptParameters(scriptBuilder.scriptParameters):
+class sodScriptParameters(scriptBuilder.headlessParameters):
     homeloc = '.'
     def __init__(self, mods, proj, mainclass='edu.sc.seis.sod.Start', name='sod', mavenRepoStructure=False, relax=False):
-        scriptBuilder.scriptParameters.__init__(self)
+        scriptBuilder.headlessParameters.__init__(self)
         for mod in mods: self.update(mod)
         self.name = name
         self.relaxScript = relax
