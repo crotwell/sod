@@ -60,8 +60,6 @@ public class NetworkArm {
         try {
             queryTimeTable = new JDBCQueryTime();
             netTable = new JDBCNetworkUnifier();
-            newChanTable = new JDBCNewChannels();
-            //networkStatusTable = new JDBCNetworkStatus();
         } catch(SQLException e) {}
         processConfig(config);
     }
@@ -129,35 +127,33 @@ public class NetworkArm {
 
     private boolean needsRefresh() {
         TimeInterval refreshInterval = finder.getRefreshInterval();
+        if(refreshInterval == null) return false;
         logger.debug("checking the refresh interval which is "
                 + refreshInterval.getValue() + " " + refreshInterval.getUnit());
-        Date databaseTime = new Date(0);
+        MicroSecondDate databaseTime;
         try {
             databaseTime = queryTimeTable.getQuery(finder.getSourceName(),
                                                    finder.getDNSName());
-            if(firstTimeThrough) {
-                firstTimeThrough = !firstTimeThrough;
+            logger.debug("the last time the networks were checked was "
+                         + databaseTime);
+            MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
+            MicroSecondDate currentTime = ClockUtil.now();
+            TimeInterval timeInterval = currentTime.difference(lastTime);
+            timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
+            if(timeInterval.getValue() >= refreshInterval.getValue()) {
+                return true;
+            } else {
+                statusChanged("Waiting until " + lastTime.add(refreshInterval)
+                              + " to recheck networks");
+                return false;
             }
         } catch(NotFound e) {
-            firstTimeThrough = true;
             logger.debug("The query database has no info about the network arm.  Hopefull this the first time through");
+            return true;
         } catch(SQLException e) {
             GlobalExceptionHandler.handle("The query database threw this exception trying to find info about the network arm's current finder.  This bodes ill",
                                           e);
-        }
-        logger.debug("the last time the networks were checked was "
-                + databaseTime);
-        if(refreshInterval == null) return false;
-        MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
-        MicroSecondDate currentTime = ClockUtil.now();
-        TimeInterval timeInterval = currentTime.difference(lastTime);
-        timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
-        if(timeInterval.getValue() >= refreshInterval.getValue()) {
             return true;
-        } else {
-            statusChanged("Waiting until " + lastTime.add(refreshInterval)
-                    + " to recheck networks");
-            return false;
         }
     }
 
@@ -402,9 +398,6 @@ public class NetworkArm {
                             dbid = chanDb.getDBId(chan.get_id());
                         } catch(NotFound e) {
                             dbid = netTable.put(chan);
-                            if(!firstTimeThrough) {
-                                newChanTable.put(dbid);
-                            }
                         }
                     }
                     channelMap.put(new Integer(dbid), chan);
@@ -545,14 +538,10 @@ public class NetworkArm {
 
     private JDBCNetworkUnifier netTable;
 
-    private JDBCNewChannels newChanTable;
-
     //private JDBCNetworkStatus networkStatusTable;w
     private NetworkDbObject[] netDbs;
 
     private List statusMonitors = new ArrayList();
-
-    private boolean firstTimeThrough = false;
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 }// NetworkArm
