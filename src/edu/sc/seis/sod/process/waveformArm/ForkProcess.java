@@ -42,7 +42,7 @@ public class ForkProcess implements LocalSeismogramProcess {
                     // skip description element
                     continue;
                 }
-                Object sodElement = SodUtil.load((Element)node,"waveFormArm");
+                Object sodElement = SodUtil.load((Element)node,"waveformArm");
                 if(sodElement instanceof LocalSeismogramProcess) {
                     localSeisProcessList.add(sodElement);
                 } else {

@@ -75,7 +75,7 @@ public class Absolute extends PhaseInteractionType {
         for(int counter = 0; counter < nodeList.getLength(); counter++) {
             node = nodeList.item(counter);
             if(node instanceof Element) {
-                Object obj = SodUtil.load((Element)node, "waveFormArm");
+                Object obj = SodUtil.load((Element)node, "waveformArm");
                 if(obj instanceof Area) area = (Area)obj;
                 else if(obj instanceof DepthRange) depthRange = (DepthRange)obj;
             }

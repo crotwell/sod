@@ -68,14 +68,14 @@ import org.w3c.dom.*;
 
 
 public class ChoiceRequest implements RequestGenerator{
-    
+
     /**
      * Creates a new <code>ChoiceRequest</code> instance.
      *
      * @param config an <code>Element</code> value
      */
     public ChoiceRequest (Element config) throws ConfigurationException{
-        
+
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -94,7 +94,7 @@ public class ChoiceRequest implements RequestGenerator{
             }
         }
     }
-    
+
     /**
      * Describe <code>generateRequest</code> method here.
      *
@@ -124,15 +124,15 @@ public class ChoiceRequest implements RequestGenerator{
             return new RequestFilter[0];
         } // end of else
     }
-    
+
     protected List choices = new LinkedList();
-    
+
     protected RequestGenerator otherwise = null;
-    
+
     abstract class Choice implements RequestGenerator, EventChannelSubsetter {
         RequestGenerator requestGenerator;
     }
-    
+
     class EventChannelChoice extends Choice {
         EventChannelChoice(Element config)  throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
@@ -141,7 +141,7 @@ public class ChoiceRequest implements RequestGenerator{
                 node = childNodes.item(counter);
                 if(node instanceof Element) {
                     SodElement sodElement =
-                        (SodElement)SodUtil.load((Element)node, "waveFormArm");
+                        (SodElement)SodUtil.load((Element)node, "waveformArm");
                     if (sodElement instanceof RequestGenerator) {
                         requestGenerator = (RequestGenerator)sodElement;
                     } else if (sodElement instanceof EventChannelSubsetter) {
@@ -151,7 +151,7 @@ public class ChoiceRequest implements RequestGenerator{
                 } // end of else
             }
         }
-        
+
         public RequestFilter[] generateRequest(EventAccessOperations event,
                                                NetworkAccess network,
                                                Channel channel,
@@ -162,7 +162,7 @@ public class ChoiceRequest implements RequestGenerator{
                                                     channel,
                                                     cookies);
         }
-        
+
         public boolean accept(EventAccessOperations event,
                               NetworkAccess network,
                               Channel channel,
@@ -172,10 +172,10 @@ public class ChoiceRequest implements RequestGenerator{
                                                 channel,
                                                 cookies);
         }
-        
+
         EventChannelSubsetter eventChannelSubsetter;
     }
-    
+
     class EventStationChoice extends Choice {
         EventStationChoice(Element config) throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
@@ -184,7 +184,7 @@ public class ChoiceRequest implements RequestGenerator{
                 node = childNodes.item(counter);
                 if(node instanceof Element) {
                     SodElement sodElement =
-                        (SodElement)SodUtil.load((Element)node, "waveFormArm");
+                        (SodElement)SodUtil.load((Element)node, "waveformArm");
                     if (sodElement instanceof RequestGenerator) {
                         requestGenerator = (RequestGenerator)sodElement;
                     } else if (sodElement instanceof EventStationSubsetter) {
@@ -194,7 +194,7 @@ public class ChoiceRequest implements RequestGenerator{
                 } // end of else
             }
         }
-        
+
         public RequestFilter[] generateRequest(EventAccessOperations event,
                                                NetworkAccess network,
                                                Channel channel,
@@ -205,7 +205,7 @@ public class ChoiceRequest implements RequestGenerator{
                                                     channel,
                                                     cookies);
         }
-        
+
         public boolean accept(EventAccessOperations event,
                               NetworkAccess network,
                               Channel channel,
@@ -215,8 +215,8 @@ public class ChoiceRequest implements RequestGenerator{
                                                 channel.my_site.my_station,
                                                 cookies);
         }
-        
+
         EventStationSubsetter eventStationSubsetter;
     }
-    
+
 }// PhaseRequest
