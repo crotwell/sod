@@ -32,7 +32,11 @@ import java.util.Map;
 
 public class JDBCEventChannelStatus extends SodJDBC{
     public JDBCEventChannelStatus() throws SQLException{
-        conn = ConnMgr.createConnection();
+        this(ConnMgr.createConnection());
+    }
+
+    public JDBCEventChannelStatus(Connection conn) throws SQLException{
+        this.conn = conn;
         if(!DBUtil.tableExists("eventchannelstatus", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventchannelstatus.create"));
