@@ -608,7 +608,17 @@
                                     <data type="string"/>
                                 </element>
                             </optional>
-                            <element name="networkTemplate">
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
+                        </element>
+                        <element name="waveformStationStatus">
+                            <optional>
+                                <element name="fileDir">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
+                            <element name="template">
                                 <data type="string"/>
                             </element>
                         </element>
