@@ -1,4 +1,15 @@
 package edu.sc.seis.sod.status;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.ConfigurationException;
@@ -7,18 +18,6 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import org.w3c.dom.Element;
 
 
 public class IndexTemplate extends FileWritingTemplate implements WaveformMonitor{
@@ -41,6 +40,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformMonito
             SodUtil.copyFile(cssLoc, dirName+"/main.css");
             SodUtil.copyFile(sortLoc, dirName+"/sorttable.js");
             SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
+            SodUtil.copyFile(footPosLoc, dirName +"/footerPositioner.js");
             SodUtil.copyFile(helpMark, dirName + "/images/helpmark.png");
             SodUtil.copyFile(up, dirName + "/images/up.gif");
             SodUtil.copyFile(down, dirName + "/images/down.gif");
@@ -95,7 +95,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformMonito
         errorDir.mkdirs();
         GlobalExceptionHandler.add(new HTMLReporter(errorDir));
     }
-    private void convertToHTML(String statusDir) throws TransformerException, FileNotFoundException, MalformedURLException, TransformerConfigurationException, IOException {
+    private void convertToHTML(String statusDir) throws TransformerException, FileNotFoundException, TransformerConfigurationException, IOException {
         String wrapperFile = statusDir + "/xmlverbatimwrapper.xsl";
         String mainXSL = statusDir + "/xmlverbatim.xsl";
         SodUtil.copyFile(xslWrapperFileLoc,wrapperFile);
@@ -117,6 +117,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformMonito
     private static String cssLoc = "jar:edu/sc/seis/sod/data/templates/main.css";
     private static String sortLoc = "jar:edu/sc/seis/sod/data/templates/sorttable.js";
     private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
+    private static String footPosLoc = "jar:edu/sc/seis/sod/data/templates/footerPositioner.js";
     private static String helpMark = "jar:edu/sc/seis/sod/data/templates/defaults/helpmark.png";
     private static String up = "jar:edu/sc/seis/sod/data/templates/defaults/up.gif";
     private static String down = "jar:edu/sc/seis/sod/data/templates/defaults/down.gif";
