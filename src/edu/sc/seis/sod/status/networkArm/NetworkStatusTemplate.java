@@ -6,23 +6,21 @@
 
 package edu.sc.seis.sod.status.networkArm;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.NetworkGroupTemplate;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 public class NetworkStatusTemplate extends NetworkInfoTemplate{
 
-    private String status = "";
+    private String armStatus = "";
     private List networkListeners = new ArrayList();
-    private Logger logger = Logger.getLogger(NetworkStatusTemplate.class);
 
     public NetworkStatusTemplate(Element el, String baseDir, String outputLocation) throws IOException, ConfigurationException {
         super(baseDir, outputLocation);
@@ -40,12 +38,12 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
     }
 
     public void setArmStatus(String status)  {
-        this.status = status;
+        this.armStatus = status;
         write();
     }
 
     private class StatusFormatter implements GenericTemplate{
-        public String getResult(){ return status; }
+        public String getResult(){ return armStatus; }
     }
 
     /**if this class has an template for this tag, it creates it using the
