@@ -16,15 +16,16 @@ import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.EventChannelPair;
 import java.io.IOException;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.util.StringTokenizer;
 
 
 public class WaveformCountProcessor implements WaveformMonitor {
 
     public WaveformCountProcessor(Element config) throws SQLException {
-        JDBCEventChannelStatus jdbcEventChannelStatus = new JDBCEventChannelStatus();
-        Status processorSuccess = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
-        waveformCounter = jdbcEventChannelStatus.getNumOfStatus(processorSuccess);
-
+			waveformCounter = getNumWaveforms("waveforms.txt");
     }
     public void update(EventChannelPair ecp) {
         Status processorSuccess = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
@@ -33,7 +34,7 @@ public class WaveformCountProcessor implements WaveformMonitor {
             FileWriter fileWriter = null;
             try {
                 fileWriter = new FileWriter("waveforms.txt");
-                fileWriter.write("Number of Waveforms processed = " + waveformCounter);
+                fileWriter.write(description + waveformCounter);
             }catch(IOException ie) {
                 GlobalExceptionHandler.handle("problem writing the waveformCount into file ",ie);
             }finally {
@@ -46,6 +47,26 @@ public class WaveformCountProcessor implements WaveformMonitor {
             }
         }
     }
+	private int getNumWaveforms(String fileName) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			StringTokenizer line = new StringTokenizer(reader.readLine());
+			StringTokenizer descTokenizer = new StringTokenizer(description);
+			int tokenCnt = descTokenizer.countTokens();
+			String numWaveforms = null;
+			for(int i=0;i<=tokenCnt;i++) {
+				numWaveforms = line.nextToken();
+			}
+			return Integer.parseInt(numWaveforms);
+		} catch (IOException e) {
+			logger.debug("This exception occurs for runs other than AtmostOnce" +
+							" and AtleastOnce when the waveforms.txt is not found ",e);
+			return 0;
+		}
+	}
     int waveformCounter = 0;
+	private static final String description = "Number of Waveforms processed = ";
+	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(WaveformCountProcessor.class);
 }
+
 
