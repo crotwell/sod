@@ -28,6 +28,7 @@
             <externalRef href="waveformProcess.rng"/>
             <ref name="external"/>
             <ref name="vectorImageProcess"/>
+            <ref name="vectorForkProcess"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -259,6 +260,13 @@
                     <ref name="basicSeismogramDisplayContents"/>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="vectorForkProcess">
+        <element name="vectorForkProcess">
+            <oneOrMore>
+                <ref name="waveformVectorProcess"/>
+            </oneOrMore>
         </element>
     </define>
 </grammar>
