@@ -65,13 +65,13 @@ public class WaveformEventTemplate extends Template implements WaveformArmMonito
         synchronized(toBeRendered){
             if (!toBeRendered.containsKey(loc)){
                 toBeRendered.put(loc, ev);
-                writer.actIfPeriodElapsed();
+                OutputScheduler.DEFAULT.schedule(writer);
             }
         }
     }
 
-    public class Writer extends PeriodicAction{
-        public void act() {
+    public class Writer implements Runnable{
+        public void run() {
             EventAccessOperations[] evs= new EventAccessOperations[0];
             String[] fileLocs = new String[0];
             synchronized(toBeRendered){

@@ -11,13 +11,12 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
-import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.MapPool;
-import edu.sc.seis.sod.status.PeriodicAction;
+import edu.sc.seis.sod.status.OutputScheduler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -27,7 +26,7 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 
-public class MapWaveformStatus extends PeriodicAction {
+public class MapWaveformStatus implements Runnable{
     public MapWaveformStatus() throws SQLException{
         this(new MapPool(1, new DefaultEventColorizer()));
     }
@@ -36,7 +35,8 @@ public class MapWaveformStatus extends PeriodicAction {
         this.pool = pool;
         evChanStatusTable = new JDBCEventChannelStatus();
     }
-    public void act() {
+
+    public void run() {
         int numEventsWaiting = 0;
         CacheEvent[] events = new CacheEvent[0];
         String[] fileLocs = new String[0];
@@ -95,13 +95,11 @@ public class MapWaveformStatus extends PeriodicAction {
         }
     }
 
-    public void write(){ actIfPeriodElapsed();  }
-
     public boolean add(EventAccessOperations ev, String outputLoc){
         synchronized(eventsToBeRendered){
             if (eventsToBeRendered.containsKey(ev)){ return false; }
             eventsToBeRendered.put(ev, outputLoc);
-            write();
+            OutputScheduler.DEFAULT.schedule(this);
             return true;
         }
     }
