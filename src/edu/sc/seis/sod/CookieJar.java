@@ -1,7 +1,7 @@
 package edu.sc.seis.sod;
 
-import java.util.HashMap;
-import java.util.Map;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
 
 /**
  * CookieJar.java
@@ -13,60 +13,23 @@ import java.util.Map;
  * @version
  */
 
-public class CookieJar {
+public class CookieJar extends ReadOnlyCookieJar {
 
-    public CookieJar (){
-        eventCookies = new HashMap();
-        stationCookies = new HashMap();
-        channelCookies = new HashMap();
-        eventStationCookies = new HashMap();
-        seismogramCookies = new HashMap();
+    public CookieJar (EventAccessOperations event, Channel channel){
+        super(event, channel);
     }
 
-    public Object getEventCookie(Object key) {
-        return eventCookies.get(key);
+    public void put(String key, Object value) {
+        context.put(key, value);
     }
 
-    public Object getStationCookie(Object key) {
-        return stationCookies.get(key);
+    public ReadOnlyCookieJar getReadOnly() {
+        if (readOnly == null) {
+            readOnly = new ReadOnlyCookieJar(this);
+        }
+        return readOnly;
     }
 
-    public Object getChannelCookie(Object key) {
-        return channelCookies.get(key);
-    }
-
-    public Object getEventStationCookie(Object key) {
-        return eventStationCookies.get(key);
-    }
-
-    public Object getSeismogramCookie(Object key) {
-        return seismogramCookies.get(key);
-    }
-
-    public void addEventCookie(Object key, Object value) {
-        eventCookies.put(key, value);
-    }
-
-    public void addStationCookie(Object key, Object value) {
-        stationCookies.put(key, value);
-    }
-
-    public void addChannelCookie(Object key, Object value) {
-        channelCookies.put(key, value);
-    }
-
-    public void addEventStationCookie(Object key, Object value) {
-        eventStationCookies.put(key, value);
-    }
-
-    public void addSeismogramCookie(Object key, Object value) {
-        seismogramCookies.put(key, value);
-    }
-
-    private Map eventCookies;
-    private Map stationCookies;
-    private Map channelCookies;
-    private Map eventStationCookies;
-    private Map seismogramCookies;
+    ReadOnlyCookieJar readOnly;
 
 }// CookieJar
