@@ -79,6 +79,10 @@ public class FissuresFormatter {
         return net.get_attributes().get_code()+net.get_attributes().get_id().begin_time.date_time.substring(0, 4);
     }
 
+    public static QuantityImpl getDepth(Origin origin) {
+        return getDepth(origin.my_location);
+    }
+
     public static QuantityImpl getDepth(Location loc) {
         return QuantityImpl.createQuantityImpl(loc.depth);
     }
@@ -87,8 +91,16 @@ public class FissuresFormatter {
         return QuantityImpl.createQuantityImpl(loc.elevation);
     }
 
+    public static float getLatitude(Origin origin) {
+        return getLatitude(origin.my_location);
+    }
+
     public static float getLatitude(Location loc) {
         return loc.latitude;
+    }
+
+    public static float getLongitude(Origin origin) {
+        return getLongitude(origin.my_location);
     }
 
     public static float getLongitude(Location loc) {
@@ -103,14 +115,26 @@ public class FissuresFormatter {
         return new MicroSecondDate(range.end_time);
     }
 
+    public static QuantityImpl getDistance(Station station, Origin origin) {
+        return getDistance(station.my_location, origin.my_location);
+    }
+
     public static QuantityImpl getDistance(Location from, Location to) {
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
 
+    public static QuantityImpl getAzimuth(Station station, Origin origin) {
+        return getAzimuth(station.my_location, origin.my_location);
+    }
+
     public static QuantityImpl getAzimuth(Location from, Location to) {
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getAz(), UnitImpl.DEGREE);
+    }
+
+    public static QuantityImpl getBackAzimuth(Station station, Origin origin) {
+        return getBackAzimuth(station.my_location, origin.my_location);
     }
 
     public static QuantityImpl getBackAzimuth(Location from, Location to) {
