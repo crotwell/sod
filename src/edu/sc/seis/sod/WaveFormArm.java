@@ -1,26 +1,23 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.subsetter.*;
 import edu.sc.seis.sod.database.*;
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
-import edu.sc.seis.fissuresUtil.cache.*;
-
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-
-import edu.iris.Fissures.IfSeismogramDC.*;
-
-import java.util.*;
-import java.io.*;
-import java.sql.*;
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccess;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
+import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
+import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -146,7 +143,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                     Start.getWaveformQueue().putNetworkInfo(eventid,
                                                             networks[netcounter].getDbId(),
                                                             0,///stations.length,
-                                                            new MicroSecondDate());
+                                                            ClockUtil.now());
                     if(stations.length == 0) {
                         updateNetworkCount(eventid, networks[netcounter].getDbId(), eventAccess);
                     }
@@ -174,7 +171,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                                                                 stations[stationcounter].getDbId(),
                                                                 networks[netcounter].getDbId(),
                                                                 0,//sites.length,
-                                                                new MicroSecondDate());
+                                                                ClockUtil.now());
                         if(sites.length == 0) {
                             updateStationCount(eventid, stations[stationcounter].getDbId(), eventAccess);
                         }
@@ -199,7 +196,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                                                                  sites[sitecounter].getDbId(),
                                                                  stations[stationcounter].getDbId(),
                                                                  0,//successfulChannels.length,
-                                                                 new MicroSecondDate());
+                                                                 ClockUtil.now());
                             if(successfulChannels.length == 0) {
                                 updateSiteCount(eventid, sites[sitecounter].getDbId(), eventAccess);
                             }

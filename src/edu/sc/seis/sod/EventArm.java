@@ -1,19 +1,24 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.database.*;
-import edu.sc.seis.sod.subsetter.eventArm.*;
-import edu.sc.seis.fissuresUtil.namingService.*;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-
 import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
 
-import java.util.*;
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.Quantity;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.subsetter.eventArm.NullEventAttrSubsetter;
+import edu.sc.seis.sod.subsetter.eventArm.NullEventProcess;
+import edu.sc.seis.sod.subsetter.eventArm.NullOriginSubsetter;
+import java.util.Calendar;
+import java.util.Properties;
+import java.util.TimeZone;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
@@ -365,7 +370,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
                              UnitImpl.DAY);
     MicroSecondDate endDate = new MicroSecondDate(endTime);
     MicroSecondDate quitDate = endDate.add(timeInterval);
-    MicroSecondDate currentDate = new MicroSecondDate();
+    MicroSecondDate currentDate = ClockUtil.now();
     if(quitDate.before(currentDate))  return true;
     try {
         logger.debug("Sleep before looking for new events, will sleep for "+

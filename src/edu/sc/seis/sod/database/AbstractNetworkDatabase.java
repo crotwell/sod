@@ -1,15 +1,18 @@
 package edu.sc.seis.sod.database;
 
-import edu.sc.seis.sod.*;
-
-import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfNetwork.*;
 
-import java.sql.*;
-import java.util.*;
-import org.omg.CORBA.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.ConfigurationException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import org.apache.log4j.Category;
 
 /**
  * AbstractNetworkDatabase.java
@@ -162,7 +165,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         MicroSecondDate microSecondDate  = new MicroSecondDate(networkId.begin_time);
         netPutStmt.setTimestamp(4, microSecondDate.getTimestamp());
         netPutStmt.setInt(5, networkId.begin_time.leap_seconds_version);
-        netPutStmt.setTimestamp(6, (new MicroSecondDate()).getTimestamp());
+        netPutStmt.setTimestamp(6, (ClockUtil.now()).getTimestamp());
         netPutStmt.setInt(7, Status.NEW.getId());
         String networkAccessIor = null;
         try {
@@ -212,7 +215,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         MicroSecondDate microSecondDate = new MicroSecondDate(stationId.begin_time);
         stationPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
         stationPutStmt.setInt(4, stationId.begin_time.leap_seconds_version);
-        stationPutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+        stationPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
         stationPutStmt.setInt(6, Status.NEW.getId());
         stationPutStmt.executeUpdate();
         return getStationDbId(networkDbObject, station);
@@ -259,7 +262,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         MicroSecondDate microSecondDate = new MicroSecondDate(siteId.begin_time);
         sitePutStmt.setTimestamp(3, microSecondDate.getTimestamp());
         sitePutStmt.setInt(4, siteId.begin_time.leap_seconds_version);
-        sitePutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+        sitePutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
         sitePutStmt.setInt(6, Status.NEW.getId());
         sitePutStmt.executeUpdate();
         return getSiteDbId(stationDbObject,
@@ -305,7 +308,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         MicroSecondDate microSecondDate = new MicroSecondDate(channelId.begin_time);
         channelPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
         channelPutStmt.setInt(4, channelId.begin_time.leap_seconds_version);
-        channelPutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+        channelPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
         channelPutStmt.setInt(6,  Status.NEW.getId());
         channelPutStmt.executeUpdate();
         return getChannelDbId(siteDbObject,

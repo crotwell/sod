@@ -257,6 +257,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         if (lastDataSet != null && lastDataSet.getEvent().equals(event)) {
             dataset = lastDataSet;
         } else {
+            logger.debug("creating new dataset "+getLabel(event));
             //temp
             dataset = new MemoryDataSet(event.get_preferred_origin().origin_time.date_time,
                                         getLabel(event),

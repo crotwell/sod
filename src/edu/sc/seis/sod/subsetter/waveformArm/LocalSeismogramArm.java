@@ -365,9 +365,6 @@ public class LocalSeismogramArm implements Subsetter{
             }
         } else {
         logger.debug("Failed, available data returned no requestFilters ");
-        logger.debug("TIME: after retrieveSeismograms "+new MicroSecondDate());
-        logger.debug("GOT SEISMOGRAMS: The date is "+ new MicroSecondDate());
-
         localSeismograms = new LocalSeismogram[0];
         } // end of else
 
