@@ -20,9 +20,9 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveformArm.ANDLocalSeismogramWrapper;
-import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.ChannelGroupAvailableDataSubsetter;
@@ -38,9 +38,9 @@ import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
 
 public class MotionVectorArm implements Subsetter {
 
-    public ChannelGroupLocalSeismogramProcess[] getProcesses() {
-        ChannelGroupLocalSeismogramProcess[] result = new ChannelGroupLocalSeismogramProcess[processes.size()];
-        return (ChannelGroupLocalSeismogramProcess[])processes.toArray(result);
+    public WaveformVectorProcess[] getProcesses() {
+        WaveformVectorProcess[] result = new WaveformVectorProcess[processes.size()];
+        return (WaveformVectorProcess[])processes.toArray(result);
     }
 
     public void handle(Object sodElement) {
@@ -56,10 +56,10 @@ public class MotionVectorArm implements Subsetter {
             dcLocator = (SeismogramDCLocator)sodElement;
         } else if(sodElement instanceof ChannelGroupAvailableDataSubsetter) {
             availData = (ChannelGroupAvailableDataSubsetter)sodElement;
-        } else if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
+        } else if(sodElement instanceof WaveformVectorProcess) {
             processes.add(sodElement);
-        } else if(sodElement instanceof LocalSeismogramProcess) {
-            processes.add(new ANDLocalSeismogramWrapper((LocalSeismogramProcess)sodElement));
+        } else if(sodElement instanceof WaveformProcess) {
+            processes.add(new ANDLocalSeismogramWrapper((WaveformProcess)sodElement));
         } else {
             logger.warn("Unknown tag in MotionVectorArm config. "
                     + sodElement.getClass().getName());
@@ -343,14 +343,14 @@ public class MotionVectorArm implements Subsetter {
                                    RequestFilter[][] infilters,
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
-        ChannelGroupLocalSeismogramProcess processor;
+        WaveformVectorProcess processor;
         ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(true,
                                                                                          localSeismograms,
                                                                                          new StringTreeLeaf(this,
                                                                                                             true));
         Iterator it = processes.iterator();
         while(it.hasNext() && result.isSuccess()) {
-            processor = (ChannelGroupLocalSeismogramProcess)it.next();
+            processor = (WaveformVectorProcess)it.next();
             try {
                 synchronized(processor) {
                     result = processor.process(ecp.getEvent(),

@@ -15,7 +15,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramResult;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
@@ -41,7 +41,7 @@ public class LocalSeismogramArm implements Subsetter {
             dcLocator = (SeismogramDCLocator)sodElement;
         } else if(sodElement instanceof AvailableDataSubsetter) {
             availData = (AvailableDataSubsetter)sodElement;
-        } else if(sodElement instanceof LocalSeismogramProcess) {
+        } else if(sodElement instanceof WaveformProcess) {
             processes.add(sodElement);
         } else {
             logger.warn("Unknown tag in LocalSeismogramArm config. "
@@ -69,8 +69,8 @@ public class LocalSeismogramArm implements Subsetter {
         return dcLocator;
     }
 
-    public LocalSeismogramProcess[] getProcesses() {
-        return (LocalSeismogramProcess[])processes.toArray(new LocalSeismogramProcess[0]);
+    public WaveformProcess[] getProcesses() {
+        return (WaveformProcess[])processes.toArray(new WaveformProcess[0]);
     }
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
@@ -345,12 +345,12 @@ public class LocalSeismogramArm implements Subsetter {
                                    RequestFilter[] infilters,
                                    RequestFilter[] outfilters,
                                    LocalSeismogramImpl[] localSeismograms) {
-        LocalSeismogramProcess processor;
+        WaveformProcess processor;
         Iterator it = processes.iterator();
         LocalSeismogramResult result = new LocalSeismogramResult(true,
                                                                  localSeismograms);
         while(it.hasNext() && result.isSuccess()) {
-            processor = (LocalSeismogramProcess)it.next();
+            processor = (WaveformProcess)it.next();
             try {
                 synchronized(processor) {
                     result = processor.process(ecp.getEvent(),
