@@ -266,11 +266,7 @@ public class HSqlDbQueue implements Queue {
 	    //System.exit(0);
 	}
 	System.out.println("DELETING THE RECORD FROM THE DATABSE");
-	try {
-	    Thread.sleep(5000);
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+
 	//System.exit(0);
     }
 
