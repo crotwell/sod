@@ -361,7 +361,57 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+      
+    <!-- REQUEST GENERATOR CHOICE REQUEST TYPE -->
     
+    <!-- ABSTRACT TYPE ChoicePartType-->
+    <xsd:complexType name="choicePartType" abstract="true">
+        <xsd:complexContent>
+            <xsd:all>
+               <xsd:element ref="requestGeneratorType" />
+            </xsd:all>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="eventStationChoice" >
+        <xsd:complexType>
+          <xsd:complexContent>
+              <xsd:extension base="choicePartType">
+                 <xsd:element ref="eventStationType" />
+              </xsd:extension >
+          </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="eventChannelChoice" >
+        <xsd:complexType>
+        <xsd:complexContent>
+            <xsd:extension base="choicePartType">
+               <xsd:element ref="eventChannelType" />
+            </xsd:extension >
+        </xsd:complexContent>
+    </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="choiceRequestType">
+        <xsd:complexContent>
+            <xsd:extension base="requestGeneratorType">
+                <xsd:sequence>
+                    <xsd:element ref="choicePart" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="otherwise" minOccurs="0">
+                       <xsd:complexType>
+                          <xsd:complexContent>
+                             <xsd:sequence>
+                                <xsd:element ref="requestGeneratorType" />
+                             </xsd:sequence>
+                          </xsd:complexContent>
+                       </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+  
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
     
     <!-- AVAILABLE DATA AND TYPE -->
