@@ -2,7 +2,10 @@ package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
+
+import java.io.*;
 
 /**
  * PrintlineChannelProcessor.java
@@ -14,14 +17,24 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class PrintlineChannelProcessor implements NetworkProcess {
+public class PrintlineChannelProcessor implements NetworkArmProcess {
     public PrintlineChannelProcessor (Element config){
-
-	process(null);
+	    
     }
 
-    public void process(NetworkAccess network) {
-	//System.out.println(network.get_attributes().name);
-	System.out.println("The Channel Process must be executed");
+    public void process(NetworkAccess network, Channel channel, CookieJar cookies) {
+	try {
+	    FileWriter fwriter = new FileWriter("_my_temp_", true);
+	    BufferedWriter bwriter = new BufferedWriter(fwriter);
+	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
+	    bwriter.write(ChannelIdUtil.toString(channel.get_id()), 0, ChannelIdUtil.toString(channel.get_id()).length());
+	    bwriter.newLine();
+	    bwriter.close();
+	} catch(Exception e) {
+	    
+	    System.out.println("Exception caught while writing to file in PrintLineChannelProcess");
+	}
+	
     }
+   
 }// PrintlineChannelProcessor
