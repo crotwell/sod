@@ -5,6 +5,11 @@
 <!-- The event arm decides which events are interesting. This is based purely on the event itself, not the relationship to a particular station, etc. -->
      <eventArm>
 
+<eventChannelFinder>
+	<name>IRIS_EventDC</name>
+	<dns>edu/iris/dmc</dns>
+	<eventchannelname>IRIS_TEST</eventchannelname>
+</eventChannelFinder>
 <!-- The event finder is one way of finding out about events. It is for events that have already been stored in a database somewhere, and so could be considered historical in some sense. The event channel is the other method, and it listens for new events. -->
 	   <eventFinder>
 
