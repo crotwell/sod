@@ -7,32 +7,36 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
-import edu.sc.seis.fissuresUtil.database.JDBCSequence;
-import edu.sc.seis.fissuresUtil.database.JDBCTable;
 import edu.sc.seis.sod.database.SodJDBC;
 
-public class JDBCRecordSectionChannel extends JDBCTable {
+public class JDBCRecordSectionChannel extends SodJDBC {
 
     static {
         ConnMgr.addPropsLocation("edu/sc/seis/sod/database/props/");
     }
 
-    public JDBCRecordSectionChannel() throws SQLException {
-        this(ConnMgr.createConnection());
+    public JDBCRecordSectionChannel(String tableName,
+            String eventRecSecTableName) throws SQLException {
+        this(tableName, eventRecSecTableName, ConnMgr.createConnection());
     }
 
-    public JDBCRecordSectionChannel(Connection conn) throws SQLException {
-        super("recordsectionchannel", conn);
-        if(!DBUtil.tableExists("recordsectionchannel", conn)) {
+    public JDBCRecordSectionChannel(String tableName,
+            String eventRecSecTableName, Connection conn) throws SQLException {
+        this.conn=conn;
+        this.tableName=tableName;
+        this.eventRecSecTableName=eventRecSecTableName;
+        String createStmt = "CREATE TABLE " + tableName
+                + "(recSecId int,channelid int)";
+        String insertStmt = "INSERT INTO " + tableName
+                + "(recSecId, channelid) VALUES (?, ?)";
+        String updateRecordSectionStmt = "UPDATE " + tableName
+                + " SET  recSecId=? WHERE recSecId=?";
+        if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate(ConnMgr.getSQL("recordsectionchannel.create"));
+            stmt.executeUpdate(createStmt);
         }
-        prepareStatements();
-    }
-
-    public void setRecSecId(int newRecSecId, int eventId, int channelId)
-            throws SQLException {
-        
+        insert = conn.prepareStatement(insertStmt);
+        updateRecordSection = conn.prepareStatement(updateRecordSectionStmt);
     }
 
     public void insert(int recSecId, int channelid) throws SQLException {
@@ -45,32 +49,45 @@ public class JDBCRecordSectionChannel extends JDBCTable {
             throws SQLException {
         try {
             int curRecSecId = getRecSecId(eventId, channelId);
-            System.out.println("Old recSecId = " +curRecSecId + " for " +channelId  );
             updateRecordSection.setInt(1, newRecSecId);
             updateRecordSection.setInt(2, curRecSecId);
             updateRecordSection.executeUpdate();
         } catch(SQLException e) {
-            throw new RuntimeException("Running the SQL query"
+            throw new RuntimeException("Running the SQL query "
                     + updateRecordSection.toString());
         }
     }
-    public boolean channelExists(int eventId,int channelId)throws SQLException{
-     if(getRecSecId(eventId,channelId)!= -1) {
-         return true;
-     }
-     return false;
+
+    public boolean channelExists(int eventId, int channelId)
+            throws SQLException {
+        if(getRecSecId(eventId, channelId) != -1) { return true; }
+        return false;
     }
+
     public int getRecSecId(int eventId, int channelId) throws SQLException {
+        if(getRecSecId==null){
+            String getRecSecIdStmt = "SELECT recSecId FROM "
+                + tableName
+                + " recSecChannel,"
+                + eventRecSecTableName
+                + " eventRecSec WHERE "
+                + "eventRecSec.recSecId=recSecChannel.recSecId AND eventid=? AND channelid=?";
+            getRecSecId=conn.prepareStatement(getRecSecIdStmt);
+        }
         getRecSecId.setInt(1, eventId);
         getRecSecId.setInt(2, channelId);
         try {
             ResultSet rs = getRecSecId.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            if(rs.next()) return rs.getInt(1);
+            return -1;
         } catch(SQLException e) {
-       return -1;
+            throw new RuntimeException("Running the SQL query "
+                    + getRecSecId.toString());
         }
     }
 
     PreparedStatement insert, updateRecordSection, getRecSecId;
+    Connection conn;
+    String tableName;
+    String eventRecSecTableName;
 }
