@@ -33,12 +33,12 @@ log4j.appender.EventFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 log4j.logger.edu.sc.seis.sod.subsetter.waveFormArm=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.WaveformArm=debug,WaveformFile
 log4j.logger.edu.sc.seis.sod.WaveformArmThread=debug,WaveformFile
-log4j.appender.WaveFormFile=org.apache.log4j.RollingFileAppender
-log4j.appender.WaveFormFile.File=logs/WaveFormArm.log
-log4j.appender.WaveFormFile.MaxFileSize=1000000KB
-log4j.appender.WaveFormFile.MaxBackupIndex=4
-log4j.appender.WaveFormFile.layout=org.apache.log4j.PatternLayout
-log4j.appender.WaveFormFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.WaveformFile=org.apache.log4j.RollingFileAppender
+log4j.appender.WaveformFile.File=logs/WaveformArm.log
+log4j.appender.WaveformFile.MaxFileSize=1000000KB
+log4j.appender.WaveformFile.MaxBackupIndex=4
+log4j.appender.WaveformFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.WaveformFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 
 
 log4j.logger.edu.sc.seis.sod.subsetter.networkArm=debug,NetworkFile
