@@ -162,6 +162,17 @@ public class MotionVectorArm implements Subsetter{
                 infilters=requestGenerator.generateRequest(ecp.getEvent(),
                                                            ecp.getChannelGroup(),
                                                            ecp.getCookieJar());
+                // check to see if at least one request filter exists, otherwise fail
+                boolean found = false;
+                for (int i = 0; i < infilters.length; i++) {
+                    if (infilters[i].length!=0) {
+                        found = true;
+                    }
+                }
+                if ( ! found) {
+                    logger.info("FAIL no request generated");
+                    ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
+                }
             } catch (Throwable e) {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
