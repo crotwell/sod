@@ -11,17 +11,14 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
-import edu.sc.seis.sod.subsetter.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import junit.framework.TestCase;
 
 public class SimpleWaveFormHTMLStatusTest extends TestCase{
     public SimpleWaveFormHTMLStatusTest(String name){ super(name); }
     
     public void setUp(){
-        EventAccessOperations event = MockFissuresCreator.createEvent();
-        EventChannelPair ecp = new EventChannelPair(null, new EventDbObject(0, event),
-                                                    new ChannelDbObject(0, MockFissuresCreator.createChannel())
-                                                        , null);
+        EventChannelPair ecp = MockECP.getECP();
         try {
             testPage = new SimpleHTMLWaveformStatus(null);
         } catch (ConfigurationException e) {}
@@ -34,12 +31,12 @@ public class SimpleWaveFormHTMLStatusTest extends TestCase{
     
     public void testFormatEvent(){
         assertEquals(EVENT_OUTPUT,
-                     testPage.formatEvent(MockFissuresCreator.createEvent()));
+                     testPage.formatEvent(MockFissures.createEvent()));
     }
     
     public void testFilizeEvent(){
         assertEquals(EVENT_FILE_LOC,
-                     testPage.fileizeEvent(MockFissuresCreator.createEvent()));
+                     testPage.fileizeEvent(MockFissures.createEvent()));
     }
     
     private SimpleHTMLWaveformStatus testPage;

@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.database.Status;
-import edu.sc.seis.sod.subsetter.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.File;
 import junit.framework.TestCase;
 
@@ -18,7 +18,7 @@ public class EventPageTest extends TestCase{
     
     public void setUp(){
         testPage = new EventChannelPage("Test Title", new File("./test.html"),
-                                 MockFissuresCreator.createEvent());
+                                 MockFissures.createEvent());
     }
     
     public void testConstruction(){
@@ -26,7 +26,7 @@ public class EventPageTest extends TestCase{
     }
     
     public void testAdd(){
-        testPage.add(MockFissuresCreator.createChannel(), Status.COMPLETE_SUCCESS);
+        testPage.add(MockFissures.createChannel(), Status.COMPLETE_SUCCESS);
         assertEquals(oneChanPage, testPage.generatePage());
     }
     

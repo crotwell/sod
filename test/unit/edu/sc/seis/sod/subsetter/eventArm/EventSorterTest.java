@@ -9,7 +9,7 @@ package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -21,15 +21,15 @@ public class EventSorterTest extends TestCase{
     public EventSorterTest(String name){ super(name); }
     
     public void setUp(){
-        epochEvent = MockFissuresCreator.createEvent();
-        fallEvent = MockFissuresCreator.createFallEvent();
+        epochEvent = MockFissures.createEvent();
+        fallEvent = MockFissures.createFallEvent();
         sorter = new EventSorter();
         sorter.add(fallEvent);
         sorter.add(epochEvent);
         incEvents = new EventAccessOperations[3];
         for (int i = 0; i < 3; i++) {
             MicroSecondDate eventTime = new MicroSecondDate((i + 1) * 1000);
-            incEvents[i] = MockFissuresCreator.createEvent(eventTime,
+            incEvents[i] = MockFissures.createEvent(eventTime,
                                                            i + 1,//magnitude & depth
                                                            incFeRegions[i]);
             sorter.add(incEvents[i]);

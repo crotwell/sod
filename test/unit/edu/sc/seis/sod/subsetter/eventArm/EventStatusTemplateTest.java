@@ -7,14 +7,9 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.RunStatus;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import junit.framework.TestCase;
-import org.w3c.dom.Document;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 public class EventStatusTemplateTest extends TestCase{
     public EventStatusTemplateTest(String name){
@@ -57,8 +52,8 @@ public class EventStatusTemplateTest extends TestCase{
         assertEquals(updatedEvent, temp.toString());
     }
     
-    private EventAccessOperations epochEvent = MockFissuresCreator.createEvent();
-    private EventAccessOperations fallEvent = MockFissuresCreator.createFallEvent();
+    private EventAccessOperations epochEvent = MockFissures.createEvent();
+    private EventAccessOperations fallEvent = MockFissures.createFallEvent();
     private EventStatusTemplate temp;
     
     private String intro =
@@ -69,12 +64,10 @@ public class EventStatusTemplateTest extends TestCase{
     
     private String plainOutput =
         intro +
-        "No events"+
         outro;
     
     private String plainHTMLOutput = "<html><header><title font=\"testAttr\">Event Arm</title></header><body>Event Arm Status:Setting up\n" +
-        "These are the events I'm watching:\n" +
-        "No events\n" +
+        "These are the events I'm watching:\n\n" +
         "aren't they grand?</body></html>";
     
     private String alaska = "CENTRAL ALASKA19700101T00:00:00.000";

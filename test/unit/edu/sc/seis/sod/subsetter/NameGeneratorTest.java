@@ -8,7 +8,7 @@ package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissuresCreator;
+import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -23,8 +23,8 @@ public class NameGeneratorTest extends TestCase{
     }
     
     public void setUp(){
-        epochInAlaska = MockFissuresCreator.createEvent();
-        fallOfWall = MockFissuresCreator.createFallEvent();
+        epochInAlaska = MockFissures.createEvent();
+        fallOfWall = MockFissures.createFallEvent();
     }
     
     public void testRegionName(){
