@@ -17,6 +17,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -192,15 +193,19 @@ public class EventArm extends SodExceptionSource implements Runnable{
 
     private void change(EventAccessOperations event, RunStatus status) {
         Iterator it = statusMonitors.iterator();
-        while(it.hasNext()){
-            ((EventStatus)it.next()).change(event, status);
+        synchronized(statusMonitors){
+            while(it.hasNext()){
+                ((EventStatus)it.next()).change(event, status);
+            }
         }
     }
 
     private void setStatus(String status){
         Iterator it = statusMonitors.iterator();
-        while(it.hasNext()){
-            ((EventStatus)it.next()).setArmStatus(status);
+        synchronized(statusMonitors){
+            while(it.hasNext()){
+                ((EventStatus)it.next()).setArmStatus(status);
+            }
         }
     }
 
@@ -313,10 +318,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 
     private List processors = new ArrayList();
-
-    private List statusMonitors = new ArrayList();
-
+    
+    private List statusMonitors = Collections.synchronizedList(new ArrayList());
+    
     private Properties props;
 
     private static Logger logger = Logger.getLogger(EventArm.class);
 }// EventArm
+
