@@ -73,12 +73,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		eventAccess = 
 		    (EventAccessOperations)Start.getEventQueue().pop();
 	    }   
-
 	} catch(Exception e) {
-
-		e.printStackTrace();
-		notifyListeners(this, e);
-	}
+	    logger.fatal("Problem running waveform arm", e);
+	    notifyListeners(this, e);
+	} finally {
+	    pool.finished();
+	} // end of finally
+	
     }
 
     /**
@@ -127,9 +128,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	}
 
 	public void run() {
+	    Runnable work = pool.getWork();
 	    while ( ! finished) {
-		Runnable work = pool.getWork();
 		work.run();
+		work = pool.getWork();
 	    } // end of while ( ! finished)
 	}
     }
@@ -161,16 +163,38 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
 	public synchronized Runnable getWork() {
 
-	    while (work == null) {
+	    while (work == null && ! finished) {
 		try {
 		    wait();
 		} catch (InterruptedException e) { }
 	    }
+	    if (finished) {
+		notifyAll();
+		return null;
+	    } // end of if (finished)
+	    
 	    Runnable myWork = work;
 	    work = null;
 	    notifyAll();
 	    return myWork;
 	}
+
+	public synchronized void finished() {
+	    // wait until there is no more work waiting for a thread
+	    while (work != null) {
+		try {
+		    wait();
+		} catch (InterruptedException e) { }
+	    }
+	    finished = true;
+	    Iterator it = pool.iterator();
+	    while (it.hasNext()) {
+		((ThreadWorker)it.next()).finish();
+	    } // end of while (it.hasNext())
+	    notifyAll();
+	}
+
+	private boolean finished = false;
     }
 
     
