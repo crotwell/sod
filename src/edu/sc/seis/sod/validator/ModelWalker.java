@@ -5,11 +5,8 @@
  */
 
 package edu.sc.seis.sod.validator;
-import edu.sc.seis.sod.validator.model.Definition;
-import edu.sc.seis.sod.validator.model.Form;
-import edu.sc.seis.sod.validator.model.GenitorForm;
-import edu.sc.seis.sod.validator.model.MultigenitorForm;
-import edu.sc.seis.sod.validator.model.NamedElement;
+import edu.sc.seis.sod.validator.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +34,31 @@ public class ModelWalker {
 
     public static boolean isSelfReferential(Form f){
         if(f.isFromDef()){  return lineageContainsRefTo(f, f.getDef()); }
+        return false;
+    }
+
+    public static boolean requiresSelfReferentiality(Form f){
+        if (f.getMin() == 0) return false;
+        if (isSelfReferential(f)) return true;
+        if (f instanceof NamedElement){
+            NamedElement el = (NamedElement)f;
+            Form kid = el.getChild();
+            return requiresSelfReferentiality(kid);
+        } else if (f instanceof Choice){
+            Choice c = (Choice)f;
+            Form[] kids = c.getChildren();
+            for (int i = 0; i < kids.length; i++) {
+                if (!requiresSelfReferentiality(kids[i])) return false;
+            }
+            return true;
+        } else if (f instanceof Interleave || f instanceof Group){
+            MultigenitorForm multi = (MultigenitorForm)f;
+            Form[] kids = multi.getChildren();
+            for (int i = 0; i < kids.length; i++) {
+                if (requiresSelfReferentiality(kids[i])) return false;
+            }
+            return true;
+        }
         return false;
     }
 
