@@ -99,7 +99,6 @@ a.download {
 }
 
 .subsection{
-  margin-left:15px;
 }
 .caption{
   width:100px;
@@ -110,6 +109,10 @@ a.download {
 	border-color:black;
 	border-width:1px;
 	background:white;
+}
+
+.section h4{
+	font-size:smaller;
 }
 
 .section h4,.section h3{
