@@ -153,3 +153,7 @@ div #choice{
 	border-left:1px dashed black;
   margin-left:5px;
 }
+
+a img{
+	border:none;
+}
