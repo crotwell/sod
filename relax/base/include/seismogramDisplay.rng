@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="recordSectionDisplayContents">
+        <ref name="defineAndReference"/>
+        <element name="type">
+            <value>recordSection</value>
+        </element>
+        <optional>
+            <element name="swapAxes">
+                <empty/>
+            </element>
+        </optional>
+        <optional>
+            <ref name="dontDrawNamed"/>
+        </optional>
+        <optional>
+            <ref name="flagColors"/>
+        </optional>
+        <optional>
+            <ref name="traceColors"/>
+        </optional>
+        <optional>
+            <ref name="borderBackground"/>
+        </optional>
+        <optional>
+            <ref name="borderColor"/>
+        </optional>
+        <zeroOrMore>
+            <ref name="border"/>
+        </zeroOrMore>
+    </define>
+    <define name="basicSeismogramDisplayContents">
+        <ref name="defineAndReference"/>
+        <optional>
+            <element name="type">
+                <value>basic</value>
+            </element>
+        </optional>
+        <optional>
+            <ref name="dontDrawNamed"/>
+        </optional>
+        <optional>
+            <ref name="flagColors"/>
+        </optional>
+        <optional>
+            <ref name="traceColors"/>
+        </optional>
+        <optional>
+            <ref name="borderBackground"/>
+        </optional>
+        <optional>
+            <ref name="borderColor"/>
+        </optional>
+        <zeroOrMore>
+            <ref name="border"/>
+        </zeroOrMore>
+    </define>
+    <define name="displaySpecificElements">
+        <notAllowed/>
+    </define>
+    <define name="dontDrawNamed">
+        <element name="dontDrawNamedDrawableNames">
+            <xsd:annotation>
+                <summary>Turns off the names of seismograms and other named drawables in the
+                display</summary>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="flagColors">
+        <element name="flagColors">
+            <xsd:annotation>
+                <summary>A list of colors to use for flags added to the display. The first flag gets
+                    the first color, the second flag gets the second color and so on and so
+                forth.</summary>
+            </xsd:annotation>
+            <ref name="defineAndReference"/>
+            <oneOrMore>
+                <ref name="color"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="traceColors">
+        <element name="traceColors">
+            <xsd:annotation>
+                <summary>A list of colors to use for seismograms added to the display. The first
+                    trace gets the first color, the second trace gets the second color and so on and
+                    so forth.</summary>
+            </xsd:annotation>
+            <ref name="defineAndReference"/>
+            <oneOrMore>
+                <ref name="color"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="borderBackground">
+        <element name="borderBackground">
+            <xsd:annotation>
+                <summary>The color of the background of all borders in the display</summary>
+            </xsd:annotation>
+            <ref name="colorContents"/>
+        </element>
+    </define>
+    <define name="borderColor">
+        <element name="borderColor">
+            <xsd:annotation>
+                <summary>The color of the ticks and text on the borders</summary>
+            </xsd:annotation>
+            <ref name="colorContents"/>
+        </element>
+    </define>
+    <define name="color">
+        <element name="color">
+            <ref name="colorContents"/>
+        </element>
+    </define>
+    <define name="colorContents">
+        <ref name="defineAndReference"/>
+        <optional>
+            <element name="red">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="green">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="blue">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="alpha">
+                <data type="integer"/>
+            </element>
+        </optional>
+    </define>
+    <define name="defineAndReference">
+        <optional>
+            <attribute name="id"/>
+        </optional>
+        <optional>
+            <attribute name="base"/>
+        </optional>
+    </define>
+    <define name="border">
+        <element name="border">
+            <ref name="defineAndReference"/>
+            <element name="type">
+                <choice>
+                    <value>title</value>
+                    <value>dist</value>
+                    <value>amp</value>
+                    <value>time</value>
+                </choice>
+            </element>
+            <element name="position">
+                <choice>
+                    <value>bottom</value>
+                    <value>top</value>
+                    <value>left</value>
+                    <value>right</value>
+                </choice>
+            </element>
+            <optional>
+                <element name="titleFont">
+                    <ref name="fontContents"/>
+                </element>
+            </optional>
+            <zeroOrMore>
+                <element name="title">
+                    <element name="text">
+                        <data type="string"/>
+                    </element>
+                    <optional>
+                        <element name="font">
+                            <ref name="fontContents"/>
+                        </element>
+                    </optional>
+                </element>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="fontContents">
+        <ref name="defineAndReference"/>
+        <optional>
+            <element name="size">
+                <data type="integer"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="name">
+                <data type="string"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="style">
+                <choice>
+                    <value>plain</value>
+                    <value>bold</value>
+                    <value>italic</value>
+                </choice>
+            </element>
+        </optional>
+    </define>
+</grammar>
