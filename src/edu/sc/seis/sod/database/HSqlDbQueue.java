@@ -85,7 +85,7 @@ public class HSqlDbQueue implements Queue {
 	}
 	try {
 	    //if(waitFlag){  
-	    if(getLength() > 4) {
+	    while(getLength() > 4) {
 		System.out.println("&*********************&&&&&&&&&&&&&&&&&&& Waiting in push ");
 		System.out.println("Before Wait push of queue");
 		wait();
