@@ -69,10 +69,10 @@ def buildJars(sodProj, clean=False):
     allProj = [ProjectParser.ProjectParser('../fissures/project.xml'),
                ProjectParser.ProjectParser('../fissuresUtil/project.xml'),
                sodProj]
-    if clean:
-        for proj in allProj: mavenExecutor.mavenExecutor(proj).clean()
     compiled = False
     for proj in allProj:
+        if clean:    
+             mavenExecutor.mavenExecutor(proj).clean()
         if mavenExecutor.mavenExecutor(proj).jarinst():
             compiled = True
     os.chdir(curdir)
