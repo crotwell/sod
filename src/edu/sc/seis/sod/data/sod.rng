@@ -3489,7 +3489,7 @@
             <element name="originNOT">
                 <ref name="origin4"/>
             </element>
-            <element name="nullOriginSubsetter">
+            <element name="passOrigin">
                 <zeroOrMore>
                     <ref name="origin4"/>
                 </zeroOrMore>
@@ -3758,7 +3758,7 @@
             <element name="originNOT">
                 <ref name="origin"/>
             </element>
-            <element name="nullOriginSubsetter">
+            <element name="passOrigin">
                 <zeroOrMore>
                     <ref name="origin"/>
                 </zeroOrMore>
@@ -4027,7 +4027,7 @@
             <element name="originNOT">
                 <ref name="origin3"/>
             </element>
-            <element name="nullOriginSubsetter">
+            <element name="passOrigin">
                 <zeroOrMore>
                     <ref name="origin3"/>
                 </zeroOrMore>
@@ -4296,7 +4296,7 @@
             <element name="originNOT">
                 <ref name="origin5"/>
             </element>
-            <element name="nullOriginSubsetter">
+            <element name="passOrigin">
                 <zeroOrMore>
                     <ref name="origin5"/>
                 </zeroOrMore>
@@ -4565,7 +4565,7 @@
             <element name="originNOT">
                 <ref name="origin2"/>
             </element>
-            <element name="nullOriginSubsetter">
+            <element name="passOrigin">
                 <zeroOrMore>
                     <ref name="origin2"/>
                 </zeroOrMore>
@@ -6102,9 +6102,9 @@
                 <optional>
                     <element name="type">
                         <choice>
-                            <value>hanning</value>
-                            <value>hamming</value>
-                            <value>cosine</value>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
                         </choice>
                     </element>
                 </optional>
@@ -6333,9 +6333,9 @@
                 <optional>
                     <element name="type">
                         <choice>
-                            <value>hanning</value>
-                            <value>hamming</value>
-                            <value>cosine</value>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
                         </choice>
                     </element>
                 </optional>
@@ -6564,9 +6564,9 @@
                 <optional>
                     <element name="type">
                         <choice>
-                            <value>hanning</value>
-                            <value>hamming</value>
-                            <value>cosine</value>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
                         </choice>
                     </element>
                 </optional>
@@ -6795,9 +6795,9 @@
                 <optional>
                     <element name="type">
                         <choice>
-                            <value>hanning</value>
-                            <value>hamming</value>
-                            <value>cosine</value>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
                         </choice>
                     </element>
                 </optional>
@@ -7026,9 +7026,9 @@
                 <optional>
                     <element name="type">
                         <choice>
-                            <value>hanning</value>
-                            <value>hamming</value>
-                            <value>cosine</value>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
                         </choice>
                     </element>
                 </optional>
