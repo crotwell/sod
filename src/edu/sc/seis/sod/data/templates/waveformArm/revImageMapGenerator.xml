@@ -3,9 +3,9 @@
 <outputLocation>
 <eventDir>events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></eventDir>
 <stationDir><networkCode/>.<stationCode/></stationDir>
+<picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></picName>
 </outputLocation>
 <filename>seismograms.html</filename>
-<picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></picName>
 <html xmlns:xlink="http://www.w3.org/1999/xlink/">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />

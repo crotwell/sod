@@ -55,8 +55,7 @@ window.onload=function(){
 </event>
 </table>
 <h2>Map:</h2>
-<img useMap="#stationImageMap"><attribute name="src"><map/></attribute></img><br/>
-<stationImageMap/>
+<img><attribute name="src"><map/></attribute></img><br/>
 Maps only update once every two minutes
 <h2>Stations:</h2>
 <table class="ruler sortable" id="stations">
