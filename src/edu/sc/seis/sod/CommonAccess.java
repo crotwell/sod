@@ -2,7 +2,8 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.model.AllVTFactory;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
-import org.apache.log4j.Category;
+import edu.sc.seis.sod.CommonAccess;
+import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
 
 
@@ -17,21 +18,10 @@ import org.apache.log4j.lf5.util.LogMonitorAdapter;
  */
 
 public class CommonAccess {
-    
-    private CommonAccess (){
-        
-        //return commonAccess();
-        
-    }
+    private CommonAccess (){}
     
     public static CommonAccess getCommonAccess() { return commonAccess; }
     
-    /**
-     * Describe <code>getFissuresNamingService</code> method here.
-     *
-     * @return a <code>FissuresNamingServiceImpl</code> value
-     * @exception Exception if an error occurs
-     */
     public FissuresNamingServiceImpl getFissuresNamingService() throws Exception{
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingServiceImpl(getORB());
@@ -45,38 +35,22 @@ public class CommonAccess {
         
     }
     
-    
-    
-    /**
-     * Describe <code>initORB</code> method here.
-     *
-     */
     protected void initORB(String[] args, java.util.Properties props) {
         if (orb == null) {
             // Initialize the ORB.
             orb = (org.omg.CORBA_2_3.ORB)org.omg.CORBA.ORB.init(args, props);
-            
             // register valuetype factories
             AllVTFactory vt = new AllVTFactory();
             vt.register(orb);
         }
     }
     
-    
-    /**
-     * Describe <code>getORB</code> method here.
-     *
-     * @return an <code>org.omg.CORBA_2_3.ORB</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
         if (orb == null) {
             initORB(null, null);
         } // end of if (orb == null)
         return orb;
     }
-    
-    private String[] args;
     
     public LogMonitorAdapter getLF5Adapter(){
         if(adapter == null){
@@ -96,9 +70,5 @@ public class CommonAccess {
     static final String NAME_SERVICE_PROP =
         "edu.sc.seis.sod.nameServiceCorbaLoc";
     
-    static Category logger =
-        Category.getInstance(CommonAccess.class.getName());
-    
-    
-    
+    static Logger logger = Logger.getLogger(CommonAccess.class);
 }// CommonAccess
