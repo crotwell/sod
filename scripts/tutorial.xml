@@ -106,11 +106,19 @@
                                 </effectiveTimeOverlap>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
-                <networkStatusTemplate
-                    outputLocation="status/network.html" xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/network.xml" />
                 <networkInfoTemplateGenerator>
-                    <fileLoc>status/<code/>-<firstWord/>/stations.html</fileLoc>
-                    <externalConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
+                    <fileDir>status</fileDir>
+                    <netsOutputFileName>networks.html</netsOutputFileName>
+                    <netDir><networkCode/>-<firstWord/></netDir>
+                    <stationsOutputFileName>stations.html</stationsOutputFileName>
+                    <stationDir><stationCode/>-<beginTime>yyyyMMddHHmmss</beginTime></stationDir>
+                    <sitesOutputFileName>sites.html</sitesOutputFileName>
+                    <siteDir><siteCode/>-<beginTime>yyyyMMddHHmmss</beginTime></siteDir>
+                    <channelsOutputFileName>channels.html</channelsOutputFileName>
+                    <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
+                    <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
+                    <siteConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/sites.xml"/>
+                    <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
                 </networkInfoTemplateGenerator>
         </networkArm>
         <waveFormArm>
