@@ -101,7 +101,7 @@
         <dependency>
             <groupId>jcalendar</groupId>
             <artifactId>jcalendar</artifactId>
-            <version>0.6.1beta</version>
+            <version>0.76</version>
         </dependency>
         <dependency>
             <groupId>JacORB</groupId>
