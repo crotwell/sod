@@ -15,6 +15,8 @@
                         <externalRef href="../base/externalRef/magnitudeRange.rng"/>
                         <ref name="depthRange"/>
                         <ref name="originPointDistance"/>
+                        <ref name="originPointAzimuth"/>
+                        <ref name="originPointBackAzimuth"/>
                         <ref name="eventArea"/>
                         <externalRef href="catalog.rng"/>
                         <externalRef href="contributor.rng"/>
@@ -222,7 +224,7 @@
                         <xsd:documentation xml:lang="en">
                                 <summary> Distance range from a fixed point. </summary>
                                 <description> True if the origin is within the
-                                given distance of the given lat and lon. </description>
+                                given distance range of the given lat and lon. </description>
                                 <example>
                                         <originPointDistance>
                                                 <unit>DEGREE</unit>
@@ -235,6 +237,60 @@
                         </xsd:documentation>
                 </xsd:annotation>
                 <element name="originPointDistance">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+                </element>
+        </define>
+        <define name="originPointAzimuth">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Azimuth range from a fixed point. </summary>
+                                <description> True if the origin is within the
+                                given azimuth range of the given lat and lon. </description>
+                                <example>
+                                        <originPointAzimuth>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </originPointAzimuth>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="originPointAzimuth">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+                </element>
+        </define>
+        <define name="originPointBackAzimuth">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Back azimuth range from a fixed point. </summary>
+                                <description> True if the origin is within the
+                                given back azimuth range of the given lat and lon. </description>
+                                <example>
+                                        <originPointBackAzimuth>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </originPointBackAzimuth>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="originPointBackAzimuth">
                     <element name="latitude">
                         <data type="double"/>
                     </element>
