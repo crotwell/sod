@@ -61,7 +61,7 @@ Maps only update once every two minutes
 <td>Id</td>
 <td>Distance</td>
 <td>Back Azimuth</td>
-<td>Successful Channels</td>
+<td class="initiallySorted ascending">Successful Channels</td>
 <td>Retry Channels</td>
 <td>Rejected Channels</td>
 </tr>

@@ -29,7 +29,7 @@ Events
 <table class="ruler sortable" id="SuccessEvents">
 <tr class="title">
 <td>Region</td>
-<td>Time (GMT)</td>
+<td class="initiallySorted ascending">Time (GMT)</td>
 <td>Magnitude</td>
 <td>Depth</td>
 <td class="num">Successful Channels</td>
@@ -51,7 +51,7 @@ Events
 <table class="ruler sortable" id="InProgressEvents">
 <tr class="title">
 <td>Region</td>
-<td >Time (GMT)</td>
+<td class="initiallySorted ascending">Time (GMT)</td>
 <td>Magnitude</td>
 <td>Depth</td>
 <td>Status</td>
@@ -69,7 +69,7 @@ Events
 <table class="ruler sortable" id="FailedEvents">
 <tr class="title">
 <td>Region</td>
-<td >Time (GMT)</td>
+<td class="initiallySorted ascending">Time (GMT)</td>
 <td>Magnitude</td>
 <td>Depth</td>
 <td>Status</td>

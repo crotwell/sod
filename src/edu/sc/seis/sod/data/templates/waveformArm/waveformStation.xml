@@ -48,7 +48,7 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 <table class="sortable ruler" id="eventTable">
 <tr class="title">
 <th><b>Region</b></th>
-<th><b>Time</b></th>
+<th class="initiallySorted ascending"><b>Time</b></th>
 <th><b>Magnitude</b></th>
 <th><b>Depth</b></th>
 <th><b>Latitude</b></th>
@@ -77,12 +77,12 @@ $fissures.formatMagnitude($m),
 </tr>
 #set( $extraRows = $extraRows - 1 )
 #end
+</table>
 #if ( $extraRows > 0 )
 #foreach ( $row in [1..$extraRows])
-<tr><td>&nbsp</td></tr>
+<br/>
 #end
 #end
-</table>
 </div>
 <div id="footer">
 <h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
