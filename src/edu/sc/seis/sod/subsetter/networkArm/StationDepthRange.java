@@ -55,7 +55,7 @@ public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange impl
 
     public boolean accept(Station station) {
         QuantityImpl actualDepth = (QuantityImpl)station.my_location.depth;
-        if(actualDepth.greaterThanEqual((QuantityImpl)getMinDepth()) && actualDepth.lessThanEqual((QuantityImpl)getMaxDepth())) {
+        if(actualDepth.greaterThanEqual(getMinDepth()) && actualDepth.lessThanEqual(getMaxDepth())) {
             return true;
         } else return false;
     }

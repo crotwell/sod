@@ -51,7 +51,7 @@ public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange impleme
 
     public boolean accept(Site site) {
         QuantityImpl actualDepth = (QuantityImpl)site.my_location.depth;
-        if(actualDepth.greaterThanEqual((QuantityImpl)getMinDepth()) && actualDepth.lessThanEqual((QuantityImpl)getMaxDepth())) {
+        if(actualDepth.greaterThanEqual(getMinDepth()) && actualDepth.lessThanEqual(getMaxDepth())) {
             return true;
         } else return false;
     }

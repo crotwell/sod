@@ -53,7 +53,7 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange imple
 
     public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         QuantityImpl actualDepth = (QuantityImpl)origin.my_location.depth;
-        if(actualDepth.greaterThanEqual((QuantityImpl)getMinDepth()) && actualDepth.lessThanEqual((QuantityImpl)getMaxDepth())) {
+        if(actualDepth.greaterThanEqual(getMinDepth()) && actualDepth.lessThanEqual(getMaxDepth())) {
             return true;
         } else return false;
     }
