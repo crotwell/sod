@@ -1,12 +1,14 @@
 package edu.sc.seis.sod;
 
 import java.awt.Dimension;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -312,10 +314,10 @@ public class SodUtil {
         File f = new File(dest);
         f.getParentFile().mkdirs();
         try {
-            FileOutputStream fos = new FileOutputStream(f);
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(f));
             int curChar;
             while((curChar = src.read()) != -1)
-                fos.write(curChar);
+                os.write(curChar);
         } catch(IOException e) {
             GlobalExceptionHandler.handle("Troble copying a file", e);
         }
