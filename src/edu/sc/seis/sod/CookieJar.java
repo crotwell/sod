@@ -49,9 +49,9 @@ public class CookieJar {
         // velocity tool
         updateStatus();
         context = new JDBCVelocityContext(ecp, jdbcCookie, memoryContext);
-        ((Context)memoryContext.get("sod_site_context")).put(ChannelIdUtil.toString(ecp.getChannel()
-                                                                     .get_id()),
-                                                             context);
+        String chanId = ChannelIdUtil.toString(ecp.getChannel().get_id());
+        Context siteContext = (Context)memoryContext.get("sod_site_context");
+        siteContext.put(chanId, context);
     }
 
     public EventChannelPair getEventChannelPair() {
