@@ -3,17 +3,17 @@ package edu.sc.seis.sod.database;
 import edu.iris.Fissures.IfNetwork.*;
 
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.log4j.Category;
-import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 
 /**
  * AbstractNetworkDatabase.java
@@ -30,15 +30,15 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         this.connection = connection;
         init();
     }
-    
+
     public abstract void create();
-    
+
     public abstract ConfigDatabase getConfigDatabase();
-    
+
     private void init() {
         try {
             create();
-            
+
             netPutStmt = connection.prepareStatement("INSERT INTO networkdatabase "+
                                                          " ( serverName, "+
                                                          " serverDNS, "+
@@ -49,13 +49,13 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                                                          " status, "+
                                                          " networkAccessIOR ) "+
                                                          " VALUES(?,?,?,?,?,?,?,?)");
-            
+
             netIdStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase "+
                                                         " WHERE network_code = ? AND "+
                                                         " network_time = ? AND "+
                                                         " nleapseconds = ? ");
-            
-            
+
+
             stationPutStmt = connection.prepareStatement("INSERT INTO stationdatabase "+
                                                              " (networkid, "+
                                                              " station_code, "+
@@ -64,7 +64,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                                                              " stqtime, "+
                                                              " status )"+
                                                              " VALUES(?,?,?,?,?,?)");
-            
+
             stationIdStmt =  connection.prepareStatement("SELECT stationid FROM stationdatabase "+
                                                              " WHERE networkid = ? AND "+
                                                              " station_code = ?  AND "+
@@ -83,8 +83,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                                                          " site_code = ? AND "+
                                                          " site_time = ? AND "+
                                                          " sleapseconds = ? ");
-            
-            
+
+
             channelPutStmt = connection.prepareStatement(" INSERT INTO channeldatabase "+
                                                              " ( siteid, "+
                                                              " channel_code, "+
@@ -93,66 +93,66 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                                                              " cqtime, "+
                                                              " status ) "+
                                                              " VALUES(?, ?, ?, ?, ?, ?)");
-            
+
             channelIdStmt = connection.prepareStatement(" SELECT channelid FROM channeldatabase "+
                                                             " WHERE siteid = ? AND "+
                                                             " channel_code = ?  AND "+
                                                             " channel_time = ? AND "+
                                                             " cleapseconds = ? ");
-            
+
             getNetStmt = connection.prepareStatement(" SELECT network_code, "+
                                                          " network_time, "+
                                                          " nleapseconds, "+
                                                          " networkAccessIOR "+
                                                          " FROM networkdatabase "+
                                                          " WHERE networkid = ? ");
-            
+
             getStationStmt = connection.prepareStatement(" SELECT station_code, "+
                                                              " station_time, "+
                                                              " stleapseconds, "+
                                                              " networkid "+
                                                              " FROM stationdatabase "+
                                                              " WHERE stationid = ? ");
-            
+
             getSiteStmt = connection.prepareStatement(" SELECT site_code, "+
                                                           " site_time, "+
                                                           " sleapseconds, "+
                                                           " stationid "+
                                                           " FROM sitedatabase "+
                                                           " WHERE siteid = ? ");
-            
+
             getChannelStmt = connection.prepareStatement(" SELECT channel_code, "+
                                                              " channel_time,  "+
                                                              " cleapseconds, "+
                                                              " siteid "+
                                                              " FROM channeldatabase "+
                                                              " WHERE channelid = ? ");
-            
+
             networkIdsStmt = connection.prepareStatement(" SELECT networkid FROM "+
                                                              " networkdatabase ");
-            
+
             stationIdsStmt = connection.prepareStatement(" SELECT stationid FROM "+
                                                              " stationdatabase "+
                                                              " WHERE networkid = ? ");
-            
+
             siteIdsStmt = connection.prepareStatement(" SELECT siteid FROM "+
                                                           " sitedatabase "+
                                                           " WHERE stationid = ? ");
-            
+
             channelIdsStmt = connection.prepareStatement(" SELECT channelid FROM "+
                                                              " channeldatabase "+
                                                              " WHERE siteid = ? ");
-            
+
             deleteStmt = " DELETE FROM ";
-            
+
         } catch(Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
-    
-    
+
+
+
     public int putNetwork(String serverName,
                           String serverDNS,
                           NetworkAccess networkAccess) {
@@ -167,7 +167,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             netPutStmt.setTimestamp(4, microSecondDate.getTimestamp());
             netPutStmt.setInt(5, networkId.begin_time.leap_seconds_version);
             netPutStmt.setTimestamp(6, (ClockUtil.now()).getTimestamp());
-            netPutStmt.setInt(7, Status.NEW.getId());
+            netPutStmt.setInt(7, Status.get(Status.NETWORK_SUBSETTER,
+                                            Status.NEW).getAsByte());
             String networkAccessIor = null; org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
             while (networkAccess instanceof RetryNetworkAccess || networkAccess instanceof CacheNetworkAccess) {
                 if (networkAccess instanceof RetryNetworkAccess) {
@@ -185,7 +186,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int getNetworkDbId(NetworkAccess networkAccess) {
         try {
             NetworkId networkId = networkAccess.get_attributes().get_id();
@@ -202,7 +203,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int putStation(NetworkDbObject networkDbObject, Station station) {
         try {
             int dbid = getStationDbId(networkDbObject, station);
@@ -215,18 +216,19 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             stationPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             stationPutStmt.setInt(4, stationId.begin_time.leap_seconds_version);
             stationPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            stationPutStmt.setInt(6, Status.NEW.getId());
+            stationPutStmt.setInt(6, Status.get(Status.NETWORK_SUBSETTER,
+                                                Status.NEW).getAsByte());
             stationPutStmt.executeUpdate();
             return getStationDbId(networkDbObject, station);
         } catch(SQLException sqle) {
             sqle.printStackTrace();
         }
-        
+
         return -1;
     }
-    
-    
-    
+
+
+
     public int getStationDbId(NetworkDbObject networkDbObject, Station station) {
         try {
             int networkdbid = networkDbObject.getDbId();
@@ -245,15 +247,15 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int putSite(StationDbObject stationDbObject,
                        Site site) {
-        
+
         try {
             int dbid = getSiteDbId(stationDbObject,
                                    site);
             if(dbid != -1) return dbid;
-            
+
             int stationdbid = stationDbObject.getDbId();
             sitePutStmt.setInt(1, stationdbid);
             SiteId siteId =  site.get_id();
@@ -262,7 +264,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             sitePutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             sitePutStmt.setInt(4, siteId.begin_time.leap_seconds_version);
             sitePutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            sitePutStmt.setInt(6, Status.NEW.getId());
+            sitePutStmt.setInt(6, Status.get(Status.NETWORK_SUBSETTER,
+                                             Status.NEW).getAsByte());
             sitePutStmt.executeUpdate();
             return getSiteDbId(stationDbObject,
                                site);
@@ -271,10 +274,10 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int getSiteDbId(StationDbObject stationDbObject,
                            Site site) {
-        
+
         try {
             int stationdbid = stationDbObject.getDbId();
             siteIdStmt.setInt(1, stationdbid);
@@ -291,12 +294,12 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             sqle.printStackTrace();
         }
         return -1;
-        
+
     }
-    
+
     public int putChannel(SiteDbObject siteDbObject,
                           Channel  channel) {
-        
+
         try {
             int dbid = getChannelDbId(siteDbObject,
                                       channel);
@@ -308,7 +311,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             channelPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             channelPutStmt.setInt(4, channelId.begin_time.leap_seconds_version);
             channelPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            channelPutStmt.setInt(6,  Status.NEW.getId());
+            channelPutStmt.setInt(6,  Status.get(Status.NETWORK_SUBSETTER,
+                                                 Status.NEW).getAsByte());
             channelPutStmt.executeUpdate();
             return getChannelDbId(siteDbObject,
                                   channel);
@@ -317,10 +321,10 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int getChannelDbId(SiteDbObject siteDbObject,
                               Channel channel) {
-        
+
         try {
             channelIdStmt.setInt(1, siteDbObject.getDbId());
             ChannelId channelId = channel.get_id();
@@ -337,11 +341,11 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
-    
+
+
     public int getSiteDbId(int channelDbId) {
         try {
-            
+
             getChannelStmt.setInt(1, channelDbId);
             ResultSet rs = getChannelStmt.executeQuery();
             if(rs.next()) {
@@ -352,7 +356,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int getStationDbId(int siteDbId) {
         try {
             getSiteStmt.setInt(1, siteDbId);
@@ -365,7 +369,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public int getNetworkDbId(int stationDbId) {
         try {
             getStationStmt.setInt(1, stationDbId);
@@ -378,10 +382,10 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return -1;
     }
-    
+
     public NetworkAccess getNetworkAccess(int networkid) {
         try {
-            
+
             //dont forget to revalidate the obtained networkAccess..
             getNetStmt.setInt(1, networkid);
             ResultSet rs = getNetStmt.executeQuery();
@@ -399,7 +403,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                         return networkAccess;
                     } catch (org.omg.CORBA.SystemException e) {
                         logger.debug("retry on NetworkAccessHelper.narrow(obj), retries="+i, e);
-                        
+
                     }
                 }
             }
@@ -408,8 +412,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
-    
+
+
     public NetworkId getNetworkId(int networkid) {
         try {
             getNetStmt.setInt(1, networkid);
@@ -426,7 +430,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
+
     public StationId getStationId(int stationid) {
         try {
             int networkid = getNetworkDbId(stationid);
@@ -447,7 +451,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         return null;
     }
     public Station getStation(int stationid) {
-        
+
         try {
             getStationStmt.setInt(1, stationid);
             ResultSet rs = getStationStmt.executeQuery();
@@ -457,16 +461,16 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
                     return site.my_station;
                 }
             }
-            
+
         } catch(SQLException sqle) {
             sqle.printStackTrace();
         }
         return null;
     }
-    
-    
+
+
     public Site getSite(int siteid) {
-        
+
         int stationid = getStationDbId(siteid);
         int networkid = getNetworkDbId(stationid);
         StationId stationId = getStationId(stationid);
@@ -477,7 +481,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
+
     public SiteId getSiteId(int siteid) {
         try {
             int stationid = getStationDbId(siteid);
@@ -488,7 +492,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             if(rs.next()) {
                 edu.iris.Fissures.Time siteTime = new MicroSecondDate(rs.getTimestamp("site_time")).getFissuresTime();
                 siteTime.leap_seconds_version = rs.getInt("sleapseconds");
-                
+
                 return new SiteId(networkId,
                                   stationId.station_code,
                                   rs.getString("site_code"),
@@ -499,7 +503,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
+
     public Channel getChannel(int channelid) {
         int siteid = getSiteDbId(channelid);
         int stationid = getStationDbId(siteid);
@@ -514,13 +518,13 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
+
     public ChannelId getChannelId(int channelid) {
         try {
             int siteid = getSiteDbId(channelid);
             SiteId siteId = getSiteId(siteid);
             NetworkId networkId = siteId.network_id;
-            
+
             getChannelStmt.setInt(1, channelid);
             ResultSet rs = getChannelStmt.executeQuery();
             if(rs.next()) {
@@ -537,8 +541,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return null;
     }
-    
-    
+
+
     public int[] getNetworkDbIds() {
         ArrayList arrayList = new ArrayList();
         try {
@@ -555,7 +559,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public int[] getStationDbIds(int networkid) {
         ArrayList arrayList = new ArrayList();
         try {
@@ -573,7 +577,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public int[] getSiteDbIds(int stationid) {
         ArrayList arrayList = new ArrayList();
         try {
@@ -591,7 +595,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public int[] getChannelDbIds(int siteid) {
         ArrayList arrayList = new ArrayList();
         try {
@@ -609,7 +613,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public NetworkDbObject[] getNetworks() {
         int[] ids = getNetworkDbIds();
         NetworkDbObject[] rtnValues = new NetworkDbObject[ids.length];
@@ -619,7 +623,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public StationDbObject[] getStations(int networkid) {
         int[] ids = getStationDbIds(networkid);
         StationDbObject[] rtnValues = new StationDbObject[ids.length];
@@ -629,7 +633,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public SiteDbObject[] getSites(int stationid) {
         int[] ids = getSiteDbIds(stationid);
         SiteDbObject[] rtnValues = new SiteDbObject[ids.length];
@@ -639,7 +643,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public ChannelDbObject[] getChannels(int siteid) {
         int[] ids = getChannelDbIds(siteid);
         ChannelDbObject[] rtnValues = new ChannelDbObject[ids.length];
@@ -649,26 +653,26 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
         }
         return rtnValues;
     }
-    
+
     public String getTimeConfigName() {
         return "networktimeconfig";
     }
-    
+
     public void setTime(String serverName, String serverDNS, edu.iris.Fissures.Time time) {
         getConfigDatabase().setTime(serverName, serverDNS, time);
     }
-    
+
     public edu.iris.Fissures.Time getTime(String serverName, String serverDNS) {
         return getConfigDatabase().getTime(serverName,
                                            serverDNS);
     }
-    
+
     public void incrementTime(String serverName, String serverDNS, int numDays) {
         getConfigDatabase().incrementTime(serverName,
                                           serverDNS,
                                           numDays);
     }
-    
+
     public void delete(String tableName) {
         try {
             connection.createStatement().execute(deleteStmt+tableName);
@@ -676,55 +680,55 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             sqle.printStackTrace();
         }
     }
-    
+
     public void clean() {
         delete("networkdatabase");
         delete("stationdatabase");
         delete("sitedatabase");
         delete("channeldatabase");
     }
-    
-    
+
+
     protected Connection connection;
-    
+
     private PreparedStatement netGetStmt;
-    
+
     private PreparedStatement netPutStmt;
-    
+
     private PreparedStatement stationGetStmt;
-    
+
     private PreparedStatement netIdStmt;
-    
+
     private PreparedStatement stationPutStmt;
-    
+
     private PreparedStatement stationIdStmt;
-    
+
     private PreparedStatement sitePutStmt;
-    
+
     private PreparedStatement siteIdStmt;
-    
+
     private PreparedStatement channelPutStmt;
-    
+
     private PreparedStatement channelIdStmt;
-    
+
     private PreparedStatement getNetStmt;
-    
+
     private PreparedStatement getStationStmt;
-    
+
     private PreparedStatement getSiteStmt;
-    
+
     private PreparedStatement getChannelStmt;
-    
+
     private PreparedStatement networkIdsStmt;
-    
+
     private PreparedStatement channelIdsStmt;
-    
+
     private PreparedStatement stationIdsStmt;
-    
+
     private PreparedStatement siteIdsStmt;
-    
+
     private String deleteStmt;
-    
+
     static Category logger =
         Category.getInstance(AbstractNetworkDatabase.class.getName());
 }// AbstractNetworkDatabase
