@@ -19,11 +19,11 @@
 			<endTime>2000-01-01T00:00:00Z</endTime>
 		</timeRange>
 		</eventTimeRange>
-		<magnitude>
+		<magnitudeRange>
 			<type>mb</type>
 			<min>5</min>
 			<max>10</max>
-		</magnitude>
+		</magnitudeRange>
 		<catalog>unknown</catalog>
 		<contributor>NEIC</contributor>
 	   </eventFinder>
@@ -48,11 +48,11 @@
 	   </eventAttrAND>
 	   <originOR>
 		<description>this describes the originOR</description>
-		<magnitude>
+		<magnitudeRange>
 			<type>mb</type>
 			<min>5</min>
 			<max>10</max>
-		</magnitude>
+		</magnitudeRange>
 		<depthRange>
 			<unitRange>
 				<unit>KILOMETER</unit>
@@ -81,12 +81,12 @@
 		<originAND>
 			<originNOT>
 				<description>this describes the originNOT</description>
-				<magnitude>
+				<magnitudeRange>
 					<description>this describes the magnitude</description>
 					<type>mb</type>
 					<min>7</min>
 					<max>10</max>
-				</magnitude>
+				</magnitudeRange>
 			</originNOT>
 		</originAND>
 	</originOR>
