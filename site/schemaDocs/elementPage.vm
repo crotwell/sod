@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+#set($instance=$def.form)
+#set($ann=$instance.annotation)
+#set($curBase=$doc.makePath($def))
+#set($curLoc="${curBase}.html")
+
+#macro(printDef $exp)$helper.getDefName($exp)#end
+
+#macro(print $exp)$helper.getName($exp)#end
+
+#macro(makeLink $exp)
+#set($base = $doc.makePath($exp))
+#set($dest = "${base}.html")
+<a href="$util.getRelativePath($curLoc, $dest, '/')">#printDef($exp)</a>
+#end
+
+#macro(printSibs $item $kids)
+<ul>
+    #foreach($sib in $kids)
+        #if($sib == $item)
+        #else
+        <li>#makeLink($sib)</li>
+        #end
+    #end
+</ul>
+#end
+
+#macro(containment)
+    #foreach($item in $walker.getContainingDefs($root, $def))
+        <section name="#print($item)">
+        #set($rent=$walker.getInstance($root, $item))
+        #if($helper.isMultigen($rent))
+            #if($helper.isChoice($rent))
+                <p>#makeLink($rent) contains a choice between this and all of the following</p>
+                #set($kids=$rent.children)
+                #printSibs($item $kids)
+            #elseif($helper.isInterleave($rent))
+                <p>In an unordered group in #makeLink(${rent}) with all of the following</p>
+                #set($kids=$rent.children)
+                #printSibs($item $kids)
+            #elseif($helper.isGroup($rent))
+                <p>In a group in #makeLink(${rent})</p>
+                #foreach($sib in $rent.children)
+                        #if($sib == $item)
+                            #if($velocityCount > 1)
+                                #set($index = $velocityCount - 2)
+                                <p>Follows #makeLink($helper.getItem($rent.children, $index))</p>
+                            #end
+                            #if($velocityCount < $helper.getLen($rent.children) - 1)
+                                <p>Followed by #makeLink($helper.getItem($rent.children, $velocityCount))</p>
+                            #end
+                        #end
+                #end
+            #end
+        #elseif($helper.isGen($rent))
+                <p>#makeLink($rent) contains this directly</p>
+        #else
+            <p>contained in #makeLink($rent)</p>
+        #end
+        </section>
+    #end
+#end
+
+#macro(contained)
+    #if($helper.isMultigen($instance))
+        <p>CONTAINS MULTIGEN CHILDE</p>
+    #elseif($helper.isGen($instance))
+        <p>CONTAINS GEN CHILDE</p>
+    #else
+        <p>CONTAINS SOME OTHER CHILDE</p>
+    #end
+#end
+
+
+<document>
+    <properties>
+        <title>SOD Tag Docs - #print($def) Tag</title>
+    </properties>
+    <body>
+	<section name="#print($def)">
+		#if($ann.description)
+			<p>
+			$ann.description
+			</p>
+        #elseif($ann.summary)
+            <p>
+            $ann.summary
+            </p>
+		#end
+	</section>
+    <section name="Example">
+        $ann.example
+    </section>
+        <section name="Items containing this">
+            #containment()
+        </section>
+        <section name="Items inside this">
+            #contained()
+        </section>
+        
+		#if($curEl.attributes)
+			<section name="Attributes">
+				#foreach($attr in $curEl.attributes)
+					<section name="$attr.name">
+						#if($attr.annotation.description)
+						<section name="Description">
+							<p>
+$attr.annotation.description
+							</p>
+						</section>
+						#elseif($attr.annotation.summary)
+						<section name="Description">
+							<p>
+$attr.annotation.summary
+							</p>
+						</section>
+						#end
+						<section name="Possible Values">
+							<p>
+$attr.child
+							</p>
+						</section>
+					</section>
+				#end
+			</section>
+		#end
+    </body>
+</document>
