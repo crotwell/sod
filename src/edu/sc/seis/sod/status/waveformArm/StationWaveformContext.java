@@ -8,6 +8,7 @@ package edu.sc.seis.sod.status.waveformArm;
 
 import edu.sc.seis.sod.EventChannelPair;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import org.apache.velocity.context.Context;
 
@@ -27,6 +28,18 @@ public class StationWaveformContext  extends WaveformArmContext {
         if (key.equals(ALL_EVENTS)) {
             try {
                 EventChannelPair[] ecps = jdbcECS.getAllForStation(stationId);
+                // use a set to remove duplicate events
+                HashSet out = new HashSet();
+                for (int i = 0; i < ecps.length; i++) {
+                    out.add(ecps[i].getEvent());
+                }
+                return out;
+            } catch (SQLException e) {
+                throw new RuntimeException("can't get for key="+key, e);
+            }
+        } else if (key.equals(SUCCESS_ECPS_KEY)) {
+            try {
+                EventChannelPair[] ecps = jdbcECS.getSuccessfulForStation(stationId);
                 // use a set to remove duplicate events
                 HashSet out = new HashSet();
                 for (int i = 0; i < ecps.length; i++) {
@@ -56,5 +69,7 @@ public class StationWaveformContext  extends WaveformArmContext {
     protected int stationId;
 
     public static final String ALL_EVENTS = "station_events";
+
+    public static final String SUCCESS_ECPS_KEY = "successful_station_events";
 }
 

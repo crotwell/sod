@@ -42,7 +42,7 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 <th><b>Back Azimuth</b></th>
 </tr>
 #set( $extraRows = 5 )
-#foreach ( $event in $station_events )
+#foreach ( $event in $successful_station_events )
 <tr>
 #set ( $origin = $event.get_preferred_origin() )
 #set ( $eventDir = $fissures.formatDateForFile($origin) )
@@ -75,4 +75,6 @@ $fissures.formatMagnitude($m),
 $menu
 </body>
 </html>
+
+
 

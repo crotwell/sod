@@ -80,7 +80,11 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                               "FROM channel, site, eventchannelstatus, station "+
                                               "WHERE "+chanJoin+
                                               " AND station.sta_id = ?");
-
+        ofStationStatus = conn.prepareStatement("SELECT pairid, eventid, channelid, status "+
+                                              "FROM channel, site, eventchannelstatus, station "+
+                                              "WHERE "+chanJoin+
+                                              " AND station.sta_id = ?"+
+                                              " AND status = ?");
     }
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException{
@@ -186,6 +190,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return extractECPs(ofStation.executeQuery());
     }
 
+
+    public EventChannelPair[] getSuccessfulForStation(int stationId)throws SQLException{
+        ofStationStatus.setInt(1, stationId);
+        ofStationStatus.setShort(2, Status.get(Stage.PROCESSOR, Standing.SUCCESS).getAsShort());
+        return extractECPs(ofStationStatus.executeQuery());
+    }
+
     public EventChannelPair[] getAll(EventAccessOperations ev)throws SQLException, NotFound{
         return getAll(eventTable.getDBId(ev));
     }
@@ -289,12 +300,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         stationsNotOfStatus, stationsOfStatus,
         channelsForPair,
         dbIdForEventAndChan,
-        ofStation;
+        ofStation, ofStationStatus;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
     private JDBCChannel chanTable;
     private Connection conn;
 }
+
 
 
