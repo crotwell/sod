@@ -139,7 +139,6 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         logger.debug("process() called");
 
         final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
-        bsd.PRINTING = true;
 
         MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0], "");
         memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
@@ -170,7 +169,6 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                         logger.debug("writing " + picFileName);
                         try {
                             if (fileType.equals(PDF)) {
-
                                 bsd.outputToPDF(new File(picFileName));
                             } else {
                                 bsd.outputToPNG(new File(picFileName), dimension);
