@@ -44,8 +44,7 @@ public class SeismogramXOR extends ForkProcess {
                                          available, copySeismograms(seismograms), cookieJar);
         }
         boolean xorResult = resultA.isSuccess() != resultB.isSuccess();
-            return new WaveformResult( xorResult,
-                                             seismograms,
+            return new WaveformResult(seismograms,
                                              new StringTreeBranch(this,
                                                                   xorResult,
                                                                   new StringTree[] { resultA.getReason(), resultB.getReason() }));

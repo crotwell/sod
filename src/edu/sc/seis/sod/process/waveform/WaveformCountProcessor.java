@@ -29,7 +29,7 @@ public class WaveformCountProcessor implements WaveformProcess {
         FileWriter fileWriter = new FileWriter("waveforms.txt");
         fileWriter.write("Number of Waveforms processed = " + num_waveforms);
         fileWriter.close();
-        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
     JDBCEventChannelStatus jdbcEventChannelStatus;
 }

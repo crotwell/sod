@@ -70,7 +70,7 @@ public class Filter implements WaveformProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new WaveformResult(true, out, new StringTreeLeaf(this, true));
+        return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
     Element config;

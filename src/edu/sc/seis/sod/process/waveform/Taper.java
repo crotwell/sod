@@ -48,7 +48,7 @@ public class Taper implements WaveformProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = taper.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new WaveformResult(true, out, new StringTreeLeaf(this, true));
+        return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
     edu.sc.seis.fissuresUtil.bag.Taper taper;

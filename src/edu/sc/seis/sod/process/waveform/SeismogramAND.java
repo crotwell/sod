@@ -36,7 +36,7 @@ public class SeismogramAND extends ForkProcess {
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        WaveformResult result = new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+        WaveformResult result = new WaveformResult(seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             synchronized (processor) {
@@ -52,8 +52,7 @@ public class SeismogramAND extends ForkProcess {
         if (reasons.size() < localSeisProcessList.size()) {
             reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
-        return new WaveformResult(result.isSuccess(),
-                                         seismograms,
+        return new WaveformResult(seismograms,
                                          new StringTreeBranch(this,
                                                               result.isSuccess(),
                                                                   (StringTree[])reasons.toArray(new StringTree[0])));

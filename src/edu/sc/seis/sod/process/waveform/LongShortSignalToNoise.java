@@ -56,7 +56,7 @@ public class LongShortSignalToNoise implements WaveformProcess {
                           CookieJar cookieJar) throws Exception {
         LongShortTrigger[] triggers = calcTriggers(seismograms);
         boolean hasTriggers = triggers.length != 0;
-        return new WaveformResult(hasTriggers, seismograms, new StringTreeLeaf(this, hasTriggers));
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, hasTriggers));
     }
 
     public LongShortTrigger[] calcTriggers(LocalSeismogramImpl[] seismograms) throws FissuresException {

@@ -18,7 +18,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGain.java 10264 2004-08-31 20:09:41Z groves $
+ * @version $Id: ResponseGain.java 10364 2004-09-04 02:39:12Z crotwell $
  */
 
 public class ResponseGain implements WaveformProcess {
@@ -36,7 +36,7 @@ public class ResponseGain implements WaveformProcess {
             for (int i=0; i<seismograms.length; i++) {
                 out[i] = edu.sc.seis.fissuresUtil.bag.ResponseGain.apply(seismograms[i], inst);
             } // end of for (int i=0; i<seismograms.length; i++)
-            return new WaveformResult(true, out, new StringTreeLeaf(this, true));
+            return new WaveformResult(out, new StringTreeLeaf(this, true));
         }else{
             return new WaveformResult(true, seismograms);
         }

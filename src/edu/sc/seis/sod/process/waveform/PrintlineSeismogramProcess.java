@@ -46,8 +46,7 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
                     + ExceptionReporterUtils.getMemoryUsage() + debugStr);
             logger.debug(debugStr);
         } // end of else
-        return new WaveformResult(true,
-                                         seismograms,
+        return new WaveformResult(seismograms,
                                          new StringTreeLeaf(this, true));
     }
 

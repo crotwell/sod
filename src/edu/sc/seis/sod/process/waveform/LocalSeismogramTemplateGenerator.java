@@ -123,8 +123,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         } else {
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
-        return new WaveformResult(true,
-                                         seismograms,
+        return new WaveformResult(seismograms,
                                          new StringTreeLeaf(this, true));
     }
 

@@ -16,15 +16,15 @@ import org.w3c.dom.Element;
 
 /**
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
- * 
+ *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 10264 2004-08-31 20:09:41Z groves $
+ * @version $Id: PhaseCut.java 10364 2004-09-04 02:39:12Z crotwell $
  */
 public class PhaseCut implements WaveformProcess {
 
     /**
      * Creates a new <code>PhaseCut</code> instance.
-     * 
+     *
      * @param config
      *            an <code>Element</code> that contains the configuration for
      *            this Processor
@@ -37,7 +37,7 @@ public class PhaseCut implements WaveformProcess {
 
     /**
      * Cuts the seismograms based on phase arrivals.
-     * 
+     *
      * @param event
      *            an <code>EventAccessOperations</code> value
      * @param network
@@ -76,12 +76,10 @@ public class PhaseCut implements WaveformProcess {
                 list.add(tempSeis);
             }
         } // end of for (int i=0; i<seismograms.length; i++)
-        if(list.size() != 0) { return new WaveformResult(true,
-                                                                (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
+        if(list.size() != 0) { return new WaveformResult((LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
                                                                 new StringTreeLeaf(this,
                                                                                    true)); }
-        return new WaveformResult(false,
-                                         seismograms,
+        return new WaveformResult(seismograms,
                                          new StringTreeLeaf(this, false));
     }
 

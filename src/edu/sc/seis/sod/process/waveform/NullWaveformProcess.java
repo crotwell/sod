@@ -40,7 +40,7 @@ public class NullWaveformProcess implements WaveformProcess {
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) {
-        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
 

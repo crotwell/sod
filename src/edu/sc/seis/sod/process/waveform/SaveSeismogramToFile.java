@@ -135,7 +135,7 @@ public class SaveSeismogramToFile implements WaveformProcess{
                         " at "+event.get_preferred_origin().origin_time.date_time);
 
         if (seismograms.length == 0) {
-            return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+            return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
         }
 
         URLDataSetSeismogram urlDSS = saveInDataSet(event, channel, seismograms, fileType);
@@ -156,7 +156,7 @@ public class SaveSeismogramToFile implements WaveformProcess{
             updateMasterDataSet(dataSetFile, lastDataSet.getName());
         }
 
-        return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
     public static String getCookieName(String prefix, ChannelId channel, int i) {

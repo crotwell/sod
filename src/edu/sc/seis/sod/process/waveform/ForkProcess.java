@@ -76,7 +76,7 @@ public class ForkProcess implements WaveformProcess {
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        WaveformResult result = new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
+        WaveformResult result = new WaveformResult(seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             synchronized (processor) {

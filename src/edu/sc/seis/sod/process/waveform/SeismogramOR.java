@@ -51,8 +51,7 @@ public class SeismogramOR extends ForkProcess {
         if (reasons.size() < localSeisProcessList.size()) {
             reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
-        return new WaveformResult(orResult,
-                                         seismograms,
+        return new WaveformResult(seismograms,
                                          new StringTreeBranch(this,
                                                               orResult,
                                                                   (StringTree[])reasons.toArray(new StringTree[0])));

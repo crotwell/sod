@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 10264 2004-08-31 20:09:41Z groves $
+ * @version $Id: RMean.java 10364 2004-09-04 02:39:12Z crotwell $
  */
 
 public class RMean implements WaveformProcess {
@@ -36,7 +36,7 @@ public class RMean implements WaveformProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = rmean.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new WaveformResult(true, out, new StringTreeLeaf(this, true));
+        return new WaveformResult(out, new StringTreeLeaf(this, true));
     }
 
     edu.sc.seis.fissuresUtil.bag.RMean rmean;
