@@ -55,6 +55,12 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
         }
     }
 
+    public static String getHtmlConfigFileName() {
+        String configFileLoc  = Start.getConfigFileName();
+        String fileName = configFileLoc.substring(0, configFileLoc.indexOf(".xml"));
+        return fileName += ".html";
+    }
+
     public void update(EventChannelPair ecp) { write(); }
 
 
