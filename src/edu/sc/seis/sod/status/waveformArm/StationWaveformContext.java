@@ -7,8 +7,8 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Start;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import org.apache.velocity.context.Context;
 
@@ -52,9 +52,27 @@ public class StationWaveformContext  extends WaveformArmContext {
         } else if (key.equals(SUCCESS_ECPS_KEY)) {
             try {
                 EventChannelPair[] ecps = jdbcECS.getSuccessfulForStation(stationId);
+
                 HashSet out = new HashSet();
                 for (int i = 0; i < ecps.length; i++) {
                     out.add(ecps[i]);
+                }
+                return out;
+            } catch (SQLException e) {
+                throw new RuntimeException("can't get for key="+key, e);
+            }
+        } else if (key.equals(SUCCESS_ECGROUP_KEY)) {
+            try {
+                EventChannelPair[] ecps = jdbcECS.getSuccessfulForStation(stationId);
+                HashSet out = new HashSet();
+                if (Start.getWaveformArm().getMotionVectorArm() != null) {
+                    for (int i = 0; i < ecps.length; i++) {
+                        out.add(Start.getWaveformArm().getEventChannelGroupPair(ecps[i]));
+                    }
+                } else {
+                    for (int i = 0; i < ecps.length; i++) {
+                        out.add(ecps[i]);
+                    }
                 }
                 return out;
             } catch (SQLException e) {
@@ -84,5 +102,7 @@ public class StationWaveformContext  extends WaveformArmContext {
     public static final String SUCCESS_EVENTS_KEY = "successful_station_events";
 
     public static final String SUCCESS_ECPS_KEY = "successful_event_channels";
+
+    public static final String SUCCESS_ECGROUP_KEY = "successful_event_channel_groups";
 }
 
