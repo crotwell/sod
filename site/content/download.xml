@@ -6,14 +6,11 @@
         <body>
                 <section name="Download SOD">
                         <p>
-                                <b>Current Release:</b> SOD 2.0 Beta 20040510 <a class="download" href="path_to_current_release">DOWNLOAD</a>
+                                <b>Current Release:</b> Sod 2.0 Beta 1 <a class="download" href="beta1/sod-beta1.tar">Download</a>
                         </p>
-                        <p>Changes in 2.0 Beta 20040510:</p>
+                        <p>Changes in 2.0 Beta 1:</p>
                         <ul>
-                                <li>Changed such-and-such to so-and-so</li>
-                                <li>New this and that and whatnot.</li>
-                                <li>Bugfixes for this and the such.</li>
-                                <li>Minor cosmetic changes here and there.</li>
+                                <li>There are none.  This is the first beta.</li>
                         </ul>
                 </section>
                 <section name="Previous Releases">
