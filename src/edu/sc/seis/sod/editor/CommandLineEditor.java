@@ -139,6 +139,8 @@ public class CommandLineEditor {
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             docBuilder.setErrorHandler(new SimpleErrorHandler());
             document =  docBuilder.parse(configFile);
+        } else {
+            throw new FileNotFoundException("Can't find "+configFilename);
         }
     }
 

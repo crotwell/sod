@@ -7,28 +7,23 @@
 package edu.sc.seis.sod.editor;
 import java.io.*;
 import javax.swing.*;
+import org.w3c.dom.*;
 
 import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Attr;
-import java.awt.Dimension;
 
 
 
@@ -51,6 +46,48 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     public void start() {
         frame = new JFrame(frameName);
+
+        JMenuBar menubar = new JMenuBar();
+        frame.setJMenuBar(menubar);
+        JMenu fileMenu = new JMenu("File");
+        menubar.add(fileMenu);
+        JMenuItem save = new JMenuItem("Save");
+        save.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        File configFile = new File(configFilename);
+                        try {
+                            save(configFile);
+                        } catch (IOException ex) {
+                            GlobalExceptionHandler.handle("Unable to save "+configFile, ex);
+                        }
+                    }
+                });
+        fileMenu.add(save);
+        JMenuItem saveAs = new JMenuItem("Save As...");
+        fileMenu.add(saveAs);
+        saveAs.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        FileDialog fileDialog = new FileDialog(frame);
+                        fileDialog.show();
+                        String outfilename = fileDialog.getFile();
+                        if (outfilename != null) {
+                        File outfile = new File(outfilename);
+                        try {
+                            save(outfile);
+                        } catch (IOException ex) {
+                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                        }
+                    }
+                    }
+                });
+        JMenuItem quit = new JMenuItem("Quit");
+        fileMenu.add(quit);
+        quit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.exit(0);
+                    }
+                });
+
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = getDocument();
         if (tabs) {
@@ -109,7 +146,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
         NamedNodeMap attrList = element.getAttributes();
 
         NodeList list = element.getChildNodes();
-        System.out.println("list length="+list.getLength()+" "+element.getTagName()+" "+attrList.getLength());
         // simple case of only 1 child Text node and no attributes
         if (list.getLength() == 1 && list.item(0) instanceof Text && attrList.getLength() == 0) {
             comp = getCompForTextNode((Text)list.item(0));

@@ -16,14 +16,6 @@ import javax.xml.transform.TransformerException;
 
 public class PropertyEditor implements EditorPlugin {
 
-    /**
-     * Method getGUI
-     *
-     * @param    element             an Element
-     *
-     * @return   a JComponent
-     *
-     */
     public JComponent getGUI(Element element) throws TransformerException {
         JPanel panel = new JPanel();
         if (element.getTagName().equals("property")) {
@@ -31,7 +23,7 @@ public class PropertyEditor implements EditorPlugin {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx=0;
             gbc.gridy=0;
-            gbc.fill = gbc.BOTH;
+            gbc.fill = gbc.HORIZONTAL;
             gbc.weightx = 1;
             gbc.weighty = 1;
             Node node = XPathAPI.selectSingleNode(element, "name/text()");
@@ -42,18 +34,10 @@ public class PropertyEditor implements EditorPlugin {
             gbc.gridx++;
             node = XPathAPI.selectSingleNode(element, "value/text()");
             text = (Text)node;
-            addTextField(panel, text, gbc);
+            panel.add(EditorUtil.getTextField(text), gbc);
             gbc.gridx--;
         }
         return panel;
-    }
-
-    void addTextField(JPanel panel, Text text, GridBagConstraints gbc) {
-        JTextField textField = new JTextField();
-        textField.setText(text.getNodeValue().trim());
-        TextListener textListen = new TextListener(text);
-        textField.getDocument().addDocumentListener(textListen);
-        panel.add(textField, gbc);
     }
 
 }
