@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
+import org.apache.log4j.*;
 
 /**
  * EventFinder.java
@@ -19,7 +20,14 @@ import edu.iris.Fissures.*;
 
 public class EventFinder implements SodElement {
     public EventFinder (Element config){
-	
+	processConfig(config);
     }
     
+    protected void processConfig(Element config) {
+	
+    }
+
+    static Category logger = 
+        Category.getInstance(EventFinder.class.getName());
+
 }// EventFinder
