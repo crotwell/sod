@@ -26,8 +26,13 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
                                                               indexLoc);
             parse(template);
             write();
+            FileWritingTemplate help = new FileWritingTemplate(dirName + "/help/", "eventPageHelp.html");
+            help.parse(TemplateFileLoader.getTemplate(getClass().getClassLoader(),
+                                                      eventPageHelp));
+            help.write();
             SodUtil.copyFile(cssLoc, dirName+"/main.css");
             SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
+            SodUtil.copyFile(helpMark, dirName + "/images/helpmark.png");
             SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + Start.getConfigFileName());
         } catch (Exception e) {
             GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
@@ -65,5 +70,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
 
     private static String cssLoc = "jar:edu/sc/seis/sod/data/templates/main.css";
     private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
+    private static String helpMark = "jar:edu/sc/seis/sod/data/templates/defaults/helpmark.png";
+    private static String eventPageHelp = "jar:edu/sc/seis/sod/data/templates/defaults/eventPageHelp.xml";
 }
 
