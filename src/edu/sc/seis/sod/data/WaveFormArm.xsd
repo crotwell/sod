@@ -505,17 +505,18 @@
                 </description>
                 <example>
                     <eventChannelAND>
+                        <embeddedEventStation>
                         <eventStationDistance>
                            <distanceRange>
                               <unit>DEGREE</unit>
                               <min>40</min>
                            </distanceRange>
                         </eventStationDistance>
-                        <backAzimuthRange>
-                           <min>30</min>
-                           <max>45</max>
-                        </backAzimuthRange>
-                    </eventStationAND>
+                        </embeddedEventStation>
+                        <embeddedChannel>
+                           <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </eventChannelAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -530,6 +531,33 @@
     
     <!-- EVENT CHANNEL OR TYPE -->	
     <xsd:complexType name="eventChannelORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventChannel subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first true outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventChannelOR>
+                        <embeddedEventStation>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        </embeddedEventStation>
+                        <embeddedChannel>
+                           <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </eventChannelOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -541,6 +569,32 @@
     
     <!-- EVENT CHANNEL XOR TYPE -->
     <xsd:complexType name="eventChannelXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventChannel subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of
+                    included subsetters.
+                </description>
+                <example>
+                    <eventChannelXOR>
+                        <embeddedEventStation>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        </embeddedEventStation>
+                        <embeddedChannel>
+                           <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </eventChannelXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -552,6 +606,29 @@
     
     <!-- EVENT CHANNEL NOT TYPE -->
     <xsd:complexType name="eventChannelNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventChannel subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included subsetter.
+                </description>
+                <example>
+                    <eventChannelNOT>
+                        <embeddedEventStation>
+                        <eventStationDistance>
+                           <distanceRange>
+                              <unit>DEGREE</unit>
+                              <min>40</min>
+                           </distanceRange>
+                        </eventStationDistance>
+                        </embeddedEventStation>
+                    </eventChannelNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="eventChannelType">
                 <xsd:sequence>
@@ -647,7 +724,7 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between EventStation subsetters.
+                    Logical AND between AvailableData subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all 
@@ -655,18 +732,10 @@
                     first false outputed are not evaluated. 
                 </description>
                 <example>
-                    <eventStationAND>
-                        <eventStationDistance>
-                           <distanceRange>
-                              <unit>DEGREE</unit>
-                              <min>40</min>
-                           </distanceRange>
-                        </eventStationDistance>
-                        <backAzimuthRange>
-                           <min>30</min>
-                           <max>45</max>
-                        </backAzimuthRange>
-                    </eventStationAND>
+                    <availableDataAND>
+                       <nogaps/>
+                       <fullCoverage/>
+                    </availableDataAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -681,6 +750,24 @@
     
     <!-- AVAILABLE DATA OR TYPE -->	
     <xsd:complexType name="availableDataORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between AvailableData subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first true outputed are not evaluated. 
+                </description>
+                <example>
+                    <availableDataOR>
+                       <nogaps/>
+                       <fullCoverage/>
+                    </availableDataOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="availableDataType">
                 <xsd:sequence>
@@ -692,6 +779,23 @@
     
     <!-- AVAILABLE DATA XOR TYPE -->
     <xsd:complexType name="availableDataXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between AvailableData subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included subsetters.
+                </description>
+                <example>
+                    <availableDataXOR>
+                       <nogaps/>
+                       <fullCoverage/>
+                    </availableDataXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="availableDataType">
                 <xsd:sequence>
@@ -703,6 +807,22 @@
     
     <!-- AVAILABLE DATA NOT TYPE -->
     <xsd:complexType name="availableDataNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an AvailableData subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of 
+                    the included subsetters.
+                </description>
+                <example>
+                    <availableDataNOT>
+                       <nogaps/>
+                    </availableDataNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="availableDataType">
                 <xsd:sequence>
@@ -750,7 +870,7 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between EventStation subsetters.
+                    Logical AND between Waveform subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all 
@@ -941,6 +1061,7 @@
     <!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
     <xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
     <xsd:element name="embeddedEventStation" type="embeddedEventStationType" substitutionGroup="eventChannel"/>
+    <xsd:element name="embeddedChannelID" type="embeddedChannelIDType" substitutionGroup="eventChannel"/>
     <xsd:element name="embeddedChannel" type="embeddedChannelType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelAND" type="eventChannelANDType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
