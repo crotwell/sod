@@ -38,7 +38,7 @@ Events
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href">events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></td>
-<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td ><originTime>yyyy-MM-dd HH:mm:ss.SSS</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
 <td class="num"><waveformChannels>SUCCESS</waveformChannels></td>
@@ -58,7 +58,7 @@ Events
 </tr>
 <events><eventLabel><tr>
 <td><feRegionName/></td>
-<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td ><originTime>yyyy-MM-dd HH:mm:ss.SSS</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
 <td><eventStatus/></td>
@@ -76,7 +76,7 @@ Events
 </tr>
 <events><eventLabel><tr>
 <td><feRegionName/></td>
-<td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td ><originTime>yyyy-MM-dd HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
 <td><eventStatus/></td>
