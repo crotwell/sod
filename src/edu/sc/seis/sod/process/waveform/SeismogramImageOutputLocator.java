@@ -94,18 +94,25 @@ public class SeismogramImageOutputLocator {
     public String getLocation(EventAccessOperations event,
                               Channel channel,
                               String fileType) {
-        return FissuresFormatter.filize(fileDir + '/'
-                + eventFormatter.getResult(event) + '/'
-                + stationFormatter.getResult(channel.my_site.my_station) + '/'
+        return FissuresFormatter.filize(getDirectory(event, channel, true)
                 + prefix + chanFormatter.getResult(channel) + "." + fileType);
     }
 
-    private String fileDir = "", prefix = "",
-            configuredFileType = SeismogramImageProcess.PNG;
+    private String fileDir = FileWritingTemplate.getBaseDirectoryName(),
+            prefix = "", configuredFileType = SeismogramImageProcess.PNG;
 
     private EventFormatter eventFormatter;
 
     private StationFormatter stationFormatter;
 
     private ChannelFormatter chanFormatter;
+
+    public String getDirectory(EventAccessOperations event,
+                               Channel chan,
+                               boolean useStatusDir) {
+        String dir = useStatusDir ? fileDir : "";
+        dir += '/' + eventFormatter.getResult(event) + '/'
+                + stationFormatter.getResult(chan.my_site.my_station) + '/';
+        return dir;
+    }
 }
