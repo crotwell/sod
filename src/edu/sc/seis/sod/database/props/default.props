@@ -20,36 +20,6 @@ eventchannelcookiejar.create=CREATE TABLE eventchannelcookiejar( pairid int, \
                                                                  valuestring varchar, \
                                                                  valueobject object, \
                                                                  UNIQUE (pairid, name))
-eventrecordsection.create=CREATE TABLE eventrecordsection( recSecId int, \
-														  eventid int, \
-														  imageName varchar, \
-														  bestForEvent boolean, \
-														  PRIMARY KEY (recSecId))
-														 
-recordsectionchannel.create=CREATE TABLE recordsectionchannel( recSecId int, \
-															   channelid int)
-
-eventrecordsection.insert=INSERT INTO eventrecordsection (recSecId, eventid, imageName, bestForEvent) VALUES (?, ?, ?, ?)
-
-recordsectionchannel.insert=INSERT INTO recordsectionchannel (recSecId, channelid) VALUES (?, ?)	
-
-eventrecordsection.getBestImageforEvent=SELECT imageName FROM eventrecordsection WHERE eventid=? AND bestForEvent		
-
-recordsectionchannel.updateRecordSection=UPDATE recordsectionchannel SET  recSecId=? WHERE \
-										 recSecId=?
-
-eventrecordsection.getImageforEventChannel=SELECT imageName FROM eventrecordsection, recordsectionchannel \
-										   WHERE eventrecordsection.recSecId=recordsectionchannel.recSecId AND \
-										     eventid=? AND channelid=? 
-										
-eventrecordsection.imageNameExists=SELECT count(imageName) FROM eventrecordsection WHERE eventid=? AND imageName=?
-
-eventrecordsection.getRecSecId=SELECT recSecId FROM eventrecordsection WHERE eventid=? AND imageName=?
-
-recordsectionchannel.getRecSecId=SELECT recSecId FROM recordsectionchannel,eventrecordsection \
-									WHERE eventrecordsection.recSecId=recordsectionchannel.recSecId AND \
-								    eventid=? AND channelid=?
-
 RecordSectionSeq.create=CREATE SEQUENCE RecordSectionSeq
 RecordSectionSeq.nextVal=SELECT NEXTVAL ('RecordSectionSeq')
 
