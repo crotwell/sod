@@ -20,7 +20,9 @@ public class LocalSeismogramTemplateTest extends TestCase {
         CookieJar cookieJar = new CookieJar(MockEventAccessOperations.createEvent(),
                                             MockChannel.createChannel());
         cookieJar.getContext().put("A", new A());
+        cookieJar.getContext().put("B", "Test B");
         BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
+        //BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/simplevelocity.xml")));
         String inString = "";
         String s;
         while((s = in.readLine()) != null) {

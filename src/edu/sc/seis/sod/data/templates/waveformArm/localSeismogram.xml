@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
 <outputLocation>
 <eventDir><originTime>yyyyMMddHHmmssSSS</originTime></eventDir>
@@ -6,6 +7,7 @@
 </outputLocation>
 <filename>seismograms.html</filename>
 <picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.png</picName>
+-->
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -13,6 +15,8 @@
 <style media="all">@import "../../main.css";</style>
 </head>
 <body>
+$A<br/>
+$B<br/>
 <div id="Header">
 <a href="../../location.html"> Events</a>
 > <a href="../event.html"><event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event></a>
@@ -33,21 +37,22 @@
 <tr>
 <td><b>Magnitude</b></td>
 <td>
-#foreach ($m in $sod_event.get_preferred_origin().Magnitudes)
+#set ( $origin = $sod_event.get_preferred_origin() )
+#foreach ($m in $origin.Magnitudes)
 $fissures.formatMagnitude($m),
 #end</td>
 </tr>
 <tr>
 <td><b>Depth</b></td>
-<td><depth/></td>
+<td>$fissures.getDepth($origin.location)</td>
 </tr>
 <tr>
 <td><b>Latitude</b></td>
-<td><latitude/></td>
+<td>$fissures.getLatitude($origin.location)</td>
 </tr>
 <tr>
 <td><b>Longitude</b></td>
-<td><longitude/></td>
+<td>$fissures.getLongitude($origin.location)</td>
 </tr>
 </table>
 <station>
@@ -55,19 +60,20 @@ $fissures.formatMagnitude($m),
 <table>
 <tr>
 <td><b>Id</b></td>
-<td><stationCode/></td>
+#set ( $station = $sod_channel.getSite().getStation() )
+<td>$station.get_code()</td>
 </tr>
 <tr>
 <td><b>Name</b></td>
-<td><name/></td>
+<td>$station.Name</td>
 </tr>
 <tr>
 <td><b>Latitude</b></td>
-<td><lat/></td>
+<td>$fissures.getLatitude($station.location)</td>
 </tr>
 <tr>
 <td><b>Longitude</b></td>
-<td><lon/></td>
+<td>$fissures.getLongitude($station.location)</td>
 </tr>
 <tr>
 <td><b>Begin Time</b></td>
@@ -81,14 +87,13 @@ $fissures.formatMagnitude($m),
 </station>
 <h2>Seismograms</h2>
 <table>
-<channels>
+#foreach ($chanId in $allChanIds)
+#set ( $channel = $sod_cookieJar.get($chanId).get("sod_channel") )
 <tr>
-<channel>
-<td><b><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></b></td>
-<td><img><attribute name="src"><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.png</attribute></img></td>
-</channel>
+<td><b>$fissures.formatChannel($channel.get_id())</b></td>
+<td><img src="${fissures.formatChannel($channel.get_id())}.png"/></td>
 </tr>
-</channels>
+#end
 </table>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
