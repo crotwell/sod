@@ -13,7 +13,13 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-
+import java.util.LinkedList;
+import java.util.Iterator;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import edu.sc.seis.sod.SodUtil;
+import org.apache.log4j.Logger;
+import edu.sc.seis.sod.ConfigurationException;
 
 
 public class ForkProcessor implements LocalSeismogramProcess {
@@ -25,8 +31,26 @@ public class ForkProcessor implements LocalSeismogramProcess {
      * @param config an <code>Element</code> that contains the configuration
      * for this Processor
      */
-    public ForkProcessor (Element config) {
+    public ForkProcessor (Element config) throws ConfigurationException {
         this.config = config;
+        NodeList children = config.getChildNodes();
+        Node node;
+        for (int i=0; i<children.getLength(); i++) {
+            node = children.item(i);
+            if (node instanceof Element) {
+                if (((Element)node).getTagName().equals("description")) {
+                    // skip description element
+                    continue;
+                }
+                Object sodElement = SodUtil.load((Element)node,"waveFormArm");
+                if(sodElement instanceof LocalSeismogramProcess) {
+                    localSeisProcessList.add(sodElement);
+                } else {
+                    logger.warn("Unknown tag in LocalSeismogramArm config. " +sodElement);
+                } // end of else
+            } // end of if (node instanceof Element)
+        } // end of for (int i=0; i<children.getSize(); i++)
+
     }
 
     /**
@@ -46,24 +70,39 @@ public class ForkProcessor implements LocalSeismogramProcess {
      * @exception Exception if an error occurs
      */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                     NetworkAccess network,
-                                     Channel channel,
-                                     RequestFilter[] original,
-                                     RequestFilter[] available,
-                                     LocalSeismogramImpl[] seismograms,
-                                     CookieJar cookies) throws Exception {
+                                         NetworkAccess network,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookies) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < out.length; i++) {
             out[i] = new LocalSeismogramImpl(seismograms[i], seismograms[i].data);
         }
 
         // pass originals to the contained processors
-        // TODO
-
+        LocalSeismogramProcess processor;
+        Iterator it = localSeisProcessList.iterator();
+        while (it.hasNext()) {
+            processor = (LocalSeismogramProcess)it.next();
+            synchronized (processor) {
+                seismograms = processor.process(event,
+                                                network,
+                                                channel,
+                                                original,
+                                                available,
+                                                seismograms,
+                                                cookies);
+            }
+        } // end of while (it.hasNext())
         return out;
     }
 
+    private LinkedList localSeisProcessList = new LinkedList();
 
     Element config;
+
+    private static final Logger logger = Logger.getLogger(ForkProcessor.class);
 }
 
