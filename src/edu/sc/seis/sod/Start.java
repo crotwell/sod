@@ -87,6 +87,9 @@ public class Start {
             } else {
                 logger.info("Valid strategy file");
             }
+            if(onlyValidate) {
+                System.exit(0);
+            }
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem configuring schema validator",
                                           e);
@@ -94,6 +97,10 @@ public class Start {
         }
         initDocument(args);
     }
+
+    private static boolean onlyValidate = false;
+
+    private static boolean waitOnError = true;
 
     private static void informUserOfBadFileAndExit(String confFilename) {
         File configFile = new File(confFilename);
@@ -241,12 +248,14 @@ public class Start {
         System.err.println("     All hope abandon, ye who enter in!");
         System.err.println();
         System.err.println("******************************************************************");
-        System.err.println();
-        for(int i = 10; i >= 0; i--) {
-            try {
-                Thread.sleep(1000);
-                System.err.print(" " + i);
-            } catch(InterruptedException e) {}
+        if(waitOnError) {
+            System.err.println();
+            for(int i = 10; i >= 0; i--) {
+                try {
+                    Thread.sleep(1000);
+                    System.err.print(" " + i);
+                } catch(InterruptedException e) {}
+            }
         }
         System.err.println();
         System.err.println();
@@ -333,7 +342,7 @@ public class Start {
                 if(Version.hasSchemaChangedSince(dbVersion.getDBVersion())) {
                     allHopeAbandon("There has been a change in the database "
                             + "structure since the database was created!  "
-                            + "Continuing this sod run is not advisable!!!");
+                            + "Continuing this sod run is not advisable!");
                 } else {
                     System.err.println("The structure of the database has not "
                             + "changed, so SOD may work if there "
@@ -395,6 +404,14 @@ public class Start {
                 exit("No configuration file given.  Supply a configuration file "
                         + "using -f <configFile>, or to just see sod run use "
                         + "-demo.   quiting until that day....");
+            }
+            for(int i = 0; i < args.length; i++) {
+                if(args[i].equals("-v")) {
+                    onlyValidate = true;
+                    waitOnError = false;
+                } else if(args[i].equals("-i")) {
+                    waitOnError = false;
+                }
             }
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
