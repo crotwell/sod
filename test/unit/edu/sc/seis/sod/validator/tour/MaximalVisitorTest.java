@@ -79,9 +79,9 @@ public class MaximalVisitorTest extends TestCase {
 
         public void leave(Group g) {}
 
-        public void visit(Interleave i) {}
+        public void visit(Interleave inter) {}
 
-        public void leave(Interleave i) {}
+        public void leave(Interleave inter) {}
 
         public void leave(NamedElement ne) {}
 
