@@ -6,19 +6,31 @@
 
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.SodUtil;
 import java.text.SimpleDateFormat;
 import org.w3c.dom.Element;
 
-public class BeginTimeTemplate implements ChannelTemplate {
+public class BeginTimeTemplate implements GenericTemplate {
+    private Time time;
+    
     public BeginTimeTemplate(Element config){
-        sdf = new SimpleDateFormat(SodUtil.getNestedText(config));
+        String nestedText = SodUtil.getNestedText(config);
+        if (nestedText != null)
+            sdf = new SimpleDateFormat(nestedText);
+        else
+            sdf = new SimpleDateFormat();
+        time = new Time();
     }
     
-    public String getResult(Channel chan) {
-        return sdf.format(new MicroSecondDate(chan.get_id().begin_time));
+    public void setTime(Time t){
+        time = t;
+    }
+    
+    public String getResult() {
+        MicroSecondDate d = new MicroSecondDate(time);
+        return sdf.format(d);
     }
     
     SimpleDateFormat sdf;

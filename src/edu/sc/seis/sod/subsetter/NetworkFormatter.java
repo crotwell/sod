@@ -61,7 +61,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
      */
     protected Object getTemplate(String tag, Element el) {
         
-        if (tag.equals("code")){
+        if (tag.equals("networkCode")){
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
                     return net.get_attributes().get_code();
@@ -69,7 +69,14 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
             };
         }
         else if (tag.equals("beginTime")){
-            return new BeginTimeTemplate(el);
+            return new NetworkBeginTimeTemplate(el);
+        }
+        else if (tag.equals("beginTimeUnformatted")){
+            return new NetworkTemplate(){
+                public String getResult(NetworkAccess net){
+                    return net.get_attributes().get_id().begin_time.date_time;
+                }
+            };
         }
         else if (tag.equals("name")){
             return new NetworkTemplate(){
@@ -109,6 +116,17 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
         }
         
         return null;
+    }
+    
+    private class NetworkBeginTimeTemplate extends BeginTimeTemplate implements NetworkTemplate{
+        public NetworkBeginTimeTemplate(Element config){
+            super(config);
+        }
+        
+        public String getResult(NetworkAccess net){
+            setTime(net.get_attributes().get_id().begin_time);
+            return getResult();
+        }
     }
     
 }

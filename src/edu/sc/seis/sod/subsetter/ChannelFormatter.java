@@ -33,13 +33,21 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                     return chan.get_id().station_code;
                 }
             };
-        }else if(tag.equals("networkCode")){
+        }
+        else if (tag.equals("channelCode")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan){
+                    return chan.get_id().channel_code;
+                }
+            };
+        }
+        else if(tag.equals("networkCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
                     return chan.get_id().network_id.network_code;
                 }
             };
-        }else if(tag.equals("channelCode")){
+        }else if(tag.equals("stationCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
                     return chan.get_code();
@@ -48,10 +56,17 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("siteCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return chan.get_id().site_code;
+                    return SiteFormatter.formatSiteCode(chan.get_id().site_code);
                 }
             };
-        }else if(tag.equals("beginTime")) return new BeginTimeTemplate(el);
+        }else if(tag.equals("beginTime")) return new ChannelBeginTimeTemplate(el);
+        else if(tag.equals("beginTimeUnformatted")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+                    return chan.get_id().begin_time.date_time;
+                }
+            };
+        }
         else if(tag.equals("dip")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
@@ -112,6 +127,18 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
             buf.append(cur.getResult(chan));
         }
         return buf.toString();
+    }
+    
+    private class ChannelBeginTimeTemplate extends BeginTimeTemplate implements ChannelTemplate{
+        
+        public ChannelBeginTimeTemplate(Element config){
+            super(config);
+        }
+        
+        public String getResult(Channel chan){
+            setTime(chan.get_id().begin_time);
+            return getResult();
+        }
     }
     
     ChannelGroupTemplate cgt;

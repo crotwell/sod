@@ -59,12 +59,11 @@ public class SiteFormatter extends Template implements SiteTemplate {
      */
     protected Object getTemplate(String tag, Element el) {
         Site site = null;
-        site.get_id();
         
         if (tag.equals("siteCode")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    return site.get_id().site_code;
+                    return formatSiteCode(site.get_id().site_code);
                 }
             };
         }
@@ -83,7 +82,7 @@ public class SiteFormatter extends Template implements SiteTemplate {
             };
         }
         else if (tag.equals("beginTime")){
-            return new BeginTimeTemplate(el);
+            return new SiteBeginTimeTemplate(el);
         }
         else if (tag.equals("status") && sgt != null){
             return new SiteTemplate(){
@@ -92,8 +91,67 @@ public class SiteFormatter extends Template implements SiteTemplate {
                 }
             };
         }
-        
+        else if (tag.equals("comment")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return site.comment;
+                }
+            };
+        }
+        else if (tag.equals("depth")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return Double.toString(site.my_location.depth.value);
+                }
+            };
+        }
+        else if (tag.equals("elevation")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return Double.toString(site.my_location.elevation.value);
+                }
+            };
+        }
+        else if (tag.equals("lat")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return Float.toString(site.my_location.latitude);
+                }
+            };
+        }
+        else if (tag.equals("lon")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return Float.toString(site.my_location.longitude);
+                }
+            };
+        }
+        else if (tag.equals("beginTimeUnformatted")){
+            return new SiteTemplate(){
+                public String getResult(Site site){
+                    return site.get_id().begin_time.date_time;
+                }
+            };
+        }
         return null;
+    }
+    
+    public static String formatSiteCode(String siteCode){
+        if (siteCode == null || siteCode.equals("") || siteCode.equals("  ")){
+            return "__";
+        }
+        else return siteCode;
+    }
+    
+    private class SiteBeginTimeTemplate extends BeginTimeTemplate implements SiteTemplate{
+        public SiteBeginTimeTemplate(Element config){
+            super(config);
+        }
+        
+        public String getResult(Site site){
+            setTime(site.get_id().begin_time);
+            return getResult();
+        }
     }
     
 }
