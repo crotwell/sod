@@ -27,8 +27,17 @@
                         subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <requestSubsetterAND>
-                            <something/>
-                            <somethingelse/>
+                            <requestPrint/>
+                            <requestSubsetterOR>
+                                <passRequest/>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </requestSubsetterOR>
                         </requestSubsetterAND>
                     </example>
                 </xsd:documentation>
@@ -47,8 +56,17 @@
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <requestSubsetterOR>
-                            <something/>
-                            <somethingelse/>
+                            <requestPrint/>
+                            <requestSubsetterAND>
+                                <passRequest/>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </requestSubsetterAND>
                         </requestSubsetterOR>
                     </example>
                 </xsd:documentation>
@@ -67,8 +85,17 @@
                         subsetters. </description>
                     <example>
                         <requestSubsetterXOR>
-                            <something/>
-                            <somethingelse/>
+                            <requestPrint/>
+                            <requestSubsetterAND>
+                                <passRequest/>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </requestSubsetterAND>
                         </requestSubsetterXOR>
                     </example>
                 </xsd:documentation>
@@ -86,7 +113,7 @@
                         subsetters. </description>
                     <example>
                         <requestSubsetterNOT>
-                            <something/>
+                            <requestPrint/>
                         </requestSubsetterNOT>
                     </example>
                 </xsd:documentation>

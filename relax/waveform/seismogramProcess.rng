@@ -386,7 +386,7 @@
                         regardless of whether the enclosed processor succeeded or failed. </description>
                     <example>
                         <alwaysSuccess>
-                            <xyz/>
+                            <printlineSeismogramProcess/>
                         </alwaysSuccess>
                     </example>
                 </xsd:documentation>

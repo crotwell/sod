@@ -66,8 +66,18 @@
                         subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <channelGroupRequestSubsetterAND>
-                            <something/>
-                            <somethingelse/>
+                            <ANDRequestSubsetterWrapper>
+                                <requestPrint/>
+                            </ANDRequestSubsetterWrapper>
+                            <ANDRequestSubsetterWrapper>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </ANDRequestSubsetterWrapper>
                         </channelGroupRequestSubsetterAND>
                     </example>
                 </xsd:documentation>
@@ -86,8 +96,18 @@
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <channelGroupRequestSubsetterOR>
-                            <something/>
-                            <somethingelse/>
+                            <ANDRequestSubsetterWrapper>
+                                <requestPrint/>
+                            </ANDRequestSubsetterWrapper>
+                            <ANDRequestSubsetterWrapper>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </ANDRequestSubsetterWrapper>
                         </channelGroupRequestSubsetterOR>
                     </example>
                 </xsd:documentation>
@@ -106,8 +126,18 @@
                         subsetters. </description>
                     <example>
                         <channelGroupRequestSubsetterXOR>
-                            <something/>
-                            <somethingelse/>
+                            <ANDRequestSubsetterWrapper>
+                                <requestPrint/>
+                            </ANDRequestSubsetterWrapper>
+                            <ANDRequestSubsetterWrapper>
+                                <requestSubsetterNOT>
+                                    <externalRequestSubsetter>
+                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                        <someTag/>
+                                        <someOtherTag/>
+                                    </externalRequestSubsetter>
+                                </requestSubsetterNOT>
+                            </ANDRequestSubsetterWrapper>
                         </channelGroupRequestSubsetterXOR>
                     </example>
                 </xsd:documentation>
@@ -125,7 +155,9 @@
                         subsetters. </description>
                     <example>
                         <channelGroupRequestSubsetterNOT>
-                            <something/>
+                            <ANDRequestSubsetterWrapper>
+                                <requestPrint/>
+                            </ANDRequestSubsetterWrapper>
                         </channelGroupRequestSubsetterNOT>
                     </example>
                 </xsd:documentation>

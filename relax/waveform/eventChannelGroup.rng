@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
-        <ref name="eventChannel"/>
+        <ref name="eventChannelGroup"/>
     </start>
-    <define name="eventChannel">
+    <define name="eventChannelGroup">
         <choice>
             <ref name="ANDEventChannelWrapper"/>
             <ref name="OREventChannelWrapper"/>
@@ -21,11 +20,10 @@
         <element name="ANDEventChannelWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event
-                        channelGroup subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
-                        channelgroup subsetter. The result is the AND of result of all the
-                        individual channels. The is most often used within the motion vector arm. </description>
+                    <summary> Allows an event channel subsetter to be embedded within a event channelGroup subsetter. </summary>
+                    <description> Allows an event channel subsetter to be embedded within a event channelgroup
+                        subsetter. The result is the AND of result of all the individual channels. The is most often
+                        used within the motion vector arm. </description>
                     <example>
                         <ANDEventChannelWrapper>
                             <embeddedChannel>
@@ -42,11 +40,10 @@
         <element name="OREventChannelWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event
-                        channelGroup subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
-                        channelgroup subsetter. The result is the OR of result of all the individual
-                        channels. The is most often used within the motion vector arm. </description>
+                    <summary> Allows an event channel subsetter to be embedded within a event channelGroup subsetter. </summary>
+                    <description> Allows an event channel subsetter to be embedded within a event channelgroup
+                        subsetter. The result is the OR of result of all the individual channels. The is most often used
+                        within the motion vector arm. </description>
                     <example>
                         <OREventChannelWrapper>
                             <embeddedChannel>
@@ -64,25 +61,29 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <description> The output is the logical AND of the outputs of all included subsetters. The
+                        subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <eventChannelGroupAND>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
+                            <ANDEventChannelWrapper>
+                                <embeddedEventStation>
+                                    <distanceRange>
+                                        <unit>DEGREE</unit>
+                                        <min>40</min>
+                                    </distanceRange>
+                                </embeddedEventStation>
+                            </ANDEventChannelWrapper>
+                            <ANDEventChannelWrapper>
+                                <embeddedChannel>
+                                    <bandCode>B</bandCode>
+                                </embeddedChannel>
+                            </ANDEventChannelWrapper>
                         </eventChannelGroupAND>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventChannelGroup"/>
             </oneOrMore>
         </element>
     </define>
@@ -91,25 +92,29 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <description> The output is the logical OR of the outputs of all included subsetters. The subsetters
+                        after the first true outputed are not evaluated. </description>
                     <example>
                         <eventChannelGroupOR>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
+                            <ANDEventChannelWrapper>
+                                <embeddedEventStation>
+                                    <distanceRange>
+                                        <unit>DEGREE</unit>
+                                        <min>40</min>
+                                    </distanceRange>
+                                </embeddedEventStation>
+                            </ANDEventChannelWrapper>
+                            <ANDEventChannelWrapper>
+                                <embeddedChannel>
+                                    <bandCode>B</bandCode>
+                                </embeddedChannel>
+                            </ANDEventChannelWrapper>
                         </eventChannelGroupOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventChannelGroup"/>
             </oneOrMore>
         </element>
     </define>
@@ -118,25 +123,28 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of included
-                        subsetters. </description>
+                    <description> The output is the logical XOR of the outputs of included subsetters. </description>
                     <example>
                         <eventChannelGroupXOR>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
+                            <ANDEventChannelWrapper>
+                                <embeddedEventStation>
+                                    <distanceRange>
+                                        <unit>DEGREE</unit>
+                                        <min>40</min>
+                                    </distanceRange>
+                                </embeddedEventStation>
+                            </ANDEventChannelWrapper>
+                            <ANDEventChannelWrapper>
+                                <embeddedChannel>
+                                    <bandCode>B</bandCode>
+                                </embeddedChannel>
+                            </ANDEventChannelWrapper>
                         </eventChannelGroupXOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="eventChannel"/>
-            <ref name="eventChannel"/>
+            <ref name="eventChannelGroup"/>
+            <ref name="eventChannelGroup"/>
         </element>
     </define>
     <define name="eventChannelGroupNOT">
@@ -144,21 +152,22 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an EventChannelGroup subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included
-                        subsetter. </description>
+                    <description> The output is the logical NOT of the output of the included subsetter. </description>
                     <example>
                         <eventChannelGroupNOT>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
+                            <ANDEventChannelWrapper>
+                                <embeddedEventStation>
+                                    <distanceRange>
+                                        <unit>DEGREE</unit>
+                                        <min>40</min>
+                                    </distanceRange>
+                                </embeddedEventStation>
+                            </ANDEventChannelWrapper>
                         </eventChannelGroupNOT>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="eventChannel"/>
+            <ref name="eventChannelGroup"/>
         </element>
     </define>
     <define name="PASS">
@@ -173,7 +182,7 @@
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="eventChannel"/>
+                <ref name="eventChannelGroup"/>
             </zeroOrMore>
         </element>
     </define>

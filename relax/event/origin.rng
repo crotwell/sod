@@ -119,12 +119,8 @@
                         evaluated. </description>
                     <example>
                         <originAND>
-                            <catalog>
-                                <value>FINGER</value>
-                            </catalog>
-                            <contributor>
-                                <value>NEIC</value>
-                            </contributor>
+                            <catalog>FINGER</catalog>
+                            <contributor>NEIC</contributor>
                         </originAND>
                     </example>
                 </xsd:documentation>

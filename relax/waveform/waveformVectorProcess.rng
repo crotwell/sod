@@ -121,7 +121,7 @@
                         the sub processors complete successfully, false otherwise. </description>
                     <example>
                         <waveformVectorFork>
-                            <rmean/>
+                            <rMean/>
                             <saveSeismogramToFile>
                                 <fileType>sac</fileType>
                                 <dataDirectory>POND_II</dataDirectory>
@@ -148,8 +148,15 @@
                         results of the contained processors are ignored.</description>
                     <example>
                         <waveformVectorAND>
-                            <xyz/>
-                            <pdq/>
+                            <waveformVectorNOT>
+                                <rMean/>
+                            </waveformVectorNOT>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>POND_II</dataDirectory>
+                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
                         </waveformVectorAND>
                     </example>
                 </xsd:documentation>
@@ -170,8 +177,15 @@
                         results of the contained processors are ignored. </description>
                     <example>
                         <waveformVectorOR>
-                            <xyz/>
-                            <pdq/>
+                            <waveformVectorNOT>
+                                <rMean/>
+                            </waveformVectorNOT>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>POND_II</dataDirectory>
+                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
                         </waveformVectorOR>
                     </example>
                 </xsd:documentation>
@@ -191,8 +205,15 @@
                         seismogram results of the contained processors are ignored. </description>
                     <example>
                         <waveformVectorXOR>
-                            <xyz/>
-                            <pdq/>
+                            <waveformVectorNOT>
+                                <rMean/>
+                            </waveformVectorNOT>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>POND_II</dataDirectory>
+                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
                         </waveformVectorXOR>
                     </example>
                 </xsd:documentation>
@@ -211,7 +232,7 @@
                         seismogram results of the contained processors are ignored.</description>
                     <example>
                         <waveformVectorNOT>
-                            <xyz/>
+                            <rMean/>
                         </waveformVectorNOT>
                     </example>
                 </xsd:documentation>
@@ -229,7 +250,7 @@
                     <example>
                         <waveformVectorAlwaysSuccess>
                             <waveformVectorFork>
-                                <rmean/>
+                                <rMean/>
                                 <saveSeismogramToFile>
                                     <fileType>sac</fileType>
                                     <dataDirectory>POND_II</dataDirectory>
