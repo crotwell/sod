@@ -28,6 +28,7 @@ public class ExampleValidator {
 
     public static void validate(String exampleContainingSchemaLoc)
             throws IOException, XMLStreamException {
+        System.out.println("validating " + exampleContainingSchemaLoc);
         StAXModelBuilder modelBuilder = new StAXModelBuilder(exampleContainingSchemaLoc);
         Form root = modelBuilder.getRoot().getForm();
         Annotation[] anns = findUniqueAnnotations(root);
@@ -98,15 +99,15 @@ public class ExampleValidator {
         }
         int numAnns = end - start;
         System.out.println(getPercentage(numAnns, totalInserted) + "% inserted");
-        System.out.println(getPercentage(numAnns, totalValid)+ "% valid");
+        System.out.println(getPercentage(numAnns, totalValid) + "% valid");
     }
 
-    public static String getPercentage(double total, double actual){
-        if(actual == total){ return "" + 100; }
-        double percentage = actual/total * 100;
+    public static String getPercentage(double total, double actual) {
+        if(actual == total) { return "" + 100; }
+        double percentage = actual / total * 100;
         return new DecimalFormat("0.00").format(percentage);
     }
-    
+
     public static void printExamples(String prefix, String[] examples) {
         StringBuffer buf = new StringBuffer();
         buf.append(prefix + ": inserted example: \n");
@@ -127,6 +128,10 @@ public class ExampleValidator {
 
     public static void main(String[] args) throws IOException,
             XMLStreamException {
-        validate("sod.rng");
+        if(args.length >= 1) {
+            validate(args[0]);
+        } else {
+            validate("sod.rng");
+        }
     }
 }
