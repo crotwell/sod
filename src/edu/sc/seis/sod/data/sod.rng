@@ -241,9 +241,9 @@
                             </oneOrMore>
                         </element>
                         <element name="eventStatusTemplate">
-                            <attribute>
-                                <name ns="http://www.w3.org/1999/xlink/">href</name>
-                            </attribute>
+                            <element name="template">
+                                <data type="string"/>
+                            </element>
                         </element>
                         <element name="mapEventStatus">
                             <element name="outputLoc">
@@ -339,19 +339,19 @@
                     <choice>
                         <element name="networkInfoTemplateGenerator">
                             <element name="netConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
+                                <element name="template">
+                                    <data type="string"/>
+                                </element>
                             </element>
                             <element name="stationConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
+                                <element name="template">
+                                    <data type="string"/>
+                                </element>
                             </element>
                             <element name="channelConfig">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
+                                <element name="template">
+                                    <data type="string"/>
+                                </element>
                             </element>
                         </element>
                         <element name="externalNetworkMonitor">
@@ -432,9 +432,9 @@
                     <zeroOrMore>
                         <choice>
                             <element name="waveformEventTemplateGenerator">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
+                                <element name="template">
+                                    <data type="string"/>
+                                </element>
                             </element>
                             <element name="waveformNetworkStatus">
                                 <element name="template">
@@ -523,9 +523,9 @@
                     <zeroOrMore>
                         <choice>
                             <element name="waveformEventTemplateGenerator">
-                                <attribute>
-                                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                                </attribute>
+                                <element name="template">
+                                    <data type="string"/>
+                                </element>
                             </element>
                             <element name="waveformNetworkStatus">
                                 <element name="template">
@@ -5589,9 +5589,9 @@
                 </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
-                <attribute>
-                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                </attribute>
+                <element name="template">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="filter">
                 <element name="lowFreqCorner">
@@ -5656,9 +5656,9 @@
                     </element>
                 </optional>
                 <element name="seismogramConfig">
-                    <attribute>
-                        <name ns="http://www.w3.org/1999/xlink/">href</name>
-                    </attribute>
+                    <element name="template">
+                        <data type="string"/>
+                    </element>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -5812,9 +5812,9 @@
                 </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
-                <attribute>
-                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                </attribute>
+                <element name="template">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="filter">
                 <element name="lowFreqCorner">
@@ -5879,9 +5879,9 @@
                     </element>
                 </optional>
                 <element name="seismogramConfig">
-                    <attribute>
-                        <name ns="http://www.w3.org/1999/xlink/">href</name>
-                    </attribute>
+                    <element name="template">
+                        <data type="string"/>
+                    </element>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -6035,9 +6035,9 @@
                 </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
-                <attribute>
-                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                </attribute>
+                <element name="template">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="filter">
                 <element name="lowFreqCorner">
@@ -6102,9 +6102,9 @@
                     </element>
                 </optional>
                 <element name="seismogramConfig">
-                    <attribute>
-                        <name ns="http://www.w3.org/1999/xlink/">href</name>
-                    </attribute>
+                    <element name="template">
+                        <data type="string"/>
+                    </element>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -6258,9 +6258,9 @@
                 </oneOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
-                <attribute>
-                    <name ns="http://www.w3.org/1999/xlink/">href</name>
-                </attribute>
+                <element name="template">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="filter">
                 <element name="lowFreqCorner">
@@ -6325,9 +6325,9 @@
                     </element>
                 </optional>
                 <element name="seismogramConfig">
-                    <attribute>
-                        <name ns="http://www.w3.org/1999/xlink/">href</name>
-                    </attribute>
+                    <element name="template">
+                        <data type="string"/>
+                    </element>
                 </element>
                 <optional>
                     <element name="prefix">

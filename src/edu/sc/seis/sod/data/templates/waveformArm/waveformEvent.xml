@@ -98,7 +98,7 @@ Maps only update once every two minutes
 </table>
 </div>
 <div id="LeftColumn">
-<menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
+<menu><template>jar:edu/sc/seis/sod/data/templates/menu.xml</template></menu>
 <div id="Key">
 <img src="../../images/individualEventMapKey.gif"/>
 </div>
