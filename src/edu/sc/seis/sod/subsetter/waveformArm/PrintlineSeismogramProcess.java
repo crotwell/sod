@@ -67,6 +67,10 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
             }
         } else {
             try {
+                System.out.println("Got "+seismograms.length+" seismograms for "+
+                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                   " for event in "+
+                                   " at "+event.get_preferred_origin().origin_time.date_time);
                 logger.debug("Got "+seismograms.length+" seismograms for "+
                                    ChannelIdUtil.toStringNoDates(channel.get_id())+
                                    " for event in "+
