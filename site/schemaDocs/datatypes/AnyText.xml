@@ -11,8 +11,8 @@
                 it SOD doesn't think you're adding more tags, but other than that, anything goes. </p>
             <table>
                 <tr>
-                    <td>Escaped Character</td>
-                    <td>Escape Sequence</td>
+                    <td><b>Desired Character</b></td>
+                    <td><b>Escape Sequence</b></td>
                 </tr>
                 <tr>
                     <td>&lt;</td>
