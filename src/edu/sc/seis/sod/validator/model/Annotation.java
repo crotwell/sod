@@ -40,6 +40,10 @@ public class Annotation {
     public String getSummary() {
         return summary;
     }
+    
+    public boolean hasSummary() {
+        return summary != null;
+    }
 
     public String getExample() {
         //System.out.println("getting example");
@@ -108,4 +112,5 @@ public class Annotation {
     private boolean include = false;
 
     public static boolean DEFAULT_HTMLIZE = true;
+
 }
