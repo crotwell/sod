@@ -102,6 +102,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 id = identifier;
             } 
         }
+        Element reqElement = SodUtil.getElement(config, "preserveRequest");
+        if (reqElement != null) {
+            preserveRequest = true;
+        }
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                               "eventDirLabel"));
         createMasterDS();
@@ -131,10 +135,19 @@ public class SaveSeismogramToFile implements WaveformProcess {
         if(seismograms.length == 0) { return new WaveformResult(seismograms,
                                                                 new StringTreeLeaf(this,
                                                                                    true)); }
-        URLDataSetSeismogram urlDSS = saveInDataSet(event,
-                                                    channel,
-                                                    seismograms,
-                                                    fileType);
+        URLDataSetSeismogram urlDSS;
+        if (preserveRequest) {
+            urlDSS = saveInDataSet(event,
+                                   channel,
+                                   seismograms,
+                                   fileType,
+                                   original[0]);
+        } else {
+            urlDSS = saveInDataSet(event,
+                                   channel,
+                                   seismograms,
+                                   fileType);
+        }
         URL[] urls = urlDSS.getURLs();
         for(int i = 0; i < urls.length; i++) {
             cookieJar.put(getCookieName(prefix, channel.get_id(), i),
@@ -263,6 +276,19 @@ public class SaveSeismogramToFile implements WaveformProcess {
             UnsupportedFileTypeException, SeedFormatException,
             XMLStreamException, IncomprehensibleDSMLException,
             ParserConfigurationException {
+        return saveInDataSet(event, channel, seismograms, fileType, null);
+    }
+
+
+    protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
+                                                 Channel channel,
+                                                 LocalSeismogramImpl[] seismograms,
+                                                 SeismogramFileTypes fileType,
+                                                 RequestFilter request)
+            throws CodecException, IOException, NoPreferredOrigin,
+            UnsupportedFileTypeException, SeedFormatException,
+            XMLStreamException, IncomprehensibleDSMLException,
+            ParserConfigurationException {
         if(subDS.length() != 0) {
             prepareDataset(event, subDS);
         } else {
@@ -296,9 +322,12 @@ public class SaveSeismogramToFile implements WaveformProcess {
             seisFileTypeArray[i] = fileType; // all are the same
             bytesWritten += seisFile.length();
         }
-        URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
-                                                               seisFileTypeArray,
-                                                               lastDataSet);
+        URLDataSetSeismogram urlDSS;
+            urlDSS= new URLDataSetSeismogram(seisURL,
+                                             seisFileTypeArray,
+                                             lastDataSet,
+                                             "",
+                                             request);
         if(prefix != null && prefix.length() != 0) {
             urlDSS.setName(prefix + urlDSS.getName());
         }
@@ -473,6 +502,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
     
     String id = "";
 
+    private boolean preserveRequest;
+    
     public static final String COOKIE_PREFIX = "SeisFile_";
 
     EventFormatter nameGenerator = null;
