@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <html>
-<header><title>Events for $fissures.formatStation($station.get_id())</title>
+<header><title>$runName - Events for $fissures.formatStation($station.get_id())</title>
 <style media="all">@import "../../main.css";</style>
 <script type="text/javascript" src="../../tableRuler.js"> </script>
 <script type="text/javascript">
@@ -28,7 +28,7 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 <th><b>Azimuth</b></th>
 <th><b>Back Azimuth</b></th>
 </tr>
-#set( $extraRows = 5 )
+#set( $extraRows = 10 )
 #foreach ( $event in $successful_station_events )
 <tr>
 #set ( $origin = $event.get_preferred_origin() )
@@ -50,7 +50,7 @@ $fissures.formatMagnitude($m),
 #end
 #if ( $extraRows > 0 )
 #foreach ( $row in [1..$extraRows])
-<tr/>
+<tr><td>&nbsp</td></tr>
 #end
 #end
 </table>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <html>
-<header><title>Networks in the waveform arm</title>
+<header><title>$runName - Networks in the waveform arm</title>
 <style media="all">@import "../main.css";</style>
 <script type="text/javascript" src="../tableRuler.js"> </script>
 <script type="text/javascript" src="../sorttable.js"> </script>
@@ -38,7 +38,7 @@ Networks
 #end
 #if ( $extraRows > 0 )
 #foreach ( $row in [1..$extraRows])
-<tr/>
+<tr><td>&nbsp</td></tr>
 #end
 #end
 </table>
