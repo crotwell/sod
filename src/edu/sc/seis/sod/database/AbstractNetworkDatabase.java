@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.log4j.Category;
+import edu.sc.seis.fissuresUtil.cache.CacheNetworkAccess;
 
 /**
  * AbstractNetworkDatabase.java
@@ -170,11 +171,16 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             String networkAccessIor = null;
             try {
                 org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
-                if (networkAccess instanceof RetryNetworkAccess) {
-                    networkAccessIor = orb.object_to_string((org.omg.CORBA.Object)((RetryNetworkAccess)networkAccess).getNetworkAccess());
-                } else {
-                    networkAccessIor = orb.object_to_string((org.omg.CORBA.Object)networkAccess);
+                while (networkAccess instanceof RetryNetworkAccess || networkAccess instanceof CacheNetworkAccess) {
+                    if (networkAccess instanceof RetryNetworkAccess) {
+                        networkAccess = ((RetryNetworkAccess)networkAccess).getNetworkAccess();
+                    }
+                    if (networkAccess instanceof CacheNetworkAccess) {
+                        networkAccess = ((CacheNetworkAccess)networkAccess).getNetworkAccess();
+                    }
                 }
+                networkAccessIor = orb.object_to_string((org.omg.CORBA.Object)networkAccess);
+
             } catch(ConfigurationException cfe) {
                 cfe.printStackTrace();
             }
