@@ -16,22 +16,24 @@ def main(argv):
     proj = ProjectParser.ProjectParser('../../project.xml')
     build.buildJars(proj)
     os.chdir(startdir)
-    files = filter(lambda x:x.endswith('xsl') or x.endswith('xml'), os.listdir('..'))
-    files = ['../' + file for file in files]
-    files.append(proj.path + 'target/' + proj.builtJar)
-    files.append('buildSchemaDocs.py')
-    files.append('elementPage.vm')
-    fileModTimes = [os.stat(file).st_mtime for file in files]
-    generateTime = os.stat('../generatedSite/tagDocs/sod/start.html').st_mtime
-    doTheWork = False
-    for modTime in fileModTimes:
-        if modTime > generateTime:
-            doTheWork = True
-    for root, dirs, files in os.walk('../../relax'):
-        if not root.count('CVS') > 0:
-            for file in files:
-                if not file.startswith('.') and os.stat(join(root, file)).st_mtime > generateTime:
-                    doTheWork = True
+    if os.path.exists('../generatedSite/tagDocs/sod/start.html'): #check for changess
+        files = filter(lambda x:x.endswith('xsl') or x.endswith('xml'), os.listdir('..'))
+        files = ['../' + file for file in files]
+        files.append(proj.path + 'target/' + proj.builtJar)
+        files.append('buildSchemaDocs.py')
+        files.append('elementPage.vm')
+        fileModTimes = [os.stat(file).st_mtime for file in files]
+        generateTime = os.stat('../generatedSite/tagDocs/sod/start.html').st_mtime
+        doTheWork = False
+        for modTime in fileModTimes:
+            if modTime > generateTime:
+                doTheWork = True
+        for root, dirs, files in os.walk('../../relax'):
+            if not root.count('CVS') > 0:
+                for file in files:
+                    if not file.startswith('.') and os.stat(join(root, file)).st_mtime > generateTime:
+                        doTheWork = True
+    else: doTheWork = True
     if doTheWork:
         build.buildSchemaDocScripts(proj)
         depCopy.copy(proj)
