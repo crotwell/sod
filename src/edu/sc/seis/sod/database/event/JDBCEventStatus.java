@@ -1,9 +1,3 @@
-/**
- * JDBCEventStatus.java
- *
- * @author Created by Omnicore CodeGuide
- */
-
 package edu.sc.seis.sod.database.event;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
