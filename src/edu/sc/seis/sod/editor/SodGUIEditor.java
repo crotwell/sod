@@ -45,7 +45,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         // silently eat CommFailure
         ignoreList.add(COMM_FAILURE.class);
         GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
-        grammar = new SchemaGrammar();
         frameName = "SOD Editor";
         setTabbed(true);
         initEditors();
@@ -73,10 +72,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         //});
         //
     }
-
-    public SchemaGrammar getGrammar() {  return grammar; }
-
-    SchemaGrammar grammar;
 
     JComponent getCompForElement(Element element) {
         try {
