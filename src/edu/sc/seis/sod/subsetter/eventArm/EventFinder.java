@@ -133,9 +133,11 @@ public class EventFinder extends AbstractSource implements SodElement {
      *
      * @return an <code>EventDC</code> value
      */
-    public EventDC getEventDC() throws Exception{
-
-        return fissuresNamingService.getEventDC(getDNSName(), getSourceName());
+    public EventDCOperations getEventDC() throws Exception{
+        if (eventDC == null) {
+            eventDC = fissuresNamingService.getEventDC(getDNSName(), getSourceName());
+        }
+        return eventDC;
     }
 
     /**
@@ -207,6 +209,7 @@ public class EventFinder extends AbstractSource implements SodElement {
 
     private FissuresNamingServiceImpl fissuresNamingService = null;
 
+    private EventDCOperations eventDC = null;
 
     private Element config = null;
 
