@@ -63,10 +63,15 @@ public class WaveformArm implements Runnable {
                 retryIfNeededAndAvailable();
             } while(Start.getEventArm().isAlive());
             logger.info("Waveform arm done.");
+            while(pool.isEmployed()){
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {}
+            }
         } catch(Throwable e) {
             GlobalExceptionHandler.handle("Problem running waveform arm", e);
         }
-        finished=true;
+        finished = true;
     }
 
     public LocalSeismogramArm getLocalSeismogramArm() {
