@@ -7,6 +7,7 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 
 public class EventChannelGroupPair {
@@ -73,10 +74,11 @@ public class EventChannelGroupPair {
     }
 
     public String toString() {
-        String s = "ECGroup: ";
+        String s = "ECGroup: "+getEvent()+" ";
         for (int i = 0; i < pairs.length; i++) {
-            s += pairs[i].toString()+" , ";
+            s += ChannelIdUtil.toString(pairs[i].getChannel().get_id())+" , ";
         }
+        s += " "+getStatus();
         return s;
     }
 
