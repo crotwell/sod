@@ -5146,6 +5146,18 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
+                <element name="displayOption">
+                    <choice>
+                        <value>BEST</value>
+                        <value>ALL</value>
+                    </choice>
+                </element>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+                <element name="numSeisPerRecordSection">
+                    <data type="integer"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5387,6 +5399,18 @@
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
                     <data type="string"/>
+                </element>
+                <element name="displayOption">
+                    <choice>
+                        <value>BEST</value>
+                        <value>ALL</value>
+                    </choice>
+                </element>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+                <element name="numSeisPerRecordSection">
+                    <data type="integer"/>
                 </element>
             </element>
             <element name="responseGain">
@@ -5630,6 +5654,18 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
+                <element name="displayOption">
+                    <choice>
+                        <value>BEST</value>
+                        <value>ALL</value>
+                    </choice>
+                </element>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+                <element name="numSeisPerRecordSection">
+                    <data type="integer"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5871,6 +5907,18 @@
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
                     <data type="string"/>
+                </element>
+                <element name="displayOption">
+                    <choice>
+                        <value>BEST</value>
+                        <value>ALL</value>
+                    </choice>
+                </element>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+                <element name="numSeisPerRecordSection">
+                    <data type="integer"/>
                 </element>
             </element>
             <element name="responseGain">
