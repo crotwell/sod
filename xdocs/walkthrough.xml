@@ -184,7 +184,7 @@ run are on a web server.
 <section name="WEED">
 <p>
 Now that you have seen the tutorial template, feel free to visit the weed template,
-also located in the ***TODO*** menu.
+also located in the File menu.
 It attempts to make SOD behave similarly to the old IRIS WEED program. There are
 some areas where making the functionality exactly like WEED would have been harder
 on the user, and so it was not designed to merely be similar. In addition to the
