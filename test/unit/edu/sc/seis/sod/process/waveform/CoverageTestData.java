@@ -56,7 +56,7 @@ public class CoverageTestData {
         TimeInterval period = spikeSeis.getSampling().getPeriod();
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate contigousDataStart = new MicroSecondDate(spikeSeisEnd.add(period));
-        LocalSeismogramImpl contigousBit = SimplePlotUtil.createTestData(contigousDataStart);
+        LocalSeismogramImpl contigousBit = SimplePlotUtil.createSpike(contigousDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 contigousBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
@@ -67,7 +67,7 @@ public class CoverageTestData {
         TimeInterval twoPeriod = (TimeInterval)spikeSeis.getSampling().getPeriod().multiplyBy(2);
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate uncontigousDataStart = new MicroSecondDate(spikeSeisEnd.add(twoPeriod));
-        LocalSeismogramImpl uncontigousBit = SimplePlotUtil.createTestData(uncontigousDataStart);
+        LocalSeismogramImpl uncontigousBit = SimplePlotUtil.createSpike(uncontigousDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 uncontigousBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
@@ -77,7 +77,7 @@ public class CoverageTestData {
         LocalSeismogramImpl firstBit = spikeSeis;
         MicroSecondDate spikeSeisEnd = spikeSeis.getEndTime();
         MicroSecondDate otherDataStart = new MicroSecondDate(spikeSeisEnd.subtract(ONE_SECOND));
-        LocalSeismogramImpl otherBit = SimplePlotUtil.createTestData(otherDataStart);
+        LocalSeismogramImpl otherBit = SimplePlotUtil.createSpike(otherDataStart);
         LocalSeismogramImpl[] data = new LocalSeismogramImpl[] {firstBit,
                                                                 otherBit};
         return new CoverageTestData(data, timeSpikeBegin, timeSpikeEnd);
