@@ -1,23 +1,20 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.database.*;
+
 import edu.iris.Fissures.IfEvent.EventAccess;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.database.ChannelDbObject;
-import edu.sc.seis.sod.database.EventDbObject;
-import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.database.SiteDbObject;
-import edu.sc.seis.sod.database.StationDbObject;
-import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -222,7 +219,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      */
     protected void processConfig(Element config)
         throws ConfigurationException {
-        
         NodeList children = config.getChildNodes();
         Node node;
         for (int i=0; i<children.getLength(); i++) {
@@ -233,11 +229,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
-                if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
-                else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
-                    
-                    //                else if(sodElement instanceof WaveformStatusProcess) //waveformStatusProcess = (WaveformStatusProcess)sodElement;
-                else {
+                if(sodElement instanceof EventStationSubsetter){
+                    eventStationSubsetter = (EventStationSubsetter)sodElement;
+                }else if(sodElement instanceof LocalSeismogramArm){
+                    localSeismogramArm = (LocalSeismogramArm)sodElement;
+                }else if(sodElement instanceof WaveFormStatus){
+                    statusMonitors.add(sodElement);
+                }else {
                     System.err.println("Unkown tag "+((Element)node).getTagName()+" found in config file");
                     System.exit(1);
                 }
@@ -268,21 +266,18 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
      * the class Status in the package edu.sc.seis.sod.database.
      */
     
-    public synchronized void setFinalStatus(EventDbObject eventDbObject,
-                                            ChannelDbObject channelDbObject,
-                                            Status status,
-                                            String reason) throws InvalidDatabaseStateException{
-        EventAccessOperations eventAccess = eventDbObject.getEventAccess();
-        Channel channel = channelDbObject.getChannel();
-        int eventid = eventDbObject.getDbId();
-        int channelid = channelDbObject.getDbId();
-        //if(status.getId() == Status.PROCESSING.getId()) return;
+    public synchronized void setStatus(EventChannelPair ecp) throws InvalidDatabaseStateException{
+        EventAccessOperations eventAccess = ecp.getEvent();
+        int eventid = ecp.getEventDbId();
+        int channelid = ecp.getChannelDbId();
         Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
-                                           status, reason);
-        //waveformStatusProcess.end(eventAccess, channel, status, reason);
-        if(status.getId() == Status.PROCESSING.getId()) return;
+                                           ecp.getStatus(), ecp.getInfo());
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((WaveFormStatus)it.next()).update(ecp);
+        }
+        if(ecp.getStatus().getId() == Status.PROCESSING.getId()) return;
         updateChannelCount(eventid, channelid, eventAccess);
-        
     }
     
     private void updateChannelCount(int eventid,
@@ -291,32 +286,21 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         Object connection = Start.getWaveformQueue().getConnection();
         synchronized(connection) {
             int sitedbid = networkArm.getSiteDbId(channelid);
-            
-            
             int count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);
             int unfinishedCount = Start.getWaveformQueue().unfinishedChannelCount(eventid, sitedbid);
             logger.debug("Channel count before is "+count+" the channelid is "+channelid+
                              "eventid is  "+eventid);
-            
-            
             if(count == -1) { throw new InvalidDatabaseStateException("Channel Count is -1"); }
-            
             if(count > 0 && count > unfinishedCount) {
                 Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
                 count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);
                 if(count == -1) {
                     throw new InvalidDatabaseStateException("Channel Count is -1");
                 }
-                
             }
-            
-            //  Start.getWaveformQueue().deleteChannelInfo(eventid, channelid);
-            
-            boolean flag = false;
             if(count <= 1 ) {
                 //decrement corresponding station reference count..
                 //delete the corresponding entry from the wavefrom sitedb
-                flag = true;
                 updateSiteCount(eventid, sitedbid, eventAccess);
             }
         }//end of synch
@@ -625,4 +609,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     private HashMap channelDbCache = new HashMap();
     
     private static Logger logger = Logger.getLogger(WaveFormArm.class);
+    
+    private List statusMonitors = new ArrayList();
 }

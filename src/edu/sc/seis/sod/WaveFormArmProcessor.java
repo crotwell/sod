@@ -28,13 +28,12 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
     public void run() {
         try {
             EventAccessOperations eventAccess = eventDbObject.getEventAccess();
-            if (successfulChannels[0]  == null) logger.debug("Chan is NULL");
-            else logger.debug("channel is NOT NULL");
             for(int counter = 0; counter < successfulChannels.length; counter++) {
-                parent.setFinalStatus(eventDbObject,
-                                      successfulChannels[counter],
-                                      Status.PROCESSING,
-                                      "WaveformArmProcessingStarted");
+                EventChannelPair cur = new EventChannelPair(networkAccess,
+                                                            eventDbObject,
+                                                            successfulChannels[counter],
+                                                            parent);
+                cur.update("Processing Started", Status.PROCESSING);
                 boolean passedESS;
                 synchronized(eventStationSubsetter) {
                     passedESS = eventStationSubsetter.accept(eventAccess,
@@ -44,19 +43,12 @@ public class WaveFormArmProcessor extends SodExceptionSource implements Runnable
                     
                 }
                 if(!passedESS) {
-                    parent.setFinalStatus(eventDbObject,
-                                          successfulChannels[counter],
-                                          Status.COMPLETE_REJECT,
-                                          "EventStationSubsetterFailed");
+                    cur.update("Event Station Subsetter Failed",
+                               Status.COMPLETE_REJECT);
                 }else{
-                    parent.setFinalStatus(eventDbObject,
-                                          successfulChannels[counter],
-                                          Status.PROCESSING,
-                                          "EventStationSubsetterSucceeded");
-                    localSeismogramArm.processLocalSeismogramArm(eventDbObject,
-                                                                 networkAccess,
-                                                                 successfulChannels[counter],
-                                                                 parent);
+                    cur.update("Event Station Subsetter Succeeded",
+                               Status.PROCESSING);
+                    localSeismogramArm.processLocalSeismogramArm(cur);
                 }//end of if
             }//end of for
         } catch(Throwable ce) {
