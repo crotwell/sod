@@ -89,22 +89,22 @@
                 </eventFinder>
                 <originAND>
                    <originPointDistance>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
+                      <latitude>0</latitude>
+                      <longitude>0</longitude>
                       <unit>DEGREE</unit>
-                      <min>30</min>
-                      <max>100</max>
+                      <min>0</min>
+                      <max>180</max>
                    </originPointDistance>
                    <originPointAzimuth>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
+                      <latitude>0</latitude>
+                      <longitude>0</longitude>
                       <unit>DEGREE</unit>
                       <min>0</min>
                       <max>360</max>
                    </originPointAzimuth>
                    <originPointBackAzimuth>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
+                      <latitude>0</latitude>
+                      <longitude>0</longitude>
                       <unit>DEGREE</unit>
                       <min>0</min>
                       <max>360</max>
@@ -166,15 +166,17 @@
                                 </effectiveTimeOverlap>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
+
+                <responseWriter>
+                    <responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
+                 </responseWriter>
+
                 <networkInfoTemplateGenerator>
                     <!--<fileDir>status</fileDir>-->
                     <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
                     <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
                 </networkInfoTemplateGenerator>
-                <responseWriter>
-                    <responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
-                 </responseWriter>
         </networkArm>
         <waveformArm>
             <eventStationAND>
