@@ -86,15 +86,14 @@ public class JDBCEventChannelRetry extends SodJDBC{
         return -1;
     }
 
-    public void addRetry(int pairId, Status failureType) throws SQLException{
+    public void addRetry(int pairId) throws SQLException{
         if(!tableContains(pairId)){insert(pairId);}
-        updateRetry(pairId, failureType.getAsShort(), getTimestamp(pairId));
+        updateRetry(pairId, getTimestamp(pairId));
     }
 
-    private void updateRetry(int pairId, short failType, Timestamp retryTime) throws SQLException{
-        updateFailure.setShort(1, failType);
-        updateFailure.setTimestamp(2, retryTime);
-        updateFailure.setInt(3, pairId);
+    private void updateRetry(int pairId, Timestamp retryTime) throws SQLException{
+        updateFailure.setTimestamp(1, retryTime);
+        updateFailure.setInt(2, pairId);
         updateFailure.executeUpdate();
     }
 
