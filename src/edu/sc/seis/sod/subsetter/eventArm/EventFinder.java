@@ -165,7 +165,6 @@ public class EventFinder extends AbstractSource implements SodElement {
      * @return an <code>edu.iris.Fissures.Area</code> value
      */
     public edu.iris.Fissures.Area getArea() {
-
 	return area;
 	
     }
