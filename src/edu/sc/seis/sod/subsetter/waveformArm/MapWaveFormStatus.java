@@ -16,7 +16,6 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Element;
@@ -77,42 +76,14 @@ public class MapWaveFormStatus implements WaveFormStatus {
         return false;
     }
     
-    //    private OpenMap getMapForEvent(EventAccessOperations event){
-    //        Iterator it = eventMapMap.keySet().iterator();
-    //        OpenMap eventMap = null;
-    //
-    //        while (it.hasNext()){
-    //            try {
-    //                EventAccessOperations curEvent = (EventAccessOperations)it.next();
-    //                if (DisplayUtils.originIsEqual(curEvent, event)){
-    //                    eventMap = (OpenMap)eventMapMap.get(curEvent);
-    //                }
-    //            }
-    //            catch (NoPreferredOrigin e) {
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //
-    //        if (eventMap == null){
-    //            eventMap = new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
-    //            EventLayer evLayer = new EventLayer(eventMap.getMapBean());
-    //            eventMap.setEventLayer(evLayer);
-    //            StationLayer staLayer = new StationLayer();
-    //            eventMap.setStationLayer(staLayer);
-    //            eventMapMap.put(event, eventMap);
-    //        }
-    //
-    //        return eventMap;
-    //    }
-    
-    public static void main(String[] args){
-        MapWaveFormStatus mwfs = new MapWaveFormStatus("mwfsTest.png");
-        
-        MockFissures mf = new MockFissures();
-        mwfs.add(mf.createFallEvent());
-                                
-        mwfs.write();
-        System.exit(0);
-    }
+//    public static void main(String[] args){
+//        MapWaveFormStatus mwfs = new MapWaveFormStatus("mwfsTest.png");
+//
+//        MockFissures mf = new MockFissures();
+//        mwfs.add(mf.createFallEvent());
+//
+//        mwfs.write();
+//        System.exit(0);
+//    }
 }
 
