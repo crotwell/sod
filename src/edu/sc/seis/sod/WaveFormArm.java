@@ -289,7 +289,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                 else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
 
                 //                else if(sodElement instanceof WaveformStatusProcess) //waveformStatusProcess = (WaveformStatusProcess)sodElement;
-
+                else {
+                    System.err.println("Unkown tag "+((Element)node).getTagName()+" found in config file");
+                    System.exit(1);
+                }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
 
