@@ -12,12 +12,15 @@ public class NetworkCode implements NetworkIdSubsetter,SodElement {
 	public NetworkCode(Element config) {
 		System.out.println("The name of the element passed to NetworkCode is "+config.getTagName());
 		System.out.println("The value of the Network Code is "+SodUtil.getNestedText(config));
+		this.config = config;
 	}
 
 	public boolean accept(NetworkId e, CookieJar cookies) {
-
-		return true;
+		if(e.network_code.equals(SodUtil.getNestedText(config))) return true;
+		else return false;
 
 	}
+
+	private Element config = null;
 
 }
