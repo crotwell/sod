@@ -10,6 +10,7 @@
                         This is a quick guide to getting an initial run of SOD. More details
                         are in the full documentation for install, run, etc.
                         </p>
+                        <p>SOD is written in Java, and so you must have Java version 1.4 or better installed in order to use SOD. Java can be downloaded for Windows and Solaris at <a href="http://java.sun.com/j2se">http://java.sun.com/j2se</a>.</p>
                         <section name="for Unix">
                         <p>
                         <tt>
