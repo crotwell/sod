@@ -1,7 +1,9 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.NameGenerator;
 import edu.sc.seis.sod.subsetter.Template;
 import java.util.ArrayList;
@@ -11,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Element;
 
-public class EventGroupTemplate extends Template{
+public class EventGroupTemplate extends Template implements GenericTemplate, EventStatus{
+    
     public EventGroupTemplate(){ this(null); }
     
     public EventGroupTemplate(Element config){
@@ -31,7 +34,13 @@ public class EventGroupTemplate extends Template{
         }else if(el.getNodeName().equals("sorting")){
             sorter = new EventSorter(el);
         }
-        return new Nothing();
+        return textTemplate("");
+    }
+    
+    public Object textTemplate(final String text){
+        return new EventTemplate(){
+            public String getResult(EventAccessOperations ev) { return text; }
+        };
     }
     
     private class Nothing{ public String toString(){ return "";} }
@@ -53,9 +62,7 @@ public class EventGroupTemplate extends Template{
         }
     }
     
-    public String toString(){ return getResults(); }
-    
-    public String getResults(){
+    public String getResult(){
         StringBuffer output = new StringBuffer();
         List sorted = sorter.getSortedEvents();
         synchronized(sorted){
@@ -83,6 +90,10 @@ public class EventGroupTemplate extends Template{
         
         public EventAccessOperations event;
         public RunStatus status;
+    }
+    
+    public void setArmStatus(String status) {
+        // NO IMPL
     }
     
     private List events = new ArrayList();
