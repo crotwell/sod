@@ -30,6 +30,12 @@ public class TagChooser implements EditorPlugin {
     }
 
     public JComponent getGUI(Element element) throws Exception {
+        // this is a hack to avoid same-named tags in the eventFinder element
+        // need a real fix, but this is ok for short term
+        if (element.getParentNode().getNodeName().equals("eventFinder")) {
+            return editor.getDefaultCompForElement(element);
+        }
+
         Box b = Box.createVerticalBox();
         JComboBox combo = new JComboBox(subTypes);
 
