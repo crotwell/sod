@@ -1,160 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <start>
-        <ref name="eventChannel"/>
-    </start>
-    <define name="eventChannel">
-        <choice>
-            <ref name="ANDEventChannelWrapper"/>
-            <ref name="OREventChannelWrapper"/>
-            <ref name="eventChannelGroupAND"/>
-            <ref name="eventChannelGroupOR"/>
-            <ref name="eventChannelGroupXOR"/>
-            <ref name="eventChannelGroupNOT"/>
-        </choice>
-    </define>
-    <define name="ANDEventChannelWrapper">
-        <element name="ANDEventChannelWrapper">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event channelGroup
+	<start>
+		<ref name="eventChannel"/>
+	</start>
+	<define name="eventChannel">
+		<choice>
+			<ref name="ANDEventChannelWrapper"/>
+			<ref name="OREventChannelWrapper"/>
+			<ref name="eventChannelGroupAND"/>
+			<ref name="eventChannelGroupOR"/>
+			<ref name="eventChannelGroupXOR"/>
+			<ref name="eventChannelGroupNOT"/>
+			<ref name="PASS"/>
+		</choice>
+	</define>
+	<define name="ANDEventChannelWrapper">
+		<element name="ANDEventChannelWrapper">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Allows an event channel subsetter to be embedded within a event channelGroup
                     subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
+					<description> Allows an event channel subsetter to be embedded within a event
                     channelgroup subsetter. The result is the AND of result of all the
                     individual channels. The is most often used within the motion
                     vector arm. </description>
-                    <example>
-                        <ANDEventChannelWrapper>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </ANDEventChannelWrapper>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
-        </element>
-    </define>
-    <define name="OREventChannelWrapper">
-        <element name="OREventChannelWrapper">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel subsetter to be embedded within a event channelGroup
+					<example>
+						<ANDEventChannelWrapper>
+							<embeddedChannel>
+								<bandCode>B</bandCode>
+							</embeddedChannel>
+						</ANDEventChannelWrapper>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<externalRef href="eventChannel.rng"/>
+		</element>
+	</define>
+	<define name="OREventChannelWrapper">
+		<element name="OREventChannelWrapper">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Allows an event channel subsetter to be embedded within a event channelGroup
                     subsetter. </summary>
-                    <description> Allows an event channel subsetter to be embedded within a event
+					<description> Allows an event channel subsetter to be embedded within a event
                     channelgroup subsetter. The result is the OR of result of all the
                     individual channels. The is most often used within the motion
                     vector arm. </description>
-                    <example>
-                        <OREventChannelWrapper>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </OREventChannelWrapper>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <externalRef href="eventChannel.rng"/>
-        </element>
-    </define>
-    <define name="eventChannelGroupAND">
-        <element name="eventChannelGroupAND">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all included
+					<example>
+						<OREventChannelWrapper>
+							<embeddedChannel>
+								<bandCode>B</bandCode>
+							</embeddedChannel>
+						</OREventChannelWrapper>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<externalRef href="eventChannel.rng"/>
+		</element>
+	</define>
+	<define name="eventChannelGroupAND">
+		<element name="eventChannelGroupAND">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical AND between EventChannelGroup subsetters. </summary>
+					<description> The output is the logical AND of the outputs of all included
                     subsetters. The subsetters after the first false outputed are not evaluated. </description>
-                    <example>
-                        <eventChannelGroupAND>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </eventChannelGroupAND>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <oneOrMore>
-                <ref name="eventChannel"/>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="eventChannelGroupOR">
-        <element name="eventChannelGroupOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all included
+					<example>
+						<eventChannelGroupAND>
+							<embeddedEventStation>
+								<distanceRange>
+									<unit>DEGREE</unit>
+									<min>40</min>
+								</distanceRange>
+							</embeddedEventStation>
+							<embeddedChannel>
+								<bandCode>B</bandCode>
+							</embeddedChannel>
+						</eventChannelGroupAND>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<oneOrMore>
+				<ref name="eventChannel"/>
+			</oneOrMore>
+		</element>
+	</define>
+	<define name="eventChannelGroupOR">
+		<element name="eventChannelGroupOR">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical OR between EventChannelGroup subsetters. </summary>
+					<description> The output is the logical OR of the outputs of all included
                     subsetters. The subsetters after the first true outputed are not evaluated. </description>
-                    <example>
-                        <eventChannelGroupOR>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </eventChannelGroupOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <oneOrMore>
-                <ref name="eventChannel"/>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="eventChannelGroupXOR">
-        <element name="eventChannelGroupXOR">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between EventChannelGroup subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of included subsetters. </description>
-                    <example>
-                        <eventChannelGroupXOR>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                            <embeddedChannel>
-                                <bandCode>B</bandCode>
-                            </embeddedChannel>
-                        </eventChannelGroupXOR>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="eventChannel"/>
-            <ref name="eventChannel"/>
-        </element>
-    </define>
-    <define name="eventChannelGroupNOT">
-        <element name="eventChannelGroupNOT">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an EventChannelGroup subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included subsetter. </description>
-                    <example>
-                        <eventChannelGroupNOT>
-                            <embeddedEventStation>
-                                <distanceRange>
-                                    <unit>DEGREE</unit>
-                                    <min>40</min>
-                                </distanceRange>
-                            </embeddedEventStation>
-                        </eventChannelGroupNOT>
-                    </example>
-                </xsd:documentation>
-            </xsd:annotation>
-            <ref name="eventChannel"/>
-        </element>
-    </define>
+					<example>
+						<eventChannelGroupOR>
+							<embeddedEventStation>
+								<distanceRange>
+									<unit>DEGREE</unit>
+									<min>40</min>
+								</distanceRange>
+							</embeddedEventStation>
+							<embeddedChannel>
+								<bandCode>B</bandCode>
+							</embeddedChannel>
+						</eventChannelGroupOR>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<oneOrMore>
+				<ref name="eventChannel"/>
+			</oneOrMore>
+		</element>
+	</define>
+	<define name="eventChannelGroupXOR">
+		<element name="eventChannelGroupXOR">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical XOR between EventChannelGroup subsetters. </summary>
+					<description> The output is the logical XOR of the outputs of included subsetters. </description>
+					<example>
+						<eventChannelGroupXOR>
+							<embeddedEventStation>
+								<distanceRange>
+									<unit>DEGREE</unit>
+									<min>40</min>
+								</distanceRange>
+							</embeddedEventStation>
+							<embeddedChannel>
+								<bandCode>B</bandCode>
+							</embeddedChannel>
+						</eventChannelGroupXOR>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<ref name="eventChannel"/>
+			<ref name="eventChannel"/>
+		</element>
+	</define>
+	<define name="eventChannelGroupNOT">
+		<element name="eventChannelGroupNOT">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Logical NOT of an EventChannelGroup subsetter. </summary>
+					<description> The output is the logical NOT of the output of the included subsetter. </description>
+					<example>
+						<eventChannelGroupNOT>
+							<embeddedEventStation>
+								<distanceRange>
+									<unit>DEGREE</unit>
+									<min>40</min>
+								</distanceRange>
+							</embeddedEventStation>
+						</eventChannelGroupNOT>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<ref name="eventChannel"/>
+		</element>
+	</define>
+	<define name="PASS">
+		<element name="passEventChannelGroup">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<summary> Always returns true. </summary>
+					<description> Simple subsetter that always returns true, useful for testing. </description>
+					<example>
+						<passEventChannelGroup/>
+					</example>
+				</xsd:documentation>
+			</xsd:annotation>
+			<zeroOrMore>
+				<ref name="eventChannel"/>
+			</zeroOrMore>
+		</element>
+	</define>
 </grammar>

@@ -11,6 +11,7 @@
             <ref name="channelGroupRequestSubsetterOR"/>
             <ref name="channelGroupRequestSubsetterXOR"/>
             <ref name="channelGroupRequestSubsetterNOT"/>
+			<ref name="PASS"/>
         </choice>
     </define>
     <define name="ANDRequestSubsetterWrapper">
@@ -129,4 +130,20 @@
             <ref name="channelGroupRequestSubsetter"/>
         </element>
     </define>
+	<define name="PASS">
+        <element name="passChannelGroupRequestSubsetter">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passChannelGroupRequestSubsetter/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="channelGroupRequestSubsetter"/>
+            </zeroOrMore>
+        </element>
+	</define>
 </grammar>

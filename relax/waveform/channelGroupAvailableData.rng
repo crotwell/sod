@@ -11,6 +11,7 @@
             <ref name="channelGroupAvailableDataOR"/>
             <ref name="channelGroupAvailableDataXOR"/>
             <ref name="channelGroupAvailableDataNOT"/>
+			<ref name="PASS"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">
@@ -129,6 +130,22 @@
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="channelGroupAvailableData"/>
+        </element>
+    </define>
+	 <define name="PASS">
+        <element name="passChannelGroupAvailableData">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passChannelGroupAvailableData/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="channelGroupAvailableData"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>
