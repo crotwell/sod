@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="eventChannel"/>
+    </start>
+    <define name="eventChannel">
+        <choice>
+            <ref name="ANDEventChannelWrapper"/>
+            <ref name="OREventChannelWrapper"/>
+        </choice>
+    </define>
+    <define name="ANDEventChannelWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel subsetter to be embedded within a event channelGroup
+                    subsetter. </summary>
+                <description> Allows an event channel subsetter to be embedded within a event
+                    channelgroup subsetter. The result is the AND of result of all the
+                    individual channels. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <ANDEventChannelWrapper>
+                        <embeddedChannel>
+                            <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </ANDEventChannelWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="ANDEventChannelWrapper">
+            <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+    <define name="OREventChannelWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel subsetter to be embedded within a event channelGroup
+                    subsetter. </summary>
+                <description> Allows an event channel subsetter to be embedded within a event
+                    channelgroup subsetter. The result is the OR of result of all the
+                    individual channels. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <OREventChannelWrapper>
+                        <embeddedChannel>
+                            <bandCode>B</bandCode>
+                        </embeddedChannel>
+                    </OREventChannelWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="OREventChannelWrapper">
+            <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+</grammar>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
+        <include href="phaseRequest.rng"/>
+    <start>
+        <element name="motionvectorArm">
+            <optional>
+                <externalRef href="eventChannelGroup.rng"/>
+            </optional>
+            <element name="channelGroupRequestGenerator">
+                <element name="phaseRequest">
+                    <ref name="phaseRequest"/>
+                </element>
+            </element>
+            <optional>
+                <externalRef href="channelGroupRequestSubsetter.rng"/>
+            </optional>
+            <externalRef href="dataCenter.rng"/>
+            <optional>
+                <externalRef href="channelGroupAvailableData.rng"/>
+            </optional>
+            <optional>
+                <externalRef href="motionVectorSubsetter.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="channelGroupSeismogramProcess.rng"/>
+            </zeroOrMore>
+        </element>
+    </start>
+</grammar>

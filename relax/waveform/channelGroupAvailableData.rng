@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="channelGroupAvailableData.rng"/>
+    </start>
+    <define name="channelGroupAvailableData">
+        <choice>
+            <ref name="ANDAvailableDataWrapper"/>
+            <ref name="ORAvailableDataWrapper"/>
+        </choice>
+    </define>
+    <define name="ANDAvailableDataWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel available data subsetter to be embedded within a event channelGroup
+                    available data subsetter. </summary>
+                <description> Allows an event channel available data subsetter to be embedded within a event
+                    channelgroup available data subsetter. The result is the AND of result of all the
+                    individual per channel available data subsetters. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <ANDAvailableDataWrapper>
+                        <noGaps/>
+                    </ANDAvailableDataWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="ANDAvailableDataWrapper">
+            <externalRef href="availableData.rng"/>
+        </element>
+    </define>
+    <define name="ORAvailableDataWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
+                    available data subsetter. </summary>
+                <description> Allows an event channel request subsetter to be embedded within a event
+                    channelgroup available data subsetter. The result is the OR of the result of all the
+                    individual per channel available data subsetters. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <ORAvailableDataWrapper>
+                        <someData>
+                    </ORAvailableDataWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="ORAvailableDataWrapper">
+            <externalRef href="availableData.rng"/>
+        </element>
+    </define>
+</grammar>

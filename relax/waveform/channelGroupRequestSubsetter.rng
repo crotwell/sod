@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="channelGroupRequestSubsetter"/>
+    </start>
+    <define name="channelGroupRequestSubsetter">
+        <choice>
+            <ref name="ANDRequestSubsetterWrapper"/>
+            <ref name="ORRequestSubsetterWrapper"/>
+        </choice>
+    </define>
+    <define name="ANDRequestSubsetterWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
+                    request subsetter. </summary>
+                <description> Allows an event channel request subsetter to be embedded within a event
+                    channelgroup request subsetter. The result is the AND of result of all the
+                    individual per channel request subsetters. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <ANDRequestSubsetterWrapper>
+                        <requestPrint/>
+                    </ANDRequestSubsetterWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="ANDRequestSubsetterWrapper">
+            <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+    <define name="ORRequestSubsetterWrapper">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
+                    request subsetter. </summary>
+                <description> Allows an event channel request subsetter to be embedded within a event
+                    channelgroup request subsetter. The result is the OR of the result of all the
+                    individual per channel request subsetters. The is most often used within the motion
+                    vector arm. </description>
+                <example>
+                    <ORRequestSubsetterWrapper>
+                        <requestPrint>
+                    </ORRequestSubsetterWrapper>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="ORRequestSubsetterWrapper">
+            <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+</grammar>

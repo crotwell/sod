@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <start>
+        <ref name="channelGroupSeismogramProcess"/>
+    </start>
+    <include href="../base/include/eventLabel.rng"/>
+    <include href="seismogramProcess.rng"/>
+    <define name="channelGroupSeismogramProcess">
+        <choice>
+            <externalRef name="seismogramProcess.rng"/>
+        </choice>
+    </define>
+    <define name="channelGroupForkProcess">
+        <element name="channelGroupForkProcess">
+            <zeroOrMore>
+                <ref name="channelGroupSeismogramProcess"/>
+            </zeroOrMore>
+        </element>
+    </define>
+</grammar>
