@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
@@ -9,7 +10,7 @@
     </xsd:annotation>
     
     <!-- Include the external schemas necessary for this schema -->
-    <xsd:include schemaLocation="./utilities.xsd"/>
+    <xsd:include schemaLocation="utilities.xsd"/>
     
     <!-- BEGIN Event Source -->
     
@@ -95,8 +96,8 @@
                 </summary>
                 <description>
                     A Fissures/DHI EventDC service is located via the name
-                    and dns tags. The EventChannelFinder is aquired from the 
-                    EventDC, and sod registers as a listener for event 
+                    and dns tags. The EventChannelFinder is aquired from the
+                    EventDC, and sod registers as a listener for event
                     notifications with the event channel with the given name.
                     As events are received, they are sent through the EventArm
                     for processing.
@@ -119,14 +120,14 @@
     </xsd:complexType>
     
     
-    <!-- END Event Source -->    
+    <!-- END Event Source -->
     
     <!-- BEGIN EventAttr -->
     
     <!-- This is the base abstract Type -->
     <xsd:complexType name="eventAttrType" abstract="true">
       <xsd:annotation>
-	<xsd:documentation xml:lang="en">
+    <xsd:documentation xml:lang="en">
             <summary>
                 Abstract superclass of all EventAttr subsetters.
             </summary>
@@ -137,7 +138,7 @@
             <example>
                
             </example>
-	</xsd:documentation>
+    </xsd:documentation>
       </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
@@ -151,9 +152,9 @@
                     Logical AND between EventAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included EventAttr subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <eventAttrAND>
@@ -180,9 +181,9 @@
                     Logical OR between EventAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included EventAttr subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <eventAttrOR>
@@ -210,7 +211,7 @@
                     Logical XOR between EventAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included EventAttr subsetters.
                 </description>
                 <example>
@@ -238,7 +239,7 @@
                     Logical NOT of an EventAttr subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included EventAttr subsetter.
                 </description>
                 <example>
@@ -255,7 +256,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <xsd:complexType name="eventAttrNameType">
         <xsd:annotation>
@@ -289,7 +290,7 @@
                     Matches the geographic Flinn-Engdahl region number.
                 </summary>
                 <description>
-                    Evaluates to true if the numerical value of the geographic 
+                    Evaluates to true if the numerical value of the geographic
                     region of the event matches one of the values in the list.
                 </description>
                 <example>
@@ -315,12 +316,12 @@
                     Matches the seismic Flinn-Engdahl region number.
                 </summary>
                 <description>
-                    Evaluates to true if the numerical value of the seismic 
+                    Evaluates to true if the numerical value of the seismic
                     region of the event matches one of the values in the list.
                 </description>
                 <example>
                     <seismicRegion>
-                        <value>12 47</value> 
+                        <value>12 47</value>
                     </seismicRegion>
                 </example>
             </xsd:documentation>
@@ -355,11 +356,11 @@
     
     <!-- END EventAttr -->
     
-    <!-- BEGIN Origin -->    
+    <!-- BEGIN Origin -->
     
     <xsd:complexType name="originType" abstract="true">
       <xsd:annotation>
-	<xsd:documentation xml:lang="en">
+    <xsd:documentation xml:lang="en">
             <summary>
                 Abstract superclass of all Origin subsetters.
             </summary>
@@ -370,7 +371,7 @@
             <example>
                
             </example>
-	</xsd:documentation>
+    </xsd:documentation>
       </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
@@ -382,7 +383,7 @@
             <xsd:documentation xml:lang="en">
                 <summary>
                     Matchs events who's preferred origin's origin time occurs
-                    within the given time range. 
+                    within the given time range.
                 </summary>
                 <description>
                     
@@ -414,7 +415,7 @@
                 </summary>
                 <description>
                    If the origin has a magnitude of the given types, and it is
-                   greater than or equals to the min and less than or equal to 
+                   greater than or equals to the min and less than or equal to
                    the max, then it is accepted. If the type is missing, than
                    any type is accepted.
                 </description>
@@ -427,7 +428,7 @@
                 </example>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:complexContent>	
+        <xsd:complexContent>
             <xsd:extension base="originType">
                 <xsd:sequence>
                     <xsd:element name="magType" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
@@ -492,7 +493,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <!-- EVENT AREA TYPE -->
     <xsd:complexType name="eventAreaType">
@@ -500,7 +501,7 @@
             <xsd:extension base="originType">
                 <xsd:sequence>
                     <xsd:element ref="area"/>
-                </xsd:sequence>	
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -514,9 +515,9 @@
                     Logical AND between Origin subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included Origin subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <originAND>
@@ -543,9 +544,9 @@
                     Logical OR between Origin subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included Origin subsetters. The subsetters after the
-                    first true outputed are not evaluated. 
+                    first true outputed are not evaluated.
                 </description>
                 <example>
                     <originOR>
@@ -572,8 +573,8 @@
                     Logical XOR between Origin subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
-                    included Origin subsetters.  
+                    The output is the logical XOR of the outputs of all
+                    included Origin subsetters.
                 </description>
                 <example>
                     <originXOR>
@@ -600,8 +601,8 @@
                     Logical NOT of an Origin subsetter.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
-                    included Origin subsetters.  
+                    The output is the logical XOR of the outputs of all
+                    included Origin subsetters.
                 </description>
                 <example>
                     <originNOT>
@@ -703,7 +704,7 @@
     <xsd:element name="magnitudeRange" type="magnitudeType" substitutionGroup="origin"/>
     
     <!-- element representing depth Range-->
-    <xsd:element name="originDepthRange" type="originDepthRangeType" substitutionGroup="origin"/>	
+    <xsd:element name="originDepthRange" type="originDepthRangeType" substitutionGroup="origin"/>
     
     <!-- element representing eventArea -->
     <xsd:element name="eventArea" type="eventAreaType" substitutionGroup="origin"/>
@@ -749,7 +750,7 @@
     <xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
     <xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
     
-    <xsd:complexType name="eventArmType">	
+    <xsd:complexType name="eventArmType">
         <xsd:complexContent>
             <xsd:extension base="armType">
                 <xsd:sequence>
@@ -764,7 +765,7 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- element representing EVENTARM -->    
+    <!-- element representing EVENTARM -->
     <xsd:element name="eventArm" type="eventArmType"/>
     
 </xsd:schema>

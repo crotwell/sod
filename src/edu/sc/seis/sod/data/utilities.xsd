@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
     
     <xsd:annotation>
@@ -29,7 +30,7 @@
     </xsd:complexType>
     
     
-    <!-- ABSTRACT TYPE FOR ARMS -->	
+    <!-- ABSTRACT TYPE FOR ARMS -->
     <xsd:complexType name="armType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sodItemType"/>
@@ -61,18 +62,18 @@
     </xsd:complexType>
 
     <!-- PROPERTY TYPE -->
-	<xsd:complexType name="propertyType">
-		<xsd:sequence>
-			<xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-		</xsd:sequence>
-	</xsd:complexType>	
+    <xsd:complexType name="propertyType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
-	<xsd:complexType name="propertySequenceType">
-		<xsd:sequence>
-			<xsd:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
-		</xsd:sequence>
-	</xsd:complexType>
+    <xsd:complexType name="propertySequenceType">
+        <xsd:sequence>
+            <xsd:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
     
     <!-- PROCESS TYPE -->
     <xsd:complexType name="processType" abstract="true">
@@ -82,7 +83,7 @@
     </xsd:complexType>
     
     <!-- EXTERNAL PROCESS TYPE -->
-    <xsd:complexType name="externalProcessType" abstract="true">		
+    <xsd:complexType name="externalProcessType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="processType">
                 <xsd:sequence>
@@ -109,14 +110,14 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="KILOMETER"/>
             <xsd:enumeration value="METER"/>
-            <xsd:enumeration value="CENTIMETER"/>	
+            <xsd:enumeration value="CENTIMETER"/>
             <xsd:enumeration value="NANOMETER"/>
             <xsd:enumeration value="MICROMETER"/>
             <xsd:enumeration value="MICRON"/>
             <xsd:enumeration value="MILLIMETER"/>
             <xsd:enumeration value="PICOMETER"/>
             <xsd:enumeration value="INCH"/>
-            <xsd:enumeration value="FOOT"/>	
+            <xsd:enumeration value="FOOT"/>
             <xsd:enumeration value="MILE"/>
             <xsd:enumeration value="HERTZ"/>
             <xsd:enumeration value="NANOSECOND"/>
@@ -209,15 +210,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- DISTANCE RANGE TYPE -->
-    <xsd:complexType name="distanceRangeType">
-        <xsd:sequence>
-            <xsd:element name="unit" type="unitType"/>
-            <xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-            <xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    
     <!-- AREA TYPE is abstract -->
     <xsd:complexType name="areaType" abstract="true">
         <xsd:complexContent>
@@ -300,17 +292,14 @@
     <!-- element representing longitude -->
     <xsd:element name="longitudeRange" type="latitudeLongitudeRangeType"/>
     
-    <!-- distanceRange element -->
-    <xsd:element name="distanceRange" type="distanceRangeType"/>
-    
     <!-- timeRangeType element -->
     <xsd:element name="timeRange" type="timeRangeType"/>
     
     <!-- REFRESH INTERVAL element -->
     <xsd:element name="refreshInterval" type="refreshIntervalType"/>
 
-	<!-- PROPERTIES ELEMENT -->
-	<xsd:element name="properties" type="propertySequenceType"/>
+    <!-- PROPERTIES ELEMENT -->
+    <xsd:element name="properties" type="propertySequenceType"/>
     
     <xsd:simpleType name="channelCodeUtilType">
         <xsd:restriction base="xsd:string">

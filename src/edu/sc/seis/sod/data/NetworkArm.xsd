@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
     
     <xsd:annotation>
@@ -10,7 +11,7 @@
     </xsd:annotation>
     
     <!-- Include the external schemas necessary for this schema -->
-    <xsd:include schemaLocation="./utilities.xsd"/>
+    <xi:include schemaLocation="./utilities.xsd"/>
     
     <!-- ABSTRACT TYPE DECLARATIONS -->
     
@@ -202,7 +203,7 @@
                     and dns tags. The NetworkFinder is aquired from the NetworkDC,
                     and a query is sent with the given arguments. The networks
                     returned are then sent thrrough the NetworkArm for processing.
-                    An optional refresh interval can be given if sod should 
+                    An optional refresh interval can be given if sod should
                     periodically check for new channels.
                 </description>
                 <example>
@@ -220,7 +221,7 @@
         </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkSource">
-                <xsd:sequence>	
+                <xsd:sequence>
                     <xsd:element ref="refreshInterval" minOccurs = "0" maxOccurs="1"/>
                 </xsd:sequence>
             </xsd:extension>
@@ -260,9 +261,9 @@
                     Logical AND between networkId subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <networkIdAND>
@@ -289,9 +290,9 @@
                     Logical OR between networkId subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <networkIdOR>
@@ -310,7 +311,7 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- NETWORKID XOR TYPE -->	
+    <!-- NETWORKID XOR TYPE -->
     <xsd:complexType name="networkIDXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -318,7 +319,7 @@
                     Logical XOR between networkId subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -346,7 +347,7 @@
                     Logical NOT of an networkId subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -378,7 +379,7 @@
                 <example>
                     <networkEffectiveTimeOverlap>
                         <description>
-                            Make sure the network was up during the time range we 
+                            Make sure the network was up during the time range we
                             are interested in.
                         </description>
                         <effectiveTimeOverlap>
@@ -421,7 +422,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <xsd:complexType name="networkAttrOwnerType">
         <xsd:annotation>
@@ -430,7 +431,7 @@
                     Matches the owner of a network.
                 </summary>
                 <description>
-                    Matches the owner of a network. This is a simple string 
+                    Matches the owner of a network. This is a simple string
                     comparision, and so care must be taken for it to be useful.
                 </description>
                 <example>
@@ -447,7 +448,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <xsd:complexType name="networkAttrANDType">
         <xsd:annotation>
@@ -456,9 +457,9 @@
                     Logical AND between networkAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <networkAttrAND>
@@ -491,9 +492,9 @@
                     Logical OR between networkAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <networkAttrOR>
@@ -526,7 +527,7 @@
                     Logical XOR between networkAttr subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -560,7 +561,7 @@
                     Logical NOT of an networkAttr subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -612,9 +613,9 @@
                     Logical AND between StationId subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <stationIDAND>
@@ -633,7 +634,7 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--STATIONID OR TYPE-->	
+    <!--STATIONID OR TYPE-->
     <xsd:complexType name="stationIDORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -641,9 +642,9 @@
                     Logical OR between stationId subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <stationIDOR>
@@ -670,7 +671,7 @@
                     Logical XOR between stationId subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -698,7 +699,7 @@
                     Logical NOT of an stationId subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -743,7 +744,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <!-- STATION OPERATOR TYPE -->
     <xsd:complexType name="stationOperatorType">
@@ -770,7 +771,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <!-- STATION DEPTH RANGE TYPE -->
     <xsd:complexType name="stationDepthRangeType">
@@ -789,7 +790,7 @@
                             <min>100</min>
                             <max>200</max>
                         </unitRange>
-                    </stationDepthRange>               
+                    </stationDepthRange>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -834,7 +835,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     <xsd:complexType name="stationAreaType">
         <xsd:annotation>
@@ -843,7 +844,7 @@
                     Matches stations that are within a given area.
                 </summary>
                 <description>
-                    Matches stations that are within a given area. See the 
+                    Matches stations that are within a given area. See the
                     documentation for Area to see the available area types.
                 </description>
                 <example>
@@ -858,7 +859,7 @@
                                 <max>-70</max>
                             </longitudeRange>
                         </boxArea>
-                    </stationArea>               
+                    </stationArea>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -866,7 +867,7 @@
             <xsd:extension base="stationType">
                 <xsd:sequence>
                     <xsd:element ref="area"/>
-                </xsd:sequence>	
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -878,9 +879,9 @@
                     Logical AND between station subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <stationAND>
@@ -901,7 +902,7 @@
                                     <max>-70</max>
                                 </longitudeRange>
                             </boxArea>
-                        </stationArea>               
+                        </stationArea>
                     </stationAND>
                 </example>
             </xsd:documentation>
@@ -922,9 +923,9 @@
                     Logical OR between station subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <stationOR>
@@ -945,7 +946,7 @@
                                     <max>-70</max>
                                 </longitudeRange>
                             </boxArea>
-                        </stationArea>               
+                        </stationArea>
                     </stationOR>
                 </example>
             </xsd:documentation>
@@ -966,7 +967,7 @@
                     Logical XOR between station subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -988,7 +989,7 @@
                                     <max>-70</max>
                                 </longitudeRange>
                             </boxArea>
-                        </stationArea>               
+                        </stationArea>
                     </stationXOR>
                 </example>
             </xsd:documentation>
@@ -1009,7 +1010,7 @@
                     Logical NOT of a station subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included EventAttr subsetter.
                 </description>
                 <example>
@@ -1025,7 +1026,7 @@
                                     <max>-70</max>
                                 </longitudeRange>
                             </boxArea>
-                        </stationArea>               
+                        </stationArea>
                     </stationNOT>
                 </example>
             </xsd:documentation>
@@ -1046,9 +1047,9 @@
                     Logical AND between siteId subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <siteIdAND>
@@ -1074,9 +1075,9 @@
                     Logical OR between siteId subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <siteIdOR>
@@ -1102,7 +1103,7 @@
                     Logical XOR between siteId subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -1129,7 +1130,7 @@
                     Logical NOT of a siteId subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -1191,7 +1192,7 @@
                             <min>100</min>
                             <max>200</max>
                         </unitRange>
-                    </siteDepthRange>               
+                    </siteDepthRange>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -1235,7 +1236,7 @@
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
-    </xsd:complexType>	
+    </xsd:complexType>
     
     
     <xsd:complexType name="siteAreaType">
@@ -1245,7 +1246,7 @@
                     Matches sites that are within a given area.
                 </summary>
                 <description>
-                    Matches sites that are within a given area. See the 
+                    Matches sites that are within a given area. See the
                     documentation for Area to see the available area types.
                 </description>
                 <example>
@@ -1268,7 +1269,7 @@
             <xsd:extension base="siteType">
                 <xsd:sequence>
                     <xsd:element ref="area"/>
-                </xsd:sequence>	
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -1280,9 +1281,9 @@
                     Logical AND between site subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <siteAND>
@@ -1292,7 +1293,7 @@
                                 <min>100</min>
                                 <max>200</max>
                             </unitRange>
-                        </siteDepthRange>               
+                        </siteDepthRange>
                         <siteEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
@@ -1319,9 +1320,9 @@
                     Logical OR between site subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <siteOR>
@@ -1331,7 +1332,7 @@
                                 <min>100</min>
                                 <max>200</max>
                             </unitRange>
-                        </siteDepthRange>               
+                        </siteDepthRange>
                         <siteEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
@@ -1358,7 +1359,7 @@
                     Logical XOR between site subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of the 2 
+                    The output is the logical XOR of the outputs of the 2
                     included subsetters.
                 </description>
                 <example>
@@ -1369,7 +1370,7 @@
                                 <min>100</min>
                                 <max>200</max>
                             </unitRange>
-                        </siteDepthRange>               
+                        </siteDepthRange>
                         <siteEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
                                 <min>20020701T00:00:00.001Z</min>
@@ -1396,7 +1397,7 @@
                     Logical NOT of an site subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -1407,7 +1408,7 @@
                                 <min>100</min>
                                 <max>200</max>
                             </unitRange>
-                        </siteDepthRange>               
+                        </siteDepthRange>
                     </siteNOT>
                 </example>
             </xsd:documentation>
@@ -1430,9 +1431,9 @@
                     Logical AND between channelId subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <channelIDAND>
@@ -1458,9 +1459,9 @@
                     Logical OR between channelID subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <channelIDOR>
@@ -1486,7 +1487,7 @@
                     Logical XOR between subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -1513,7 +1514,7 @@
                     Logical NOT of an channelId subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -1618,9 +1619,9 @@
                     Logical AND between channel subsetters.
                 </summary>
                 <description>
-                    The output is the logical AND of the outputs of all 
+                    The output is the logical AND of the outputs of all
                     included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
+                    first false outputed are not evaluated.
                 </description>
                 <example>
                     <channelAND>
@@ -1658,9 +1659,9 @@
                     Logical OR between channel subsetters.
                 </summary>
                 <description>
-                    The output is the logical OR of the outputs of all 
+                    The output is the logical OR of the outputs of all
                     included subsetters. If the first subsetters returns
-                    true then the second is not evaluated. 
+                    true then the second is not evaluated.
                 </description>
                 <example>
                     <channelOR>
@@ -1698,7 +1699,7 @@
                     Logical XOR between channel subsetters.
                 </summary>
                 <description>
-                    The output is the logical XOR of the outputs of all 
+                    The output is the logical XOR of the outputs of all
                     included subsetters.
                 </description>
                 <example>
@@ -1737,7 +1738,7 @@
                     Logical NOT of an channel subsetter.
                 </summary>
                 <description>
-                    The output is the logical NOT of the output of the 
+                    The output is the logical NOT of the output of the
                     included subsetter.
                 </description>
                 <example>
@@ -1837,7 +1838,7 @@
                     Matches an orientation of a channel.
                 </summary>
                 <description>
-                    The match is true if the channel's orientation is with the 
+                    The match is true if the channel's orientation is with the
                     offset of the given azimuth and dip. The offset, as well as
                     the azimuth and dip are given in degrees.
                 </description>
@@ -1868,7 +1869,7 @@
                     Matches the azimuth of a channel.
                 </summary>
                 <description>
-                    The match is true if azimuth of the channel's orientation is with the 
+                    The match is true if azimuth of the channel's orientation is with the
                     the given azimuth range. The min and max are given in degrees.
                 </description>
                 <example>
@@ -1896,7 +1897,7 @@
                     Matches the dip of a channel.
                 </summary>
                 <description>
-                    The match is true if the dip of the channel's orientation is with the 
+                    The match is true if the dip of the channel's orientation is with the
                     the given dip range. The min and max are given in degrees.
                 </description>
                 <example>
@@ -1946,7 +1947,7 @@
     
     <xsd:element name="networkFinder" type="networkFinderType" substitutionGroup="networkSource"/>
     
-    <!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->	
+    <!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->
     <xsd:element name="networkID" abstract="true"/>
     <xsd:element name="networkCode" type="networkCodeType" substitutionGroup="networkID"/>
     <xsd:element name="networkIDAND" type="networkIDANDType" substitutionGroup="networkID"/>
@@ -2005,7 +2006,7 @@
     <xsd:element name="siteXOR" type="siteXORType" substitutionGroup="site"/>
     <xsd:element name="siteNOT" type="siteNOTType" substitutionGroup="site"/>
     
-    <!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->	
+    <!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->
     <xsd:element name="channelID" type="channelIDType" abstract="true"/>
     <xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channelID"/>
     <xsd:element name="gainCode" type="gainCodeType" substitutionGroup="channelID"/>
@@ -2050,7 +2051,7 @@
                     <xsd:element ref="networkProcess" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
-        </xsd:complexContent>	
+        </xsd:complexContent>
     </xsd:complexType>
     
     <xsd:element name="networkArm" type="networkArmType"/>

@@ -13,20 +13,21 @@ public class SimpleErrorHandler implements ErrorHandler {
 
     //not sure why this is needed???
     boolean warmup=false;
+    
+    boolean foundError = false;
 
-		    /** Warning. */
+            /** Warning. */
     public void warning(SAXParseException ex) throws SAXException {
-	logger.warn(getLocationString(ex), ex);
-	setValid(false);
+    logger.warn(getLocationString(ex), ex);
+        foundError = true;
     }
 
     /** Error. */
     public void error(SAXParseException ex)  throws SAXException {
         if (warmup)
             return;
-
-	logger.error(getLocationString(ex), ex);
-	setValid(false);
+        foundError = true;
+    logger.error(getLocationString(ex), ex);
     }
 
     /** Fatal error. */
@@ -35,10 +36,14 @@ public class SimpleErrorHandler implements ErrorHandler {
             return;
 
         logger.fatal(getLocationString(ex), ex);
-	setValid(false);
+                foundError = true;
         throw ex;
     }
 
+    public boolean isfoundError() {
+        return foundError;
+    }
+    
     /** Returns a string of the location. */
     private String getLocationString(SAXParseException ex) {
         StringBuffer str = new StringBuffer();
@@ -58,18 +63,6 @@ public class SimpleErrorHandler implements ErrorHandler {
         return str.toString();
 
     } // getLocationString(SAXParseException):String
-
-    public void setValid(boolean value) {
-	this.valid = value;
-    }
-
-    public boolean isValid() {
-
-	return this.valid;
-    }
-
-    
-    private boolean valid = true;
 
     static Category logger = Category.getInstance(SimpleErrorHandler.class.getName());
  }
