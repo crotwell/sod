@@ -67,12 +67,12 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
             }
         } else {
             try {
-                System.out.println("Got "+seismograms.length+" seismograms for "+
+                logger.debug("Got "+seismograms.length+" seismograms for "+
                                    ChannelIdUtil.toStringNoDates(channel.get_id())+
                                    " for event in "+
                                    " at "+event.get_preferred_origin().origin_time.date_time);
             } catch (NoPreferredOrigin e) {
-                System.out.println("Got "+seismograms.length+" seismograms for "+
+                logger.debug("Got "+seismograms.length+" seismograms for "+
                                    ChannelIdUtil.toStringNoDates(channel.get_id())+
                                    " for event without a preferred origin");
             } // end of try-catch

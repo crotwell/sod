@@ -161,14 +161,11 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		dataset.write(fos);
 		fos.close();
 	    } catch(Exception ex) {
-		System.out.println("EXCEPTION CAUGHT WHILE trying to save dataset"
-				   +ex.toString());
 		ex.printStackTrace();
 		logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", ex);
 	    }
 	} catch(Exception e) {
 	    
-	    System.out.println("Exception caught while writing to file in SacFileProcess");
 	    e.printStackTrace();
 	    logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
 	}

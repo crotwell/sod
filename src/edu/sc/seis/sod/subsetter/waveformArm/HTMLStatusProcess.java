@@ -34,7 +34,7 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     }
 
     private void writeHeader() {
-	String header = "<html><head><title>sodReport</title></head><body>";
+	String header = "<html><head><title>sodReport</title></head><body bgcolor='#ffffff'>";
 	write(header);
 	//	newLine();
 	
@@ -46,7 +46,7 @@ public class HTMLStatusProcess implements WaveformStatusProcess {
     }
 
     private void startTable() {
-	String str = new String("<table>");
+	String str = new String("<table border='1' width='90%'>");
 	write(str);
 	//bw.newLine();
     }

@@ -91,19 +91,20 @@ public class LocalSeismogramArm implements Subsetter{
 
     }
 
+    /**
+     * Starts the processing of the localSeismogramArm. 
+     */
+
     public void processLocalSeismogramArm(EventDbObject eventDbObject, 
 					  NetworkDbObject networkDbObject, 
 					  ChannelDbObject channelDbObject, 
 
 					  DataCenter dataCenter,
 					  WaveFormArm waveformArm) throws Exception{
-	System.out.println("at the start of the method  processLocalSeismogramArm");
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
-	System.out.println("Before forming the microsecond date ");	
 	MicroSecondDate chanBegin = new MicroSecondDate(channel.effective_time.start_time);
-	System.out.println("after forming the channel begin");
 	MicroSecondDate chanEnd;
 	if(channel.effective_time.end_time != null) {
 	    chanEnd = new MicroSecondDate(channel.effective_time.end_time);
@@ -113,12 +114,7 @@ public class LocalSeismogramArm implements Subsetter{
 	if(chanEnd.before(chanBegin)) {
 	    chanEnd = TimeUtils.future;
 	}
-	System.out.println("after the second if statement");
-	if(eventAccess == null) System.out.println("the eventAccess is null");
-	else System.out.println("The eventAccess is not null");
 
-	if(eventAccess.get_preferred_origin() == null) System.out.println("the preferred origin is null");
-	else System.out.println("the preferred origin is NOT null");	
 	MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
 
 	TimeInterval day = new TimeInterval(1, UnitImpl.DAY);
@@ -150,7 +146,7 @@ public class LocalSeismogramArm implements Subsetter{
     }
 
     /**
-     * Describe <code>processEventChannelSubsetter</code> method here.
+     * handles eventChannelSubsetter
      *
      * @exception Exception if an error occurs
      */
@@ -193,7 +189,7 @@ public class LocalSeismogramArm implements Subsetter{
 
 
     /**
-     * Describe <code>processRequestGeneratorSubsetter</code> method here.
+     * handles requestGenerator Subsetter.
      *
      */
     public void processRequestGeneratorSubsetter(EventDbObject eventDbObject, 
@@ -226,8 +222,6 @@ public class LocalSeismogramArm implements Subsetter{
 	} // end of for (int i=0; i<outFilters.length; i++)
 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
-	System.out.println("The lenght of the infilters is----------- "+infilters.length);
-	System.out.println("The lenght of the outfilters is---------- "+outfilters.length);
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
@@ -242,7 +236,7 @@ public class LocalSeismogramArm implements Subsetter{
     }
     
     /**
-     * Describe <code>processAvailableDataSubsetter</code> method here.
+     * handles availableDataSubsetter
      *
      */
     public void processAvailableDataSubsetter(EventDbObject eventDbObject, 
@@ -277,7 +271,8 @@ public class LocalSeismogramArm implements Subsetter{
 	    MicroSecondDate before = new MicroSecondDate();
 	    LocalSeismogram[] localSeismograms;
 	    if (outfilters.length != 0) {
-		localSeismograms = dataCenter.retrieve_seismograms(infilters);
+	//	localSeismograms = dataCenter.retrieve_seismograms(infilters);
+		localSeismograms = new LocalSeismogram[0];
 	    } else {
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
@@ -323,6 +318,10 @@ public class LocalSeismogramArm implements Subsetter{
 				       "AvailableDataSubsetterFailed");
 	}
     }
+
+    /**
+     * handles LocalSeismogramSubsetter.
+     */
     
     public void processLocalSeismogramSubsetter	(EventDbObject eventDbObject, 
 						 NetworkDbObject networkDbObject, 
@@ -368,6 +367,10 @@ public class LocalSeismogramArm implements Subsetter{
 	}
 	    
     }
+
+    /**
+     * processes the seismograms obtained from the seismogram server.
+     */
     
     public void processSeismograms(EventDbObject eventDbObject, 
 				   NetworkDbObject networkDbObject, 
