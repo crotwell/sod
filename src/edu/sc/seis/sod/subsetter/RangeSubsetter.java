@@ -5,6 +5,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.SodUtil;
 
 public class RangeSubsetter {
+    public RangeSubsetter(){}
 
     public RangeSubsetter(Element config) {
         NodeList children = config.getChildNodes();
