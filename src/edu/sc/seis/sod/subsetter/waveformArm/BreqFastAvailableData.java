@@ -70,18 +70,8 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    } // end of if (!)
 		
 	} // end of if (dataDirectory.exits())
-	String eventFileName = 
-	    regions.getRegionName(event.get_attributes().region);
-	try {
-	    eventFileName+=
-		" "+event.get_preferred_origin().origin_time.date_time;
-	} catch (NoPreferredOrigin e) {
-	    
-	} // end of try-catch
 	
-	eventFileName = eventFileName.replace(' ', '_');
-	eventFileName = eventFileName.replace(',', '_');
-	File bfFile = new File(dataDirectory, eventFileName+".breqfast");
+	File bfFile = new File(dataDirectory, getFileName(event));
 	if (bfFile.exists()) {
 	    fileExists = true;
 	} else {
@@ -134,7 +124,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    } // end of try-catch
 	    
 	    out.write(".QUALITY "+getConfig("quality")+nl);
-	    out.write(".LABEL "+eventFileName+nl);
+	    out.write(".LABEL "+getLabel(event)+nl);
 	    out.write(".END"+nl);
 	    out.write(nl);
 	} // end of if ( ! fileExists)
@@ -159,6 +149,131 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	    
 	} // end of for (int i=0; i<request.length; i++)
 	out.close();
+    }
+
+    protected String getFileName(EventAccessOperations event) {
+	return getLabel(event)+".breqfast";
+    }
+
+    protected String getLabel(EventAccessOperations event) {
+	Element labelConfig = SodUtil.getElement(config, "label");
+	if (labelConfig == null) {
+	    String eventFileName = 
+		regions.getRegionName(event.get_attributes().region);
+	    try {
+		eventFileName+=
+		    " "+event.get_preferred_origin().origin_time.date_time;
+	    } catch (NoPreferredOrigin e) {
+		
+	    } // end of try-catch
+	    
+	    eventFileName = eventFileName.replace(' ', '_');
+	    eventFileName = eventFileName.replace(',', '_');
+	    return eventFileName;
+	} // end of if (labelConfig == null)
+	
+	// not null so use config
+	NodeList children = labelConfig.getChildNodes();
+	Node node;
+	String name = "";
+	String separator = "";
+	String separatorValue = "_";
+	for(int counter = 0; counter < children.getLength(); counter++ ) {
+	    node = children.item(counter);
+	    if(node instanceof Element ) {
+		if(((Element)node).getTagName().equals("separator")) {
+		    separatorValue = SodUtil.getText((Element)node);
+		}
+	    }
+	}
+
+	for(int counter = 0; counter < children.getLength(); counter++ ) {
+	    node = children.item(counter);
+	    if (node instanceof Text) {
+		String text = ((Text)node).getData();
+		text = text.trim();
+		StringBuffer sb = new StringBuffer(text.length());
+		char[] chars = text.toCharArray();
+		for (int i=0; i<chars.length; i++) {
+		    if (Character.isWhitespace(chars[i])) {
+			// skip
+		    } else {
+			sb.append(chars[i]);
+		    } // end of else
+		} // end of for (int i=0; i<chars.length; i++)
+		text = sb.toString();
+		text = text.replace(' ','_');
+		//		logger.debug("Breq text node:"+text);
+		name += text;
+	    } else if(node instanceof Element ) {
+		name += separator;
+		separator = separatorValue;
+		if(((Element)node).getTagName().equals("feRegionName")) {
+		    String regionName = 
+			regions.getRegionName(event.get_attributes().region);
+		    regionName = regionName.replace(' ', '_');
+		    regionName = regionName.replace(',', '_');
+		    name += regionName;
+		} else if(((Element)node).getTagName().equals("feRegionNumber")) {
+		    int regionNum = 
+			event.get_attributes().region.number;
+		    name += regionNum;
+		} else if(((Element)node).getTagName().equals("depth")) {
+		    try {
+			name +=
+			    event.get_preferred_origin().my_location.depth.value;
+		    } catch (NoPreferredOrigin e) {
+		    } // end of try-catch
+		} else if(((Element)node).getTagName().equals("latitude")) {
+		    try {
+			name +=
+			    event.get_preferred_origin().my_location.latitude;
+		    } catch (NoPreferredOrigin e) {
+		    } // end of try-catch
+		} else if(((Element)node).getTagName().equals("longitude")) {
+		    try {
+			name +=
+			    event.get_preferred_origin().my_location.longitude;
+		    } catch (NoPreferredOrigin e) {
+		    } // end of try-catch
+		} else if(((Element)node).getTagName().equals("magnitude")) {
+		    try {
+			Magnitude[] mags =
+			    event.get_preferred_origin().magnitudes;
+			if (mags.length > 0) {
+			    name +=
+				mags[0].value;
+			} // end of if (mags.length > 0)
+		    } catch (NoPreferredOrigin e) {
+		    } // end of try-catch
+		} else if(((Element)node).getTagName().equals("originTime")) {
+		    try {
+			String formatStr = SodUtil.getText((Element)node);
+			//logger.debug("Breqfast label originTime:"+formatStr);
+			if (formatStr.length() == 0) {
+			    formatStr = "yyyyMMdd'T'HHmmss.SSS";
+			} // end of if (formatStr.length == 0)
+			
+			SimpleDateFormat labelFormat = new SimpleDateFormat(formatStr);
+			labelFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+			MicroSecondDate msd = 
+			    new MicroSecondDate(event.get_preferred_origin().origin_time);
+			name +=
+			    labelFormat.format(msd);
+		    } catch (NoPreferredOrigin e) {
+		    } // end of try-catch
+		} else if(((Element)node).getTagName().equals("separator")) {
+		    // ignore as this was processed previously
+		} else {
+		    logger.warn("BreqFast label, tag "+((Element)node).getTagName()+" is not understood.");
+		} // end of else
+		
+	    }
+	}
+	name = name.replace(' ', '_');
+	name = name.replace(',', '_');
+	logger.debug("Breqfast label: "+name);
+	return name;
     }
 
     static final String nl = "\n";
