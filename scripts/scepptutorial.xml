@@ -87,8 +87,8 @@
                 <siteCode>00</siteCode>
             </siteOR>
             <siteEffectiveTimeOverlap>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
+                <startTime>20040701T00:00:00.001Z</startTime>
+                <endTime>20040731T23:59:59.999Z</endTime>
             </siteEffectiveTimeOverlap>
         </siteAND>
         <channelAND>
