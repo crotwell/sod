@@ -64,7 +64,7 @@ public class EventArm implements Runnable{
         alive = true;
         try {
             getEvents();
-        } catch(Exception e) {
+        } catch(Throwable e) {
             GlobalExceptionHandler.handle("Exception caught while processing the EventArm", e);
         }
         logger.debug("Event arm finished");
