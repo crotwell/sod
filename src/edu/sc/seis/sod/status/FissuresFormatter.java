@@ -222,6 +222,12 @@ public class FissuresFormatter {
             return yearDateFormat.format(d);
         }
     }
+    
+    public static String formatYMD(Date d) {
+        synchronized(ymdDateFormat) {
+            return ymdDateFormat.format(d);
+        }
+    }
 
     public static MicroSecondDate now() {
         return ClockUtil.now();
@@ -240,6 +246,8 @@ public class FissuresFormatter {
         return filize(base + "." + extension);
     }
 
+    public static SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 
     public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
