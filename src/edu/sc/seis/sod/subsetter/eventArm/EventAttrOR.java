@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter;
+package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.sc.seis.sod.*;
 import java.util.*;
