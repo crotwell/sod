@@ -203,13 +203,6 @@ public class LocalSeismogramArm implements Subsetter{
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
 
-	DataCenter dataCenter;
-	synchronized(seismogramDCLocator) {
-	    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
-							     networkAccess,
-							     channel.my_site.my_station,
-							     null);
-	}
 	synchronized (requestGeneratorSubsetter) {
 	    infilters = 
 		requestGeneratorSubsetter.generateRequest(eventAccess, 
@@ -228,19 +221,72 @@ public class LocalSeismogramArm implements Subsetter{
 			 +infilters[i].end_time.date_time);
 	} // end of for (int i=0; i<outFilters.length; i++)
 
-	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
 				   "requestgeneratorSubsettterCompleted");
-	processAvailableDataSubsetter(eventDbObject, 
-				      networkDbObject, 
-				      channelDbObject, 
-				      dataCenter, 
-				      infilters, 
-				      outfilters,
-				      waveformArm);
+
+            processRequestSubsetter(eventDbObject, 
+                                    networkDbObject, 
+                                    channelDbObject, 
+                                    infilters, 
+                                    waveformArm);
     }
+    
+    /**
+     * handles RequestSubsetter
+     *
+     */
+    public void processRequestSubsetter(EventDbObject eventDbObject, 
+                                        NetworkDbObject networkDbObject, 
+                                        ChannelDbObject channelDbObject,
+                                        RequestFilter[] infilters,
+                                        WaveFormArm waveformArm)
+        throws Exception
+    {
+        boolean b;
+        EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+        NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+        Channel channel = channelDbObject.getChannel();
+	
+        synchronized (requestSubsetter) {
+            b = requestSubsetter.accept(eventAccess, 
+                                        networkAccess, 
+                                        channel, 
+                                        infilters, 
+                                        null);
+        }
+        if( b ) {
+            waveformArm.setFinalStatus(eventDbObject,
+                                       channelDbObject,
+                                       Status.PROCESSING,
+                                       "requestSubsetterCompleted");
+	    
+            DataCenter dataCenter;
+            synchronized(seismogramDCLocator) {
+                dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
+                                                                 networkAccess,
+                                                                 channel.my_site.my_station,
+                                                                 null);
+            }
+
+            RequestFilter[] outfilters = dataCenter.available_data(infilters); 
+            processAvailableDataSubsetter(eventDbObject, 
+                                          networkDbObject, 
+                                          channelDbObject, 
+                                          dataCenter, 
+                                          infilters, 
+                                          outfilters,
+                                          waveformArm);
+        } else {
+            logger.info("FAIL available data");
+            waveformArm.setFinalStatus(eventDbObject,
+                                       channelDbObject,
+                                       Status.COMPLETE_REJECT,
+                                       "requestSubsetterFailed");
+        }
+    }
+
     
     /**
      * handles availableDataSubsetter
@@ -429,6 +475,9 @@ public class LocalSeismogramArm implements Subsetter{
     
     private RequestGenerator requestGeneratorSubsetter = 
 	new NullRequestGenerator();
+    
+    private RequestSubsetter requestSubsetter = 
+        new NullRequestSubsetter();
     
     private AvailableDataSubsetter availableDataSubsetter = 
 	new NullAvailableDataSubsetter();

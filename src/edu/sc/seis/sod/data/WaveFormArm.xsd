@@ -963,6 +963,122 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****REQUEST SUBSETTER***** -->
+    
+    <!-- REQUEST SUBSETTER AND TYPE -->
+    <xsd:complexType name="requestSubsetterANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between RequestSubsetter subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <requestSubsetterAND>
+                       <something/>
+                       <somethingelse/>
+                    </requestSubsetterAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                    <xsd:element ref="requestSubsetter" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- REQUEST SUBSETTER OR TYPE -->	
+    <xsd:complexType name="requestSubsetterORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between RequestSubsetter subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first true outputed are not evaluated. 
+                </description>
+                <example>
+                    <requestSubsetterOR>
+                       <something/>
+                       <somethingelse/>
+                    </requestSubsetterOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                    <xsd:element ref="requestSubsetter" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- REQUEST SUBSETTER XOR TYPE -->
+    <xsd:complexType name="requestSubsetterXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between RequestSubsetter subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included subsetters.
+                </description>
+                <example>
+                    <requestSubsetterXOR>
+                       <something/>
+                       <somethingelse/>
+                    </requestSubsetterXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                    <xsd:element ref="requestSubsetter" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- REQUEST SUBSETTER NOT TYPE -->
+    <xsd:complexType name="requestSubsetterNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an RequestSubsetter subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of 
+                    the included subsetters.
+                </description>
+                <example>
+                    <requestSubsetterNOT>
+                       <something/>
+                    </requestSubsetterNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                    <xsd:element ref="requestSubsetter" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
   
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
     
@@ -1273,6 +1389,27 @@
         </xsd:complexContent>
     </xsd:complexType>
     
+
+    <xsd:complexType name="breqfastRequestSubsetterType"> 
+        <xsd:complexContent>
+            <xsd:extension base="requestSubsetterType">
+                <xsd:sequence>
+                    <xsd:element name="dataDirectory" type="xsd:string"/>
+                    <xsd:element name="label" type="breqfastLabelType" minOccurs="0" />
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="inst" type="xsd:string"/>
+                    <xsd:element name="mail" type="xsd:string"/>
+                    <xsd:element name="email" type="xsd:string"/>
+                    <xsd:element name="phone" type="xsd:string"/>
+                    <xsd:element name="fax" type="xsd:string"/>
+                    <xsd:element name="media" type="xsd:string"/>
+                    <xsd:element name="altmedia1" type="xsd:string"/>
+                    <xsd:element name="altmedia2" type="xsd:string"/>
+                    <xsd:element name="quality" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
     
     <!-- ELEMENT DECLARATIONS -->
     
@@ -1314,6 +1451,14 @@
     <xsd:element name="requestGenerator" type="requestGeneratorType" abstract="true"/>
     <xsd:element name="phaseRequest" type="phaseRequestType" substitutionGroup="requestGenerator"/>
     
+    <!-- ELEMENT DECLARATIONS FOR REQUEST SUBSETTEROR TYPE -->
+    <xsd:element name="requestSubsetter" type="requestSubsetterType" abstract="true"/>
+    <xsd:element name="requestSubsetterAND" type="requestSubsetterANDType" substitutionGroup="requestSubsetter"/>
+    <xsd:element name="requestSubsetterOR" type="requestSubsetterORType" substitutionGroup="requestSubsetter"/>
+    <xsd:element name="requestSubsetterXOR" type="requestSubsetterXORType" substitutionGroup="requestSubsetter"/>
+    <xsd:element name="requestSubsetterNOT" type="requestSubsetterNOTType" substitutionGroup="requestSubsetter"/>
+    <xsd:element name="breqFastRequestSubsetter" type="breqfastRequestSubsetterType" substitutionGroup="requestSubsetter"/>
+
     <!-- ELEMENT DECLARATIONS FOR AVAILABLE DATA TYPE -->
     <xsd:element name="availableData" type="availableDataType" abstract="true"/>
     <xsd:element name="nogaps" type="nogapsType" substitutionGroup="availableData"/>
@@ -1329,28 +1474,6 @@
     <xsd:element name="seismogram" type="seismogramType" abstract="true"/>
     
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
-<<<<<<< WaveFormArm.xsd
-    <xsd:element name="waveForm" type="waveFormType" abstract="true"/>
-    <xsd:element name="waveFormAND" type="waveFormANDType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
-    <xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
-    
-    <!-- element representing the process -->
-    <xsd:element name="waveFormProcess" type="processType" abstract="true"/>
-    <xsd:element name="waveFormStatusProcess"
-    type="processType">
-    <xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
-    <xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
-    
-    <xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="externalSeismogramProcess"
-        type="externalWaveformProcessType"
-    substitutionGroup="waveFormProcess"/>
-=======
     <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
     
     <!-- element representing the process -->
@@ -1361,7 +1484,6 @@
     <xsd:element name="rMean" type="rMeanType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="rTrend" type="rTrendType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
->>>>>>> 1.16
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
     <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
@@ -1372,6 +1494,7 @@
                 <xsd:sequence>
                     <xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="requestSubsetter"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
                     <xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="seismogram" minOccurs="0" maxOccurs="1"/>
