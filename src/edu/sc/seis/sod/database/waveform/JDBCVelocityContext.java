@@ -25,6 +25,7 @@ public class JDBCVelocityContext extends AbstractContext {
     public Object internalGet(String name) {
         try {
             CookieJarResult cookie = jdbcCookieJar.get(pairId, name);
+            if (cookie == null) { return null; }
             if (cookie.getValueString() != null) {return cookie.getValueString();}
             if (cookie.getValueObject() != null) {return cookie.getValueObject();}
             return new Double(cookie.getValueDouble());
