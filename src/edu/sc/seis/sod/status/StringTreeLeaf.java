@@ -24,6 +24,9 @@ public class StringTreeLeaf extends StringTree {
         this(name, boo, "");
     }
 
+    public StringTreeLeaf(String name, boolean boo) {
+        this(name, boo, "");
+    }
     public String toString() {
         return super.toString() + " :" + reason + (t != null ? "  " + t : "");
     }
