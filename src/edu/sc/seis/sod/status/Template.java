@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.status;
 
 
-import edu.sc.seis.sod.status.eventArm.MapEventStatus;
+import edu.sc.seis.sod.Start;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -25,7 +25,7 @@ public abstract class Template{
         if(tag.equals("runName")) return new RunNameTemplate();
         else if(tag.equals("startTime")) return new StartTimeTemplate();
         else if(tag.equals("now"))  return new NowTemplate();
-        else if(tag.equals("map")) return new MapEventStatus(el);
+        else if(tag.equals("configFileName")) return textTemplate(Start.getConfigFileName());
         return null;
     }
     
@@ -33,8 +33,6 @@ public abstract class Template{
         parse(el.getChildNodes());
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
     }
-    
-    public static boolean v = false;
     
     private void parse(NodeList nl) {
         for (int i = 0; i < nl.getLength(); i++) {
@@ -44,11 +42,8 @@ public abstract class Template{
                 String name = n.getNodeName();
                 if(name.equals("attribute")) continue;
                 Object template = getTemplate(name, (Element)n);
-                if(template == null) template = this.getTemplate(name, (Element)n);
                 if(template != null) addTemplate(template);
                 else{
-                    
-                    
                     addString("<" + name);
                     int numAttr = addAttributes(n);
                     if(n.getChildNodes().getLength() - numAttr == 0) addString("/>");
@@ -68,8 +63,7 @@ public abstract class Template{
         builtUpText = "";
     }
     
-    private void addString(String text){ if(v) System.out.println("adding string " + text);
-        builtUpText += text; }
+    private void addString(String text){  builtUpText += text; }
     
     private String builtUpText = "";
     
