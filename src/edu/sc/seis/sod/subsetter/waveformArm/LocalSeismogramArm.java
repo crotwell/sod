@@ -281,7 +281,14 @@ public class LocalSeismogramArm implements Subsetter{
                                                                  null);
             }
 
-            RequestFilter[] outfilters = dataCenter.available_data(infilters);
+            RequestFilter[] outfilters;
+            try {
+                outfilters = dataCenter.available_data(infilters);
+            } catch (org.omg.CORBA.SystemException e) {
+                // retry ?
+                logger.info("Caught CORBA exception, retrying once...", e);
+                outfilters = dataCenter.available_data(infilters);
+            }
             processAvailableDataSubsetter(eventDbObject,
                                           networkDbObject,
                                           channelDbObject,
