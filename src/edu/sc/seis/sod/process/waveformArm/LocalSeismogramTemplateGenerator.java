@@ -92,6 +92,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess 
             props.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
                       "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
             props.put("runtime.log.logsystem.log4j.category", loggerName);
+            props.put("velocimacro.library", "");
             velocity.init(props);
         } catch(Throwable t) {
             GlobalExceptionHandler.handle("Problem initializing Velocity", t);
