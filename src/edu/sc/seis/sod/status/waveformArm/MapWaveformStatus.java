@@ -12,6 +12,7 @@ import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
@@ -58,32 +59,10 @@ public class MapWaveformStatus extends PeriodicAction {
             for (int i = 0; i < events.length; i++) {
                 StationLayer sl = map.getStationLayer();
                 sl.honorRepaint(false);
-                EventChannelPair[] ecps = evChanStatusTable.getAll(events[i]);
-                for (int j = 0; j < ecps.length; j++) {
-                    Station station = ecps[j].getChannel().my_site.my_station;
-                    Station[] stations = {station};
-                    sl.stationDataChanged(new StationDataEvent(this, stations));
-                    AvailableStationDataEvent availability = null;
-                    Status status = ecps[j].getStatus();
-                    if (status.getStanding() == Standing.REJECT||
-                        status.getStanding() == Standing.CORBA_FAILURE||
-                        status.getStanding() == Standing.SYSTEM_FAILURE){
-                        availability = new AvailableStationDataEvent(this,
-                                                                     station,
-                                                                     AvailableStationDataEvent.DOWN);
-                    }else if (status.getStanding() == Standing.SUCCESS||
-                              status.getStanding() == Standing.IN_PROG||
-                              status.getStanding() == Standing.RETRY){
-                        availability = new AvailableStationDataEvent(this,
-                                                                     station,
-                                                                     AvailableStationDataEvent.UP);
-                    }else{
-                        availability = new AvailableStationDataEvent(this,
-                                                                     station,
-                                                                     AvailableStationDataEvent.UNKNOWN);
-                    }
-                    sl.stationAvailabiltyChanged(availability);
-                }
+                Station[] successful = evChanStatusTable.getOfStatus(success, events[i]);
+                addStations(sl, successful, AvailableStationDataEvent.UP);
+                Station[] unsuccessful = evChanStatusTable.getNotOfStatus(success, events[i]);
+                addStations(sl, unsuccessful, AvailableStationDataEvent.DOWN);
                 sl.honorRepaint(true);
                 EventLayer el = map.getEventLayer();
                 EQDataEvent eqEvent = new EQDataEvent(this,
@@ -108,6 +87,15 @@ public class MapWaveformStatus extends PeriodicAction {
         pool.returnMap(map);
     }
 
+    private static void addStations(StationLayer sl, Station[] stations, int status){
+        sl.stationDataChanged(new StationDataEvent(null, stations));
+        for (int j = 0; j < stations.length; j++) {
+            sl.stationAvailabiltyChanged(new AvailableStationDataEvent(null,
+                                                                       stations[j],
+                                                                       status));
+        }
+    }
+
     public void write(){ actIfPeriodElapsed();  }
 
     public boolean add(EventAccessOperations ev, String outputLoc){
@@ -119,6 +107,7 @@ public class MapWaveformStatus extends PeriodicAction {
         }
     }
 
+    private static final Status success = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
     private Map eventsToBeRendered = Collections.synchronizedMap(new HashMap());
     private MapPool pool;
     private JDBCEventChannelStatus evChanStatusTable;
