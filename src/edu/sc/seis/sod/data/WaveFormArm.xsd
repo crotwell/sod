@@ -428,6 +428,16 @@
         </xsd:complexContent>
     </xsd:complexType>
     
+    <!-- AVAILABLE DATA SOME COVERAGE TYPE -->
+    <xsd:complexType name="someCoverageType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
     
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****WAVEFORM***** -->
     
@@ -573,6 +583,7 @@
     <xsd:element name="availableData" type="availableDataType" abstract="true"/>
     <xsd:element name="nogaps" type="nogapsType" substitutionGroup="availableData"/>
     <xsd:element name="fullCoverage" type="fullCoverageType" substitutionGroup="availableData"/>
+    <xsd:element name="someCoverage" type="someCoverageType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataAND" type="availableDataANDType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataOR" type="availableDataORType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataXOR" type="availableDataXORType" substitutionGroup="availableData"/>

@@ -185,33 +185,13 @@ public class LocalSeismogramArm implements Subsetter{
 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 
-// 	processAvailableDataSubsetter(eventAccess, 
-// 				      networkAccess, 
-// 				      channel, 
-// 				      dataCenter, 
-// 				      infilters, 
-// 				      outfilters,
-// 				      waveformArm);
-
-	if (outfilters.length != 0) {
-	    processAvailableDataSubsetter(eventAccess, 
-					  networkAccess, 
-					  channel, 
-					  dataCenter, 
-					  infilters, 
-					  outfilters,
-					  waveformArm);
-	    
-	} else {
-
-	    waveformArm.setFinalStatus(eventAccess,
-				       channel,
-				       Status.COMPLETE_REJECT,
-				       "outfilters length is zero");
-	    logger.debug("available data returned no filters for "+ChannelIdUtil.toString(channel.get_id()));
-	} // end of else
-	
-	
+	processAvailableDataSubsetter(eventAccess, 
+				      networkAccess, 
+				      channel, 
+				      dataCenter, 
+				      infilters, 
+				      outfilters,
+				      waveformArm);
     }
     
     /**
