@@ -19,16 +19,20 @@ public final class AvailableDataNOT extends AvailableDataLogicalSubsetter
     }
 
     public StringTree accept(EventAccessOperations event,
-                          Channel channel,
-                          RequestFilter[] original,
-                          RequestFilter[] available,
-                          CookieJar cookieJar) throws Exception {
+                             Channel channel,
+                             RequestFilter[] original,
+                             RequestFilter[] available,
+                             CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
         StringTree result;
         if(it.hasNext()) {
             AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-            result = filter.accept(event, channel, original, available, cookieJar);
-            return new StringTreeBranch(this, ! result.isSuccess(), result);
+            result = filter.accept(event,
+                                   channel,
+                                   original,
+                                   available,
+                                   cookieJar);
+            return new StringTreeBranch(this, !result.isSuccess(), result);
         }
         return new StringTreeLeaf(this, false, "Empty NOT");
     }
