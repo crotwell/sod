@@ -10,6 +10,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class ForkProcess implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar
                                         ) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < out.length; i++) {
@@ -77,7 +78,7 @@ public class ForkProcess implements LocalSeismogramProcess {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
                 seismograms = processor.process(event, channel, original,
-                                                available, seismograms);
+                                                available, seismograms, cookieJar);
             }
         } // end of while (it.hasNext())
         return out;

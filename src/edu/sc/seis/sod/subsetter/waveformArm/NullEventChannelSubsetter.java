@@ -1,10 +1,10 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventChannelSubsetter;
+import org.w3c.dom.Element;
 
 /**
  * Describe class <code>NullEventChannelSubsetter</code> here.
@@ -18,7 +18,7 @@ public class NullEventChannelSubsetter implements EventChannelSubsetter {
 
     public NullEventChannelSubsetter(Element config) {}
 
-    public boolean accept(EventAccessOperations o, Channel channel) {
+    public boolean accept(EventAccessOperations o, Channel channel, CookieJar cookieJar) {
         return true;
     }
 }// NullEventChannelSubsetter

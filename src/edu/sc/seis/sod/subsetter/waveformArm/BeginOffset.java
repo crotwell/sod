@@ -16,8 +16,8 @@ import org.w3c.dom.Element;
  *</pre>
  */
 public class BeginOffset extends Interval {
-    public BeginOffset (Element config){ super(config); }
+    public BeginOffset (Element config){
+        super(config);
+    }
 
-    public boolean accept(EventAccessOperations event,  NetworkAccess network,
-                          Channel channel){ return true; }
 }// BeginOffset

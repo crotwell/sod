@@ -14,6 +14,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.LongShortStoN;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +48,7 @@ public class LongShortSignalToNoise implements LocalSeismogramSubsetter {
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
-                          LocalSeismogramImpl[] seismograms) throws Exception {
+                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
         for (int i = 0; i < seismograms.length; i++) {
             LongShortTrigger[] triggers = sToN.calcTriggers(seismograms[i]);
             if (triggers.length != 0) {

@@ -1,15 +1,14 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 /**
  * sample xml
@@ -22,7 +21,7 @@ public class NoGaps implements AvailableDataSubsetter, SodElement{
     public NoGaps (Element config){}
 
     public boolean accept(EventAccessOperations event, Channel channel,
-                          RequestFilter[] original, RequestFilter[] available) {
+                          RequestFilter[] original, RequestFilter[] available, CookieJar cookieJar) {
 
         boolean ok = true;
         logger.debug("original length="+original.length+"  available legnth="+available.length);

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 
@@ -16,7 +17,7 @@ public class NullEventStationSubsetter implements EventStationSubsetter {
 
     public NullEventStationSubsetter(Element config) {}
 
-    public boolean accept(EventAccessOperations o,  Station station) {
+    public boolean accept(EventAccessOperations o,  Station station, CookieJar cookieJar) {
         return true;
     }
 }// NullEventStationSubsetter

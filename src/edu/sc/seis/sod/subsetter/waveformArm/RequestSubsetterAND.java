@@ -49,11 +49,11 @@ public final class RequestSubsetterAND
      */
     public boolean accept(EventAccessOperations event,
               Channel channel,
-              RequestFilter[] original) throws Exception{
+              RequestFilter[] original, CookieJar cookieJar) throws Exception{
     Iterator it = filterList.iterator();
     while (it.hasNext()) {
         RequestSubsetter filter = (RequestSubsetter)it.next();
-        if (filter.accept(event, channel, original) == false) {
+        if (filter.accept(event, channel, original, cookieJar) == false) {
         return false;
         }
     }

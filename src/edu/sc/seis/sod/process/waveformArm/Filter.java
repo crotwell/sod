@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.bag.ButterworthFilter;
 import edu.sc.seis.fissuresUtil.freq.SeisGramText;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,7 +63,7 @@ public class Filter implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms)
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {

@@ -45,7 +45,7 @@ public class OriginOffsetRequest  implements RequestGenerator {
     }
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                                           Channel channel) throws Exception{
+                                           Channel channel, CookieJar cookieJar) throws Exception{
         Origin origin = null;
         origin = event.get_preferred_origin();
 

@@ -3,6 +3,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.sod.CookieJar;
 
 /**
  * SeismogramDCLocator.java
@@ -18,6 +19,6 @@ public interface SeismogramDCLocator {
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
                                              Channel channel,
-                                             RequestFilter[] infilters) throws Exception;
+                                             RequestFilter[] infilters, CookieJar cookieJar) throws Exception;
 
 }// SeismogramDCLocator

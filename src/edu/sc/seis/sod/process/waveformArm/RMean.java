@@ -4,6 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 /**
@@ -13,7 +14,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 7650 2004-03-16 18:24:31Z groves $
+ * @version $Id: RMean.java 7822 2004-03-25 20:34:37Z crotwell $
  */
 
 public class RMean implements LocalSeismogramProcess {
@@ -28,7 +29,7 @@ public class RMean implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms)
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {

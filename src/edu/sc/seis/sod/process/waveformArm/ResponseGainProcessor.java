@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.ResponseGain;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
 import org.w3c.dom.Element;
 
@@ -16,7 +17,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 7650 2004-03-16 18:24:31Z groves $
+ * @version $Id: ResponseGainProcessor.java 7822 2004-03-25 20:34:37Z crotwell $
  */
 
 public class ResponseGainProcessor implements LocalSeismogramProcess {
@@ -26,7 +27,7 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms)
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws Exception {
         ResponseGain responseGain = new ResponseGain(Start.getNetworkArm().getFinder());
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];

@@ -8,10 +8,10 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.RequestSubsetter;
 import org.w3c.dom.Element;
 
@@ -26,7 +26,7 @@ public class RequestPrint
 
     public boolean accept(EventAccessOperations event,
                           Channel channel,
-                          RequestFilter[] request)
+                          RequestFilter[] request, CookieJar cookieJar)
         throws Exception
     {
         System.out.println("Request "+ChannelIdUtil.toString(channel.get_id())

@@ -8,6 +8,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 
@@ -34,7 +35,7 @@ public class PhaseExists implements EventStationSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations event, Station station)
+    public boolean accept(EventAccessOperations event, Station station, CookieJar cookieJar)
         throws Exception{
         Origin origin = event.get_preferred_origin();
         TauP_Time tauPTime = new TauP_Time(modelName);

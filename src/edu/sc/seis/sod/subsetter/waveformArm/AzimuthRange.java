@@ -3,11 +3,10 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 import org.w3c.dom.Element;
 
@@ -27,7 +26,7 @@ public class AzimuthRange extends RangeSubsetter implements EventChannelSubsette
         super(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess, Channel chan)
+    public boolean accept(EventAccessOperations eventAccess, Channel chan, CookieJar cookieJar)
         throws Exception {
         float minValue = getMinValue();
         float maxValue = getMaxValue();

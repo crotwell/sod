@@ -28,6 +28,6 @@ public interface EventChannelSubsetter  extends Subsetter {
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event,
-              Channel channel) throws Exception;
+              Channel channel, CookieJar cookieJar) throws Exception;
 
 }// EventChannelSubsetter

@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 
@@ -21,7 +22,7 @@ public class NullRequestSubsetter implements RequestSubsetter {
     public NullRequestSubsetter(Element config) {}
 
     public boolean accept(EventAccessOperations event, Channel channel,
-                          RequestFilter[] request)throws Exception{
+                          RequestFilter[] request, CookieJar cookieJar)throws Exception{
         return true;
     }
 

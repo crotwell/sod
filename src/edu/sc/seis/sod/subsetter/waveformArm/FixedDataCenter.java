@@ -8,6 +8,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.RetryDataCenter;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
@@ -37,7 +38,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
                                              Channel channel,
-                                             RequestFilter[] infilters) throws Exception{
+                                             RequestFilter[] infilters, CookieJar cookieJar) throws Exception{
         return dataCenter;
     }
 

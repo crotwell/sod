@@ -59,7 +59,7 @@ public class PhaseInteraction implements EventStationSubsetter {
 
     }
 
-    public boolean accept(EventAccessOperations event,  Station station)
+    public boolean accept(EventAccessOperations event,  Station station, CookieJar cookieJar)
         throws Exception{
         if(interactionStyle.equals("PATH")) return acceptPathInteraction(event, station);
         else return acceptPierceInteraction(event, station);

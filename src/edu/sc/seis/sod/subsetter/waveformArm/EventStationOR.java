@@ -1,15 +1,13 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 /**
  * This subsetter is used to specify a sequence of EventStationSubsetters. This subsetter is accepted when even one
@@ -54,12 +52,12 @@ public final class EventStationOR extends  WaveformLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o, Station station)
+    public boolean accept(EventAccessOperations o, Station station, CookieJar cookieJar)
         throws Exception{
         Iterator it = filterList.iterator();
         while(it.hasNext()) {
             EventStationSubsetter filter = (EventStationSubsetter)it.next();
-            if (filter.accept(o,station)) { return true; }
+            if (filter.accept(o,station, cookieJar)) { return true; }
         }
         return false;
     }

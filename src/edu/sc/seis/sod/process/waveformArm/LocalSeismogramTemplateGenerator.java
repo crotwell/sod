@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.ChannelFormatter;
@@ -93,11 +94,11 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms) throws Exception {
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
 
         if (seismoImageProcess != null){
-            seismoImageProcess.process(event, channel, original, available, seismograms);
+            seismoImageProcess.process(event, channel, original, available, seismograms, cookieJar);
         }
         else {
             logger.debug("There was no picname in config.  I am not generating pictures.");

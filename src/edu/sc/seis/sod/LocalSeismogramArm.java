@@ -91,7 +91,7 @@ public class LocalSeismogramArm implements Subsetter{
         Channel channel = ecp.getChannel();
         synchronized (eventChannel) {
             try {
-                passed = eventChannel.accept(eventAccess,channel);
+                passed = eventChannel.accept(eventAccess,channel, ecp.getCookieJar());
             } catch (Throwable e) {
                 handle(ecp, Stage.EVENT_CHANNEL_SUBSETTER, e);
                 return;
@@ -111,7 +111,8 @@ public class LocalSeismogramArm implements Subsetter{
         synchronized (requestGenerator) {
             try {
                 infilters=requestGenerator.generateRequest(ecp.getEvent(),
-                                                           ecp.getChannel());
+                                                           ecp.getChannel(),
+                                                          ecp.getCookieJar());
             } catch (Throwable e) {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
@@ -125,7 +126,7 @@ public class LocalSeismogramArm implements Subsetter{
         synchronized (request) {
             try {
                 passed = request.accept(ecp.getEvent(), ecp.getChannel(),
-                                        infilters);
+                                        infilters, ecp.getCookieJar());
             } catch (Throwable e) {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
@@ -137,7 +138,7 @@ public class LocalSeismogramArm implements Subsetter{
             synchronized(dcLocator) {
                 try {
                     dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(), ecp.getChannel(),
-                                                           infilters);
+                                                           infilters, ecp.getCookieJar());
                 } catch (Throwable e) {
                     handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                     return;
@@ -195,7 +196,7 @@ public class LocalSeismogramArm implements Subsetter{
         synchronized (availData) {
             try {
                 passed = availData.accept(ecp.getEvent(), ecp.getChannel(),
-                                          infilters, outfilters);
+                                          infilters, outfilters, ecp.getCookieJar());
             } catch (Throwable e) {
                 handle(ecp, Stage.AVAILABLE_DATA_SUBSETTER, e);
                 return;
@@ -301,7 +302,7 @@ public class LocalSeismogramArm implements Subsetter{
             try {
                 passed = seisSubsetter.accept(ecp.getEvent(), ecp.getChannel(),
                                               infilters, outfilters,
-                                              localSeismograms);
+                                              localSeismograms, ecp.getCookieJar());
             } catch (Throwable e) {
                 handle(ecp, Stage.DATA_SUBSETTER, e);
                 return;
@@ -336,7 +337,8 @@ public class LocalSeismogramArm implements Subsetter{
                                                          ecp.getChannel(),
                                                          infilters,
                                                          outfilters,
-                                                         localSeismograms);
+                                                         localSeismograms,
+                                                         ecp.getCookieJar());
                 } catch (Throwable e) { handle(ecp, Stage.PROCESSOR, e); }
             }
         } // end of while (it.hasNext())

@@ -4,6 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 /**
@@ -24,7 +25,7 @@ public class NullLocalSeismogramSubsetter implements LocalSeismogramSubsetter{
 
     public boolean accept(EventAccessOperations event, Channel channel,
                           RequestFilter[] original, RequestFilter[] available,
-                          LocalSeismogramImpl[] seismograms) throws Exception {
+                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception {
         return true;
     }
 }// LocalSeismogram

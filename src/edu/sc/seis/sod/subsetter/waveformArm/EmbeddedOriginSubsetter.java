@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
@@ -38,7 +39,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
 
     }
 
-    public boolean accept(EventAccessOperations eventAccess, Station station) throws Exception{
+    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookieJar) throws Exception{
         return originSubsetter.accept(eventAccess, eventAccess.get_preferred_origin());
     }
 

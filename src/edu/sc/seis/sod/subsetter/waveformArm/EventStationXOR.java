@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.subsetter.waveformArm;
 
-import org.w3c.dom.Element;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
+import org.w3c.dom.Element;
 
 /**
  * eventStationXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
@@ -50,11 +49,11 @@ public final class EventStationXOR extends  WaveformLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Station station)
+    public boolean accept(EventAccessOperations event, Station station, CookieJar cookieJar)
         throws Exception {
         EventStationSubsetter filterA = (EventStationSubsetter)filterList.get(0);
         EventStationSubsetter filterB = (EventStationSubsetter)filterList.get(1);
-        return ( filterA.accept(event, station) != filterB.accept(event, station));
+        return ( filterA.accept(event, station, cookieJar) != filterB.accept(event, station, cookieJar));
 
     }
 

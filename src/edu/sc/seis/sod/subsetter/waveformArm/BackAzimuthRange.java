@@ -30,7 +30,7 @@ public class BackAzimuthRange extends RangeSubsetter implements EventStationSubs
         super(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess,  Station station)
+    public boolean accept(EventAccessOperations eventAccess,  Station station, CookieJar cookieJar)
         throws Exception{
         float minValue = getMinValue();
         float maxValue = getMaxValue();

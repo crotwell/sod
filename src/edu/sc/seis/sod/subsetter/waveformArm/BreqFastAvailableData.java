@@ -10,6 +10,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.EventFormatter;
@@ -49,7 +50,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
     public boolean accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] request,
-                          RequestFilter[] available) throws IOException,
+                          RequestFilter[] available, CookieJar cookieJar) throws IOException,
         ConfigurationException, NoPreferredOrigin {
         writeToBFEmail(event, channel, request);
         // don't care if yes or no

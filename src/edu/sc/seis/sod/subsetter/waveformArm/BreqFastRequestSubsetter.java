@@ -4,6 +4,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import org.w3c.dom.Element;
 
 /**
@@ -21,8 +22,8 @@ public class BreqFastRequestSubsetter implements RequestSubsetter {
     }
 
     public boolean accept(EventAccessOperations event, Channel channel,
-                          RequestFilter[] request)throws Exception {
-        return breqfast.accept(event, channel, request, request);
+                          RequestFilter[] request, CookieJar cookieJar)throws Exception {
+        return breqfast.accept(event, channel, request, request, cookieJar);
     }
     BreqFastAvailableData breqfast;
 } // BreqFastRequestGenerator

@@ -90,16 +90,16 @@ public class ChoiceRequest implements RequestGenerator{
     }
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                                           Channel channel) throws Exception{
+                                           Channel channel, CookieJar cookieJar) throws Exception{
         Iterator it = choices.iterator();
         while (it.hasNext()) {
             Choice c = (Choice)it.next();
-            if (c.accept(event, channel)) {
-                return c.generateRequest(event, channel);
+            if (c.accept(event, channel, cookieJar)) {
+                return c.generateRequest(event, channel, cookieJar);
             } // end of if (c.accept(event, network, channel, cookies))
         } // end of while (it.hasNext())
         if (otherwise != null) {
-            return otherwise.generateRequest(event, channel);
+            return otherwise.generateRequest(event, channel, cookieJar);
         } else {
             return new RequestFilter[0];
         } // end of else
@@ -133,13 +133,13 @@ public class ChoiceRequest implements RequestGenerator{
         }
 
         public RequestFilter[] generateRequest(EventAccessOperations event,
-                                               Channel channel) throws Exception  {
-            return requestGenerator.generateRequest(event, channel);
+                                               Channel channel, CookieJar cookieJar) throws Exception  {
+            return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
-        public boolean accept(EventAccessOperations event, Channel channel)
+        public boolean accept(EventAccessOperations event, Channel channel, CookieJar cookieJar)
             throws Exception {
-            return eventChannelSubsetter.accept(event,channel);
+            return eventChannelSubsetter.accept(event,channel, cookieJar);
         }
 
         EventChannelSubsetter eventChannelSubsetter;
@@ -165,13 +165,13 @@ public class ChoiceRequest implements RequestGenerator{
         }
 
         public RequestFilter[] generateRequest(EventAccessOperations event,
-                                               Channel channel) throws Exception  {
-            return requestGenerator.generateRequest(event, channel);
+                                               Channel channel, CookieJar cookieJar) throws Exception  {
+            return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
         public boolean accept(EventAccessOperations event,
-                              Channel channel) throws Exception {
-            return eventStationSubsetter.accept(event, channel.my_site.my_station);
+                              Channel channel, CookieJar cookieJar) throws Exception {
+            return eventStationSubsetter.accept(event, channel.my_site.my_station, cookieJar);
         }
 
         EventStationSubsetter eventStationSubsetter;

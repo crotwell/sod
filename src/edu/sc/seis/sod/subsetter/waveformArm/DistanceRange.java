@@ -7,6 +7,7 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import org.apache.log4j.Logger;
@@ -31,7 +32,7 @@ public class DistanceRange extends DistanceRangeSubsetter implements EventStatio
         super(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess,  Station station)
+    public boolean accept(EventAccessOperations eventAccess,  Station station, CookieJar cookieJar)
         throws Exception  {
         Origin origin = null;
         origin = eventAccess.get_preferred_origin();

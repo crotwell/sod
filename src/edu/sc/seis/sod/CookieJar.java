@@ -2,6 +2,7 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import org.apache.velocity.VelocityContext;
 
 /**
  * CookieJar.java
@@ -13,23 +14,22 @@ import edu.iris.Fissures.IfNetwork.Channel;
  * @version
  */
 
-public class CookieJar extends ReadOnlyCookieJar {
+public class CookieJar {
 
     public CookieJar (EventAccessOperations event, Channel channel){
-        super(event, channel);
+        context = new VelocityContext();
+        context.put("sod.event", event);
+        context.put("sod.channel", channel);
+    }
+
+    public Object get(String key) {
+        return context.get(key);
     }
 
     public void put(String key, Object value) {
         context.put(key, value);
     }
 
-    public ReadOnlyCookieJar getReadOnly() {
-        if (readOnly == null) {
-            readOnly = new ReadOnlyCookieJar(this);
-        }
-        return readOnly;
-    }
-
-    ReadOnlyCookieJar readOnly;
+    VelocityContext context;
 
 }// CookieJar

@@ -26,12 +26,12 @@ public final class EventChannelOR extends  WaveformLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o, Channel channel)
+    public boolean accept(EventAccessOperations o, Channel channel, CookieJar cookieJar)
         throws Exception{
         Iterator it = filterList.iterator();
         while (it.hasNext()) {
             EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-            if (!filter.accept(o, channel)) { return false; }
+            if (!filter.accept(o, channel, cookieJar)) { return false; }
         }
         return true;
     }

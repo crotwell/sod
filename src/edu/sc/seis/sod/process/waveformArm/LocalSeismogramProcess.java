@@ -3,6 +3,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.waveformArm.WaveformArmProcess;
 /**
  * LocalSeismogramProcess.java
@@ -32,6 +33,6 @@ public interface LocalSeismogramProcess extends WaveformArmProcess {
                      Channel channel,
                      RequestFilter[] original,
                      RequestFilter[] available,
-                     LocalSeismogramImpl[] seismograms) throws Exception;
+                     LocalSeismogramImpl[] seismograms, CookieJar cookieJar) throws Exception;
 
 }// LocalSeismogramProcessor

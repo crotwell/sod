@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -20,12 +21,12 @@ public final class EventChannelNOT extends  WaveformLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o, Channel channel)
+    public boolean accept(EventAccessOperations o, Channel channel, CookieJar cookieJar)
         throws Exception{
         Iterator it = filterList.iterator();
         while (it.hasNext()) {
             EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-            if (!filter.accept(o, channel)) {return false;}
+            if (!filter.accept(o, channel, cookieJar)) {return false;}
         }
         return true;
     }

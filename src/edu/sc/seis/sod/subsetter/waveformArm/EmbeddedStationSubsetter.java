@@ -45,7 +45,7 @@ public class EmbeddedStationSubsetter implements EventStationSubsetter{
 
     }
 
-    public boolean accept(EventAccessOperations eventAccess, Station station) throws Exception{
+    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookieJar) throws Exception{
         return stationSubsetter.accept(station);
     }
 

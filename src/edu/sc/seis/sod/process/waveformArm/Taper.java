@@ -10,8 +10,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import org.w3c.dom.Element;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 public class Taper implements LocalSeismogramProcess {
     public Taper (Element config) {
@@ -28,7 +29,7 @@ public class Taper implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar
                                         ) throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
         for (int i=0; i<seismograms.length; i++) {

@@ -21,6 +21,7 @@ public class EventChannelPair{
         this.chan = chan;
         this.owner = owner;
         this.pairId = pairId;
+        this.cookieJar = new CookieJar(getEvent(), getChannel());
     }
 
     public int getPairId(){ return pairId; }
@@ -77,10 +78,13 @@ public class EventChannelPair{
 
     public CacheEvent getEvent(){ return event.getEvent(); }
 
+    public CookieJar getCookieJar() {return cookieJar; }
+
     private Status status;
     private EventDbObject event;
     private ChannelDbObject chan;
     private WaveformArm owner;
     private int pairId;
+    private CookieJar cookieJar;
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }

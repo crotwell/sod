@@ -3,11 +3,11 @@ package edu.sc.seis.sod.process.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -35,7 +35,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms)
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws IOException, NoPreferredOrigin {
         if (filename != null && filename.length() != 0) {
             FileWriter fwriter = new FileWriter(filename, true);

@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import org.w3c.dom.Element;
@@ -16,7 +17,7 @@ import org.w3c.dom.Element;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 7650 2004-03-16 18:24:31Z groves $
+ * @version $Id: ExternalSeismogramProcess.java 7822 2004-03-25 20:34:37Z crotwell $
  */
 
 public class ExternalSeismogramProcess implements LocalSeismogramProcess {
@@ -30,10 +31,10 @@ public class ExternalSeismogramProcess implements LocalSeismogramProcess {
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms)
+                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws Exception{
         return externalProcess.process(event, channel, original, available,
-                                       seismograms);
+                                       seismograms, cookieJar);
     }
 
     LocalSeismogramProcess externalProcess;
