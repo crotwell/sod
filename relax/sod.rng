@@ -4,18 +4,7 @@
     <start>
         <element name="sod">
             <optional>
-                <element name="properties">
-                    <oneOrMore>
-                        <element name="property">
-                            <element name="name">
-                                <data type="string"/>
-                            </element>
-                            <element name="value">
-                                <data type="string"/>
-                            </element>
-                        </element>
-                    </oneOrMore>
-                </element>
+                    <externalRef href="properties.rng"></externalRef>
             </optional>
             <externalRef href="event/arm.rng"/>
             <externalRef href="network/arm.rng"/>
