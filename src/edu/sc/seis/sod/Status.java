@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import edu.iris.Fissures.model.UnitImpl;
+
 public class Status{
     private Status(byte packedRepr){
         this.type = (byte)(packedRepr/16);
@@ -8,7 +10,7 @@ public class Status{
     }
 
     public String toString(){
-        if(type == 0) return SPECIAL_STRINGS[stage];
+        if(type == SPECIAL) return SPECIAL_STRINGS[stage];
         return STAGE_STRINGS[stage] + " " + TYPE_STRINGS[type];
     }
 
@@ -95,6 +97,35 @@ public class Status{
             if(all.toString().equals(nestedText)) return all[i];
         }
         throw new IllegalArgumentException("No such status for string " + nestedText);
+    }
+
+    public static int getFieldInt(String fieldName) {
+        try {
+            return Status.class.getField(fieldName.toUpperCase()).getInt(null);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException("field "+fieldName+" cannot be found in Status");
+        } catch (IllegalAccessException e) {
+            // this should not happen since the
+            //NoSuchFieldException wasn't thrown by class.getField()
+
+            throw new RuntimeException("This was supposed to be unreachable");
+        }
+    }
+
+    public static Status[] getAllForType(String typeFieldName) {
+        int fieldInt = getFieldInt(typeFieldName);
+        Status[] out;
+        if (typeFieldName.equals("NEW") || typeFieldName.equals("SUCCESS")) {
+            // should be only one
+            out = new Status[1];
+            out[0] = get(SPECIAL, fieldInt);
+        } else {
+            out = new Status[TYPE_STRINGS.length];
+            for (int i = 0; i < out.length; i++) {
+                out[i] = get(i, fieldInt);
+            }
+        }
+        return out;
     }
 
     private static Status[] all = new Status[127];

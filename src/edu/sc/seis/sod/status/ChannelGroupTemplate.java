@@ -58,10 +58,15 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
             for (int i = 0; i < nl.getLength(); i++) {
                 if (nl.item(i) instanceof Element) {
                     Element child = (Element)nl.item(i);
+                    Status[] statusArr = Status.getAllForType(SodUtil.getNestedText(child));
                     if (child.getTagName().equals("status")) {
-                        useStatus.add(Status.get(SodUtil.getNestedText(child)));
+                        for (int j = 0; j < statusArr.length; j++) {
+                            useStatus.add(statusArr[j]);
+                        }
                     } else if (child.getTagName().equals("notStatus")) {
-                        notUseStatus.add(Status.get(SodUtil.getNestedText(child)));
+                        for (int j = 0; j < statusArr.length; j++) {
+                            notUseStatus.add(statusArr[j]);
+                        }
                     }
                 }
             }
