@@ -116,6 +116,11 @@ public class FissuresFormatter {
         return loc.longitude;
     }
 
+    public static boolean isNull(Object obj) {
+        if(obj == null) throw new NullPointerException();
+        return false;
+    }
+
     public static MicroSecondDate getEffectiveBegin(Station station) {
         return new MicroSecondDate(station.effective_time.start_time);
     }
@@ -160,10 +165,6 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
 
-    public static QuantityImpl getAzimuth(ArrayList list) {
-        return getAzimuth((Station)list.get(0), (Origin)list.get(1));
-    }
-
     public static QuantityImpl getAzimuth(Station station, Origin origin) {
         return getAzimuth(station.my_location, origin.my_location);
     }
@@ -171,10 +172,6 @@ public class FissuresFormatter {
     public static QuantityImpl getAzimuth(Location from, Location to) {
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getAz(), UnitImpl.DEGREE);
-    }
-
-    public static QuantityImpl getBackAzimuth(ArrayList list) {
-        return getBackAzimuth((Station)list.get(0), (Origin)list.get(1));
     }
 
     public static QuantityImpl getBackAzimuth(Station station, Origin origin) {
@@ -230,6 +227,7 @@ public class FissuresFormatter {
     }
 
 }
+
 
 
 
