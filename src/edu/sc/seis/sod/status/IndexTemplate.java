@@ -27,6 +27,7 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             parse(template);
             write();
             SodUtil.copyFile(cssLoc, dirName+"/main.css");
+            SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
             SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + Start.getConfigFileName());
         } catch (Exception e) {
             GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
@@ -63,5 +64,6 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String indexLoc = "jar:edu/sc/seis/sod/data/templates/index.xml";
 
     private static String cssLoc = "jar:edu/sc/seis/sod/data/templates/main.css";
+    private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
 }
 
