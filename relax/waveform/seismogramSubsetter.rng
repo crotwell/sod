@@ -125,7 +125,7 @@
                 <element name="modelName">
                     <data type="string"/>
                 </element>
-            <optional>
+            </optional>
             <element name="phaseName">
                 <data type="string"/>
             </element>

@@ -5537,9 +5537,11 @@
                 </optional>
             </element>
             <element name="phaseSignalToNoise">
-                <element name="modelName">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <element name="phaseName">
                     <data type="string"/>
                 </element>
@@ -5603,9 +5605,11 @@
                 </optional>
             </element>
             <element name="phaseSignalToNoise">
-                <element name="modelName">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <element name="phaseName">
                     <data type="string"/>
                 </element>
@@ -5669,9 +5673,11 @@
                 </optional>
             </element>
             <element name="phaseSignalToNoise">
-                <element name="modelName">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <element name="phaseName">
                     <data type="string"/>
                 </element>
