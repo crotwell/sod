@@ -12,11 +12,11 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.chooser.AvailableStationDataEvent;
 import edu.sc.seis.fissuresUtil.chooser.StationDataEvent;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -98,7 +98,7 @@ public class MapWaveformStatus extends PeriodicAction implements WaveformArmMoni
                                 try{
                                     map.writeMapToPNG(fileLoc);
                                 } catch (IOException e) {
-                                    CommonAccess.handleException("unable to save map to "+fileLoc, e);
+                                    GlobalExceptionHandler.handle("unable to save map to "+fileLoc, e);
                                 }
                             }
                         });
@@ -106,7 +106,7 @@ public class MapWaveformStatus extends PeriodicAction implements WaveformArmMoni
                 pool.returnMap(map);
             }
         }catch(Throwable t){
-            CommonAccess.handleException(t, "Waveform map updater had a problem");
+            GlobalExceptionHandler.handle("Waveform map updater had a problem", t);
         }
     }
 

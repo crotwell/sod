@@ -158,7 +158,7 @@ public class NetworkInfoTemplateGenerator implements NetworkArmMonitor {
                                                                        + stasOutputFileName,
                                                                    net));
             } catch (IOException e) {
-                CommonAccess.handleException(e, "trouble creating StationsInNetworkTemplate");
+                GlobalExceptionHandler.handle("trouble creating StationsInNetworkTemplate", e);
             }
         }
         StationsInNetworkTemplate snt = (StationsInNetworkTemplate)stationTemplates.get(getIDString(net));

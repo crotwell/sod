@@ -60,7 +60,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         try {
                             save(configFile);
                         } catch (IOException ex) {
-                            CommonAccess.handleException("Unable to save "+configFile, ex);
+                            GlobalExceptionHandler.handle("Unable to save "+configFile, ex);
                         }
                     }
                 });
@@ -77,7 +77,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         try {
                             save(outfile);
                         } catch (IOException ex) {
-                            CommonAccess.handleException("Unable to save to "+outfile, ex);
+                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
                         }
                     }
                     }
@@ -97,7 +97,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream(NAME_PROPS ));
             }catch(IOException e)
             {
-                CommonAccess.handleException("Error in loading names Prop file",e);
+                GlobalExceptionHandler.handle("Error in loading names Prop file",e);
             }
             frame.getContentPane().add(new JScrollPane(getTabPane()), BorderLayout.CENTER);
             // put each top level sod element in a panel

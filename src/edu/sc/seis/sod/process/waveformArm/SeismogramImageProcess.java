@@ -12,8 +12,8 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
@@ -118,7 +118,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                         try {
                             bsd.outputToPNG(picFileName);
                         } catch (Throwable e) {
-                            CommonAccess.handleException("unable to save map to "+ picFileName, e);
+                            GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
                         }
                     }
                 });

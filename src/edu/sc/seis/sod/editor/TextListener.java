@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -29,9 +29,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            CommonAccess.handleException("Problem in changedUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in changedUpdate", ex);
         } catch (BadLocationException ex) {
-            CommonAccess.handleException("Problem in changedUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in changedUpdate", ex);
         }
     }
 
@@ -45,9 +45,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            CommonAccess.handleException("Problem in insertUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in insertUpdate", ex);
         } catch (BadLocationException ex) {
-            CommonAccess.handleException("Problem in insertUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in insertUpdate", ex);
         }
     }
 
@@ -62,9 +62,9 @@ public class TextListener implements DocumentListener {
         try {
             node.setNodeValue(e.getDocument().getText(0, e.getDocument().getLength()));
         } catch (DOMException ex) {
-            CommonAccess.handleException("Problem in removeUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in removeUpdate", ex);
         } catch (BadLocationException ex) {
-            CommonAccess.handleException("Problem in removeUpdate", ex);
+            GlobalExceptionHandler.handle("Problem in removeUpdate", ex);
         }
     }
 

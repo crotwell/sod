@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -52,7 +52,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
                             start.getEventArm().add(statusDisp);
                             start.getWaveformArm().addStatusMonitor(statusDisp);
                         } catch (Throwable t) {
-                            CommonAccess.handleException("Problem starting SOD", t);
+                            GlobalExceptionHandler.handle("Problem starting SOD", t);
                             go.setText("Gone.  :(");
                         }
                     }

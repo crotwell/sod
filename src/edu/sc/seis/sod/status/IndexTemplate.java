@@ -29,7 +29,7 @@ public class IndexTemplate extends FileWritingTemplate{
             SodUtil.copyFile(cssLoc, dirName+"/main.css");
             SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + Start.getConfigFileName());
         } catch (Exception e) {
-            CommonAccess.handleException("unexpected problem creating index.html page", e);
+            GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
         }
     }
 

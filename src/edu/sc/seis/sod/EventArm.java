@@ -65,7 +65,7 @@ public class EventArm implements Runnable{
         try {
             getEvents();
         } catch(Exception e) {
-            CommonAccess.handleException(e, "Exception caught while processing the EventArm");
+            GlobalExceptionHandler.handle("Exception caught while processing the EventArm", e);
         }
         logger.debug("Event arm finished");
         alive = false;
@@ -132,7 +132,7 @@ public class EventArm implements Runnable{
                         numRetries++;
                         // force trip back to name service
                         eventFinderSubsetter.forceGetEventDC();
-                        CommonAccess.handleException("Got an Corba exception while trying query from "+
+                        GlobalExceptionHandler.handle("Got an Corba exception while trying query from "+
                                                          queryStart.getFissuresTime().date_time+
                                                          " to "+queryEnd.getFissuresTime().date_time+
                                                          ", sleep for 1 minute before retrying. Num retries = "+numRetries, e);
@@ -228,11 +228,11 @@ public class EventArm implements Runnable{
                 handle(events[i]);
             } catch (Exception e) {
                 // problem with this event, log it and go on
-                CommonAccess.handleException("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
+                GlobalExceptionHandler.handle("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
                                                  " Continuing with rest of events", e);
             } catch (Throwable e) {
                 // problem with this event, log it and go on
-                CommonAccess.handleException("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
+                GlobalExceptionHandler.handle("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
                                                  " Continuing with rest of events", e);
             }
         }
@@ -393,7 +393,7 @@ public class EventArm implements Runnable{
                         throw e;
                     } else {
                         // maybe it will be ok if we retry, log just in case
-                        CommonAccess.handleException("Got a corba exception querying, retrying "+i+" of "+MAX_RETRY, e);
+                        GlobalExceptionHandler.handle("Got a corba exception querying, retrying "+i+" of "+MAX_RETRY, e);
                         try {
                             // sleep for 1 second just to give things a chance to change
                             // hope springs eternal...

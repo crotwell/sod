@@ -10,7 +10,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,7 +36,7 @@ public abstract class PeriodicAction{
         try{
             act();
         }catch(Throwable t){
-            CommonAccess.handleException(t, "Trouble running periodic action");
+            GlobalExceptionHandler.handle("Trouble running periodic action", t);
         }
         synchronized(schedulingLock){
             lastAct = ClockUtil.now();

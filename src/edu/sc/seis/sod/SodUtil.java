@@ -1,20 +1,15 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.sod.subsetter.*;
+import edu.iris.Fissures.model.*;
+import java.io.*;
 
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.Unit;
-import edu.iris.Fissures.model.BoxAreaImpl;
-import edu.iris.Fissures.model.GlobalAreaImpl;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import edu.sc.seis.sod.subsetter.LatitudeRange;
+import edu.sc.seis.sod.subsetter.LongitudeRange;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Properties;
@@ -24,11 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import java.io.FileNotFoundException;
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
 
 public class SodUtil {
 
@@ -201,7 +191,7 @@ public class SodUtil {
                 URL url = TemplateFileLoader.getUrl(SodUtil.class.getClassLoader(), src);
                 copyStream(url.openStream(), dest);
             } catch (Exception e) {
-                CommonAccess.handleException("trouble creating url for copying", e);
+                GlobalExceptionHandler.handle("trouble creating url for copying", e);
             }
         }else{
             File f = new File(src);
@@ -217,7 +207,7 @@ public class SodUtil {
             int curChar;
             while((curChar = src.read()) != -1) fos.write(curChar);
         } catch (IOException e) {
-            CommonAccess.handleException("Troble copying a file", e);
+            GlobalExceptionHandler.handle("Troble copying a file", e);
         }
     }
 

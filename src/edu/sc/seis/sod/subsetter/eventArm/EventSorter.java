@@ -6,9 +6,9 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.database.event.StatefulEvent;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import java.sql.SQLException;
 import org.w3c.dom.Element;
 
@@ -19,7 +19,7 @@ public class EventSorter{
         try {
             evStatus = new JDBCEventStatus();
         } catch (SQLException e) {
-            CommonAccess.handleException(e, "Trouble creating JDBCEventStatus for sorting events");
+            GlobalExceptionHandler.handle("Trouble creating JDBCEventStatus for sorting events", e);
         }
         setSorting(config);
     }

@@ -218,8 +218,8 @@ public class NetworkArm {
             }
 
         } catch(Exception e) {
-            CommonAccess.handleException(e, "Problem in method getSuccessfulStations for net "+
-                                        NetworkIdUtil.toString(networkDbObject.getNetworkAccess().get_attributes().get_id()));
+            GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "+
+                                        NetworkIdUtil.toString(networkDbObject.getNetworkAccess().get_attributes().get_id()), e);
         }
         StationDbObject[] rtnValues = new StationDbObject[arrayList.size()];
         rtnValues = (StationDbObject[]) arrayList.toArray(rtnValues);
@@ -271,7 +271,7 @@ public class NetworkArm {
                 }
             }
         } catch(Exception e) {
-            CommonAccess.handleException(e, "Problem in method getSuccessfulSites");
+            GlobalExceptionHandler.handle("Problem in method getSuccessfulSites", e);
         }
         SiteDbObject[] rtnValues = new SiteDbObject[successes.size()];
         rtnValues = (SiteDbObject[]) successes.toArray(rtnValues);
@@ -330,7 +330,7 @@ public class NetworkArm {
                                                               Standing.REJECT));
             }
         } catch(Throwable e) {
-            CommonAccess.handleException(e, "Problem in method getSuccessfulChannels for "+StationIdUtil.toString(site.my_station.get_id()));
+            GlobalExceptionHandler.handle("Problem in method getSuccessfulChannels for "+StationIdUtil.toString(site.my_station.get_id()), e);
         }
         ChannelDbObject[] values = new ChannelDbObject[successes.size()];
         values = (ChannelDbObject[]) successes.toArray(values);
@@ -357,7 +357,7 @@ public class NetworkArm {
                 ((NetworkArmMonitor)it.next()).setArmStatus(newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
-                CommonAccess.handleException("Problem changing status in NetworkArm", e);
+                GlobalExceptionHandler.handle("Problem changing status in NetworkArm", e);
             }
         }
     }
@@ -369,7 +369,7 @@ public class NetworkArm {
                 ((NetworkArmMonitor)it.next()).change(chan, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
-                CommonAccess.handleException("Problem changing channel status in NetworkArm", e);
+                GlobalExceptionHandler.handle("Problem changing channel status in NetworkArm", e);
             }
         }
     }
@@ -381,7 +381,7 @@ public class NetworkArm {
                 ((NetworkArmMonitor)it.next()).change(sta, newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
-                CommonAccess.handleException("Problem changing station status in NetworkArm", e);
+                GlobalExceptionHandler.handle("Problem changing station status in NetworkArm", e);
             }
         }
     }
@@ -393,7 +393,7 @@ public class NetworkArm {
                 ((NetworkArmMonitor)it.next()).change(na, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
-                CommonAccess.handleException("Problem changing network status in NetworkArm", e);
+                GlobalExceptionHandler.handle("Problem changing network status in NetworkArm", e);
             }
         }
     }
@@ -405,7 +405,7 @@ public class NetworkArm {
                 ((NetworkArmMonitor)it.next()).change(site, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
-                CommonAccess.handleException("Problem changing site status in NetworkArm", e);
+                GlobalExceptionHandler.handle("Problem changing site status in NetworkArm", e);
             }
         }
     }

@@ -57,7 +57,7 @@ public class WaveformArm implements Runnable {
             } while(Start.getEventArm().isAlive());
             logger.info("Waveform arm done.");
         } catch(Throwable e) {
-            CommonAccess.handleException("Problem running waveform arm", e);
+            GlobalExceptionHandler.handle("Problem running waveform arm", e);
         }
     }
 
@@ -262,7 +262,7 @@ public class WaveformArm implements Runnable {
                     }
                 }
             } catch (SQLException e) {
-                CommonAccess.handleException("Trouble setting the status on an event channel pair",
+                GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
                                              e);
             }
         }
@@ -273,7 +273,7 @@ public class WaveformArm implements Runnable {
                     ((WaveformArmMonitor)it.next()).update(ecp);
                 } catch (Exception e) {
                     // oh well, log it and go to next status processor
-                    CommonAccess.handleException("Problem in setStatus", e);
+                    GlobalExceptionHandler.handle("Problem in setStatus", e);
                 }
             }
         }

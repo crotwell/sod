@@ -47,7 +47,7 @@ public class Start{
             document = createDoc(createInputSource(confFilename));
             configFile = confFilename;
         } catch (Exception e) {
-            CommonAccess.handleException(e, "Trouble creating xml document");
+            GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         try {
             if(!Validator.validate(createInputSource(confFilename))){
@@ -72,7 +72,7 @@ public class Start{
                 logger.info("Valid config file");
             }
         } catch (Exception e) {
-            CommonAccess.handleException(e, "Problem configuring schema validator");
+            GlobalExceptionHandler.handle("Problem configuring schema validator", e);
             System.exit(0);
         }
         initDocument(args);
@@ -226,7 +226,7 @@ public class Start{
             logger.info("Start start()");
             start.start();
         } catch(Exception e) {
-            CommonAccess.handleException(e, "Problem in main");
+            GlobalExceptionHandler.handle("Problem in main", e);
         }
         logger.info("Done.");
     } // end of main ()
@@ -254,7 +254,7 @@ public class Start{
                 JDBCEventStatus eventStatus = new JDBCEventStatus();
                 eventStatus.restartCompletedEvents();
             } catch (SQLException e) {
-                CommonAccess.handleException("Trouble restarting completed events", e);
+                GlobalExceptionHandler.handle("Trouble restarting completed events", e);
             }
         }
     }

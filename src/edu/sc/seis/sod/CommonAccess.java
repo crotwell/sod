@@ -20,13 +20,6 @@ import org.apache.log4j.lf5.util.LogMonitorAdapter;
 public class CommonAccess {
     private CommonAccess (){}
 
-    public static void handleException(Throwable t, String reason) {
-        handleException(reason, t);
-    }
-    public static void handleException(String reason, Throwable t) {
-        GlobalExceptionHandler.handle(reason, t);
-    }
-
     public static CommonAccess getCommonAccess() { return commonAccess; }
 
     public FissuresNamingService getFissuresNamingService() throws ConfigurationException {

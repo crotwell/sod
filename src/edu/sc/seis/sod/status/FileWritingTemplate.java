@@ -3,7 +3,7 @@ package edu.sc.seis.sod.status;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Start;
 import java.io.BufferedWriter;
@@ -64,7 +64,7 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
             try {
                 return new MenuTemplate(TemplateFileLoader.getTemplate(el), getOutputLocation(), baseDir);
             } catch (Exception e) {
-                CommonAccess.handleException("Problem getting template for Menu", e);
+                GlobalExceptionHandler.handle("Problem getting template for Menu", e);
             }
         }
 
