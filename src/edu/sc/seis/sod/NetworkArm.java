@@ -3,7 +3,6 @@ package edu.sc.seis.sod;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +14,7 @@ import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
+import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
@@ -36,11 +36,13 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
-import edu.sc.seis.sod.database.network.JDBCNewChannels;
 import edu.sc.seis.sod.process.networkArm.NetworkProcess;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
 import edu.sc.seis.sod.subsetter.channel.PassChannel;
+import edu.sc.seis.sod.subsetter.network.NetworkAND;
+import edu.sc.seis.sod.subsetter.network.NetworkCode;
+import edu.sc.seis.sod.subsetter.network.NetworkOR;
 import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
 import edu.sc.seis.sod.subsetter.network.PassNetwork;
 import edu.sc.seis.sod.subsetter.site.PassSite;
@@ -135,7 +137,7 @@ public class NetworkArm {
             databaseTime = queryTimeTable.getQuery(finder.getSourceName(),
                                                    finder.getDNSName());
             logger.debug("the last time the networks were checked was "
-                         + databaseTime);
+                    + databaseTime);
             MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
             MicroSecondDate currentTime = ClockUtil.now();
             TimeInterval timeInterval = currentTime.difference(lastTime);
@@ -144,7 +146,7 @@ public class NetworkArm {
                 return true;
             } else {
                 statusChanged("Waiting until " + lastTime.add(refreshInterval)
-                              + " to recheck networks");
+                        + " to recheck networks");
                 return false;
             }
         } catch(NotFound e) {
@@ -191,8 +193,23 @@ public class NetworkArm {
         NetworkDCOperations netDC = finder.getNetworkDC();
         NetworkAccess[] allNets;
         synchronized(netDC) {
-            logger.debug("before netDC.a_finder().retrieve_all()");
-            allNets = netDC.a_finder().retrieve_all();
+            String[] constrainingCodes = getConstrainingNetworkCodes(attrSubsetter);
+            if(constrainingCodes.length > 0) {
+                logger.debug("before calling netDC.a_finder().retrieve_by_code "
+                        + constrainingCodes.length + " times");
+                NetworkFinder netFinder = netDC.a_finder();
+                List constrainedNets = new ArrayList();
+                for(int i = 0; i < constrainingCodes.length; i++) {
+                    NetworkAccess[] found = netFinder.retrieve_by_code(constrainingCodes[i]);
+                    for(int j = 0; j < found.length; j++) {
+                        constrainedNets.add(found[i]);
+                    }
+                }
+                allNets = (NetworkAccess[])constrainedNets.toArray(new NetworkAccess[0]);
+            } else {
+                logger.debug("before netDC.a_finder().retrieve_all()");
+                allNets = netDC.a_finder().retrieve_all();
+            }
         }
         logger.debug("found " + allNets.length
                 + " network access objects from the network DC finder");
@@ -229,6 +246,42 @@ public class NetworkArm {
         logger.debug("got " + netDbs.length + " networkDBobjects");
         statusChanged("Waiting for a request");
         return netDbs;
+    }
+
+    /**
+     * Given a network subsetter, return a string array consisting of all the
+     * network codes this subsetter accepts. If it doesn't constrain network
+     * codes, an empty array is returned.
+     */
+    public static String[] getConstrainingNetworkCodes(NetworkSubsetter ns) {
+        if(ns == null) {
+            return new String[0];
+        } else if(ns instanceof NetworkAND) {
+            NetworkSubsetter[] kids = ((NetworkAND)ns).getSubsetters();
+            List constrainingCodes = new ArrayList();
+            for(int i = 0; i < kids.length; i++) {
+                String[] codes = getConstrainingNetworkCodes(kids[i]);
+                for(int j = 0; j < codes.length; j++) {
+                    constrainingCodes.add(codes[i]);
+                }
+            }
+            return (String[])constrainingCodes.toArray(new String[0]);
+        } else if(ns instanceof NetworkOR) {
+            NetworkSubsetter[] kids = ((NetworkOR)ns).getSubsetters();
+            List constrainingCodes = new ArrayList();
+            for(int i = 0; i < kids.length; i++) {
+                String[] codes = getConstrainingNetworkCodes(kids[i]);
+                if(codes.length == 0) { return new String[0]; }
+                for(int j = 0; j < codes.length; j++) {
+                    constrainingCodes.add(codes[j]);
+                }
+            }
+            return (String[])constrainingCodes.toArray(new String[0]);
+        } else if(ns instanceof NetworkCode) {
+            return new String[] {((NetworkCode)ns).getCode()};
+        } else {
+            return new String[0];
+        }
     }
 
     /**
