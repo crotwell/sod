@@ -103,6 +103,16 @@ public class EventFinderEditor implements EditorPlugin{
         public String toString() {
             return SimpleGUIEditor.getDisplayName(dns+"/"+name);
         }
+        public boolean equals(Object o) {
+            if ( ! (o instanceof ServerNameDNS)) {
+                return false;
+            }
+            ServerNameDNS other = (ServerNameDNS)o;
+            return (other.name.equals(name) && other.dns.equals(dns));
+        }
+        public int hashCode() {
+            return (name+dns).hashCode();
+        }
         String name;
         String dns;
     }
@@ -118,8 +128,11 @@ public class EventFinderEditor implements EditorPlugin{
             fname.setNameServiceCorbaLoc(owner.getProperties().getProperty("edu.sc.seis.sod.nameServiceCorbaLoc"));
             NSEventDC[] eventServers = fname.getAllEventDC();
             for (int i = 0; i < eventServers.length; i++) {
-                combo.addItem(new ServerNameDNS(eventServers[i].getServerName(),
-                                                eventServers[i].getServerDNS()));
+                ServerNameDNS server = new ServerNameDNS(eventServers[i].getServerName(),
+                                                         eventServers[i].getServerDNS());
+                if ( ! server.equals(defaultServer)) {
+                    combo.addItem(server);
+                }
             }
         }
         ServerNameDNS defaultServer;
