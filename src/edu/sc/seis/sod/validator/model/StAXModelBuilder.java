@@ -219,7 +219,20 @@ public class StAXModelBuilder implements XMLStreamConstants {
                             reader.next();
                             prevEventType = curEventType;
                         }
-                        note.setExample(buf.toString());
+                        String example = buf.toString();
+                        example = example.replaceAll("\\t", "        ");
+                        int j = 0;
+                        for(int i = 0; i < example.length(); i++ ) {
+                            if(example.charAt(i) == '\n') {
+                                j = 0;
+                            }else if(example.charAt(i) != ' ') {
+                                break;
+                            }else {
+                                j++;
+                            }
+                        }
+                        example = example.trim();
+                        note.setExample(example.replaceAll("[ \\t]{" + j + "}", ""));
                     }
                 }
             }
