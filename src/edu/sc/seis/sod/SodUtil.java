@@ -31,8 +31,7 @@ public class SodUtil {
     }
 
     public static boolean isTrueText(String nestedText) {
-        if(nestedText.equalsIgnoreCase("yes")){ return true; }
-        else if(nestedText.equalsIgnoreCase("true")){ return true; }
+        if(nestedText.equals("TRUE")){ return true; }
         return false;
     }
 
@@ -399,6 +398,43 @@ public class SodUtil {
 
         pathBuf.append(toTok.nextToken());
         return dotBuf.toString() + pathBuf.toString();
+    }
+
+    public static String getAbsolutePath(String baseLoc, String relativeLoc){
+        String noFileBase = removeFileName(baseLoc);
+        int numDirUp = countDots(relativeLoc);
+        String relBase = stripDirs(noFileBase, numDirUp);
+        return relBase + stripRelativeBits(relativeLoc);
+    }
+
+    private static String stripRelativeBits(String relativeLoc) {
+        while(relativeLoc.indexOf("../") == 0){
+            relativeLoc = relativeLoc.substring(3);
+        }
+        if(relativeLoc.indexOf("./") == 0){
+            relativeLoc = relativeLoc.substring(2);
+        }
+        if(relativeLoc.indexOf("/") == 0){
+            relativeLoc = relativeLoc.substring(1);
+        }
+        return relativeLoc;
+    }
+
+    private static String stripDirs(String base, int numDirUp) {
+        for (int i = 0; i < numDirUp; i++) {
+            base = base.substring(0, base.lastIndexOf("/"));
+        }
+        return base + '/';
+    }
+
+    private static String removeFileName(String base) {
+        return base.substring(0, base.lastIndexOf("/"));
+    }
+
+    private static int countDots(String relativeLocation){
+        int lastDots = relativeLocation.lastIndexOf("..");
+        if(lastDots == -1){ return 0; }
+        return 1 + lastDots/3;
     }
 
     public static void loadProperties(Element config, Properties props) {
