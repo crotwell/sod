@@ -44,13 +44,13 @@ Structure of a SOD configuration file.
     &lt;/networkArm&gt;
     &lt;waveFormArm&gt;
         &lt;<a href="#eventStationType">eventStation</a>&gt;
-        &lt;<a href="#dataCenterType">dataCenter</a>&gt;
         &lt;localSeismogramArm&gt;
             &lt;<a href="#eventChannelType">eventChannel</a>&gt;
             &lt;<a href="#requestGeneratorType">requestGenerator</a>&gt;
+            &lt;<a href="#dataCenterType">dataCenter</a>&gt;
             &lt;<a href="#availableDataType">availableData</a>&gt;
-            &lt;<a href="#waveFormType">waveForm</a>&gt;
-            &lt;<a href="#localSeismogramProcessType">localSeismogramProcess</a>&gt;
+            &lt;<a href="#seismogramType">seismogram</a>&gt;
+            &lt;<a href="#seismogramProcessType">seismogramProcess</a>&gt;
         &lt;/localSeismogramArm&gt;
     &lt;/waveFromArm&gt;
 &lt;sod&gt;
@@ -99,31 +99,38 @@ Structure of a SOD configuration file.
         </a>
       </p>
     </xsl:if>
+      <xsl:if test="@abstract='true'" >
     <p>
       <h4>
         <xsl:text>All known subclasses</xsl:text>
       </h4>
+      <table>
       <xsl:for-each select="//xsd:complexType[xsd:complexContent/xsd:extension/@base=$tag-name]" >
         <xsl:sort select="@name" />
         <xsl:variable name="subclass" select="@name"/>
-        <a href="#{$subclass}">
+        <tr><td><a href="#{$subclass}">
           <xsl:value-of select="$subclass"/>
-        </a><br/>
+        </a></td>
+        <td><xsl:value-of select="xsd:annotation/xsd:documentation/summary" />
         <xsl:text> </xsl:text>
+        </td>
+        </tr>
       </xsl:for-each>
+    </table>
     </p>
+  </xsl:if>
     <p>
       <xsl:apply-templates select="xsd:annotation" />
     </p>
     <p>
-      <h5><xsl:text>Elements</xsl:text></h5>
+      <h4><xsl:text>Elements</xsl:text></h4>
       <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
     </p>
     <hr/>
   </xsl:template>
 
   <xsl:template match="comment()" mode="comments">
-    <h5><xsl:text>Comment</xsl:text></h5>
+    <h4><xsl:text>Comment</xsl:text></h4>
     
     <p>
       <xsl:value-of select="."/>
