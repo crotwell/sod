@@ -218,7 +218,6 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
             AuditInfo[] audit = new AuditInfo[1];
             audit[0] = new AuditInfo(System.getProperty("user.name"),
                                      "seismogram loaded via sod.");
-            File seisFile;
             URL[] seisURL = new URL[seismograms.length];
             SeismogramFileTypes[] seisFileTypeArray = new SeismogramFileTypes[seisURL.length];
             String[] seisURLStr = new String[seismograms.length];
@@ -231,7 +230,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 logger.debug("saveInDataset "+i+" "+ChannelIdUtil.toString(seismograms[i].channel_id));
                 seismograms[i].channel_id = channel.get_id();
 
-                seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
+                File seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
                                                        dataDirectory,
                                                        channel,
                                                        event,
@@ -239,6 +238,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 seisURLStr[i] = getRelativeURLString(lastDataSetFile, seisFile);
                 seisURL[i] = seisFile.toURI().toURL();
                 seisFileTypeArray[i] = seisFileType;  // all are the same
+                bytesWritten += seisFile.length();
             }
             URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
                                                                    seisFileTypeArray,
@@ -408,6 +408,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         // baseUp is not a direct ancestor of ref, fall back to absolute?
         return ref.getPath();
     }
+
+    public static int getBytesWritten(){ return bytesWritten; }
+
+    private static int bytesWritten = 0;
 
     static DataSetToXML dsToXML = new DataSetToXML();
 
