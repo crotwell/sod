@@ -6,153 +6,54 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.sc.seis.sod.status.EventFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.database.event.ConditionEvent;
+import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import java.sql.SQLException;
 import org.w3c.dom.Element;
 
 public class EventSorter{
     public EventSorter(){ this(null); }
 
     public EventSorter(Element config){
+        try {
+            evStatus = new JDBCEventStatus();
+        } catch (SQLException e) {
+            CommonAccess.handleException(e, "Trouble creating JDBCEventStatus for sorting events");
+        }
         setSorting(config);
     }
 
     public void setSorting(Element config){
-        if(config == null || config.getChildNodes().getLength() == 0){
-            sorter = new Sorter();
-        }else{
+        if(config != null  && config.getChildNodes().getLength() != 0){
             Element sortType = (Element)config.getFirstChild();
-            String ordering = sortType.getAttribute("order");
-            if(sortType.getNodeName().equals("addition")){
-                sorter = new Sorter();
-            }else if(sortType.getNodeName().equals("time")){
-                sorter = new DateSorter();
+            if(sortType.getNodeName().equals("time")){
+                query = "SELECT DISTINCT origineventid, origin_time FROM origin ORDER BY origin_time";
             }else if(sortType.getNodeName().equals("magnitude")){
-                sorter = new MagnitudeSorter();
-            }else if(sortType.getNodeName().equals("location")){
-                sorter = new LocationSorter();
+                query = "SELECT DISTINCT origineventid, magnitudevalue FROM origin, magnitude " +
+                    "WHERE origin.originid IN (SELECT originid FROM eventaccess) and " +
+                    "magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin.originid = magnitude.originid) " +
+                    "ORDER BY  magnitudevalue";
             }else if(sortType.getNodeName().equals("depth")){
-                sorter = new DepthSorter();
+                query = "SELECT DISTINCT origineventid, locationdepthvalue FROM origin, location " +
+                    "WHERE originid IN (SELECT originid FROM eventaccess) and " +
+                    "locationdepthvalue IN (SELECT locationdepthvalue FROM location WHERE originlocationid = locationid) " +
+                    "ORDER BY  locationdepthvalue";
             }
-            if(ordering.equals("reverse")) sorter = new ReverseSorter(sorter);
-        }
-        sorted.clear();
-        Iterator it = additionOrdered.iterator();
-        synchronized(additionOrdered){
-            while(it.hasNext()) sort((EventAccessOperations)it.next());
-        }
-    }
-
-    public List getSortedEvents() {
-        return sorted;
-    }
-
-    public void add(EventAccessOperations event) {
-        additionOrdered.add(event);
-        sort(event);
-    }
-
-    private void sort(EventAccessOperations event){
-        sorted.add(sorter.getPosition(event), event);
-    }
-
-    private class Sorter{
-        public int getPosition(EventAccessOperations event){
-            return sorted.size();
-        }
-    }
-
-    private class DateSorter extends Sorter{
-        public int getPosition(EventAccessOperations event) {
-            int i = 0;
-            MicroSecondDate eventOrigin = new MicroSecondDate(getOrigin(event).origin_time);
-            Iterator it = sorted.iterator();
-            while(it.hasNext()){
-                EventAccessOperations cur = (EventAccessOperations)it.next();
-                MicroSecondDate curOriginDate = new MicroSecondDate(getOrigin(cur).origin_time);
-                if(!curOriginDate.before(eventOrigin)) break;
-                i++;
+            if(query != null){
+                String ordering = sortType.getAttribute("order");
+                if(ordering.equals("descending")) query += " DESC";
+                else query += " ASC";
             }
-            return i;
         }
     }
 
-    private class MagnitudeSorter extends Sorter{
-        public int getPosition(EventAccessOperations event){
-            int i = 0;
-            float eventMag = getOrigin(event).magnitudes[0].value;
-            Iterator it = sorted.iterator();
-            while(it.hasNext()){
-                EventAccessOperations cur = (EventAccessOperations)it.next();
-                float curMag = getOrigin(cur).magnitudes[0].value;
-                if(curMag > eventMag) break;
-                i++;
-            }
-            return i;
-        }
+    public ConditionEvent[] getSortedEvents() throws SQLException{
+        if(query == null) return evStatus.getAll();
+        return evStatus.get(query, "origineventid");
     }
 
-    private class DepthSorter extends Sorter{
-        public int getPosition(EventAccessOperations event){
-            int i = 0;
-            QuantityImpl eventDepth = (QuantityImpl)getOrigin(event).my_location.depth;
-            Iterator it = sorted.iterator();
-            while(it.hasNext()){
-                EventAccessOperations cur = (EventAccessOperations)it.next();
-                QuantityImpl curDepth = (QuantityImpl)getOrigin(cur).my_location.depth;
-                if(curDepth.greaterThan(eventDepth)) break;
-                i++;
-            }
-            return i;
-        }
-    }
+    private String query;
 
-    private class LocationSorter extends Sorter{
-        public int getPosition(EventAccessOperations event){
-            int i = 0;
-            String loc = EventFormatter.getRegionName(event);
-            Iterator it = sorted.iterator();
-            while(it.hasNext()){
-                EventAccessOperations cur = (EventAccessOperations)it.next();
-                String curLoc = EventFormatter.getRegionName(cur);
-                if(loc.compareTo(curLoc) < 0) break;
-                i++;
-            }
-            return i;
-        }
-    }
-
-    private class ReverseSorter extends Sorter{
-        public ReverseSorter(Sorter reversedSorter){
-            this.reversedSorter = reversedSorter;
-        }
-
-        public int getPosition(EventAccessOperations event){
-            return sorted.size() - reversedSorter.getPosition(event);
-        }
-
-        private Sorter reversedSorter;
-    }
-
-    private Origin getOrigin(EventAccessOperations event){
-        // this code is bad
-        try {
-            return event.get_preferred_origin();
-        } catch (NoPreferredOrigin e) {}
-        return null;
-    }
-
-    private Sorter sorter;
-
-    private List sorted = Collections.synchronizedList(new ArrayList());
-
-    private List additionOrdered = Collections.synchronizedList(new ArrayList());
+    private JDBCEventStatus evStatus;
 }
