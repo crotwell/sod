@@ -69,6 +69,14 @@
                 </section>
                 <section name="News">
                 <table id="entry">
+                <th>29 July 2004</th>
+                <tr>
+                        <td>
+                                <p>Sod 2.0 beta 8 is out the door.  You can download it <a href="download.html">here</a>. We're getting pretty close to the actual release of 2.0.  This release adds connection stability enhancements for the event and seismogram servers like the ones added for the network server in the previous beta.  It also marks the debut of the <a href="tagDocs/sod/start.html">strategy file reference</a>.  There will be some major tweaking to the format and content of these files, but you can now use them as your one stop shop for information on the contents of SOD strategy files.</p>
+                        </td>
+                </tr>
+        </table>
+                <table id="entry">
                 <th>9 July 2004</th>
                 <tr>
                         <td>
