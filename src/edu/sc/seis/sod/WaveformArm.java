@@ -202,8 +202,11 @@ public class WaveformArm implements Runnable {
                     if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
                                               failchan.get_id())) {
                         int chanDbId = chans[k].getDbId();
-                        evChanStatus.put(evDbId, chanDbId, eventStationInit);
-                        evChanStatus.put(evDbId, chanDbId, eventStationReject);
+                        synchronized(evChanStatus) {
+                            evChanStatus.put(evDbId,
+                                             chanDbId,
+                                             eventStationReject);
+                        }
                     }
                 }
             }
@@ -276,7 +279,10 @@ public class WaveformArm implements Runnable {
 
     public EventChannelGroupPair getEventChannelGroupPair(EventChannelPair ecp) {
         try {
-            Channel[] chans = evChanStatus.getAllChansForSite(ecp.getPairId());
+            Channel[] chans;
+            synchronized(evChanStatus) {
+                chans = evChanStatus.getAllChansForSite(ecp.getPairId());
+            }
             ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
             for(int i = 0; i < groups.length; i++) {
@@ -288,10 +294,13 @@ public class WaveformArm implements Runnable {
             if(pairGroup == null) {
                 return null;
             }
-            int[] pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
-            EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
+            int[] pairIds;
             synchronized(evChanStatus) {
-                for(int i = 0; i < pairIds.length; i++) {
+                pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
+            }
+            EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
+            for(int i = 0; i < pairIds.length; i++) {
+                synchronized(evChanStatus) {
                     pairs[i] = evChanStatus.get(pairIds[i], this);
                 }
             }
@@ -314,7 +323,9 @@ public class WaveformArm implements Runnable {
                 try {
                     EventChannelPair ecp;
                     try {
-                        ecp = evChanStatus.get(pairId, this);
+                        synchronized(evChanStatus) {
+                            ecp = evChanStatus.get(pairId, this);
+                        }
                     } catch(NotFound e) {
                         GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair "
                                                               + pairId
@@ -327,7 +338,11 @@ public class WaveformArm implements Runnable {
                         if(ecgp == null) {
                             return null;
                         }
-                        return new RetryMotionVectorWaveformWorkUnit(evChanStatus.getPairs(ecgp));
+                        int[] pairs;
+                        synchronized(evChanStatus) {
+                            pairs = evChanStatus.getPairs(ecgp);
+                        }
+                        return new RetryMotionVectorWaveformWorkUnit(pairs);
                     } catch(NotFound e) {
                         GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair right after it gave it to me",
                                                       e);
@@ -372,11 +387,17 @@ public class WaveformArm implements Runnable {
                 workUnit = new LocalSeismogramWaveformWorkUnit(pairIds[i]);
             } else {
                 try {
-                    EventChannelPair ecp = evChanStatus.get(pairIds[i], this);
+                    EventChannelPair ecp;
+                    synchronized(evChanStatus) {
+                        ecp = evChanStatus.get(pairIds[i], this);
+                    }
                     EventChannelGroupPair ecgp = getEventChannelGroupPair(ecp);
                     if(!usedPairGroups.contains(ecgp)) {
                         usedPairGroups.add(ecgp);
-                        int[] pairGroup = evChanStatus.getPairs(ecgp);
+                        int[] pairGroup;
+                        synchronized(evChanStatus) {
+                            pairGroup = evChanStatus.getPairs(ecgp);
+                        }
                         workUnit = new MotionVectorWaveformWorkUnit(pairGroup);
                     }
                 } catch(NotFound e) {
@@ -459,19 +480,19 @@ public class WaveformArm implements Runnable {
     }
 
     public synchronized void setStatus(EventChannelPair ecp) {
-        synchronized(evChanStatus) {
-            try {
+        try {
+            synchronized(evChanStatus) {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
-                Status stat = ecp.getStatus();
-                if(stat.getStanding() == Standing.CORBA_FAILURE) {
-                    handleCorbaFailure(ecp);
-                } else if(stat.getStanding() == Standing.RETRY) {
-                    handleAvailableDataFailure(ecp);
-                }
-            } catch(SQLException e) {
-                GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
-                                              e);
             }
+            Status stat = ecp.getStatus();
+            if(stat.getStanding() == Standing.CORBA_FAILURE) {
+                handleCorbaFailure(ecp);
+            } else if(stat.getStanding() == Standing.RETRY) {
+                handleAvailableDataFailure(ecp);
+            }
+        } catch(SQLException e) {
+            GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
+                                          e);
         }
         synchronized(statusMonitors) {
             Iterator it = statusMonitors.iterator();
