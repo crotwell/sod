@@ -16,6 +16,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -29,14 +30,7 @@ public class WaveformVectorAlwaysSuccess implements
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
             if(node instanceof Element) {
-                Object sodElement = SodUtil.load((Element)node,
-                                                 "waveform.vector");
-                if(sodElement instanceof WaveformVectorProcess) {
-                    subProcess = (WaveformVectorProcess)sodElement;
-                } else {
-                    logger.warn("Unknown tag in AlwaysSuccess config. "
-                            + sodElement);
-                } // end of else
+                subProcess = MotionVectorArm.loadAndWrap((Element)node);
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }

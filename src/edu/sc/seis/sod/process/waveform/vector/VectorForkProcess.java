@@ -13,6 +13,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.ForkProcess;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
@@ -30,13 +31,7 @@ public class VectorForkProcess implements WaveformVectorProcess {
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
             if(node instanceof Element) {
-                Object sodElement = SodUtil.load((Element)node,
-                                                 new String[] {"waveform",
-                                                               "waveform.vector"});
-                if(sodElement instanceof WaveformProcess
-                        && !(sodElement instanceof WaveformVectorProcess)) {
-                    sodElement = new ANDWaveformProcessWrapper((WaveformProcess)sodElement);
-                }
+                WaveformVectorProcess sodElement = MotionVectorArm.loadAndWrap((Element)node);
                 processes.add(sodElement);
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)

@@ -11,6 +11,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.MotionVectorArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.status.StringTree;
@@ -31,17 +32,7 @@ public class WaveformVectorFork implements WaveformVectorProcessWrapper {
         for(int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
             if(node instanceof Element) {
-                Object sodElement = SodUtil.load((Element)node,
-                                                 new String[] {"waveform.vector",
-                                                               "waveform"});
-                if(sodElement instanceof WaveformVectorProcess) {
-                    cgProcessList.add(sodElement);
-                } else if(sodElement instanceof WaveformProcess) {
-                    cgProcessList.add(new ANDWaveformProcessWrapper((WaveformProcess)sodElement));
-                } else {
-                    logger.warn("Unknown tag in MotionVectorArm config. "
-                            + sodElement.getClass().getName());
-                }
+                cgProcessList.add(MotionVectorArm.loadAndWrap((Element)node));
             }
         }
     }

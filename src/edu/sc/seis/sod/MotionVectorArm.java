@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.UnitBase;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -358,6 +359,20 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
             failLogger.info(ecp + " " + result.getReason());
+        }
+    }
+    
+    public static WaveformVectorProcess loadAndWrap(Element element) throws ConfigurationException {
+        Object sodElement = SodUtil.load(element,
+                                         new String[] {"waveform",
+                                                       "waveform.vector"});
+        if(sodElement instanceof WaveformProcess
+                && !(sodElement instanceof WaveformVectorProcess)) {
+            return new ANDWaveformProcessWrapper((WaveformProcess)sodElement);
+        } else if (sodElement instanceof WaveformVectorProcess) {
+            return (WaveformVectorProcess)sodElement;
+        } else {
+            throw new ConfigurationException("Element "+element.getLocalName()+" is not a WaveformProcess or a WaveformVectorProcess");
         }
     }
 
