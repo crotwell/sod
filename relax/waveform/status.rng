@@ -3,9 +3,6 @@
         xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
         <start>
                 <choice>
-                        <element name="logFactor5WaveFormStatus">
-                                <empty/>
-                        </element>
                         <element name="simpleHTMLWaveformStatus">
                                 <optional>
                                         <element name="outputDirectory">
