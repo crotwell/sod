@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import org.w3c.dom.Element;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -40,10 +42,12 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                                                "fileNameBase"));
         this.numSeisPerImage = new Integer(SodUtil.getText(SodUtil.getElement(config,
                                                                               "numSeisPerRecordSection"))).intValue();
-        String eventRecSecTableName="eventRecordSection" + this.id;
-        String recSecChanTableName="recSecChannel"+ this.id;
-        recordSectionChannel = new JDBCRecordSectionChannel(recSecChanTableName,eventRecSecTableName);
-        eventRecordSection = new JDBCEventRecordSection(eventRecSecTableName,recSecChanTableName);
+        String eventRecSecTableName = "eventRecordSection" + this.id;
+        String recSecChanTableName = "recordSectionChannel" + this.id;
+        recordSectionChannel = new JDBCRecordSectionChannel(recSecChanTableName,
+                                                            eventRecSecTableName);
+        eventRecordSection = new JDBCEventRecordSection(eventRecSecTableName,
+                                                        recSecChanTableName);
         eventAccess = new JDBCEventAccess();
         channel = new JDBCChannel();
     }
@@ -114,7 +118,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         if(length > 0) {
             int fileNameCounter = 0;
             if(length <= numSeisPerImage) {
-                writeImage(dataSeis, event, fileNameBase + fileNameCounter + fileExtension);
+                writeImage(dataSeis, event, fileNameBase + fileNameCounter
+                        + fileExtension);
                 return;
             } else {
                 sort(dataSeis);
@@ -128,9 +133,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                         tempDSS[j] = dataSeis[index];
                         index += spacing;
                     }
-                    //String fileName = (i == 1 ? (fileNameBase + fileExtension)
-                      //      : (fileNameBase + fileNameCounter + fileExtension));
-                    writeImage(tempDSS, event, fileNameBase + fileNameCounter + fileExtension);
+                    writeImage(tempDSS, event, fileNameBase + fileNameCounter
+                            + fileExtension);
                     fileNameCounter++;
                 }
                 if(!bestDisplay) {
@@ -152,16 +156,16 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                             EventAccessOperations event,
                             String fileName) throws IOException, NotFound,
             SQLException {
-        int recSecId=-1;
+        int recSecId = -1;
         int eventId = eventAccess.getDBId(event);
         boolean isBest = false;
         if(displayOption.equals("BEST")) {
             isBest = true;
         }
-        if(!eventRecordSection.imageExists(eventId,fileName)){
-            recSecId=eventRecordSection.insert(eventId,fileName,isBest);
-        }else{
-            recSecId=eventRecordSection.getRecSecId(eventId,fileName);
+        if(!eventRecordSection.imageExists(eventId, fileName)) {
+            recSecId = eventRecordSection.insert(eventId, fileName);
+        } else {
+            recSecId = eventRecordSection.getRecSecId(eventId, fileName);
         }
         File parentDir = saveSeisToFile.getEventDirectory(event);
         RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
@@ -169,12 +173,18 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         try {
             File outPNG = new File(parentDir, fileName);
             rsDisplay.outputToPNG(outPNG, new Dimension(500, 500));
-            for(int j=0;j<dataSeis.length;j++){
-                int channelId=channel.getDBId(dataSeis[j].getRequestFilter().channel_id);
-                if(recordSectionChannel.channelExists(eventId,channelId)){
-                    recordSectionChannel.updateRecordSection(recSecId,eventId,channelId);
-                }else{
-                    recordSectionChannel.insert(recSecId,channelId);
+            HashMap seisToPixelMap = rsDisplay.getPixelMap();
+            for(int j = 0; j < dataSeis.length; j++) {
+                ChannelId channel_id = dataSeis[j].getRequestFilter().channel_id;
+                int channelId = channel.getDBId(channel_id);
+                double[] pixelInfo = (double[])seisToPixelMap.get(channel_id);
+                if(recordSectionChannel.channelExists(eventId, channelId)) {
+                    recordSectionChannel.updateRecordSection(recSecId,
+                                                             eventId,
+                                                             channelId,
+                                                             pixelInfo);
+                } else {
+                    recordSectionChannel.insert(recSecId, channelId, pixelInfo);
                 }
             }
         } catch(IOException e) {
@@ -196,10 +206,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private JDBCRecordSectionChannel recordSectionChannel;
 
     private JDBCEventAccess eventAccess;
-    
+
     private JDBCChannel channel;
 
-    private String fileNameBase = "RecordSection";//default
+    private String fileNameBase;
 
     private final static String fileExtension = ".png";
 }
