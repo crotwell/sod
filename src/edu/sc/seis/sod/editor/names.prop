@@ -25,7 +25,12 @@ originDepthRange=Event depth
 stationEffectiveTimeOverlap=Station Activity Time
 siteEffectiveTimeOverlap=Site Activity Time
 channelEffectiveTimeOverlap=Channel Activity Time
+edu/iris/dmc/IRIS_EventDC=IRIS
+edu/sc/seis/ANHINGAEVENTDC=SCEPP
+edu/berkeley/geo/quake/NCEDC_EventDC=Berkeley NCEDC
+edu/berkeley/geo/quake/NCSN_EventDC=Berkeley NCSN
 siteCode=Site Code
 stationCode=Station Code
 networkCode=Network Code
 channelCode=Channel Code
+

@@ -101,7 +101,7 @@ public class EventFinderEditor implements EditorPlugin{
             this.dns = dns;
         }
         public String toString() {
-            return dns+" "+name;
+            return SimpleGUIEditor.getDisplayName(dns+"/"+name);
         }
         String name;
         String dns;
