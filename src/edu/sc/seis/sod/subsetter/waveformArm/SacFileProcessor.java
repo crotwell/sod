@@ -120,7 +120,6 @@ public class SacFileProcessor implements LocalSeismogramProcess {
             DataSet dataset = getDataSet(event);
         }
         saveInDataSet(event, channel, seismograms);
-        dsToXML.writeToFile(lastDataSetElement, lastDataSetFile);
         
         boolean found = false;
         Iterator it = masterDSNames.iterator();
@@ -151,7 +150,8 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         throws ConfigurationException,
         CodecException,
         IOException,
-        NoPreferredOrigin {
+        NoPreferredOrigin,
+        ParserConfigurationException {
         
         File eventDirectory = getEventDirectory(event);
         File dataDirectory = new File(eventDirectory, "data");
@@ -200,7 +200,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                        DataSet.CHANNEL+ChannelIdUtil.toString(channel.get_id()),
                        channel);
         
-        
+        dsToXML.writeToFile(lastDataSetElement, lastDataSetFile);
         
         return urlDSS;
     }
