@@ -13,15 +13,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
 
-public abstract class ExternalFileTemplate extends Template{
+public abstract class ExternalFileTemplate extends Template implements GenericTemplate{
     public ExternalFileTemplate(Element el)throws IOException{
         super(getTemplate(el));
         outputLocation = getOutLoc(el);
@@ -53,11 +54,27 @@ public abstract class ExternalFileTemplate extends Template{
     public void update(){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(outputLocation)));
-            writer.write(getResults());
+            writer.write(getResult());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public String getResult(){
+        StringBuffer buf = new StringBuffer();
+        Iterator it = pieces.iterator();
+        while(it.hasNext()){
+            GenericTemplate cur = (GenericTemplate)it.next();
+            buf.append(cur.getResult());
+        }
+        return buf.toString();
+    }
+    
+    protected Object textTemplate(final String text){
+        return new GenericTemplate(){
+            public String getResult() { return text; }
+        };
     }
     
     private String outputLocation;
