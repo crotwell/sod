@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 import java.io.*;
 
@@ -49,23 +50,42 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
 			RequestFilter[] available,
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) {
-	try {
-	      FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
-	    BufferedWriter bwriter = new BufferedWriter(fwriter);
-	    String debugStr = "Got "+seismograms.length+" seismograms for "+
-		ChannelIdUtil.toStringNoDates(channel.get_id())+
-		" for event in "+
-		" at "+event.get_preferred_origin().origin_time.date_time;
-	    bwriter.write(debugStr, 0, debugStr.length());
-	    bwriter.newLine();
-	    bwriter.close();
-	} catch(Exception e) {
-	    
-	    System.out.println("Exception caught while writing to file in PrintLineWaveformProcess");
-	}
+        if (filename != null) {     
+        	try {
+                FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
+                BufferedWriter bwriter = new BufferedWriter(fwriter);
+                String debugStr = "Got "+seismograms.length+" seismograms for "+
+                    ChannelIdUtil.toStringNoDates(channel.get_id())+
+                    " for event in "+
+                    " at "+event.get_preferred_origin().origin_time.date_time;
+                bwriter.write(debugStr, 0, debugStr.length());
+                bwriter.newLine();
+                bwriter.close();
+            } catch(Exception e) {
+                
+                logger.warn("Exception caught while writing to file.", e);
+            }
+        } else {
+            try {
+                System.out.println("Got "+seismograms.length+" seismograms for "+
+                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                   " for event in "+
+                                   " at "+event.get_preferred_origin().origin_time.date_time);
+            } catch (NoPreferredOrigin e) {
+                System.out.println("Got "+seismograms.length+" seismograms for "+
+                                   ChannelIdUtil.toStringNoDates(channel.get_id())+
+                                   " for event without a preferred origin");
+            } // end of try-catch
+        } // end of else
+        
 	
     }
    
     ParseRegions regions;
+
+    String filename = null;
+
+    static Category logger = 
+	Category.getInstance(PrintlineSeismogramProcess.class.getName());
 
 }// PrintlineWaveformProcessor
