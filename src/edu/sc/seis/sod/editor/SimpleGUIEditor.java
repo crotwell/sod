@@ -37,9 +37,9 @@ import javax.swing.JTabbedPane;
 
 
 
-public class SimpleGUI extends CommandLineEditor {
+public class SimpleGUIEditor extends CommandLineEditor {
 
-    public SimpleGUI(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
+    public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
 
     }
@@ -110,7 +110,7 @@ public class SimpleGUI extends CommandLineEditor {
         }
         JTextField textField = new JTextField();
         textField.setText(text.getNodeValue().trim());
-        TextListener textListen = new SimpleGUI.TextListener(text);
+        TextListener textListen = new SimpleGUIEditor.TextListener(text);
         textField.getDocument().addDocumentListener(textListen);
         panel.add(textField, gbc);
     }
@@ -120,12 +120,12 @@ public class SimpleGUI extends CommandLineEditor {
      */
     public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException {
         BasicConfigurator.configure();
-        SimpleGUI gui = new SimpleGUI(args);
+        SimpleGUIEditor gui = new SimpleGUIEditor(args);
         gui.start();
         System.out.println("Done editing.");
     }
 
-    private static Logger logger = Logger.getLogger(SimpleGUI.class);
+    private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
 
     class TextListener implements DocumentListener {
         Text text;
