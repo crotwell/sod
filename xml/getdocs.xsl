@@ -191,42 +191,42 @@
     <xsl:copy-of select="description/node()" />
     <h4>Example</h4>
     <code>
-      <xsl:apply-templates select="example/node()" mode="make-literal" />
+      <pre>
+        <xsl:apply-templates select="example/node()" mode="make-literal" />
+      </pre>
     </code>
   </xsl:template>
 
   <xsl:template match="*" mode="make-literal" >
-    <xsl:text>&lt;</xsl:text>
-    <xsl:value-of select="name()"/>
-    <xsl:if test="count(@*)">
-      <xsl:text> </xsl:text>
-    </xsl:if>
-    <xsl:for-each select="@*">
+      <xsl:text>&lt;</xsl:text>
       <xsl:value-of select="name()"/>
-      <xsl:text>=&quot;</xsl:text>
-      <xsl:value-of select="."/>
-      <xsl:text>&quot;</xsl:text>
-    </xsl:for-each>
-    <xsl:choose>
-    <xsl:when test="node()">
-      <xsl:text>&gt;</xsl:text>
-      <br/>
-      <xsl:apply-templates select="node()" mode="make-literal" />
-      <xsl:text>&lt;/</xsl:text>
-      <xsl:value-of select="name()"/>
-      <xsl:text>&gt;</xsl:text>
-      <br/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:text>/&gt;</xsl:text>
-      <br/>
-    </xsl:otherwise>
-    </xsl:choose>
+      <xsl:if test="count(@*)">
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:for-each select="@*">
+        <xsl:value-of select="name()"/>
+        <xsl:text>=&quot;</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>&quot;</xsl:text>
+      </xsl:for-each>
+      <xsl:choose>
+        <xsl:when test="node()">
+          <xsl:text>&gt;</xsl:text>
+          <xsl:apply-templates select="node()" mode="make-literal" />
+          <xsl:text>&lt;/</xsl:text>
+          <xsl:value-of select="name()"/>
+          <xsl:text>&gt;</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>/&gt;</xsl:text>
+          
+        </xsl:otherwise>
+      </xsl:choose>
   </xsl:template>
-
+  
   <xsl:template match="text()" mode="make-literal" >
     <xsl:value-of select="."/>
-    <br/>
+    
   </xsl:template>
 
 </xsl:stylesheet>
