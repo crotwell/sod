@@ -1,7 +1,5 @@
 package edu.sc.seis.sod;
 import edu.iris.Fissures.IfEvent.*;
-import edu.sc.seis.sod.subsetter.eventArm.*;
-import java.util.*;
 
 import edu.iris.Fissures.Area;
 import edu.iris.Fissures.Quantity;
@@ -18,7 +16,16 @@ import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.process.eventArm.EventArmProcess;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
+import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
+import edu.sc.seis.sod.subsetter.eventArm.NullOriginSubsetter;
+import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
+import edu.sc.seis.sod.subsetter.eventArm.OriginTimeRange;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
@@ -26,7 +33,6 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.sc.seis.fissuresUtil.database.NotFound;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
