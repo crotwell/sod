@@ -247,7 +247,7 @@ public class EventArm implements Runnable{
         return s;
     }
 
-    public void handle(CacheEvent event) throws Exception{
+    private void handle(CacheEvent event) throws Exception{
         change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
                                  Standing.IN_PROG));
         EventAttr attr = event.get_attributes();
