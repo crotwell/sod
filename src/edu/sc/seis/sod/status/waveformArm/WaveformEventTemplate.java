@@ -4,54 +4,116 @@ import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.status.eventArm.EventTemplate;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import org.w3c.dom.Element;
 
-public class WaveformEventTemplate extends FileWritingTemplate implements WaveformArmMonitor{
-    public WaveformEventTemplate(Element el, EventAccessOperations event) throws Exception {
-        this(TemplateFileLoader.getTemplate(el),
-             el.getAttribute("fileDir"),
-             el.getAttribute("outputLocation"),
-             event);
+public class WaveformEventTemplate extends Template implements WaveformArmMonitor{
+    public WaveformEventTemplate(Element el, String baseDir,
+                                 EventFormatter dirNameCreator, String pageName) throws IOException, ConfigurationException {
+        this.baseDir = baseDir;
+        this.dirNameCreator = dirNameCreator;
+        this.pageName = pageName;
+        parse(el);
     }
 
-    public WaveformEventTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event) throws IOException, ConfigurationException {
-        super(baseDir, outputLocation);
-        this.event = event;
-        parse(el);
-        if(Start.getWaveformArm() != null) {
-            Start.getWaveformArm().addStatusMonitor(this);
+    public String getOutputDirectory(EventAccessOperations ev){
+        return baseDir + "/" + dirNameCreator.getResult(ev) + "/";
+    }
+
+    protected Object textTemplate(final String text) {
+        return new GenericTemplate() {
+            public String getResult() { return text; }
+        };
+    }
+
+
+    public void update(EventAccessOperations ev, Status status){
+        String outputDir = getOutputDirectory(ev);
+        String loc = outputDir + pageName;
+        if(status.equals(Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                    Standing.IN_PROG))){
+            try{
+                FileWritingTemplate.testOutputLoc(loc);
+            } catch (IOException e) {
+                GlobalExceptionHandler.handle(e);
+            }
         }
-        write();
+        update(ev, outputDir, pageName);
     }
 
     public void update(EventChannelPair ecp){
-        if(ecp.getEvent().equals(event)){
-            if(map != null){
-                map.add(ecp.getEvent(), getOutputDirectory() + "/map.png");
+        String outputDir = getOutputDirectory(ecp.getEvent());
+        update(ecp.getEvent(), outputDir, pageName);
+    }
+
+
+    public void update(EventAccessOperations ev, String outputDir, String fileLoc){
+        if(map != null){ map.add(ev, outputDir + "map.png"); }
+        String loc = outputDir + fileLoc;
+        synchronized(toBeRendered){
+            if (!toBeRendered.containsKey(loc)){
+                toBeRendered.put(loc, ev);
+                writer.actIfPeriodElapsed();
             }
-            write();
+        }
+    }
+
+    public class Writer extends PeriodicAction{
+        public void act() {
+            EventAccessOperations[] evs= new EventAccessOperations[0];
+            String[] fileLocs = new String[0];
+            synchronized(toBeRendered){
+                int numEvsWaiting = toBeRendered.size();
+                if(toBeRendered.size() > 0){
+                    evs = new EventAccessOperations[toBeRendered.size()];
+                    fileLocs = new String[toBeRendered.size()];
+                    Iterator it = toBeRendered.keySet().iterator();
+                    while(it.hasNext()){
+                        String loc= (String)it.next();
+                        fileLocs[--numEvsWaiting] = loc;
+                        evs[numEvsWaiting] = (EventAccessOperations)toBeRendered.get(loc);
+                    }
+                    toBeRendered.clear();
+                }
+            }
+            for (int i = 0; i < evs.length; i++) {
+                FileWritingTemplate.write(fileLocs[i], getResult(evs[i]));
+            }
+        }
+
+        private String getResult(EventAccessOperations ev) {
+            StringBuffer buf = new StringBuffer();
+            Iterator it = templates.iterator();
+            while(it.hasNext()){
+                Object cur = it.next();
+                if(cur instanceof EventTemplate){
+                    buf.append(((EventTemplate)cur).getResult(ev));
+                }else if(cur instanceof GenericTemplate){
+                    buf.append(((GenericTemplate)cur).getResult());
+                }
+            }
+            return buf.toString();
         }
     }
 
     protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if(tag.equals("eventStations")) {
-            return new EventStationGroupTemplate(el, event);
+            return new EventStationGroupTemplate(el);
         }else if(tag.equals("map")){
             try {
-                synchronized(getClass()){
-                    if(map == null){ map = new MapWaveformStatus(pool); }
-                }
-                map.add(event, getOutputDirectory() + "/map.png");
+                if(map == null){ map = new MapWaveformStatus(); }
                 return new GenericTemplate(){
                     public String getResult() { return "map.png";}
                 };
@@ -64,23 +126,21 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
                     }
                 };
             }
-        }else if(tag.equals("event")){  return new EventTemplate(el); }
+        }else if(tag.equals("event")){  return new EventFormatter(el); }
+        else if(tag.equals("menu")){
+            try {
+                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/2/test.html", baseDir);
+            } catch (Exception e) {
+                GlobalExceptionHandler.handle("Problem getting template for Menu", e);
+            }
+        }
         return super.getTemplate(tag, el);
     }
 
-    private class EventTemplate implements GenericTemplate{
-        public EventTemplate(Element el) throws ConfigurationException {
-            formatter = new EventFormatter(el);
-        }
-
-        public String getResult() { return formatter.getResult(event); }
-
-        private EventFormatter formatter;
-    }
-
-    private EventAccessOperations event;
-
-    private static MapPool pool = new MapPool(2, new DefaultEventColorizer());
-
-    private static MapWaveformStatus map;
+    private Map toBeRendered = Collections.synchronizedMap(new HashMap());
+    private EventFormatter dirNameCreator;
+    private String pageName;
+    private String baseDir;
+    private MapWaveformStatus map;
+    private Writer writer = new Writer();
 }
