@@ -61,6 +61,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
         logger.debug("Event arm finished");
     }
     
+    public void add(EventStatus monitor){ statusMonitors.add(monitor); }
+    
     private void processConfig(Element config)
         throws ConfigurationException {
         Start.getEventQueue().setSourceAlive(true);
@@ -85,7 +87,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
                 } else if(sodElement instanceof EventArmProcess) {
                     processors.add(sodElement);
                 }else if(sodElement instanceof EventStatus) {
-                    statusMonitors.add(sodElement);
+                    add((EventStatus)sodElement);
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
