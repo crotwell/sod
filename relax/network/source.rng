@@ -2,7 +2,10 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
-        <ref name="finder"/>
+        <choice>
+            <ref name="finder"/>
+            <ref name="filterFinder"/>
+        </choice>
     </start>
     <define name="finder">
         <element name="networkFinder">
@@ -29,6 +32,33 @@
             <ref name="name"/>
             <ref name="dns"/>
             <externalRef href="../base/externalRef/refreshInterval.rng"/>
+        </element>
+    </define>
+    <define name="filterFinder">
+        <element name="filterNetworkFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Finds networks and only allows in stations matching reg exps loaded
+                        from a url</summary>
+                    <example>
+                        <networkFinder>
+                            <name>IRIS_NetworkDC</name>
+                            <dns>edu/iris/dmc</dns>
+                            <refreshInterval>
+                                <unit>MINUTE</unit>
+                                <value>3000</value>
+                            </refreshInterval>
+                            <filterURL>http://seis.sc.edu/GEE/Dynamic/GEE_2.1/configs/filterStations.txt</filterURL>
+                        </networkFinder>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="name"/>
+            <ref name="dns"/>
+            <externalRef href="../base/externalRef/refreshInterval.rng"/>
+            <element name="filterURL">
+                <data type="string"/>
+            </element>
         </element>
     </define>
     <define name="name">
