@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProcess {
 
     public ANDLocalSeismogramWrapper(LocalSeismogramProcess subsetter) {
-        this.subsetter = subsetter;
+        this.process = subsetter;
     }
 
     public ANDLocalSeismogramWrapper(Element config) throws ConfigurationException{
@@ -30,11 +30,15 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
-                subsetter =
+                process =
                     (LocalSeismogramProcess) SodUtil.load((Element)node, "waveformArm");
                 break;
             }
         }
+    }
+
+    public LocalSeismogramProcess getProcess() {
+        return process;
     }
 
 
@@ -47,7 +51,7 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = true;
         for (int i = 0; i < channelGroup.getChannels().length; i++) {
-            LocalSeismogramResult result = subsetter.process(event,
+            LocalSeismogramResult result = process.process(event,
                                                              channelGroup.getChannels()[i],
                                                              original[i],
                                                              available[i],
@@ -62,6 +66,7 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         return new ChannelGroupLocalSeismogramResult(true, out);
     }
 
-    LocalSeismogramProcess subsetter;
+
+    LocalSeismogramProcess process;
 }
 

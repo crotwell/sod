@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 7822 2004-03-25 20:34:37Z crotwell $
+ * @version $Id: ExternalSeismogramProcess.java 8857 2004-05-21 20:02:00Z crotwell $
  */
 
 public class ExternalSeismogramProcess implements LocalSeismogramProcess {
@@ -27,7 +27,7 @@ public class ExternalSeismogramProcess implements LocalSeismogramProcess {
         externalProcess = (LocalSeismogramProcess) SodUtil.loadExternal(config);
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,

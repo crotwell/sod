@@ -31,7 +31,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
         regions = ParseRegions.getInstance();
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -62,7 +62,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                              regions.getRegionName(event.get_attributes().region)+
                              " at "+event.get_preferred_origin().origin_time.date_time);
         } // end of else
-        return seismograms;
+        return new LocalSeismogramResult(true, seismograms);
     }
 
     ParseRegions regions;

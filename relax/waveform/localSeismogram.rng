@@ -16,9 +16,6 @@
             <optional>
                 <externalRef href="availableData.rng"/>
             </optional>
-            <optional>
-                <externalRef href="seismogramSubsetter.rng"/>
-            </optional>
             <zeroOrMore>
                 <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>

@@ -106,7 +106,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -152,7 +152,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 });
 
 
-        return seismograms;
+        return new LocalSeismogramResult(true, seismograms);
     }
 
     private static Dimension dimension = new Dimension(500, 200);

@@ -60,31 +60,38 @@ public class ForkProcess implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookieJar
                                         ) throws Exception {
-        LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
-        for (int i = 0; i < out.length; i++) {
-            out[i] = new LocalSeismogramImpl(seismograms[i], seismograms[i].data);
-        }
+        LocalSeismogramImpl[] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
         LocalSeismogramProcess processor;
         Iterator it = localSeisProcessList.iterator();
-        while (it.hasNext()) {
+        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms);
+        while (it.hasNext() && result.isSuccess()) {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
-                seismograms = processor.process(event, channel, original,
-                                                available, seismograms, cookieJar);
+                result = processor.process(event, channel, original,
+                                                available, result.getSeismograms(), cookieJar);
             }
         } // end of while (it.hasNext())
+        return new LocalSeismogramResult(result.isSuccess(), out);
+    }
+
+    public static LocalSeismogramImpl[] copySeismograms(LocalSeismogramImpl[] seismograms) {
+        LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = new LocalSeismogramImpl(seismograms[i], seismograms[i].data);
+        }
         return out;
     }
 
-    private LinkedList localSeisProcessList = new LinkedList();
+    protected LinkedList localSeisProcessList = new LinkedList();
 
     Element config;
 

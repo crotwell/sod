@@ -39,12 +39,13 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
 
 
     public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
-                          ChannelGroup channelGroup,
-                          RequestFilter[][] original,
-                          RequestFilter[][] available,
-                          LocalSeismogramImpl[][] seismograms,
-                          CookieJar cookieJar) throws Exception {
+                                                     ChannelGroup channelGroup,
+                                                     RequestFilter[][] original,
+                                                     RequestFilter[][] available,
+                                                     LocalSeismogramImpl[][] seismograms,
+                                                     CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
+        boolean b = false;
         for (int i = 0; i < channelGroup.getChannels().length; i++) {
             LocalSeismogramResult result = subsetter.process(event,
                                                              channelGroup.getChannels()[i],
@@ -53,9 +54,10 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
                                                              ForkProcess.copySeismograms(seismograms[i]),
                                                              cookieJar);
             out[i] = result.getSeismograms();
-            if (result.isSuccess()) {
-                return new ChannelGroupLocalSeismogramResult(true, seismograms);
-            }
+            b |= result.isSuccess();
+        }
+        if (b) {
+            return new ChannelGroupLocalSeismogramResult(true, out);
         }
         return ChannelGroupLocalSeismogramResult.FAIL;
     }

@@ -14,7 +14,7 @@ import edu.sc.seis.sod.CookieJar;
 
 public interface ChannelGroupLocalSeismogramProcess extends WaveformArmProcess {
 
-    public LocalSeismogramImpl[][] process(EventAccessOperations event,
+    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
                                            ChannelGroup channelGroup,
                                            RequestFilter[][] original,
                                            RequestFilter[][] available,

@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 7822 2004-03-25 20:34:37Z crotwell $
+ * @version $Id: RTrend.java 8857 2004-05-21 20:02:00Z crotwell $
  */
 
 public class RTrend implements LocalSeismogramProcess {
@@ -43,7 +43,7 @@ public class RTrend implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -52,7 +52,7 @@ public class RTrend implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = rtrend.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return out;
+        return new LocalSeismogramResult(true, out);
     }
 
     Element config;

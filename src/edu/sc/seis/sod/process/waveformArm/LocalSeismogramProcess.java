@@ -29,7 +29,7 @@ public interface LocalSeismogramProcess extends WaveformArmProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                      Channel channel,
                      RequestFilter[] original,
                      RequestFilter[] available,

@@ -117,7 +117,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -139,7 +139,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
 
-        return seismograms;
+        return new LocalSeismogramResult(true, seismograms);
     }
 
     public File getOutputFile(EventAccessOperations event, Channel chan) {

@@ -126,7 +126,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         }
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -137,7 +137,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                         " for event in "+
                         regions.getRegionName(event.get_attributes().region)+
                         " at "+event.get_preferred_origin().origin_time.date_time);
-        if (seismograms.length == 0) { return seismograms; }
+        if (seismograms.length == 0) { return new LocalSeismogramResult(true, seismograms); }
         synchronized(masterDataSetElement) {
             saveInDataSet(event, channel, seismograms, fileType);
 
@@ -153,7 +153,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 updateMasterDataSet(lastDataSetFile, lastDataSet.getName());
             }
         }
-        return seismograms;
+        return new LocalSeismogramResult(true, seismograms);
     }
 
     protected void updateMasterDataSet(File childDataset, String childName)

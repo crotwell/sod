@@ -19,10 +19,98 @@
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
             <ref name="forkProcess"/>
-            <ref name="phaseSignalToNoiseCalculator" />
+            <ref name="alwaysSuccess"/>
+            <ref name="phaseSignalToNoise" />
             <ref name="seismogramImageProcess" />
+            <ref name="seismogramAND"/>
+            <ref name="seismogramOR"/>
+            <ref name="seismogramXOR"/>
+            <ref name="seismogramNOT"/>
         </choice>
     </define>
+    <define name="seismogramAND">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical AND between seismogram subsetters. </summary>
+                <description> The output is the logical AND of the outputs of all included
+                    subsetters. The subsetters after the first false outputed are not evaluated.
+                    The seismic data passed down the chain is the data passed in,
+                    seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <seismogramAND>
+                        <xyz/>
+                        <pdq/>
+                    </seismogramAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="seismogramAND">
+            <oneOrMore>
+                <ref name="seismogramProcess"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="seismogramOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical OR between seismogramSubsetter subsetters. </summary>
+                <description> The output is the logical OR of the outputs of all included
+                    subsetters. The subsetters after the first true outputed are not evaluated.
+                    The seismic data passed down the chain is the data passed in,
+                    seismogram results of the contained processors are ignored. </description>
+                <example>
+                    <seismogramOR>
+                        <xyz/>
+                        <pdq/>
+                    </seismogramOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="seismogramOR">
+            <oneOrMore>
+                <ref name="seismogramProcess"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="seismogramXOR">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical XOR between seismogramSubsetter subsetters. </summary>
+                <description> The output is the logical XOR of the outputs of all included
+                    subsetters. The seismic data passed down the chain is the data passed in,
+                    seismogram results of the contained processors are ignored. </description>
+                <example>
+                    <seismogramXOR>
+                        <xyz/>
+                        <pdq/>
+                    </seismogramXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="seismogramXOR">
+            <ref name="seismogramProcess"/>
+            <ref name="seismogramProcess"/>
+        </element>
+    </define>
+    <define name="seismogramNOT">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Logical NOT of an seismogramSubsetter subsetter. </summary>
+                <description> The output is the logical NOT of the output of the included
+                    subsetters. The seismic data passed down the chain is the data passed in,
+                    seismogram results of the contained processors are ignored.</description>
+                <example>
+                    <seismogramNOT>
+                        <xyz/>
+                    </seismogramNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="seismogramNOT">
+            <ref name="seismogramProcess"/>
+        </element>
+    </define>
+
     <define name="phaseCut">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -162,12 +250,13 @@
             </zeroOrMore>
         </element>
     </define>
-    <define name="phaseSignalToNoiseCalculator">
-    <!-- this is the same as phaseSignalToNoise in seismogramSubbsetter and
-         should probalby be a ref of some sort instead of this lame cut-paste
-         See also simialer in channelGroupSeismogramProcess
-     -->
-        <element name="phaseSignalToNoiseCalculator">
+    <define name="alwaysSuccess">
+        <element name="alwaysSuccess">
+            <ref name="seismogramProcess"/>
+        </element>
+    </define>
+    <define name="phaseSignalToNoise">
+        <element name="phaseSignalToNoise">
             <optional>
                 <element name="modelName">
                     <data type="string"/>

@@ -22,7 +22,7 @@ public class ExternalChannelGroupSeismogramProcess implements ChannelGroupLocalS
         externalProcess = (ChannelGroupLocalSeismogramProcess) SodUtil.loadExternal(config);
     }
 
-    public LocalSeismogramImpl[][] process(EventAccessOperations event,
+    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
                                            ChannelGroup channel,
                                            RequestFilter[][] original,
                                            RequestFilter[][] available,

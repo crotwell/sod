@@ -1,5 +1,6 @@
 /**
- * PhaseSignalToNoiseCalculator.java
+ * PhaseSignalToNoiseCalculator calculates the max signal to noise, but always
+ * accepts regardless of the ratio. The result is stored in the cookiejar.
  *
  * @author Philip Crotwell
  */
@@ -15,7 +16,7 @@ import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.subsetter.waveformArm.PhaseSignalToNoise;
+import edu.sc.seis.sod.process.waveformArm.PhaseSignalToNoise;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
@@ -33,18 +34,18 @@ public class PhaseSignalToNoiseCalculator  implements LocalSeismogramProcess, Ch
         phaseSToN = new PhaseSignalToNoise(config);
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) throws Exception {
         // this has the side effect of putting the trigger in the cookiejar
-        boolean notUsed = phaseSToN.accept(event, channel, original, available, seismograms, cookieJar);
-        return seismograms;
+        LocalSeismogramResult result = phaseSToN.process(event, channel, original, available, seismograms, cookieJar);
+        return new LocalSeismogramResult(true, seismograms);
     }
 
-    public LocalSeismogramImpl[][] process(EventAccessOperations event,
+    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
                                            ChannelGroup channelGroup,
                                            RequestFilter[][] original,
                                            RequestFilter[][] available,
@@ -59,7 +60,7 @@ public class PhaseSignalToNoiseCalculator  implements LocalSeismogramProcess, Ch
                               trigger);
             }
         }
-        return seismograms;
+        return new ChannelGroupLocalSeismogramResult(true, seismograms);
     }
 
     Element config;

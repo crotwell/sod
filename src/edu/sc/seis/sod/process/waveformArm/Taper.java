@@ -25,7 +25,7 @@ public class Taper implements LocalSeismogramProcess {
         }
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -35,7 +35,7 @@ public class Taper implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = taper.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return out;
+        return new LocalSeismogramResult(true, out);
     }
 
     edu.sc.seis.fissuresUtil.bag.Taper taper;

@@ -17,9 +17,10 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.sod.process.waveformArm.ANDLocalSeismogramWrapper;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramProcess;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcessWrapper;
+import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
+import edu.sc.seis.sod.process.waveformArm.ORLocalSeismogramWrapper;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,15 +32,6 @@ import org.w3c.dom.NodeList;
 public class MotionVectorArm implements Subsetter{
     public MotionVectorArm(Element config) throws ConfigurationException{
         processConfig(config);
-    }
-
-    /**
-     * Returns SeisSubsetter
-     *
-     * @return    a  ChannelGroupLocalSeismogramSubsetter
-     */
-    public ChannelGroupLocalSeismogramSubsetter getChannelGroupLocalSeismogramSubsetter() {
-        return seisSubsetter;
     }
 
     /**
@@ -118,12 +110,8 @@ public class MotionVectorArm implements Subsetter{
                     dcLocator = (SeismogramDCLocator)sodElement;
                 } else if(sodElement instanceof ChannelGroupAvailableDataSubsetter)  {
                     availData = (ChannelGroupAvailableDataSubsetter)sodElement;
-                } else if(sodElement instanceof ChannelGroupLocalSeismogramSubsetter)  {
-                    seisSubsetter = (ChannelGroupLocalSeismogramSubsetter)sodElement;
                 } else if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
                     processes.add(sodElement);
-                } else if(sodElement instanceof LocalSeismogramProcess) {
-                    processes.add(new LocalSeismogramProcessWrapper((LocalSeismogramProcess)sodElement));
                 } else {
                     logger.warn("Unknown tag in MotionVectorArm config. " +sodElement.getClass().getName());
                 } // end of else
@@ -360,10 +348,10 @@ public class MotionVectorArm implements Subsetter{
                 tempLocalSeismograms[i] =
                     (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
             }
-            processLocalSeismogramSubsetter(ecp,
-                                            infilters,
-                                            outfilters,
-                                            tempLocalSeismograms);
+            processSeismograms(ecp,
+                               infilters,
+                               outfilters,
+                               tempLocalSeismograms);
         } else {
             logger.info("FAIL available data");
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
@@ -371,61 +359,36 @@ public class MotionVectorArm implements Subsetter{
         }
     }
 
-    public void processLocalSeismogramSubsetter(EventChannelGroupPair ecp,
-                                                RequestFilter[][] infilters,
-                                                RequestFilter[][] outfilters,
-                                                LocalSeismogramImpl[][] localSeismograms) {
-        boolean passed;
-        synchronized (seisSubsetter) {
-            try {
-                passed = seisSubsetter.accept(ecp.getEvent(),
-                                              ecp.getChannelGroup(),
-                                              infilters,
-                                              outfilters,
-                                              localSeismograms,
-                                              ecp.getCookieJar());
-            } catch (Throwable e) {
-                handle(ecp, Stage.DATA_SUBSETTER, e);
-                return;
-            }
-        }
-        if( passed ) {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.IN_PROG));
-            try {
-                processSeismograms(ecp, infilters, outfilters, localSeismograms);
-            } catch (Throwable e) {
-                handle(ecp, Stage.DATA_SUBSETTER, e);
-            }
-        } else {
-            logger.info("FAIL seismogram subsetter");
-            ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.REJECT));
-        }
-
-    }
-
     public void processSeismograms(EventChannelGroupPair ecp,
                                    RequestFilter[][] infilters,
                                    RequestFilter[][] outfilters,
-                                   LocalSeismogramImpl[][] localSeismograms)
-        throws Exception {
+                                   LocalSeismogramImpl[][] localSeismograms) {
         ChannelGroupLocalSeismogramProcess processor;
+        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(true, localSeismograms);
         Iterator it = processes.iterator();
-        while (it.hasNext()) {
+        while (it.hasNext() && result.isSuccess()) {
             processor = (ChannelGroupLocalSeismogramProcess)it.next();
-            synchronized (processor) {
-                try {
-                    localSeismograms = processor.process(ecp.getEvent(),
-                                                         ecp.getChannelGroup(),
-                                                         infilters,
-                                                         outfilters,
-                                                         localSeismograms,
-                                                         ecp.getCookieJar());
-                } catch (Throwable e) { handle(ecp, Stage.PROCESSOR, e); }
+            try {
+                synchronized (processor) {
+                    result = processor.process(ecp.getEvent(),
+                                               ecp.getChannelGroup(),
+                                               infilters,
+                                               outfilters,
+                                               result.getSeismograms(),
+                                               ecp.getCookieJar());
+                }
+            } catch (Throwable e) {
+                handle(ecp, Stage.PROCESSOR, e);
+                return;
             }
         } // end of while (it.hasNext())
         logger.debug("finished with "+
                          ChannelIdUtil.toStringNoDates(ecp.getChannelGroup().getChannels()[0].get_id()));
-        ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
+        if (result.isSuccess()) {
+            ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
+        } else {
+            ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
+        }
     }
 
     private static void handle(EventChannelGroupPair ecp, Stage stage, Throwable t){
@@ -445,8 +408,6 @@ public class MotionVectorArm implements Subsetter{
     private SeismogramDCLocator dcLocator;
 
     private ChannelGroupAvailableDataSubsetter availData = new NullAvailableDataSubsetter();
-
-    private ChannelGroupLocalSeismogramSubsetter seisSubsetter = new NullLocalSeismogramSubsetter();
 
     private LinkedList processes = new LinkedList();
 

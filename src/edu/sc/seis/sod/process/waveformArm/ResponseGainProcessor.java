@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 8780 2004-05-18 15:54:27Z crotwell $
+ * @version $Id: ResponseGainProcessor.java 8857 2004-05-21 20:02:00Z crotwell $
  */
 
 public class ResponseGainProcessor implements LocalSeismogramProcess {
@@ -26,7 +26,7 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
         responseGain = new ResponseGain(Start.getNetworkArm().getFinder());
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -37,7 +37,7 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = responseGain.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return out;
+        return new LocalSeismogramResult(true, out);
     }
 
     ResponseGain responseGain;

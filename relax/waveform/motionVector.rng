@@ -18,9 +18,6 @@
             <optional>
                 <externalRef href="channelGroupAvailableData.rng"/>
             </optional>
-            <optional>
-                <externalRef href="motionVectorSubsetter.rng"/>
-            </optional>
             <zeroOrMore>
                 <externalRef href="channelGroupSeismogramProcess.rng"/>
             </zeroOrMore>

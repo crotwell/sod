@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 7822 2004-03-25 20:34:37Z crotwell $
+ * @version $Id: PhaseCut.java 8857 2004-05-21 20:02:00Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -48,7 +48,7 @@ public class PhaseCut implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -65,8 +65,11 @@ public class PhaseCut implements LocalSeismogramProcess {
                 list.add(tempSeis);
             }
         } // end of for (int i=0; i<seismograms.length; i++)
-
-        return (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]);
+        if (list.size() != 0) {
+            return new LocalSeismogramResult(true, (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]));
+        } else {
+            return LocalSeismogramResult.FAIL;
+        }
     }
 
     Element config;

@@ -13,16 +13,16 @@
                                 <text/>
                             </element>
                             <element name="eventQueryIncrement">
-                                <ref name="time6"/>
+                                <ref name="time4"/>
                             </element>
                             <element name="eventRefreshInterval">
-                                <ref name="time6"/>
+                                <ref name="time4"/>
                             </element>
                             <element name="eventLag">
-                                <ref name="time6"/>
+                                <ref name="time4"/>
                             </element>
                             <element name="maxRetryDelay">
-                                <ref name="time6"/>
+                                <ref name="time4"/>
                             </element>
                             <element name="waveformWorkerThreads">
                                 <text/>
@@ -230,7 +230,7 @@
                     </element>
                 </oneOrMore>
                 <optional>
-                    <ref name="origin4"/>
+                    <ref name="origin3"/>
                 </optional>
                 <zeroOrMore>
                     <choice>
@@ -421,13 +421,13 @@
                                 <data type="string"/>
                             </element>
                             <element name="beginOffset">
-                                <ref name="time7"/>
+                                <ref name="time5"/>
                             </element>
                             <element name="endPhase">
                                 <data type="string"/>
                             </element>
                             <element name="endOffset">
-                                <ref name="time7"/>
+                                <ref name="time5"/>
                             </element>
                         </element>
                         <optional>
@@ -448,9 +448,6 @@
                         </element>
                         <optional>
                             <ref name="availableData3"/>
-                        </optional>
-                        <optional>
-                            <ref name="seismogramSubsetter3"/>
                         </optional>
                         <zeroOrMore>
                             <ref name="seismogramProcess2"/>
@@ -478,13 +475,13 @@
                                     <data type="string"/>
                                 </element>
                                 <element name="beginOffset">
-                                    <ref name="time5"/>
+                                    <ref name="time3"/>
                                 </element>
                                 <element name="endPhase">
                                     <data type="string"/>
                                 </element>
                                 <element name="endOffset">
-                                    <ref name="time5"/>
+                                    <ref name="time3"/>
                                 </element>
                             </element>
                         </element>
@@ -518,16 +515,6 @@
                                 </element>
                                 <element name="ORAvailableDataWrapper">
                                     <ref name="availableData"/>
-                                </element>
-                            </choice>
-                        </optional>
-                        <optional>
-                            <choice>
-                                <element name="ANDLocalSeismogramSubsetterWrapper">
-                                    <ref name="seismogramSubsetter2"/>
-                                </element>
-                                <element name="ORLocalSeismogramSubsetterWrapper">
-                                    <ref name="seismogramSubsetter"/>
                                 </element>
                             </choice>
                         </optional>
@@ -809,19 +796,19 @@
     <define name="eventStation3">
         <choice>
             <element name="distanceRange">
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin3"/>
+                <ref name="origin2"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station3"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -847,7 +834,7 @@
                         </group>
                     </choice>
                 </element>
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1010,19 +997,19 @@
     <define name="eventStation4">
         <choice>
             <element name="distanceRange">
-                <ref name="range9"/>
+                <ref name="range8"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin5"/>
+                <ref name="origin4"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station5"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range9"/>
+                <ref name="range8"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range9"/>
+                <ref name="range8"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1048,7 +1035,7 @@
                         </group>
                     </choice>
                 </element>
-                <ref name="range9"/>
+                <ref name="range8"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1214,7 +1201,7 @@
                 <ref name="range"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin"/>
+                <ref name="origin5"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station"/>
@@ -1412,19 +1399,19 @@
     <define name="eventStation2">
         <choice>
             <element name="distanceRange">
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin2"/>
+                <ref name="origin"/>
             </element>
             <element name="embeddedStationSubsetter">
                 <ref name="station2"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1450,7 +1437,7 @@
                         </group>
                     </choice>
                 </element>
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1882,7 +1869,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range8"/>
+                    <ref name="range9"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1892,7 +1879,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range8"/>
+                <ref name="range9"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -1901,7 +1888,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range8"/>
+                <ref name="range9"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -1910,7 +1897,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range8"/>
+                <ref name="range9"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -2102,7 +2089,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range2"/>
+                    <ref name="range3"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -2112,7 +2099,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range2"/>
+                <ref name="range3"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -2121,7 +2108,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range2"/>
+                <ref name="range3"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -2130,7 +2117,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range2"/>
+                <ref name="range3"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -2542,7 +2529,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range4"/>
+                    <ref name="range5"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -2552,7 +2539,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range5"/>
             </element>
             <element name="originPointAzimuth">
                 <element name="latitude">
@@ -2561,7 +2548,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range5"/>
             </element>
             <element name="originPointBackAzimuth">
                 <element name="latitude">
@@ -2570,7 +2557,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range5"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -4044,120 +4031,6 @@
             </element>
         </choice>
     </define>
-    <define name="phaseInteractionBase4">
-        <zeroOrMore>
-            <choice>
-                <element name="boxArea">
-                    <element name="latitudeRange">
-                        <element name="unit">
-                            <choice>
-                                <value>KILOMETER</value>
-                                <value>METER</value>
-                                <value>CENTIMETER</value>
-                                <value>NANOMETER</value>
-                                <value>MICROMETER</value>
-                                <value>MICRON</value>
-                                <value>MILLIMETER</value>
-                                <value>PICOMETER</value>
-                                <value>INCH</value>
-                                <value>FOOT</value>
-                                <value>MILE</value>
-                                <value>DEGREE</value>
-                                <value>RADIAN</value>
-                            </choice>
-                        </element>
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                    </element>
-                    <element name="longitudeRange">
-                        <element name="unit">
-                            <choice>
-                                <value>KILOMETER</value>
-                                <value>METER</value>
-                                <value>CENTIMETER</value>
-                                <value>NANOMETER</value>
-                                <value>MICROMETER</value>
-                                <value>MICRON</value>
-                                <value>MILLIMETER</value>
-                                <value>PICOMETER</value>
-                                <value>INCH</value>
-                                <value>FOOT</value>
-                                <value>MILE</value>
-                                <value>DEGREE</value>
-                                <value>RADIAN</value>
-                            </choice>
-                        </element>
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                    </element>
-                </element>
-                <element name="pointArea">
-                    <element name="latitude">
-                        <data type="float"/>
-                    </element>
-                    <element name="longitude">
-                        <data type="float"/>
-                    </element>
-                    <element name="unit">
-                        <choice>
-                            <value>KILOMETER</value>
-                            <value>METER</value>
-                            <value>CENTIMETER</value>
-                            <value>NANOMETER</value>
-                            <value>MICROMETER</value>
-                            <value>MICRON</value>
-                            <value>MILLIMETER</value>
-                            <value>PICOMETER</value>
-                            <value>INCH</value>
-                            <value>FOOT</value>
-                            <value>MILE</value>
-                            <value>DEGREE</value>
-                            <value>RADIAN</value>
-                        </choice>
-                    </element>
-                    <optional>
-                        <element name="min">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="max">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                </element>
-                <element name="globalArea">
-                    <empty/>
-                </element>
-            </choice>
-        </zeroOrMore>
-        <zeroOrMore>
-            <element name="depthRange">
-                <ref name="range9"/>
-            </element>
-        </zeroOrMore>
-        <zeroOrMore>
-            <element name="distanceRange">
-                <ref name="range9"/>
-            </element>
-        </zeroOrMore>
-    </define>
     <define name="phaseInteractionBase3">
         <zeroOrMore>
             <choice>
@@ -4263,12 +4136,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range3"/>
+                <ref name="range2"/>
             </element>
         </zeroOrMore>
     </define>
@@ -4377,12 +4250,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range5"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
     </define>
@@ -4500,6 +4373,120 @@
             </element>
         </zeroOrMore>
     </define>
+    <define name="phaseInteractionBase4">
+        <zeroOrMore>
+            <choice>
+                <element name="boxArea">
+                    <element name="latitudeRange">
+                        <element name="unit">
+                            <choice>
+                                <value>KILOMETER</value>
+                                <value>METER</value>
+                                <value>CENTIMETER</value>
+                                <value>NANOMETER</value>
+                                <value>MICROMETER</value>
+                                <value>MICRON</value>
+                                <value>MILLIMETER</value>
+                                <value>PICOMETER</value>
+                                <value>INCH</value>
+                                <value>FOOT</value>
+                                <value>MILE</value>
+                                <value>DEGREE</value>
+                                <value>RADIAN</value>
+                            </choice>
+                        </element>
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="longitudeRange">
+                        <element name="unit">
+                            <choice>
+                                <value>KILOMETER</value>
+                                <value>METER</value>
+                                <value>CENTIMETER</value>
+                                <value>NANOMETER</value>
+                                <value>MICROMETER</value>
+                                <value>MICRON</value>
+                                <value>MILLIMETER</value>
+                                <value>PICOMETER</value>
+                                <value>INCH</value>
+                                <value>FOOT</value>
+                                <value>MILE</value>
+                                <value>DEGREE</value>
+                                <value>RADIAN</value>
+                            </choice>
+                        </element>
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </element>
+                <element name="pointArea">
+                    <element name="latitude">
+                        <data type="float"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="float"/>
+                    </element>
+                    <element name="unit">
+                        <choice>
+                            <value>KILOMETER</value>
+                            <value>METER</value>
+                            <value>CENTIMETER</value>
+                            <value>NANOMETER</value>
+                            <value>MICROMETER</value>
+                            <value>MICRON</value>
+                            <value>MILLIMETER</value>
+                            <value>PICOMETER</value>
+                            <value>INCH</value>
+                            <value>FOOT</value>
+                            <value>MILE</value>
+                            <value>DEGREE</value>
+                            <value>RADIAN</value>
+                        </choice>
+                    </element>
+                    <optional>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                    </optional>
+                </element>
+                <element name="globalArea">
+                    <empty/>
+                </element>
+            </choice>
+        </zeroOrMore>
+        <zeroOrMore>
+            <element name="depthRange">
+                <ref name="range8"/>
+            </element>
+        </zeroOrMore>
+        <zeroOrMore>
+            <element name="distanceRange">
+                <ref name="range8"/>
+            </element>
+        </zeroOrMore>
+    </define>
     <define name="seismogramProcess2">
         <choice>
             <element name="printlineSeismogramProcess">
@@ -4571,13 +4558,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
             </element>
             <element name="rMean">
@@ -4641,7 +4628,10 @@
                     <ref name="seismogramProcess2"/>
                 </zeroOrMore>
             </element>
-            <element name="phaseSignalToNoiseCalculator">
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess2"/>
+            </element>
+            <element name="phaseSignalToNoise">
                 <optional>
                     <element name="modelName">
                         <data type="string"/>
@@ -4651,16 +4641,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time9"/>
+                    <ref name="time6"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -4682,6 +4672,23 @@
                         <data type="string"/>
                     </element>
                 </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess2"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess2"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramXOR">
+                <ref name="seismogramProcess2"/>
+                <ref name="seismogramProcess2"/>
+            </element>
+            <element name="seismogramNOT">
+                <ref name="seismogramProcess2"/>
             </element>
         </choice>
     </define>
@@ -4826,7 +4833,10 @@
                     <ref name="seismogramProcess"/>
                 </zeroOrMore>
             </element>
-            <element name="phaseSignalToNoiseCalculator">
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess"/>
+            </element>
+            <element name="phaseSignalToNoise">
                 <optional>
                     <element name="modelName">
                         <data type="string"/>
@@ -4867,6 +4877,23 @@
                         <data type="string"/>
                     </element>
                 </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramXOR">
+                <ref name="seismogramProcess"/>
+                <ref name="seismogramProcess"/>
+            </element>
+            <element name="seismogramNOT">
+                <ref name="seismogramProcess"/>
             </element>
         </choice>
     </define>
@@ -5478,35 +5505,6 @@
             </element>
         </optional>
     </define>
-    <define name="range4">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
-    </define>
     <define name="range2">
         <element name="unit">
             <choice>
@@ -5681,6 +5679,35 @@
             </element>
         </optional>
     </define>
+    <define name="range4">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
     <define name="xml7">
         <element>
             <anyName/>
@@ -5695,7 +5722,7 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml6">
+    <define name="xml2">
         <element>
             <anyName/>
             <oneOrMore>
@@ -5704,7 +5731,7 @@
                         <anyName/>
                     </attribute>
                     <text/>
-                    <ref name="xml6"/>
+                    <ref name="xml2"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -5737,20 +5764,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml2">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml2"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="xml4">
         <element>
             <anyName/>
@@ -5779,209 +5792,19 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="seismogramSubsetter3">
-        <choice>
-            <element name="longShortSignalToNoise">
-                <optional>
-                    <element name="longTime">
-                        <ref name="time8"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="shortTime">
-                        <ref name="time8"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="delayTime">
-                        <ref name="time8"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="ratio">
-                        <data type="float"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="phaseSignalToNoise">
-                <optional>
-                    <element name="modelName">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-                <element name="shortOffsetBegin">
-                    <ref name="time8"/>
-                </element>
-                <element name="shortOffsetEnd">
-                    <ref name="time8"/>
-                </element>
-                <element name="longOffsetBegin">
-                    <ref name="time8"/>
-                </element>
-                <element name="longOffsetEnd">
-                    <ref name="time8"/>
-                </element>
-                <element name="ratio">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="seismogramSubsetterAND">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter3"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterOR">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter3"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterXOR">
-                <ref name="seismogramSubsetter3"/>
-                <ref name="seismogramSubsetter3"/>
-            </element>
-            <element name="seismogramSubsetterNOT">
-                <ref name="seismogramSubsetter3"/>
-            </element>
-        </choice>
-    </define>
-    <define name="seismogramSubsetter">
-        <choice>
-            <element name="longShortSignalToNoise">
-                <optional>
-                    <element name="longTime">
-                        <ref name="time3"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="shortTime">
-                        <ref name="time3"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="delayTime">
-                        <ref name="time3"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="ratio">
-                        <data type="float"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="phaseSignalToNoise">
-                <optional>
-                    <element name="modelName">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-                <element name="shortOffsetBegin">
-                    <ref name="time3"/>
-                </element>
-                <element name="shortOffsetEnd">
-                    <ref name="time3"/>
-                </element>
-                <element name="longOffsetBegin">
-                    <ref name="time3"/>
-                </element>
-                <element name="longOffsetEnd">
-                    <ref name="time3"/>
-                </element>
-                <element name="ratio">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="seismogramSubsetterAND">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterOR">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterXOR">
-                <ref name="seismogramSubsetter"/>
-                <ref name="seismogramSubsetter"/>
-            </element>
-            <element name="seismogramSubsetterNOT">
-                <ref name="seismogramSubsetter"/>
-            </element>
-        </choice>
-    </define>
-    <define name="seismogramSubsetter2">
-        <choice>
-            <element name="longShortSignalToNoise">
-                <optional>
-                    <element name="longTime">
-                        <ref name="time4"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="shortTime">
-                        <ref name="time4"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="delayTime">
-                        <ref name="time4"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="ratio">
-                        <data type="float"/>
-                    </element>
-                </optional>
-            </element>
-            <element name="phaseSignalToNoise">
-                <optional>
-                    <element name="modelName">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-                <element name="shortOffsetBegin">
-                    <ref name="time4"/>
-                </element>
-                <element name="shortOffsetEnd">
-                    <ref name="time4"/>
-                </element>
-                <element name="longOffsetBegin">
-                    <ref name="time4"/>
-                </element>
-                <element name="longOffsetEnd">
-                    <ref name="time4"/>
-                </element>
-                <element name="ratio">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="seismogramSubsetterAND">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter2"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterOR">
-                <oneOrMore>
-                    <ref name="seismogramSubsetter2"/>
-                </oneOrMore>
-            </element>
-            <element name="seismogramSubsetterXOR">
-                <ref name="seismogramSubsetter2"/>
-                <ref name="seismogramSubsetter2"/>
-            </element>
-            <element name="seismogramSubsetterNOT">
-                <ref name="seismogramSubsetter2"/>
-            </element>
-        </choice>
+    <define name="xml6">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml6"/>
+                </choice>
+            </oneOrMore>
+        </element>
     </define>
     <define name="time4">
         <interleave>
@@ -6004,66 +5827,6 @@
         </interleave>
     </define>
     <define name="time3">
-        <interleave>
-            <element name="unit">
-                <choice>
-                    <value>NANOSECOND</value>
-                    <value>MICROSECOND</value>
-                    <value>MILLISECOND</value>
-                    <value>SECOND</value>
-                    <value>MINUTE</value>
-                    <value>HOUR</value>
-                    <value>DAY</value>
-                    <value>WEEK</value>
-                    <value>YEAR</value>
-                </choice>
-            </element>
-            <element name="value">
-                <data type="float"/>
-            </element>
-        </interleave>
-    </define>
-    <define name="time8">
-        <interleave>
-            <element name="unit">
-                <choice>
-                    <value>NANOSECOND</value>
-                    <value>MICROSECOND</value>
-                    <value>MILLISECOND</value>
-                    <value>SECOND</value>
-                    <value>MINUTE</value>
-                    <value>HOUR</value>
-                    <value>DAY</value>
-                    <value>WEEK</value>
-                    <value>YEAR</value>
-                </choice>
-            </element>
-            <element name="value">
-                <data type="float"/>
-            </element>
-        </interleave>
-    </define>
-    <define name="time9">
-        <interleave>
-            <element name="unit">
-                <choice>
-                    <value>NANOSECOND</value>
-                    <value>MICROSECOND</value>
-                    <value>MILLISECOND</value>
-                    <value>SECOND</value>
-                    <value>MINUTE</value>
-                    <value>HOUR</value>
-                    <value>DAY</value>
-                    <value>WEEK</value>
-                    <value>YEAR</value>
-                </choice>
-            </element>
-            <element name="value">
-                <data type="float"/>
-            </element>
-        </interleave>
-    </define>
-    <define name="time6">
         <interleave>
             <element name="unit">
                 <choice>
@@ -6123,7 +5886,7 @@
             </element>
         </interleave>
     </define>
-    <define name="time5">
+    <define name="time6">
         <interleave>
             <element name="unit">
                 <choice>
@@ -6143,7 +5906,7 @@
             </element>
         </interleave>
     </define>
-    <define name="time7">
+    <define name="time5">
         <interleave>
             <element name="unit">
                 <choice>

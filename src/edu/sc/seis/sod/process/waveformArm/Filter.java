@@ -59,7 +59,7 @@ public class Filter implements LocalSeismogramProcess {
                                        filterType);
     }
 
-    public LocalSeismogramImpl[] process(EventAccessOperations event,
+    public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,
                                          RequestFilter[] available,
@@ -69,7 +69,7 @@ public class Filter implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return out;
+        return new LocalSeismogramResult(true, out);
     }
 
     Element config;
