@@ -8,8 +8,8 @@
             <unit>WEEK</unit>
         </eventQueryIncrement>
         <eventRefreshInterval>
-        <value>6</value>
-        <unit>MINUTE</unit>
+            <value>6</value>
+            <unit>MINUTE</unit>
         </eventRefreshInterval>
         <eventLag>
             <value>1</value>
@@ -23,38 +23,38 @@
         <removeDatabase>TRUE</removeDatabase>
     </properties>
     <eventArm>
-      <eventFinder>
-        <name>IRIS_EventDC</name>
-        <dns>edu/iris/dmc</dns>
-        <boxArea>
-            <latitudeRange>
-                <unit>DEGREE</unit>
-                <min>-90</min>
-                <max>90</max>
-            </latitudeRange>
-            <longitudeRange>
-                <unit>DEGREE</unit>
-                <min>-180</min>
-                <max>180</max>
-            </longitudeRange>
-        </boxArea>
-        <originDepthRange>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <boxArea>
+                <latitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-90</min>
+                    <max>90</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-180</min>
+                    <max>180</max>
+                </longitudeRange>
+            </boxArea>
+            <originDepthRange>
                 <unit>KILOMETER</unit>
                 <min>0</min>
                 <max>1000</max>
-        </originDepthRange>
-        <originTimeRange>
-            <startTime>20030101T00:00:00.001Z</startTime>
-            <endTime>20030131T23:59:59.999Z</endTime>
-        </originTimeRange>
-        <magnitudeRange>
-            <min>6.0</min>
-            <max>10.0</max>
-        </magnitudeRange>
+            </originDepthRange>
+            <originTimeRange>
+                <startTime>20030101T00:00:00.001Z</startTime>
+                <endTime>20030131T23:59:59.999Z</endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>6.0</min>
+                <max>10.0</max>
+            </magnitudeRange>
             <catalog>WHDF</catalog>
             <contributor>NEIC</contributor>
-      </eventFinder>
-      <originAND>
+        </eventFinder>
+        <originAND>
             <originOR>
                 <removeEventDuplicate/>
                 <passOrigin/>
@@ -67,7 +67,7 @@
                 <geographicalRegion>12</geographicalRegion>
                 <passOrigin/>
             </originOR>
-             <originOR>
+            <originOR>
                 <seismicRegion>12</seismicRegion>
                 <passOrigin/>
             </originOR>
@@ -87,14 +87,14 @@
             </originOR>
             <originOR>
                 <originDepthRange>
-                        <unit>KILOMETER</unit>
-                        <min>0</min>
-                        <max>1000</max>
+                    <unit>KILOMETER</unit>
+                    <min>0</min>
+                    <max>1000</max>
                 </originDepthRange>
                 <passOrigin/>
             </originOR>
             <originOR>
-            <pointLinearDistanceMagnitude>
+                <pointLinearDistanceMagnitude>
                     <latitude>35</latitude>
                     <longitude>-85</longitude>
                     <unit>DEGREE</unit>
@@ -107,14 +107,14 @@
                     </magnitudeRange>
                 </pointLinearDistanceMagnitude>
                 <passOrigin/>
-                </originOR>
-                <originOR>
+            </originOR>
+            <originOR>
                 <originPointDistance>
-                        <latitude>35</latitude>
-                        <longitude>-85</longitude>
-                        <unit>DEGREE</unit>
-                        <min>30</min>
-                        <max>90</max>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
+                    <unit>DEGREE</unit>
+                    <min>30</min>
+                    <max>90</max>
                 </originPointDistance>
                 <passOrigin/>
             </originOR>
@@ -129,13 +129,13 @@
                 <passOrigin/>
             </originOR>
             <originOR>
-                 <originPointBackAzimuth>
+                <originPointBackAzimuth>
                     <latitude>35</latitude>
                     <longitude>-85</longitude>
                     <unit>DEGREE</unit>
                     <min>30</min>
                     <max>90</max>
-                 </originPointBackAzimuth>
+                </originPointBackAzimuth>
                 <passOrigin/>
             </originOR>
             <originOR>
@@ -165,21 +165,21 @@
                 <passOrigin/>
             </originOR>
             <originOR>
-              <eventArea>
-               <boxArea>
-                  <latitudeRange>
-                    <unit>DEGREE</unit>
-                    <min>-90</min>
-                     <max>90</max>
-                  </latitudeRange>
-                  <longitudeRange>
-                    <unit>DEGREE</unit>
-                    <min>-180</min>
-                    <max>180</max>
-                  </longitudeRange>
-               </boxArea>
-              </eventArea>
-              <passOrigin/>
+                <eventArea>
+                    <boxArea>
+                        <latitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-90</min>
+                            <max>90</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-180</min>
+                            <max>180</max>
+                        </longitudeRange>
+                    </boxArea>
+                </eventArea>
+                <passOrigin/>
             </originOR>
             <originOR>
                 <originXOR>
@@ -196,18 +196,16 @@
             </originOR>
         </originAND>
         <printLineEventProcess/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
-           <name>IRIS_NetworkDC</name>
+            <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
             <refreshInterval>
                 <unit>MINUTE</unit>
                 <value>3000</value>
-                </refreshInterval>
+            </refreshInterval>
         </networkFinder>
         <networkAND>
             <networkOR>
@@ -258,9 +256,9 @@
             </stationOR>
             <stationOR>
                 <stationDepthRange>
-                        <unit>KILOMETER</unit>
-                        <min>0</min>
-                        <max>1000</max>
+                    <unit>KILOMETER</unit>
+                    <min>0</min>
+                    <max>1000</max>
                 </stationDepthRange>
                 <passStation/>
             </stationOR>
@@ -272,29 +270,29 @@
                 <passStation/>
             </stationOR>
             <stationOR>
-               <stationArea>
-                <boxArea>
-                    <latitudeRange>
-                        <unit>DEGREE</unit>
-                        <min>-90</min>
-                        <max>90</max>
-                    </latitudeRange>
-                    <longitudeRange>
-                        <unit>DEGREE</unit>
-                        <min>-180</min>
-                        <max>180</max>
-                    </longitudeRange>
-                </boxArea>
+                <stationArea>
+                    <boxArea>
+                        <latitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-90</min>
+                            <max>90</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-180</min>
+                            <max>180</max>
+                        </longitudeRange>
+                    </boxArea>
                 </stationArea>
                 <passStation/>
             </stationOR>
             <stationOR>
                 <stationPointDistance>
-                        <latitude>35</latitude>
-                        <longitude>-85</longitude>
-                        <unit>DEGREE</unit>
-                        <min>30</min>
-                        <max>90</max>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
+                    <unit>DEGREE</unit>
+                    <min>30</min>
+                    <max>90</max>
                 </stationPointDistance>
                 <passStation/>
             </stationOR>
@@ -309,13 +307,13 @@
                 <passStation/>
             </stationOR>
             <stationOR>
-                 <stationPointBackAzimuth>
+                <stationPointBackAzimuth>
                     <latitude>35</latitude>
                     <longitude>-85</longitude>
                     <unit>DEGREE</unit>
                     <min>30</min>
                     <max>90</max>
-                 </stationPointBackAzimuth>
+                </stationPointBackAzimuth>
                 <passStation/>
             </stationOR>
             <stationOR>
@@ -331,17 +329,17 @@
                 </stationNOT>
                 <passStation/>
             </stationOR>
-       </stationAND>
+        </stationAND>
         <siteAND>
             <siteOR>
                 <siteCode>00</siteCode>
                 <passSite/>
             </siteOR>
-         <siteOR>
+            <siteOR>
                 <siteDepthRange>
-                        <unit>KILOMETER</unit>
-                        <min>0</min>
-                        <max>1000</max>
+                    <unit>KILOMETER</unit>
+                    <min>0</min>
+                    <max>1000</max>
                 </siteDepthRange>
                 <passSite/>
             </siteOR>
@@ -353,23 +351,23 @@
                 <passSite/>
             </siteOR>
             <siteOR>
-              <siteArea>
-                <boxArea>
-                    <latitudeRange>
-                        <unit>DEGREE</unit>
-                        <min>-90</min>
-                        <max>90</max>
-                    </latitudeRange>
-                    <longitudeRange>
-                        <unit>DEGREE</unit>
-                        <min>-180</min>
-                        <max>180</max>
-                    </longitudeRange>
-                </boxArea>
-               </siteArea>
+                <siteArea>
+                    <boxArea>
+                        <latitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-90</min>
+                            <max>90</max>
+                        </latitudeRange>
+                        <longitudeRange>
+                            <unit>DEGREE</unit>
+                            <min>-180</min>
+                            <max>180</max>
+                        </longitudeRange>
+                    </boxArea>
+                </siteArea>
                 <passSite/>
             </siteOR>
-             <siteOR>
+            <siteOR>
                 <siteXOR>
                     <siteCode>00</siteCode>
                     <siteCode>00</siteCode>
@@ -382,7 +380,7 @@
                 </siteNOT>
                 <passSite/>
             </siteOR>
-         </siteAND>
+        </siteAND>
         <channelAND>
             <channelOR>
                 <channelCode>BHZ</channelCode>
@@ -399,9 +397,9 @@
             <channelOR>
                 <orientationCode>Z</orientationCode>
                 <passChannel/>
-             </channelOR>
-             <channelOR>
-                 <sampling>
+            </channelOR>
+            <channelOR>
+                <sampling>
                     <min>1</min>
                     <max>40</max>
                     <interval>
@@ -413,8 +411,8 @@
             </channelOR>
             <channelOR>
                 <channelEffectiveTimeOverlap>
-                        <startTime>20030101T00:00:00.001Z</startTime>
-                        <endTime>20030201T23:59:59.999Z</endTime>
+                    <startTime>20030101T00:00:00.001Z</startTime>
+                    <endTime>20030201T23:59:59.999Z</endTime>
                 </channelEffectiveTimeOverlap>
                 <passChannel/>
             </channelOR>
@@ -454,14 +452,15 @@
                 <passChannel/>
             </channelOR>
         </channelAND>
-         <printlineChannelProcessor/>
+        <printlineChannelProcessor/>
         <responseWriter>
             <type>resp</type>
             <directory>responses</directory>
-            <filePattern><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</filePattern>
+            <filePattern>
+                <networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</filePattern>
         </responseWriter>
         <networkInfoTemplateGenerator>
-                    <!--<fileDir>status</fileDir>-->
+            <!--<fileDir>status</fileDir>-->
             <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
             <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
@@ -506,7 +505,7 @@
                     <min>30</min>
                     <max>90</max>
                 </backAzimuthRange>
-                    <passEventStation/>
+                <passEventStation/>
             </eventStationOR>
             <eventStationOR>
                 <linearDistanceMagnitudeRange>
@@ -519,7 +518,7 @@
                     <min>30</min>
                     <max>90</max>
                 </linearDistanceMagnitudeRange>
-                        <passEventStation/>
+                <passEventStation/>
             </eventStationOR>
             <eventStationOR>
                 <eventStationXOR>
@@ -570,21 +569,21 @@
                 </phaseExists>
                 <passEventStation/>
             </eventStationOR>
-     </eventStationAND>
-     <localSeismogramArm>
-        <eventChannelAND>
-            <eventChannelOR>
-                <embeddedEventStation>
+        </eventStationAND>
+        <localSeismogramArm>
+            <eventChannelAND>
+                <eventChannelOR>
+                    <embeddedEventStation>
                         <distanceRange>
                             <unit>DEGREE</unit>
                             <min>40</min>
                             <max>50</max>
                         </distanceRange>
-                </embeddedEventStation>
-                <passEventChannel/>
-             </eventChannelOR>
-             <eventChannelOR>
-                <embeddedChannel>
+                    </embeddedEventStation>
+                    <passEventChannel/>
+                </eventChannelOR>
+                <eventChannelOR>
+                    <embeddedChannel>
                         <sampling>
                             <min>1</min>
                             <max>40</max>
@@ -593,11 +592,11 @@
                                 <value>1</value>
                             </interval>
                         </sampling>
-                 </embeddedChannel>
-             <passEventChannel/>
-             </eventChannelOR>
-             <eventChannelOR>
-                <eventChannelXOR>
+                    </embeddedChannel>
+                    <passEventChannel/>
+                </eventChannelOR>
+                <eventChannelOR>
+                    <eventChannelXOR>
                         <embeddedEventStation>
                             <distanceRange>
                                 <unit>DEGREE</unit>
@@ -607,262 +606,260 @@
                         <embeddedChannel>
                             <bandCode>B</bandCode>
                         </embeddedChannel>
-                </eventChannelXOR>
-             <passEventChannel/>
-             </eventChannelOR>
-             <eventChannelOR>
-                <eventChannelNOT>
+                    </eventChannelXOR>
+                    <passEventChannel/>
+                </eventChannelOR>
+                <eventChannelOR>
+                    <eventChannelNOT>
                         <embeddedEventStation>
                             <distanceRange>
                                 <unit>DEGREE</unit>
                                 <min>40</min>
                             </distanceRange>
                         </embeddedEventStation>
-                </eventChannelNOT>
-                <passEventChannel/>
-             </eventChannelOR>
-    </eventChannelAND>
-         <phaseRequest>
-            <model>prem</model>
-            <beginPhase>ttp</beginPhase>
-            <beginOffset>
-                <unit>SECOND</unit>
-                <value>-60</value>
-            </beginOffset>
-            <endPhase>tts</endPhase>
-            <endOffset>
-             <unit>SECOND</unit>
-             <value>360</value>
-            </endOffset>
-         </phaseRequest>
-         <requestSubsetterAND>
-            <requestSubsetterOR>
-                <requestSubsetterXOR>
-                    <requestPrint/>
-                    <requestPrint/>
-                </requestSubsetterXOR>
-                <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
-                <requestSubsetterNOT>
-                    <requestPrint/>
-                </requestSubsetterNOT>
-                <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
-                <requestPrint/>
-                <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
-                <breqFastRequestSubsetter>
-                    <dataDirectory>request</dataDirectory>
-                    <name>Jagadeesh Danala</name>
-                    <inst>USC</inst>
-                    <mail>abc</mail>
-                    <email>danala@seis.sc.edu</email>
-                    <phone>8037778986</phone>
-                    <fax>9999</fax>
-                    <media>asdf</media>
-                    <altmedia1></altmedia1>
-                    <altmedia2></altmedia2>
-                    <quality></quality>
-               </breqFastRequestSubsetter>
-               <passRequest/>
-            </requestSubsetterOR>
-        </requestSubsetterAND>
-        <fixedDataCenter>
-           <name>IRIS_PondDataCenter</name>
-           <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
-        <availableDataAND>
-            <availableDataOR>
-                <postEventWait>
+                    </eventChannelNOT>
+                    <passEventChannel/>
+                </eventChannelOR>
+            </eventChannelAND>
+            <phaseRequest>
+                <model>prem</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
                     <unit>SECOND</unit>
-                    <value>10.5</value>
-                </postEventWait>
-                <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                <noGaps/>
-                <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                <fullCoverage/>
-                <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                 <someCoverage/>
-                 <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                 <availableDataXOR>
+                    <value>-60</value>
+                </beginOffset>
+                <endPhase>tts</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>360</value>
+                </endOffset>
+            </phaseRequest>
+            <requestSubsetterAND>
+                <requestSubsetterOR>
+                    <requestSubsetterXOR>
+                        <requestPrint/>
+                        <requestPrint/>
+                    </requestSubsetterXOR>
+                    <passRequest/>
+                </requestSubsetterOR>
+                <requestSubsetterOR>
+                    <requestSubsetterNOT>
+                        <requestPrint/>
+                    </requestSubsetterNOT>
+                    <passRequest/>
+                </requestSubsetterOR>
+                <requestSubsetterOR>
+                    <requestPrint/>
+                    <passRequest/>
+                </requestSubsetterOR>
+                <requestSubsetterOR>
+                    <breqFastRequestSubsetter>
+                        <dataDirectory>request</dataDirectory>
+                        <name>Jagadeesh Danala</name>
+                        <inst>USC</inst>
+                        <mail>abc</mail>
+                        <email>danala@seis.sc.edu</email>
+                        <phone>8037778986</phone>
+                        <fax>9999</fax>
+                        <media>asdf</media>
+                        <altmedia1/>
+                        <altmedia2/>
+                        <quality/>
+                    </breqFastRequestSubsetter>
+                    <passRequest/>
+                </requestSubsetterOR>
+            </requestSubsetterAND>
+            <fixedDataCenter>
+                <name>IRIS_PondDataCenter</name>
+                <dns>edu/iris/dmc</dns>
+            </fixedDataCenter>
+            <availableDataAND>
+                <availableDataOR>
+                    <postEventWait>
+                        <unit>SECOND</unit>
+                        <value>10.5</value>
+                    </postEventWait>
+                    <passAvailableData/>
+                </availableDataOR>
+                <availableDataOR>
                     <noGaps/>
+                    <passAvailableData/>
+                </availableDataOR>
+                <availableDataOR>
                     <fullCoverage/>
-                 </availableDataXOR>
-                 <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                <availableDataNOT>
-                    <fullCoverage/>
-                </availableDataNOT>
-             <passAvailableData/>
-            </availableDataOR>
-     </availableDataAND>
-     <forkProcess>
-        <alwaysSuccess>
-            <printlineSeismogramProcess/>
-        </alwaysSuccess>
-    </forkProcess>
-    <forkProcess>
-        <alwaysSuccess>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-            <dataDirectory>POND_II</dataDirectory>
-            <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-            </eventDirLabel>
-        </saveSeismogramToFile>
-        </alwaysSuccess>
-    </forkProcess>
-    <forkProcess>
-        <alwaysSuccess>
-        <responseGain/>
-        </alwaysSuccess>
-    </forkProcess>
-    <forkProcess>
-        <alwaysSuccess>
-            <phaseCut>
-            <model>prem</model>
-            <beginPhase>ttp</beginPhase>
-            <beginOffset>
-                <unit>SECOND</unit>
-                <value>-60</value>
-            </beginOffset>
-            <endPhase>tts</endPhase>
-            <endOffset>
-             <unit>SECOND</unit>
-             <value>360</value>
-            </endOffset>
-          </phaseCut>
-        </alwaysSuccess>
-    </forkProcess>
-    <forkProcess>
-        <alwaysSuccess>
-            <rMean/>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <rTrend/>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <taper>
-                <width>.05</width>
-                <type>HANNING</type>
-            </taper>
-         </alwaysSuccess>
-     </forkProcess>
-
-     <forkProcess>
-        <alwaysSuccess>
-           <localSeismogramTemplateGenerator>
-              <!--<fileDir>status</fileDir>-->
-              <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-              </localSeismogramTemplateGenerator>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <filter>
-                   <lowFreqCorner><value>50</value><unit>SECOND</unit></lowFreqCorner>
-                   <highFreqCorner><value>5</value><unit>HERTZ</unit></highFreqCorner>
-                   <numPoles>2</numPoles>
-                   <filterType>NONCAUSAL</filterType>
-                </filter>
-         </alwaysSuccess>
-    </forkProcess>
-    <forkProcess>
-        <alwaysSuccess>
-            <phaseSignalToNoise>
-                <phaseName>P</phaseName>
-                <shortOffsetBegin>
-                    <unit>SECOND</unit>
-                   <value>100</value>
-                </shortOffsetBegin>
-                <shortOffsetEnd>
-                    <unit>SECOND</unit>
-                    <value>200</value>
-                </shortOffsetEnd>
-                <longOffsetBegin>
-                   <unit>SECOND</unit>
-                   <value>100</value>
-                </longOffsetBegin>
-                <longOffsetEnd>
-                    <unit>SECOND</unit>
-                   <value>200</value>
-                </longOffsetEnd>
-                <ratio>2</ratio>
-            </phaseSignalToNoise>
-        </alwaysSuccess>
-     </forkProcess>
-     <!-- <forkProcess>
+                    <passAvailableData/>
+                </availableDataOR>
+                <availableDataOR>
+                    <someCoverage/>
+                    <passAvailableData/>
+                </availableDataOR>
+                <availableDataOR>
+                    <availableDataXOR>
+                        <noGaps/>
+                        <fullCoverage/>
+                    </availableDataXOR>
+                    <passAvailableData/>
+                </availableDataOR>
+                <availableDataOR>
+                    <availableDataNOT>
+                        <fullCoverage/>
+                    </availableDataNOT>
+                    <passAvailableData/>
+                </availableDataOR>
+            </availableDataAND>
+            <forkProcess>
+                <alwaysSuccess>
+                    <printlineSeismogramProcess/>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <saveSeismogramToFile>
+                        <fileType>sac</fileType>
+                        <dataDirectory>POND_II</dataDirectory>
+                        <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                        </eventDirLabel>
+                    </saveSeismogramToFile>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <responseGain/>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <phaseCut>
+                        <model>prem</model>
+                        <beginPhase>ttp</beginPhase>
+                        <beginOffset>
+                            <unit>SECOND</unit>
+                            <value>-60</value>
+                        </beginOffset>
+                        <endPhase>tts</endPhase>
+                        <endOffset>
+                            <unit>SECOND</unit>
+                            <value>360</value>
+                        </endOffset>
+                    </phaseCut>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <rMean/>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <rTrend/>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <taper>
+                        <width>.05</width>
+                        <type>HANNING</type>
+                    </taper>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <filter>
+                        <lowFreqCorner>
+                            <value>50</value>
+                            <unit>SECOND</unit>
+                        </lowFreqCorner>
+                        <highFreqCorner>
+                            <value>5</value>
+                            <unit>HERTZ</unit>
+                        </highFreqCorner>
+                        <numPoles>2</numPoles>
+                        <filterType>NONCAUSAL</filterType>
+                    </filter>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <phaseSignalToNoise>
+                        <phaseName>P</phaseName>
+                        <shortOffsetBegin>
+                            <unit>SECOND</unit>
+                            <value>100</value>
+                        </shortOffsetBegin>
+                        <shortOffsetEnd>
+                            <unit>SECOND</unit>
+                            <value>200</value>
+                        </shortOffsetEnd>
+                        <longOffsetBegin>
+                            <unit>SECOND</unit>
+                            <value>100</value>
+                        </longOffsetBegin>
+                        <longOffsetEnd>
+                            <unit>SECOND</unit>
+                            <value>200</value>
+                        </longOffsetEnd>
+                        <ratio>2</ratio>
+                    </phaseSignalToNoise>
+                </alwaysSuccess>
+            </forkProcess>
+            <!-- <forkProcess>
         <alwaysSuccess>
             <seismogramImageProcess>
                 <seismogramConfig xlink:href=""/>
             </seismogramImageProcess>
         </alwaysSuccess>
      </forkProcess> -->
-     <forkProcess>
-        <alwaysSuccess>
-             <legacyExecute>
-                  <command>echo</command>
-             </legacyExecute>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <seismogramAND>
-                <rMean/>
-                <rTrend/>
-            </seismogramAND>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <seismogramXOR>
-                <rMean/>
-                <rTrend/>
-            </seismogramXOR>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <seismogramOR>
-                <rMean/>
-                <rTrend/>
-            </seismogramOR>
-        </alwaysSuccess>
-     </forkProcess>
-     <forkProcess>
-        <alwaysSuccess>
-            <seismogramNOT>
-                <rMean/>
-            </seismogramNOT>
-        </alwaysSuccess>
-     </forkProcess>
-   </localSeismogramArm>
-     <waveformEventTemplateGenerator>
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+            <forkProcess>
+                <alwaysSuccess>
+                    <legacyExecute>
+                        <command>echo</command>
+                    </legacyExecute>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <seismogramAND>
+                        <rMean/>
+                        <rTrend/>
+                    </seismogramAND>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <seismogramXOR>
+                        <rMean/>
+                        <rTrend/>
+                    </seismogramXOR>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <seismogramOR>
+                        <rMean/>
+                        <rTrend/>
+                    </seismogramOR>
+                </alwaysSuccess>
+            </forkProcess>
+            <forkProcess>
+                <alwaysSuccess>
+                    <seismogramNOT>
+                        <rMean/>
+                    </seismogramNOT>
+                </alwaysSuccess>
+            </forkProcess>
+        </localSeismogramArm>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
-          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
-          <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
+            <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
         </waveformNetworkStatus>
         <waveformStationStatus>
-          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
     </waveformArm>
- </sod>
-
-
+</sod>

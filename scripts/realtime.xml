@@ -39,9 +39,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>0</min>
-                    <max>1000</max>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20040701T00:00:00.001Z</startTime>
@@ -54,10 +54,7 @@
             <catalog>PREF</catalog>
         </eventFinder>
         <removeEventDuplicate/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
-        
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -101,7 +98,6 @@
             <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
-        
     </networkArm>
     <waveformArm>
         <eventStationOR>
@@ -114,13 +110,12 @@
                 </embeddedOriginSubsetter>
                 <embeddedOriginSubsetter>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>200</min>
-                            <max>1000</max>
+                        <unit>KILOMETER</unit>
+                        <min>200</min>
+                        <max>1000</max>
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
             <eventStationAND>
                 <embeddedOriginSubsetter>
                     <magnitudeRange>
@@ -130,13 +125,12 @@
                 </embeddedOriginSubsetter>
                 <embeddedOriginSubsetter>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>100</min>
-                            <max>200</max>
+                        <unit>KILOMETER</unit>
+                        <min>100</min>
+                        <max>200</max>
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -150,7 +144,6 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -164,7 +157,6 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
             <linearDistanceMagnitudeRange>
                 <magnitudeRange>
                     <min>4.9</min>
@@ -174,7 +166,6 @@
                 <min>30</min>
                 <max>60</max>
             </linearDistanceMagnitudeRange>
-            
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -188,9 +179,7 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
         </eventStationOR>
-        
         <motionVectorArm>
             <requestGeneratorWrapper>
                 <phaseRequest>
@@ -214,7 +203,6 @@
             <ORAvailableDataWrapper>
                 <someCoverage/>
             </ORAvailableDataWrapper>
-            
             <ORLocalSeismogramWrapper>
                 <phaseSignalToNoise>
                     <modelName>prem</modelName>
@@ -238,7 +226,6 @@
                     <ratio>2</ratio>
                 </phaseSignalToNoise>
             </ORLocalSeismogramWrapper>
-            
             <alwaysSuccess>
                 <phaseSignalToNoise>
                     <modelName>prem</modelName>
@@ -262,22 +249,15 @@
                     <ratio>0</ratio>
                 </phaseSignalToNoise>
             </alwaysSuccess>
-            
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>BUD_II</dataDirectory>
-                <eventDirLabel>
-                    Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>
-                <fileDir>status</fileDir>
-                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-            </localSeismogramTemplateGenerator>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         </motionVectorArm>
-        <waveformEventTemplateGenerator>
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
             <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>

@@ -1,179 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
-	<properties>
-		<runName>BREQFast Test Run</runName>
-		<statusBase>status</statusBase>
-		<eventQueryIncrement>
-			<value>1</value>
-			<unit>WEEK</unit>
-		</eventQueryIncrement>
-		<eventRefreshInterval>
-			<value>6</value>
-			<unit>MINUTE</unit>
-		</eventRefreshInterval>
-		<eventLag>
-			<value>1</value>
-			<unit>WEEK</unit>
-		</eventLag>
-		<maxRetryDelay>
-			<value>16</value>
-			<unit>DAY</unit>
-		</maxRetryDelay>
-		<waveformWorkerThreads>1</waveformWorkerThreads>
-		<removeDatabase>TRUE</removeDatabase>
-		<eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
-	</properties>
-	<eventArm>
-		<eventFinder>
-			<name>IRIS_EventDC</name>
-			<dns>edu/iris/dmc</dns>
-			<boxArea>
-				<latitudeRange>
-					<unit>DEGREE</unit>
-					<min>-90</min>
-					<max>90</max>
-				</latitudeRange>
-				<longitudeRange>
-					<unit>DEGREE</unit>
-					<min>-180</min>
-					<max>180</max>
-				</longitudeRange>
-			</boxArea>
-			<originDepthRange>
-					<unit>KILOMETER</unit>
-					<min>0</min>
-					<max>1000</max>
-			</originDepthRange>
-			<originTimeRange>
-				<startTime>20030101T00:00:00.001Z</startTime>
-				<endTime>20030131T23:59:59.999Z</endTime>
-			</originTimeRange>
-			<magnitudeRange>
-				<min>6.0</min>
-				<max>10.0</max>
-			</magnitudeRange>
-			<catalog>PREF</catalog>
-			<contributor>IRIS</contributor>
-		</eventFinder>
-		<removeEventDuplicate/>
-		<printLineEventProcess/>
-		<eventStatusTemplate>
-			<eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-		</eventStatusTemplate>
-	</eventArm>
-	<networkArm>
-		<networkFinder>
-			<name>IRIS_NetworkDC</name>
-			<dns>edu/iris/dmc</dns>
-			<refreshInterval>
-				<unit>DAY</unit>
-				<value>2</value>
-			</refreshInterval>
-		</networkFinder>
-		<networkCode>II</networkCode>
-		<stationEffectiveTimeOverlap>
-			<startTime>20030101T00:00:00.001Z</startTime>
-			<endTime>20030131T23:59:59.999Z</endTime>
-		</stationEffectiveTimeOverlap>
-		<siteAND>
-			<siteOR>
-				<siteCode></siteCode>
-				<siteCode>00</siteCode>
-			</siteOR>
-			<siteEffectiveTimeOverlap>
-				<startTime>20030101T00:00:00.001Z</startTime>
-				<endTime>20030131T23:59:59.999Z</endTime>
-			</siteEffectiveTimeOverlap>
-		</siteAND>
-		<channelAND>
-			<bandCode>L</bandCode>
-			<channelNOT>
-                                <!-- to prevent LOG channels -->
-				<gainCode>O</gainCode>
-			</channelNOT>
-			<channelEffectiveTimeOverlap>
-				<startTime>20030101T00:00:00.001Z</startTime>
-				<endTime>20030131T23:59:59.999Z</endTime>
-			</channelEffectiveTimeOverlap>
-		</channelAND>
-		<networkInfoTemplateGenerator>
-			<netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
-			<stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
-			<channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
-		</networkInfoTemplateGenerator>
-	</networkArm>
-	<waveformArm>
-		<distanceRange>
-			<unit>DEGREE</unit>
-			<min>30</min>
-			<max>90</max>
-		</distanceRange>
-		<localSeismogramArm>
-			<phaseRequest>
-				<model>prem</model>
-				<beginPhase>ttp</beginPhase>
-				<beginOffset>
-					<unit>SECOND</unit>
-					<value>-60</value>
-				</beginOffset>
-				<endPhase>tts</endPhase>
-				<endOffset>
-					<unit>SECOND</unit>
-					<value>360</value>
-				</endOffset>
-			</phaseRequest>
-						
-
-			<requestSubsetterNOT>
-				<breqFastRequestSubsetter>
-					<dataDirectory>sample_breqfast</dataDirectory>
-					<label>
-						<originTime>yyyy_DDD_HH_mm_ss</originTime>
-               _A
-            </label>
-					<name>Felix T. Cat</name>
-					<inst>Univ. of Somewhere</inst>
-					<mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
-					<email>cat@seis.somewhere.edu</email>
-					<phone>555-555-5555</phone>
-					<fax>none</fax>
-					<media>Electronic</media>
-					<altmedia1>Electronic</altmedia1>
-					<altmedia2>Electronic</altmedia2>
-					<quality>b</quality>
-				</breqFastRequestSubsetter>
-			</requestSubsetterNOT>
-
-			<fixedDataCenter>
-				<name>IRIS_PondDataCenter</name>
-				<dns>edu/iris/dmc</dns>
-			</fixedDataCenter>
-			<someCoverage/>
-			<printlineSeismogramProcess/>
-
-			<saveSeismogramToFile>
-				<fileType>sac</fileType>
-				<dataDirectory>POND_II</dataDirectory>
-				<eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-				</eventDirLabel>
-			</saveSeismogramToFile>
-			<localSeismogramTemplateGenerator>
-				<seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-			</localSeismogramTemplateGenerator>
-		</localSeismogramArm>
-		<waveformEventTemplateGenerator>
-			<waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-		</waveformEventTemplateGenerator>
-		<waveformNetworkStatus>
-			<template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
-			<networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
-		</waveformNetworkStatus>
-
-		<waveformStationStatus>
-			<template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
-		</waveformStationStatus>
-
-	</waveformArm>
+    <properties>
+        <runName>BREQFast Test Run</runName>
+        <statusBase>status</statusBase>
+        <eventQueryIncrement>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventQueryIncrement>
+        <eventRefreshInterval>
+            <value>6</value>
+            <unit>MINUTE</unit>
+        </eventRefreshInterval>
+        <eventLag>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventLag>
+        <maxRetryDelay>
+            <value>16</value>
+            <unit>DAY</unit>
+        </maxRetryDelay>
+        <waveformWorkerThreads>1</waveformWorkerThreads>
+        <removeDatabase>TRUE</removeDatabase>
+        <eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
+    </properties>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <boxArea>
+                <latitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-90</min>
+                    <max>90</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-180</min>
+                    <max>180</max>
+                </longitudeRange>
+            </boxArea>
+            <originDepthRange>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
+            </originDepthRange>
+            <originTimeRange>
+                <startTime>20030101T00:00:00.001Z</startTime>
+                <endTime>20030131T23:59:59.999Z</endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>6.0</min>
+                <max>10.0</max>
+            </magnitudeRange>
+            <catalog>PREF</catalog>
+            <contributor>IRIS</contributor>
+        </eventFinder>
+        <removeEventDuplicate/>
+        <printLineEventProcess/>
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+            <refreshInterval>
+                <unit>DAY</unit>
+                <value>2</value>
+            </refreshInterval>
+        </networkFinder>
+        <networkCode>II</networkCode>
+        <stationEffectiveTimeOverlap>
+            <startTime>20030101T00:00:00.001Z</startTime>
+            <endTime>20030131T23:59:59.999Z</endTime>
+        </stationEffectiveTimeOverlap>
+        <siteAND>
+            <siteOR>
+                <siteCode/>
+                <siteCode>00</siteCode>
+            </siteOR>
+            <siteEffectiveTimeOverlap>
+                <startTime>20030101T00:00:00.001Z</startTime>
+                <endTime>20030131T23:59:59.999Z</endTime>
+            </siteEffectiveTimeOverlap>
+        </siteAND>
+        <channelAND>
+            <bandCode>L</bandCode>
+            <channelNOT>
+                <!-- to prevent LOG channels -->
+                <gainCode>O</gainCode>
+            </channelNOT>
+            <channelEffectiveTimeOverlap>
+                <startTime>20030101T00:00:00.001Z</startTime>
+                <endTime>20030131T23:59:59.999Z</endTime>
+            </channelEffectiveTimeOverlap>
+        </channelAND>
+        <networkInfoTemplateGenerator>
+            <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
+            <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
+            <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
+        </networkInfoTemplateGenerator>
+    </networkArm>
+    <waveformArm>
+        <distanceRange>
+            <unit>DEGREE</unit>
+            <min>30</min>
+            <max>90</max>
+        </distanceRange>
+        <localSeismogramArm>
+            <phaseRequest>
+                <model>prem</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-60</value>
+                </beginOffset>
+                <endPhase>tts</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>360</value>
+                </endOffset>
+            </phaseRequest>
+            <requestSubsetterNOT>
+                <breqFastRequestSubsetter>
+                    <dataDirectory>sample_breqfast</dataDirectory>
+                    <label>
+                        <originTime>yyyy_DDD_HH_mm_ss</originTime> _A </label>
+                    <name>Felix T. Cat</name>
+                    <inst>Univ. of Somewhere</inst>
+                    <mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
+                    <email>cat@seis.somewhere.edu</email>
+                    <phone>555-555-5555</phone>
+                    <fax>none</fax>
+                    <media>Electronic</media>
+                    <altmedia1>Electronic</altmedia1>
+                    <altmedia2>Electronic</altmedia2>
+                    <quality>b</quality>
+                </breqFastRequestSubsetter>
+            </requestSubsetterNOT>
+            <fixedDataCenter>
+                <name>IRIS_PondDataCenter</name>
+                <dns>edu/iris/dmc</dns>
+            </fixedDataCenter>
+            <someCoverage/>
+            <printlineSeismogramProcess/>
+            <saveSeismogramToFile>
+                <fileType>sac</fileType>
+                <dataDirectory>POND_II</dataDirectory>
+                <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                </eventDirLabel>
+            </saveSeismogramToFile>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
+        </localSeismogramArm>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
+        <waveformNetworkStatus>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
+            <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
+        </waveformNetworkStatus>
+        <waveformStationStatus>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
+        </waveformStationStatus>
+    </waveformArm>
 </sod>
-
-

@@ -39,9 +39,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>0</min>
-                    <max>1000</max>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20020101T00:00:00.001Z</startTime>
@@ -56,90 +56,82 @@
         <originAND>
             <removeEventDuplicate/>
             <originOR>
-            <originAND>
+                <originAND>
                     <magnitudeRange>
                         <min>5.1</min>
                         <max>10.0</max>
                     </magnitudeRange>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>200</min>
-                            <max>1000</max>
+                        <unit>KILOMETER</unit>
+                        <min>200</min>
+                        <max>1000</max>
                     </originDepthRange>
-            </originAND>
-
-            <originAND>
+                </originAND>
+                <originAND>
                     <magnitudeRange>
                         <min>5.3</min>
                         <max>10.0</max>
                     </magnitudeRange>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>100</min>
-                            <max>200</max>
+                        <unit>KILOMETER</unit>
+                        <min>100</min>
+                        <max>200</max>
                     </originDepthRange>
-            </originAND>
-
-            <originAND>
-                <originPointDistance>
-                    <latitude>34</latitude>
-                    <longitude>-81</longitude>
-                    <unit>DEGREE</unit>
-                    <min>0</min>
-                    <max>10</max>
-                </originPointDistance>
+                </originAND>
+                <originAND>
+                    <originPointDistance>
+                        <latitude>34</latitude>
+                        <longitude>-81</longitude>
+                        <unit>DEGREE</unit>
+                        <min>0</min>
+                        <max>10</max>
+                    </originPointDistance>
                     <magnitudeRange>
                         <min>3.0</min>
                         <max>10.0</max>
                     </magnitudeRange>
-            </originAND>
-
-            <originAND>
-                <originPointDistance>
-                    <latitude>34</latitude>
-                    <longitude>-81</longitude>
-                    <unit>DEGREE</unit>
-                    <min>10</min>
-                    <max>30</max>
-                </originPointDistance>
+                </originAND>
+                <originAND>
+                    <originPointDistance>
+                        <latitude>34</latitude>
+                        <longitude>-81</longitude>
+                        <unit>DEGREE</unit>
+                        <min>10</min>
+                        <max>30</max>
+                    </originPointDistance>
                     <magnitudeRange>
                         <min>4.0</min>
                         <max>10.0</max>
                     </magnitudeRange>
-            </originAND>
-
-            <pointLinearDistanceMagnitude>
-                    <latitude>34</latitude>
-                    <longitude>-81</longitude>
-                <unit>DEGREE</unit>
-                <min>30</min>
-                <max>60</max>
-                <magnitudeRange>
-                    <min>4.9</min>
-                    <max>5.5</max>
-                </magnitudeRange>
-            </pointLinearDistanceMagnitude>
-
-            <originAND>
-                <originPointDistance>
+                </originAND>
+                <pointLinearDistanceMagnitude>
                     <latitude>34</latitude>
                     <longitude>-81</longitude>
                     <unit>DEGREE</unit>
-                    <min>60</min>
-                    <max>180</max>
-                </originPointDistance>
+                    <min>30</min>
+                    <max>60</max>
+                    <magnitudeRange>
+                        <min>4.9</min>
+                        <max>5.5</max>
+                    </magnitudeRange>
+                </pointLinearDistanceMagnitude>
+                <originAND>
+                    <originPointDistance>
+                        <latitude>34</latitude>
+                        <longitude>-81</longitude>
+                        <unit>DEGREE</unit>
+                        <min>60</min>
+                        <max>180</max>
+                    </originPointDistance>
                     <magnitudeRange>
                         <min>5.5</min>
                         <max>10.0</max>
                     </magnitudeRange>
-            </originAND>
-
-        </originOR>
+                </originAND>
+            </originOR>
         </originAND>
         <printLineEventProcess/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -157,7 +149,6 @@
         </networkInfoTemplateGenerator>
     </networkArm>
     <waveformArm>
-
         <localSeismogramArm>
             <phaseRequest>
                 <model>prem</model>
@@ -178,30 +169,21 @@
             </fixedDataCenter>
             <someCoverage/>
             <printlineSeismogramProcess/>
-
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>SCEPP</dataDirectory>
                 <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>
-                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-            </localSeismogramTemplateGenerator>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         </localSeismogramArm>
-        <waveformEventTemplateGenerator>
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
             <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
         </waveformNetworkStatus>
-
         <waveformStationStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
-
     </waveformArm>
 </sod>
-
-

@@ -8,10 +8,10 @@
             <unit>WEEK</unit>
         </eventQueryIncrement>
         <eventRefreshInterval>
-		<value>6</value>
-		<unit>MINUTE</unit>
-		</eventRefreshInterval>
-		<eventLag>
+            <value>6</value>
+            <unit>MINUTE</unit>
+        </eventRefreshInterval>
+        <eventLag>
             <value>1</value>
             <unit>WEEK</unit>
         </eventLag>
@@ -19,7 +19,7 @@
             <value>16</value>
             <unit>DAY</unit>
         </maxRetryDelay>
-		<waveformWorkerThreads>1</waveformWorkerThreads>
+        <waveformWorkerThreads>1</waveformWorkerThreads>
         <removeDatabase>TRUE</removeDatabase>
     </properties>
     <eventArm>
@@ -39,9 +39,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>0</min>
-                    <max>1000</max>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20040701T00:00:00.001Z</startTime>
@@ -53,11 +53,8 @@
             </magnitudeRange>
             <catalog>PREF</catalog>
         </eventFinder>
-		<removeEventDuplicate/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
-
+        <removeEventDuplicate/>
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -75,8 +72,8 @@
             <networkCode>US</networkCode>
         </networkOR>
         <stationEffectiveTimeOverlap>
-                <startTime>20040101T00:00:00.001Z</startTime>
-                <endTime>20050131T23:59:59.999Z</endTime>
+            <startTime>20040101T00:00:00.001Z</startTime>
+            <endTime>20050131T23:59:59.999Z</endTime>
         </stationEffectiveTimeOverlap>
         <siteAND>
             <siteOR>
@@ -84,16 +81,16 @@
                 <siteCode>00</siteCode>
             </siteOR>
             <siteEffectiveTimeOverlap>
-                    <startTime>20040101T00:00:00.001Z</startTime>
-                    <endTime>20050131T23:59:59.999Z</endTime>
+                <startTime>20040101T00:00:00.001Z</startTime>
+                <endTime>20050131T23:59:59.999Z</endTime>
             </siteEffectiveTimeOverlap>
         </siteAND>
         <channelAND>
             <bandCode>B</bandCode>
             <gainCode>H</gainCode>
             <channelEffectiveTimeOverlap>
-                    <startTime>20040101T00:00:00.001Z</startTime>
-                    <endTime>20050131T23:59:59.999Z</endTime>
+                <startTime>20040101T00:00:00.001Z</startTime>
+                <endTime>20050131T23:59:59.999Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
         <networkInfoTemplateGenerator>
@@ -101,7 +98,6 @@
             <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
-
     </networkArm>
     <waveformArm>
         <eventStationOR>
@@ -114,13 +110,12 @@
                 </embeddedOriginSubsetter>
                 <embeddedOriginSubsetter>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>200</min>
-                            <max>1000</max>
+                        <unit>KILOMETER</unit>
+                        <min>200</min>
+                        <max>1000</max>
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-
             <eventStationAND>
                 <embeddedOriginSubsetter>
                     <magnitudeRange>
@@ -130,13 +125,12 @@
                 </embeddedOriginSubsetter>
                 <embeddedOriginSubsetter>
                     <originDepthRange>
-                            <unit>KILOMETER</unit>
-                            <min>100</min>
-                            <max>200</max>
+                        <unit>KILOMETER</unit>
+                        <min>100</min>
+                        <max>200</max>
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -150,7 +144,6 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -164,7 +157,6 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-
             <linearDistanceMagnitudeRange>
                 <magnitudeRange>
                     <min>4.9</min>
@@ -174,7 +166,6 @@
                 <min>30</min>
                 <max>60</max>
             </linearDistanceMagnitudeRange>
-
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -188,90 +179,83 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-
         </eventStationOR>
-
         <motionVectorArm>
             <requestGeneratorWrapper>
-            <phaseRequest>
-                <model>prem</model>
-                <beginPhase>ttp</beginPhase>
-                <beginOffset>
-                    <unit>SECOND</unit>
-                    <value>-120</value>
-                </beginOffset>
-                <endPhase>2.0kmps</endPhase>
-                <endOffset>
-                    <unit>SECOND</unit>
-                    <value>60</value>
-                </endOffset>
-            </phaseRequest>
+                <phaseRequest>
+                    <model>prem</model>
+                    <beginPhase>ttp</beginPhase>
+                    <beginOffset>
+                        <unit>SECOND</unit>
+                        <value>-120</value>
+                    </beginOffset>
+                    <endPhase>2.0kmps</endPhase>
+                    <endOffset>
+                        <unit>SECOND</unit>
+                        <value>60</value>
+                    </endOffset>
+                </phaseRequest>
             </requestGeneratorWrapper>
             <fixedDataCenter>
                 <name>IRIS_BudDataCenter</name>
                 <dns>edu/iris/dmc</dns>
             </fixedDataCenter>
             <ORAvailableDataWrapper>
-            <someCoverage/>
+                <someCoverage/>
             </ORAvailableDataWrapper>
-
             <ORLocalSeismogramWrapper>
-            <phaseSignalToNoise>
-                <modelName>prem</modelName>
-                <phaseName>ttp</phaseName>
-                <shortOffsetBegin>
-                    <unit>SECOND</unit>
-                    <value>-5</value>
-                </shortOffsetBegin>
-                <shortOffsetEnd>
-                    <unit>SECOND</unit>
-                    <value>5</value>
-                </shortOffsetEnd>
-                <longOffsetBegin>
-                    <unit>SECOND</unit>
-                    <value>-105</value>
-                </longOffsetBegin>
-                <longOffsetEnd>
-                    <unit>SECOND</unit>
-                    <value>-5</value>
-                </longOffsetEnd>
-                <ratio>2</ratio>
-            </phaseSignalToNoise>
+                <phaseSignalToNoise>
+                    <modelName>prem</modelName>
+                    <phaseName>ttp</phaseName>
+                    <shortOffsetBegin>
+                        <unit>SECOND</unit>
+                        <value>-5</value>
+                    </shortOffsetBegin>
+                    <shortOffsetEnd>
+                        <unit>SECOND</unit>
+                        <value>5</value>
+                    </shortOffsetEnd>
+                    <longOffsetBegin>
+                        <unit>SECOND</unit>
+                        <value>-105</value>
+                    </longOffsetBegin>
+                    <longOffsetEnd>
+                        <unit>SECOND</unit>
+                        <value>-5</value>
+                    </longOffsetEnd>
+                    <ratio>2</ratio>
+                </phaseSignalToNoise>
             </ORLocalSeismogramWrapper>
-
             <alwaysSuccess>
-            <phaseSignalToNoise>
-                <modelName>prem</modelName>
-                <phaseName>ttp</phaseName>
-                <shortOffsetBegin>
-                    <unit>SECOND</unit>
-                    <value>-5</value>
-                </shortOffsetBegin>
-                <shortOffsetEnd>
-                    <unit>SECOND</unit>
-                    <value>5</value>
-                </shortOffsetEnd>
-                <longOffsetBegin>
-                    <unit>SECOND</unit>
-                    <value>-105</value>
-                </longOffsetBegin>
-                <longOffsetEnd>
-                    <unit>SECOND</unit>
-                    <value>-5</value>
-                </longOffsetEnd>
-                <ratio>0</ratio>
-            </phaseSignalToNoise>
+                <phaseSignalToNoise>
+                    <modelName>prem</modelName>
+                    <phaseName>ttp</phaseName>
+                    <shortOffsetBegin>
+                        <unit>SECOND</unit>
+                        <value>-5</value>
+                    </shortOffsetBegin>
+                    <shortOffsetEnd>
+                        <unit>SECOND</unit>
+                        <value>5</value>
+                    </shortOffsetEnd>
+                    <longOffsetBegin>
+                        <unit>SECOND</unit>
+                        <value>-105</value>
+                    </longOffsetBegin>
+                    <longOffsetEnd>
+                        <unit>SECOND</unit>
+                        <value>-5</value>
+                    </longOffsetEnd>
+                    <ratio>0</ratio>
+                </phaseSignalToNoise>
             </alwaysSuccess>
-
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>BUD_II</dataDirectory>
-                <eventDirLabel>
-                    Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
             <localSeismogramTemplateGenerator>
-                <fileDir>status</fileDir>
                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
             </localSeismogramTemplateGenerator>
         </motionVectorArm>
@@ -279,11 +263,11 @@
             <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         </waveformEventTemplateGenerator>
         <waveformNetworkStatus>
-          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
-          <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
+            <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
         </waveformNetworkStatus>
         <waveformStationStatus>
-          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
+            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
     </waveformArm>
 </sod>

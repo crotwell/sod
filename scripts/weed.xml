@@ -36,9 +36,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>0</min>
-                    <max>1000</max>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20030101T00:00:00.001Z</startTime>
@@ -75,12 +75,8 @@
             </originPointBackAzimuth>
             <removeEventDuplicate/>
         </originAND>
-        
         <printLineEventProcess/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
-        
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -98,7 +94,7 @@
         </stationEffectiveTimeOverlap>
         <siteAND>
             <siteOR>
-                <siteCode>  </siteCode>
+                <siteCode/>
                 <siteCode>00</siteCode>
             </siteOR>
             <siteEffectiveTimeOverlap>
@@ -117,20 +113,13 @@
                 <endTime>20030131T23:59:59.999Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
-        
         <responseWriter>
             <type>resp</type>
             <directory>responses</directory>
             <filePattern>
-                <networkCode/>.<stationCode/>
-                .<siteCode/>
-                .<channelCode/>
-                .resp
-            </filePattern>
+                <networkCode/>.<stationCode/> .<siteCode/> .<channelCode/> .resp </filePattern>
         </responseWriter>
-        
         <networkInfoTemplateGenerator>
-            <!--<fileDir>status</fileDir>-->
             <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
             <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
@@ -188,24 +177,14 @@
             </fixedDataCenter>
             <someCoverage/>
             <printlineSeismogramProcess/>
-            
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>POND_II</dataDirectory>
-                <eventDirLabel>
-                    Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>
-                <!--<fileDir>status</fileDir>-->
-                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-            </localSeismogramTemplateGenerator>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         </localSeismogramArm>
-        <waveformEventTemplateGenerator>
-            <!--<fileDir>status</fileDir>-->
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
     </waveformArm>
 </sod>
-
-

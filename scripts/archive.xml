@@ -39,9 +39,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>0</min>
-                    <max>1000</max>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20030101T00:00:00.001Z</startTime>
@@ -55,9 +55,7 @@
             <contributor>IRIS</contributor>
         </eventFinder>
         <printLineEventProcess/>
-        <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
-        </eventStatusTemplate>
+        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -75,7 +73,7 @@
         </stationEffectiveTimeOverlap>
         <siteAND>
             <siteOR>
-                <siteCode>  </siteCode>
+                <siteCode/>
                 <siteCode>00</siteCode>
             </siteOR>
             <siteEffectiveTimeOverlap>
@@ -126,31 +124,21 @@
             </fixedDataCenter>
             <someCoverage/>
             <printlineSeismogramProcess/>
-            
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>POND_II</dataDirectory>
-                <eventDirLabel>
-                    Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>
-                <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
-            </localSeismogramTemplateGenerator>
+            <localSeismogramTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
         </localSeismogramArm>
-        <waveformEventTemplateGenerator>
-            <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
-        </waveformEventTemplateGenerator>
+        <waveformEventTemplateGenerator xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         <waveformNetworkStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
             <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
         </waveformNetworkStatus>
-        
         <waveformStationStatus>
             <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
         </waveformStationStatus>
-        
     </waveformArm>
 </sod>
-
-
