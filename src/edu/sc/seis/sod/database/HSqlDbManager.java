@@ -2,6 +2,7 @@ package edu.sc.seis.sod.database;
 
 import java.sql.*;
 import java.util.*;
+import org.apache.log4j.*;
 /**
  * HSqlDbManager.java
  *
@@ -15,6 +16,8 @@ import java.util.*;
 public class HSqlDbManager extends AbstractDatabaseManager{
     public HSqlDbManager (Properties props){
 	super(props);
+	//here set the log size and if possible even the size of the script file.
+	setLogSize();
     }
 
      public ConfigDatabase getConfigDatabase() {
@@ -53,13 +56,26 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 		String driverName = new String("org.hsqldb.jdbcDriver");
 		Class.forName(driverName).newInstance();
 		connection = DriverManager.getConnection("jdbc:hsqldb:"+getDatabaseName(), "sa", "");
+		
 	    } 
 	    return connection;
 	} catch(Exception sqle) {
-	    sqle.printStackTrace();
+	    //	    sqle.printStackTrace();
+	    logger.debug("Unable to create the connection to HSQLDB database "+getDatabaseName());
 	    return null;
 	}
 	
+    }
+
+    private void setLogSize() {
+	try {
+	    Statement stmt = getConnection().createStatement();
+	    stmt.executeUpdate("SET LOGSIZE 10");
+	} catch(SQLException sqle) {
+	    //error cannot set the logsize.
+	    //sqle.printStackTrace();
+	    logger.debug("ERROR: unable to set the log size ");
+	}
     }
 
     
@@ -72,5 +88,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     private WaveformDatabase waveformDatabase;
     
     private Connection connection;
+
+    private static Category logger = Category.getInstance(HSqlDbManager.class.getName());
     
 }// HSqlDbManager
