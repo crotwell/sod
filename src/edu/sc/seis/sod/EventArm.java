@@ -110,6 +110,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
                 logger.debug("Found "+events.length+" events between "+ queryStart + " and "+ queryEnd);
                 Start.getEventQueue().setTime(source, dns, queryEnd.getFissuresTime());
                 startEventSubsetter(cacheEvents(events));
+                setStatus("Waiting for the wave form queue to process some events before getting more events");
                 Start.getEventQueue().waitForProcessing();
             }
             TimeInterval queryLength = queryEnd.subtract(queryStart);
@@ -159,7 +160,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
     
     public void startEventSubsetter(EventAccessOperations event, EventAttr attr) throws Exception {
-        begin(event);
+        change(event, RunStatus.NEW);
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr, null)) {
             Origin origin = event.get_preferred_origin();
             if(originSubsetter.accept(event, origin, null)) {
@@ -167,35 +168,30 @@ public class EventArm extends SodExceptionSource implements Runnable{
                                            eventFinderSubsetter.getSourceName(),
                                                (EventAccess)((CacheEvent)event).getEventAccess(),
                                            origin);
-                pass(event);
+                change(event, RunStatus.PASSED);
                 startProcessors(event);
             }else{
-                fail(event, "The event origin subsetter did not accept this event");
+                change(event, RunStatus.FAILED);
             }
         }else{
-            fail(event, "The event attribute subsetter did not accept this event");
+            change(event, RunStatus.FAILED);
         }
     }
     
-    private void begin(EventAccessOperations event) {
+    private void change(EventAccessOperations event, RunStatus status) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((EventStatus)it.next()).begin(event);
-        }
-    }
-    private void pass(EventAccessOperations event) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()){
-            ((EventStatus)it.next()).pass(event);
+            ((EventStatus)it.next()).change(event, status);
         }
     }
     
-    private void fail(EventAccessOperations event, String reason) {
+    private void setStatus(String status){
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((EventStatus)it.next()).fail(event, reason);
+            ((EventStatus)it.next()).setArmStatus(status);
         }
     }
+        
     
     private void startProcessors(EventAccessOperations eventAccess) throws Exception {
         Iterator it = processors.iterator();
@@ -219,6 +215,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+
                              Start.REFRESH_INTERVAL+" seconds");
+            setStatus("Waiting until " + ClockUtil.now().add(new TimeInterval(Start.REFRESH_INTERVAL, UnitImpl.SECOND)) + " to check for new events");
             Thread.sleep(Start.REFRESH_INTERVAL * 1000);
         } catch(InterruptedException ie) {
             logger.warn("Event arm sleep was interrupted.", ie);

@@ -2,7 +2,6 @@ package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfNetwork.*;
 import edu.sc.seis.sod.database.*;
-import edu.sc.seis.sod.subsetter.networkArm.*;
 
 import edu.iris.Fissures.Time;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -11,6 +10,10 @@ import edu.sc.seis.fissuresUtil.cache.RetryNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.subsetter.RefreshInterval;
+import edu.sc.seis.sod.subsetter.networkArm.NullChannelSubsetter;
+import edu.sc.seis.sod.subsetter.networkArm.NullNetworkSubsetter;
+import edu.sc.seis.sod.subsetter.networkArm.NullSiteSubsetter;
+import edu.sc.seis.sod.subsetter.networkArm.NullStationSubsetter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,65 +107,36 @@ public class NetworkArm {
             
         } else if(sodElement instanceof NetworkArmProcess) {
             networkArmProcesses.add(sodElement);
+        }else if(sodElement instanceof NetworkStatus) {
+            statusMonitors.add(sodElement);
         }
     }
     
-    public void handleNetworkArmProcess(NetworkAccess networkAccess,
-                                        Channel channel,
-                                        CookieJar cookieJar) throws Exception{
+    public void processNetworkArm(NetworkAccess networkAccess,
+                                  Channel channel,
+                                  CookieJar cookieJar) throws Exception{
         Iterator it = networkArmProcesses.iterator();
         while(it.hasNext()){
             ((NetworkArmProcess)it.next()).process(networkAccess, channel, cookieJar);
         }
     }
     
-    
-    /**
-     * returns the Channel corresponding to the databaseid dbid.
-     *
-     * @param dbid an <code>int</code> value
-     * @return a <code>Channel</code> value
-     */
     public synchronized  Channel getChannel(int dbid) {
         return networkDatabase.getChannel(dbid);
     }
     
-    /**
-     * returns the ObjectReference of the NetworkAcces corresponding to the databaseid dbid.
-     *
-     * @param dbid an <code>int</code> value
-     * @return a <code>NetworkAccess</code> value
-     */
     public synchronized NetworkAccess getNetworkAccess(int dbid) {
         return networkDatabase.getNetworkAccess(dbid);
     }
     
-    /**
-     * returns the sitedatabaseid corresponding to the channelid.
-     *
-     * @param channelid an <code>int</code> value
-     * @return an <code>int</code> value
-     */
     public synchronized int getSiteDbId(int channelid) {
         return networkDatabase.getSiteDbId(channelid);
     }
     
-    /**
-     * returns the stationdatabaseid corresponding to the siteid
-     *
-     * @param siteid an <code>int</code> value
-     * @return an <code>int</code> value
-     */
     public synchronized int getStationDbId(int siteid) {
         return networkDatabase.getStationDbId(siteid);
     }
     
-    /**
-     * returns the networkid corresponding to the stationid.
-     *
-     * @param stationid an <code>int</code> value
-     * @return an <code>int</code> value
-     */
     public synchronized int getNetworkDbId(int stationid) {
         return networkDatabase.getNetworkDbId(stationid);
     }
@@ -196,6 +170,13 @@ public class NetworkArm {
             System.exit(0);
         }
         if(timeInterval.getValue() >= refreshInterval.getValue()) return true;
+        try {
+            statusChanged("Waiting until " + lastTime.add(refreshInterval.getTimeInterval()) + " to recheck networks");
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+            System.out.println("The time interval set in the refreshInterval for the NetworkFinder has an unacceptable unit");
+            System.exit(0);
+        }
         return false;
     }
     
@@ -213,6 +194,7 @@ public class NetworkArm {
         if(networksBeenChecked && !needsRefresh()) {
             return networkDbObjects;
         }
+        statusChanged("Getting networks");
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
         NetworkDCOperations netDC =
@@ -229,6 +211,8 @@ public class NetworkArm {
                                                           finderSubsetter.getDNSName(),
                                                           allNets[i]);
                     networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
+                }else{
+                    change(allNets[i], RunStatus.FAILED);
                 }
             } // end of if (allNets[counter] != null)
         }
@@ -241,6 +225,10 @@ public class NetworkArm {
         networkDbObjects = (NetworkDbObject[]) networkDBs.toArray(networkDbObjects);
         logger.debug("got " + networkDbObjects.length + " networkDBobjects");
         networksBeenChecked = true;
+        statusChanged("Waiting for a request");
+        for (int i = 0; i < networkDbObjects.length; i++) {
+            change(networkDbObjects[i].getNetworkAccess(), RunStatus.PASSED);
+        }
         return networkDbObjects;
     }
     
@@ -256,6 +244,7 @@ public class NetworkArm {
         if(networkDbObject.stationDbObjects != null) {
             return networkDbObject.stationDbObjects;
         }
+        statusChanged("Getting stations for " + networkDbObject.getNetworkAccess().get_attributes().name);
         ArrayList arrayList = new ArrayList();
         try {
             CookieJar cookieJar =
@@ -265,7 +254,10 @@ public class NetworkArm {
                 if(stationSubsetter.accept(networkDbObject.getNetworkAccess(), stations[subCounter], cookieJar)) {
                     int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
                     StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
+                    System.out.println("put " + stationDbObject + " into the database.  It has an id of " + dbid);
                     arrayList.add(stationDbObject);
+                }else{
+                    change(stations[subCounter], RunStatus.FAILED);
                 }
             }
             
@@ -275,6 +267,10 @@ public class NetworkArm {
         StationDbObject[] rtnValues = new StationDbObject[arrayList.size()];
         rtnValues = (StationDbObject[]) arrayList.toArray(rtnValues);
         networkDbObject.stationDbObjects = rtnValues;
+        statusChanged("Waiting for a request");
+        for (int i = 0; i < rtnValues.length; i++) {
+            change(rtnValues[i].getStation(), RunStatus.PASSED);
+        }
         return rtnValues;
     }
     
@@ -290,7 +286,9 @@ public class NetworkArm {
         if(stationDbObject.siteDbObjects != null) {
             return stationDbObject.siteDbObjects;
         }
-        ArrayList siteDbObjects = new ArrayList();
+        statusChanged("Getting sites for " + stationDbObject.getStation().get_id().station_code);
+        ArrayList successes = new ArrayList();
+        List failures = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         Station station = stationDbObject.getStation();
         try {
@@ -301,18 +299,25 @@ public class NetworkArm {
                                                        channels[i].my_site);
                     SiteDbObject siteDbObject = new SiteDbObject(dbid,
                                                                  channels[i].my_site);
-                    if(!containsSite(siteDbObject, siteDbObjects)) {
-                        siteDbObjects.add(siteDbObject);
+                    if(!containsSite(siteDbObject, successes)) {
+                        successes.add(siteDbObject);
                     }
+                }else if(!failures.contains(channels[i].my_site)){
+                    change(channels[i].my_site, RunStatus.FAILED);
+                    failures.add(channels[i].my_site);
                 }
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        SiteDbObject[] rtnValues = new SiteDbObject[siteDbObjects.size()];
-        rtnValues = (SiteDbObject[]) siteDbObjects.toArray(rtnValues);
+        SiteDbObject[] rtnValues = new SiteDbObject[successes.size()];
+        rtnValues = (SiteDbObject[]) successes.toArray(rtnValues);
         stationDbObject.siteDbObjects = rtnValues;
         logger.debug(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
+        statusChanged("Waiting for a request");
+        for (int i = 0; i < rtnValues.length; i++) {
+            change(rtnValues[i].getSite(), RunStatus.PASSED);
+        }
         return rtnValues;
         
     }
@@ -339,7 +344,8 @@ public class NetworkArm {
         if(siteDbObject.channelDbObjects != null) {
             return siteDbObject.channelDbObjects;
         }
-        ArrayList arrayList = new ArrayList();
+        statusChanged("Getting channels for " + siteDbObject);
+        List successes = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         CookieJar cookieJar = (CookieJar)cookieJarCache.get(networkAccess);
         
@@ -348,25 +354,65 @@ public class NetworkArm {
             Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
             
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
-                if(!isSameSite(site, channels[subCounter].my_site)) continue;
-                
-                if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
+                change(channels[subCounter], RunStatus.NEW);
+                if(!isSameSite(site, channels[subCounter].my_site)){
+                    continue;
+                }else if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
                     int dbid = networkDatabase.putChannel(siteDbObject,
                                                           channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                           channels[subCounter]);
-                    arrayList.add(channelDbObject);
-                    handleNetworkArmProcess(networkAccess, channels[subCounter], cookieJar);
-                }
+                    successes.add(channelDbObject);
+                    processNetworkArm(networkAccess, channels[subCounter], cookieJar);
+                }else change(channels[subCounter], RunStatus.FAILED);
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        ChannelDbObject[] values = new ChannelDbObject[arrayList.size()];
-        values = (ChannelDbObject[]) arrayList.toArray(values);
+        ChannelDbObject[] values = new ChannelDbObject[successes.size()];
+        values = (ChannelDbObject[]) successes.toArray(values);
         siteDbObject.channelDbObjects = values;
         logger.debug("got "+values.length+" channels");
+        statusChanged("Waiting for a request");
+        for (int i = 0; i < values.length; i++) {
+            change(values[i].getChannel(), RunStatus.PASSED);
+        }
         return values;
+    }
+    
+    private void statusChanged(String newStatus) {
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((NetworkStatus)it.next()).setArmStatus(newStatus);
+        }
+    }
+    
+    private void change(Channel chan, RunStatus newStatus) {
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((NetworkStatus)it.next()).change(chan, newStatus);
+        }
+    }
+    
+    private void change(Station sta, RunStatus newStatus) {
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((NetworkStatus)it.next()).change(sta, newStatus);
+        }
+    }
+    
+    private void change(NetworkAccess na, RunStatus newStatus) {
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((NetworkStatus)it.next()).change(na, newStatus);
+        }
+    }
+    
+    private void change(Site site, RunStatus newStatus) {
+        Iterator it = statusMonitors.iterator();
+        while(it.hasNext()){
+            ((NetworkStatus)it.next()).change(site, newStatus);
+        }
     }
     
     private boolean isSameSite(Site givenSite, Site tempSite) {
@@ -398,10 +444,13 @@ public class NetworkArm {
     
     private NetworkDbObject[] networkDbObjects;
     
-    
     private NetworkDatabase networkDatabase;
     
     private HashMap cookieJarCache = new HashMap();
+    
+    private List statusMonitors = new ArrayList();
+    
+    private String status;
     
     private static Logger logger = Logger.getLogger(NetworkArm.class);
     

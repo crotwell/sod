@@ -7,12 +7,12 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.database.Status;
 
 public interface EventStatus extends SodElement {
-    public void begin(EventAccessOperations event);
-
-    public void fail(EventAccessOperations event, String reason);
-
-    public void pass(EventAccessOperations event);
+    
+    public void setArmStatus(String status);
+    
+    public void change(EventAccessOperations event, RunStatus status);
 }
 
