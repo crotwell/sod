@@ -66,7 +66,7 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
     public void setArmStatus(String status) {}
 
     public void update(EventChannelPair ecp) {
-        // do nothing, just be a WaveformArmMonitor to be loaded in the WaveformArm
+        template.update(ecp);
     }
 
     private boolean added = false;
