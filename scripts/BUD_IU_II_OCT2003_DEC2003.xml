@@ -33,9 +33,6 @@
     </property>
   </properties>
   <eventArm>
-    <LogFactor5Status>
-      <classname>edu.sc.seis.sod.subbsetter.eventArm.LogFactor5Status</classname>
-    </LogFactor5Status>
     <eventFinder>
       <name>IRIS_EventDC</name>
       <dns>edu/iris/dmc</dns>
@@ -72,14 +69,10 @@
       </catalog>
       <contributor>NEIC</contributor>
     </eventFinder>
+    <logFactor5EventStatus/>
+    <simpleHTMLEventStatus/>
   </eventArm>
   <networkArm>
-    <LogFactor5Status>
-      <classname>edu.sc.seis.sod.subbsetter.networkArm.LogFactor5Status</classname>
-    </LogFactor5Status>
-    <SimpleHTMLStatus>
-      <classname>edu.sc.seis.sod.subbsetter.networkArm.SimpleHTMLStatus</classname>
-    </SimpleHTMLStatus>
     <networkFinder>
       <description>Connect to the IRIS networkDC</description>
       <name>IRIS_NetworkDC</name>
@@ -133,6 +126,10 @@
       </channelEffectiveTimeOverlap>
     </channelAND>
     <printlineChannelProcessor/>
+    <logFactor5NetworkStatus/>
+    <simpleHTMLNetworkStatus>
+        <outputDirectory>html/networkStatus</outputDirectory>
+    </simpleHTMLNetworkStatus>
   </networkArm>
   <waveFormArm>
     <distanceRange>
