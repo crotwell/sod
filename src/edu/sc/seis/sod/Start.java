@@ -184,7 +184,8 @@ public class Start implements SodExceptionListener {
 	    String filename 
 		= props.getProperty("edu.sc.seis.sod.configuration");
 	    if (filename == null) {
-		filename = "edu/sc/seis/sod/data/DefaultConfig.xml";		 
+		logger.fatal("No configuration file given, quiting....");
+		return;
 	    } // end of if (filename == null)
 	    
 	    InputStream in;
@@ -193,13 +194,19 @@ public class Start implements SodExceptionListener {
 		java.net.URLConnection conn = url.openConnection();
 		in = new BufferedInputStream(conn.getInputStream());
 	    } else {
-		String schemaFilename = "edu/sc/seis/sod/data/";
-		schemaURL = 
-		    (Start.class).getClassLoader().getResource(schemaFilename);
-		
-		in = (Start.class).getClassLoader().getResourceAsStream(filename);	
-		    //new BufferedInputStream(new FileInputStream(filename));
+		in = new BufferedInputStream(new FileInputStream(filename));
 	    } // end of else
+
+	    if (in == null) {
+		logger.fatal("Unable to load configuration file "+filename+", quiting...");
+		return;
+	    } // end of if (in == null)
+	    
+
+	    String schemaFilename = "edu/sc/seis/sod/data/";
+	    schemaURL = 
+		(Start.class).getClassLoader().getResource(schemaFilename);
+	    logger.debug(schemaFilename+"->"+schemaURL.toString());
 	    
 
 	    //n = new BufferedInputStream(new FileInputStream("/home/telukutl/sod/xml/network.xml"));
@@ -231,7 +238,7 @@ public class Start implements SodExceptionListener {
     protected Document initParser(InputStream xmlFile) 
 	throws ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	factory.setValidating(true);
+	factory.setValidating(false);
 	//factory.set
 	factory.setNamespaceAware(true);
 
@@ -241,7 +248,8 @@ public class Start implements SodExceptionListener {
 	Document document =  docBuilder.parse(xmlFile, schemaURL.toString());
 	if(errorHandler.isValid()) return document;
 	else {
-	    System.out.println("The xml Configuration file contains errors");
+	    logger.fatal("The xml Configuration file contains errors.");
+	    System.out.println("The xml Configuration file contains errors.");
 	    System.exit(0);
 	    return null;
 	}
