@@ -35,8 +35,8 @@ import org.w3c.dom.NodeList;
 
 public class WaveformArm implements Runnable {
 
-    public WaveformArm(Element config, NetworkArm networkArm, int threadPoolSize)
-            throws Exception {
+    public WaveformArm(Element config, EventArm eventArm,
+            NetworkArm networkArm, int threadPoolSize) throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         eventRetryTable = new JDBCEventChannelRetry();
@@ -48,6 +48,7 @@ public class WaveformArm implements Runnable {
         }
         processConfig(config);
         this.networkArm = networkArm;
+        this.eventArm = eventArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor",
                                     threadPoolSize);
         MAX_RETRY_DELAY = Start.getRunProps().getMaxRetryDelay();
@@ -73,7 +74,7 @@ public class WaveformArm implements Runnable {
                     Thread.sleep(10000);
                 } catch(InterruptedException e) {}
                 retryIfNeededAndAvailable();
-            } while(Start.getEventArm().isAlive());
+            } while(eventArm.isAlive());
             logger.info("Main waveform arm done.  Retrying failures.");
             MicroSecondDate runFinishTime = ClockUtil.now();
             MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
@@ -141,8 +142,7 @@ public class WaveformArm implements Runnable {
             //that all the network information for this particular event is
             // inserted
             //in the waveformDatabase.
-            Start.getEventArm()
-                    .change(ev.getEvent(),
+            eventArm.change(ev.getEvent(),
                             Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                        Standing.SUCCESS));
         }
@@ -451,7 +451,7 @@ public class WaveformArm implements Runnable {
         synchronized(eventStatus) {
             next = eventStatus.getNext();
         }
-        while(Start.getEventArm().isAlive() && next == -1) {
+        while(eventArm.isAlive() && next == -1) {
             try {
                 Thread.sleep(1000);
             } catch(InterruptedException e) {}
@@ -712,8 +712,7 @@ public class WaveformArm implements Runnable {
             }
         }
 
-        private EventVectorPair extractEventVectorPair()
-                throws Exception {
+        private EventVectorPair extractEventVectorPair() throws Exception {
             try {
                 EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
                 synchronized(evChanStatus) {
@@ -748,6 +747,8 @@ public class WaveformArm implements Runnable {
     private MotionVectorArm motionVectorArm = null;
 
     private NetworkArm networkArm = null;
+
+    private EventArm eventArm = null;
 
     private JDBCEventStatus eventStatus;
 
