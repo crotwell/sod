@@ -96,7 +96,7 @@ public class EventFinder extends AbstractSource implements SodElement {
                     Object object = SodUtil.load((Element)node, "eventArm");
                     if(tagName.equals("originDepthRange")) {
                         depthRange = ((OriginDepthRange)object);
-                    }else if(tagName.equals("eventTimeRange")) {
+                    }else if(tagName.equals("originTimeRange")) {
                         eventTimeRange = ((OriginTimeRange)object);
                     }else if(tagName.equals("magnitudeRange")) {
                         magnitudeRange = (MagnitudeRange)object;

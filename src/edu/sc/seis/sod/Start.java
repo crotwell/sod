@@ -233,6 +233,7 @@ public class Start{
 
     private static void exit(String reason) {
         logger.fatal(reason);
+        System.err.println(reason);
         System.exit(1);
     }
 

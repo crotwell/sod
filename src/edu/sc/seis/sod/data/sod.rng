@@ -184,7 +184,7 @@
                                 </element>
                             </element>
                         </optional>
-                        <element name="eventTimeRange">
+                        <element name="originTimeRange">
                             <element name="startTime">
                                 <data type="string"/>
                             </element>
