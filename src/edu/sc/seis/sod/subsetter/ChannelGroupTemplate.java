@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
 
-
-
 public class ChannelGroupTemplate extends Template implements GenericTemplate{
     Map channelMap = new HashMap();
     
@@ -37,9 +35,8 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
     }
     
     public Object getTemplate(String tag, Element element){
-        if(tag.equals("channel")) return new ChannelFormatter(element);
+        if(tag.equals("channel")) return new ChannelFormatter(element, this);
         return null;
     }
-    
 }
 
