@@ -144,6 +144,23 @@ public class WaveformArm implements Runnable {
             }
             LinkedList failures = new LinkedList();
             ChannelGroup[] chanGroups = ChannelGroup.group(channels, failures);
+            Iterator it = failures.iterator();
+            while(it.hasNext()) {
+                Channel failchan = (Channel)it.next();
+                for (int k = 0; k < chans.length; k++) {
+                    if (ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
+                                               failchan.get_id())) {
+                        int pairId = evChanStatus.put(ev.getDbId(),
+                                                      chans[k].getDbId(),
+                                                      Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                                 Standing.INIT));
+                        pairId = evChanStatus.put(ev.getDbId(),
+                                                  chans[k].getDbId(),
+                                                  Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                             Standing.REJECT));
+                    }
+                }
+            }
             for (int i = 0; i < chanGroups.length; i++) {
                 int[] pairIds = new int[3];
                 for (int j = 0; j < pairIds.length; j++) {
@@ -161,8 +178,10 @@ public class WaveformArm implements Runnable {
                     }
                 }
                 invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(pairIds));
+                // retryIfNeededAndAvailable();
             }
         } else {
+            // individual local seismograms
             for(int i = 0; i < chans.length; i++) {
                 startChannel(overlap, chans[i], ev);
             }
@@ -204,9 +223,9 @@ public class WaveformArm implements Runnable {
         if(pairId != -1) {
             if (motionVectorArm != null) {
                 int[] pairs = new int[3];
-GlobalExceptionHandler.handle("Retry on motion vector arm is BROKEN", new Exception());
+                GlobalExceptionHandler.handle("Retry on motion vector arm is BROKEN", new Exception());
                 return null;
-              //  return new RetryMotionVectorWaveformWorkUnit(pairs);
+                //  return new RetryMotionVectorWaveformWorkUnit(pairs);
             } else {
                 return new RetryWaveformWorkUnit(pairId);
             }
