@@ -9,6 +9,7 @@
     <define name="channelGroupSeismogramProcess">
         <choice>
             <externalRef href="seismogramProcess.rng"/>
+            <ref name="threeComponentData" />
             <ref name="channelGroupForkProcess" />
             <ref name="ANDLocalSeismogramWrapper" />
             <ref name="ORLocalSeismogramWrapper" />
@@ -18,6 +19,21 @@
               are treaded as if they are in a ANDLocalSeismogramWrapper -->
             <externalRef href="seismogramProcess.rng"/>
         </choice>
+    </define>
+    <define name="threeComponentData">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Checks for data in all three components. </summary>
+                <description> If there is some data in all three components, then
+                this returns true, if any are empty, then false. </description>
+                <example>
+                    <threeComponentData/>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="threeComponentData">
+            <empty/>
+        </element>
     </define>
     <define name="channelGroupForkProcess">
         <element name="channelGroupForkProcess">

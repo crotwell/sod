@@ -6717,6 +6717,9 @@
     <define name="channelGroupSeismogramProcess">
         <choice>
             <ref name="seismogramProcess4"/>
+            <element name="threeComponentData">
+                <empty/>
+            </element>
             <element name="channelGroupForkProcess">
                 <zeroOrMore>
                     <ref name="channelGroupSeismogramProcess"/>
