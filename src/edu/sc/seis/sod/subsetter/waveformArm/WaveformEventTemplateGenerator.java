@@ -33,10 +33,10 @@ public class WaveformEventTemplateGenerator implements EventStatus, WaveFormStat
     }
     
     public void change(EventAccessOperations event, RunStatus status) {
-        getTempate(event);
+        getTemplate(event);
     }
     
-    public WaveformEventTemplate getTempate(EventAccessOperations ev){
+    public WaveformEventTemplate getTemplate(EventAccessOperations ev){
         if(!eventTemplates.containsKey(ev)){
             eventTemplates.put(ev, new WaveformEventTemplate(config, formatter.getResult(ev), ev));
         }
