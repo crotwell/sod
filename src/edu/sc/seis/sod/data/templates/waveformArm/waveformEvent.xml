@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-<title>Events</title>
+<title><event><feRegionName/></event></title>
 <style media="all">@import "../main.css";</style>
 </head>
 <body>
@@ -22,9 +22,11 @@ Maps only update once every two minutes
 <table>
 <tr id="title">
 <td>Id</td>
-<td>Begin Time (GMT)</td>
-<td>End Time (GMT)</td>
-<td>Status</td>
+<td>Begin Time</td>
+<td>End Time</td>
+<td># Successful Channels</td>
+<td># Retry Channels</td>
+<td># Reject Channels</td>
 </tr>
 <stations>
 <statusFilter>
@@ -36,25 +38,27 @@ Maps only update once every two minutes
 </td>
 <td><beginTime>MM/dd/yyyy</beginTime></td>
 <td><endTime>MM/dd/yyyy</endTime></td>
-<td><attribute name="id"><status/></attribute><status/></td>
+<td><numSuccess/></td>
+<td><numRetry/></td>
+<td><numFailed/></td>
 </tr>
 </station>
 </stations>
 <stations>
 <statusFilter>
-   <notStatus>SUCCESS</notStatus>
+   <status>FAILURE</status>
 </statusFilter>
 <station><tr>
 <td><networkCode/>.<stationCode/></td>
 <td><beginTime>MM/dd/yyyy</beginTime></td>
 <td><endTime>MM/dd/yyyy</endTime></td>
-<td><attribute name="id"><status/></attribute><status/></td>
+<td><numSuccess/></td>
+<td><numRetry/></td>
+<td><numFailed/></td>
 </tr>
 </station>
 </stations>
 </table>
-
-
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
 <div id="footer">
