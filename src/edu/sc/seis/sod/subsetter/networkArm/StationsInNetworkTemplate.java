@@ -7,11 +7,13 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.NetworkFormatter;
 import edu.sc.seis.sod.subsetter.StationGroupTemplate;
 import edu.sc.seis.sod.subsetter.networkArm.NetworkInfoTemplate;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +28,7 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
     private List stationListeners = new ArrayList();
     private Logger logger = Logger.getLogger(StationsInNetworkTemplate.class);
     
-    public StationsInNetworkTemplate(Element el, String outputLocation, NetworkAccess net){
+    public StationsInNetworkTemplate(Element el, String outputLocation, NetworkAccess net) throws IOException{
         super(outputLocation);
         network = net;
         parse(el);
@@ -54,7 +56,11 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
         while (it.hasNext()){
             ((StationGroupTemplate)it.next()).change(station, status);
         }
-        write();
+        try {
+            write();
+        } catch (IOException e) {
+            CommonAccess.handleException(e, "trouble writing file");
+        }
     }
     
     public NetworkAccess getNetwork(){

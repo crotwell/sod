@@ -38,7 +38,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     private Logger logger = Logger.getLogger(NetworkInfoTemplateGenerator.class);
     private Element netConfig, staConfig, siteConfig, chanConfig;
     
-    public NetworkInfoTemplateGenerator(Element el){
+    public NetworkInfoTemplateGenerator(Element el) throws Exception{
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
@@ -67,16 +67,16 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                 chansOutputFileName = n.getFirstChild().getNodeValue();
             }
             else if (n.getNodeName().equals("netConfig")){
-                netConfig = getConfig((Element)n);
+                netConfig = TemplateFileLoader.getTemplate((Element)n);
             }
             else if (n.getNodeName().equals("stationConfig")){
-                staConfig = getConfig((Element)n);
+                staConfig = TemplateFileLoader.getTemplate((Element)n);
             }
             else if (n.getNodeName().equals("siteConfig")){
-                siteConfig = getConfig((Element)n);
+                siteConfig = TemplateFileLoader.getTemplate((Element)n);
             }
             else if (n.getNodeName().equals("channelConfig")){
-                chanConfig = getConfig((Element)n);
+                chanConfig = TemplateFileLoader.getTemplate((Element)n);
             }
         }
         if (fileDir == null || netFormatter == null || staFormatter == null || siteFormatter == null
@@ -88,21 +88,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                     + " siteDir, channelsOutputFileName, netConfig, stationConfig, siteConfig, and chanConfig.");
         }
         
-        try {
-            netTemplate = new NetworkStatusTemplate(netConfig, fileDir + '/' + netsOutputFileName);
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble creating networkStatusTemplate");
-        }
-    }
-    
-    private Element getConfig(Element el){
-        Element tmpEl = null;
-        try {
-            tmpEl = TemplateFileLoader.getTemplate(el);
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble getting config template");
-        }
-        return tmpEl;
+        netTemplate = new NetworkStatusTemplate(netConfig, fileDir + '/' + netsOutputFileName);
     }
     
     public void change(NetworkAccess net, RunStatus status){
@@ -136,14 +122,18 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     
     public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net){
         if (!contains(net)){
-            stationTemplates.put(net.get_attributes().name + net.get_attributes().get_id().begin_time.date_time,
-                                 new StationsInNetworkTemplate(staConfig,
-                                                               fileDir
-                                                                   + '/'
-                                                                   + netFormatter.getResult(net)
-                                                                   + '/'
-                                                                   + stasOutputFileName,
-                                                               net));
+            try {
+                stationTemplates.put(net.get_attributes().name + net.get_attributes().get_id().begin_time.date_time,
+                                     new StationsInNetworkTemplate(staConfig,
+                                                                   fileDir
+                                                                       + '/'
+                                                                       + netFormatter.getResult(net)
+                                                                       + '/'
+                                                                       + stasOutputFileName,
+                                                                   net));
+            } catch (IOException e) {
+                CommonAccess.handleException(e, "trouble creating StationsInNetworkTemplate");
+            }
         }
         return (StationsInNetworkTemplate)stationTemplates.get(net.get_attributes().name
                                                                    + net.get_attributes().get_id().begin_time.date_time);
@@ -155,17 +145,21 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     
     public SitesInStationTemplate getSitesInStationTemplate(Station station){
         if (!contains(station)){
-            siteTemplates.put(station.name
-                                  + station.get_id().begin_time.date_time,
-                              new SitesInStationTemplate(siteConfig,
-                                                         fileDir
-                                                             + '/'
-                                                             + netFormatter.getResult(getNetworkFromStation(station))
-                                                             + '/'
-                                                             + staFormatter.getResult(station)
-                                                             + '/'
-                                                             + sitesOutputFileName,
-                                                         station));
+            try {
+                siteTemplates.put(station.name
+                                      + station.get_id().begin_time.date_time,
+                                  new SitesInStationTemplate(siteConfig,
+                                                             fileDir
+                                                                 + '/'
+                                                                 + netFormatter.getResult(getNetworkFromStation(station))
+                                                                 + '/'
+                                                                 + staFormatter.getResult(station)
+                                                                 + '/'
+                                                                 + sitesOutputFileName,
+                                                             station));
+            } catch (IOException e) {
+                CommonAccess.handleException(e, "trouble creating SitesInStationTemplate");
+            }
         }
         return (SitesInStationTemplate)siteTemplates.get(station.name
                                                              + station.get_id().begin_time.date_time);
@@ -177,20 +171,24 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     
     public ChannelsInSiteTemplate getChannelsInSiteTemplate(Site site){
         if (!contains(site)){
-            channelTemplates.put(site.my_station.my_network.get_code()
-                                     + site.my_station.get_code() + SiteFormatter.formatSiteCode(site.get_code())
-                                     + site.get_id().begin_time.date_time,
-                                 new ChannelsInSiteTemplate(chanConfig,
-                                                            fileDir
-                                                                + '/'
-                                                                + netFormatter.getResult(getNetworkFromStation(site.my_station))
-                                                                + '/'
-                                                                + staFormatter.getResult(site.my_station)
-                                                                + '/'
-                                                                + siteFormatter.getResult(site)
-                                                                + '/'
-                                                                + chansOutputFileName,
-                                                            site));
+            try {
+                channelTemplates.put(site.my_station.my_network.get_code()
+                                         + site.my_station.get_code() + SiteFormatter.formatSiteCode(site.get_code())
+                                         + site.get_id().begin_time.date_time,
+                                     new ChannelsInSiteTemplate(chanConfig,
+                                                                fileDir
+                                                                    + '/'
+                                                                    + netFormatter.getResult(getNetworkFromStation(site.my_station))
+                                                                    + '/'
+                                                                    + staFormatter.getResult(site.my_station)
+                                                                    + '/'
+                                                                    + siteFormatter.getResult(site)
+                                                                    + '/'
+                                                                    + chansOutputFileName,
+                                                                site));
+            } catch (IOException e) {
+                CommonAccess.handleException(e, "trouble creating ChannelsInSiteTemplate");
+            }
         }
         return (ChannelsInSiteTemplate)channelTemplates.get(site.my_station.my_network.get_code()
                                                                 + site.my_station.get_code()

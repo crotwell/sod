@@ -7,11 +7,10 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
-import edu.sc.seis.sod.subsetter.NetworkFormatter;
 import edu.sc.seis.sod.subsetter.NetworkGroupTemplate;
-import edu.sc.seis.sod.subsetter.TemplateFileLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,15 +38,23 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
             NetworkGroupTemplate ngt = (NetworkGroupTemplate)it.next();
             ngt.change(networkAccess, status);
         }
-        write();
+        try {
+            write();
+        } catch (IOException e) {
+            CommonAccess.handleException(e, "trouble writing file");
+        }
     }
     
     public void setArmStatus(String status) {
         logger.debug("setArmStatus: " + status);
         this.status = status;
-        write();
+        try {
+            write();
+        } catch (IOException e) {
+            CommonAccess.handleException(e, "trouble writing file");
+        }
     }
-
+    
     private class StatusFormatter implements GenericTemplate{
         public String getResult(){ return status; }
     }

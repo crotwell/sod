@@ -8,10 +8,12 @@ package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.SiteGroupTemplate;
 import edu.sc.seis.sod.subsetter.StationFormatter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +26,7 @@ public class SitesInStationTemplate extends NetworkInfoTemplate{
     private List siteListeners = new ArrayList();
     private Logger logger = Logger.getLogger(SitesInStationTemplate.class);
     
-    public SitesInStationTemplate(Element el, String outputLocation, Station sta){
+    public SitesInStationTemplate(Element el, String outputLocation, Station sta) throws IOException{
         super(outputLocation);
         station = sta;
         parse(el);
@@ -50,7 +52,11 @@ public class SitesInStationTemplate extends NetworkInfoTemplate{
         while (it.hasNext()){
             ((SiteGroupTemplate)it.next()).change(site, status);
         }
-        write();
+        try {
+            write();
+        } catch (IOException e) {
+            CommonAccess.handleException(e, "trouble writing file");
+        }
     }
     
     private class MyStationTemplate implements GenericTemplate{

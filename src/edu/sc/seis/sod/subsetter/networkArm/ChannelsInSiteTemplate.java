@@ -7,10 +7,12 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Site;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.ChannelGroupTemplate;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.SiteFormatter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +27,7 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
     
-    public ChannelsInSiteTemplate(Element el, String outputLocation, Site site){
+    public ChannelsInSiteTemplate(Element el, String outputLocation, Site site) throws IOException{
         super(outputLocation);
         this.site = site;
         parse(el);
@@ -55,7 +57,11 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
         while (it.hasNext()){
             ((ChannelGroupTemplate)it.next()).change(channel, status);
         }
-        write();
+        try {
+            write();
+        } catch (IOException e) {
+            CommonAccess.handleException(e, "trouble writing file");
+        }
     }
     
     private class MySiteTemplate implements GenericTemplate{

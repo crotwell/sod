@@ -14,12 +14,14 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.NetworkStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import java.io.File;
+import java.io.IOException;
 import org.w3c.dom.Element;
 
 public class SimpleHTMLNetworkStatus implements NetworkStatus{
@@ -48,7 +50,11 @@ public class SimpleHTMLNetworkStatus implements NetworkStatus{
         statusPage.clear("Status");
         statusPage.append("Status", status, 0);
         for (int i = 0; i < pages.length; i++) {
-            pages[i].write();
+            try {
+                pages[i].write();
+            } catch (IOException e) {
+                CommonAccess.handleException(e, "trouble writing file");
+            }
         }
     }
     
