@@ -145,6 +145,23 @@ oot:${pom.id}</connection>
     <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
     <unitTestSourceDirectory>test</unitTestSourceDirectory>
     <sourceDirectory>src</sourceDirectory>
+    <resources>
+       <resource>
+          <directory>src/edu/sc/seis/sod</directory>
+          <targetPath>edu/sc/seis/sod</targetPath>
+          <includes>
+             <include>sod.prop</include>
+          </includes>
+       </resource>
+       <resource>
+          <directory>src/edu/sc/seis/sod/data</directory>
+          <targetPath>edu/sc/seis/sod/data</targetPath>
+          <includes>
+             <include>*.xsd</include>
+          </includes>
+       </resource>
+    </resources>
+
   </build>
 
 </project>
