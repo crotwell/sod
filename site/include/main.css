@@ -154,6 +154,16 @@ div #choice{
   margin-left:5px;
 }
 
+div #group{
+border-left:1px solid black;
+  margin-left:5px;
+}
+
+div #inter{
+	border-left:1px dotted black;
+  margin-left:5px;
+}
+
 a img{
 	border:none;
 }
