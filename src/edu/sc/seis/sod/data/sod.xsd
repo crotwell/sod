@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-
-	<xsd:annotation>
-		<xsd:documentation xml:lang="en">
-			Schema for the EventArm of SOD
-		</xsd:documentation>
-	</xsd:annotation>
-	
-	
-	<!-- Include the external schemas necessary for this schema -->
-	<xsd:include schemaLocation="./EventArm.xsd"/>
-	<xsd:include schemaLocation="./NetworkArm.xsd"/>
-	<xsd:include schemaLocation="./WaveFormArm.xsd"/>
-	
-	<xsd:complexType name="sodType">
-		<xsd:sequence>
-			<xsd:element ref="eventArm" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="networkArm" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="waveFormArm" minOccurs="0" maxOccurs="1"/>
-		</xsd:sequence>
-	</xsd:complexType>
-
-	<xsd:element name="sod" type="sodType"/>
+    
+    
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+            Schema for the EventArm of SOD
+        </xsd:documentation>
+    </xsd:annotation>
+    
+    
+    <!-- Include the external schemas necessary for this schema -->
+    <xsd:include schemaLocation="./EventArm.xsd"/>
+    <xsd:include schemaLocation="./NetworkArm.xsd"/>
+    <xsd:include schemaLocation="./WaveFormArm.xsd"/>
+    
+    <xsd:complexType name="sodType">
+        <xsd:sequence>
+            <xsd:element ref="eventArm" minOccurs="0" maxOccurs="1"/>
+            <xsd:element ref="networkArm" minOccurs="0" maxOccurs="1"/>
+            <xsd:element ref="waveFormArm" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="sod" type="sodType"/>
 </xsd:schema>
 
 

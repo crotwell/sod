@@ -1,871 +1,871 @@
 <?xml version="1.0"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-
-	<xsd:annotation>
-		<xsd:documentation xml:lang="en">
-			Schema for the NetworkArm of SOD
-		</xsd:documentation>
-	</xsd:annotation>
-
-	<!-- Include the external schemas necessary for this schema -->
-	<xsd:include schemaLocation="./utilities.xsd"/>
-
-	<!-- ABSTRACT TYPE DECLARATIONS -->
-
-	<!--  abstractType networkSource -->
-	<xsd:complexType name="networkSource" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="sourceType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- abstractType networkID -->
-	<xsd:complexType name="networkIDType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--abstractType networkAttr -->
-	<xsd:complexType name="networkAttrType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- abstractType stationID -->
-	<xsd:complexType name="stationIDType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- abstractType station -->
-	<xsd:complexType name="stationType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	<!-- abstractType siteID -->
-	<xsd:complexType name="siteIDType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--abstracType site -->
-	<xsd:complexType name="siteType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- abstractType channelID -->
-	<xsd:complexType name="channelIDType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- abstractType channel -->
-	<xsd:complexType name="channelType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORKFINDER TYPE-->
-	<xsd:complexType name="networkFinderType">
-		<xsd:complexContent>
-			<xsd:extension base="networkSource">
-				<xsd:sequence>	
-					<xsd:element ref="refreshInterval" minOccurs = "0" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORK CODE TYPE -->
-	<xsd:complexType name="networkCodeType">
-		<xsd:complexContent>
-			<xsd:extension base="networkIDType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORKID AND TYPE -->
-	<xsd:complexType name="networkIDANDType">
-		<xsd:complexContent>
-			<xsd:extension base="networkIDType">
-				<xsd:sequence>
-					<xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORKID OR TYPE -->
-	<xsd:complexType name="networkIDORType">
-		<xsd:complexContent>
-			<xsd:extension base="networkIDType">
-				<xsd:sequence>
-					<xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-					
-	<!-- NETWORKID XOR TYPE -->	
-	<xsd:complexType name="networkIDXORType">
-		<xsd:complexContent>
-			<xsd:extension base="networkIDType">
-				<xsd:sequence>
-					<xsd:element ref="networkID" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORKID NOT TYPE -->
-	<xsd:complexType name="networkIDNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="networkIDType">
-				<xsd:sequence>
-					<xsd:element ref="networkID" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
-	<xsd:complexType name="networkeffectiveTimeOverlapType">
-		<xsd:complexContent>
-			<xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- NETWORK ATTR NAME TYPE -->
-	<xsd:complexType name="networkAttrNameType">
-		<xsd:complexContent>
-			<xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!-- NETWORK ATTR OWNER TYPE -->
-	<xsd:complexType name="networkAttrOwnerType">
-		<xsd:complexContent>
-			<xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!--NETWORKATTR AND TYPE-->
-	<xsd:complexType name="networkAttrANDType">
-		<xsd:complexContent>
-			 <xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--NETWORKATTR OR TYPE-->
-	<xsd:complexType name="networkAttrORType">
-		<xsd:complexContent>
-			 <xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--NETWORKATTR XOR TYPE-->
-	<xsd:complexType name="networkAttrXORType">
-		<xsd:complexContent>
-			 <xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element ref="networkAttr" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--NETWORKATTR NOT TYPE-->
-	<xsd:complexType name="networkAttrNOTType">
-		<xsd:complexContent>
-			 <xsd:extension base="networkAttrType">
-				<xsd:sequence>
-					<xsd:element ref="networkAttr" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATIONID AND TYPE-->
-	<xsd:complexType name="stationIDANDType">
-		<xsd:complexContent>
-			<xsd:extension base="stationIDType">
-				<xsd:sequence>
-					<xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATIONID OR TYPE-->	
-	<xsd:complexType name="stationIDORType">
-		<xsd:complexContent>
-			<xsd:extension base="stationIDType">
-				<xsd:sequence>
-					<xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATIONID XOR TYPE-->
-	<xsd:complexType name="stationIDXORType">
-		<xsd:complexContent>
-			<xsd:extension base="stationIDType">
-				<xsd:sequence>
-					<xsd:element ref="stationID" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATIONID NOT TYPE-->
-	<xsd:complexType name="stationIDNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="stationIDType">
-				<xsd:sequence>
-					<xsd:element ref="stationID" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- STATION NAME TYPE -->
-	<xsd:complexType name="stationNameType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!-- STATION OPERATOR TYPE -->
-	<xsd:complexType name="stationOperatorType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!-- STATION DEPTH RANGE TYPE -->
-	<xsd:complexType name="stationDepthRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element name="unitRange" type="unitRangeType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!--STATION EFFECTIVE TIME OVERLAP TYPE-->
-	<xsd:complexType name="stationeffectiveTimeOverlapType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!-- STATION AREA TYPE -->
-	<xsd:complexType name="stationAreaType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="area"/>
-				</xsd:sequence>	
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATION AND TYPE-->
-	<xsd:complexType name="stationANDType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="station" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATION OR TYPE-->	
-	<xsd:complexType name="stationORType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="station" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATION XOR TYPE-->
-	<xsd:complexType name="stationXORType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="station" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATION NOT TYPE-->
-	<xsd:complexType name="stationNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="station" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--STATION LATITUDE LONGITUDE BOX TYPE-->
-	<xsd:complexType name="stationLatLonBoxType">
-		<xsd:complexContent>
-			<xsd:extension base="stationType">
-				<xsd:sequence>
-					<xsd:element ref="area"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!--SITEID AND TYPE-->
-	<xsd:complexType name="siteIDANDType">
-		<xsd:complexContent>
-			<xsd:extension base="siteIDType">
-				<xsd:sequence>
-					<xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITEID OR TYPE-->	
-	<xsd:complexType name="siteIDORType">
-		<xsd:complexContent>
-			<xsd:extension base="siteIDType">
-				<xsd:sequence>
-					<xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITEID XOR TYPE-->
-	<xsd:complexType name="siteIDXORType">
-		<xsd:complexContent>
-			<xsd:extension base="siteIDType">
-				<xsd:sequence>
-					<xsd:element ref="siteID" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITEID NOT TYPE-->
-	<xsd:complexType name="siteIDNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="siteIDType">
-				<xsd:sequence>
-					<xsd:element ref="siteID" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-        
-	<!--SITE CODE TYPE-->
-	<xsd:complexType name="siteCodeType">
-		<xsd:complexContent>
-			<xsd:extension base="siteIDType">
-				<xsd:sequence>
-					<xsd:element name="value" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER SITE -->
-	
-	<!-- SITE DEPTH RANGE TYPE -->
-	<xsd:complexType name="siteDepthRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element name="unitRange" type="unitRangeType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!--SITE EFFECTIVE TIME OVERLAP TYPE-->
-	<xsd:complexType name="siteeffectiveTimeOverlapType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-
-	<!-- SITE AREA TYPE -->
-	<xsd:complexType name="siteAreaType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element ref="area"/>
-				</xsd:sequence>	
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITE AND TYPE-->
-	<xsd:complexType name="siteANDType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element ref="site" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	<!--SITE OR TYPE-->
-	<xsd:complexType name="siteORType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element ref="site" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITE XOR TYPE-->
-	<xsd:complexType name="siteXORType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element ref="site" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--SITE NOT TYPE-->
-	<xsd:complexType name="siteNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="siteType">
-				<xsd:sequence>
-					<xsd:element ref="site" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-		<!-- TYPE DECLARATIONS FOR THE SUBSETTER CHANNELID -->
-
-	<!--CHANNELID AND TYPE-->
-	<xsd:complexType name="channelIDANDType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNELID OR TYPE-->	
-	<xsd:complexType name="channelIDORType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNELID XOR TYPE-->
-	<xsd:complexType name="channelIDXORType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element ref="channelID" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNELID NOT TYPE-->
-	<xsd:complexType name="channelIDNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element ref="channelID" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	<!--CHANNELID BROAD BAND TYPE-->
-	<xsd:complexType name="broadbandType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNELID LONG PERIOD TYPE-->
-	<xsd:complexType name="longPeriodType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--BAND CODE TYPE-->
-	<xsd:complexType name="bandCodeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element name="value" type="channelCodeUtilType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--BAND CODE TYPE-->
-	<xsd:complexType name="gainCodeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element name="value" type="channelCodeUtilType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--BAND CODE TYPE-->
-	<xsd:complexType name="orientationCodeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelIDType">
-				<xsd:sequence>
-					<xsd:element name="value" type="channelCodeUtilType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****CHANNEL***** -->
-
-	<!--CHANNEL AND TYPE-->
-	<xsd:complexType name="channelANDType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element ref="channel" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNEL OR TYPE-->	
-	<xsd:complexType name="channelORType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element ref="channel" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNEL XOR TYPE-->
-	<xsd:complexType name="channelXORType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element ref="channel" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNEL NOT TYPE-->
-	<xsd:complexType name="channelNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element ref="channel" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNEL SAMPLING TYPE-->
-	<xsd:complexType name="samplingType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="interval" type="timeIntervalType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--CHANNEL EFFECTIVE TIME OVERLAP TYPE-->
-	<xsd:complexType name="channeleffectiveTimeOverlapType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- CHANNEL ORIENTATION RANGE -->
-	<xsd:complexType name="orientationRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element ref="azimuth"/>
-					<xsd:element ref="dip"/>
-					<xsd:element name="maxOffset" type="unitType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- CHANNEL ORIENTATION AZIMUTH RANGE -->
-	<xsd:complexType name="orientationAzimuthRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:float"/>
-					<xsd:element name="max" type="xsd:float"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-		
-	<!-- CHANNEL ORIENTATION DIP RANGE -->
-	<xsd:complexType name="orientationDipRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="channelType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:float"/>
-					<xsd:element name="max" type="xsd:float"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE NETWORKARM -->
-		
-	<xsd:complexType name="externalNetworkProcessType">
-		<xsd:complexContent>
-			<xsd:extension base="externalProcessType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	<xsd:complexType name="printLineChannelProcessorType">
-		<xsd:complexContent>
-			<xsd:extension base="internalProcessType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- common Global Elements of Network Arm -->
-	<xsd:element name="azimuth" type="xsd:float"/>
-	<xsd:element name="dip" type="xsd:float"/>
-
-	<!-- ELEMENT DECLARATIONS FOR NETWORK SOURCE TYPE -->
-	<xsd:element name="networkSource" abstract="true"/>
-
-	<xsd:element name="networkFinder" type="networkFinderType" substitutionGroup="networkSource"/>
-
-	<!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->	
-	<xsd:element name="networkID" abstract="true"/>
-	<xsd:element name="networkCode" type="networkCodeType" substitutionGroup="networkID"/>
-	<xsd:element name="networkIDAND" type="networkIDANDType" substitutionGroup="networkID"/>
-	<xsd:element name="networkIDOR" type="networkIDORType" substitutionGroup="networkID"/>
-	<xsd:element name="networkIDXOR" type="networkIDXORType" substitutionGroup="networkID"/>
-	<xsd:element name="networkIDNOT" type="networkIDNOTType" substitutionGroup="networkID"/>
-
-	
-	<!-- ELEMENT DECLARATIONS FOR NETWORK ATTR TYPE -->
-	<xsd:element name="networkAttr" type="networkAttrType" abstract="true"/>
-	<xsd:element name="networkAttrName" type="networkAttrNameType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkAttrOwner" type="networkAttrOwnerType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkeffectiveTimeOverlap" type="networkeffectiveTimeOverlapType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkAttrAND" type="networkAttrANDType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkAttrOR" type="networkAttrORType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkAttrXOR" type="networkAttrXORType" substitutionGroup="networkAttr"/>
-	<xsd:element name="networkAttrNOT" type="networkAttrNOTType" substitutionGroup="networkAttr"/>
-
-	<!-- ELEMENT DECLARATIONS FOR STATION ID TYPE -->
-	<xsd:element name="stationID" type="stationIDType" abstract="true"/>
-	<xsd:element name="stationIDAND" type="stationIDANDType" substitutionGroup="stationID"/>
-	<xsd:element name="stationIDOR" type="stationIDORType" substitutionGroup="stationID"/>
-	<xsd:element name="stationIDXOR" type="stationIDXORType" substitutionGroup="stationID"/>
-	<xsd:element name="stationIDNOT" type="stationIDNOTType" substitutionGroup="stationID"/>
-
-	<!-- ELEMENT DECLARATIONS FOR STATION TYPE -->
-	<xsd:element name="station" type="stationType" abstract="true"/>
-	<xsd:element name="stationName" type="stationNameType" substitutionGroup="station"/>
-	<xsd:element name="stationOperator" type="stationOperatorType" substitutionGroup="station"/>
-	<xsd:element name="stationDepthRange" type="stationDepthRangeType" substitutionGroup="station"/>
-	<xsd:element name="stationeffectiveTimeOverlap" type="stationeffectiveTimeOverlapType" substitutionGroup="station"/>
-	<!-- element representing eventArea -->
-	<xsd:element name="stationArea" type="stationAreaType" substitutionGroup="station"/>
-	<xsd:element name="stationLatLonBox" type="stationLatLonBoxType" substitutionGroup="station"/>
-	<xsd:element name="stationAND" type="stationANDType" substitutionGroup="station"/>
-	<xsd:element name="stationOR" type="stationORType" substitutionGroup="station"/>
-	<xsd:element name="stationXOR" type="stationXORType" substitutionGroup="station"/>
-	<xsd:element name="stationNOT" type="stationNOTType" substitutionGroup="station"/>
-
-	<!-- ELEMENT DECLARATIONS FOR SITE ID TYPE -->
-	<xsd:element name="siteID" type="siteIDType" abstract="true"/>
-	<xsd:element name="siteCode" type="siteCodeType" substitutionGroup="siteID"/>
-	<xsd:element name="siteIDAND" type="siteIDANDType" substitutionGroup="siteID"/>
-	<xsd:element name="siteIDOR" type="siteIDORType" substitutionGroup="siteID"/>
-	<xsd:element name="siteIDXOR" type="siteIDXORType" substitutionGroup="siteID"/>
-	<xsd:element name="siteIDNOT" type="siteIDNOTType" substitutionGroup="siteID"/>
-
-	<!-- ELEMENT DECLARATIONS FOR SITE TYPE -->
-	<xsd:element name="site" type="siteType" abstract="true"/>
-	<xsd:element name="siteDepthRange" type="siteDepthRangeType" substitutionGroup="site"/>
-	<xsd:element name="siteeffectiveTimeOverlap" type="siteeffectiveTimeOverlapType" substitutionGroup="site"/>
-	<!-- element representing siteArea -->
-	<xsd:element name="siteArea" type="siteAreaType" substitutionGroup="site"/>
-	<xsd:element name="siteAND" type="siteANDType" substitutionGroup="site"/>
-	<xsd:element name="siteOR" type="siteORType" substitutionGroup="site"/>
-	<xsd:element name="siteXOR" type="siteXORType" substitutionGroup="site"/>
-	<xsd:element name="siteNOT" type="siteNOTType" substitutionGroup="site"/>
-
-	<!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->	
-	<xsd:element name="channelID" type="channelIDType" abstract="true"/>
-	<xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channelID"/>
-	<xsd:element name="gainCode" type="gainCodeType" substitutionGroup="channelID"/>
-	<xsd:element name="orientationCode" type="orientationCodeType" substitutionGroup="channelID"/>
-	<xsd:element name="channelIDAND" type="channelIDANDType" substitutionGroup="channelID"/>
-	<xsd:element name="channelIDOR" type="channelIDORType" substitutionGroup="channelID"/>
-	<xsd:element name="channelIDXOR" type="channelIDXORType" substitutionGroup="channelID"/>
-	<xsd:element name="channelIDNOT" type="channelIDNOTType" substitutionGroup="channelID"/>
-
-	<!-- ELEMENT DECLARATIONS FOR CHANNEL TYPE -->
-	<xsd:element name="channel" type="channelType" abstract="true"/>
-	<xsd:element name="sampling" type="samplingType" substitutionGroup="channel"/>
-	<xsd:element name="channeleffectiveTimeOverlap" type="channeleffectiveTimeOverlapType" substitutionGroup="channel"/>
-	<xsd:element name="orientationRange" type="orientationRangeType" substitutionGroup="channel"/>
-	<xsd:element name="orientationAzimuthRange" type="orientationAzimuthRangeType" substitutionGroup="channel"/>
-	<xsd:element name="orientationDipRange" type="orientationDipRangeType" substitutionGroup="channel"/>
-	<xsd:element name="channelAND" type="channelANDType" substitutionGroup="channel"/>
-	<xsd:element name="channelOR" type="channelORType" substitutionGroup="channel"/>
-	<xsd:element name="channelXOR" type="channelXORType" substitutionGroup="channel"/>
-	<xsd:element name="channelNOT" type="channelNOTType" substitutionGroup="channel"/>
-
-
-	
-	<!-- element representing the process -->
-	<xsd:element name="networkProcess" type="processType" abstract="true"/>
-	<xsd:element name="printlineChannelProcessor" type="printLineChannelProcessorType"  substitutionGroup="networkProcess"/>
-	<xsd:element name="externalNetworkProcess" type="externalNetworkProcessType" substitutionGroup="networkProcess"/>
-
-	<xsd:complexType name="networkArmType">
-		<xsd:complexContent>
-			<xsd:extension base="armType">
-				<xsd:sequence>
-					<xsd:element ref="networkSource"  minOccurs="1" maxOccurs="1"/>
-					<xsd:element ref="networkID"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="networkAttr"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="stationID" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="station"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="siteID"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="site"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="channelID"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="channel"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="networkProcess" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>	
-	</xsd:complexType>
-
-	<xsd:element name="networkArm" type="networkArmType"/>
-
-	<!--
-	<xsd:complexType name="sodTypeone">
-		<xsd:sequence>
-			<xsd:element ref="networkArm"/>
-		</xsd:sequence>
-	</xsd:complexType>
-
-	<xsd:element name="sodone" type="sodTypeone"/>
-	-->
-
+    
+    
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+            Schema for the NetworkArm of SOD
+        </xsd:documentation>
+    </xsd:annotation>
+    
+    <!-- Include the external schemas necessary for this schema -->
+    <xsd:include schemaLocation="./utilities.xsd"/>
+    
+    <!-- ABSTRACT TYPE DECLARATIONS -->
+    
+    <!--  abstractType networkSource -->
+    <xsd:complexType name="networkSource" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="sourceType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType networkID -->
+    <xsd:complexType name="networkIDType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--abstractType networkAttr -->
+    <xsd:complexType name="networkAttrType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType stationID -->
+    <xsd:complexType name="stationIDType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType station -->
+    <xsd:complexType name="stationType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType siteID -->
+    <xsd:complexType name="siteIDType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--abstracType site -->
+    <xsd:complexType name="siteType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType channelID -->
+    <xsd:complexType name="channelIDType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- abstractType channel -->
+    <xsd:complexType name="channelType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORKFINDER TYPE-->
+    <xsd:complexType name="networkFinderType">
+        <xsd:complexContent>
+            <xsd:extension base="networkSource">
+                <xsd:sequence>	
+                    <xsd:element ref="refreshInterval" minOccurs = "0" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORK CODE TYPE -->
+    <xsd:complexType name="networkCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="networkIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORKID AND TYPE -->
+    <xsd:complexType name="networkIDANDType">
+        <xsd:complexContent>
+            <xsd:extension base="networkIDType">
+                <xsd:sequence>
+                    <xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORKID OR TYPE -->
+    <xsd:complexType name="networkIDORType">
+        <xsd:complexContent>
+            <xsd:extension base="networkIDType">
+                <xsd:sequence>
+                    <xsd:element ref="networkID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORKID XOR TYPE -->	
+    <xsd:complexType name="networkIDXORType">
+        <xsd:complexContent>
+            <xsd:extension base="networkIDType">
+                <xsd:sequence>
+                    <xsd:element ref="networkID" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORKID NOT TYPE -->
+    <xsd:complexType name="networkIDNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="networkIDType">
+                <xsd:sequence>
+                    <xsd:element ref="networkID" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
+    <xsd:complexType name="networkeffectiveTimeOverlapType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- NETWORK ATTR NAME TYPE -->
+    <xsd:complexType name="networkAttrNameType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- NETWORK ATTR OWNER TYPE -->
+    <xsd:complexType name="networkAttrOwnerType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!--NETWORKATTR AND TYPE-->
+    <xsd:complexType name="networkAttrANDType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--NETWORKATTR OR TYPE-->
+    <xsd:complexType name="networkAttrORType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element ref="networkAttr" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--NETWORKATTR XOR TYPE-->
+    <xsd:complexType name="networkAttrXORType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element ref="networkAttr" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--NETWORKATTR NOT TYPE-->
+    <xsd:complexType name="networkAttrNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="networkAttrType">
+                <xsd:sequence>
+                    <xsd:element ref="networkAttr" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATIONID AND TYPE-->
+    <xsd:complexType name="stationIDANDType">
+        <xsd:complexContent>
+            <xsd:extension base="stationIDType">
+                <xsd:sequence>
+                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATIONID OR TYPE-->	
+    <xsd:complexType name="stationIDORType">
+        <xsd:complexContent>
+            <xsd:extension base="stationIDType">
+                <xsd:sequence>
+                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATIONID XOR TYPE-->
+    <xsd:complexType name="stationIDXORType">
+        <xsd:complexContent>
+            <xsd:extension base="stationIDType">
+                <xsd:sequence>
+                    <xsd:element ref="stationID" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATIONID NOT TYPE-->
+    <xsd:complexType name="stationIDNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="stationIDType">
+                <xsd:sequence>
+                    <xsd:element ref="stationID" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- STATION NAME TYPE -->
+    <xsd:complexType name="stationNameType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- STATION OPERATOR TYPE -->
+    <xsd:complexType name="stationOperatorType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- STATION DEPTH RANGE TYPE -->
+    <xsd:complexType name="stationDepthRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element name="unitRange" type="unitRangeType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!--STATION EFFECTIVE TIME OVERLAP TYPE-->
+    <xsd:complexType name="stationeffectiveTimeOverlapType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- STATION AREA TYPE -->
+    <xsd:complexType name="stationAreaType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="area"/>
+                </xsd:sequence>	
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATION AND TYPE-->
+    <xsd:complexType name="stationANDType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="station" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATION OR TYPE-->	
+    <xsd:complexType name="stationORType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="station" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATION XOR TYPE-->
+    <xsd:complexType name="stationXORType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="station" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATION NOT TYPE-->
+    <xsd:complexType name="stationNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="station" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--STATION LATITUDE LONGITUDE BOX TYPE-->
+    <xsd:complexType name="stationLatLonBoxType">
+        <xsd:complexContent>
+            <xsd:extension base="stationType">
+                <xsd:sequence>
+                    <xsd:element ref="area"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!--SITEID AND TYPE-->
+    <xsd:complexType name="siteIDANDType">
+        <xsd:complexContent>
+            <xsd:extension base="siteIDType">
+                <xsd:sequence>
+                    <xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITEID OR TYPE-->	
+    <xsd:complexType name="siteIDORType">
+        <xsd:complexContent>
+            <xsd:extension base="siteIDType">
+                <xsd:sequence>
+                    <xsd:element ref="siteID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITEID XOR TYPE-->
+    <xsd:complexType name="siteIDXORType">
+        <xsd:complexContent>
+            <xsd:extension base="siteIDType">
+                <xsd:sequence>
+                    <xsd:element ref="siteID" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITEID NOT TYPE-->
+    <xsd:complexType name="siteIDNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="siteIDType">
+                <xsd:sequence>
+                    <xsd:element ref="siteID" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITE CODE TYPE-->
+    <xsd:complexType name="siteCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="siteIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER SITE -->
+    
+    <!-- SITE DEPTH RANGE TYPE -->
+    <xsd:complexType name="siteDepthRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element name="unitRange" type="unitRangeType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!--SITE EFFECTIVE TIME OVERLAP TYPE-->
+    <xsd:complexType name="siteeffectiveTimeOverlapType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- SITE AREA TYPE -->
+    <xsd:complexType name="siteAreaType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element ref="area"/>
+                </xsd:sequence>	
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITE AND TYPE-->
+    <xsd:complexType name="siteANDType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element ref="site" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITE OR TYPE-->
+    <xsd:complexType name="siteORType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element ref="site" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITE XOR TYPE-->
+    <xsd:complexType name="siteXORType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element ref="site" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--SITE NOT TYPE-->
+    <xsd:complexType name="siteNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="siteType">
+                <xsd:sequence>
+                    <xsd:element ref="site" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER CHANNELID -->
+    
+    <!--CHANNELID AND TYPE-->
+    <xsd:complexType name="channelIDANDType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNELID OR TYPE-->	
+    <xsd:complexType name="channelIDORType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element ref="channelID" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNELID XOR TYPE-->
+    <xsd:complexType name="channelIDXORType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element ref="channelID" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNELID NOT TYPE-->
+    <xsd:complexType name="channelIDNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element ref="channelID" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNELID BROAD BAND TYPE-->
+    <xsd:complexType name="broadbandType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNELID LONG PERIOD TYPE-->
+    <xsd:complexType name="longPeriodType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--BAND CODE TYPE-->
+    <xsd:complexType name="bandCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="channelCodeUtilType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--BAND CODE TYPE-->
+    <xsd:complexType name="gainCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="channelCodeUtilType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--BAND CODE TYPE-->
+    <xsd:complexType name="orientationCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="channelCodeUtilType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****CHANNEL***** -->
+    
+    <!--CHANNEL AND TYPE-->
+    <xsd:complexType name="channelANDType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element ref="channel" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNEL OR TYPE-->	
+    <xsd:complexType name="channelORType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element ref="channel" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNEL XOR TYPE-->
+    <xsd:complexType name="channelXORType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element ref="channel" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNEL NOT TYPE-->
+    <xsd:complexType name="channelNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element ref="channel" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNEL SAMPLING TYPE-->
+    <xsd:complexType name="samplingType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="interval" type="timeIntervalType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--CHANNEL EFFECTIVE TIME OVERLAP TYPE-->
+    <xsd:complexType name="channeleffectiveTimeOverlapType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element name="effectiveTimeOverlap" type="effectiveTimeOverlapType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- CHANNEL ORIENTATION RANGE -->
+    <xsd:complexType name="orientationRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element ref="azimuth"/>
+                    <xsd:element ref="dip"/>
+                    <xsd:element name="maxOffset" type="unitType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- CHANNEL ORIENTATION AZIMUTH RANGE -->
+    <xsd:complexType name="orientationAzimuthRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element name="min" type="xsd:float"/>
+                    <xsd:element name="max" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- CHANNEL ORIENTATION DIP RANGE -->
+    <xsd:complexType name="orientationDipRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="channelType">
+                <xsd:sequence>
+                    <xsd:element name="min" type="xsd:float"/>
+                    <xsd:element name="max" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE NETWORKARM -->
+    
+    <xsd:complexType name="externalNetworkProcessType">
+        <xsd:complexContent>
+            <xsd:extension base="externalProcessType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="printLineChannelProcessorType">
+        <xsd:complexContent>
+            <xsd:extension base="internalProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- common Global Elements of Network Arm -->
+    <xsd:element name="azimuth" type="xsd:float"/>
+    <xsd:element name="dip" type="xsd:float"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR NETWORK SOURCE TYPE -->
+    <xsd:element name="networkSource" abstract="true"/>
+    
+    <xsd:element name="networkFinder" type="networkFinderType" substitutionGroup="networkSource"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->	
+    <xsd:element name="networkID" abstract="true"/>
+    <xsd:element name="networkCode" type="networkCodeType" substitutionGroup="networkID"/>
+    <xsd:element name="networkIDAND" type="networkIDANDType" substitutionGroup="networkID"/>
+    <xsd:element name="networkIDOR" type="networkIDORType" substitutionGroup="networkID"/>
+    <xsd:element name="networkIDXOR" type="networkIDXORType" substitutionGroup="networkID"/>
+    <xsd:element name="networkIDNOT" type="networkIDNOTType" substitutionGroup="networkID"/>
+    
+    
+    <!-- ELEMENT DECLARATIONS FOR NETWORK ATTR TYPE -->
+    <xsd:element name="networkAttr" type="networkAttrType" abstract="true"/>
+    <xsd:element name="networkAttrName" type="networkAttrNameType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkAttrOwner" type="networkAttrOwnerType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkeffectiveTimeOverlap" type="networkeffectiveTimeOverlapType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkAttrAND" type="networkAttrANDType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkAttrOR" type="networkAttrORType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkAttrXOR" type="networkAttrXORType" substitutionGroup="networkAttr"/>
+    <xsd:element name="networkAttrNOT" type="networkAttrNOTType" substitutionGroup="networkAttr"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR STATION ID TYPE -->
+    <xsd:element name="stationID" type="stationIDType" abstract="true"/>
+    <xsd:element name="stationIDAND" type="stationIDANDType" substitutionGroup="stationID"/>
+    <xsd:element name="stationIDOR" type="stationIDORType" substitutionGroup="stationID"/>
+    <xsd:element name="stationIDXOR" type="stationIDXORType" substitutionGroup="stationID"/>
+    <xsd:element name="stationIDNOT" type="stationIDNOTType" substitutionGroup="stationID"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR STATION TYPE -->
+    <xsd:element name="station" type="stationType" abstract="true"/>
+    <xsd:element name="stationName" type="stationNameType" substitutionGroup="station"/>
+    <xsd:element name="stationOperator" type="stationOperatorType" substitutionGroup="station"/>
+    <xsd:element name="stationDepthRange" type="stationDepthRangeType" substitutionGroup="station"/>
+    <xsd:element name="stationeffectiveTimeOverlap" type="stationeffectiveTimeOverlapType" substitutionGroup="station"/>
+    <!-- element representing eventArea -->
+    <xsd:element name="stationArea" type="stationAreaType" substitutionGroup="station"/>
+    <xsd:element name="stationLatLonBox" type="stationLatLonBoxType" substitutionGroup="station"/>
+    <xsd:element name="stationAND" type="stationANDType" substitutionGroup="station"/>
+    <xsd:element name="stationOR" type="stationORType" substitutionGroup="station"/>
+    <xsd:element name="stationXOR" type="stationXORType" substitutionGroup="station"/>
+    <xsd:element name="stationNOT" type="stationNOTType" substitutionGroup="station"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR SITE ID TYPE -->
+    <xsd:element name="siteID" type="siteIDType" abstract="true"/>
+    <xsd:element name="siteCode" type="siteCodeType" substitutionGroup="siteID"/>
+    <xsd:element name="siteIDAND" type="siteIDANDType" substitutionGroup="siteID"/>
+    <xsd:element name="siteIDOR" type="siteIDORType" substitutionGroup="siteID"/>
+    <xsd:element name="siteIDXOR" type="siteIDXORType" substitutionGroup="siteID"/>
+    <xsd:element name="siteIDNOT" type="siteIDNOTType" substitutionGroup="siteID"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR SITE TYPE -->
+    <xsd:element name="site" type="siteType" abstract="true"/>
+    <xsd:element name="siteDepthRange" type="siteDepthRangeType" substitutionGroup="site"/>
+    <xsd:element name="siteeffectiveTimeOverlap" type="siteeffectiveTimeOverlapType" substitutionGroup="site"/>
+    <!-- element representing siteArea -->
+    <xsd:element name="siteArea" type="siteAreaType" substitutionGroup="site"/>
+    <xsd:element name="siteAND" type="siteANDType" substitutionGroup="site"/>
+    <xsd:element name="siteOR" type="siteORType" substitutionGroup="site"/>
+    <xsd:element name="siteXOR" type="siteXORType" substitutionGroup="site"/>
+    <xsd:element name="siteNOT" type="siteNOTType" substitutionGroup="site"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->	
+    <xsd:element name="channelID" type="channelIDType" abstract="true"/>
+    <xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channelID"/>
+    <xsd:element name="gainCode" type="gainCodeType" substitutionGroup="channelID"/>
+    <xsd:element name="orientationCode" type="orientationCodeType" substitutionGroup="channelID"/>
+    <xsd:element name="channelIDAND" type="channelIDANDType" substitutionGroup="channelID"/>
+    <xsd:element name="channelIDOR" type="channelIDORType" substitutionGroup="channelID"/>
+    <xsd:element name="channelIDXOR" type="channelIDXORType" substitutionGroup="channelID"/>
+    <xsd:element name="channelIDNOT" type="channelIDNOTType" substitutionGroup="channelID"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR CHANNEL TYPE -->
+    <xsd:element name="channel" type="channelType" abstract="true"/>
+    <xsd:element name="sampling" type="samplingType" substitutionGroup="channel"/>
+    <xsd:element name="channeleffectiveTimeOverlap" type="channeleffectiveTimeOverlapType" substitutionGroup="channel"/>
+    <xsd:element name="orientationRange" type="orientationRangeType" substitutionGroup="channel"/>
+    <xsd:element name="orientationAzimuthRange" type="orientationAzimuthRangeType" substitutionGroup="channel"/>
+    <xsd:element name="orientationDipRange" type="orientationDipRangeType" substitutionGroup="channel"/>
+    <xsd:element name="channelAND" type="channelANDType" substitutionGroup="channel"/>
+    <xsd:element name="channelOR" type="channelORType" substitutionGroup="channel"/>
+    <xsd:element name="channelXOR" type="channelXORType" substitutionGroup="channel"/>
+    <xsd:element name="channelNOT" type="channelNOTType" substitutionGroup="channel"/>
+    
+    
+    
+    <!-- element representing the process -->
+    <xsd:element name="networkProcess" type="processType" abstract="true"/>
+    <xsd:element name="printlineChannelProcessor" type="printLineChannelProcessorType"  substitutionGroup="networkProcess"/>
+    <xsd:element name="externalNetworkProcess" type="externalNetworkProcessType" substitutionGroup="networkProcess"/>
+    
+    <xsd:complexType name="networkArmType">
+        <xsd:complexContent>
+            <xsd:extension base="armType">
+                <xsd:sequence>
+                    <xsd:element ref="networkSource"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="networkID"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="networkAttr"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="stationID" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="station"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="siteID"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="site"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="channelID"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="channel"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="networkProcess" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>	
+    </xsd:complexType>
+    
+    <xsd:element name="networkArm" type="networkArmType"/>
+    
+    <!--
+    <xsd:complexType name="sodTypeone">
+    <xsd:sequence>
+    <xsd:element ref="networkArm"/>
+    </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="sodone" type="sodTypeone"/>
+    -->
+    
 </xsd:schema>

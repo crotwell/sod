@@ -1,634 +1,634 @@
 <?xml version="1.0"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-
-	<xsd:annotation>
-		<xsd:documentation xml:lang="en">
-			Schema for the WaveFormArm of SOD
-		</xsd:documentation>
-	</xsd:annotation>
-
-	<!-- Include the external schemas necessary for this schema -->
-	<xsd:include schemaLocation="./utilities.xsd"/>
-	<xsd:include schemaLocation="./EventArm.xsd"/>
-	<xsd:include schemaLocation="./NetworkArm.xsd"/>
-
-	<!-- Abstract Type Declarations -->
-
-	<!-- ABSTRACT TYPE EVENT STATION-->
-	<xsd:complexType name="eventStationType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- ABSTRACT TYPE EVENT CHANNEL-->
-	<xsd:complexType name="eventChannelType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- ABSTRACT TYPE REQUEST GENERATOR-->
-	<xsd:complexType name="requestGeneratorType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- ABSTRACT TYPE AVAILABLE DATA-->
-	<xsd:complexType name="availableDataType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- ABSTRACT TYPE WAVE FORM-->
-	<xsd:complexType name="waveFormType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="subsetterType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- ABSTRACT TYPE DATA CENTER SOURCE -->
-	<xsd:complexType name="dataCenterType" abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="sourceType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTSTATION***** -->
-
-	<!-- EVENT STATION AND TYPE -->
-	<xsd:complexType name="eventStationANDType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="eventStation" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION OR TYPE -->	
-	<xsd:complexType name="eventStationORType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="eventStation" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION XOR TYPE -->
-	<xsd:complexType name="eventStationXORType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="eventStation" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION NOT TYPE -->
-	<xsd:complexType name="eventStationNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="eventStation" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION DISTANCE TYPE -->
-	<xsd:complexType name="eventStationDistanceType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element name="distanceRange" type="distanceRangeType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION MAGNITUDE TYPE -->
-	<xsd:complexType name="embeddedOriginSubsetterType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="origin"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION STATION TYPE -->
-	<xsd:complexType name="embeddedStationSubsetterType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="station"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION AZIMUTH RANGE TYPE -->
-	<xsd:complexType name="azimuthRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:float"/>
-					<xsd:element name="max" type="xsd:float"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- EVENT STATION BACK AZIMUTH RANGE TYPE -->
-	<xsd:complexType name="backAzimuthRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element name="min" type="xsd:float"/>
-					<xsd:element name="max" type="xsd:float"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE RANGE TYPE -->
-	<xsd:complexType name="linearDistanceMagnitudeRangeType">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element ref="magnitudeRange"/>
-					<xsd:element ref="distanceRange"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- PHASE TURN INTERACTION TYPE -->
-	<xsd:simpleType name="phaseTurnInteractionType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="TOPSIDE REFLECTION"/>
-			<xsd:enumeration value="BOTTOMSIDE REFLECTION"/>
-			<xsd:enumeration value="TURNPOINT"/>
-			<xsd:enumeration value="UPGOING S TO P CONVERSION"/>
-			<xsd:enumeration value="UPGOING P TO S CONVERSION"/>	
-			<xsd:enumeration value="DOWNGOING S TO P CONVERSION"/>
-			<xsd:enumeration value="DOWNGOING P TO S CONVERSION"/>
-			<xsd:enumeration value="PATH"/>
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<!-- ABSTRACT TYPE PHASE TYPE -->
-	<xsd:complexType name="phaseAbstractType"  abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="eventStationType">
-				<xsd:sequence>
-					<xsd:element name="modelName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-					<xsd:element name="phaseName" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	<!-- EVENT STATION PHASE EXISTS TYPE -->
-	<xsd:complexType name="phaseExistsType">
-		<xsd:complexContent>
-			<xsd:extension base="phaseAbstractType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	
-	<!-- EVENT STATION PHASE INTERACTION TYPE -->
-	<xsd:complexType name="phaseInteractionAbstractType"  abstract="true">
-		<xsd:complexContent>
-			<xsd:extension base="phaseAbstractType">
-				<xsd:sequence>
-					<xsd:element name="interactionStyle" type="phaseTurnInteractionType"/>	
-					<xsd:element name="interactionNumber" type="xsd:positiveInteger" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- PHASE RELATIVE ABSOLUTE ABSTRACT TYPE -->
-	<xsd:complexType name="phaseRelativeAbsoluteAbstractType" abstract="true"/>
-		
-
-	<!-- PHASE RELATIVE TYPE -->
-	<xsd:complexType name="phaseInteractionRelativeType">
-		<xsd:complexContent>
-			<xsd:extension base="phaseRelativeAbsoluteAbstractType">
-				<xsd:sequence>
-					<xsd:element name="reference" type="phaseDistanceReferenceType"/>
-					<xsd:element ref="area" minOccurs="0" maxOccurs="unbounded"/>
-					<xsd:element name="depthRange" minOccurs="0" maxOccurs="unbounded">
-						<xsd:complexType>
-							<xsd:sequence>	
-								<xsd:element name="unitRange" type="unitRangeType"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element ref="distanceRange" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>	
-	
-	<!-- EVENT STATION PHASE INTERACTION ABSOLUTE TYPE -->
-	<xsd:complexType name="phaseInteractionAbsoluteType">
-		<xsd:complexContent>
-			<xsd:extension base="phaseRelativeAbsoluteAbstractType">
-				<xsd:sequence>
-					<xsd:element ref="area" minOccurs="0"  maxOccurs="0"/>
-					<xsd:element name="depthRange" minOccurs="0" maxOccurs="0">
-						<xsd:complexType>
-							<xsd:sequence>	
-								<xsd:element name="unitRange" type="unitRangeType"/>
-							</xsd:sequence>
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT STATION PHASE INTERACTION TYPE -->
-	<xsd:complexType name="phaseInteractionType">
-		<xsd:complexContent>
-			<xsd:extension base="phaseInteractionAbstractType">
-				<xsd:sequence>
-					<xsd:element ref="phaseRelativeAbsolute" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	
-
-	
-	<!-- PHASE DISTANCE REFERENCE TYPE -->
-	<xsd:simpleType name="phaseDistanceReferenceType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="EVENT"/>
-			<xsd:enumeration value="STATION"/>
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
-
-	<!-- EVENT CHANNEL AND TYPE -->
-	<xsd:complexType name="eventChannelANDType">
-		<xsd:complexContent>
-			<xsd:extension base="eventChannelType">
-				<xsd:sequence>
-					<xsd:element ref="eventChannel" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT CHANNEL OR TYPE -->	
-	<xsd:complexType name="eventChannelORType">
-		<xsd:complexContent>
-			<xsd:extension base="eventChannelType">
-				<xsd:sequence>
-					<xsd:element ref="eventChannel" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT CHANNEL XOR TYPE -->
-	<xsd:complexType name="eventChannelXORType">
-		<xsd:complexContent>
-			<xsd:extension base="eventChannelType">
-				<xsd:sequence>
-					<xsd:element ref="eventChannel" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- EVENT CHANNEL NOT TYPE -->
-	<xsd:complexType name="eventChannelNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="eventChannelType">
-				<xsd:sequence>
-					<xsd:element ref="eventChannel" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****DATA CENTER***** -->
-
-	<!-- DATA CENTER FIXED DATA CENTER TYPE -->
-	<xsd:complexType name="fixedDataCenterType">
-		<xsd:complexContent>
-			<xsd:extension base="dataCenterType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER REQUESTGENERATOR********** -->
-
-	<!-- REQUEST GENERATOR PHASE REQUEST TYPE -->
-	<xsd:complexType name="phaseRequestType">
-		<xsd:complexContent>
-			<xsd:extension base="requestGeneratorType">
-				<xsd:sequence>
-					<xsd:element name="beginPhase" type="xsd:string"/>
-					<xsd:element name="beginOffset" type="timeIntervalType"/>
-					<xsd:element name="endPhase" type="xsd:string"/>
-					<xsd:element name="endOffset" type="timeIntervalType"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
-
-	<!-- AVAILABLE DATA AND TYPE -->
-	<xsd:complexType name="availableDataANDType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-					<xsd:element ref="availableData" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- AVAILABLE DATA OR TYPE -->	
-	<xsd:complexType name="availableDataORType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-					<xsd:element ref="availableData" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- AVAILABLE DATA XOR TYPE -->
-	<xsd:complexType name="availableDataXORType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-					<xsd:element ref="availableData" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- AVAILABLE DATA NOT TYPE -->
-	<xsd:complexType name="availableDataNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-					<xsd:element ref="availableData" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- AVAILABLE DATA NO GAPS TYPE -->
-	<xsd:complexType name="nogapsType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- AVAILABLE DATA FULL COVERAGE TYPE -->
-	<xsd:complexType name="fullCoverageType">
-		<xsd:complexContent>
-			<xsd:extension base="availableDataType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
-	
-	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****WAVEFORM***** -->
-
-	<!-- WAVE FORM AND TYPE -->
-	<xsd:complexType name="waveFormANDType">
-		<xsd:complexContent>
-			<xsd:extension base="waveFormType">
-				<xsd:sequence>
-					<xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- WAVE FORM OR TYPE -->	
-	<xsd:complexType name="waveFormORType">
-		<xsd:complexContent>
-			<xsd:extension base="waveFormType">
-				<xsd:sequence>
-					<xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- WAVE FORM XOR TYPE -->
-	<xsd:complexType name="waveFormXORType">
-		<xsd:complexContent>
-			<xsd:extension base="waveFormType">
-				<xsd:sequence>
-					<xsd:element ref="waveForm" minOccurs="2" maxOccurs="2"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- WAVE FORM NOT TYPE -->
-	<xsd:complexType name="waveFormNOTType">
-		<xsd:complexContent>
-			<xsd:extension base="waveFormType">
-				<xsd:sequence>
-					<xsd:element ref="waveForm" minOccurs="1" maxOccurs="1"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!--LOCAL SEISMOGRAM TYPE-->
-	<xsd:complexType name="localSeismogramType">
-		<xsd:complexContent>
-			<xsd:extension base="waveFormType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
-
-	<xsd:complexType name="externalWaveformProcessType">
-		<xsd:complexContent>
-			<xsd:extension base="externalProcessType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="printLineWaveformProcessorType">
-		<xsd:complexContent>
-			<xsd:extension base="internalProcessType">
-				<xsd:sequence>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="localSeismogramProcessType"> 
-		<xsd:complexContent>
-			<xsd:extension base="printLineWaveformProcessorType">
-				<xsd:sequence>
-					<xsd:element name="dataDirectory" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:complexType name="breqfastAvailableDataType"> 
-		<xsd:complexContent>
-			<xsd:extension base="printLineWaveformProcessorType">
-				<xsd:sequence>
-					<xsd:element name="dataDirectory" type="xsd:string"/>
-					<xsd:element name="name" type="xsd:string"/>
-					<xsd:element name="inst" type="xsd:string"/>
-					<xsd:element name="mail" type="xsd:string"/>
-					<xsd:element name="email" type="xsd:string"/>
-					<xsd:element name="phone" type="xsd:string"/>
-					<xsd:element name="fax" type="xsd:string"/>
-					<xsd:element name="media" type="xsd:string"/>
-					<xsd:element name="altmedia1" type="xsd:string"/>
-					<xsd:element name="altmedia2" type="xsd:string"/>
-					<xsd:element name="quality" type="xsd:string"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<!-- ELEMENT DECLARATIONS -->
-
-	<!-- ELEMENT DECLARATIONS FOR EVENT STATION TYPE -->
-	<xsd:element name="eventStation" type="eventStationType" abstract="true"/>
-	<xsd:element name="eventStationDistance" type="eventStationDistanceType" substitutionGroup="eventStation"/>
-	<xsd:element name="embeddedOriginSubsetter" type="embeddedOriginSubsetterType" substitutionGroup="eventStation"/>
-	<xsd:element name="embeddedStationSubsetter" type="embeddedStationSubsetterType" substitutionGroup="eventStation"/>
-	<xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
-	<xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
-	<xsd:element name="linearDistanceMagnitudeRange" type="linearDistanceMagnitudeRangeType" substitutionGroup="eventStation"/>
-
-	<xsd:element name="phaseRelativeAbsolute" type="phaseRelativeAbsoluteAbstractType" abstract="true"/>
-	<xsd:element name="relative" type="phaseInteractionRelativeType" substitutionGroup="phaseRelativeAbsolute"/>
-	<xsd:element name="absolute" type="phaseInteractionAbsoluteType" substitutionGroup="phaseRelativeAbsolute"/>
-	<xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
-	<xsd:element name="phaseExists" type="phaseExistsType" substitutionGroup="eventStation"/>
-
-	<xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
-	<xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
-	<xsd:element name="eventStationXOR" type="eventStationXORType" substitutionGroup="eventStation"/>
-	<xsd:element name="eventStationNOT" type="eventStationNOTType" substitutionGroup="eventStation"/>
-	
-	<!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
-	<xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
-	<xsd:element name="eventChannelAND" type="eventChannelANDType" substitutionGroup="eventChannel"/>
-	<xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
-	<xsd:element name="eventChannelXOR" type="eventChannelXORType" substitutionGroup="eventChannel"/>
-	<xsd:element name="eventChannelNOT" type="eventChannelNOTType" substitutionGroup="eventChannel"/>
-
-	<!-- ELEMENT DECLARATIONS FOR DATA CENTER TYPE -->
-	<xsd:element name="dataCenter" type="dataCenterType" abstract="true"/>
-	<xsd:element name="fixedDataCenter" type="fixedDataCenterType" substitutionGroup="dataCenter"/>
-
-	<!-- ELEMENT DECLARATIONS FOR REQUEST GENERATOR TYPE -->
-	<xsd:element name="requestGenerator" type="requestGeneratorType" abstract="true"/>
-	<xsd:element name="phaseRequest" type="phaseRequestType" substitutionGroup="requestGenerator"/>
-
-	<!-- ELEMENT DECLARATIONS FOR AVAILABLE DATA TYPE -->
-	<xsd:element name="availableData" type="availableDataType" abstract="true"/>
-	<xsd:element name="nogaps" type="nogapsType" substitutionGroup="availableData"/>
-	<xsd:element name="fullCoverage" type="fullCoverageType" substitutionGroup="availableData"/>
-	<xsd:element name="availableDataAND" type="availableDataANDType" substitutionGroup="availableData"/>
-	<xsd:element name="availableDataOR" type="availableDataORType" substitutionGroup="availableData"/>
-	<xsd:element name="availableDataXOR" type="availableDataXORType" substitutionGroup="availableData"/>
-	<xsd:element name="availableDataNOT" type="availableDataNOTType" substitutionGroup="availableData"/>
-
-	<!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
-	<xsd:element name="waveForm" type="waveFormType" abstract="true"/>
-	<xsd:element name="waveFormAND" type="waveFormANDType" substitutionGroup="waveForm"/>
-	<xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
-	<xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
-	<xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
-	<xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
-
-	<!-- element representing the process -->waw
-	<xsd:element name="waveFormProcess" type="processType" abstract="true"/>
-	<xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
-	<xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
-	<xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
-	<xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
-
-	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
-	<xsd:element name="externalSeismogramProcess"
-	type="externalWaveformProcessType"
-	substitutionGroup="waveFormProcess"/>
-
-	<xsd:complexType name="localSeismogramArmType">
-		<xsd:complexContent>
-			<xsd:extension base="armType">
-				<xsd:sequence>
-					<xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
-					<!--xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/-->
-					<xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="waveForm"  minOccurs="0" maxOccurs="1"/>
-	                                <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:element name="localSeismogramArm" type="localSeismogramArmType"/>
-	<xsd:complexType name="waveFormArmType">
-		<xsd:complexContent>
-			<xsd:extension base="armType">
-				<xsd:sequence>
-					<xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
-					 <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
-					<xsd:element ref="localSeismogramArm"/>
-					<xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-
-	<xsd:element name="waveFormArm" type="waveFormArmType"/>
-
-
+    
+    
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+            Schema for the WaveFormArm of SOD
+        </xsd:documentation>
+    </xsd:annotation>
+    
+    <!-- Include the external schemas necessary for this schema -->
+    <xsd:include schemaLocation="./utilities.xsd"/>
+    <xsd:include schemaLocation="./EventArm.xsd"/>
+    <xsd:include schemaLocation="./NetworkArm.xsd"/>
+    
+    <!-- Abstract Type Declarations -->
+    
+    <!-- ABSTRACT TYPE EVENT STATION-->
+    <xsd:complexType name="eventStationType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- ABSTRACT TYPE EVENT CHANNEL-->
+    <xsd:complexType name="eventChannelType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- ABSTRACT TYPE REQUEST GENERATOR-->
+    <xsd:complexType name="requestGeneratorType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- ABSTRACT TYPE AVAILABLE DATA-->
+    <xsd:complexType name="availableDataType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- ABSTRACT TYPE WAVE FORM-->
+    <xsd:complexType name="waveFormType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- ABSTRACT TYPE DATA CENTER SOURCE -->
+    <xsd:complexType name="dataCenterType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="sourceType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTSTATION***** -->
+    
+    <!-- EVENT STATION AND TYPE -->
+    <xsd:complexType name="eventStationANDType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION OR TYPE -->	
+    <xsd:complexType name="eventStationORType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION XOR TYPE -->
+    <xsd:complexType name="eventStationXORType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION NOT TYPE -->
+    <xsd:complexType name="eventStationNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION DISTANCE TYPE -->
+    <xsd:complexType name="eventStationDistanceType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element name="distanceRange" type="distanceRangeType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION MAGNITUDE TYPE -->
+    <xsd:complexType name="embeddedOriginSubsetterType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="origin"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION STATION TYPE -->
+    <xsd:complexType name="embeddedStationSubsetterType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="station"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION AZIMUTH RANGE TYPE -->
+    <xsd:complexType name="azimuthRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element name="min" type="xsd:float"/>
+                    <xsd:element name="max" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- EVENT STATION BACK AZIMUTH RANGE TYPE -->
+    <xsd:complexType name="backAzimuthRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element name="min" type="xsd:float"/>
+                    <xsd:element name="max" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE RANGE TYPE -->
+    <xsd:complexType name="linearDistanceMagnitudeRangeType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element ref="magnitudeRange"/>
+                    <xsd:element ref="distanceRange"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- PHASE TURN INTERACTION TYPE -->
+    <xsd:simpleType name="phaseTurnInteractionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="TOPSIDE REFLECTION"/>
+            <xsd:enumeration value="BOTTOMSIDE REFLECTION"/>
+            <xsd:enumeration value="TURNPOINT"/>
+            <xsd:enumeration value="UPGOING S TO P CONVERSION"/>
+            <xsd:enumeration value="UPGOING P TO S CONVERSION"/>	
+            <xsd:enumeration value="DOWNGOING S TO P CONVERSION"/>
+            <xsd:enumeration value="DOWNGOING P TO S CONVERSION"/>
+            <xsd:enumeration value="PATH"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <!-- ABSTRACT TYPE PHASE TYPE -->
+    <xsd:complexType name="phaseAbstractType"  abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="eventStationType">
+                <xsd:sequence>
+                    <xsd:element name="modelName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="phaseName" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION PHASE EXISTS TYPE -->
+    <xsd:complexType name="phaseExistsType">
+        <xsd:complexContent>
+            <xsd:extension base="phaseAbstractType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- EVENT STATION PHASE INTERACTION TYPE -->
+    <xsd:complexType name="phaseInteractionAbstractType"  abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="phaseAbstractType">
+                <xsd:sequence>
+                    <xsd:element name="interactionStyle" type="phaseTurnInteractionType"/>	
+                    <xsd:element name="interactionNumber" type="xsd:positiveInteger" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- PHASE RELATIVE ABSOLUTE ABSTRACT TYPE -->
+    <xsd:complexType name="phaseRelativeAbsoluteAbstractType" abstract="true"/>
+    
+    
+    <!-- PHASE RELATIVE TYPE -->
+    <xsd:complexType name="phaseInteractionRelativeType">
+        <xsd:complexContent>
+            <xsd:extension base="phaseRelativeAbsoluteAbstractType">
+                <xsd:sequence>
+                    <xsd:element name="reference" type="phaseDistanceReferenceType"/>
+                    <xsd:element ref="area" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="depthRange" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:sequence>	
+                                <xsd:element name="unitRange" type="unitRangeType"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element ref="distanceRange" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>	
+    
+    <!-- EVENT STATION PHASE INTERACTION ABSOLUTE TYPE -->
+    <xsd:complexType name="phaseInteractionAbsoluteType">
+        <xsd:complexContent>
+            <xsd:extension base="phaseRelativeAbsoluteAbstractType">
+                <xsd:sequence>
+                    <xsd:element ref="area" minOccurs="0"  maxOccurs="0"/>
+                    <xsd:element name="depthRange" minOccurs="0" maxOccurs="0">
+                        <xsd:complexType>
+                            <xsd:sequence>	
+                                <xsd:element name="unitRange" type="unitRangeType"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT STATION PHASE INTERACTION TYPE -->
+    <xsd:complexType name="phaseInteractionType">
+        <xsd:complexContent>
+            <xsd:extension base="phaseInteractionAbstractType">
+                <xsd:sequence>
+                    <xsd:element ref="phaseRelativeAbsolute" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    
+    
+    <!-- PHASE DISTANCE REFERENCE TYPE -->
+    <xsd:simpleType name="phaseDistanceReferenceType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="EVENT"/>
+            <xsd:enumeration value="STATION"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
+    
+    <!-- EVENT CHANNEL AND TYPE -->
+    <xsd:complexType name="eventChannelANDType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="eventChannel" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT CHANNEL OR TYPE -->	
+    <xsd:complexType name="eventChannelORType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="eventChannel" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT CHANNEL XOR TYPE -->
+    <xsd:complexType name="eventChannelXORType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="eventChannel" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- EVENT CHANNEL NOT TYPE -->
+    <xsd:complexType name="eventChannelNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="eventChannelType">
+                <xsd:sequence>
+                    <xsd:element ref="eventChannel" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****DATA CENTER***** -->
+    
+    <!-- DATA CENTER FIXED DATA CENTER TYPE -->
+    <xsd:complexType name="fixedDataCenterType">
+        <xsd:complexContent>
+            <xsd:extension base="dataCenterType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER REQUESTGENERATOR********** -->
+    
+    <!-- REQUEST GENERATOR PHASE REQUEST TYPE -->
+    <xsd:complexType name="phaseRequestType">
+        <xsd:complexContent>
+            <xsd:extension base="requestGeneratorType">
+                <xsd:sequence>
+                    <xsd:element name="beginPhase" type="xsd:string"/>
+                    <xsd:element name="beginOffset" type="timeIntervalType"/>
+                    <xsd:element name="endPhase" type="xsd:string"/>
+                    <xsd:element name="endOffset" type="timeIntervalType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
+    
+    <!-- AVAILABLE DATA AND TYPE -->
+    <xsd:complexType name="availableDataANDType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                    <xsd:element ref="availableData" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- AVAILABLE DATA OR TYPE -->	
+    <xsd:complexType name="availableDataORType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                    <xsd:element ref="availableData" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- AVAILABLE DATA XOR TYPE -->
+    <xsd:complexType name="availableDataXORType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                    <xsd:element ref="availableData" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- AVAILABLE DATA NOT TYPE -->
+    <xsd:complexType name="availableDataNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                    <xsd:element ref="availableData" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- AVAILABLE DATA NO GAPS TYPE -->
+    <xsd:complexType name="nogapsType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- AVAILABLE DATA FULL COVERAGE TYPE -->
+    <xsd:complexType name="fullCoverageType">
+        <xsd:complexContent>
+            <xsd:extension base="availableDataType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****WAVEFORM***** -->
+    
+    <!-- WAVE FORM AND TYPE -->
+    <xsd:complexType name="waveFormANDType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormType">
+                <xsd:sequence>
+                    <xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- WAVE FORM OR TYPE -->	
+    <xsd:complexType name="waveFormORType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormType">
+                <xsd:sequence>
+                    <xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- WAVE FORM XOR TYPE -->
+    <xsd:complexType name="waveFormXORType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormType">
+                <xsd:sequence>
+                    <xsd:element ref="waveForm" minOccurs="2" maxOccurs="2"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- WAVE FORM NOT TYPE -->
+    <xsd:complexType name="waveFormNOTType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormType">
+                <xsd:sequence>
+                    <xsd:element ref="waveForm" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--LOCAL SEISMOGRAM TYPE-->
+    <xsd:complexType name="localSeismogramType">
+        <xsd:complexContent>
+            <xsd:extension base="waveFormType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
+    
+    <xsd:complexType name="externalWaveformProcessType">
+        <xsd:complexContent>
+            <xsd:extension base="externalProcessType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="printLineWaveformProcessorType">
+        <xsd:complexContent>
+            <xsd:extension base="internalProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="localSeismogramProcessType"> 
+        <xsd:complexContent>
+            <xsd:extension base="printLineWaveformProcessorType">
+                <xsd:sequence>
+                    <xsd:element name="dataDirectory" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="breqfastAvailableDataType"> 
+        <xsd:complexContent>
+            <xsd:extension base="printLineWaveformProcessorType">
+                <xsd:sequence>
+                    <xsd:element name="dataDirectory" type="xsd:string"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="inst" type="xsd:string"/>
+                    <xsd:element name="mail" type="xsd:string"/>
+                    <xsd:element name="email" type="xsd:string"/>
+                    <xsd:element name="phone" type="xsd:string"/>
+                    <xsd:element name="fax" type="xsd:string"/>
+                    <xsd:element name="media" type="xsd:string"/>
+                    <xsd:element name="altmedia1" type="xsd:string"/>
+                    <xsd:element name="altmedia2" type="xsd:string"/>
+                    <xsd:element name="quality" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <!-- ELEMENT DECLARATIONS -->
+    
+    <!-- ELEMENT DECLARATIONS FOR EVENT STATION TYPE -->
+    <xsd:element name="eventStation" type="eventStationType" abstract="true"/>
+    <xsd:element name="eventStationDistance" type="eventStationDistanceType" substitutionGroup="eventStation"/>
+    <xsd:element name="embeddedOriginSubsetter" type="embeddedOriginSubsetterType" substitutionGroup="eventStation"/>
+    <xsd:element name="embeddedStationSubsetter" type="embeddedStationSubsetterType" substitutionGroup="eventStation"/>
+    <xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
+    <xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
+    <xsd:element name="linearDistanceMagnitudeRange" type="linearDistanceMagnitudeRangeType" substitutionGroup="eventStation"/>
+    
+    <xsd:element name="phaseRelativeAbsolute" type="phaseRelativeAbsoluteAbstractType" abstract="true"/>
+    <xsd:element name="relative" type="phaseInteractionRelativeType" substitutionGroup="phaseRelativeAbsolute"/>
+    <xsd:element name="absolute" type="phaseInteractionAbsoluteType" substitutionGroup="phaseRelativeAbsolute"/>
+    <xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
+    <xsd:element name="phaseExists" type="phaseExistsType" substitutionGroup="eventStation"/>
+    
+    <xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
+    <xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
+    <xsd:element name="eventStationXOR" type="eventStationXORType" substitutionGroup="eventStation"/>
+    <xsd:element name="eventStationNOT" type="eventStationNOTType" substitutionGroup="eventStation"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
+    <xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
+    <xsd:element name="eventChannelAND" type="eventChannelANDType" substitutionGroup="eventChannel"/>
+    <xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
+    <xsd:element name="eventChannelXOR" type="eventChannelXORType" substitutionGroup="eventChannel"/>
+    <xsd:element name="eventChannelNOT" type="eventChannelNOTType" substitutionGroup="eventChannel"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR DATA CENTER TYPE -->
+    <xsd:element name="dataCenter" type="dataCenterType" abstract="true"/>
+    <xsd:element name="fixedDataCenter" type="fixedDataCenterType" substitutionGroup="dataCenter"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR REQUEST GENERATOR TYPE -->
+    <xsd:element name="requestGenerator" type="requestGeneratorType" abstract="true"/>
+    <xsd:element name="phaseRequest" type="phaseRequestType" substitutionGroup="requestGenerator"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR AVAILABLE DATA TYPE -->
+    <xsd:element name="availableData" type="availableDataType" abstract="true"/>
+    <xsd:element name="nogaps" type="nogapsType" substitutionGroup="availableData"/>
+    <xsd:element name="fullCoverage" type="fullCoverageType" substitutionGroup="availableData"/>
+    <xsd:element name="availableDataAND" type="availableDataANDType" substitutionGroup="availableData"/>
+    <xsd:element name="availableDataOR" type="availableDataORType" substitutionGroup="availableData"/>
+    <xsd:element name="availableDataXOR" type="availableDataXORType" substitutionGroup="availableData"/>
+    <xsd:element name="availableDataNOT" type="availableDataNOTType" substitutionGroup="availableData"/>
+    
+    <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
+    <xsd:element name="waveForm" type="waveFormType" abstract="true"/>
+    <xsd:element name="waveFormAND" type="waveFormANDType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
+    <xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
+    
+    <!-- element representing the process -->waw
+    <xsd:element name="waveFormProcess" type="processType" abstract="true"/>
+    <xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
+    <xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
+    
+    <xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="externalSeismogramProcess"
+        type="externalWaveformProcessType"
+    substitutionGroup="waveFormProcess"/>
+    
+    <xsd:complexType name="localSeismogramArmType">
+        <xsd:complexContent>
+            <xsd:extension base="armType">
+                <xsd:sequence>
+                    <xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
+                    <!--xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/-->
+                    <xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="waveForm"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:element name="localSeismogramArm" type="localSeismogramArmType"/>
+    <xsd:complexType name="waveFormArmType">
+        <xsd:complexContent>
+            <xsd:extension base="armType">
+                <xsd:sequence>
+                    <xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="localSeismogramArm"/>
+                    <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+    <xsd:element name="waveFormArm" type="waveFormArmType"/>
+    
+    
 </xsd:schema>
