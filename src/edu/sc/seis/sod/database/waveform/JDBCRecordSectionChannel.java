@@ -23,9 +23,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         this.conn = conn;
         this.tableName = tableName;
         this.eventRecSecTableName = eventRecSecTableName;
-        String createStmt = "CREATE TABLE "
-                + tableName
-                + " (recSecId int,channelid int,topLeftX double, topLeftY double,bottomRightX double,bottomRightY double)";
+        String createStmt = getCreateStatement(tableName);
         String insertStmt = "INSERT INTO "
                 + tableName
                 + " (recSecId, channelid,topLeftX,topLeftY,bottomRightX,bottomRightY) VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,6 +33,10 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         String getChannelsStmt = " SELECT channelid FROM " + tableName
                 + " WHERE recSecId = ?";
         String delRecSecStmt = "delete from " + tableName + " where recSecId=?";
+        if(!DBUtil.tableExists(eventRecSecTableName,conn)){
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(JDBCEventRecordSection.getCreateStatement(eventRecSecTableName));
+        }
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -54,6 +56,13 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         insert.setDouble(5, pixelInfo[2]);
         insert.setDouble(6, pixelInfo[3]);
         insert.executeUpdate();
+    }
+
+    public static String getCreateStatement(String tableName) {
+        String createStmt = "CREATE TABLE "
+                + tableName
+                + " (recSecId int,channelid int,topLeftX double, topLeftY double,bottomRightX double,bottomRightY double)";
+        return createStmt;
     }
 
     public void updateRecordSection(int newRecSecId,
