@@ -227,9 +227,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JLabel label = new JLabel(getDisplayName(element.getTagName()));
         Box box = Box.createVerticalBox();
         JComponent comp = getCompForAttributes(element);
-        if (comp != null) {
-            box.add(comp);
-        }
+        if (comp != null) { box.add(comp); }
 
         NamedNodeMap attrList = element.getAttributes();
 
@@ -239,6 +237,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             comp = getCompForTextNode((Text)list.item(0));
             if (comp != null) {
                 box = Box.createHorizontalBox();
+                box.add(Box.createHorizontalStrut(10));
                 box.add(label);
                 box.add(new JLabel(" = "));
                 box.add(comp);
@@ -296,9 +295,10 @@ public class SimpleGUIEditor extends CommandLineEditor {
         Box botRow = Box.createHorizontalBox();
         box.add(botRow);
 
+        topRow.add(Box.createHorizontalStrut(5));
         topRow.add(top);
         topRow.add(Box.createGlue());
-        botRow.add(Box.createRigidArea(new Dimension(10, 10)));
+        botRow.add(Box.createRigidArea(new Dimension(15, 10)));
         botRow.add(bottom);
         botRow.add(Box.createGlue());
         return box;
