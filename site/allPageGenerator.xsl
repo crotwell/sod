@@ -11,7 +11,16 @@
                         <xsl:apply-templates select="document(source/text())">
                             <xsl:with-param name="currentPage" select="destination/text()"/>
                             <xsl:with-param name="base" select="base/text()"/>
-                            <xsl:with-param name="menu" select="menu/text()"/>
+                            <xsl:with-param name="menu">
+                                <xsl:choose>
+                                    <xsl:when test="menu">
+                                        <xsl:value-of select="menu/text()"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="'Tutorials'"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:with-param>
                         </xsl:apply-templates>
                     </redirect:write>
                 </xsl:if>
