@@ -28,17 +28,17 @@ public class EventSorter{
         if(config != null  && config.getChildNodes().getLength() != 0){
             Element sortType = (Element)config.getFirstChild();
             if(sortType.getNodeName().equals("time")){
-                query = "SELECT DISTINCT origineventid, origin_time FROM origin ORDER BY origin_time";
+                query = "SELECT DISTINCT origin_event_id, time_stamp FROM origin, time WHERE origin_time_id = time_id ORDER BY time_stamp";
             }else if(sortType.getNodeName().equals("magnitude")){
-                query = "SELECT DISTINCT origineventid, magnitudevalue FROM origin, magnitude " +
-                    "WHERE origin.originid IN (SELECT originid FROM eventaccess) and " +
-                    "magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin.originid = magnitude.originid) " +
+                query = "SELECT DISTINCT origin_event_id, magnitudevalue FROM origin, magnitude " +
+                    "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
+                    "magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
                     "ORDER BY  magnitudevalue";
             }else if(sortType.getNodeName().equals("depth")){
-                query = "SELECT DISTINCT origineventid, locationdepthvalue FROM origin, location " +
-                    "WHERE originid IN (SELECT originid FROM eventaccess) and " +
-                    "locationdepthvalue IN (SELECT locationdepthvalue FROM location WHERE originlocationid = locationid) " +
-                    "ORDER BY  locationdepthvalue";
+                query = "SELECT DISTINCT origin_event_id, quantity_value  FROM origin, quantity " +
+                    "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
+                    "quantity_value IN (SELECT quantity_value FROM quantity WHERE quantity_id IN (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
+                    "ORDER BY  quantity_value";
             }
             if(query != null){
                 String ordering = sortType.getAttribute("order");
@@ -50,7 +50,7 @@ public class EventSorter{
 
     public StatefulEvent[] getSortedEvents() throws SQLException{
         if(query == null) return evStatus.getAll();
-        return evStatus.get(query, "origineventid");
+        return evStatus.get(query, "origin_event_id");
     }
 
     private String query;
