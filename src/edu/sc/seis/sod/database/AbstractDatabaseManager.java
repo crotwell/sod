@@ -31,7 +31,7 @@ public  abstract class AbstractDatabaseManager  {
 
     public void close() {
 	try {
-	    getEventDatabase().delete(Status.COMPLETE_SUCCESS);
+	    //    getEventDatabase().delete(Status.COMPLETE_SUCCESS);
 	    getConnection().close();
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
