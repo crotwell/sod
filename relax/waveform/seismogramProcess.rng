@@ -345,7 +345,9 @@
     </define>
     <define name="localSeismogramStatus">
         <element name="localSeismogramTemplateGenerator">
-            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            <element name="template">
+                <data type="string"/>
+            </element>
         </element>
     </define>
     <define name="forkProcess">
@@ -432,7 +434,9 @@
                 </element>
             </optional>
             <element name="seismogramConfig">
-                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+                <element name="template">
+                    <data type="string"/>
+                </element>
             </element>
             <optional>
                 <element name="prefix">

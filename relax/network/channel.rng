@@ -107,10 +107,10 @@
                         subsetters. The subsetters after the first false outputed are not evaluated.</description>
                     <example>
                         <channelAND>
-                            <channeleffectiveTimeOverlap>
+                            <channelEffectiveTimeOverlap>
                                 <startTime>20020701T00:00:00.001Z</startTime>
                                 <endTime>20021030T00:00:00.001Z</endTime>
-                            </channeleffectiveTimeOverlap>
+                            </channelEffectiveTimeOverlap>
                             <sampling>
                                 <min>1</min>
                                 <max>40</max>
@@ -137,10 +137,10 @@
                         subsetters. If the first subsetters returns true then the second is not evaluated.</description>
                     <example>
                         <channelOR>
-                            <channeleffectiveTimeOverlap>
+                            <channelEffectiveTimeOverlap>
                                 <startTime>20020701T00:00:00.001Z</startTime>
                                 <endTime>20021030T00:00:00.001Z</endTime>
-                            </channeleffectiveTimeOverlap>
+                            </channelEffectiveTimeOverlap>
                             <sampling>
                                 <min>1</min>
                                 <max>40</max>
@@ -166,10 +166,10 @@
                     <description>The output is the logical XOR of the outputs of all included subsetters.</description>
                     <example>
                         <channelXOR>
-                            <channeleffectiveTimeOverlap>
+                            <channelEffectiveTimeOverlap>
                                 <startTime>20020701T00:00:00.001Z</startTime>
                                 <endTime>20021030T00:00:00.001Z</endTime>
-                            </channeleffectiveTimeOverlap>
+                            </channelEffectiveTimeOverlap>
                             <sampling>
                                 <min>1</min>
                                 <max>40</max>

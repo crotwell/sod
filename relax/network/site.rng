@@ -100,10 +100,8 @@
                                 <max>200</max>
                             </siteDepthRange>
                             <siteEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                    <startTime>20020701T00:00:00.001Z</startTime>
-                                    <endTime>20021030T00:00:00.001Z</endTime>
-                                </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                             </siteEffectiveTimeOverlap>
                         </siteAND>
                     </example>
@@ -130,10 +128,8 @@
                             <max>200</max>
                         </siteDepthRange>
                         <siteEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <startTime>20020701T00:00:00.001Z</startTime>
-                                <endTime>20021030T00:00:00.001Z</endTime>
-                            </effectiveTimeOverlap>
+                            <startTime>20020701T00:00:00.001Z</startTime>
+                            <endTime>20021030T00:00:00.001Z</endTime>
                         </siteEffectiveTimeOverlap>
                     </siteOR>
                 </example>

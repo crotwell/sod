@@ -15,7 +15,9 @@
     </define>
     <define name="waveformEvent">
         <element name="waveformEventTemplateGenerator">
-            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            <element name="template">
+                <data type="string"/>
+            </element>
         </element>
     </define>
     <define name="waveformNetwork">

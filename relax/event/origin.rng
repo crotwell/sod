@@ -61,7 +61,7 @@
                     <description> Evaluates to true if the numerical value of the geographic region
                         of the event matches the given value. </description>
                     <example>
-                        <geographicRegion>12</geographicRegion>
+                        <geographicalRegion>12</geographicalRegion>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
@@ -143,12 +143,8 @@
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <originOR>
-                            <catalog>
-                                <value>FINGER</value>
-                            </catalog>
-                            <contributor>
-                                <value>NEIC</value>
-                            </contributor>
+                            <catalog>FINGER</catalog>
+                            <contributor>NEIC</contributor>
                         </originOR>
                     </example>
                 </xsd:documentation>
@@ -167,12 +163,8 @@
                         Origin subsetters. </description>
                     <example>
                         <originXOR>
-                            <catalog>
-                                <value>FINGER</value>
-                            </catalog>
-                            <contributor>
-                                <value>NEIC</value>
-                            </contributor>
+                            <catalog>FINGER</catalog>
+                            <contributor>NEIC</contributor>
                         </originXOR>
                     </example>
                 </xsd:documentation>
@@ -190,9 +182,7 @@
                         Origin subsetters. </description>
                     <example>
                         <originNOT>
-                            <catalog>
-                                <value>FINGER</value>
-                            </catalog>
+                            <catalog>FINGER</catalog>
                         </originNOT>
                     </example>
                 </xsd:documentation>
@@ -258,11 +248,11 @@
                         lat and lon. </description>
                     <example>
                         <originPointAzimuth>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
                             <unit>DEGREE</unit>
                             <min>30</min>
                             <max>90</max>
-                            <latitude>35</latitude>
-                            <longitude>-85</longitude>
                         </originPointAzimuth>
                     </example>
                 </xsd:documentation>
@@ -279,11 +269,11 @@
                         given lat and lon. </description>
                     <example>
                         <originPointBackAzimuth>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
                             <unit>DEGREE</unit>
                             <min>30</min>
                             <max>90</max>
-                            <latitude>35</latitude>
-                            <longitude>-85</longitude>
                         </originPointBackAzimuth>
                     </example>
                 </xsd:documentation>

@@ -190,10 +190,12 @@
                             <stationArea>
                                 <boxArea>
                                     <latitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>25</min>
                                         <max>35</max>
                                     </latitudeRange>
                                     <longitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>-80</min>
                                         <max>-70</max>
                                     </longitudeRange>
@@ -225,10 +227,12 @@
                             <stationArea>
                                 <boxArea>
                                     <latitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>25</min>
                                         <max>35</max>
                                     </latitudeRange>
                                     <longitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>-80</min>
                                         <max>-70</max>
                                     </longitudeRange>
@@ -259,10 +263,12 @@
                             <stationArea>
                                 <boxArea>
                                     <latitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>25</min>
                                         <max>35</max>
                                     </latitudeRange>
                                     <longitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>-80</min>
                                         <max>-70</max>
                                     </longitudeRange>
@@ -288,10 +294,12 @@
                             <stationArea>
                                 <boxArea>
                                     <latitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>25</min>
                                         <max>35</max>
                                     </latitudeRange>
                                     <longitudeRange>
+                                        <unit>DEGREE</unit>
                                         <min>-80</min>
                                         <max>-70</max>
                                     </longitudeRange>
