@@ -70,6 +70,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         saveAs.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         FileDialog fileDialog = new FileDialog(frame);
+                        fileDialog.setMode(FileDialog.SAVE);
                         fileDialog.show();
                         String outfilename = fileDialog.getFile();
                         if (outfilename != null) {
