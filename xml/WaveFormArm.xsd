@@ -461,6 +461,17 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<xsd:complexType name="localSeismogramProcessType"> 
+		<xsd:complexContent>
+			<xsd:extension base="printLineWaveformProcessorType">
+				<xsd:sequence>
+					<xsd:element name="dataDirectory" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
 	<!-- ELEMENT DECLARATIONS -->
 
 	<!-- ELEMENT DECLARATIONS FOR EVENT STATION TYPE -->
@@ -515,6 +526,7 @@
 	<xsd:element name="waveFormProcess" type="processType" abstract="true"/>
 	<xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
 	<xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
+	<xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
 	<xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
 
 	<xsd:complexType name="localSeismogramArmType">
@@ -523,7 +535,7 @@
 				<xsd:sequence>
 					<xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
-					<xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
+					<!--xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/-->
 					<xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="waveForm"  minOccurs="0" maxOccurs="1"/>
 	                                <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
@@ -538,6 +550,7 @@
 			<xsd:extension base="armType">
 				<xsd:sequence>
 					<xsd:element ref="eventStation"  minOccurs="0" maxOccurs="1"/>
+					 <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
 					<xsd:element ref="localSeismogramArm"/>
 					<xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>

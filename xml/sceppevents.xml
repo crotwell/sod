@@ -149,8 +149,8 @@
 
 <!-- Accept any channel with B or L band code -->
 	<channelIDOR>
-		<bandCode>B</bandCode>
-		<bandCode>L</bandCode>
+		<bandCode><value>B</value></bandCode>
+		<bandCode><value>L</value></bandCode>
 	</channelIDOR>
 
 	<sampling>
@@ -223,7 +223,9 @@
 		<fullCoverage/>
 	</availableDataAND>
 
-	<printlineSeismogramProcess/>
+	<sacFileProcessor>
+		<dataDirectory>SceppEvents</dataDirectory>
+	</sacFileProcessor>
 	</localSeismogramArm>
    </waveFormArm>
 </sod>
