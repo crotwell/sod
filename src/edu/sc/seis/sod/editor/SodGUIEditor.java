@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import java.awt.FileDialog;
 import edu.sc.seis.sod.Start;
+import javax.swing.JComponent;
 
 
 
@@ -83,19 +84,16 @@ public class SodGUIEditor extends SimpleGUIEditor {
                 });
     }
 
-    void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
+    JComponent getCompForElement(Element element) {
         try {
             if (element.getTagName().equals("property")) {
                 PropertyEditor edit = new PropertyEditor();
-                GridBagConstraints clone = (GridBagConstraints)gbc.clone();
-                clone.fill = clone.HORIZONTAL;
-                panel.add(edit.getGUI(element), gbc);
-                gbc.gridy++;
+                return edit.getGUI(element);
             } else {
-                super.addElementToPanel(panel, element, gbc);
+                return super.getCompForElement(element);
             }
         } catch (Exception e) {
-            super.addElementToPanel(panel, element, gbc);
+            return super.getCompForElement(element);
         }
     }
 

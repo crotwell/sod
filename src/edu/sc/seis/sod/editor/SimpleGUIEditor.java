@@ -28,6 +28,7 @@ import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Attr;
+import java.awt.Dimension;
 
 
 
@@ -60,31 +61,18 @@ public class SimpleGUIEditor extends CommandLineEditor {
             JPanel panel;
             for (int j = 0; j < list.getLength(); j++) {
                 if (list.item(j) instanceof Element) {
-                    panel = new JPanel();
-                    GridBagConstraints gbc = new GridBagConstraints();
-                    gbc.gridx=0;
-                    gbc.gridy=0;
-                    gbc.anchor = gbc.WEST;
-                    gbc.fill = gbc.HORIZONTAL;
-                    gbc.weightx = 1;
-                    gbc.weighty = 1;
-                    panel.setLayout(new GridBagLayout());
-                    tabs.add(((Element)list.item(j)).getTagName(), panel);
-                    addElementToPanel(panel, (Element)list.item(j), gbc);
+                    Box box = Box.createVerticalBox();
+                    box.add(getCompForElement((Element)list.item(j)));
+                    box.add(Box.createGlue());
+                    tabs.add(((Element)list.item(j)).getTagName(), box);
                 }
             }
         } else {
-            JPanel panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx=0;
-            gbc.gridy=0;
-            gbc.anchor = gbc.WEST;
-            gbc.fill = gbc.HORIZONTAL;
-            gbc.weightx = 1;
-            gbc.weighty = 1;
-            addElementToPanel(panel, doc.getDocumentElement(), gbc);
-            frame.getContentPane().add(new JScrollPane(panel), BorderLayout.CENTER);
+            JComponent comp = getCompForElement(doc.getDocumentElement());
+            Box box = Box.createVerticalBox();
+            box.add(comp);
+            box.add(Box.createGlue());
+            frame.getContentPane().add(new JScrollPane(box), BorderLayout.CENTER);
         }
         frame.pack();
         frame.show();
@@ -110,67 +98,93 @@ public class SimpleGUIEditor extends CommandLineEditor {
         xmlWriter.write(getDocument());
     }
 
-    void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
+    JComponent getCompForElement(Element element) {
         JLabel label = new JLabel(element.getTagName());
-        panel.add(label, gbc);
-        gbc.gridx++;
-        addAttributesToPanel(panel, element, gbc);
-        addChildrenToPanel(panel, element, gbc);
-        gbc.gridx--;
-    }
-
-    void addAttributesToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
-        NamedNodeMap list = element.getAttributes();
-        for (int i = 0; i < list.getLength() && i<3; i++) {
-            if (list.item(i) instanceof Attr) {
-                Attr attr = (Attr)list.item(i);
-                //JLabel label = new JLabel(attr.getName());
-                JLabel label = new JLabel(""+i);
-                //panel.add(label, gbc);
-//                gbc.gridx++;
-//                JTextField textField = new JTextField();
-//                textField.setText(attr.getNodeValue());
-//                TextListener textListen = new TextListener(attr);
-//                textField.getDocument().addDocumentListener(textListen);
-//                panel.add(textField, gbc);
-//                gbc.gridx--;
- //               gbc.gridy++;
-            }
+        Box box = Box.createVerticalBox();
+        JComponent comp = getCompForAttributes(element);
+        if (comp != null) {
+            box.add(comp);
         }
-        gbc.gridy++;
-    }
 
-    void addChildrenToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
+        NamedNodeMap attrList = element.getAttributes();
+
         NodeList list = element.getChildNodes();
-        // simple case of only 1 child Text node
-        if (list.getLength() == 1 && list.item(0) instanceof Text) {
-            addTextNodeToPanel(panel, (Text)list.item(0), gbc);
+        System.out.println("list length="+list.getLength()+" "+element.getTagName()+" "+attrList.getLength());
+        // simple case of only 1 child Text node and no attributes
+        if (list.getLength() == 1 && list.item(0) instanceof Text && attrList.getLength() == 0) {
+            comp = getCompForTextNode((Text)list.item(0));
+            if (comp != null) {
+                box = Box.createHorizontalBox();
+                box.add(label);
+                box.add(new JLabel(" = "));
+                box.add(comp);
+                return box;
+            }
         } else {
-            gbc.gridy++;
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i) instanceof Element) {
-                    addElementToPanel(panel, (Element)list.item(i), gbc);
+                    box.add(getCompForElement((Element)list.item(i)));
                 } else if (list.item(i) instanceof Text) {
                     Text text = (Text)list.item(i);
-                    addTextNodeToPanel(panel, text, gbc);
+                    comp = getCompForTextNode(text);
+                    if (comp != null) {
+                        box.add(comp);
+                    }
                 }
-                gbc.gridy++;
             }
         }
-        gbc.gridy++;
+        return indent(label, box);
     }
 
-    void addTextNodeToPanel(JPanel panel, Text text, GridBagConstraints gbc) {
+    JComponent getCompForAttributes(Element element) {
+        Box box = Box.createHorizontalBox();
+        Box nameCol = Box.createVerticalBox();
+        box.add(nameCol);
+        Box valCol = Box.createVerticalBox();
+        box.add(valCol);
+        NamedNodeMap list = element.getAttributes();
+        for (int i = 0; i < list.getLength(); i++) {
+            if (list.item(i) instanceof Attr) {
+                Attr attr = (Attr)list.item(i);
+                JLabel label = new JLabel(attr.getName());
+                nameCol.add(label);
+                JTextField textField = new JTextField();
+                textField.setText(attr.getNodeValue());
+                TextListener textListen = new TextListener(attr);
+                textField.getDocument().addDocumentListener(textListen);
+                valCol.add(textField);
+            }
+        }
+        return box;
+    }
+
+    JComponent getCompForTextNode(Text text) {
         if (text.getNodeValue().trim().equals("")) {
-            return;
+            return null;
         }
         JTextField textField = new JTextField();
         textField.setText(text.getNodeValue().trim());
         TextListener textListen = new TextListener(text);
         textField.getDocument().addDocumentListener(textListen);
-        panel.add(textField, gbc);
+        return textField;
     }
 
+    /** creates a JPanel with the bottom component slightly indented relative
+     to the bottome one. */
+    public Box indent(JComponent top, JComponent bottom) {
+        Box box = Box.createVerticalBox();
+        Box topRow = Box.createHorizontalBox();
+        box.add(topRow);
+        Box botRow = Box.createHorizontalBox();
+        box.add(botRow);
+
+        topRow.add(top);
+        topRow.add(Box.createGlue());
+        botRow.add(Box.createRigidArea(new Dimension(10, 10)));
+        botRow.add(bottom);
+        botRow.add(Box.createGlue());
+        return box;
+    }
     /**
      *
      */
