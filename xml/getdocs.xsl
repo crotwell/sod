@@ -7,7 +7,7 @@
   <xsl:template match="/">
     <html>
       <head>
-        <title>Menu Structure of GEE</title>
+        <title>Sod Tag Documentation</title>
       </head>
       <body>
          <p>test</p>
@@ -17,16 +17,25 @@
   </xsl:template>
 
   <xsl:template match="xsd:schema" >
-      <xsl:apply-templates select="xsd:complexType" />
+    <p>Doing a schema</p>
+    <xsl:apply-templates select="xsd:include" />
+    <xsl:apply-templates select="xsd:complexType" />
+  </xsl:template>
+
+  <xsl:template match="xsd:include" >
+    <p>Found an include <xsl:value-of select="@schemaLocation" /></p>
+    <xsl:apply-templates select="document(@schemaLocation)/xsd:schema" />
   </xsl:template>
 
   <xsl:template match="xsd:complexType" >
-    <h1>
-      <xsl:value-of select="@name" />
-    </h1>
-    <p>
-      <xsl:apply-templates select="xsd:sequence" />
-    </p>
+    <xsl:if test="not(@abstract='true')" >
+      <h1>
+        <xsl:value-of select="@name" />
+      </h1>
+      <p>
+        <xsl:apply-templates select="xsd:sequence|xsd:complexContent" />
+      </p>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="xsd:sequence" >
@@ -34,6 +43,16 @@
       <xsl:apply-templates select="xsd:element" />
       <br/>
     </p>
+  </xsl:template>
+
+  <xsl:template match="xsd:complexContent" >
+      <xsl:apply-templates select="xsd:extension" />
+  </xsl:template>
+
+  <xsl:template match="xsd:extension" >
+    <p>doing an extesion</p>
+    <xsl:apply-templates select="ancestor::xsd:complexType[@name=@base]" />
+    <xsl:apply-templates select="xsd:sequence" />
   </xsl:template>
 
   <xsl:template match="xsd:element" >
