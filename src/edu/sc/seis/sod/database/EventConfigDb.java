@@ -1,5 +1,5 @@
 
-package edu.sc.seis.fissuresUtil.cache;
+package edu.sc.seis.sod.database;
 
 import edu.iris.Fissures.model.*;
 
