@@ -135,7 +135,7 @@ public class EventFormatter extends Template implements EventTemplate{
                 Iterator it = statii.iterator();
                 while(it.hasNext()){
                     try {
-                        count += statusTable.getAll(ev, (Status)it.next()).length;
+                        count += statusTable.getNum(ev, (Status)it.next());
                     } catch (Exception e) { GlobalExceptionHandler.handle(e); }
                 }
             }
