@@ -1,12 +1,10 @@
 package edu.sc.seis.sod;
 import java.util.*;
 
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -54,6 +52,15 @@ public class WaveformArm implements Runnable {
 
     public void run() {
         try {
+            addSuspendedPairsToQueue(Start.suspendedPairs);
+            while(pool.isEmployed()){
+                try {
+                    //System.out.println("isEmployed: " + pool.isEmployed());
+                    //System.out.println("numWaiting: " + pool.getNumWaiting());
+                    //System.out.println("numIdle: " + pool.getNumIdle());
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {}
+            }
             waitForInitialEvent();
             do{
                 populateEventChannelDb();
@@ -266,7 +273,7 @@ public class WaveformArm implements Runnable {
             EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
             synchronized(evChanStatus){
                 for (int i = 0; i < pairIds.length; i++) {
-                    pairs[i] = evChanStatus.get(pairIds[i], WaveformArm.this);
+                    pairs[i] = evChanStatus.get(pairIds[i], this);
                 }
             }
             return new EventChannelGroupPair(pairs);
@@ -294,22 +301,12 @@ public class WaveformArm implements Runnable {
                                                       e);
                         return null;
                     }
-                    Channel[] chans = evChanStatus.getAllChansForSite(pairId);
-                    ChannelGroup[] groups = ChannelGroup.group(chans, new ArrayList());
-                    ChannelGroup pairGroup = null;
-                    for (int i = 0; i < groups.length; i++) {
-                        if(groups[i].contains(ecp.getChannel())){
-                            pairGroup = groups[i];
-                            break;
-                        }
-                    }
-                    if(pairGroup == null){
-                        GlobalExceptionHandler.handle("WaveformArm unable to match up a channel with a group that must've previously existed, ecp id="+pairId+"  groups.length="+groups.length+"  ecp="+ecp,
-                                                      new RuntimeException());
-                        return null;
-                    }
                     try {
-                        return new RetryMotionVectorWaveformWorkUnit(evChanStatus.getPairs(ecp.getEvent(), pairGroup));
+                        EventChannelGroupPair ecgp = getEventChannelGroupPair(ecp);
+                        if (ecgp == null){
+                            return null;
+                        }
+                        return new RetryMotionVectorWaveformWorkUnit(evChanStatus.getPairs(ecgp));
                     } catch (NotFound e) {
                         GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair right after it gave it to me",
                                                       e);
@@ -323,6 +320,60 @@ public class WaveformArm implements Runnable {
             }
         }
         return null;
+    }
+
+    private void addSuspendedPairsToQueue(int[] pairIds) throws SQLException{
+
+        //if we're going to run suspended pairs we need to prepopulate the networkArm.
+        //That's what this lovely monsterous triple for-loop does.  You can remove it
+        //once the network db returns real channels.
+        if (pairIds.length > 0){
+            try {
+                NetworkDbObject[] nets= networkArm.getSuccessfulNetworks();
+                for (int i = 0; i < nets.length; i++) {
+                    StationDbObject[] stas = networkArm.getSuccessfulStations(nets[i]);
+                    for (int j = 0; j < stas.length; j++) {
+                        SiteDbObject[] sites = networkArm.getSuccessfulSites(nets[i], stas[j]);
+                        for (int k = 0; k < sites.length; k++){
+                            networkArm.getSuccessfulChannels(nets[i], sites[k]);
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                GlobalExceptionHandler.handle(e);
+            }
+        }
+
+
+        for (int i = 0; i < pairIds.length; i++) {
+            WaveformWorkUnit workUnit = null;
+            if (localSeismogramArm != null){
+                workUnit =
+                    new LocalSeismogramWaveformWorkUnit(pairIds[i]);
+            }
+            else{
+                try {
+                    EventChannelPair ecp = evChanStatus.get(pairIds[i],this);
+                    EventChannelGroupPair ecgp = getEventChannelGroupPair(ecp);
+                    if (!usedPairGroups.contains(ecgp)){
+                        usedPairGroups.add(ecgp);
+                        int[] pairGroup = evChanStatus.getPairs(ecgp);
+                        workUnit =
+                            new MotionVectorWaveformWorkUnit(pairGroup);
+                    }
+                } catch (NotFound e) {
+                    GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair " +
+                                                      pairIds[i] + " right after it gave it to me",
+                                                  e);
+                }
+            }
+            if (workUnit != null){
+//                System.out.println("putting workunit for pairId "
+//                                  + pairIds[i] + " in pool");
+                pool.invokeLater(workUnit);
+            }
+        }
     }
 
     private int getNumRetryWaiting() {
@@ -473,6 +524,7 @@ public class WaveformArm implements Runnable {
     private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
         public LocalSeismogramWaveformWorkUnit(int pairId){
             this.pairId = pairId;
+            //System.out.println("pairId " + pairId + " added to pool");
         }
 
         public void run(){
@@ -628,6 +680,8 @@ public class WaveformArm implements Runnable {
     private JDBCEventStatus eventStatus;
     private JDBCEventChannelStatus evChanStatus;
     private JDBCEventChannelRetry eventRetryTable;
+
+    private List usedPairGroups = new ArrayList();
 
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible
