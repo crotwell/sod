@@ -54,7 +54,7 @@ public class LocalSeismogramArm implements Subsetter{
     	processConfig(config);
     }
 
-     /**
+    /**
      * Describe <code>processConfig</code> method here.
      *
      * @param config an <code>Element</code> value
@@ -101,7 +101,7 @@ public class LocalSeismogramArm implements Subsetter{
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
 	Channel channel = channelDbObject.getChannel();
-System.out.println("Before forming the microsecond date ");	
+	System.out.println("Before forming the microsecond date ");	
 	MicroSecondDate chanBegin = new MicroSecondDate(channel.effective_time.start_time);
 	System.out.println("after forming the channel begin");
 	MicroSecondDate chanEnd;
@@ -114,7 +114,7 @@ System.out.println("Before forming the microsecond date ");
 	    chanEnd = TimeUtils.future;
 	}
 	System.out.println("after the second if statement");
-       if(eventAccess == null) System.out.println("the eventAccess is null");
+	if(eventAccess == null) System.out.println("the eventAccess is null");
 	else System.out.println("The eventAccess is not null");
 
 	if(eventAccess.get_preferred_origin() == null) System.out.println("the preferred origin is null");
@@ -134,7 +134,7 @@ System.out.println("Before forming the microsecond date ");
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
 				       Status.COMPLETE_REJECT,
-				       "channelEffectiveTimeOverlaps doesnot match");
+				       "channel EffectiveTime doesnot overlap event");
 	    return;
 	}
 	waveformArm.setFinalStatus(eventDbObject,
@@ -174,9 +174,9 @@ System.out.println("Before forming the microsecond date ");
 	}
 	if( b ) {
 	    waveformArm.setFinalStatus(eventDbObject,
-					channelDbObject,
-					Status.PROCESSING,
-					"EventChannelSubsetterSucceeded");
+				       channelDbObject,
+				       Status.PROCESSING,
+				       "EventChannelSubsetterSucceeded");
 	    processRequestGeneratorSubsetter(eventDbObject, 
 					     networkDbObject, 
 					     channelDbObject, 
@@ -217,12 +217,17 @@ System.out.println("Before forming the microsecond date ");
  
 	logger.debug("BEFORE getting seismograms "+infilters.length);
 	for (int i=0; i<infilters.length; i++) {
-	    logger.debug("Getting seismograms "+ChannelIdUtil.toString(infilters[i].channel_id)+" from "+infilters[i].start_time.date_time+" to "+infilters[i].end_time.date_time);
+	    logger.debug("Getting seismograms "
+			 +ChannelIdUtil.toString(infilters[i].channel_id)
+			 +" from "
+			 +infilters[i].start_time.date_time
+			 +" to "
+			 +infilters[i].end_time.date_time);
 	} // end of for (int i=0; i<outFilters.length; i++)
 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
-System.out.println("The lenght of the infilters is----------- "+infilters.length);
-System.out.println("The lenght of the outfilters is---------- "+outfilters.length);
+	System.out.println("The lenght of the infilters is----------- "+infilters.length);
+	System.out.println("The lenght of the outfilters is---------- "+outfilters.length);
 	waveformArm.setFinalStatus(eventDbObject,
 				   channelDbObject,
 				   Status.PROCESSING,
@@ -280,7 +285,7 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 	    
 	    MicroSecondDate after = new MicroSecondDate();
 	    logger.debug("After getting seismograms "+after.subtract(before));
-	       logger.debug("Using infilters, fix this when DMC fixes server");
+	    logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 
 	    for (int i=0; i<localSeismograms.length; i++) {
@@ -292,6 +297,16 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 		    logger.error("Got null in seismogram array "+ChannelIdUtil.toString(channel.get_id()));
 		    return;
 		}
+		if ( ! ChannelIdUtil.areEqual(localSeismograms[i].channel_id, channel.get_id())) {
+		    // must be server error
+		    logger.debug("Channel id in returned seismogram doesn not match channelid in request. req="
+				 +ChannelIdUtil.toString(channel.get_id())
+				 +" seis="
+				 +ChannelIdUtil.toString(localSeismograms[i].channel_id));
+		    // fix seis with original id
+		    localSeismograms[i].channel_id = channel.get_id();
+		} // end of if ()
+		
 	    } // end of for (int i=0; i<localSeismograms.length; i++)
 	    
 	    processLocalSeismogramSubsetter(eventDbObject, 
@@ -318,7 +333,7 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 						 WaveFormArm waveformArm) throws Exception { 
 	
 
-	    logger.debug("Using infilters, fix this when DMC fixes server");
+	logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 	boolean b;
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
@@ -335,9 +350,9 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 	}
 	if( b ) {
 	    waveformArm.setFinalStatus(eventDbObject,
-					channelDbObject,
-					Status.PROCESSING,
-					"localSeismogramSubsetterAccepted");
+				       channelDbObject,
+				       Status.PROCESSING,
+				       "localSeismogramSubsetterAccepted");
 	    processSeismograms(eventDbObject, 
 			       networkDbObject, 
 			       channelDbObject, 
@@ -348,8 +363,8 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 	} else {
 	    waveformArm.setFinalStatus(eventDbObject,
 				       channelDbObject,
-				      Status.COMPLETE_REJECT,
-				      "LocalSeismogramSubsetterFailed");
+				       Status.COMPLETE_REJECT,
+				       "LocalSeismogramSubsetterFailed");
 	}
 	    
     }
