@@ -47,15 +47,33 @@ public abstract class Template{
     }
 
     protected void parse(Element el) throws ConfigurationException {
-        parse(el.getChildNodes());
+        parse(el, false);
+    }
+
+    /** @param trim Removes all whitespace from TEXT_NODEs.
+     * */
+    protected void parse(Element el, boolean trim) throws ConfigurationException {
+        parse(el.getChildNodes(), trim);
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
     }
 
     private void parse(NodeList nl) throws ConfigurationException {
+        parse(nl, false);
+    }
+
+    /** @param trim Removes all whitespace from TEXT_NODEs.
+     * */
+    private void parse(NodeList nl, boolean trim) throws ConfigurationException {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if(n.getNodeType() == Node.TEXT_NODE) {
-                addString(n.getNodeValue());
+                String s = n.getNodeValue();
+                if (trim) {
+                    s.trim();
+                    // \s means all whitespace characters
+                    s.replaceAll("\\s", "");
+                }
+                addString(s);
             } else if (n.getNodeType() == Node.COMMENT_NODE) {
                 // skip it
             } else{

@@ -41,7 +41,7 @@ public class EventFormatter extends Template implements EventTemplate{
 
     public EventFormatter(Element config, boolean filize) throws ConfigurationException {
         if(config == null || config.hasChildNodes() == false) useDefaultConfig();
-        else parse(config);
+        else parse(config, filize);
         filizeResults = filize;
     }
 
