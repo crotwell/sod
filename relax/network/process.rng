@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="process"/>
     </start>
@@ -38,12 +39,7 @@
     </define>
     <define name="external">
         <element name="externalNetworkProcess">
-            <element name="classname">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
+            <ref name="externalClass"/>
         </element>
     </define>
 </grammar>

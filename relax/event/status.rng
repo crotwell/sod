@@ -40,7 +40,7 @@
         </element>
     </define>
     <define name="externalEventStatus">
-        <element name="externalEventStatus">
+        <element name="externalEventMonitor">
             <element name="classname">
                 <data type="string"/>
             </element>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="origin"/>
     </start>
@@ -11,8 +12,8 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting events</summary>
-                <description>This collects all of the subsetters that make
-                    decisions on the contents of an event.</description>
+                <description>This collects all of the subsetters that make decisions on the contents
+                    of an event.</description>
             </xsd:annotation>
             <ref name="removeEventDuplicate"/>
             <ref name="name"/>
@@ -35,6 +36,7 @@
             <ref name="XOR"/>
             <ref name="NOT"/>
             <ref name="PASS"/>
+            <ref name="externalOriginSubsetter"/>
         </choice>
     </define>
     <define name="name">
@@ -42,8 +44,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the event name</summary>
-                    <description> Evaluates to true if the name of the event
-                        matches the string. </description>
+                    <description> Evaluates to true if the name of the event matches the string. </description>
                     <example>
                         <eventAttrName>FIJI ISLANDS REGION</eventAttrName>
                     </example>
@@ -57,9 +58,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the geographic Flinn-Engdahl region number</summary>
-                    <description> Evaluates to true if the numerical value of
-                        the geographic region of the event matches the given
-                        value. </description>
+                    <description> Evaluates to true if the numerical value of the geographic region
+                        of the event matches the given value. </description>
                     <example>
                         <geographicRegion>12</geographicRegion>
                     </example>
@@ -77,8 +77,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the seismic Flinn-Engdahl region number</summary>
-                    <description>Evaluates to true if the numerical value of the
-                        seismic region of the event matches the given value. </description>
+                    <description>Evaluates to true if the numerical value of the seismic region of
+                        the event matches the given value. </description>
                     <example>
                         <seismicRegion>12</seismicRegion>
                     </example>
@@ -114,9 +114,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between Origin subsetters</summary>
-                    <description> The output is the logical AND of the outputs
-                        of all included Origin subsetters. The subsetters after
-                        the first false outputed are not evaluated. </description>
+                    <description> The output is the logical AND of the outputs of all included
+                        Origin subsetters. The subsetters after the first false outputed are not
+                        evaluated. </description>
                     <example>
                         <originAND>
                             <catalog>
@@ -139,9 +139,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between Origin subsetters</summary>
-                    <description> The output is the logical OR of the outputs of
-                        all included Origin subsetters. The subsetters after the
-                        first true outputed are not evaluated. </description>
+                    <description> The output is the logical OR of the outputs of all included Origin
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <originOR>
                             <catalog>
@@ -164,8 +163,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between Origin subsetters</summary>
-                    <description> The output is the logical XOR of the outputs
-                        of all included Origin subsetters. </description>
+                    <description> The output is the logical XOR of the outputs of all included
+                        Origin subsetters. </description>
                     <example>
                         <originXOR>
                             <catalog>
@@ -187,8 +186,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an Origin subsetter</summary>
-                    <description> The output is the logical XOR of the outputs
-                        of all included Origin subsetters. </description>
+                    <description> The output is the logical XOR of the outputs of all included
+                        Origin subsetters. </description>
                     <example>
                         <originNOT>
                             <catalog>
@@ -205,9 +204,8 @@
         <element name="originPointDistance">
             <xsd:annotation>
                 <summary>Distance range from a fixed point</summary>
-                <description>True if the origin is within the given distance
-                    range of the given lat and lon. This allows for the
-                    definition of donuts and circles of accepted events.</description>
+                <description>True if the origin is within the given distance range of the given lat
+                    and lon. This allows for the definition of donuts and circles of accepted events.</description>
                 <example>
                     <originPointDistance>
                         <latitude>35</latitude>
@@ -224,13 +222,11 @@
     <define name="pointLinearDistanceMagnitude">
         <element name="pointLinearDistanceMagnitude">
             <xsd:annotation>
-                <summary>Accepts events above a linear threshold of magnitude
-                    with distance</summary>
-                <description> If the magnitude of the event is greater than or
-                    equal to the linear interpolation at the event point
-                    distance, then the event is accepted. To reverse and take
-                    events smaller than the linear interpolation, enclose this
-                    in an originNOT. </description>
+                <summary>Accepts events above a linear threshold of magnitude with distance</summary>
+                <description> If the magnitude of the event is greater than or equal to the linear
+                    interpolation at the event point distance, then the event is accepted. To
+                    reverse and take events smaller than the linear interpolation, enclose this in
+                    an originNOT. </description>
             </xsd:annotation>
             <ref name="latLonUnitRange"/>
             <externalRef href="../base/externalRef/magnitudeRange.rng"/>
@@ -258,8 +254,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Azimuth range from a fixed point</summary>
-                    <description> True if the origin is within the given azimuth
-                        range of the given lat and lon. </description>
+                    <description> True if the origin is within the given azimuth range of the given
+                        lat and lon. </description>
                     <example>
                         <originPointAzimuth>
                             <unit>DEGREE</unit>
@@ -279,8 +275,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Back azimuth range from a fixed point</summary>
-                    <description> True if the origin is within the given back
-                        azimuth range of the given lat and lon. </description>
+                    <description> True if the origin is within the given back azimuth range of the
+                        given lat and lon. </description>
                     <example>
                         <originPointBackAzimuth>
                             <unit>DEGREE</unit>
@@ -298,13 +294,12 @@
     <define name="removeEventDuplicate">
         <element name="removeEventDuplicate">
             <xsd:annotation>
-                <description>This subsetter first gets all of the events SOD has
-                    accepted. Then it takes the current event, and if its time
-                    plus or minus the time variance, its depth plus or minus the
-                    depth variance, or its location plus or minus the distance
-                    variance falls within the values of one of the already
-                    accepted events, the event is rejected. This allows for the
-                    use of only one of several very similar events</description>
+                <description>This subsetter first gets all of the events SOD has accepted. Then it
+                    takes the current event, and if its time plus or minus the time variance, its
+                    depth plus or minus the depth variance, or its location plus or minus the
+                    distance variance falls within the values of one of the already accepted events,
+                    the event is rejected. This allows for the use of only one of several very
+                    similar events</description>
                 <summary>Accepts events that are disimilar from already accepted events</summary>
             </xsd:annotation>
             <optional>
@@ -329,8 +324,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Accepts any origin</summary>
-                    <description>Simple subsetter that always returns true,
-                        useful for testing. </description>
+                    <description>Simple subsetter that always returns true, useful for testing. </description>
                     <example>
                         <passOrigin/>
                     </example>
@@ -339,6 +333,11 @@
             <zeroOrMore>
                 <ref name="origin"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="externalOriginSubsetter">
+        <element name="externalOriginSubsetter">
+            <ref name="externalClass"/>
         </element>
     </define>
 </grammar>

@@ -19,7 +19,7 @@
             <ref name="rMean"/>
             <ref name="rTrend"/>
             <ref name="taper"/>
-            <ref name="externalSeismogramProcess"/>
+            <ref name="externalWaveformProcess"/>
             <ref name="localSeismogramStatus"/>
             <ref name="filter"/>
             <ref name="forkProcess"/>
@@ -39,10 +39,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between seismograph subsetters. </summary>
-                    <description> The output is the logical AND of the outputs
-                        of all included subsetters. The subsetters after the
-                        first false outputted are not evaluated. The seismic
-                        data passed down the chain is the data passed in,
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputted are not
+                        evaluated. The seismic data passed down the chain is the data passed in,
                         seismogram results of the contained processors are ignored.</description>
                     <example>
                         <seismogramAND>
@@ -62,10 +61,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between seismogramSubsetter subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of
-                        all included subsetters. The subsetters after the first
-                        true outputted are not evaluated. The seismic data
-                        passed down the chain is the data passed in, seismogram
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputted are not evaluated.
+                        The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored. </description>
                     <example>
                         <seismogramOR>
@@ -84,12 +82,10 @@
         <element name="seismogramXOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between seismogramSubsetter
-                        subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs
-                        of all included subsetters. The seismic data passed down
-                        the chain is the data passed in, seismogram results of
-                        the contained processors are ignored. </description>
+                    <summary> Logical XOR between seismogramSubsetter subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. The seismic data passed down the chain is the data passed in,
+                        seismogram results of the contained processors are ignored. </description>
                     <example>
                         <seismogramXOR>
                             <xyz/>
@@ -107,10 +103,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an seismogramSubsetter subsetter. </summary>
-                    <description> The output is the logical NOT of the output of
-                        the included subsetters. The seismic data passed down
-                        the chain is the data passed in, seismogram results of
-                        the contained processors are ignored.</description>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. The seismic data passed down the chain is the data passed in,
+                        seismogram results of the contained processors are ignored.</description>
                     <example>
                         <seismogramNOT>
                             <xyz/>
@@ -125,10 +120,9 @@
         <element name="phaseCut">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Cuts seismograms relative to predicted phase
-                        arrival times. </summary>
-                    <description> Cuts seismograms relative to offsets from
-                        phase arrival time predicted by TauP for the model. </description>
+                    <summary> Cuts seismograms relative to predicted phase arrival times. </summary>
+                    <description> Cuts seismograms relative to offsets from phase arrival time
+                        predicted by TauP for the model. </description>
                     <example>
                         <phaseCut>
                             <model>prem</model>
@@ -154,9 +148,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Filter</summary>
-                    <description>Applies a Butterworth filter to the
-                        seismograms. The filterType can be CAUSAL or NONCAUSAL
-                        or TWOPASS, with the last two being equivalent.</description>
+                    <description>Applies a Butterworth filter to the seismograms. The filterType can
+                        be CAUSAL or NONCAUSAL or TWOPASS, with the last two being equivalent.</description>
                     <example>
                         <filter>
                             <lowFreqCorner>
@@ -230,11 +223,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Apply a taper.</summary>
-                    <description>Applies a taper to the seismograms. The type
-                        can be one of HANNING, HAMMIN or COSINE, with HANNING
-                        the default. The width is given as a fraction of the
-                        seismogram length, and so should be 0.5 as otherwise the
-                        begin and end taper will overlap each other. 0.05 is the default.</description>
+                    <description>Applies a taper to the seismograms. The type can be one of HANNING,
+                        HAMMIN or COSINE, with HANNING the default. The width is given as a fraction
+                        of the seismogram length, and so should be 0.5 as otherwise the begin and
+                        end taper will overlap each other. 0.05 is the default.</description>
                     <example>
                         <taper>
                             <width>.05</width>
@@ -264,11 +256,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Response Gain Correction</summary>
-                    <description>Applies a overall sensitivity from the response
-                        to the seismograms. This will convert int or short
-                        seismograms into floats to avoid rounding errors that
-                        could result in the output seismograms being all zeros.
-                        There is no configuration.</description>
+                    <description>Applies a overall sensitivity from the response to the seismograms.
+                        This will convert int or short seismograms into floats to avoid rounding
+                        errors that could result in the output seismograms being all zeros. There is
+                        no configuration.</description>
                     <example>
                         <responseGain/>
                     </example>
@@ -282,10 +273,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Saves seismograms in files. </summary>
-                    <description>The seismograms are written to data files in
-                        the given directory. Also writes out a dsml file for use
-                        in GEE and other fissures tools that support datasets.
-                        Always returns true unless there is an error. </description>
+                    <description>The seismograms are written to data files in the given directory.
+                        Also writes out a dsml file for use in GEE and other fissures tools that
+                        support datasets. Always returns true unless there is an error. </description>
                     <example>
                         <saveSeismogramToFile>
                             <fileType>sac</fileType>
@@ -315,21 +305,20 @@
             </element>
         </element>
     </define>
-    <define name="externalSeismogramProcess">
-        <element name="externalSeismogramProcess">
+    <define name="externalWaveformProcess">
+        <element name="externalWaveformProcess">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Runs an externally defined Java processor. </summary>
-                    <description>This runs the Java processor defined in the
-                        given class, which must implement the
-                        edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess
+                    <summary>Runs an externally defined Java processor</summary>
+                    <description>This runs the Java processor defined in the given class, which must
+                        implement the edu.sc.seis.sod.process.waveformArm.process.WaveformProcess
                         interface. </description>
                     <example>
-                        <externalSeismogramProcess>
+                        <externalWaveformProcess>
                             <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>
                             <dataDirectory>POND_II</dataDirectory>
                             <extraParam>1.7</extraParam>
-                        </externalSeismogramProcess>
+                        </externalWaveformProcess>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
@@ -346,9 +335,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Prints a line to std out for each seismogram processed.</summary>
-                    <description>This simply prints a line to standard out for
-                        each seismogram to be processed. It can be used as a
-                        simple status monitor. </description>
+                    <description>This simply prints a line to standard out for each seismogram to be
+                        processed. It can be used as a simple status monitor. </description>
                     <include/>
                 </xsd:documentation>
             </xsd:annotation>
@@ -365,10 +353,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Forks the processing of seismograms.</summary>
-                    <description>This forks the processing of the seismograms so
-                        that more than one sequence of processing steps can be
-                        applied to the data independently. The fork processor
-                        returns the original input seismograms, but the success
+                    <description>This forks the processing of the seismograms so that more than one
+                        sequence of processing steps can be applied to the data independently. The
+                        fork processor returns the original input seismograms, but the success
                         boolean of the enclosed processors. </description>
                     <example>
                         <forkProcess>
@@ -393,9 +380,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Executes a subprocessor, but always returns true.</summary>
-                    <description>This executes the enclosed processor, but
-                        always returns a success regardless of whether the
-                        enclosed processor succeeded or failed. </description>
+                    <description>This executes the enclosed processor, but always returns a success
+                        regardless of whether the enclosed processor succeeded or failed. </description>
                     <example>
                         <alwaysSuccess>
                             <xyz/>
@@ -463,11 +449,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Executes an external program.</summary>
-                    <description>The legacyExecute processor is capable of
-                        running existing command line programs. It does this by
-                        passing the filename of the seismograms saved by a
-                        earlier SaveSeismogramToFile processor to a program
-                        started with Runtime.exec(). </description>
+                    <description>The legacyExecute processor is capable of running existing command
+                        line programs. It does this by passing the filename of the seismograms saved
+                        by a earlier SaveSeismogramToFile processor to a program started with
+                        Runtime.exec(). </description>
                     <example>
                         <legacyExecute>
                             <command>echo</command>

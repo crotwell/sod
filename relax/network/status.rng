@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="status"/>
     </start>
     <define name="status">
         <choice>
             <ref name="networkStatusTemplate"/>
+            <ref name="externalNetworkMonitor"/>
         </choice>
     </define>
     <define name="networkStatusTemplate">
-            <element name="networkInfoTemplateGenerator">
-                    <element name="netConfig">
-                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                    </element>
-                    <element name="stationConfig">
-                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                    </element>
-                    <element name="channelConfig">
-                            <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-                    </element>
-           </element>
+        <element name="networkInfoTemplateGenerator">
+            <element name="netConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+            <element name="stationConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+            <element name="channelConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+        </element>
+    </define>
+    <define name="externalNetworkMonitor">
+        <element name="externalNetworkMonitor">
+            <ref name="externalClass"/>
+        </element>
     </define>
 </grammar>

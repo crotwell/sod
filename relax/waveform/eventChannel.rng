@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="eventChannel"/>
     </start>
@@ -12,17 +14,18 @@
             <ref name="eventChannelXOR"/>
             <ref name="eventChannelNOT"/>
             <ref name="PASS"/>
+            <ref name="external"/>
         </choice>
     </define>
     <define name="embeddedEventStation">
         <element name="embeddedEventStation">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event station subsetter to be embedded within a event channel
-                    subsetter. </summary>
+                    <summary> Allows an event station subsetter to be embedded within a event
+                        channel subsetter. </summary>
                     <description> Allows an event station subsetter to be embedded within a event
-                    channel subsetter. The is most often used within an EventChannel logical
-                    subsetter. </description>
+                        channel subsetter. The is most often used within an EventChannel logical
+                        subsetter. </description>
                     <example>
                         <embeddedEventStation>
                             <distanceRange>
@@ -41,8 +44,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Allows a Channel subsetter to be embedded within an EventChannel. </summary>
-                    <description> Allows a Channel subsetter to be embedded within an EventChannel. This
-                    is most often used within a EventChannel logical. </description>
+                    <description> Allows a Channel subsetter to be embedded within an EventChannel.
+                        This is most often used within a EventChannel logical. </description>
                     <example>
                         <embeddedChannel>
                             <sampling>
@@ -66,7 +69,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between EventChannel subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <eventChannelAND>
                             <embeddedEventStation>
@@ -93,7 +96,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between EventChannel subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
-                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <eventChannelOR>
                             <embeddedEventStation>
@@ -119,7 +122,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between EventChannel subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of included subsetters. </description>
+                    <description> The output is the logical XOR of the outputs of included
+                        subsetters. </description>
                     <example>
                         <eventChannelXOR>
                             <embeddedEventStation>
@@ -144,7 +148,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an EventChannel subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the included subsetter. </description>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetter. </description>
                     <example>
                         <eventChannelNOT>
                             <embeddedEventStation>
@@ -174,6 +179,11 @@
             <zeroOrMore>
                 <ref name="eventChannel"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalEventChannelSubsetter">
+            <ref name="externalClass"/>
         </element>
     </define>
 </grammar>

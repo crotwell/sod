@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="channelGroupAvailableData"/>
     </start>
@@ -11,19 +13,20 @@
             <ref name="channelGroupAvailableDataOR"/>
             <ref name="channelGroupAvailableDataXOR"/>
             <ref name="channelGroupAvailableDataNOT"/>
-			<ref name="PASS"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">
         <element name="ANDAvailableDataWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel available data subsetter to be embedded within a event channelGroup
-                    available data subsetter. </summary>
-                    <description> Allows an event channel available data subsetter to be embedded within a event
-                    channelgroup available data subsetter. The result is the AND of result of all the
-                    individual per channel available data subsetters. The is most often used within the motion
-                    vector arm. </description>
+                    <summary> Allows an event channel available data subsetter to be embedded within
+                        a event channelGroup available data subsetter. </summary>
+                    <description> Allows an event channel available data subsetter to be embedded
+                        within a event channelgroup available data subsetter. The result is the AND
+                        of result of all the individual per channel available data subsetters. The
+                        is most often used within the motion vector arm. </description>
                     <example>
                         <ANDAvailableDataWrapper>
                             <noGaps/>
@@ -38,12 +41,12 @@
         <element name="ORAvailableDataWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
-                    available data subsetter. </summary>
-                    <description> Allows an event channel request subsetter to be embedded within a event
-                    channelgroup available data subsetter. The result is the OR of the result of all the
-                    individual per channel available data subsetters. The is most often used within the motion
-                    vector arm. </description>
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event channelGroup available data subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup available data subsetter. The result is the OR of the
+                        result of all the individual per channel available data subsetters. The is
+                        most often used within the motion vector arm. </description>
                     <example>
                         <ORAvailableDataWrapper>
                             <someData/>
@@ -59,9 +62,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between AvailableData subsetters. </summary>
-                    <description> The output is the logical AND of the outputs of all
-                                        included subsetters. The subsetters after the first false
-                                        outputed are not evaluated. </description>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <channelGroupAvailableDataAND>
                             <noGaps/>
@@ -80,9 +82,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between AvailableData subsetters. </summary>
-                    <description> The output is the logical OR of the outputs of all
-                                        included subsetters. The subsetters after the first true
-                                        outputed are not evaluated. </description>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <channelGroupAvailableDataOR>
                             <noGaps/>
@@ -101,8 +102,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between AvailableData subsetters. </summary>
-                    <description> The output is the logical XOR of the outputs of all
-                                        included subsetters. </description>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. </description>
                     <example>
                         <channelGroupAvailableDataXOR>
                             <noGaps/>
@@ -120,8 +121,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an AvailableData subsetter. </summary>
-                    <description> The output is the logical NOT of the output of the
-                                        included subsetters. </description>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. </description>
                     <example>
                         <channelGroupAvailableDataNOT>
                             <noGaps/>
@@ -132,7 +133,7 @@
             <ref name="channelGroupAvailableData"/>
         </element>
     </define>
-	 <define name="PASS">
+    <define name="PASS">
         <element name="passChannelGroupAvailableData">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -146,6 +147,11 @@
             <zeroOrMore>
                 <ref name="channelGroupAvailableData"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalChannelGroupAvailableData">
+            <ref name="externalClass"/>
         </element>
     </define>
 </grammar>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="waveformStatus"/>
     </start>
@@ -9,6 +10,7 @@
             <ref name="waveformEvent"/>
             <ref name="waveformNetwork"/>
             <ref name="waveformStation"/>
+            <ref name="external"/>
         </choice>
     </define>
     <define name="waveformEvent">
@@ -31,6 +33,11 @@
             <element name="template">
                 <data type="string"/>
             </element>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalWaveformMonitor">
+            <ref name="externalClass"/>
         </element>
     </define>
     <include href="../base/include/eventLabel.rng"/>

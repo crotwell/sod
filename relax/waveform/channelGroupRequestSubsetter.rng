@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="channelGroupRequestSubsetter"/>
     </start>
@@ -11,19 +13,20 @@
             <ref name="channelGroupRequestSubsetterOR"/>
             <ref name="channelGroupRequestSubsetterXOR"/>
             <ref name="channelGroupRequestSubsetterNOT"/>
-			<ref name="PASS"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
         </choice>
     </define>
     <define name="ANDRequestSubsetterWrapper">
         <element name="ANDRequestSubsetterWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
-                    request subsetter. </summary>
-                    <description> Allows an event channel request subsetter to be embedded within a event
-                    channelgroup request subsetter. The result is the AND of result of all the
-                    individual per channel request subsetters. The is most often used within the motion
-                    vector arm. </description>
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event channelGroup request subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup request subsetter. The result is the AND of result of all
+                        the individual per channel request subsetters. The is most often used within
+                        the motion vector arm. </description>
                     <example>
                         <ANDRequestSubsetterWrapper>
                             <requestPrint/>
@@ -38,12 +41,12 @@
         <element name="ORRequestSubsetterWrapper">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Allows an event channel request subsetter to be embedded within a event channelGroup
-                    request subsetter. </summary>
-                    <description> Allows an event channel request subsetter to be embedded within a event
-                    channelgroup request subsetter. The result is the OR of the result of all the
-                    individual per channel request subsetters. The is most often used within the motion
-                    vector arm. </description>
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event channelGroup request subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup request subsetter. The result is the OR of the result of
+                        all the individual per channel request subsetters. The is most often used
+                        within the motion vector arm. </description>
                     <example>
                         <ORRequestSubsetterWrapper>
                             <requestPrint/>
@@ -60,7 +63,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between RequestSubsetter subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <channelGroupRequestSubsetterAND>
                             <something/>
@@ -80,7 +83,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between RequestSubsetter subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
-                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <channelGroupRequestSubsetterOR>
                             <something/>
@@ -100,7 +103,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical XOR between RequestSubsetter subsetters. </summary>
                     <description> The output is the logical XOR of the outputs of all included
-                    subsetters. </description>
+                        subsetters. </description>
                     <example>
                         <channelGroupRequestSubsetterXOR>
                             <something/>
@@ -119,7 +122,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
                     <description> The output is the logical NOT of the output of the included
-                    subsetters. </description>
+                        subsetters. </description>
                     <example>
                         <channelGroupRequestSubsetterNOT>
                             <something/>
@@ -130,7 +133,7 @@
             <ref name="channelGroupRequestSubsetter"/>
         </element>
     </define>
-	<define name="PASS">
+    <define name="PASS">
         <element name="passChannelGroupRequest">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
@@ -145,5 +148,10 @@
                 <ref name="channelGroupRequestSubsetter"/>
             </zeroOrMore>
         </element>
-	</define>
+    </define>
+    <define name="external">
+        <element name="externalChannelGroupRequestSubsetter">
+            <ref name="externalClass"/>
+        </element>
+    </define>
 </grammar>

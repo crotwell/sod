@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="site"/>
     </start>
@@ -10,8 +11,8 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting sites</summary>
-                <description>This collects all of the subsetters that make
-                    decisions on the contents of a site.</description>
+                <description>This collects all of the subsetters that make decisions on the contents
+                    of a site.</description>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="depthRange"/>
@@ -22,6 +23,7 @@
             <ref name="XOR"/>
             <ref name="NOT"/>
             <ref name="PASS"/>
+            <ref name="externalSiteSubsetter"/>
         </choice>
     </define>
     <define name="code">
@@ -44,9 +46,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches sites at a range of depths below the surface</summary>
-                    <description>Matches sites at a range of depths below the
-                        surface. This might be used to separate surface sites
-                        from borehole sites.</description>
+                    <description>Matches sites at a range of depths below the surface. This might be
+                        used to separate surface sites from borehole sites.</description>
                     <example>
                         <siteDepthRange>
                             <unit>METER</unit>
@@ -63,12 +64,10 @@
         <element name="siteEffectiveTimeOverlap">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Matches if the site effective time overlaps the
-                        given time range</summary>
-                    <description>Matches if the site effective time overlaps the
-                        given time range. This is generally used to avoid
-                        processing sites that did not yet exist, or were
-                        deactivated before a time range of interest</description>
+                    <summary>Matches if the site effective time overlaps the given time range</summary>
+                    <description>Matches if the site effective time overlaps the given time range.
+                        This is generally used to avoid processing sites that did not yet exist, or
+                        were deactivated before a time range of interest</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="timeRange"/>
@@ -79,9 +78,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches sites that are within a given area</summary>
-                    <description> Matches sites that are within a given area.
-                        See the documentation for Area to see the available area
-                        types. </description>
+                    <description> Matches sites that are within a given area. See the documentation
+                        for Area to see the available area types. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <externalRef href="../base/externalRef/area.rng"/>
@@ -92,9 +90,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Logical AND between site subsetters</summary>
-                    <description>The output is the logical AND of the outputs of
-                        all included subsetters. The subsetters after the first
-                        false outputed are not evaluated.</description>
+                    <description>The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated.</description>
                     <example>
                         <siteAND>
                             <siteDepthRange>
@@ -122,9 +119,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Logical OR between site subsetters</summary>
-                    <description>The output is the logical OR of the outputs of
-                        all included subsetters. If the first subsetters returns
-                        true then the second is not evaluated.</description>
+                    <description>The output is the logical OR of the outputs of all included
+                        subsetters. If the first subsetters returns true then the second is not evaluated.</description>
                 </xsd:documentation>
                 <example>
                     <siteOR>
@@ -152,8 +148,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Logical XOR between site subsetters</summary>
-                    <description>The output is the logical XOR of the outputs of
-                        the 2 included subsetters.</description>
+                    <description>The output is the logical XOR of the outputs of the 2 included subsetters.</description>
                     <example>
                         <siteXOR>
                             <siteDepthRange>
@@ -178,8 +173,7 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Logical NOT of an site subsetter</summary>
-                    <description>The output is the logical NOT of the output of
-                        the included subsetter.</description>
+                    <description>The output is the logical NOT of the output of the included subsetter.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="site"/>
@@ -190,13 +184,17 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Always returns true</summary>
-                    <description>Simple subsetter that always returns true,
-                        useful for testing.</description>
+                    <description>Simple subsetter that always returns true, useful for testing.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="site"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="externalSiteSubsetter">
+        <element name="externalSiteSubsetter">
+            <ref name="externalClass"/>
         </element>
     </define>
 </grammar>

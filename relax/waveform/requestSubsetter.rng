@@ -1,203 +1,208 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-	<start>
-		<ref name="requestSubsetter"/>
-	</start>
-	<include href="../base/include/eventLabel.rng"/>
-	<define name="requestSubsetter">
-		<choice>
-			<ref name="requestSubsetterAND"/>
-			<ref name="requestSubsetterOR"/>
-			<ref name="requestSubsetterXOR"/>
-			<ref name="requestSubsetterNOT"/>
-			<ref name="requestPrint"/>
-			<ref name="breqFastRequestSubsetter"/>
-			<ref name="PASS"/>
-		</choice>
-	</define>
-	<define name="requestSubsetterAND">
-		<element name="requestSubsetterAND">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical AND between RequestSubsetter subsetters. </summary>
-					<description> The output is the logical AND of the outputs of all included
-                    subsetters. The subsetters after the first false outputed are not evaluated. </description>
-					<example>
-						<requestSubsetterAND>
-							<something/>
-							<somethingelse/>
-						</requestSubsetterAND>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="requestSubsetter"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="requestSubsetterOR">
-		<element name="requestSubsetterOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical OR between RequestSubsetter subsetters. </summary>
-					<description> The output is the logical OR of the outputs of all included
-                    subsetters. The subsetters after the first true outputed are not evaluated. </description>
-					<example>
-						<requestSubsetterOR>
-							<something/>
-							<somethingelse/>
-						</requestSubsetterOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="requestSubsetter"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="requestSubsetterXOR">
-		<element name="requestSubsetterXOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical XOR between RequestSubsetter subsetters. </summary>
-					<description> The output is the logical XOR of the outputs of all included
-                    subsetters. </description>
-					<example>
-						<requestSubsetterXOR>
-							<something/>
-							<somethingelse/>
-						</requestSubsetterXOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="requestSubsetter"/>
-			<ref name="requestSubsetter"/>
-		</element>
-	</define>
-	<define name="requestSubsetterNOT">
-		<element name="requestSubsetterNOT">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical NOT of an RequestSubsetter subsetter. </summary>
-					<description> The output is the logical NOT of the output of the included
-                    subsetters. </description>
-					<example>
-						<requestSubsetterNOT>
-							<something/>
-						</requestSubsetterNOT>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="requestSubsetter"/>
-		</element>
-	</define>
-	<define name="requestPrint">
-		<element name="requestPrint">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Prints the Request and returns true. </summary>
-					<description> Mainly useful for debugging, prints out the request. </description>
-					<example>
-						<requestPrint/>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<empty/>
-		</element>
-	</define>
-	<define name="breqFastRequestSubsetter">
-		<element name="breqFastRequestSubsetter">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary>Creates a breqfast request and saves it to a file and returns true. </summary>
-					<description> Mainly useful for accessing data that is not available via
-                Fissures/DHI, such as restricted PASSCAL datasets or data from datacenters
-                that have a breqfast system but not DHI seismogram servers. Of course
-                the network information must be available to SOD.
-
-                As this subsetter always returns true, processing will continue
-                past this point. In most cases, the whole reason to generate
-                breqfast requests is that it is the only way to get the data, and
-                so there is not much point in proceeding down the waveform arm. So
-                you will generally want to wrap the breqFastRequestSubsetter in
-                a &lt;requestSubsetterNOT&gt; so that the return value is false.
-                This will allow SOD to proceed to the next piece of work and avoid
-                the wasted time in going to the server to get data.
-                </description>
-					<example>
-						<breqFastRequestSubsetter>
-							<dataDirectory>RUSH_breqfast</dataDirectory>
-							<label>
-								<originTime>yyyy_DDD_HH_mm_ss</originTime>
-							</label>
-							<name>Jenny Seismologist</name>
-							<inst>Univ. of Example</inst>
-							<mail>Dept. of Seismology., Main St. MyTown AA, USA</mail>
-							<email>joe@seis.example.edu</email>
-							<phone>555-867-5309</phone>
-							<fax>none</fax>
-							<media>Electronic</media>
-							<altmedia1>Electronic</altmedia1>
-							<altmedia2>Electronic</altmedia2>
-							<quality>b</quality>
-						</breqFastRequestSubsetter>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<element name="dataDirectory">
-				<data type="string"/>
-			</element>
-			<optional>
-				<element name="label">
-					<ref name="eventLabel"/>
-				</element>
-			</optional>
-			<element name="name">
-				<data type="string"/>
-			</element>
-			<element name="inst">
-				<data type="string"/>
-			</element>
-			<element name="mail">
-				<data type="string"/>
-			</element>
-			<element name="email">
-				<data type="string"/>
-			</element>
-			<element name="phone">
-				<data type="string"/>
-			</element>
-			<element name="fax">
-				<data type="string"/>
-			</element>
-			<element name="media">
-				<data type="string"/>
-			</element>
-			<element name="altmedia1">
-				<data type="string"/>
-			</element>
-			<element name="altmedia2">
-				<data type="string"/>
-			</element>
-			<element name="quality">
-				<data type="string"/>
-			</element>
-		</element>
-	</define>
-	<define name="PASS">
-		<element name="passRequest">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Always returns true. </summary>
-					<description> Simple subsetter that always returns true, useful for testing. </description>
-					<example>
-						<passRequest/>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<zeroOrMore>
-				<ref name="requestSubsetter"/>
-			</zeroOrMore>
-		</element>
-	</define>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
+    <start>
+        <ref name="requestSubsetter"/>
+    </start>
+    <include href="../base/include/eventLabel.rng"/>
+    <define name="requestSubsetter">
+        <choice>
+            <ref name="requestSubsetterAND"/>
+            <ref name="requestSubsetterOR"/>
+            <ref name="requestSubsetterXOR"/>
+            <ref name="requestSubsetterNOT"/>
+            <ref name="requestPrint"/>
+            <ref name="breqFastRequestSubsetter"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
+        </choice>
+    </define>
+    <define name="requestSubsetterAND">
+        <element name="requestSubsetterAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <requestSubsetterAND>
+                            <something/>
+                            <somethingelse/>
+                        </requestSubsetterAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="requestSubsetter"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="requestSubsetterOR">
+        <element name="requestSubsetterOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <requestSubsetterOR>
+                            <something/>
+                            <somethingelse/>
+                        </requestSubsetterOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="requestSubsetter"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="requestSubsetterXOR">
+        <element name="requestSubsetterXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between RequestSubsetter subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. </description>
+                    <example>
+                        <requestSubsetterXOR>
+                            <something/>
+                            <somethingelse/>
+                        </requestSubsetterXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="requestSubsetter"/>
+            <ref name="requestSubsetter"/>
+        </element>
+    </define>
+    <define name="requestSubsetterNOT">
+        <element name="requestSubsetterNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. </description>
+                    <example>
+                        <requestSubsetterNOT>
+                            <something/>
+                        </requestSubsetterNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="requestSubsetter"/>
+        </element>
+    </define>
+    <define name="requestPrint">
+        <element name="requestPrint">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Prints the Request and returns true. </summary>
+                    <description> Mainly useful for debugging, prints out the request. </description>
+                    <example>
+                        <requestPrint/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="breqFastRequestSubsetter">
+        <element name="breqFastRequestSubsetter">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Creates a breqfast request and saves it to a file and returns true. </summary>
+                    <description> Mainly useful for accessing data that is not available via
+                        Fissures/DHI, such as restricted PASSCAL datasets or data from datacenters
+                        that have a breqfast system but not DHI seismogram servers. Of course the
+                        network information must be available to SOD. As this subsetter always
+                        returns true, processing will continue past this point. In most cases, the
+                        whole reason to generate breqfast requests is that it is the only way to get
+                        the data, and so there is not much point in proceeding down the waveform
+                        arm. So you will generally want to wrap the breqFastRequestSubsetter in a
+                        &lt;requestSubsetterNOT&gt; so that the return value is false. This
+                        will allow SOD to proceed to the next piece of work and avoid the wasted
+                        time in going to the server to get data. </description>
+                    <example>
+                        <breqFastRequestSubsetter>
+                            <dataDirectory>RUSH_breqfast</dataDirectory>
+                            <label>
+                                <originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            </label>
+                            <name>Jenny Seismologist</name>
+                            <inst>Univ. of Example</inst>
+                            <mail>Dept. of Seismology., Main St. MyTown AA, USA</mail>
+                            <email>joe@seis.example.edu</email>
+                            <phone>555-867-5309</phone>
+                            <fax>none</fax>
+                            <media>Electronic</media>
+                            <altmedia1>Electronic</altmedia1>
+                            <altmedia2>Electronic</altmedia2>
+                            <quality>b</quality>
+                        </breqFastRequestSubsetter>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <element name="dataDirectory">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="label">
+                    <ref name="eventLabel"/>
+                </element>
+            </optional>
+            <element name="name">
+                <data type="string"/>
+            </element>
+            <element name="inst">
+                <data type="string"/>
+            </element>
+            <element name="mail">
+                <data type="string"/>
+            </element>
+            <element name="email">
+                <data type="string"/>
+            </element>
+            <element name="phone">
+                <data type="string"/>
+            </element>
+            <element name="fax">
+                <data type="string"/>
+            </element>
+            <element name="media">
+                <data type="string"/>
+            </element>
+            <element name="altmedia1">
+                <data type="string"/>
+            </element>
+            <element name="altmedia2">
+                <data type="string"/>
+            </element>
+            <element name="quality">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passRequest">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passRequest/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="requestSubsetter"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalRequestSubsetter">
+            <ref name="externalClass"/>
+        </element>
+    </define>
 </grammar>
