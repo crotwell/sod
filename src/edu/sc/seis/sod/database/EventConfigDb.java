@@ -35,7 +35,6 @@ public class EventConfigDb {
 		stmt.executeUpdate("CREATE TABLE timeconfig "+
 				   "( time timestamp)");
 	    } catch(SQLException sqle) {
-		System.out.println("Table timeconfig  is already created");
 	    }
 	    setTimeStmt = connection.prepareStatement(" INSERT into timeconfig "+
 						      " VALUES(?) ");

@@ -34,7 +34,7 @@ public class PostgresConfigDatabase extends AbstractConfigDatabase{
 				   " serverDNS text, "+
 				   " time timestamp)");
 	    } catch(SQLException sqle) {
-		System.out.println("Table timeconfig  is already created");
+		//("Table timeconfig  is already created");
 	    }
 	} catch(Exception e) {
 	    logger.debug("table "+tableName+" is already created");

@@ -33,7 +33,6 @@ public class EventQueue {
 		
 	while(list.size() == 24) {
 	    try {
-		System.out.println("Watiting in PUSH");
 		wait();
 	    } catch(InterruptedException ie) { }
 	}
@@ -49,7 +48,6 @@ public class EventQueue {
 	
 	while(list.size() == 0 && sourceAlive == true) {
 	    try {
-		System.out.println("Waiting in POP");
 		wait();
 	    } catch(InterruptedException ie) { }
 
@@ -82,7 +80,6 @@ public class EventQueue {
     public synchronized void setSourceAlive(boolean value) {
 
 	this.sourceAlive = value;
-	System.out.println("Settting the value of the source to "+value);
 	notifyAll();
     }
     
