@@ -6,6 +6,7 @@
 
 package edu.sc.seis.sod;
 
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -23,18 +24,22 @@ public class EventChannelPair{
         this.owner = owner;
         this.net = net;
     }
-    
+
     public void update(Exception e, String info, Status status) throws InvalidDatabaseStateException {
+        if (e instanceof FissuresException) {
+            FissuresException fe = (FissuresException)e;
+            info = info+" FissuresException: code="+fe.the_error.error_code+" "+fe.the_error.error_description;
+        }
         logger.error(info, e);
         update(info, status);
     }
-    
+
     public void update(String info, Status status)throws InvalidDatabaseStateException{
         this.info = info;
         this.status = status;
         if(owner != null)owner.setStatus(this);
     }
-    
+
     public boolean equals(Object o){
         if(!(o instanceof EventChannelPair)) return false;
         EventChannelPair ecp = (EventChannelPair)o;
@@ -44,38 +49,38 @@ public class EventChannelPair{
         }
         return false;
     }
-    
+
     public int hashCode(){
         int code = 47 * getChannelDbId();
         code += 23 * getEventDbId();
         return code;
     }
-    
+
     public int getChannelDbId(){ return chan.getDbId(); }
-    
+
     public int getEventDbId() { return event.getDbId(); }
-    
+
     public Status getStatus(){ return status; }
-    
+
     public String getInfo(){ return info; }
-    
+
     public Channel getChannel() { return chan.getChannel(); }
-    
+
     public EventAccessOperations getEvent(){ return event.getEventAccess(); }
-    
+
     public NetworkAccess getNet(){ return net.getNetworkAccess(); }
-    
+
     private String info;
-    
+
     private Status status;
-    
+
     private EventDbObject event;
-    
+
     private ChannelDbObject chan;
-    
+
     private WaveFormArm owner;
-    
+
     private NetworkDbObject net;
-    
+
     private static Logger logger = Logger.getLogger(EventChannelPair.class);
 }
