@@ -116,8 +116,12 @@ $fissures.formatMagnitude($m),
 #set ( $clickableWidth = 10)
 #foreach ($chanId in $allChanIds)
 #set ( $chanContext = $sod_cookieJar.get($chanId) )
+#if($sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_P"))
 #set ( $flagData_P = $sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_P"))
+#end
+#if($sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_S"))
 #set ( $flagData_S = $sod_cookieJar.get("original_SeismogramImageProcess_flagPixels_S"))
+#end
 #set ( $channel = $chanContext.get("sod_channel") )
 <tr>
 <td><b>$fissures.formatChannel($channel.get_id())</b><br/>
@@ -136,17 +140,24 @@ $!chanContext.sod_phaseStoN_ttp.when</td>
 <img name="${count}" id="${count}" src="original_${originalImgLoc}" USEMAP="#map${count}" />
 </a>
 <map name="map${count}">
+#if($flagData_P)
 #set ($flag_P_LB_X = (${flagData_P.getFlagLoc()} - ${clickableWidth}) )
 #set ($flag_P_UB_X = (${flagData_P.getFlagLoc()} + ${clickableWidth}) )
 #set ($flag_P_LB_Y = ${flagData_P.getFlagBottom()} )
 #set ($flag_P_UB_Y = ${flagData_P.getFlagTop()} )
 <area shape="rectangle" coords="${flag_P_LB_X},${flag_P_UB_Y},${flag_P_UB_X},${flag_P_LB_Y}" href="javascript:flipImage('${count}','${pImage}','${originalImgLoc}')"/>
+#end
+#if($flagDataS)
 #set ($flag_S_LB_X = (${flagData_S.getFlagLoc()} - ${clickableWidth}) )
 #set ($flag_S_UB_X = (${flagData_S.getFlagLoc()} + ${clickableWidth}) )
 #set ($flag_S_LB_Y = ${flagData_S.getFlagBottom()} )
 #set ($flag_S_UB_Y = ${flagData_S.getFlagTop()} )
 <area shape="rectangle" coords="${flag_S_LB_X},${flag_S_UB_Y},${flag_S_UB_X},${flag_S_LB_Y}" href="javascript:flipImage('${count}','${sImage}','${originalImgLoc}')"/>
+#end
 </map>
+#if(!${flagDataS})
+<p>NO S FLAG</p>
+#end
 
 #set ( $count = $count + 1)
 #else
