@@ -398,8 +398,7 @@ public class WaveformArm implements Runnable {
 
     private void handleCorbaFailure(EventChannelPair ecp) throws SQLException{
         synchronized (eventRetryTable) {
-            eventRetryTable.addRetry(ecp.getPairId(),
-                                     ecp.getStatus());
+            eventRetryTable.addRetry(ecp.getPairId());
         }
     }
 
@@ -408,8 +407,7 @@ public class WaveformArm implements Runnable {
             new MicroSecondDate(ecp.getEvent().getOrigin().origin_time);
         if (oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
             synchronized (eventRetryTable) {
-                eventRetryTable.addRetry(ecp.getPairId(),
-                                         ecp.getStatus());
+                eventRetryTable.addRetry(ecp.getPairId());
             }
         }else{
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
