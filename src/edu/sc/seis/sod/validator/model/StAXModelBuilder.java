@@ -186,6 +186,9 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 }else if(reader.getLocalName().equals("description")){
                     reader.next();
                     note.setDescription(reader.getText());
+                } else if (reader.getLocalName().equals("include")){
+                    reader.next();
+                    note.setInclude(true);
                 } else if(reader.getLocalName().equals("example")){
                     reader.next();
                     StringBuffer buf = new StringBuffer();
@@ -406,3 +409,4 @@ public class StAXModelBuilder implements XMLStreamConstants{
     private Grammar definedGrammar;
     private static Map parsedGrammars = new HashMap();
 }
+
