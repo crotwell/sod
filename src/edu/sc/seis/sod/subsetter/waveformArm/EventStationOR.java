@@ -10,7 +10,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.WaveFormLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
 
 /**
  * This subsetter is used to specify a sequence of EventStationSubsetters. This subsetter is accepted when even one
@@ -49,7 +49,7 @@ import edu.sc.seis.sod.subsetter.waveformArm.WaveFormLogicalSubsetter;
 
 
 public final class EventStationOR
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
     /**

@@ -20,7 +20,7 @@ import edu.iris.Fissures.*;
 
 
 public final class EventChannelAND
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventChannelSubsetter {
 
     /**

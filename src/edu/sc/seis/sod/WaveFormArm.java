@@ -25,13 +25,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class WaveFormArm implements Runnable {
-    public WaveFormArm(Element config, NetworkArm networkArm)
+public class WaveformArm implements Runnable {
+    public WaveformArm(Element config, NetworkArm networkArm)
         throws Exception {
         this(config, networkArm, 5);
     }
 
-    public WaveFormArm(Element config, NetworkArm networkArm, int threadPoolSize)
+    public WaveformArm(Element config, NetworkArm networkArm, int threadPoolSize)
         throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
@@ -354,7 +354,7 @@ public class WaveFormArm implements Runnable {
             NetworkAccess networkAccess  = networkArm.getNetworkAccess(networkid);
             NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
             return new EventChannelPair(networkDbObject, getEvent(eventId),
-                                        channelDbObject,WaveFormArm.this,
+                                        channelDbObject,WaveformArm.this,
                                         pairId);
         }
         private int pairId;
@@ -380,7 +380,7 @@ public class WaveFormArm implements Runnable {
 
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible
-    private static Logger logger = Logger.getLogger(WaveFormArm.class);
+    private static Logger logger = Logger.getLogger(WaveformArm.class);
 
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
     private int poolLineCapacity = 100, retryNum;

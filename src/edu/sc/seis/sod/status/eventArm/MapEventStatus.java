@@ -3,6 +3,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
+import edu.sc.seis.fissuresUtil.map.colorizer.event.FreshnessEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import edu.sc.seis.sod.Status;
 
 public class MapEventStatus extends PeriodicAction implements SodElement, EventArmMonitor{
     protected String fileLoc;
@@ -70,7 +70,7 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventA
 
     public void setArmStatus(String status){}// noImpl
 
-    private static MapPool pool = new MapPool(1);
+    private static MapPool pool = new MapPool(1, new FreshnessEventColorizer());
     private JDBCEventStatus events;
     private static Logger logger = Logger.getLogger(MapEventStatus.class);
 }

@@ -3,6 +3,7 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
@@ -45,7 +46,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
             return cgt;
         }
         if(tag.equals("map")){
-            MapWaveFormStatus map = new MapWaveFormStatus(getOutputDirectory() + "/map.png", pool);
+            MapWaveformStatus map = new MapWaveformStatus(getOutputDirectory() + "/map.png", pool);
             map.add(event);
             waveformStatusListeners.add(map);
             map.write();
@@ -67,7 +68,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
 
     private EventAccessOperations event;
 
-    private static MapPool pool = new MapPool(2);
+    private static MapPool pool = new MapPool(2, new DefaultEventColorizer());
 
     private List waveformStatusListeners = new ArrayList();
 

@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
 
 
 public final class RequestSubsetterNOT
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements RequestSubsetter {
 
     /**

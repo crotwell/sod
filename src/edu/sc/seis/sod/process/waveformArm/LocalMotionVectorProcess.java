@@ -17,7 +17,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
  * @version
  */
 
-public interface LocalMotionVectorProcess extends WaveFormArmProcess {
+public interface LocalMotionVectorProcess extends WaveformArmProcess {
 
 
     /**

@@ -8,7 +8,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.WaveFormLogicalSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.WaveformLogicalSubsetter;
 
 /**
  * eventStationXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
@@ -45,7 +45,7 @@ import edu.sc.seis.sod.subsetter.waveformArm.WaveFormLogicalSubsetter;
  */
 
 public final class EventStationXOR
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
     /**

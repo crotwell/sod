@@ -17,7 +17,7 @@ import edu.iris.Fissures.*;
  * @version 1.0
  */
 public final class EventChannelNOT
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventChannelSubsetter {
 
     /**

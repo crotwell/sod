@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
 
 
 public final class AvailableDataNOT
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements AvailableDataSubsetter {
 
     /**

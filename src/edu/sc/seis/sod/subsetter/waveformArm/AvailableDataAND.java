@@ -23,7 +23,7 @@ import org.apache.log4j.*;
  */
 
 public final class AvailableDataAND
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements AvailableDataSubsetter {
 
     /**

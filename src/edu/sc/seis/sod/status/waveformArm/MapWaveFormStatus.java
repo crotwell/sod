@@ -13,6 +13,7 @@ import edu.sc.seis.fissuresUtil.chooser.AvailableStationDataEvent;
 import edu.sc.seis.fissuresUtil.chooser.StationDataEvent;
 import edu.sc.seis.fissuresUtil.display.EQDataEvent;
 import edu.sc.seis.fissuresUtil.map.OpenMap;
+import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.CommonAccess;
@@ -31,22 +32,22 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-public class MapWaveFormStatus extends PeriodicAction implements WaveformArmMonitor {
+public class MapWaveformStatus extends PeriodicAction implements WaveformArmMonitor {
 
     private String fileLoc;
     private List events = new ArrayList();
     private Map channelMap = new HashMap();
     private MapPool pool;
 
-    public MapWaveFormStatus(Element element) {
+    public MapWaveformStatus(Element element) {
         this(element.getAttribute("xlink:href"));
     }
 
-    public MapWaveFormStatus(String fileLoc){
-        this(fileLoc, new MapPool(1));
+    public MapWaveformStatus(String fileLoc){
+        this(fileLoc, new MapPool(1, new DefaultEventColorizer()));
     }
 
-    public MapWaveFormStatus(String fileLoc, MapPool pool){
+    public MapWaveformStatus(String fileLoc, MapPool pool){
         this.fileLoc = fileLoc;
         this.pool = pool;
         write();
@@ -142,6 +143,6 @@ public class MapWaveFormStatus extends PeriodicAction implements WaveformArmMoni
         return events.contains(ev);
     }
 
-    private static Logger logger = Logger.getLogger(MapWaveFormStatus.class);
+    private static Logger logger = Logger.getLogger(MapWaveformStatus.class);
 }
 

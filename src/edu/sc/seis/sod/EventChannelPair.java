@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 public class EventChannelPair{
     public EventChannelPair(NetworkDbObject net, EventDbObject event,
-                            ChannelDbObject chan, WaveFormArm owner, int pairId){
+                            ChannelDbObject chan, WaveformArm owner, int pairId){
         this.event = event;
         this.chan = chan;
         this.owner = owner;
@@ -76,7 +76,7 @@ public class EventChannelPair{
 
     private ChannelDbObject chan;
 
-    private WaveFormArm owner;
+    private WaveformArm owner;
 
     private NetworkDbObject net;
 

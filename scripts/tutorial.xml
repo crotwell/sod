@@ -149,7 +149,7 @@
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
                 </networkInfoTemplateGenerator>
         </networkArm>
-        <waveFormArm>
+        <waveformArm>
                 <distanceRange>
                         <unit>DEGREE</unit>
                         <min>30</min>
@@ -190,6 +190,6 @@
                 		<!--<fileDir>status</fileDir>-->
                 		<waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
-        </waveFormArm>
+        </waveformArm>
 </sod>
 

@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.process.waveformArm.WaveFormArmProcess;
+import edu.sc.seis.sod.process.waveformArm.WaveformArmProcess;
 /**
  * LocalSeismogramProcess.java
  *
@@ -16,7 +16,7 @@ import edu.sc.seis.sod.process.waveformArm.WaveFormArmProcess;
  * @version
  */
 
-public interface LocalSeismogramProcess extends WaveFormArmProcess {
+public interface LocalSeismogramProcess extends WaveformArmProcess {
 
     /**
      * Processes localSeismograms, possibly modifying them.

@@ -44,7 +44,7 @@ import edu.iris.Fissures.*;
  */
 
 public final class EventStationAND
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
     /**

@@ -140,7 +140,7 @@ public class Start{
         return new InputSource(new BufferedInputStream(in));
     }
 
-    public static WaveFormArm getWaveformArm() { return waveform; }
+    public static WaveformArm getWaveformArm() { return waveform; }
 
     public static EventArm getEventArm() { return event; }
 
@@ -175,14 +175,14 @@ public class Start{
                 } else if (el.getTagName().equals("networkArm")) {
                     logger.info(el.getTagName());
                     network = new NetworkArm(el);
-                } else if (el.getTagName().equals("waveFormArm")) {
+                } else if (el.getTagName().equals("waveformArm")) {
                     logger.info(el.getTagName());
                     int poolSize =
                         Integer.parseInt(props.getProperty("edu.sc.seis.sod.waveformarm.threads",
                                                            "5"));
-                    waveform = new WaveFormArm(el, network, poolSize);
-                    waveFormArmThread = new Thread(waveform, "waveFormArm Thread");
-                    waveFormArmThread.start();
+                    waveform = new WaveformArm(el, network, poolSize);
+                    waveformArmThread = new Thread(waveform, "waveformArm Thread");
+                    waveformArmThread.start();
                 }  else {
                     logger.debug("process "+el.getTagName());
                 }
@@ -296,11 +296,11 @@ public class Start{
 
     private static Logger logger = Logger.getLogger(Start.class);
 
-    private static Thread waveFormArmThread;
+    private static Thread waveformArmThread;
 
     private static Thread eventArmThread;
 
-    private static WaveFormArm waveform;
+    private static WaveformArm waveform;
 
     private static EventArm event;
 

@@ -17,6 +17,6 @@ public interface Subsetter extends SodElement {
 
     static final String networkArmPackage = "networkArm";
 
-    static final String waveformArmPackage  = "waveFormArm";
+    static final String waveformArmPackage  = "waveformArm";
 
 }// Subsetter

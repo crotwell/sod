@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 public final class EventStationNOT
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements EventStationSubsetter {
 
     /**

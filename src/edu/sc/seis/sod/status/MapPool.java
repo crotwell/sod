@@ -1,16 +1,18 @@
 package edu.sc.seis.sod.status;
 
 import edu.sc.seis.fissuresUtil.map.OpenMap;
+import edu.sc.seis.fissuresUtil.map.colorizer.event.EventColorizer;
+import edu.sc.seis.fissuresUtil.map.colorizer.event.FreshnessEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 
 public class MapPool{
-    public MapPool(int mapCount){
+    public MapPool(int mapCount, EventColorizer colorizer){
         maps = new OpenMap[mapCount];
         free = new boolean[mapCount];
         for (int i = 0; i < maps.length; i++) {
             maps[i] = new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
-            maps[i].setEventLayer(new EventLayer(maps[i].getMapBean()));
+            maps[i].setEventLayer(new EventLayer(maps[i].getMapBean(), colorizer));
             maps[i].setStationLayer(new StationLayer());
             free[i] = true;
         }

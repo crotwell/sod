@@ -89,7 +89,7 @@ public class ChoiceRequest implements RequestGenerator{
                 } else if (element.getTagName().equals("otherwise")) {
                     otherwise =
                         (RequestGenerator)SodUtil.load((Element)node,
-                                                       "waveFormArm");
+                                                       "waveformArm");
                 } // end of else
             }
         }

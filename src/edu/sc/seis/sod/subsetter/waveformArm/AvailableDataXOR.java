@@ -21,7 +21,7 @@ import edu.iris.Fissures.*;
  *</pre>
  */
 public final class AvailableDataXOR
-    extends  WaveFormLogicalSubsetter
+    extends  WaveformLogicalSubsetter
     implements AvailableDataSubsetter {
 
     /**
