@@ -26,8 +26,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 public class Start{
+
+    static {
+        GlobalExceptionHandler.registerWithAWTThread();
+    }
+
     /**
      * Creates a new <code>Start</code> instance set to use the XML config file
      * the input stream points to as its configuration
@@ -61,35 +67,35 @@ public class Start{
         }
         initDocument(args);
     }
-    
+
     public Start(Document document) throws Exception {
         this(document, new String[0]);
     }
-    
+
     public Start(Document document, String[] args) throws Exception {
         this.document = document;
         initDocument(args);
     }
-    
+
     public static MicroSecondDate getStartTime(){ return startTime; }
-    
+
     public static TimeInterval getElapsedTime(){
         return ClockUtil.now().subtract(startTime);
     }
-    
+
     public static String getConfigFileName(){ return configFile; }
-    
+
     public static String getRunName(){
         if(runName == null){
             runName = props.getProperty("sod.start.RunName", "Your Sod");
         }
         return runName;
     }
-    
+
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
         loadProps((Start.class).getClassLoader().getResourceAsStream(DEFAULT_PROPS));
-        
+
         for (int i=0; i<args.length-1; i++) {
             if (args[i].equals("-props")) {
                 // override with values in local directory,
@@ -98,10 +104,10 @@ public class Start{
                 System.out.println("loaded file props from "+args[i+1]+"  log4j.rootCategory="+props.getProperty("log4j.rootCategory"));
             }
         }
-        
+
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
-        
+
         //now override the properties with the properties specified
         // in the configuration file.
         Element docElement = getDocument().getDocumentElement();
@@ -112,14 +118,14 @@ public class Start{
         } else {
             logger.debug("No properties specified in the configuration file");
         }
-        
+
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
-        
+
         executeRestartOptions();
     }
-    
+
     private InputSource createInputSource(String loc) throws IOException{
         InputStream in = null;
         if(loc.startsWith("http:") || loc.startsWith("ftp:")){
@@ -132,13 +138,13 @@ public class Start{
         }
         return new InputSource(new BufferedInputStream(in));
     }
-    
+
     public static WaveFormArm getWaveformArm() { return waveform; }
-    
+
     public static EventArm getEventArm() { return event; }
-    
+
     public static NetworkArm getNetworkArm() { return network; }
-    
+
     public static Document createDoc(InputSource source)
         throws SAXException, IOException, ParserConfigurationException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -148,7 +154,7 @@ public class Start{
         Document doc =  builder.parse(source);
         return doc;
     }
-    
+
     public void start() throws Exception {
         startTime = ClockUtil.now();
         Element docElement = document.getDocumentElement();
@@ -177,7 +183,7 @@ public class Start{
                     waveform = new WaveFormArm(el, network, poolSize);
                     waveFormArmThread = new Thread(waveform, "waveFormArm Thread");
                     waveFormArmThread.start();
-                    
+
                 }  else {
                     logger.debug("process "+el.getTagName());
                 }
@@ -186,30 +192,30 @@ public class Start{
         new IndexTemplate(props.getProperty("sod.start.IndexPageDirectory",
                                             "status"));
     }
-    
+
     public static Properties getProperties() {return props; }
-    
+
     public Document getDocument(){ return document; }
-    
+
     public static void main (String[] args) {
         try {
             // start up log4j before read props so at least there is some logging
             // later we will use PropertyConfigurator to really configure log4j
             BasicConfigurator.configure();
             String confFilename = null;
-            
+
             for (int i=0; i<args.length-1; i++) {
                 if(args[i].equals("-conf") || args[i].equals("-f")) {
                     confFilename = args[i+1];
                 }
             }
-            
+
             if (confFilename == null) {
                 System.err.println("No configuration file given, quiting....");
                 return;
             }
             Start start = new Start(confFilename, args);
-            
+
             logger.info("Start start()");
             start.start();
         } catch(Exception e) {
@@ -217,7 +223,7 @@ public class Start{
         }
         logger.info("Done.");
     } // end of main ()
-    
+
     private static void loadProps(InputStream propStream){
         try {
             props.load(propStream);
@@ -228,11 +234,11 @@ public class Start{
             System.exit(0);
         }
     }
-    
+
     public static void add(Properties newProps){
         props.putAll(newProps);
     }
-    
+
     private static  void executeRestartOptions() {
         //TODO - use this in new db
         Start.REMOVE_DATABASE = isRemoveDatabase();
@@ -245,7 +251,7 @@ public class Start{
             }
         }
     }
-    
+
     public static TimeInterval getIntervalProp(TimeInterval defaultInterval,
                                                String propName) throws NoSuchFieldException {
         String unitName = props.getProperty(propName + ".unit", "DAY");
@@ -256,7 +262,7 @@ public class Start{
         }
         return defaultInterval;
     }
-    
+
     private static boolean isRemoveDatabase() {
         String str = props.getProperty("edu.sc.seis.sod.database.remove");
         if(str != null) {
@@ -264,7 +270,7 @@ public class Start{
         }
         return false;
     }
-    
+
     public static int getIntProp(String propName, int defaultValue){
         String str = props.getProperty(propName);
         if(str != null) {
@@ -274,38 +280,38 @@ public class Start{
         }
         return defaultValue;
     }
-    
+
     private static boolean isReopenEvents() {
         String str = props.getProperty("sod.start.ReopenEvents");
         if(str != null && str.equalsIgnoreCase("true"))  return true;
         return false;
     }
-    
+
     public static final String
         DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
-    
+
     public static boolean REMOVE_DATABASE = false;
-    
+
     private static Properties props = System.getProperties();
-    
+
     private Document document;
-    
+
     private static Logger logger = Logger.getLogger(Start.class);
-    
+
     private static Thread waveFormArmThread;
-    
+
     private static Thread eventArmThread;
-    
+
     private static WaveFormArm waveform;
-    
+
     private static EventArm event;
-    
+
     private static NetworkArm network;
-    
+
     private static String configFile, runName = null;
-    
+
     private static MicroSecondDate startTime;
-    
+
     private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
 
