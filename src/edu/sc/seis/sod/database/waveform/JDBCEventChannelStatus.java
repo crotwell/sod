@@ -44,7 +44,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         getForEvent = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE eventid = ?");
         getPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         getForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
-        getEventForStatus = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE status = ? AND eventid = ?");
+        getEventForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
         getStationEventForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE status = ? AND eventid = ? AND eventchannelstatus.channelid = channel.chan_id AND channel.site_id = site.site_id AND site.sta_id = ?");
     }
 
@@ -84,11 +84,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return getAll(eventTable.getDBId(ev));
     }
 
-    public EventChannelPair[] getAll(EventAccessOperations ev, Status status) throws NotFound, SQLException {
+    public int getNum(EventAccessOperations ev, Status status) throws NotFound, SQLException {
         int evId = eventTable.getDBId(ev);
         getEventForStatus.setInt(1, status.getAsShort());
         getEventForStatus.setInt(2, evId);
-        return extractECPs(getEventForStatus.executeQuery());
+        ResultSet rs = getEventForStatus.executeQuery();
+        rs.next();
+        return rs.getInt(1);
     }
 
     public int getNum(EventAccessOperations ev, Status status, int stationDbId) throws NotFound, SQLException {
