@@ -22,6 +22,15 @@ public class CookieJar {
         context.put("sod_channel", channel);
     }
 
+    /**
+     * Returns the Velocity Context that stores the put data
+     *
+     * @return    a  VelocityContext
+     */
+    public VelocityContext getContext() {
+        return context;
+    }
+
     public Object get(String key) {
         return context.get(key);
     }
