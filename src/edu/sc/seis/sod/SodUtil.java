@@ -312,7 +312,6 @@ public class SodUtil {
 		    String propName = SodUtil.getNestedText(SodUtil.getElement(elem, "name"));
 		    String propValue = SodUtil.getNestedText(SodUtil.getElement(elem, "value"));
 		    props.setProperty(propName, propValue);
-	       
 		}
 	    }
 	}
