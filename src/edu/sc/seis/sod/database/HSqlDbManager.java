@@ -27,7 +27,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
     public NetworkDatabase getNetworkDatabase(){
         if(networkDatabase == null) {
             try {
-                networkDatabase = new HSqlNetworkDb(ConnMgr.getConnection());
+                networkDatabase = new HSqlNetworkDb(ConnMgr.createConnection());
             } catch (SQLException e) {
                 throw new RuntimeException("Trouble setting up network db", e);
             }
@@ -41,7 +41,7 @@ public class HSqlDbManager extends AbstractDatabaseManager{
                 String driverName = new String("org.hsqldb.jdbcDriver");
                 Class.forName(driverName).newInstance();
                 System.out.println("The database name is "+getDatabaseName());
-                connection = ConnMgr.getConnection();
+                connection = ConnMgr.createConnection();
                 //DriverManager.getConnection("jdbc:hsqldb:"+getDatabaseName(), "sa", "");
                 
             }

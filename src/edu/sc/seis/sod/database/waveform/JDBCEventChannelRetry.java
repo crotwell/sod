@@ -13,7 +13,7 @@ import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCEventChannelRetry extends SodJDBC{
     public JDBCEventChannelRetry() throws SQLException{
-        Connection conn = ConnMgr.getConnection();
+        Connection conn = ConnMgr.createConnection();
         if(!DBUtil.tableExists("eventchannelretry", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventchannelretry.create"));

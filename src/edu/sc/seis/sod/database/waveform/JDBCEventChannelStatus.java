@@ -20,7 +20,7 @@ import java.sql.Statement;
 
 public class JDBCEventChannelStatus extends SodJDBC{
     public JDBCEventChannelStatus() throws SQLException{
-        Connection conn = ConnMgr.getConnection();
+        Connection conn = ConnMgr.createConnection();
         if(!DBUtil.tableExists("eventchannelstatus", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventchannelstatus.create"));

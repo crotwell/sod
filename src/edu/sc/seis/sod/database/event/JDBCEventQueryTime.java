@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class JDBCEventQueryTime extends SodJDBC{
     public JDBCEventQueryTime() throws SQLException{
-        Connection conn = ConnMgr.getConnection();
+        Connection conn = ConnMgr.createConnection();
         if(!DBUtil.tableExists("eventquerytimes", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventquerytimes.create"));
