@@ -131,7 +131,7 @@ public class EventArm implements Runnable{
                         numRetries++;
                         // force trip back to name service
                         eventFinderSubsetter.forceGetEventDC();
-                        CommonAccess.handleException("Got an UNKNOWN while trying query from "+
+                        CommonAccess.handleException("Got an Corba exception while trying query from "+
                                                          queryStart.getFissuresTime().date_time+
                                                          " to "+queryEnd.getFissuresTime().date_time+
                                                          ", sleep for 1 minute before retrying. Num retries = "+numRetries, e);
