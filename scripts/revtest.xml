@@ -20,7 +20,7 @@
             <value>16</value>
             <unit>DAY</unit>
         </maxRetryDelay>
-        <removeDatabase/>
+        <removeDatabase>TRUE</removeDatabase>
     </properties>
     <eventArm>
         <eventFinder>
