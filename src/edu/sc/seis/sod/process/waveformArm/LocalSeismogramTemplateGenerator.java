@@ -47,11 +47,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             Node n = nl.item(i);
             if (n.getNodeName().equals("fileDir")){
                 fileDir = n.getFirstChild().getNodeValue();
-            }
-        }
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node n = nl.item(i);
-            if (n.getNodeName().equals("seismogramConfig")){
+            } else if (n.getNodeName().equals("seismogramConfig")){
                 waveformSeismogramConfig = TemplateFileLoader.getTemplate((Element)n);
 
                 Node tmpEl = SodUtil.getElement(waveformSeismogramConfig, "outputLocation");
