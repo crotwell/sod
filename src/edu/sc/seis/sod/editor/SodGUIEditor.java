@@ -131,6 +131,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("originPointDistance", new OriginPointDistanceEditor());
         editors.put("originPointAzimuth", new OriginPointAzimuthEditor());
         editors.put("originPointBackAzimuth", new OriginPointBackAzimuthEditor());
+        editors.put("seismicRegion", new SeismicRegionEditor());
+        editors.put("geographicRegion", new GeographicRegionEditor());
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
         editors.put("eventFinder", new EventFinderEditor(this));
         editors.put("networkFinder", new NetworkFinderEditor(this));
@@ -196,8 +198,3 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
-
-
-
-
-
