@@ -1,25 +1,4 @@
 package edu.sc.seis.sod;
-import edu.iris.Fissures.IfEvent.*;
-
-import edu.iris.Fissures.Area;
-import edu.iris.Fissures.Quantity;
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.QuantityImpl;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.JDBCQueryTime;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.process.eventArm.EventProcess;
-import edu.sc.seis.sod.status.eventArm.EventMonitor;
-import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
-import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
-import edu.sc.seis.sod.subsetter.eventArm.PassOrigin;
-import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
-import edu.sc.seis.sod.subsetter.eventArm.OriginTimeRange;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +12,33 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.iris.Fissures.Area;
+import edu.iris.Fissures.Quantity;
+import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.IfEvent.EventAccess;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.EventSeqIter;
+import edu.iris.Fissures.IfEvent.EventSeqIterHolder;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.JDBCQueryTime;
+import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.process.eventArm.EventProcess;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
+import edu.sc.seis.sod.subsetter.origin.EventFinder;
+import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
+import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+import edu.sc.seis.sod.subsetter.origin.OriginTimeRange;
+import edu.sc.seis.sod.subsetter.origin.PassOrigin;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters specified
@@ -79,7 +85,7 @@ public class EventArm implements Runnable{
             if (node instanceof Element) {
                 Element el = (Element)node;
                 if ((el).getTagName().equals("description")) continue;
-                Object sodElement = SodUtil.load(el, "eventArm");
+                Object sodElement = SodUtil.load(el, new String[]{"eventArm","origin"});
                 if(sodElement instanceof EventFinder) {
                     finder = (EventFinder)sodElement;
                 } else if(sodElement instanceof OriginSubsetter) {

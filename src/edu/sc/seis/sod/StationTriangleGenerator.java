@@ -5,12 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
-
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.waveformArm.MapWaveformStatus;

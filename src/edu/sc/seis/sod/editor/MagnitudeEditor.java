@@ -5,17 +5,17 @@
  */
 
 package edu.sc.seis.sod.editor;
-import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeListener;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
-import javax.swing.event.ChangeEvent;
 
 
 

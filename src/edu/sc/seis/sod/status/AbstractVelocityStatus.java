@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
+import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.networkArm.NetworkArmContext;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;

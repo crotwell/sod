@@ -6,9 +6,6 @@
 
 package edu.sc.seis.sod.editor;
 
-import de.wannawork.jcalendar.JCalendarComboBox;
-import edu.iris.Fissures.model.ISOTime;
-import edu.iris.Fissures.model.MicroSecondDate;
 import java.util.Calendar;
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -19,6 +16,9 @@ import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import de.wannawork.jcalendar.JCalendarComboBox;
+import edu.iris.Fissures.model.ISOTime;
+import edu.iris.Fissures.model.MicroSecondDate;
 
 public class DateEditor implements EditorPlugin {
 

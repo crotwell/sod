@@ -1,18 +1,5 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.IfNetwork.Site;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.SiteIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
-import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
-import edu.sc.seis.sod.status.FissuresFormatter;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -26,6 +13,19 @@ import org.apache.velocity.tools.generic.IteratorTool;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.apache.velocity.tools.generic.RenderTool;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.Site;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelCookieJar;
+import edu.sc.seis.sod.database.waveform.JDBCVelocityContext;
+import edu.sc.seis.sod.status.FissuresFormatter;
 
 /**
  * CookieJar exists as a way for various subsetters and processors in

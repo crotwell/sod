@@ -1,8 +1,6 @@
 package edu.sc.seis.sod.status;
 
 
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Start;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -10,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.ConfigurationException;
 
 public abstract class Template{
     /**

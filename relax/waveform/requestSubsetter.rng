@@ -3,122 +3,122 @@
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
-        <ref name="requestSubsetter"/>
+        <ref name="request"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
-    <define name="requestSubsetter">
+    <define name="request">
         <choice>
-            <ref name="requestSubsetterAND"/>
-            <ref name="requestSubsetterOR"/>
-            <ref name="requestSubsetterXOR"/>
-            <ref name="requestSubsetterNOT"/>
+            <ref name="requestAND"/>
+            <ref name="requestOR"/>
+            <ref name="requestXOR"/>
+            <ref name="requestNOT"/>
             <ref name="requestPrint"/>
-            <ref name="breqFastRequestSubsetter"/>
+            <ref name="breqFastRequest"/>
             <ref name="PASS"/>
             <ref name="external"/>
         </choice>
     </define>
-    <define name="requestSubsetterAND">
-        <element name="requestSubsetterAND">
+    <define name="requestAND">
+        <element name="requestAND">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical AND between RequestSubsetter subsetters. </summary>
+                    <summary> Logical AND between Request subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
                         subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
-                        <requestSubsetterAND>
+                        <requestAND>
                             <requestPrint/>
-                            <requestSubsetterOR>
+                            <requestOR>
                                 <passRequest/>
-                                <requestSubsetterNOT>
+                                <requestNOT>
                                     <externalRequestSubsetter>
                                         <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
                                         <someTag/>
                                         <someOtherTag/>
                                     </externalRequestSubsetter>
-                                </requestSubsetterNOT>
-                            </requestSubsetterOR>
-                        </requestSubsetterAND>
+                                </requestNOT>
+                            </requestOR>
+                        </requestAND>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="requestSubsetter"/>
+                <ref name="request"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="requestSubsetterOR">
-        <element name="requestSubsetterOR">
+    <define name="requestOR">
+        <element name="requestOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical OR between RequestSubsetter subsetters. </summary>
+                    <summary> Logical OR between Request subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
-                        <requestSubsetterOR>
+                        <requestOR>
                             <requestPrint/>
-                            <requestSubsetterAND>
+                            <requestAND>
                                 <passRequest/>
-                                <requestSubsetterNOT>
+                                <requestNOT>
                                     <externalRequestSubsetter>
                                         <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
                                         <someTag/>
                                         <someOtherTag/>
                                     </externalRequestSubsetter>
-                                </requestSubsetterNOT>
-                            </requestSubsetterAND>
-                        </requestSubsetterOR>
+                                </requestNOT>
+                            </requestAND>
+                        </requestOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
-                <ref name="requestSubsetter"/>
+                <ref name="request"/>
             </oneOrMore>
         </element>
     </define>
-    <define name="requestSubsetterXOR">
-        <element name="requestSubsetterXOR">
+    <define name="requestXOR">
+        <element name="requestXOR">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical XOR between RequestSubsetter subsetters. </summary>
+                    <summary> Logical XOR between Request subsetters. </summary>
                     <description> The output is the logical XOR of the outputs of all included
                         subsetters. </description>
                     <example>
-                        <requestSubsetterXOR>
+                        <requestXOR>
                             <requestPrint/>
-                            <requestSubsetterAND>
+                            <requestAND>
                                 <passRequest/>
-                                <requestSubsetterNOT>
+                                <requestNOT>
                                     <externalRequestSubsetter>
                                         <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
                                         <someTag/>
                                         <someOtherTag/>
                                     </externalRequestSubsetter>
-                                </requestSubsetterNOT>
-                            </requestSubsetterAND>
-                        </requestSubsetterXOR>
+                                </requestNOT>
+                            </requestAND>
+                        </requestXOR>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="requestSubsetter"/>
-            <ref name="requestSubsetter"/>
+            <ref name="request"/>
+            <ref name="request"/>
         </element>
     </define>
-    <define name="requestSubsetterNOT">
-        <element name="requestSubsetterNOT">
+    <define name="requestNOT">
+        <element name="requestNOT">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary> Logical NOT of an RequestSubsetter subsetter. </summary>
+                    <summary> Logical NOT of an Request subsetter. </summary>
                     <description> The output is the logical NOT of the output of the included
                         subsetters. </description>
                     <example>
-                        <requestSubsetterNOT>
+                        <requestNOT>
                             <requestPrint/>
-                        </requestSubsetterNOT>
+                        </requestNOT>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="requestSubsetter"/>
+            <ref name="request"/>
         </element>
     </define>
     <define name="requestPrint">
@@ -135,8 +135,8 @@
             <empty/>
         </element>
     </define>
-    <define name="breqFastRequestSubsetter">
-        <element name="breqFastRequestSubsetter">
+    <define name="breqFastRequest">
+        <element name="breqFastRequest">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Creates a breqfast request and saves it to a file and returns true. </summary>
@@ -147,12 +147,12 @@
                         returns true, processing will continue past this point. In most cases, the
                         whole reason to generate breqfast requests is that it is the only way to get
                         the data, and so there is not much point in proceeding down the waveform
-                        arm. So you will generally want to wrap the breqFastRequestSubsetter in a
-                        &lt;requestSubsetterNOT&gt; so that the return value is false. This
+                        arm. So you will generally want to wrap the breqFastRequest in a
+                        &lt;requestNOT&gt; so that the return value is false. This
                         will allow SOD to proceed to the next piece of work and avoid the wasted
                         time in going to the server to get data. </description>
                     <example>
-                        <breqFastRequestSubsetter>
+                        <breqFastRequest>
                             <dataDirectory>RUSH_breqfast</dataDirectory>
                             <label>
                                 <originTime>yyyy_DDD_HH_mm_ss</originTime>
@@ -167,7 +167,7 @@
                             <altmedia1>Electronic</altmedia1>
                             <altmedia2>Electronic</altmedia2>
                             <quality>b</quality>
-                        </breqFastRequestSubsetter>
+                        </breqFastRequest>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
@@ -223,12 +223,12 @@
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
-                <ref name="requestSubsetter"/>
+                <ref name="request"/>
             </zeroOrMore>
         </element>
     </define>
     <define name="external">
-        <element name="externalRequestSubsetter">
+        <element name="externalRequest">
             <ref name="externalClass"/>
         </element>
     </define>

@@ -6,17 +6,17 @@
                 <externalRef href="eventStation.rng"/>
             </optional>
             <optional>
-                <externalRef href="eventChannelGroup.rng"/>
+                <externalRef href="eventVector.rng"/>
             </optional>
             <element name="requestGeneratorWrapper">
-                <externalRef href="phaseRequest.rng"/>
+                <externalRef href="requestGenerator.rng"/>
             </element>
             <optional>
-                <externalRef href="channelGroupRequestSubsetter.rng"/>
+                <externalRef href="vectorRequestSubsetter.rng"/>
             </optional>
             <externalRef href="dataCenter.rng"/>
             <optional>
-                <externalRef href="channelGroupAvailableData.rng"/>
+                <externalRef href="vectorAvailableData.rng"/>
             </optional>
             <zeroOrMore>
                 <externalRef href="waveformVectorProcess.rng"/>

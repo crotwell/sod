@@ -1,7 +1,6 @@
 package edu.sc.seis.sod;
 
 import org.apache.log4j.BasicConfigurator;
-
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
 
 /**

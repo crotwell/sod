@@ -8,7 +8,7 @@
             <optional>
                 <externalRef href="eventChannel.rng"/>
             </optional>
-            <externalRef href="phaseRequest.rng"/>
+                <externalRef href="requestGenerator.rng"/>
             <optional>
                 <externalRef href="requestSubsetter.rng"/>
             </optional>

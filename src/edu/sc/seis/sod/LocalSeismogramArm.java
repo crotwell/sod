@@ -15,19 +15,19 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
-import edu.sc.seis.sod.process.waveformArm.WaveformResult;
+import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.WaveformResult;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.EventChannelSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.NullRequestGenerator;
-import edu.sc.seis.sod.subsetter.waveformArm.NullSeismogramDCLocator;
-import edu.sc.seis.sod.subsetter.waveformArm.PassAvailableData;
-import edu.sc.seis.sod.subsetter.waveformArm.PassEventChannel;
-import edu.sc.seis.sod.subsetter.waveformArm.PassRequest;
-import edu.sc.seis.sod.subsetter.waveformArm.RequestGenerator;
-import edu.sc.seis.sod.subsetter.waveformArm.RequestSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.dataCenter.NullSeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
+import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
+import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.requestGenerator.NullRequestGenerator;
+import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
 public class LocalSeismogramArm implements Subsetter {
     public void handle(Object sodElement){
@@ -35,8 +35,8 @@ public class LocalSeismogramArm implements Subsetter {
             eventChannel = (EventChannelSubsetter)sodElement;
         } else if(sodElement instanceof RequestGenerator) {
             requestGenerator = (RequestGenerator)sodElement;
-        } else if(sodElement instanceof RequestSubsetter) {
-            request = (RequestSubsetter)sodElement;
+        } else if(sodElement instanceof Request) {
+            request = (Request)sodElement;
         } else if(sodElement instanceof SeismogramDCLocator) {
             dcLocator = (SeismogramDCLocator)sodElement;
         } else if(sodElement instanceof AvailableDataSubsetter) {
@@ -57,7 +57,7 @@ public class LocalSeismogramArm implements Subsetter {
         return requestGenerator;
     }
 
-    public RequestSubsetter getRequestSubsetter() {
+    public Request getRequestSubsetter() {
         return request;
     }
 
@@ -390,7 +390,7 @@ public class LocalSeismogramArm implements Subsetter {
 
     private RequestGenerator requestGenerator = new NullRequestGenerator();
 
-    private RequestSubsetter request = new PassRequest();
+    private Request request = new PassRequest();
 
     private AvailableDataSubsetter availData = new PassAvailableData();
 

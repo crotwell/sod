@@ -6,6 +6,9 @@
 
 package edu.sc.seis.sod.editor;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import javax.swing.JTextArea;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
@@ -13,9 +16,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
-import java.util.Iterator;
-import java.util.LinkedList;
-import javax.swing.JTextArea;
 
 public class TextAreaStatusDisplay implements EventMonitor, WaveformMonitor {
     TextAreaStatusDisplay() {

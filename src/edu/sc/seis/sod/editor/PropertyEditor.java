@@ -5,10 +5,10 @@
  */
 
 package edu.sc.seis.sod.editor;
-import edu.sc.seis.sod.SodUtil;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -18,7 +18,7 @@ import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import java.awt.event.ActionEvent;
+import edu.sc.seis.sod.SodUtil;
 
 public class PropertyEditor implements EditorPlugin {
     public JComponent getGUI(Element element) throws TransformerException {

@@ -7,18 +7,18 @@ import org.w3c.dom.Element;
 public class OriginXORTest
     extends TestCase
 {
-    edu.sc.seis.sod.subsetter.eventArm.OriginXOR originxor = null;
+    edu.sc.seis.sod.subsetter.origin.OriginXOR originxor = null;
 
     public OriginXORTest(String name) {
         super(name);
     }
 
-    public edu.sc.seis.sod.subsetter.eventArm.OriginXOR createInstance() throws Exception {
+    public edu.sc.seis.sod.subsetter.origin.OriginXOR createInstance() throws Exception {
         Element xor = XMLConfigUtil.parse("<originXOR>"+
                                               "<passOrigin/>"+
                                               "<originNOT><passOrigin/></originNOT>"+
                                               "</originXOR>");
-        return new edu.sc.seis.sod.subsetter.eventArm.OriginXOR(xor);
+        return new edu.sc.seis.sod.subsetter.origin.OriginXOR(xor);
     }
 
     protected void setUp() throws Exception {

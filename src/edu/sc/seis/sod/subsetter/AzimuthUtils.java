@@ -6,11 +6,6 @@
 
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.Location;
-import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 
 public class AzimuthUtils{

@@ -1,12 +1,14 @@
 package edu.sc.seis.sod.database;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.sod.database.SodJDBC;
-import java.util.Date;
 
 public class JDBCQueryTime extends SodJDBC{
     public JDBCQueryTime() throws SQLException{

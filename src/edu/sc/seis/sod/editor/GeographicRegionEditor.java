@@ -5,16 +5,20 @@
  */
 
 package edu.sc.seis.sod.editor;
-import javax.swing.*;
-
-import edu.sc.seis.fissuresUtil.display.GeographicRegion;
-import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.display.SeismicRegion;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import edu.sc.seis.fissuresUtil.display.GeographicRegion;
+import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.display.SeismicRegion;
 
 
 

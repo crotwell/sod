@@ -1,14 +1,11 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.model.*;
-import java.io.*;
-import edu.iris.Fissures.TimeRange;
-import edu.iris.Fissures.Unit;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
-import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.subsetter.LatitudeRange;
-import edu.sc.seis.sod.subsetter.LongitudeRange;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -20,21 +17,31 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.Unit;
+import edu.iris.Fissures.model.BoxAreaImpl;
+import edu.iris.Fissures.model.GlobalAreaImpl;
+import edu.iris.Fissures.model.ISOTime;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.subsetter.LatitudeRange;
+import edu.sc.seis.sod.subsetter.LongitudeRange;
 
 public class SodUtil {
 
     public static boolean isTrue(Element el, String tagName) {
         Element booleanElement = getElement(el, tagName);
-        if(booleanElement != null && isTrueText(getNestedText(booleanElement))) {
-            return true;
-        }
+        if(booleanElement != null && isTrueText(getNestedText(booleanElement))) { return true; }
         return false;
     }
 
     public static boolean isTrueText(String nestedText) {
-        if(nestedText.equals("TRUE")) {
-            return true;
-        }
+        if(nestedText.equals("TRUE")) { return true; }
         return false;
     }
 
@@ -51,17 +58,18 @@ public class SodUtil {
             }
         }
         File htmlDir = new File(outputDirName);
-        if(outputDirName != null)
-            htmlDir = new File(outputDirName);
-        if(!htmlDir.exists())
-            htmlDir.mkdirs();
-        if(!htmlDir.isDirectory()) {
-            throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory");
-        }
+        if(outputDirName != null) htmlDir = new File(outputDirName);
+        if(!htmlDir.exists()) htmlDir.mkdirs();
+        if(!htmlDir.isDirectory()) { throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory"); }
         return htmlDir;
     }
 
     public static synchronized Object load(Element config, String armName)
+            throws ConfigurationException {
+        return load(config, new String[] {armName});
+    }
+
+    public static synchronized Object load(Element config, String[] armNames)
             throws ConfigurationException {
         try {
             String tagName = config.getTagName();
@@ -82,14 +90,12 @@ public class SodUtil {
                 return loadBoxArea(config);
             } else if(tagName.equals("PointArea")) {
                 return loadBoxArea(config);
-            } else if(tagName.equals("FlinnEngdahlArea")) {
-                return loadFEArea(config);
-            }
+            } else if(tagName.equals("FlinnEngdahlArea")) { return loadFEArea(config); }
             // not a known non-sodElement type, so load via reflection
-            if(tagName.startsWith("External")) {
-                return loadExternal(tagName, armName, config);
-            }
-            return loadClass(load(tagName, armName), config);
+            if(tagName.startsWith("External")) { return loadExternal(tagName,
+                                                                     armNames,
+                                                                     config); }
+            return loadClass(load(tagName, armNames), config);
         } catch(InvocationTargetException e) {
             // occurs if the constructor throws an exception
             // don't repackage ConfigurationException
@@ -109,16 +115,22 @@ public class SodUtil {
         } // end of try-catch
     }
 
-    private static Class load(String tagName, String armName)
+    private static Class load(String tagName, String[] armNames)
             throws ClassNotFoundException {
+        if(tagName.equals("beginOffset") || tagName.equals("endOffset")) {
+            tagName = "interval";
+        }
         //Load for each of the arms....
-        for(int i = 0; i < basePackageNames.length; i++) {
-            String packageName = baseName + "." + basePackageNames[i] + "."
-                    + armName;
-            try {
-                return Class.forName(packageName + "." + tagName);
-            } catch(ClassNotFoundException ex) {}//will be handled at the
-            // end
+        for(int j = 0; j < armNames.length; j++) {
+            String armName = armNames[j];
+            for(int i = 0; i < basePackageNames.length; i++) {
+                String packageName = baseName + "." + basePackageNames[i] + "."
+                        + armName;
+                try {
+                    return Class.forName(packageName + "." + tagName);
+                } catch(ClassNotFoundException ex) {}//will be handled at the
+                // end
+            }
         }
         //load for the base packages....
         for(int i = 0; i < basePackageNames.length; i++) {
@@ -137,20 +149,19 @@ public class SodUtil {
      * mustImplement, a configuration exception is thrown
      */
     public static synchronized Object loadExternal(String tagName,
-                                                   String armName,
+                                                   String[] armNames,
                                                    Element config)
             throws Exception {
         String classname = getNestedText(SodUtil.getElement(config, "classname"));
         try {
             Class extClass = Class.forName(classname);
             Class mustImplement = load(tagName.substring("external".length()),
-                                       armName);
+                                       armNames);
             Class[] implementedInterfaces = extClass.getInterfaces();
             for(int i = 0; i < implementedInterfaces.length; i++) {
                 Class curInterface = implementedInterfaces[i];
-                if(curInterface.equals(mustImplement)) {
-                    return loadClass(extClass, config);
-                }
+                if(curInterface.equals(mustImplement)) { return loadClass(extClass,
+                                                                          config); }
             }
             throw new ConfigurationException("External class " + classname
                     + " does not implement the class it's working with, "
@@ -370,9 +381,8 @@ public class SodUtil {
     public static String getText(Element config) {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
-            if(children.item(i) instanceof Text) {
-                return children.item(i).getNodeValue();
-            }
+            if(children.item(i) instanceof Text) { return children.item(i)
+                    .getNodeValue(); }
         }
         //nothing found, return null
         return null;
@@ -461,9 +471,7 @@ public class SodUtil {
 
     private static int countDots(String relativeLocation) {
         int lastDots = relativeLocation.lastIndexOf("..");
-        if(lastDots == -1) {
-            return 0;
-        }
+        if(lastDots == -1) { return 0; }
         return 1 + lastDots / 3;
     }
 

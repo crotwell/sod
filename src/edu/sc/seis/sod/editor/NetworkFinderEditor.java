@@ -6,16 +6,15 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 
 public class NetworkFinderEditor extends ServerEditor implements EditorPlugin{
 

@@ -7,7 +7,6 @@
 package edu.sc.seis.sod.editor;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 
 

@@ -5,24 +5,23 @@
  */
 
 package edu.sc.seis.sod.status.waveformArm;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
+import org.apache.velocity.VelocityContext;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.networkArm.VelocityStationGetter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
-import org.apache.velocity.VelocityContext;
-import org.w3c.dom.Element;
 
 
 

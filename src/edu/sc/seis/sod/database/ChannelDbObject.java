@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.IfNetwork.Channel;
 
 /**
  * ChannelDbObject.java

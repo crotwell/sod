@@ -1,13 +1,10 @@
 package edu.sc.seis.sod;
 
 
-import org.xml.sax.Attributes;
+import org.apache.log4j.Category;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.helpers.DefaultHandler;
-import org.apache.log4j.Category;
 
 public class SimpleErrorHandler implements ErrorHandler {
 

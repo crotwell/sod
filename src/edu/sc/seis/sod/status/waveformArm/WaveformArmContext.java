@@ -6,13 +6,12 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
+import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class WaveformArmContext  extends AbstractContext {
 

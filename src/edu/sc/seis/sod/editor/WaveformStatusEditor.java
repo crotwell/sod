@@ -5,8 +5,8 @@
  */
 
 package edu.sc.seis.sod.editor;
-import org.w3c.dom.Element;
 import javax.swing.JComponent;
+import org.w3c.dom.Element;
 
 
 

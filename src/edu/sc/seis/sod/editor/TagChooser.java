@@ -6,10 +6,8 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.Collections;
@@ -25,6 +23,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.w3c.dom.Element;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 public abstract class TagChooser implements EditorPlugin {
     public TagChooser(String ssType, SodGUIEditor editor) {
@@ -53,7 +52,7 @@ public abstract class TagChooser implements EditorPlugin {
         Iterator it = getSubTypes().iterator();
         while(it.hasNext()) {
             String ssType = (String)it.next();
-            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(editor.getDisplayName(ssType));
+            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(SimpleGUIEditor.getDisplayName(ssType));
             popupGroup.add(menuItem);
             if (ssType.equals(element.getTagName())) {
                 menuItem.setSelected(true);

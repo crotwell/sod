@@ -5,9 +5,6 @@
  */
 package edu.sc.seis.sod.validator.example;
 
-import edu.sc.seis.sod.validator.Validator;
-import edu.sc.seis.sod.validator.model.Annotation;
-import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -15,7 +12,9 @@ import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import edu.sc.seis.sod.validator.Validator;
+import edu.sc.seis.sod.validator.model.Annotation;
+import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 
 public class ExampleValidator {
 

@@ -1,10 +1,8 @@
 package edu.sc.seis.sod.subsetter;
-import edu.sc.seis.sod.*;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.sc.seis.sod.SodUtil;
 
 public abstract class AbstractSource{
     public AbstractSource (Element config){

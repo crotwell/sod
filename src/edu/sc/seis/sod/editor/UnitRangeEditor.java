@@ -5,8 +5,6 @@
  */
 
 package edu.sc.seis.sod.editor;
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -16,6 +14,8 @@ import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 
 
 

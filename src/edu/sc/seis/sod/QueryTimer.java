@@ -6,14 +6,13 @@
 
 package edu.sc.seis.sod;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class QueryTimer{
     public static final int QUERY_REPS = 20;

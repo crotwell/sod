@@ -6,9 +6,6 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.UpdateChecker;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.sod.UpdateChecker;
 
 
 

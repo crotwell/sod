@@ -6,19 +6,6 @@
  */
 
 package edu.sc.seis.sod;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAttr;
-import edu.iris.Fissures.IfNetwork.NetworkId;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.SamplingImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.subsetter.networkArm.ChannelSubsetter;
-import edu.sc.seis.sod.subsetter.networkArm.NetworkSubsetter;
-import edu.sc.seis.sod.subsetter.networkArm.StationSubsetter;
-import edu.sc.seis.sod.validator.Validator;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +19,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
+import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.SamplingImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.NetworkDbObject;
+import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
+import edu.sc.seis.sod.subsetter.network.NetworkSubsetter;
+import edu.sc.seis.sod.subsetter.station.StationSubsetter;
+import edu.sc.seis.sod.validator.Validator;
 
 public class ChannelGrouper {
 	public ChannelGrouper() {
@@ -112,7 +112,7 @@ public class ChannelGrouper {
 										}
 									}
 								}else {
-									Object subsetter = SodUtil.load(el,"networkArm");
+									Object subsetter = SodUtil.load(el,NetworkArm.PACKAGES);
 									if(subsetter instanceof NetworkSubsetter) {
 										NetworkId netId = channels[0].get_id().network_id;
 										NetworkDbObject[] networks = Start.getNetworkArm().getSuccessfulNetworks();

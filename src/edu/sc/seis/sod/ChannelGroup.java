@@ -6,9 +6,9 @@
  */
 
 package edu.sc.seis.sod;
+import org.apache.log4j.Logger;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
-import org.apache.log4j.Logger;
 
 public class ChannelGroup {
     public ChannelGroup(Channel[] channels) {

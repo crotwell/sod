@@ -6,17 +6,17 @@
 
 package edu.sc.seis.sod.editor;
 
-import com.sun.msv.grammar.Grammar;
-import com.sun.msv.grammar.SimpleNameClass;
-import com.sun.msv.grammar.util.ExpressionWalker;
-import com.sun.msv.reader.util.GrammarLoader;
-import com.sun.msv.reader.util.IgnoreController;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
+import com.sun.msv.grammar.Grammar;
+import com.sun.msv.grammar.SimpleNameClass;
+import com.sun.msv.grammar.util.ExpressionWalker;
+import com.sun.msv.reader.util.GrammarLoader;
+import com.sun.msv.reader.util.IgnoreController;
 
 public class SchemaGrammar {
     public SchemaGrammar() throws Exception {

@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

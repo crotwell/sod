@@ -1,13 +1,13 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.fissuresUtil.display.drawable.Flag;
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.display.drawable.DrawableSeismogram;
-import java.awt.Graphics2D;
 import java.awt.Dimension;
-import edu.sc.seis.fissuresUtil.display.registrar.TimeEvent;
-import edu.sc.seis.fissuresUtil.display.registrar.AmpEvent;
-import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import java.awt.Graphics2D;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.display.drawable.DrawableSeismogram;
+import edu.sc.seis.fissuresUtil.display.drawable.Flag;
+import edu.sc.seis.fissuresUtil.display.registrar.AmpEvent;
+import edu.sc.seis.fissuresUtil.display.registrar.TimeEvent;
 
 public class SodFlag extends Flag {
 	public SodFlag(MicroSecondDate flagTime, String name,

@@ -5,12 +5,13 @@
  */
 
 package edu.sc.seis.sod.editor;
-import java.io.*;
-import org.w3c.dom.*;
-
-import edu.sc.seis.sod.SimpleErrorHandler;
-import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.TemplateFileLoader;
+import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +21,16 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.xpath.XPathAPI;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import edu.sc.seis.sod.SimpleErrorHandler;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 
 
 

@@ -6,10 +6,6 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.fissuresUtil.cache.NSEventDC;
-import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.Box;
@@ -18,6 +14,9 @@ import javax.swing.border.TitledBorder;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
+import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 
 public abstract class ServerEditor {
     public ServerEditor(SodGUIEditor owner){
@@ -45,7 +44,7 @@ public abstract class ServerEditor {
         serverBox.add(Box.createHorizontalGlue());
         combo.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent e) {
-                        if (e.getStateChange() == e.SELECTED) {
+                        if (e.getStateChange() == ItemEvent.SELECTED) {
                             ServerNameDNSWrapper selected = (ServerNameDNSWrapper)e.getItem();
                             try {
                                 XPathAPI.selectSingleNode(element, "dns/text()").setNodeValue(selected.getServerDNS());

@@ -6,9 +6,14 @@
 
 package edu.sc.seis.sod.editor;
 
-import javax.swing.*;
-
 import java.awt.Dimension;
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.transform.TransformerException;

@@ -1,10 +1,9 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.model.AllVTFactory;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
+import edu.iris.Fissures.model.AllVTFactory;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 
 
 /**

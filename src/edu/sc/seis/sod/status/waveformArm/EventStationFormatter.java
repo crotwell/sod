@@ -6,11 +6,14 @@
 
 package edu.sc.seis.sod.status.waveformArm;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
@@ -20,10 +23,6 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import org.w3c.dom.Element;
 
 public class EventStationFormatter extends StationFormatter{
     public EventStationFormatter(Element el) throws ConfigurationException{

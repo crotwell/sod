@@ -5,12 +5,12 @@
  */
 
 package edu.sc.seis.sod.editor;
-import edu.sc.seis.sod.SodUtil;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.border.TitledBorder;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.SodUtil;
 
 
 

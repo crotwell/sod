@@ -6,12 +6,12 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.iris.Fissures.model.UnitImpl;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.model.UnitImpl;
 
 public class LinearDistanceMagnitudeEditor extends UnitRangeEditor {
 

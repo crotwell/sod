@@ -6,11 +6,11 @@
 
 package edu.sc.seis.sod.editor;
 
+import javax.swing.JComponent;
+import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ServerNameDNS;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import org.w3c.dom.Element;
-import javax.swing.JComponent;
 
 public class FixedDataCenterEditor extends ServerEditor implements EditorPlugin{
     public FixedDataCenterEditor(SodGUIEditor owner){ super(owner); }

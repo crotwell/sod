@@ -6,13 +6,13 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 public class TextListener implements DocumentListener {
     Node node;

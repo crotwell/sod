@@ -6,15 +6,9 @@
 
 package edu.sc.seis.sod.editor;
 
-import java.awt.event.ItemListener;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.xml.transform.TransformerException;
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import java.awt.event.ItemEvent;
 
 public class NetCodeEditor implements EditorPlugin {
 

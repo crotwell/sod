@@ -6,14 +6,14 @@
 
 package edu.sc.seis.sod;
 
+import java.sql.SQLException;
+import org.apache.log4j.Logger;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
-import java.sql.SQLException;
-import org.apache.log4j.Logger;
 
 public class EventChannelPair{
     public EventChannelPair(EventDbObject event, ChannelDbObject chan,

@@ -7,7 +7,6 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.border.TitledBorder;
 import javax.xml.transform.TransformerException;
-
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 

@@ -6,9 +6,9 @@
 
 package edu.sc.seis.sod;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import org.w3c.dom.Element;
 
 public class RunProperties{
     public RunProperties(Element el) throws ConfigurationException{

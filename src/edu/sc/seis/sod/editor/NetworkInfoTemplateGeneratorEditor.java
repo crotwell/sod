@@ -5,9 +5,7 @@
  */
 
 package edu.sc.seis.sod.editor;
-import javax.swing.Box;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import org.w3c.dom.Element;
 
 

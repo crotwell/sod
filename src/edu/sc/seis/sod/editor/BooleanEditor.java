@@ -5,17 +5,15 @@
  */
 
 package edu.sc.seis.sod.editor;
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
-import javax.swing.border.Border;
 
 
 

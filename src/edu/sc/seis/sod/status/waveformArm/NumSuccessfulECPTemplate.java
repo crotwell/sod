@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.status.waveformArm;
 
+import java.sql.SQLException;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.AllTypeTemplate;
-import java.sql.SQLException;
-import org.w3c.dom.Element;
 
 public class NumSuccessfulECPTemplate extends AllTypeTemplate{
     public NumSuccessfulECPTemplate() throws SQLException{

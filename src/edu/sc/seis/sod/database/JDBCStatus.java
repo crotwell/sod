@@ -6,13 +6,13 @@
 
 package edu.sc.seis.sod.database;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Status;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class JDBCStatus{
     public JDBCStatus(){

@@ -1,8 +1,6 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import junit.framework.TestCase;
-// JUnitDoclet begin import
-import edu.sc.seis.sod.subsetter.eventArm.PassOrigin;
 // JUnitDoclet end import
 
 /**
@@ -20,7 +18,7 @@ extends TestCase
 // JUnitDoclet end extends_implements
 {
   // JUnitDoclet begin class
-  edu.sc.seis.sod.subsetter.eventArm.PassOrigin passorigin = null;
+  edu.sc.seis.sod.subsetter.origin.PassOrigin passorigin = null;
   // JUnitDoclet end class
 
   public PassOriginTest(String name) {
@@ -29,9 +27,9 @@ extends TestCase
     // JUnitDoclet end method PassOriginTest
   }
 
-  public edu.sc.seis.sod.subsetter.eventArm.PassOrigin createInstance() throws Exception {
+  public edu.sc.seis.sod.subsetter.origin.PassOrigin createInstance() throws Exception {
     // JUnitDoclet begin method testcase.createInstance
-    return new edu.sc.seis.sod.subsetter.eventArm.PassOrigin();
+    return new edu.sc.seis.sod.subsetter.origin.PassOrigin();
     // JUnitDoclet end method testcase.createInstance
   }
 

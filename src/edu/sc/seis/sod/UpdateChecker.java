@@ -9,7 +9,6 @@ package edu.sc.seis.sod;
 import edu.sc.seis.fissuresUtil.cache.JobTracker;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.UpdateCheckerJob;
-import edu.sc.seis.sod.Version;
 
 public class UpdateChecker  {
 

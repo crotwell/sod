@@ -1,13 +1,5 @@
 package edu.sc.seis.sod.status;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
-import edu.sc.seis.sod.status.waveformArm.NumSuccessfulECPTemplate;
-import edu.sc.seis.sod.status.waveformArm.SacDataWrittenTemplate;
-import edu.sc.seis.sod.status.waveformArm.WPHTemplate;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,6 +8,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
+import edu.sc.seis.sod.status.waveformArm.NumSuccessfulECPTemplate;
+import edu.sc.seis.sod.status.waveformArm.SacDataWrittenTemplate;
+import edu.sc.seis.sod.status.waveformArm.WPHTemplate;
 
 public class FileWritingTemplate extends Template implements GenericTemplate, Runnable {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {

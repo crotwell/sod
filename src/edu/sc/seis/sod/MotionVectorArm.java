@@ -19,22 +19,22 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.sod.process.waveformArm.ANDWaveformProcessWrapper;
-import edu.sc.seis.sod.process.waveformArm.WaveformVectorProcess;
-import edu.sc.seis.sod.process.waveformArm.WaveformVectorResult;
-import edu.sc.seis.sod.process.waveformArm.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.ChannelGroupAvailableDataSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.ChannelGroupRequestGenerator;
-import edu.sc.seis.sod.subsetter.waveformArm.ChannelGroupRequestSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.EventChannelGroupSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.PassAvailableData;
-import edu.sc.seis.sod.subsetter.waveformArm.PassEventChannel;
-import edu.sc.seis.sod.subsetter.waveformArm.PassRequest;
-import edu.sc.seis.sod.subsetter.waveformArm.RequestGenerator;
-import edu.sc.seis.sod.subsetter.waveformArm.RequestGeneratorWrapper;
-import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
+import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
+import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
+import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
+import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
+import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
+import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
+import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
 
 public class MotionVectorArm implements Subsetter {
 
@@ -44,18 +44,18 @@ public class MotionVectorArm implements Subsetter {
     }
 
     public void handle(Object sodElement) {
-        if(sodElement instanceof EventChannelGroupSubsetter) {
-            eventChannelGroup = (EventChannelGroupSubsetter)sodElement;
-        } else if(sodElement instanceof ChannelGroupRequestGenerator) {
-            requestGenerator = (ChannelGroupRequestGenerator)sodElement;
+        if(sodElement instanceof EventVectorSubsetter) {
+            eventChannelGroup = (EventVectorSubsetter)sodElement;
+        } else if(sodElement instanceof VectorRequestGenerator) {
+            requestGenerator = (VectorRequestGenerator)sodElement;
         } else if(sodElement instanceof RequestGenerator) {
             requestGenerator = new RequestGeneratorWrapper((RequestGenerator)sodElement);
-        } else if(sodElement instanceof ChannelGroupRequestSubsetter) {
-            request = (ChannelGroupRequestSubsetter)sodElement;
+        } else if(sodElement instanceof VectorRequest) {
+            request = (VectorRequest)sodElement;
         } else if(sodElement instanceof SeismogramDCLocator) {
             dcLocator = (SeismogramDCLocator)sodElement;
-        } else if(sodElement instanceof ChannelGroupAvailableDataSubsetter) {
-            availData = (ChannelGroupAvailableDataSubsetter)sodElement;
+        } else if(sodElement instanceof VectorAvailableDataSubsetter) {
+            availData = (VectorAvailableDataSubsetter)sodElement;
         } else if(sodElement instanceof WaveformVectorProcess) {
             processes.add(sodElement);
         } else if(sodElement instanceof WaveformProcess) {
@@ -388,15 +388,15 @@ public class MotionVectorArm implements Subsetter {
         }
     }
 
-    private EventChannelGroupSubsetter eventChannelGroup = new PassEventChannel();
+    private EventVectorSubsetter eventChannelGroup = new PassEventChannel();
 
-    private ChannelGroupRequestGenerator requestGenerator;
+    private VectorRequestGenerator requestGenerator;
 
-    private ChannelGroupRequestSubsetter request = new PassRequest();
+    private VectorRequest request = new PassRequest();
 
     private SeismogramDCLocator dcLocator;
 
-    private ChannelGroupAvailableDataSubsetter availData = new PassAvailableData();
+    private VectorAvailableDataSubsetter availData = new PassAvailableData();
 
     private LinkedList processes = new LinkedList();
 

@@ -1,19 +1,5 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeInterval;
-import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
-import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.JDBCConfig;
-import edu.sc.seis.sod.database.JDBCStatus;
-import edu.sc.seis.sod.database.JDBCVersion;
-import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import edu.sc.seis.sod.editor.SimpleGUIEditor;
-import edu.sc.seis.sod.status.IndexTemplate;
-import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +19,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.database.JDBCConfig;
+import edu.sc.seis.sod.database.JDBCStatus;
+import edu.sc.seis.sod.database.JDBCVersion;
+import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.editor.SimpleGUIEditor;
+import edu.sc.seis.sod.status.IndexTemplate;
+import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.validator.Validator;
 
 public class Start{
     static {
