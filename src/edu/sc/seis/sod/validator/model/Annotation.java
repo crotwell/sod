@@ -100,6 +100,17 @@ public class Annotation {
         }
         return buf.toString();
     }
+    
+    public Annotation makeCopyWithNewFormProvider(FormProvider fp){
+        Annotation copy = new Annotation();
+        copy.summary = summary;
+        copy.desc = desc;
+        copy.hasExampleFromAnnotation = hasExampleFromAnnotation;
+        copy.example = example;
+        copy.include = include;
+        copy.setFormProvider(fp);
+        return copy;
+    }
 
     private boolean hasExampleFromAnnotation = false;
 
