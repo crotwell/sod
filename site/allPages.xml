@@ -145,7 +145,7 @@
                 </page>
                 <page>
                     <source>SchemaDoc</source>
-                    <destination>tagDocs/network/status/start.html</destination>
+                    <destination>tagDocs/network/status/status.html</destination>
                     <name>Status</name>
                 </page>
             </submenu>
