@@ -40,7 +40,7 @@ public class RangeSubsetter {
      * @return a <code>float</code> value
      */
     public float getMinValue() {
-		if(minElement == 0) return Float.MIN_VALUE; 
+		if(minElement == null) return Float.MIN_VALUE; 
 		String rtnValue = SodUtil.getNestedText(minElement);
 		return  Float.parseFloat(rtnValue);
 	}
