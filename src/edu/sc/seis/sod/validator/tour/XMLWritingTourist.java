@@ -39,7 +39,7 @@ public class XMLWritingTourist implements Tourist {
 
     public void visit(Data d) {
         lastForm = d;
-        result.append(DEFAULT_INT_VALUE);
+        result.append(d.getDatatype().getDescription());
     }
 
     public void visit(Empty e) {}
