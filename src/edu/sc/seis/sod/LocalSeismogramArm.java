@@ -183,9 +183,11 @@ public class LocalSeismogramArm implements Subsetter{
                     retries++;
                     logger.debug("after failed available_data call retries="+retries+" "+e.toString());
                     if (retries < MAX_RETRY) {
-                        logger.info("Caught CORBA exception, retrying..."+retries, e);
+                            // sleep is 10 seconds times num retries
+                        int sleepTime = 10*retries;
+                        logger.info("Caught CORBA exception, sleep for "+sleepTime+" then retry..."+retries, e);
                         try {
-                            Thread.sleep(1000*retries);
+                            Thread.sleep(sleepTime*1000); // change seconds to milliseconds
                         } catch(InterruptedException ex) {}
                         if (retries % 2 == 0) {
                             //force reload from name service evey other try
