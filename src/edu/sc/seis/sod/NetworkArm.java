@@ -58,11 +58,9 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
  */
 public class NetworkArm {
 
-    public NetworkArm(Element config) throws ConfigurationException {
-        try {
-            queryTimeTable = new JDBCQueryTime();
-            netTable = new JDBCNetworkUnifier();
-        } catch(SQLException e) {}
+    public NetworkArm(Element config) throws SQLException, ConfigurationException {
+        queryTimeTable = new JDBCQueryTime();
+        netTable = new JDBCNetworkUnifier();
         processConfig(config);
     }
 
