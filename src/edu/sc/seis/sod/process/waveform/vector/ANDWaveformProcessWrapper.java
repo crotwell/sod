@@ -73,7 +73,7 @@ public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
     }
 
     public String toString() {
-        return "ANDLocalSeismogramWrapper("+process.toString()+")";
+        return "ANDWaveformProcessWrapper("+process.toString()+")";
     }
 
 
