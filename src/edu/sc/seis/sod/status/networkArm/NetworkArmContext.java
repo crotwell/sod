@@ -101,8 +101,7 @@ public class NetworkArmContext  extends AbstractContext {
 
     public static final String ALL_NETS_KEY = "network_arm_all";
 
-    public static final String SUCCESSFUL_NETS_KEY = "network_arm_successful";
+    public static final String SUCCESSFUL_NETS_KEY = "successful_networks";
 
-    public static final String NET_PREFIX = "network_arm_";
 }
 
