@@ -150,6 +150,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("channelNOT", bool);
         editors.put("stationNOT", bool);
         editors.put("originNOT", bool);
+        editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new LatitudeRangeEditor());
         editors.put("longitudeRange", new LongitudeRangeEditor());
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
