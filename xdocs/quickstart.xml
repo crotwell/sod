@@ -61,9 +61,7 @@ Fri Jul 16 14:52:35 EDT 2004 28/37/304 Mb  Got 1 seismograms for II.ERM.00.LHZ f
                         <p>
                         The <tt>status</tt> directory will contain html files, updated about every 2 minutes
                         or so, showing the events, stations and seismograms that have
-                        been found. The <tt>POND_II</tt> directory will contain SAC files
-                        orgainized into on earthquake per subdirectory along with <tt>dsml</tt> files
-                        that are readable by <a href="http://www.seis.sc.edu/gee">GEE</a>.
+                        been found. The <tt>POND_II</tt> directory will contain subdirectories for each earthquake retrieved by SOD, and each of these subdirectories will contain SAC files corresponding to that earthquake along with <tt>dsml</tt> files that are readable by <a href="http://www.seis.sc.edu/gee">GEE</a>.
                         </p>
                 </section>
         </body>
