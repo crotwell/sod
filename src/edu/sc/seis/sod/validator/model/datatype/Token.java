@@ -68,6 +68,10 @@ public class Token implements ModelDatatype{
     }
 
     public String toString(){ return "Token"; }
+    
+    public String getExampleValue(){
+        return "text";
+    }
 
 }
 

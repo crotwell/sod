@@ -65,6 +65,10 @@ public class AnyText implements ModelDatatype{
         //TODO
         return super.hashCode();
     }
+    
+    public String getExampleValue(){
+        return "text";
+    }
 
 }
 

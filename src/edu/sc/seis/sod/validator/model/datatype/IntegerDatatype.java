@@ -6,15 +6,15 @@ package edu.sc.seis.sod.validator.model.datatype;
 import org.relaxng.datatype.DatatypeException;
 import org.relaxng.datatype.DatatypeStreamingValidator;
 import org.relaxng.datatype.ValidationContext;
-
 import edu.sc.seis.sod.validator.model.ModelDatatype;
 
 /**
  * @author Charlie Groves
  */
-public class IntegerDatatype implements ModelDatatype{
+public class IntegerDatatype implements ModelDatatype {
 
-    public String getDescription() { return "integer";
+    public String getDescription() {
+        return "integer";
     }
 
     public boolean isValid(String arg0, ValidationContext arg1) {
@@ -22,9 +22,9 @@ public class IntegerDatatype implements ModelDatatype{
         return false;
     }
 
-    public void checkValid(String arg0, ValidationContext arg1) throws DatatypeException {
-        // TODO Auto-generated method stub
-        
+    public void checkValid(String arg0, ValidationContext arg1)
+            throws DatatypeException {
+    // TODO Auto-generated method stub
     }
 
     public DatatypeStreamingValidator createStreamingValidator(ValidationContext arg0) {
@@ -57,4 +57,7 @@ public class IntegerDatatype implements ModelDatatype{
         return false;
     }
 
+    public String getExampleValue() {
+        return "12";
+    }
 }

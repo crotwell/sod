@@ -55,6 +55,10 @@ public class DoubleDatatype implements ModelDatatype {
     public String getDescription() { return "double"; }
 
     public String toString(){ return getDescription(); }
+    
+    public String getExampleValue(){
+        return "12.57";
+    }
 
 }
 

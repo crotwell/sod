@@ -58,5 +58,8 @@ public class FloatDatatype implements ModelDatatype{
 
     public String toString(){ return getDescription(); }
 
+    public String getExampleValue(){
+        return "42.189";
+    }
 }
 
