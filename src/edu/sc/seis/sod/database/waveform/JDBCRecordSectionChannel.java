@@ -22,11 +22,12 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         this.tableName = tableName;
         this.eventRecSecTableName = eventRecSecTableName;
         String createStmt = "CREATE TABLE " + tableName
-                + "(recSecId int,channelid int)";
+                + "(recSecId int,channelid int,topLeftX double, topLeftY double,bottomRightX double,bottomRightY double)";
         String insertStmt = "INSERT INTO " + tableName
-                + "(recSecId, channelid) VALUES (?, ?)";
-        String updateRecordSectionStmt = "UPDATE " + tableName
-                + " SET  recSecId=? WHERE recSecId=? and channelid=?";
+                + "(recSecId, channelid,topLeftX,topLeftY,bottomRightX,bottomRightY) VALUES (?, ?, ?, ?, ?, ?)";
+        String updateRecordSectionStmt = "UPDATE "
+                + tableName
+                + " SET  recSecId=?, topLeftX=?, topLeftY=?, bottomRightX=?, bottomRightY=? WHERE recSecId=? and channelid=?";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -35,23 +36,67 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         updateRecordSection = conn.prepareStatement(updateRecordSectionStmt);
     }
 
-    public void insert(int recSecId, int channelid) throws SQLException {
+    public void insert(int recSecId, int channelid, double[] pixelInfo)
+            throws SQLException {
         insert.setInt(1, recSecId);
         insert.setInt(2, channelid);
+        insert.setDouble(3, pixelInfo[0]);
+        insert.setDouble(4, pixelInfo[1]);
+        insert.setDouble(5,pixelInfo[2]);
+        insert.setDouble(6,pixelInfo[3]);
         insert.executeUpdate();
     }
 
-    public void updateRecordSection(int newRecSecId, int eventId, int channelId)
-            throws SQLException {
+    public void updateRecordSection(int newRecSecId,
+                                    int eventId,
+                                    int channelId,
+                                    double[] pixelInfo) throws SQLException {
         try {
             int curRecSecId = getRecSecId(eventId, channelId);
             updateRecordSection.setInt(1, newRecSecId);
-            updateRecordSection.setInt(2, curRecSecId);
-            updateRecordSection.setInt(3, channelId);
+            updateRecordSection.setDouble(2, pixelInfo[0]);
+            updateRecordSection.setDouble(3, pixelInfo[1]);
+            updateRecordSection.setDouble(4, pixelInfo[2]);
+            updateRecordSection.setDouble(5, pixelInfo[3]);
+            updateRecordSection.setInt(6, curRecSecId);
+            updateRecordSection.setInt(7, channelId);
             updateRecordSection.executeUpdate();
         } catch(SQLException e) {
             throw new RuntimeException("Running the SQL query "
                     + updateRecordSection.toString());
+        }
+    }
+
+    public double[] getPixelInfo(int eventId, int channelId)
+            throws SQLException {
+        if(getPixelInfo == null) {
+            String getPixelInfoStmt = "select topLeftX,topLeftY,bottomRightX,bottomRightY from "
+                    + tableName
+                    + " recSecChannel,"
+                    + eventRecSecTableName
+                    + " eventRecSec WHERE"
+                    + "eventRecSec.recSecId=recSecChannel.recSecId  AND eventid=? AND channelid=?";
+            getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
+        }
+        getPixelInfo.setInt(1, eventId);
+        getPixelInfo.setInt(2, channelId);
+        double[] pixelInfo = {-1, -1,-1,-1};
+        try {
+            ResultSet rs = getPixelInfo.executeQuery();
+            if(rs.next()) {
+                double topLeftX = rs.getInt(1);
+                double topLeftY = rs.getInt(2);
+                double bottomRightX = rs.getInt(3);
+                double bottomRightY = rs.getInt(4);
+                pixelInfo[0] = topLeftX;
+                pixelInfo[1] = topLeftY;
+                pixelInfo[2] = bottomRightX;
+                pixelInfo[3] = bottomRightY;
+            }
+            return pixelInfo;
+        } catch(SQLException e) {
+            throw new RuntimeException("Running the SQL query "
+                    + getPixelInfo.toString());
         }
     }
 
@@ -83,7 +128,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         }
     }
 
-    PreparedStatement insert, updateRecordSection, getRecSecId;
+    PreparedStatement insert, updateRecordSection, getRecSecId, getPixelInfo;
 
     Connection conn;
 
