@@ -1,14 +1,11 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
+import edu.sc.seis.sod.subsetter.*;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveFormStatus;
-import edu.sc.seis.sod.subsetter.ChannelGroupTemplate;
-import edu.sc.seis.sod.subsetter.EventFormatter;
-import edu.sc.seis.sod.subsetter.FileWritingTemplate;
-import edu.sc.seis.sod.subsetter.GenericTemplate;
-import edu.sc.seis.sod.subsetter.TemplateFileLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +45,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             return cgt;
         }
         if(tag.equals("map")){
-            MapWaveFormStatus map = new MapWaveFormStatus(getOutputDirectory() + "/map.png");
+            MapWaveFormStatus map = new MapWaveFormStatus(getOutputDirectory() + "/map.png", pool);
             map.add(event);
             waveformStatusListeners.add(map);
             map.write();
@@ -69,6 +66,8 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
     }
     
     private EventAccessOperations event;
+    
+    private static MapPool pool = new MapPool(2);
     
     private List waveformStatusListeners = new ArrayList();
     

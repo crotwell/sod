@@ -18,40 +18,72 @@ import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.subsetter.MapPool;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
 
 public class MapWaveFormStatus implements WaveFormStatus {
     
-    private OpenMap mainMap = new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
-    private EventLayer eventLayer;
-    private StationLayer stationLayer;
     private String fileLoc;
     private Map eventMap = new HashMap();
     private Map channelMap = new HashMap();
+    private MapPool pool;
     
     public MapWaveFormStatus(Element element) {
         this(element.getAttribute("xlink:href"));
     }
     
     public MapWaveFormStatus(String fileLoc){
+        this(fileLoc, new MapPool(1));
+    }
+    
+    public MapWaveFormStatus(String fileLoc, MapPool pool){
         this.fileLoc = fileLoc;
-        eventLayer = new EventLayer(mainMap.getMapBean());
-        mainMap.setEventLayer(eventLayer);
-        stationLayer = new StationLayer();
-        mainMap.setStationLayer(stationLayer);
+        this.pool = pool;
         write();
     }
     
-    public void write(){ mainMap.writeMapToPNG(fileLoc); }
+    public void write(){
+        synchronized(channelMap){
+            OpenMap map = pool.getMap();
+            StationLayer sl = map.getStationLayer();
+            sl.honorRepaint(false);
+            Iterator it = channelMap.keySet().iterator();
+            while(it.hasNext()){
+                Channel cur = (Channel)it.next();
+                sl.stationDataChanged(new StationDataEvent(this, new Station[]{cur.my_site.my_station}));
+                Status status = (Status)channelMap.get(cur);
+                if (status == Status.COMPLETE_REJECT ||
+                    status == Status.SOD_FAILURE){
+                    sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                               cur.my_site.my_station,
+                                                                               AvailableStationDataEvent.DOWN));
+                }
+                else if (status == Status.COMPLETE_SUCCESS){
+                    sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                               cur.my_site.my_station,
+                                                                               AvailableStationDataEvent.UP));
+                }
+                else{
+                    sl.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
+                                                                               cur.my_site.my_station,
+                                                                               AvailableStationDataEvent.UNKNOWN));
+                }
+            }
+            sl.honorRepaint(true);
+            EventLayer el = map.getEventLayer();
+            it = eventMap.keySet().iterator();
+            while(it.hasNext()){
+                EventAccessOperations ev = (EventAccessOperations)it.next();
+                el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
+            }
+            map.writeMapToPNG(fileLoc);
+            pool.returnMap(map);
+        }
+    }
     
-    /**
-     * Method update
-     *
-     * @param    ecp                 an EventChannelPair
-     *
-     */
     public void update(EventChannelPair ecp) {
         if(add(ecp.getEvent())){
             add(ecp.getChannel(), ecp.getStatus());
@@ -61,51 +93,18 @@ public class MapWaveFormStatus implements WaveFormStatus {
     }
     
     public boolean add(Channel chan, Status status){
-        if (!channelMap.containsKey(chan)){
-            stationLayer.stationDataChanged(new StationDataEvent(this, new Station[]{chan.my_site.my_station}));
+        if(channelMap.containsKey(chan)){
             channelMap.put(chan, status);
             return true;
-        }
-        else if (channelMap.get(chan) != status){
-            if (status == Status.COMPLETE_REJECT ||
-               status == Status.SOD_FAILURE){
-                stationLayer.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                    chan.my_site.my_station,
-                                                                                    AvailableStationDataEvent.DOWN));
-            }
-            else if (status == Status.COMPLETE_SUCCESS){
-                stationLayer.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                     chan.my_site.my_station,
-                                                                                     AvailableStationDataEvent.UP));
-            }
-            else{
-                stationLayer.stationAvailabiltyChanged(new AvailableStationDataEvent(this,
-                                                                                     chan.my_site.my_station,
-                                                                                     AvailableStationDataEvent.UNKNOWN));
-            }
-            return true;
-        }
+        }else if (channelMap.get(chan) != status) return true;
         return false;
     }
     
     public boolean add(EventAccessOperations ev){
         if (!eventMap.containsKey(ev)){
-            eventLayer.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
             eventMap.put(ev, null);
-                    return true;
-                    
+            return true;
         }
         return false;
     }
-    
-//    public static void main(String[] args){
-//        MapWaveFormStatus mwfs = new MapWaveFormStatus("mwfsTest.png");
-//
-//        MockFissures mf = new MockFissures();
-//        mwfs.add(mf.createFallEvent());
-//
-//        mwfs.write();
-//        System.exit(0);
-//    }
 }
-
