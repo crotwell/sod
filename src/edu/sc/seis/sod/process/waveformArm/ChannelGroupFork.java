@@ -1,0 +1,98 @@
+/**
+ * ChannelGroupFork.java
+ *
+ * @author Created by Omnicore CodeGuide
+ */
+
+package edu.sc.seis.sod.process.waveformArm;
+
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.sod.ChannelGroup;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import java.util.Iterator;
+import java.util.LinkedList;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class ChannelGroupFork implements ChannelGroupLocalSeismogramProcess {
+
+    public ChannelGroupFork(Element config) throws ConfigurationException {
+        this.config = config;
+        NodeList children = config.getChildNodes();
+        Node node;
+        for (int i=0; i<children.getLength(); i++) {
+            node = children.item(i);
+            if (node instanceof Element) {
+                if (((Element)node).getTagName().equals("description")) {
+                    // skip description element
+                    continue;
+                }
+                Object sodElement = SodUtil.load((Element)node,"waveformArm");
+                if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
+                    cgProcessList.add(sodElement);
+                } else if(sodElement instanceof LocalSeismogramProcess) {
+                    cgProcessList.add(new ANDLocalSeismogramWrapper((LocalSeismogramProcess)sodElement));
+                } else {
+                    logger.warn("Unknown tag in MotionVectorArm config. " +sodElement.getClass().getName());
+                }
+            } // end of if (node instanceof Element)
+        } // end of for (int i=0; i<children.getSize(); i++)
+    }
+
+    public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
+                                                     ChannelGroup channelGroup,
+                                                     RequestFilter[][] original,
+                                                     RequestFilter[][] available,
+                                                     LocalSeismogramImpl[][] seismograms,
+                                                     CookieJar cookieJar) throws Exception {
+
+
+        LocalSeismogramImpl[][] out = copySeismograms(seismograms);
+
+        // pass originals to the contained processors
+        ChannelGroupLocalSeismogramProcess processor;
+        LinkedList reasons = new LinkedList();
+        Iterator it = cgProcessList.iterator();
+        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
+        while (it.hasNext() && result.isSuccess()) {
+            processor = (ChannelGroupLocalSeismogramProcess)it.next();
+            synchronized (processor) {
+                result = processor.process(event, channelGroup, original,
+                                           available, result.getSeismograms(), cookieJar);
+            }
+            reasons.addLast(result.getReason());
+        } // end of while (it.hasNext())
+        return new ChannelGroupLocalSeismogramResult(out,
+                                         new StringTreeBranch(this,
+                                                              result.isSuccess(),
+                                                                  (StringTree[])reasons.toArray(new StringTree[0])));
+    }
+
+    public static LocalSeismogramImpl[][] copySeismograms(LocalSeismogramImpl[][] seismograms) {
+        LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = new LocalSeismogramImpl[seismograms[i].length];
+            for (int j = 0; j < seismograms[i].length; j++) {
+                out[i][j] = new LocalSeismogramImpl(seismograms[i][j], seismograms[i][j].data);
+            }
+        }
+        return out;
+    }
+
+    protected LinkedList cgProcessList = new LinkedList();
+
+    protected Element config;
+
+    private static final Logger logger = Logger.getLogger(ChannelGroupFork.class);
+
+}
+
