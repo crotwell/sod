@@ -36,12 +36,14 @@ public class LinearDistanceMagnitudeEditor extends UnitRangeEditor {
         b.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName("distanceRange")));
         Box out = Box.createVerticalBox();
         Element child = (Element)XPathAPI.selectSingleNode(element, "magnitudeRange");
-        out.add(editor.getCompForElement(child));
+        out.add(magEdit.getGUI(child));
         out.add(b);
         out.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
         return out;
     }
 
     private SodGUIEditor editor;
+
+    private MagnitudeEditor magEdit = new MagnitudeEditor();
 }
 

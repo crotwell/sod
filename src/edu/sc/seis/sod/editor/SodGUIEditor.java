@@ -38,7 +38,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         try {
             String tag = element.getTagName();
             if (editors.containsKey(tag)){
-                return ((EditorPlugin)editors.get(tag)).getGUI(element);
+                EditorPlugin ed = (EditorPlugin)editors.get(tag);
+                return ed.getGUI(element);
             } else {
                 return super.getCompForElement(element);
             }

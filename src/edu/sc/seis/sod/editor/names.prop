@@ -100,3 +100,4 @@ refreshInterval=Refresh Interval
 atLeastOnce=At Least Once
 atMostOnce=At Most Once
 removeEventDuplicate=Remove Duplicate Events
+linearDistanceMagnitudeRange=Linear Distance with Magnitude
