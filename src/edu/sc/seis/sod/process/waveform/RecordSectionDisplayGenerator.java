@@ -61,6 +61,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             IncomprehensibleDSMLException, UnsupportedFileTypeException,
             ConfigurationException {
         try {
+            fileNameCounter = 1;
             saveSeisToFile = getSaveSeismogramToFile();
             DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
                     .toURI()
@@ -83,7 +84,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         for(int i = 0; i < dataSeis.length; i++) {
             QuantityImpl distance = DisplayUtils.calculateDistance(dataSeis[i]);
             for(int j = 0; j < dataSeis.length; j++) {
-                if(distance.greaterThanEqual(DisplayUtils.calculateDistance(dataSeis[j]))) {
+                if(distance.lessThan(DisplayUtils.calculateDistance(dataSeis[j]))) {
                     DataSetSeismogram tempSeis = dataSeis[i];
                     dataSeis[i] = dataSeis[j];
                     dataSeis[j] = tempSeis;
@@ -95,31 +96,31 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private void outputRecordSections(EventAccessOperations event,
                                       DataSetSeismogram[] dataSeis)
             throws IOException {
-        if(dataSeis.length > 0) {
-            sort(dataSeis);
-            RecordSectionDisplay recordSectionDisplay = new RecordSectionDisplay();
-            if(dataSeis.length <= 6) {
-                writeImage(dss, event);
-                return;
-            } else {
-                DataSetSeismogram[] tempDSS = new DataSetSeismogram[6];
-                int maxIndex = 0;
-                int length = dataSeis.length;
-                int count = length / 6;
-                for(int i = 0; i < count; i++) {
-                    int seisCount = 0;
-                    while(seisCount < 6) {
-                        tempDSS[seisCount] = dataSeis[i + count];
-                        maxIndex = i + count;
-                        seisCount++;
-                    }
-                    writeImage(tempDSS, event);
+        int length = dataSeis.length;
+        sort(dataSeis);
+        RecordSectionDisplay recordSectionDisplay = new RecordSectionDisplay();
+        if(length > 0 && length <= 6) {
+            writeImage(dss, event);
+            return;
+        } else {
+            DataSetSeismogram[] tempDSS = new DataSetSeismogram[6];
+            int maxIndex = 0;
+            int spacing = length / 6;
+            for(int i = 0; i < spacing; i++) {
+                int j = 0;
+                for(int seisCount=0;seisCount<6;seisCount++){
+                    maxIndex = j + i;
+                    tempDSS[seisCount] = dataSeis[maxIndex];
+                    j += spacing;
                 }
-                if((length % 6) != 0) {
-                    tempDSS = new DataSetSeismogram[length - maxIndex - 1];
-                    for(int j = 0; j < length - maxIndex - 1; j++) {
-                        tempDSS[j] = dataSeis[maxIndex + j];
-                    }
+                writeImage(tempDSS, event);
+            }
+            if((length % 6) != 0) {
+                tempDSS = new DataSetSeismogram[length - maxIndex - 1];
+                for(int k = 0; k < length - maxIndex - 1; k++) {
+                    tempDSS[k] = dataSeis[maxIndex + k + 1];
+                }
+                if((length - maxIndex - 1) > 0) {
                     writeImage(tempDSS, event);
                 }
             }
@@ -152,7 +153,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private int counter;
 
-    private int fileNameCounter = 1;
+    private int fileNameCounter;
 
     private final static String fileBase = "recordSection";
 
