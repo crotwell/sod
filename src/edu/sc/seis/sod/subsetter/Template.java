@@ -30,7 +30,7 @@ public abstract class Template{
                 templates.add(textTemplate(n.getNodeValue()));
             else{
                 String name = n.getNodeName();
-                if(name.equals("attribute")) break;
+                if(name.equals("attribute")) continue;
                 Object template = getTemplate(name, (Element)n);
                 if(template != null) templates.add(template);
                 else{
