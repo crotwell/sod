@@ -32,11 +32,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public EventArm (Element config, SodExceptionListener sodExceptionListener) throws ConfigurationException {
+    public EventArm (Element config, SodExceptionListener sodExceptionListener, Properties props) throws ConfigurationException {
 	if ( ! config.getTagName().equals("eventArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
 	this.config = config;
+	this.props = props;
 	addSodExceptionListener(sodExceptionListener);
 	processConfig(config);
     }
@@ -223,15 +224,15 @@ public class EventArm extends SodExceptionSource implements Runnable{
 		startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
 
 		eventConfigDb.setTime(startTime);
-		eventConfigDb.incrementTime(1);
+		eventConfigDb.incrementTime(getIncrementValue());
 		startTime = eventConfigDb.getTime();
-		eventConfigDb.incrementTime(1);
+		eventConfigDb.incrementTime(getIncrementValue());
 	    } else {
 		//here delete all the events in the queue from the 
 		//previous day that are successful or failed
 		Start.getEventQueue().delete(Status.COMPLETE_SUCCESS);
 		Start.getEventQueue().delete(Status.COMPLETE_REJECT);
-		eventConfigDb.incrementTime(1);
+		eventConfigDb.incrementTime(getIncrementValue());
 	    }
 	
 	    endTime = calculateEndTime(startTime, 
@@ -301,7 +302,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	Calendar calendar = Calendar.getInstance();
 	calendar.setTime(microSecondDate);
 	logger.debug("The microSeoncDate after Increment is "+new MicroSecondDate(calendar.getTime()));
-	calendar.roll(Calendar.DAY_OF_YEAR, 1);
+	calendar.roll(Calendar.DAY_OF_YEAR, getIncrementValue());
 	microSecondDate = new MicroSecondDate(calendar.getTime());
 	logger.debug("The microSeoncDate after Increment is "+microSecondDate);
 	MicroSecondDate endDate = new MicroSecondDate(givenEndTime);
@@ -318,6 +319,17 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    (new MicroSecondDate(givenEndTime)).equals( new MicroSecondDate(endTime))) return true;
 	else return false;
     }
+
+    private int getIncrementValue() {
+	String value = props.getProperty("edu.sc.seis.sod.daystoincrement");
+	if(value == null) return 1;
+	try {
+	    int val = Integer.parseInt(value);
+	    return val;
+	} catch(NumberFormatException nfe) {
+	    return 1;
+	}
+    }
     
 
     private edu.sc.seis.sod.subsetter.eventArm.EventFinder eventFinderSubsetter;
@@ -333,6 +345,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
     private edu.iris.Fissures.IfEvent.EventFinder finder = null;
 
     private Element config = null;
+
+    private Properties props;
 
     static Category logger = 
         Category.getInstance(EventArm.class.getName());
