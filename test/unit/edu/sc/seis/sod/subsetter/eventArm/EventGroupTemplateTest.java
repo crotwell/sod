@@ -8,7 +8,7 @@ package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.database.event.EventCondition;
 import junit.framework.TestCase;
 
 public class EventGroupTemplateTest extends TestCase{
@@ -25,25 +25,25 @@ public class EventGroupTemplateTest extends TestCase{
     }
     
     public void testAdd(){
-        egt.change(MockEventAccessOperations.createEvent(), RunStatus.NEW);
+        egt.change(MockEventAccessOperations.createEvent(), EventCondition.NEW);
         assertEquals(epochResult, egt.getResult());
     }
     
     public void testUpdate(){
-        egt.change(epochEvent, RunStatus.NEW);
-        egt.change(epochEvent, RunStatus.PASSED);
+        egt.change(epochEvent, EventCondition.NEW);
+        egt.change(epochEvent, EventCondition.SUBSETTER_PASSED);
         assertEquals(epochResult, egt.getResult());
     }
     
     public void testAddSecondItem(){
-        egt.change(epochEvent, RunStatus.NEW);
-        egt.change(berlinEvent, RunStatus.NEW);
+        egt.change(epochEvent, EventCondition.NEW);
+        egt.change(berlinEvent, EventCondition.NEW);
         assertEquals(epochResult + berlinResult, egt.getResult());
     }
     
     public void testRepeatedAdd(){
-        egt.change(epochEvent, RunStatus.NEW);
-        egt.change(epochEvent, RunStatus.NEW);
+        egt.change(epochEvent, EventCondition.NEW);
+        egt.change(epochEvent, EventCondition.NEW);
         assertEquals(epochResult, egt.getResult());
     }
     
