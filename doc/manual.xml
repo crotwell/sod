@@ -53,8 +53,39 @@ waveform.
 </para>
 </chapter>
 
-<chapter><title>Event Arm</title>
-<para>test</para>
+<chapter>
+<title>Event Arm</title>
+<para>
+The event arm separates seismic events into interesting and 
+non-interesting events. Interesting events flow out of the event arm into
+the waveform arm for further processing, while non-interesting events are 
+discarded. There are four main steps within the event arm, which are described
+below.
+</para>
+<sect1>
+<title>Source</title>
+<para>
+The source of the event information is given first. It consists of a serverDNS
+and a serverName entry, both of which allow Fissures/DHI EventDC servers to
+be located from a Naming Service. The serverDNS gives the heirarchy of naming
+contexts, or directories, in reveresd DNS format. This is similar to the 
+Java package naming convention, and so a server located withi the seismology
+program at the University of South Carolina might have a serverDNS of
+edu/sc/seis. Another common serverDNS would be for the IRIS DMC, which is
+currently edu/iris/dmc.
+</para>
+<para>
+The serverName is the name of the EventDC within the name service. The current
+server at the DMC is named IRIS_EventDC. It is possible to have multiple 
+servers within the same serverDNS with different names.
+</para>
+</sect1>
+</sect1>
+<title>Event Attributes</title>
+<para>
+
+</para>
+</sect1>
 </chapter>
 
 </book>
