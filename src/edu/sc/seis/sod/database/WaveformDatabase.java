@@ -107,5 +107,5 @@ public interface WaveformDatabase {
 
     public void endTransaction();
 
-    public Connection getConnection();
+    public Object getConnection();
 }// WaveformDatabase

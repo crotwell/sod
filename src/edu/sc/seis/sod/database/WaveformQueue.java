@@ -111,6 +111,6 @@ public interface WaveformQueue {
 
     public void endTransaction();
 
-    public Connection getConnection();
+    public Object getConnection();
 
 }// WaveformQueue

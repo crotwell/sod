@@ -36,14 +36,15 @@ public class WaveformDbQueue implements WaveformQueue{
     public void push(int waveformeventid, 
 		     int siteid,
 		     int waveformnetworkid) {
-	Connection connection = getConnection();
-	synchronized(connection) {
-	    waveformDatabase.putChannelInfo(waveformeventid,
-					    waveformnetworkid, 
-					    siteid, 
-					    new MicroSecondDate());
-	    connection.notifyAll();
-	}
+        Object connection = getConnection();
+    
+        synchronized(connection) {
+            waveformDatabase.putChannelInfo(waveformeventid,
+                                            waveformnetworkid, 
+                                            siteid, 
+                                            new MicroSecondDate());
+            connection.notifyAll();
+        }
 
     }
 
@@ -56,43 +57,43 @@ public class WaveformDbQueue implements WaveformQueue{
    
     public int pop() {
 	
-	Connection connection = getConnection();
-	synchronized(connection) {
+        Object connection = getConnection();
+        synchronized(connection) {
 	    
-	    int dbid = waveformDatabase.getFirst();
-	     while(dbid == -1 && sourceAlive == true ) {
-		try {
-		    connection.wait();
-		} catch(InterruptedException ie) {
-		    ie.printStackTrace();
-		}
-		dbid = waveformDatabase.getFirst();
-	    }
+            int dbid = waveformDatabase.getFirst();
+            while(dbid == -1 && sourceAlive == true ) {
+                try {
+                    connection.wait();
+                } catch(InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+                dbid = waveformDatabase.getFirst();
+            }
 	    
-	    return dbid;
-	}
+            return dbid;
+        }
     }
 
 
     public synchronized int getWaveformId(int waveformeventid, int waveformnetworkid) {
-	return waveformDatabase.getChannelDbId(waveformeventid,
-					       waveformnetworkid);
+        return waveformDatabase.getChannelDbId(waveformeventid,
+                                               waveformnetworkid);
     }
 
     public synchronized void setStatus(int dbid, Status newStatus) {
-	waveformDatabase.updateStatus(dbid, newStatus);
+        waveformDatabase.updateStatus(dbid, newStatus);
     }
 
     public synchronized void setStatus(int dbid, Status newStatus, String reason) {
-	waveformDatabase.updateStatus(dbid, newStatus, reason);
+        waveformDatabase.updateStatus(dbid, newStatus, reason);
     }
 
     public synchronized int getWaveformEventId(int dbid) {
-	return waveformDatabase.getWaveformEventId(dbid);
+        return waveformDatabase.getWaveformEventId(dbid);
     }
     
     public synchronized int getWaveformChannelId(int dbid) {
-	return waveformDatabase.getWaveformChannelId(dbid);
+        return waveformDatabase.getWaveformChannelId(dbid);
     }
 
 
@@ -273,8 +274,8 @@ public class WaveformDbQueue implements WaveformQueue{
 	waveformDatabase.endTransaction();
     }
 
-    public Connection getConnection() {
-	return waveformDatabase.getConnection();
+    public Object getConnection() {
+        return waveformDatabase.getConnection();
     }
 
      private int getPersistanceType(Properties props) {
