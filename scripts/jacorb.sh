@@ -23,6 +23,7 @@ JAICORE=$MAVEN/repository/jars/jai_core.jar
 JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-1.7.1.jar
 OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.5.4.jar
+JING=$MAVEN/repository/jing/jars/jing-20030619.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
@@ -30,6 +31,6 @@ java -Djava.endorsed.dirs=${JACORB_LIB}  \
     -Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB \
     -Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton \
     -Xmx256m \
-    -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
+    -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${JING}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
     edu.sc.seis.sod.Start $*
 
