@@ -7,71 +7,83 @@
 package edu.sc.seis.sod.status.waveformArm;
 
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.sod.status.*;
+
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
-import edu.sc.seis.sod.status.ChannelGroupTemplate;
-import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.GenericTemplate;
-import edu.sc.seis.sod.status.StationFormatter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.ParserConfigurationException;
 
-public class LocalSeismogramTemplate extends FileWritingTemplate {
-
-    private EventAccessOperations event;
-    private Station station;
-    private CookieJar cookieJar;
-
-    //I have every intention of getting rid of this as soon as possible
-    private List channelListeners = new ArrayList();
-
-    public LocalSeismogramTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event, Station sta, CookieJar cookieJar)
-        throws IOException, ConfigurationException{
-        super(baseDir, outputLocation);
-        this.event = event;
-        this.cookieJar = cookieJar;
-        station = sta;
+public class LocalSeismogramTemplate extends Template{
+    public LocalSeismogramTemplate(Element el, String baseDir)
+        throws ConfigurationException{
+        this.baseDir = baseDir;
         parse(el);
-        write();
     }
 
-    public void update(Channel chan, CookieJar cookieJar) throws Exception{
-        this.cookieJar = cookieJar;
-        //I intend to do something fancier very soon
-        Iterator it = channelListeners.iterator();
-        while (it.hasNext()){
-            ((ChannelGroupTemplate)it.next()).change(chan, Status.get(Stage.PROCESSOR,
-                                                                      Standing.SUCCESS));
+    public void update(String outputLocation, CookieJar cj){
+        String loc = baseDir + outputLocation;
+        System.out.println("GOT AN UPDATE FOR LOC " + loc);
+        synchronized(toBeRendered){
+            if (!toBeRendered.containsKey(loc)){
+                toBeRendered.put(loc, cj);
+                writer.actIfPeriodElapsed();
+            }
         }
-        write();
     }
 
-    /**
-     * Override method getResult to insert velocity post processing.
-     *
-     */
-    public String getResult() {
-        String s = super.getResult();
+    protected Object textTemplate(final String text) {
+        return new GenericTemplate() {
+            public String getResult() { return text; }
+        };
+    }
 
-        s = getVelocityResult(s, cookieJar);
-        return s;
+    public class Writer extends PeriodicAction{
+        public void act() {
+            System.out.println("WRITING");
+            CookieJar[] jars = new CookieJar[0];
+            String[] fileLocs = new String[0];
+            synchronized(toBeRendered){
+                int numCookiesWaiting = toBeRendered.size();
+                if(toBeRendered.size() > 0){
+                    jars = new CookieJar[toBeRendered.size()];
+                    fileLocs = new String[toBeRendered.size()];
+                    Iterator it = toBeRendered.keySet().iterator();
+                    while(it.hasNext()){
+                        String loc= (String)it.next();
+                        fileLocs[--numCookiesWaiting] = loc;
+                        jars[numCookiesWaiting] = (CookieJar)toBeRendered.get(loc);
+                    }
+                    toBeRendered.clear();
+                }
+            }
+            for (int i = 0; i < jars.length; i++) {
+                System.out.println("WRITING TO " + fileLocs[i]);
+                FileWritingTemplate.write(fileLocs[i], getResult(jars[i], fileLocs[i]));
+            }
+        }
+    }
+
+    public String getResult(CookieJar cj, String outputLocation) {
+        StringBuffer buf = new StringBuffer();
+        Iterator e = templates.iterator();
+        while(e.hasNext()) {
+            buf.append(((GenericTemplate)e.next()).getResult());
+        }
+        return getVelocityResult(buf.toString(), cj);
     }
 
     public static String getVelocityResult(String template, CookieJar cookieJar) {
@@ -81,9 +93,9 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
             // due to velocity gathering introspection information,
             // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
             boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(cookieJar.getContext()),
-                                                                    out,
-                                                                    "localSeismogramTemplate",
-                                                                    template);
+                                                                                     out,
+                                                                                     "localSeismogramTemplate",
+                                                                                     template);
             template = out.toString();
         } catch (ParseErrorException e) {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
@@ -94,7 +106,6 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         } catch (IOException e) {
             GlobalExceptionHandler.handle("Problem using Velocity", e);
         }
-
         return template;
     }
 
@@ -103,41 +114,17 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, Element el)throws ConfigurationException {
-        //I intend to change this channels thing to something a little more sophisticated
-        if (tag.equals("channels")){
-            ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
-            channelListeners.add(cgt);
-            return cgt;
-        }
-        if (tag.equals("event")){
-            return new EventTemplate(el);
-        }
-        if (tag.equals("station")){
-            return new MyStationTemplate(el);
+        if(tag.equals("menu")){
+            try {
+                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/1/2/test.html", baseDir);
+            } catch (Exception e) {
+                GlobalExceptionHandler.handle("Problem getting template for Menu", e);
+            }
         }
         return super.getTemplate(tag,el);
     }
 
-    private class EventTemplate implements GenericTemplate{
-        public EventTemplate(Element el) throws ConfigurationException {
-            formatter = new EventFormatter(el);
-        }
-
-        public String getResult() { return formatter.getResult(event); }
-
-        private EventFormatter formatter;
-    }
-
-    private class MyStationTemplate implements GenericTemplate{
-        public MyStationTemplate(Element el) throws ConfigurationException {
-            formatter = new StationFormatter(el);
-        }
-
-        public String getResult() { return formatter.getResult(station); }
-
-        private StationFormatter formatter;
-    }
-
+    private Writer writer = new Writer();
+    private Map toBeRendered = Collections.synchronizedMap(new HashMap());
+    private String baseDir;
 }
-
-
