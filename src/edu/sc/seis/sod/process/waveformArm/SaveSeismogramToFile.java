@@ -18,7 +18,6 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveFormArm.LocalSeismogramProcess;
-import edu.sc.seis.sod.process.waveFormArm.SaveSeismogramToFile;
 import edu.sc.seis.sod.status.EventFormatter;
 import java.io.File;
 import java.io.IOException;
