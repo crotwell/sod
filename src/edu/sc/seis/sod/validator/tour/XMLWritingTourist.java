@@ -103,7 +103,11 @@ public class XMLWritingTourist implements Tourist {
 
     public void visit(Text t) {
         lastForm = t;
-        write(DEFAULT_TEXT_VALUE);
+        if(t.getAnnotation().hasExampleFromAnnotation()) {
+            write(t.getAnnotation().getExample());
+        } else {
+            write(DEFAULT_TEXT_VALUE);
+        }
     }
 
     public void visit(Value v) {
