@@ -26,7 +26,8 @@
                 <value>MINUTE</value>
                 <value>HOUR</value>
                 <value>DAY</value>
-                <value>YEAR</value>
+                <value>WEEK</value>
+                <value>FORTNIGHT</value>
                 <value>AMPERE</value>
                 <value>COULOMB</value>
                 <value>VOLT</value>
@@ -98,7 +99,14 @@
                 <value>HOUR</value>
                 <value>DAY</value>
                 <value>WEEK</value>
-                <value>YEAR</value>
+                <value>FORTNIGHT</value>
+            </choice>
+        </element>
+    </define>
+    <define name="freqUnit" combine="choice">
+        <element name="unit">
+            <choice>
+                <value>HERTZ</value>
             </choice>
         </element>
     </define>
