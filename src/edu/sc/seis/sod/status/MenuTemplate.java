@@ -18,6 +18,8 @@ public class MenuTemplate extends Template implements GenericTemplate{
     private String pathFrom;
     private String fileDir;
 
+    public static final String TEMPLATE_LOC = "jar:edu/sc/seis/sod/data/templates/menu.xml";
+
     public MenuTemplate(Element el, String pathFrom, String fileDir) throws ConfigurationException {
         this.pathFrom = pathFrom;
         this.fileDir = fileDir;
