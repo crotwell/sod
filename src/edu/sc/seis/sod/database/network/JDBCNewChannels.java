@@ -19,8 +19,9 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 
 public class JDBCNewChannels extends SodJDBC {
 
-    public JDBCNewChannels() throws SQLException{
+    public JDBCNewChannels() throws SQLException {
         Connection conn = ConnMgr.createConnection();
+        channelTable = new JDBCChannel();
         if (!DBUtil.tableExists("newchannels", conn)){
             conn.createStatement().executeUpdate(ConnMgr.getSQL("newchannels.create"));
         }
@@ -55,6 +56,6 @@ public class JDBCNewChannels extends SodJDBC {
     }
 
     private PreparedStatement put, getNext, remove;
-    private JDBCChannel channelTable = new JDBCChannel();
+    private JDBCChannel channelTable;
 }
 
