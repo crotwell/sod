@@ -45,7 +45,7 @@ td{
     font-family:verdana, arial, helvetica, sans-serif;
     font-size:11px;
 }
-tr#title{
+tr.title{
     font-weight: bold;
 }
 
@@ -126,4 +126,7 @@ color: red;
 
 #new {
 color: blue;
+}
+tr.ruled{
+background:#9cf;
 }
