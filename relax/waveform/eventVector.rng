@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
+    <start>
+        <ref name="eventChannel"/>
+    </start>
+    <define name="eventChannel">
+        <choice>
+            <ref name="ANDEventChannelWrapper"/>
+            <ref name="OREventChannelWrapper"/>
+            <ref name="eventVectorAND"/>
+            <ref name="eventVectorOR"/>
+            <ref name="eventVectorXOR"/>
+            <ref name="eventVectorNOT"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
+        </choice>
+    </define>
+    <define name="ANDEventChannelWrapper">
+        <element name="ANDEventChannelWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel subsetter to be embedded within a event
+                        vector subsetter. </summary>
+                    <description> Allows an event channel subsetter to be embedded within a event
+                        channelgroup subsetter. The result is the AND of result of all the
+                        individual channels. The is most often used within the motion vector arm. </description>
+                    <example>
+                        <ANDEventChannelWrapper>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </ANDEventChannelWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+    <define name="OREventChannelWrapper">
+        <element name="OREventChannelWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel subsetter to be embedded within a event
+                        vector subsetter. </summary>
+                    <description> Allows an event channel subsetter to be embedded within a event
+                        channelgroup subsetter. The result is the OR of result of all the individual
+                        channels. The is most often used within the motion vector arm. </description>
+                    <example>
+                        <OREventChannelWrapper>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </OREventChannelWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+    <define name="eventVectorAND">
+        <element name="eventVectorAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between EventVector subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <eventVectorAND>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventVectorAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventChannel"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventVectorOR">
+        <element name="eventVectorOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between EventVector subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <eventVectorOR>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventVectorOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="eventChannel"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="eventVectorXOR">
+        <element name="eventVectorXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between EventVector subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of included
+                        subsetters. </description>
+                    <example>
+                        <eventVectorXOR>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                            <embeddedChannel>
+                                <bandCode>B</bandCode>
+                            </embeddedChannel>
+                        </eventVectorXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="eventChannel"/>
+            <ref name="eventChannel"/>
+        </element>
+    </define>
+    <define name="eventVectorNOT">
+        <element name="eventVectorNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an EventVector subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetter. </description>
+                    <example>
+                        <eventVectorNOT>
+                            <embeddedEventStation>
+                                <distanceRange>
+                                    <unit>DEGREE</unit>
+                                    <min>40</min>
+                                </distanceRange>
+                            </embeddedEventStation>
+                        </eventVectorNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="eventChannel"/>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passEventChannel">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passEventChannel/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="eventChannel"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalEventVectorSubsetter">
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

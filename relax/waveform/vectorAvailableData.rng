@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
+    <start>
+        <ref name="vectorAvailableData"/>
+    </start>
+    <define name="vectorAvailableData">
+        <choice>
+            <ref name="ANDAvailableDataWrapper"/>
+            <ref name="ORAvailableDataWrapper"/>
+            <ref name="vectorAvailableDataAND"/>
+            <ref name="vectorAvailableDataOR"/>
+            <ref name="vectorAvailableDataXOR"/>
+            <ref name="vectorAvailableDataNOT"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
+        </choice>
+    </define>
+    <define name="ANDAvailableDataWrapper">
+        <element name="ANDAvailableDataWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel available data subsetter to be embedded within
+                        a event vector available data subsetter. </summary>
+                    <description> Allows an event channel available data subsetter to be embedded
+                        within a event channelgroup available data subsetter. The result is the AND
+                        of result of all the individual per channel available data subsetters. The
+                        is most often used within the motion vector arm. </description>
+                    <example>
+                        <ANDAvailableDataWrapper>
+                            <noGaps/>
+                        </ANDAvailableDataWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="availableData.rng"/>
+        </element>
+    </define>
+    <define name="ORAvailableDataWrapper">
+        <element name="ORAvailableDataWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event vector available data subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup available data subsetter. The result is the OR of the
+                        result of all the individual per channel available data subsetters. The is
+                        most often used within the motion vector arm. </description>
+                    <example>
+                        <ORAvailableDataWrapper>
+                            <someData/>
+                        </ORAvailableDataWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="availableData.rng"/>
+        </element>
+    </define>
+    <define name="vectorAvailableDataAND">
+        <element name="vectorAvailableDataAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between AvailableData subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <vectorAvailableDataAND>
+                            <noGaps/>
+                            <fullCoverage/>
+                        </vectorAvailableDataAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorAvailableData"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorAvailableDataOR">
+        <element name="vectorAvailableDataOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between AvailableData subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <vectorAvailableDataOR>
+                            <noGaps/>
+                            <fullCoverage/>
+                        </vectorAvailableDataOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorAvailableData"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorAvailableDataXOR">
+        <element name="vectorAvailableDataXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between AvailableData subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. </description>
+                    <example>
+                        <vectorAvailableDataXOR>
+                            <noGaps/>
+                            <fullCoverage/>
+                        </vectorAvailableDataXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="vectorAvailableData"/>
+            <ref name="vectorAvailableData"/>
+        </element>
+    </define>
+    <define name="vectorAvailableDataNOT">
+        <element name="vectorAvailableDataNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an AvailableData subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. </description>
+                    <example>
+                        <vectorAvailableDataNOT>
+                            <noGaps/>
+                        </vectorAvailableDataNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="vectorAvailableData"/>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passVectorAvailableData">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passVectorAvailableData/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="vectorAvailableData"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalVectorAvailableData">
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>

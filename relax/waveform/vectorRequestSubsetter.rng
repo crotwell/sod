@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
+    <start>
+        <ref name="vectorRequest"/>
+    </start>
+    <define name="vectorRequest">
+        <choice>
+            <ref name="ANDRequestWrapper"/>
+            <ref name="ORRequestWrapper"/>
+            <ref name="vectorRequestAND"/>
+            <ref name="vectorRequestOR"/>
+            <ref name="vectorRequestXOR"/>
+            <ref name="vectorRequestNOT"/>
+            <ref name="PASS"/>
+            <ref name="external"/>
+        </choice>
+    </define>
+    <define name="ANDRequestWrapper">
+        <element name="ANDRequestWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event vector request subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup request subsetter. The result is the AND of result of all
+                        the individual per channel request subsetters. The is most often used within
+                        the motion vector arm. </description>
+                    <example>
+                        <ANDRequestWrapper>
+                            <requestPrint/>
+                        </ANDRequestWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+    <define name="ORRequestWrapper">
+        <element name="ORRequestWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Allows an event channel request subsetter to be embedded within a
+                        event vector request subsetter. </summary>
+                    <description> Allows an event channel request subsetter to be embedded within a
+                        event channelgroup request subsetter. The result is the OR of the result of
+                        all the individual per channel request subsetters. The is most often used
+                        within the motion vector arm. </description>
+                    <example>
+                        <ORRequestWrapper>
+                            <requestPrint/>
+                        </ORRequestWrapper>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <externalRef href="requestSubsetter.rng"/>
+        </element>
+    </define>
+    <define name="vectorRequestAND">
+        <element name="vectorRequestAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between Request subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                    <example>
+                        <vectorRequestAND>
+                            <something/>
+                            <somethingelse/>
+                        </vectorRequestAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorRequest"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorRequestOR">
+        <element name="vectorRequestOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between Request subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                    <example>
+                        <vectorRequestOR>
+                            <something/>
+                            <somethingelse/>
+                        </vectorRequestOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="vectorRequest"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="vectorRequestXOR">
+        <element name="vectorRequestXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between Request subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. </description>
+                    <example>
+                        <vectorRequestXOR>
+                            <something/>
+                            <somethingelse/>
+                        </vectorRequestXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="vectorRequest"/>
+            <ref name="vectorRequest"/>
+        </element>
+    </define>
+    <define name="vectorRequestNOT">
+        <element name="vectorRequestNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an Request subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. </description>
+                    <example>
+                        <vectorRequestNOT>
+                            <something/>
+                        </vectorRequestNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="vectorRequest"/>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passVectorRequest">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passVectorRequest/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="vectorRequest"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalVectorRequest">
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>
