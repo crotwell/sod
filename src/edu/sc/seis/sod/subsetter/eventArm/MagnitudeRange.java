@@ -57,11 +57,11 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     this.config = config;
     // processConfig(config);
     }
-    
-    private void processConfig(Element config) throws ConfigurationException {
-    
 
-    
+    private void processConfig(Element config) throws ConfigurationException {
+
+
+
     }
 
     /**
@@ -73,37 +73,10 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
-    if(origin.magnitudes[0].value >= getMinMagnitude().value &&
-       origin.magnitudes[0].value <= getMaxMagnitude().value)
+    if(origin.magnitudes[0].value >= getMinValue() &&
+       origin.magnitudes[0].value <= getMaxValue())
         return true;
     else return false;
-
-    }
-
-    /**
-       NEED TO CHANGE the getMinMagnitude() and getMaxMagnitude() to getMinValue() and getMaxvalue() or avoid them
-       all together as they exist in the super classs
-    ***/
-
-    /**
-     * Describe <code>getMinMagnitude</code> method here.
-     *
-     * @return a <code>Magnitude</code> value
-     */
-    public Magnitude getMinMagnitude() {
-    
-    return new Magnitude("ms", getMinValue(), null);
-    
-    }
-    
-    /**
-     * Describe <code>getMaxMagnitude</code> method here.
-     *
-     * @return a <code>Magnitude</code> value
-     */
-    public Magnitude getMaxMagnitude() {
-
-    return new Magnitude("ms", getMaxValue(), null);
 
     }
 
@@ -115,13 +88,13 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     for(int counter  = 0; counter < childNodes.getLength(); counter++) {
         node = childNodes.item(counter);
         if(node instanceof Element) {
-        
+
         String tagName = ((Element)node).getTagName();
         if(tagName.equals("magType")){
             MagType magType = (MagType)SodUtil.load((Element)node, "");
             arrayList.add(magType.getType());
         }
-        
+
         }
     }
     String[] searchTypes = new String[arrayList.size()];
@@ -130,5 +103,5 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     }
 
     private Element config;
-    
+
 }// MagnitudeRange

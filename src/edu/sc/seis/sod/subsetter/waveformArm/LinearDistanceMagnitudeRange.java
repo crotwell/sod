@@ -42,7 +42,7 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
         Element subElement = SodUtil.getElement(config, "magnitudeRange");
         magnitudeRange = (MagnitudeRange) SodUtil.load(subElement, "eventArm");
     }
-    
+
     /**
      * Describe <code>accept</code> method here.
      *
@@ -55,21 +55,21 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
     public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) throws Exception {
         Origin origin = null;
         origin = eventAccess.get_preferred_origin();
-        
+
         double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
                                                          origin.my_location.longitude,
                                                          station.my_location.latitude,
                                                          station.my_location.longitude);
         if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-            double resultantMagnitude = magnitudeRange.getMinMagnitude().value + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxMagnitude().value - magnitudeRange.getMinMagnitude().value)/(getMinDistance().value - getMaxDistance().value);
+            double resultantMagnitude = magnitudeRange.getMinValue() + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxValue() - magnitudeRange.getMinValue())/(getMinDistance().value - getMaxDistance().value);
             if(origin.magnitudes[0].value >= resultantMagnitude) {
                 return true;
             }
         }
         return false;
-        
+
     }
-    
+
     private  MagnitudeRange magnitudeRange;
-    
+
 }// LinearDistanceMagnitudeRange

@@ -339,8 +339,8 @@ public class EventArm implements Runnable{
             }
             if(ef.getMagnitudeRange() != null) {
                 MagnitudeRange magRange = ef.getMagnitudeRange();
-                minMag = magRange.getMinMagnitude().value;
-                maxMag = magRange.getMaxMagnitude().value;
+                minMag = magRange.getMinValue();
+                maxMag = magRange.getMaxValue();
                 searchTypes = magRange.getSearchTypes();
                 String s = "mag range is in subsetter, min of " + minMag + " max of " + maxMag+" types= ";
                 for (int i = 0; i < searchTypes.length; i++) {
