@@ -41,6 +41,9 @@ public interface Queue {
 
     public void setFinalStatus(EventAccess eventAccess, Status status);
 
+
+    public void delete(Status status);
+
     /**
      * returns the length of the queue.
      *

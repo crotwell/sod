@@ -23,6 +23,8 @@ import org.omg.CORBA.*;
 public class HSqlDbQueue implements Queue {
     public HSqlDbQueue (){
 	eventDatabase = new HSqlDatabase();
+	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
+	delete(Status.COMPLETE_SUCCESS);
     }
     
     public void push(java.lang.Object obj) {}
@@ -42,7 +44,10 @@ public class HSqlDbQueue implements Queue {
 	    cfe.printStackTrace();
 	}
 	try {
-	    if(waitFlag)  wait();
+	    if(waitFlag){  
+		System.out.println("&*********************&&&&&&&&&&&&&&&&&&& Waiting in push ");
+		wait();
+	    }
 	} catch(InterruptedException ie) {}
 
 
@@ -77,10 +82,13 @@ public class HSqlDbQueue implements Queue {
 	System.out.println("The dbid that is obtained is "+dbid);
     }
 
-    public void setFinalStatus(EventAccess eventAccess, Status status) {
-	System.out.println("DELETING THE RECORD");
+    public synchronized void setFinalStatus(EventAccess eventAccess, Status status) {
+	System.out.println("UPDATING THE STATUS");
 	int dbid = eventDatabase.get(eventAccess);
 	eventDatabase.updateStatus(dbid, status);
+	System.out.println("Notifying in  updateStatus ");
+	notifyAll();
+
 	getLength();
 	
 	
@@ -95,13 +103,15 @@ public class HSqlDbQueue implements Queue {
      * @return a <code>java.lang.Object</code> value
      */
     public synchronized java.lang.Object pop() {
-	
-	while((getNew() == 0 && sourceAlive == true)){// || 
-	      // (dbid == -1 && sourceAlive == true)){
+	int dbid = eventDatabase.getFirst(Status.NEW);
+	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% In the method pop the value of sourceAlive is "+sourceAlive);
+	while((getLength() == 0 && sourceAlive == true)  || 
+	    (dbid == -1 && sourceAlive == true)){
 	    try {
-		//System.out.println("Waiting in POP");
+		System.out.println("Waiting in POP())))))))))))))))()()()()()()()()()()()()()()()()()(");
 		wait();
-	    } catch(InterruptedException ie) { }
+		dbid = eventDatabase.getFirst(Status.NEW);
+	    } catch(InterruptedException ie) { ie.printStackTrace();}
 
 	}
 	org.omg.CORBA.ORB orb = null;
@@ -110,7 +120,7 @@ public class HSqlDbQueue implements Queue {
 	} catch(edu.sc.seis.sod.ConfigurationException cfe) {
 	    cfe.printStackTrace();
 	}
-	int dbid = eventDatabase.getFirst(Status.NEW);
+	//int dbid = eventDatabase.getFirst(Status.NEW);
 	System.out.println("The dbid while popping is "+dbid);
 	eventDatabase.updateStatus(dbid, Status.PROCESSING);
 	String ior = eventDatabase.getObject(dbid);
@@ -119,7 +129,15 @@ public class HSqlDbQueue implements Queue {
 	org.omg.CORBA.Object obj = orb.string_to_object(ior);
 	obj = reValidate(dbid, obj);
 	EventAccess eventAccess = EventAccessHelper.narrow(obj);
-	if(getNew() <= 4) notifyAll();
+	if(getLength() <= 4){ 
+	    System.out.println("NOtifying the OTHER THREADS AS EVENTS ARE <= 4 #################################################################");
+	    waitFlag = false;
+	    notifyAll();
+	}
+	if(eventAccess == null) {
+	    System.out.println("The event Access is null ");
+	    System.exit(0);
+	}
 	return new CacheEvent(eventAccess);
 	//return eventAccess;
     }
@@ -186,7 +204,7 @@ public class HSqlDbQueue implements Queue {
      *
      * @param value a <code>boolean</code> value
      */
-    public void setSourceAlive(boolean value) {
+    public synchronized void setSourceAlive(boolean value) {
 	this.sourceAlive = value;
     }
     
@@ -204,7 +222,26 @@ public class HSqlDbQueue implements Queue {
     public  synchronized void waitForProcessing() {
 	if(getLength() > 4) {
 	    waitFlag = true;
+	    System.out.println("Wait flag is set to be true");
 	}
+    }
+
+    public synchronized void delete(Status status) {
+	getLength();
+	int numSuccessful = eventDatabase.getCount(status);
+	if(numSuccessful > 0) {
+	    eventDatabase.delete(status);
+	    notifyAll();
+	    //getLength();
+	    //System.exit(0);
+	}
+	System.out.println("DELETING THE RECORD FROM THE DATABSE");
+	try {
+	    Thread.sleep(5000);
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+	//System.exit(0);
     }
 
     private edu.iris.Fissures.IfEvent.EventDC getEventDC(int dbid) {

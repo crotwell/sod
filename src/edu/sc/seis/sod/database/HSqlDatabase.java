@@ -81,6 +81,8 @@ public class HSqlDatabase implements EventDatabase{
 						  " WHERE eventid = ? ");
 	    
 	    iorUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET eventAccess = ? WHERE eventid = ?");
+
+	    statusUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET status = ? WHERE status = ?");
 	    
 	} catch(Exception e) {
 	    
@@ -269,10 +271,20 @@ public class HSqlDatabase implements EventDatabase{
 	    updateStmt.setInt(1, newStatus.getId());
 	    updateStmt.setInt(2, id);
 	    updateStmt.executeUpdate();
-	} catch(SQLException sqle) {
+	  	} catch(SQLException sqle) {
 
 	    sqle.printStackTrace();
 	    
+	}
+    }
+
+    public void updateStatus(Status oldStatus, Status newStatus) {
+	try {
+	    statusUpdateStmt.setInt(1, newStatus.getId());
+	    statusUpdateStmt.setInt(2, oldStatus.getId());
+	    statusUpdateStmt.executeUpdate();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
 	}
     }
 
@@ -299,6 +311,14 @@ public class HSqlDatabase implements EventDatabase{
 	
 	int dbid = get(eventAccess);
 	delete(dbid);
+    }
+
+    public void delete(Status status) {
+
+	int[] dbids = get(status);
+	for(int counter = 0; counter < dbids.length; counter++) {
+	    delete(dbids[counter]);
+	}
     }
 
     public int getCount(Status status) {
@@ -376,6 +396,8 @@ public class HSqlDatabase implements EventDatabase{
     private PreparedStatement updateStmt;
     
     private PreparedStatement statusStmt;
+
+    private PreparedStatement statusUpdateStmt;
 
     private PreparedStatement deleteStmt;
 

@@ -45,12 +45,16 @@ public interface EventDatabase {
     
     public void updateStatus(int id, Status newStatus);
 
+    public void updateStatus(Status oldStatus, Status newStatus);
+
     public void updateIOR(int dbid, String newIOR);
 		   
     public void delete(int id);
 
     public void delete(EventAccess eventAccess);
     
+    public void delete(Status status);
+
     public int getCount(Status status);
 
     public String getObject(int eventid);
