@@ -50,7 +50,7 @@ public class PrintLineEventProcess implements EventArmProcess {
 		//ntln("Exception caught while writing to file in PrintLineChannelProcess");
 	    }
 	} else {
-
+             System.out.println(eventStr);
 	} // end of else
 	
     }
