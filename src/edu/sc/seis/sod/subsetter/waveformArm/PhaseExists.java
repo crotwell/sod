@@ -3,10 +3,9 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.SphericalCoords;
-import edu.sc.seis.TauP.TauP_Time;
+import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -33,21 +32,17 @@ public class PhaseExists implements EventStationSubsetter {
         } else {
             throw new ConfigurationException("Phase name not in configuration");
         }
+        try {
+            tauPTime = new TauPUtil(modelName);
+        } catch(TauModelException e) {
+            throw new ConfigurationException("Cannot initize TauP travel time calculator", e);
+        }
     }
 
     public boolean accept(EventAccessOperations event, Station station, CookieJar cookieJar)
         throws Exception{
         Origin origin = event.get_preferred_origin();
-        TauP_Time tauPTime = new TauP_Time(modelName);
-        tauPTime.clearPhaseNames();
-        tauPTime.parsePhaseList(phaseName);
-        UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-        tauPTime.setSourceDepth(origin.my_location.depth.value);
-        tauPTime.calculate(SphericalCoords.distance(origin.my_location.latitude,
-                                                    origin.my_location.longitude,
-                                                    station.my_location.latitude,
-                                                    station.my_location.longitude));
-        Arrival[] arrivals  = tauPTime.getArrivals();
+        Arrival[] arrivals  = tauPTime.calcTravelTimes(station, origin, new String[] { phaseName });
         if(getRequiredArrival(arrivals) == null) return false;
         else return true;
     }
@@ -68,6 +63,8 @@ public class PhaseExists implements EventStationSubsetter {
         }
         return requiredArrival;
     }
+
+    TauPUtil tauPTime;
 
     private String modelName = "iasp91";
 
