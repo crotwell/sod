@@ -359,6 +359,9 @@ public class LocalSeismogramArm implements Subsetter{
                                                result.getSeismograms(),
                                                ecp.getCookieJar());
                 }
+                if ( ! result.isSuccess()) {
+                    logger.info("Processor reject: "+result.getReason());
+                }
             } catch (Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
                 return;

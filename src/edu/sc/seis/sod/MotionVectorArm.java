@@ -21,6 +21,7 @@ import edu.sc.seis.sod.process.waveformArm.ANDLocalSeismogramWrapper;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramProcess;
 import edu.sc.seis.sod.process.waveformArm.ChannelGroupLocalSeismogramResult;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -366,7 +367,7 @@ public class MotionVectorArm implements Subsetter{
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
         ChannelGroupLocalSeismogramProcess processor;
-        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(true, localSeismograms);
+        ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(true, localSeismograms, new StringTreeLeaf(this, true));
         Iterator it = processes.iterator();
         while (it.hasNext() && result.isSuccess()) {
             processor = (ChannelGroupLocalSeismogramProcess)it.next();
@@ -380,7 +381,7 @@ public class MotionVectorArm implements Subsetter{
                                                ecp.getCookieJar());
                 }
                 if ( ! result.isSuccess()) {
-                    logger.info("Processor reject at: "+processor.toString());
+                    logger.info("Processor reject: "+result.getReason());
                 }
             } catch (Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);

@@ -61,7 +61,7 @@ public class PhaseSignalToNoiseCalculator  implements LocalSeismogramProcess, Ch
                               trigger);
             }
         }
-        return new ChannelGroupLocalSeismogramResult(true, seismograms);
+        return new ChannelGroupLocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     Element config;
