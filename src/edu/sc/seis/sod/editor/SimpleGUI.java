@@ -33,6 +33,7 @@ import javax.swing.text.BadLocationException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import edu.sc.seis.fissuresUtil.xml.Writer;
+import javax.swing.JTabbedPane;
 
 
 
@@ -45,15 +46,25 @@ public class SimpleGUI extends CommandLineEditor {
 
     public void start() {
         JFrame frame = new JFrame("SOD Simple GUI");
-        JPanel panel = new JPanel();
         frame.getContentPane().setLayout(new BorderLayout());
-        frame.getContentPane().add(new JScrollPane(panel), BorderLayout.CENTER);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = gbc.WEST;
-        gbc.fill = gbc.HORIZONTAL;
-        panel.setLayout(new GridBagLayout());
+        JTabbedPane tabs = new JTabbedPane();
+        frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
         Document doc = start.getDocument();
-        addElementToPanel(panel, doc.getDocumentElement(), gbc);
+
+        // put each top level sod element in a panel
+        NodeList list = doc.getDocumentElement().getChildNodes();
+        JPanel panel;
+        for (int j = 0; j < list.getLength(); j++) {
+            if (list.item(j) instanceof Element) {
+                panel = new JPanel();
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.anchor = gbc.WEST;
+                gbc.fill = gbc.HORIZONTAL;
+                panel.setLayout(new GridBagLayout());
+                tabs.add(((Element)list.item(j)).getTagName(), panel);
+                addElementToPanel(panel, (Element)list.item(j), gbc);
+            }
+        }
         frame.pack();
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
