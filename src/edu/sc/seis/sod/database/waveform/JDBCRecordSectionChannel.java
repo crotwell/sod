@@ -20,7 +20,8 @@ public class JDBCRecordSectionChannel extends JDBCTable {
     public JDBCRecordSectionChannel() throws SQLException {
         this(ConnMgr.createConnection());
     }
-    public JDBCRecordSectionChannel(Connection conn) throws SQLException{
+
+    public JDBCRecordSectionChannel(Connection conn) throws SQLException {
         super("recordsectionchannel", conn);
         if(!DBUtil.tableExists("recordsectionchannel", conn)) {
             Statement stmt = conn.createStatement();
@@ -28,17 +29,48 @@ public class JDBCRecordSectionChannel extends JDBCTable {
         }
         prepareStatements();
     }
-    public void insert(int recSecId,int channelid) throws SQLException {
+
+    public void setRecSecId(int newRecSecId, int eventId, int channelId)
+            throws SQLException {
+        
+    }
+
+    public void insert(int recSecId, int channelid) throws SQLException {
         insert.setInt(1, recSecId);
         insert.setInt(2, channelid);
         insert.executeUpdate();
     }
-    public void updateRecordSection(int recSecId,int eventid,int channelid) throws SQLException{
-        updateRecordSection.setInt(1,recSecId);
-        updateRecordSection.setInt(2,eventid);
-        updateRecordSection.setInt(3,channelid);
-        updateRecordSection.executeUpdate();
+
+    public void updateRecordSection(int newRecSecId, int eventId, int channelId)
+            throws SQLException {
+        try {
+            int curRecSecId = getRecSecId(eventId, channelId);
+            System.out.println("Old recSecId = " +curRecSecId + " for " +channelId  );
+            updateRecordSection.setInt(1, newRecSecId);
+            updateRecordSection.setInt(2, curRecSecId);
+            updateRecordSection.executeUpdate();
+        } catch(SQLException e) {
+            throw new RuntimeException("Running the SQL query"
+                    + updateRecordSection.toString());
+        }
     }
-    
-    PreparedStatement insert,updateRecordSection;
+    public boolean channelExists(int eventId,int channelId)throws SQLException{
+     if(getRecSecId(eventId,channelId)!= -1) {
+         return true;
+     }
+     return false;
+    }
+    public int getRecSecId(int eventId, int channelId) throws SQLException {
+        getRecSecId.setInt(1, eventId);
+        getRecSecId.setInt(2, channelId);
+        try {
+            ResultSet rs = getRecSecId.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch(SQLException e) {
+       return -1;
+        }
+    }
+
+    PreparedStatement insert, updateRecordSection, getRecSecId;
 }
