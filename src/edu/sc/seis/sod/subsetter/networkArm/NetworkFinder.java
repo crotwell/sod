@@ -2,9 +2,8 @@ package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.sc.seis.fissuresUtil.cache.NSNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
-import edu.sc.seis.fissuresUtil.cache.RetryNetworkDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
@@ -48,7 +47,7 @@ public class NetworkFinder extends AbstractSource{
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);
         } else refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
-        netDC = new RetryNetworkDC(new NSNetworkDC(dns, objectName, fns), 2);
+        netDC = BulletproofVestFactory.vestNetworkDC(dns, objectName, fns);
     }
 
     public ProxyNetworkDC getNetworkDC() {

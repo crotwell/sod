@@ -199,10 +199,10 @@ public class NetworkArm {
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
         for(int i = 0; i < allNets.length; i++) {
             try {
-                allNets[i] = BulletproofVestFactory.networkAccessVest(allNets[i],
-                                                                  new RetryNetworkDC(new NSNetworkDC(finder.getDNSName(),
+                allNets[i] = BulletproofVestFactory.vestNetworkAccess(allNets[i],
+                                                                  BulletproofVestFactory.vestNetworkDC(finder.getDNSName(),
                                                                                   finder.getSourceName(),
-                                                                                  finder.getFissuresNamingService()), 3));
+                                                                                  finder.getFissuresNamingService()));
                 if(attrSubsetter.accept(allNets[i].get_attributes())){
                     int dbid;
                     synchronized(netTable){
