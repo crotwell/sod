@@ -16,6 +16,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 
 import java.util.*;
+import java.io.*;
 
 import org.w3c.dom.*;
 import org.apache.log4j.*;
@@ -55,7 +56,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    int eventid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
 	    int channelid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
 	    EventAccessOperations eventAccess = Start.getEventQueue().getEventAccess(eventid);
-	    updateDatabase(eventid, channelid, eventAccess);
+	    updateChannelCount(eventid, channelid, eventAccess);
 	}
     }
 	
@@ -82,30 +83,46 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		    Start.getEventQueue().getEventAccess(eventid);
 				waveformStatusProcess.begin(eventAccess);
 		NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
+	
 		Start.getWaveformQueue().putInfo(eventid, networks.length);
+		if(networks.length == 0) {
+		    updateEventStatus(eventid, eventAccess);
+		}
 		for(int netcounter = 0; netcounter < networks.length; netcounter++) {
 		    waveformStatusProcess.begin(eventAccess, networks[netcounter].getNetworkAccess());
 		    StationDbObject[] stations = networkArm.getSuccessfulStations(networks[netcounter]);
+		    
 		    Start.getWaveformQueue().putNetworkInfo(eventid,
 							    networks[netcounter].getDbId(),
 							    stations.length,
 							    new MicroSecondDate());
+		    if(stations.length == 0) {
+			updateNetworkCount(eventid, networks[netcounter].getDbId(), eventAccess);
+		    }
 		    for(int stationcounter = 0; stationcounter < stations.length; stationcounter++) {
 			waveformStatusProcess.begin(eventAccess, stations[stationcounter].getStation());
 			SiteDbObject[] sites = networkArm.getSuccessfulSites(networks[netcounter], 
-								     stations[stationcounter]);
+									     stations[stationcounter]);
+			
 			Start.getWaveformQueue().putStationInfo(eventid,
 								stations[stationcounter].getDbId(),
 								sites.length,
 								new MicroSecondDate());
+			if(sites.length == 0) {
+			    updateStationCount(eventid, stations[stationcounter].getDbId(), eventAccess);
+			}
 			for(int sitecounter = 0; sitecounter < sites.length; sitecounter++) {
 			    waveformStatusProcess.begin(eventAccess, sites[sitecounter].getSite());
 			    ChannelDbObject[] successfulChannels = 
 				networkArm.getSuccessfulChannels(networks[netcounter], sites[sitecounter]);
+			    
 			    Start.getWaveformQueue().putSiteInfo(eventid,
 								 sites[sitecounter].getDbId(),
 								 successfulChannels.length,
 								 new MicroSecondDate());
+			    if(successfulChannels.length == 0) {
+				updateSiteCount(eventid, sites[sitecounter].getDbId(), eventAccess);
+			    }
 			    //when the threads are really changed to per channel base ..
 			    // the below for loop must be removed...
 			    for(int counter = 0; counter < successfulChannels.length; counter++) {
@@ -188,61 +205,88 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
 					   status, reason);
 	waveformStatusProcess.end(eventAccess, channel, status, reason);
-	updateDatabase(eventid, channelid, eventAccess);
+	updateChannelCount(eventid, channelid, eventAccess);
 
     }
+
+   private void write(String str) {
+	try {
+	    FileWriter fw = new FileWriter("stationdebugger", true);
+	    BufferedWriter bw = new BufferedWriter(fw);
+	    bw.write(str, 0, str.length());
+	    bw.newLine();
+	    bw.close();
+	    fw.close();
+	} catch(Exception e) {
+	    e.printStackTrace();
+	}
+    }
     
-    private void updateDatabase(int eventid, int channelid, EventAccessOperations eventAccess) {
+    private synchronized void updateChannelCount(int eventid, int channelid, EventAccessOperations eventAccess) {
 	int sitedbid = networkArm.getSiteDbId(channelid);
-	int stationdbid = -1, networkdbid = -1;
+	      
 	Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
 	//	Start.getWaveformQueue().deleteChannelInfo(eventid, channelid);
-	 
+
 	boolean flag = false;
 	if(Start.getWaveformQueue().getChannelCount(eventid, sitedbid) <= 0) {
 	    //decrement corresponding station reference count..
 	    //delete the corresponding entry from the wavefrom sitedb
 	    flag = true;
+	    updateSiteCount(eventid, sitedbid, eventAccess);
 	}
-	   
-	if(flag) {
-	    flag = false;
-	    stationdbid = networkArm.getStationDbId(sitedbid);
-	    Start.getWaveformQueue().decrementSiteCount(eventid, stationdbid);
-	    //  Start.getWaveformQueue().deleteSiteInfo(eventid, sitedbid);
-	    if(Start.getWaveformQueue().getSiteCount(eventid, stationdbid) <= 0) {
-		flag = true;
-	    }
-	}
-
-	if(flag) {
-
-	    flag = false;
-	    networkdbid = networkArm.getNetworkDbId(stationdbid);
-	    Start.getWaveformQueue().decrementStationCount(eventid, networkdbid);
-	    //	    Start.getWaveformQueue().deleteStationInfo(eventid, stationdbid);
-	    if(Start.getWaveformQueue().getStationCount(eventid, networkdbid) <= 0) {
-		flag = true;
-	    }
-	}
-
-	if(flag) {
-	    flag = false;
-	    Start.getWaveformQueue().decrementNetworkCount(eventid);
-	    //    Start.getWaveformQueue().deleteNetworkInfo(eventid, networkdbid);
-	    if(Start.getWaveformQueue().getNetworkCount(eventid) <= 0) {
-		flag = true;
-	    }
-	}
+    }
 	
-	if(flag) {
+    private synchronized void updateSiteCount(int eventid, int sitedbid, EventAccessOperations eventAccess) {
+	
+	boolean flag = false;
+	int stationdbid = networkArm.getStationDbId(sitedbid);
+
+	Start.getWaveformQueue().decrementSiteCount(eventid, stationdbid);
+
+	//  Start.getWaveformQueue().deleteSiteInfo(eventid, sitedbid);
+	if(Start.getWaveformQueue().getSiteCount(eventid, stationdbid) <= 0) {
+	    flag = true;
+	    updateStationCount(eventid, stationdbid, eventAccess);
+	}
+
+    }
+    
+    private synchronized void updateStationCount(int eventid, int stationdbid, EventAccessOperations eventAccess) {
+
+	boolean flag = false;
+	int networkdbid = networkArm.getNetworkDbId(stationdbid);
+
+	Start.getWaveformQueue().decrementStationCount(eventid, networkdbid);
+
+	//	    Start.getWaveformQueue().deleteStationInfo(eventid, stationdbid);
+	if(Start.getWaveformQueue().getStationCount(eventid, networkdbid) <= 0) {
+	    flag = true;
+	    updateNetworkCount(eventid, networkdbid, eventAccess);
+	}
+    }
+
+    private synchronized void updateNetworkCount(int eventid, int networkdbid, EventAccessOperations eventAccess) {
+	
+	boolean flag = false;
+
+	Start.getWaveformQueue().decrementNetworkCount(eventid);
+
+	//    Start.getWaveformQueue().deleteNetworkInfo(eventid, networkdbid);
+	if(Start.getWaveformQueue().getNetworkCount(eventid) <= 0) {
+	    flag = true;
+	    updateEventStatus(eventid, eventAccess);
+	}
+    }
+    
+    private synchronized void updateEventStatus(int eventid, EventAccessOperations eventAccess) {
 	    //delete the row corresponding to eventid from
 	    // the waveform database.
 	    //   Start.getWaveformQueue().deleteInfo(eventid);
-	    Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+	Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
 						 Status.COMPLETE_SUCCESS);
-	    if(Start.getEventQueue().getLength() == 0) waveformStatusProcess.closeProcessing();
-	}
+	if(Start.getEventQueue().getLength() == 0) waveformStatusProcess.closeProcessing();
+	
     }
 
     class ThreadWorker extends Thread {
