@@ -65,6 +65,8 @@ public class SeismogramImageProcess implements WaveformProcess {
                 putDataInCookieJar = true;
             } else if(n.getNodeName().equals("dimension")) {
                 dims = SodUtil.loadDimensions((Element)n);
+            } else if(n.getNodeName().equals("showOnlyFirstArrivals")) {
+                showOnlyFirst = true;
             }
         }
         locator = new SeismogramImageOutputLocator(el);
@@ -176,10 +178,15 @@ public class SeismogramImageProcess implements WaveformProcess {
         Origin origin = EventUtil.extractOrigin(event);
         TimeInterval filterOffset = new TimeInterval(10, UnitImpl.SECOND);
         final MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
-        final Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(channel.my_site.my_station,
-                                                                            origin,
-                                                                            phases),
-                                                       filterOffset);
+        Arrival[] arrivals = PhasePhilter.filter(tauP.calcTravelTimes(channel.my_site.my_station,
+                                                                      origin,
+                                                                      phases),
+                                                 filterOffset);
+        if(showOnlyFirst) {
+            Arrival s = PhasePhilter.findFirstS(arrivals);
+            Arrival p = PhasePhilter.findFirstP(arrivals);
+            arrivals = new Arrival[] {p, s};
+        }
         final SodFlag[] flags = new SodFlag[arrivals.length];
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
@@ -210,8 +217,8 @@ public class SeismogramImageProcess implements WaveformProcess {
                          */
                         int pLeft = NUM_P_TO_MARK;
                         int sLeft = NUM_S_TO_MARK;
-                        for(int i = 0; i < arrivals.length; i++) {
-                            String phase = arrivals[i].getName();
+                        for(int i = 0; i < flags.length; i++) {
+                            String phase = flags[i].getName();
                             FlagData flagData = flags[i].getFlagData();
                             if(phase.startsWith("P") && pLeft-- > 0) {
                                 cookieJar.put(locator.getPrefix() + COOKIE_KEY
@@ -239,6 +246,8 @@ public class SeismogramImageProcess implements WaveformProcess {
     private SeismogramImageOutputLocator locator;
 
     private TauPUtil tauP;
+
+    private boolean showOnlyFirst;
 
     private PhaseWindow phaseWindow = null;
 
