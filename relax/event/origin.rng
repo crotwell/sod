@@ -19,6 +19,7 @@
                         <ref name="originPointDistance"/>
                         <ref name="originPointAzimuth"/>
                         <ref name="originPointBackAzimuth"/>
+                        <ref name="pointLinearDistanceMagnitude" />
                         <ref name="eventArea"/>
                         <externalRef href="catalog.rng"/>
                         <externalRef href="contributor.rng"/>
@@ -219,6 +220,15 @@
                         <ref name="origin"/>
                 </element>
         </define>
+        <define name="latLonUnitRange">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+        </define>
         <define name="originPointDistance">
                 <xsd:annotation>
                         <xsd:documentation xml:lang="en">
@@ -227,24 +237,24 @@
                                 given distance range of the given lat and lon. </description>
                                 <example>
                                         <originPointDistance>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
                                                 <unit>DEGREE</unit>
                                                 <min>30</min>
                                                 <max>90</max>
-                                                <latitude>35</latitude>
-                                                <longitude>-85</longitude>
                                         </originPointDistance>
                                 </example>
                         </xsd:documentation>
                 </xsd:annotation>
                 <element name="originPointDistance">
-                    <element name="latitude">
-                        <data type="double"/>
-                    </element>
-                    <element name="longitude">
-                        <data type="double"/>
-                    </element>
-                    <ref name="range"/>
+                    <ref name="latLonUnitRange"/>
                 </element>
+        </define>
+        <define name="pointLinearDistanceMagnitude">
+            <element name="pointLinearDistanceMagnitude">
+                <ref name="latLonUnitRange"/>
+                <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            </element>
         </define>
         <define name="originPointAzimuth">
                 <xsd:annotation>
@@ -264,13 +274,7 @@
                         </xsd:documentation>
                 </xsd:annotation>
                 <element name="originPointAzimuth">
-                    <element name="latitude">
-                        <data type="double"/>
-                    </element>
-                    <element name="longitude">
-                        <data type="double"/>
-                    </element>
-                    <ref name="range"/>
+                    <ref name="latLonUnitRange"/>
                 </element>
         </define>
         <define name="originPointBackAzimuth">
@@ -291,13 +295,7 @@
                         </xsd:documentation>
                 </xsd:annotation>
                 <element name="originPointBackAzimuth">
-                    <element name="latitude">
-                        <data type="double"/>
-                    </element>
-                    <element name="longitude">
-                        <data type="double"/>
-                    </element>
-                    <ref name="range"/>
+                    <ref name="latLonUnitRange"/>
                 </element>
         </define>
         <define name="removeEventDuplicate">

@@ -15,10 +15,18 @@ public class AbstractOriginPoint extends DistanceRangeSubsetter {
 
     public AbstractOriginPoint (Element config) throws Exception{
         super(config);
+        double[] out = getLatLon(config);
+        latitude = out[0];
+        longitude = out[1];
+    }
+
+    public static double[] getLatLon(Element config) {
+        double[] out = new double[2];
         NodeList nodeList = config.getElementsByTagName("latitude");
-        latitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
+        out[0] = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
         nodeList = config.getElementsByTagName("longitude");
-        longitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
+        out[1] = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
+        return out;
     }
 
     protected double latitude = 0.0;
