@@ -88,13 +88,29 @@
                         <catalog>WHDF</catalog>
                         <contributor>NEIC</contributor>
                 </eventFinder>
-                <originPointDistance>
-                   <latitude>35</latitude>
-                   <longitude>-82</longitude>
-                   <unit>DEGREE</unit>
-                   <min>30</min>
-                   <max>100</max>
-                </originPointDistance>
+                <originAND>
+                   <originPointDistance>
+                      <latitude>35</latitude>
+                      <longitude>-82</longitude>
+                      <unit>DEGREE</unit>
+                      <min>30</min>
+                      <max>100</max>
+                   </originPointDistance>
+                   <originPointAzimuth>  
+                      <latitude>35</latitude>
+                      <longitude>-82</longitude>
+                      <unit>DEGREE</unit>
+                      <min>0</min>
+                      <max>360</max>
+                   </originPointAzimuth>
+                   <originPointBackAzimuth>  
+                      <latitude>35</latitude>
+                      <longitude>-82</longitude>
+                      <unit>DEGREE</unit>
+                      <min>0</min>
+                      <max>360</max>
+                   </originPointBackAzimuth>
+                <originAND>
 
                 <eventStatusTemplate>
 			<!--<fileDir>status</fileDir>-->
