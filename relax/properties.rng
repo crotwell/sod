@@ -28,13 +28,29 @@
                                                 <text/>
                                         </element>
                                         <element name="reopenEvents">
-                                                <empty/>
+                                                <ref name="trueOrFalse"/>
                                         </element>
                                         <element name="removeDatabase">
-                                                <empty/>
+                                                <ref name="trueOrFalse"/>
                                         </element>
                                 </choice>
                         </oneOrMore>
                 </element>
         </start>
+        <define name="trueOrFalse">
+                <choice>
+                        <value>TRUE</value>
+                        <value>True</value>
+                        <value>true</value>
+                        <value>YES</value>
+                        <value>yes</value>
+                        <value>Yes</value>
+                        <value>FALSE</value>
+                        <value>False</value>
+                        <value>false</value>
+                        <value>NO</value>
+                        <value>no</value>
+                        <value>No</value>
+                </choice>
+        </define>
 </grammar>

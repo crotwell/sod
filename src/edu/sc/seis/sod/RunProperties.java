@@ -47,11 +47,11 @@ public class RunProperties{
             numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
         }
 
-        if(SodUtil.getElement(el, "reopenEvents") != null){
+        if(SodUtil.isTrue(el, "reopenEvents")){
             reopenEvents = true;
         }
 
-        if(SodUtil.getElement(el, "removeDatabase") != null){
+        if(SodUtil.isTrue(el, "reopenEvents")){
             removeDatabase = true;
         }
     }

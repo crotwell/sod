@@ -22,6 +22,21 @@ import org.w3c.dom.Text;
 
 public class SodUtil {
 
+    public static boolean isTrue(Element el, String tagName) {
+        Element booleanElement = getElement(el, tagName);
+        if(booleanElement != null && isTrueText(getNestedText(booleanElement))){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isTrueText(String nestedText) {
+        if(nestedText.equalsIgnoreCase("yes")){ return true; }
+        else if(nestedText.equalsIgnoreCase("true")){ return true; }
+        return false;
+    }
+
+
     public static synchronized Object loadExternal(Element config)
         throws ConfigurationException {
         try {

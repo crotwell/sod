@@ -5,10 +5,12 @@
  */
 
 package edu.sc.seis.sod.editor;
+import edu.sc.seis.sod.SodUtil;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import javax.swing.Box;
+import java.awt.event.ActionListener;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.xml.transform.TransformerException;
@@ -16,6 +18,7 @@ import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import java.awt.event.ActionEvent;
 
 public class PropertyEditor implements EditorPlugin {
     public JComponent getGUI(Element element) throws TransformerException {
@@ -77,10 +80,20 @@ public class PropertyEditor implements EditorPlugin {
                 return EditorUtil.makeTimeIntervalTwiddler(el);
             }
         }
+        final Text t = (Text)XPathAPI.selectSingleNode(el, "text()");
         for (int i = 0; i < checkBoxEls.length; i++) {
-            if(checkBoxEls[i].equals(el.getTagName())){ return new JPanel(); }
+            if(checkBoxEls[i].equals(el.getTagName())){
+                final JCheckBox checkBox = new JCheckBox();
+                checkBox.setSelected(SodUtil.isTrueText(t.getNodeValue()));
+                checkBox.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e) {
+                                if(checkBox.isSelected()){ t.setData("TRUE"); }
+                                else{ t.setData("FALSE"); }
+                            }
+                        });
+                return checkBox;
+            }
         }
-        Text t = (Text)XPathAPI.selectSingleNode(el, "text()");
         if(el.getTagName().equals("waveformWorkerThreads")){
             return EditorUtil.createNumberSpinner(t, 1, 5, 1);
         }else{
