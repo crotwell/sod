@@ -57,7 +57,7 @@ Events
 <td>Status</td>
 </tr>
 <events><eventLabel><tr>
-<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td><feRegionName/></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
@@ -75,7 +75,7 @@ Events
 <td>Status</td>
 </tr>
 <events><eventLabel><tr>
-<td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td><feRegionName/></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
