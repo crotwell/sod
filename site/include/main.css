@@ -137,6 +137,10 @@ a.download {
   margin: 4px;
 }
 
+.section p{
+  width: 400px;
+}
+
 .currentNode a{
   color:#A44441;
   font-weight:600;
