@@ -97,6 +97,7 @@ public class NetworkArm {
 	NetworkDC netdc = networkFinderSubsetter.getNetworkDC();
         finder = netdc.a_finder();
 	edu.iris.Fissures.IfNetwork.NetworkAccess[] allNets = finder.retrieve_all();
+        logger.info("Got "+allNets.length+" networks from finder.");
 	networkIds = new NetworkId[allNets.length];
 	for(int counter = 0; counter < allNets.length; counter++) {
 	    if (allNets[counter] != null) {
@@ -176,7 +177,15 @@ public class NetworkArm {
     public void handleStationSubsetter(NetworkAccess networkAccess, Station station) throws Exception{
 	
 	if(stationSubsetter.accept(networkAccess, station, null)) {
-	    Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
+        Channel[] channels = null;
+        try {
+            channels = 
+                networkAccess.retrieve_for_station(station.get_id());
+        } catch (org.omg.CORBA.UNKNOWN e) {
+            logger.warn("Caught an UNKNOWN station id ="+StationIdUtil.toString(station.get_id()), e);
+            throw e;
+        } // end of try-catch
+        
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
 		handleSiteIdSubsetter(networkAccess, channels[subCounter]);
 	
