@@ -66,6 +66,18 @@
 <td><attribute name="id"><standing/></attribute><status/></td>
 </tr>
 </channel>
+<statusFilter><status>success</status></statusFilter>
+</channels>
+<channels>
+<channel>
+<tr>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</tr>
+</channel>
+<statusFilter><notStatus>success</notStatus></statusFilter>
 </channels>
 </table>
 <h2>Sites:</h2>

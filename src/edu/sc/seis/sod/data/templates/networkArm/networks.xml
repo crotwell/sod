@@ -34,6 +34,16 @@ Networks
 <td><beginTime>yyyy</beginTime></td>
 <td><attribute name="id"><standing/></attribute><status/></td>
 </network></tr>
+<statusFilter><status>success</status></statusFilter>
+</networks>
+<networks>
+<tr><network>
+<td><networkCode/></td>
+<td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
+<td><beginTime>yyyy</beginTime></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</network></tr>
+<statusFilter><notStatus>success</notStatus></statusFilter>
 </networks>
 </table>
 </div>

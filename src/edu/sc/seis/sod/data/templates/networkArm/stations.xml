@@ -56,6 +56,17 @@
 <td><attribute name="id"><standing/></attribute><status/></td>
 </tr>
 </station>
+<statusFilter><status>success</status></statusFilter>
+</stations>
+<stations>
+<station>
+<tr>
+<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/channels.html</attribute><networkCode/>.<stationCode/></a></td>
+<td><name/></td>
+<td><attribute name="id"><standing/></attribute><status/></td>
+</tr>
+</station>
+<statusFilter><notStatus>success</notStatus></statusFilter>
 </stations>
 </table>
 </div>

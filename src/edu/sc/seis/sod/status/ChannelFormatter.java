@@ -130,8 +130,8 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         }else if(tag.equals("standing") && cgt != null){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-					Status status = (Status)cgt.channelMap.get(chan);
-                    return cgt.getStatus(chan);
+                    Status status = (Status)cgt.channelMap.get(chan);
+                    return status.getStanding().toString();
                 }
             };
         }

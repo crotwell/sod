@@ -24,7 +24,6 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventA
 
     public MapEventStatus(Element element){
         this(element, false);
-        v = true;
     }
 
     /**

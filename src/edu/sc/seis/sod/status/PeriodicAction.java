@@ -45,7 +45,6 @@ public abstract class PeriodicAction{
     }
 
     private boolean scheduled = false;
-    protected boolean v = false;
     private static final TimeInterval ACTION_INTERVAL = new TimeInterval(.5, UnitImpl.MINUTE);
     private MicroSecondDate lastAct = ClockUtil.now().subtract(ACTION_INTERVAL);
     private Object schedulingLock = new Object();
