@@ -40,6 +40,15 @@
     </define>
     <define name="ANDWaveformProcessWrapper">
         <element name="ANDWaveformProcessWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
+                    <description>Each of the components of the waveformVector are processed
+                    independently by the waveformProcess and the results are ANDed together.
+                    This operation short circuts, so no waveforms after the first
+                    failure are processed.</description>
+                </xsd:documentation>
+            </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>
@@ -47,6 +56,15 @@
     </define>
     <define name="ORWaveformProcessWrapper">
         <element name="ORWaveformProcessWrapper">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
+                    <description>Each of the components of the waveformVector are processed
+                    independently by the waveformProcess and the results are ORed together.
+                    This operation short circuts, so no waveforms after the first
+                    success are processed.</description>
+                </xsd:documentation>
+            </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="seismogramProcess.rng"/>
             </zeroOrMore>
@@ -97,7 +115,7 @@
         <element name="waveformVectorFork">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <summary>Forks the processing for three component data. </summary>
+                    <summary>Forks the processing for vector waveform data. </summary>
                     <description>The seismograms are copied and sent through the fork allowing
                         independent processing of the same data. The return value is true if all of
                         the sub processors complete successfully, false otherwise. </description>
