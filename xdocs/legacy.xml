@@ -13,6 +13,39 @@
                         information.
                         </p>
                 </section>
+                <section name="Example">
+                     <p>This snippet of xml shows the use of the legacyExecute
+                     processor. Instead of doing something useful, we simply
+                     use the echo program.
+                     </p>
+                     <pre>
+                        <saveSeismogramToFile>
+                            <fileType>sac</fileType>
+                            <dataDirectory>POND_II</dataDirectory>
+                            <eventDirLabel>
+                            Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                            </eventDirLabel>
+                         </saveSeismogramToFile>
+                         <legacyExecute>
+                             <command>echo</command>
+                         </legacyExecute>
+                     </pre>
+                     <p>One important thing is that the legacyExecute works in cooperation
+                     with the saveSeismogramToFile processor, which handles the saving
+                     of the actual seismograms. LegacyExecute just uses the filenames
+                     from SaveSeismogramToFile to pass to the command. So, you must
+                     have a saveSeismogramToFile somewhere before the legacyExecute.
+                     SaveSeismogramToFile also has an optional prefix tag, which
+                     allows more than one to be in the same SOD run without interfering.
+                     If the prefix is used in the SaveSeismogramToFile, then the
+                     same prefix should also be used in the legacyExecute.
+                     </p>
+                     <p>There is a similar processor for use in the motion vector
+                     arm called channelGroupLegacyExecute. It takes the same parameters
+                     and the only difference is that the file names for all three
+                     components are put on the command line.
+                     </p>
+                </section>
                 <section name="Complications">
                         <p>Unfortunately, there can be significant complications
                         with executing external applications from within SOD. That
@@ -64,3 +97,4 @@
                 </section>
         </body>
 </document>
+
