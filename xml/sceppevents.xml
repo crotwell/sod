@@ -197,6 +197,26 @@
 				</magnitudeRange>
 			</embeddedOriginSubsetter>
 		</eventStationAND>
+		<phaseExists>
+			<modelName>prem</modelName>
+			<phaseName>P</phaseName>
+		</phaseExists>
+		<phaseInteraction>
+			<modelName>prem</modelName>
+			<phaseName>P</phaseName>
+			<interactionStyle>TOPSIDE REFLECTION</interactionStyle>
+			<interactionNumber>1</interactionNumber>
+			<relative>
+				<reference>EVENT</reference>
+				<depthRange>
+					<unitRange>
+						<unit>KILOMETER</unit>
+						<min>-1000</min>
+						<max>1000</max>
+					</unitRange>
+				</depthRange>
+			</relative>
+		</phaseInteraction>
 	</eventStationOR>
 
 	<fixedDataCenter>

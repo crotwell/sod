@@ -179,9 +179,9 @@
 	<!-- PHASE TURN INTERACTION TYPE -->
 	<xsd:simpleType name="phaseTurnInteractionType">
 		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="TOP SIDE REFLECTION"/>
-			<xsd:enumeration value="BOTTOM SIDE REFLECTION"/>
-			<xsd:enumeration value="TURN POINT"/>
+			<xsd:enumeration value="TOPSIDE REFLECTION"/>
+			<xsd:enumeration value="BOTTOMSIDE REFLECTION"/>
+			<xsd:enumeration value="TURNPOINT"/>
 			<xsd:enumeration value="UPGOING S TO P CONVERSION"/>
 			<xsd:enumeration value="UPGOING P TO S CONVERSION"/>	
 			<xsd:enumeration value="DOWNGOING S TO P CONVERSION"/>
@@ -195,8 +195,8 @@
 		<xsd:complexContent>
 			<xsd:extension base="eventStationType">
 				<xsd:sequence>
+					<xsd:element name="modelName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
 					<xsd:element name="phaseName" type="xsd:string"/>
-					<xsd:element name="velocityModel" type="xsd:string"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
