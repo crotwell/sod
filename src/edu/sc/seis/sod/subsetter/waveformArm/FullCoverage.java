@@ -45,8 +45,12 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement{
 			  RequestFilter[] original, 
 			  RequestFilter[] available, 
 			  CookieJar cookies) {
-
-	return true;
+	// simple impl, probably need more robust
+	if (original.length == available.length) {
+	    return true;
+	} // end of if (original.length == available.length)
+	
+	return false;
     }
     
 }// FullCoverage
