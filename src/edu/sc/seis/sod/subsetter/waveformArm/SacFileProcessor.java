@@ -84,6 +84,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		regions.getRegionName(event.get_attributes().region)+
 		" "+event.get_preferred_origin().origin_time.date_time;
 	    eventDirName = eventDirName.replace(' ', '_');
+	    eventDirName = eventDirName.replace(',', '_');
 	    File eventDirectory = new File(dataDirectory, eventDirName);
 	    if ( ! eventDirectory.exists()) {
 		if ( ! eventDirectory.mkdirs()) {
@@ -92,7 +93,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	    } // end of if (dataDirectory.exits())
 
 	    // load dataset if it already exists
-	    File dsFile = new File(eventDirName, eventDirName+".dsml");
+	    File dsFile = new File(eventDirectory, eventDirName+".dsml");
 	    XMLDataSet dataset;
 	    if (dsFile.exists()) {
 		dataset = XMLDataSet.load(dsFile.toURL());
@@ -136,7 +137,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 					 audit);
 	    }
 	    try {
-		File outFile = new File(eventDirName, eventDirName+".dsml");
+		File outFile = new File(eventDirectory, eventDirName+".dsml");
 		OutputStream fos = new BufferedOutputStream(
 				      new FileOutputStream(outFile));
 		dataset.write(fos);
