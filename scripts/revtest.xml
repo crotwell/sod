@@ -44,8 +44,8 @@
                 <max>1000</max>
             </originDepthRange>
             <originTimeRange>
-                <startTime>20040801T00:00:00.001Z</startTime>
-                <endTime>20050131T23:59:59.999Z</endTime>
+                <startTime>20040711T00:00:00.001Z</startTime>
+                <endTime>20040718T23:59:59.999Z</endTime>
             </originTimeRange>
             <magnitudeRange>
                 <min>3.0</min>
@@ -54,7 +54,9 @@
             <catalog>PREF</catalog>
         </eventFinder>
         <removeEventDuplicate/>
-        <eventStatusTemplate xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
+        <eventStatusTemplate>
+           <template>jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml</template>
+        </eventStatusTemplate>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -94,9 +96,12 @@
             </channelEffectiveTimeOverlap>
         </channelAND>
         <networkInfoTemplateGenerator>
-            <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
-            <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
-            <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
+            <netConfig><template>jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml</template>
+            </netConfig>
+            <stationConfig><template>jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml</template>
+            </stationConfig>
+            <channelConfig><template>jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml</template>
+            </channelConfig>
         </networkInfoTemplateGenerator>
     </networkArm>
     <waveformVectorArm>
@@ -202,7 +207,7 @@
         <ORAvailableDataWrapper>
             <someCoverage/>
         </ORAvailableDataWrapper>
-        <ORLocalSeismogramWrapper>
+        <ORWaveformProcessWrapper>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
                 <phaseName>ttp</phaseName>
@@ -224,7 +229,7 @@
                 </longOffsetEnd>
                 <ratio>2</ratio>
             </phaseSignalToNoise>
-        </ORLocalSeismogramWrapper>
+        </ORWaveformProcessWrapper>
         <alwaysSuccess>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
