@@ -165,10 +165,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("localSeismogramAND", bool);
         editors.put("localSeismogramOR", bool);
         editors.put("midPoint", new MidPointEditor(this));
-        editors.put("latitudeRange", new  DegreeRangeEditor(-90, 90));
-        editors.put("longitudeRange", new DegreeRangeEditor(-180, 180));
-        editors.put("azimuthRange", new DegreeRangeEditor(0, 180));
-        editors.put("backAzimuthRange", new DegreeRangeEditor(0, 180));
+        editors.put("latitudeRange", new  UnitRangeEditor(ANGLE_UNITS, -90, 90, 5, false));
+        editors.put("longitudeRange", new UnitRangeEditor(ANGLE_UNITS, -180, 180, 5, false));
+        editors.put("azimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
+        editors.put("backAzimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
         String[] switchTypes = {"origin", "channel", "station", "site", "network"};
         for (int i = 0; i < switchTypes.length; i++) {
@@ -191,6 +191,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
     protected Start start;
 
     private static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
+
+    private static final UnitImpl[] ANGLE_UNITS = { UnitImpl.DEGREE };
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();

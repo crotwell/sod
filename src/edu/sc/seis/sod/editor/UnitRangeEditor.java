@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
+import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -20,14 +21,19 @@ import org.w3c.dom.Text;
 
 public class UnitRangeEditor implements EditorPlugin {
     public UnitRangeEditor(UnitImpl[] units){
-        this(units, 0, 1000, 100);
+        this(units, false);
     }
 
-    public UnitRangeEditor(UnitImpl[] units, double min, double max, double step){
+    public UnitRangeEditor(UnitImpl[] units, boolean isBordered){
+        this(units, 0, 1000, 100, isBordered);
+    }
+
+    public UnitRangeEditor(UnitImpl[] units, double min, double max, double step, boolean isBordered){
         this.units = units;
         this.min = min;
         this.max = max;
         this.step = step;
+        this.isBordered = isBordered;
     }
 
     public JComponent getGUI(Element element) throws Exception {
@@ -37,6 +43,10 @@ public class UnitRangeEditor implements EditorPlugin {
         JSpinner minSpinner = EditorUtil.createNumberSpinner(minText, min, max, step);
         JSpinner maxSpinner = EditorUtil.createNumberSpinner(maxText, min, max, step);
         b.add(Box.createHorizontalGlue());
+        if(!isBordered){
+            b.add(new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
+            b.add(Box.createHorizontalStrut(10));
+        }
         b.add(new JLabel("From: "));
         b.add(minSpinner);
         b.add(new JLabel("  to  "));
@@ -50,11 +60,15 @@ public class UnitRangeEditor implements EditorPlugin {
             b.add(unitLabel);
         }
         b.add(Box.createHorizontalGlue());
+        if (isBordered){
+            b.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
+        }
         return b;
     }
 
     private UnitImpl[] units;
     private double min, max, step;
+    private boolean isBordered;
 }
 
 
