@@ -92,7 +92,6 @@
             </siteEffectiveTimeOverlap>
         </siteAND>
         <channelAND>
-            <bandCode>L</bandCode>
             <channelNOT>
                 <!-- to prevent LOG channels -->
                 <gainCode>O</gainCode>
