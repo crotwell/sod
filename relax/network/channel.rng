@@ -24,17 +24,12 @@
             <ref name="PASS"/>
         </choice>
     </define>
-    <define name="channelCodeUtil">
+    <define name="channelCodeChar">
         <data type="string">
             <param name="pattern">[A-Z0-9]{1}</param>
         </data>
     </define>
 
-    <define name="channelCodeType">
-        <data type="string">
-            <param name="pattern">[A-Z0-9]{3}</param>
-        </data>
-    </define>
      <define name="channelCode">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -48,7 +43,9 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="channelCode">
-            <ref name="channelCodeType"/>
+            <data type="string">
+                <param name="pattern">[A-Z0-9]{3}</param>
+            </data>
         </element>
     </define>
     <define name="bandCode">
@@ -65,7 +62,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="bandCode">
-            <ref name="channelCodeUtil"/>
+            <ref name="channelCodeChar"/>
         </element>
     </define>
     <define name="gainCode">
@@ -82,7 +79,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="gainCode">
-            <ref name="channelCodeUtil"/>
+            <ref name="channelCodeChar"/>
         </element>
     </define>
     <define name="orientationCode">
@@ -99,7 +96,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="orientationCode">
-            <ref name="channelCodeUtil"/>
+            <ref name="channelCodeChar"/>
         </element>
     </define>
     <define name="AND">
