@@ -11,6 +11,7 @@ def buildInternal(proj, name=None):
     name =  'internal' + buildName(proj)
     extras = [('scripts/revtest.xml', 'bin/revtest.xml'),
               ('scripts/tutorial.xml', 'bin/tutorial.xml'),
+              ('scripts/restartTest.xml', 'bin/restartTest.xml'),
               ('scripts/weed.xml', 'bin/weed.xml'),
               ('scripts/yjpagent.dll', 'bin/yjpagent.dll'),
               ('scripts/cwg.prop', 'bin/cwg.prop'),
@@ -31,15 +32,14 @@ def buildExternal(proj, name=None):
 def buildDist(proj, scripts, name=None, extras=[], archives=[]):
     buildSod.build(proj)
     if not os.path.exists('scripts/logs'): os.mkdir('scripts/logs')
-    scriptsWithTarloc = [(script, 'bin/'+script) for script in scripts]
+    extras.extend([(script, 'bin/'+script) for script in scripts])
     if name is None: name = buildName(proj)
-    distBuilder.buildDist(proj, archives, True, extras, scriptsWithTarloc, name)
+    distBuilder.buildDist(proj, extras, name, True, archives)
+    for script in scripts: os.remove(script)
 
-def buildName(proj):
-    return proj.name + '-' + time.strftime('%y%m%d')
+def buildName(proj): return proj.name + '-' + time.strftime('%y%m%d')
 
 if __name__ == "__main__":
-    buildSodScripts.sodScriptParameters.homeloc='../'
     proj = ProjectParser.ProjectParser('./project.xml')
     if len(sys.argv) > 1:  buildExternal(proj)
     else: buildInternal(proj)
