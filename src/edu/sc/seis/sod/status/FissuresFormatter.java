@@ -8,6 +8,9 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.SiteId;
+import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.event.MagnitudeUtil;
@@ -15,6 +18,9 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.SiteIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 
@@ -31,6 +37,15 @@ public class FissuresFormatter {
 
     public static String formatChannel(ChannelId id) {
         return ChannelIdUtil.toStringNoDates(id);
+    }
+    public static String formatSite(SiteId id) {
+        return SiteIdUtil.toStringNoDates(id);
+    }
+    public static String formatStation(StationId id) {
+        return StationIdUtil.toStringNoDates(id);
+    }
+    public static String formatNetwork(NetworkId id) {
+        return NetworkIdUtil.toStringNoDates(id);
     }
 
     public static QuantityImpl getDepth(Location loc) {
