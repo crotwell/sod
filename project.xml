@@ -11,11 +11,9 @@
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>edu.sc.seis.sod</package>
-    <description>SOD automates the most tedious data selection,
-        downloading and routine processing tasks, shortening the time
-        between idea and science. Please also check out the user site
-        at http://www.seis.sc.edu/sod.
-    </description>
+    <description>SOD automates the most tedious data selection, downloading and routine processing
+        tasks, shortening the time between idea and science. Please also check out the user site at
+        http://www.seis.sc.edu/sod. </description>
     <shortDescription>Standing Order for Data.</shortDescription>
     <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
     <siteAddress>www.seis.sc.edu</siteAddress>
@@ -63,8 +61,11 @@
             </roles>
         </developer>
     </developers>
-    
     <dependencies>
+        <dependency>
+            <id>itext</id>
+            <version>0.99</version>
+        </dependency>
         <dependency>
             <groupId>isti</groupId>
             <artifactId>isti.util</artifactId>
@@ -89,7 +90,6 @@
             <version>b9</version>
             <url>http://www.jdom.org</url>
         </dependency>
-        
         <dependency>
             <id>jing</id>
             <version>20030619</version>
@@ -135,7 +135,6 @@
             <artifactId>logkit</artifactId>
             <version>1.2</version>
         </dependency>
-        
         <dependency>
             <id>fissuresUtil</id>
             <version>1.0.8beta</version>
@@ -234,14 +233,12 @@
             <version>1.4</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
-        
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.0</version>
             <url>http://jakarta.apache.org/commons/collections</url>
         </dependency>
-        
         <dependency>
             <groupId>velocity-tools</groupId>
             <artifactId>velocity-tools-generic</artifactId>
@@ -271,8 +268,8 @@
         <dependency>
             <groupId>mapData</groupId>
             <artifactId>etopo10</artifactId>
-            <jar>etopo10.jar</jar>            
-        </dependency>      
+            <jar>etopo10.jar</jar>
+        </dependency>
     </dependencies>
     <build>
         <nagEmailAddress>jaster@seis.sc.edu</nagEmailAddress>
