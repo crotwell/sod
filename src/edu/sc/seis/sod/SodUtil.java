@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -297,6 +298,34 @@ public class SodUtil {
         }
         return rtnValue;
     }
+	
+		public static String getRelativePath(String fromPath, String toPath, String separator){
+		StringTokenizer fromTok = new StringTokenizer(fromPath, separator);
+		StringTokenizer toTok = new StringTokenizer(toPath, separator);
+		StringBuffer dotBuf = new StringBuffer();
+		StringBuffer pathBuf = new StringBuffer();
+		
+		while (fromTok.countTokens() > 1 || toTok.countTokens() > 1){
+			if (fromTok.countTokens() > 1 && toTok.countTokens() > 1){
+				String fromTmp = fromTok.nextToken();
+				String toTmp = toTok.nextToken();
+				if (!fromTmp.equals(toTmp)){
+					dotBuf.append(".." + separator);
+					pathBuf.append(toTmp + separator);
+				}
+			}
+			else if (fromTok.countTokens() > 1){
+				fromTok.nextToken();
+				dotBuf.append(".." + separator);
+			}
+			else if (toTok.countTokens() > 1){
+				pathBuf.append(toTok.nextToken() + separator);
+			}
+		}
+		
+		pathBuf.append(toTok.nextToken());
+		return dotBuf.toString() + pathBuf.toString();
+	}
 
     public static void loadProperties(Element config, Properties props) {
         NodeList children = config.getChildNodes();
