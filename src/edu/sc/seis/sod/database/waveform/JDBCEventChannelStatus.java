@@ -281,7 +281,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         }
     }
 
-    private int getPairId(int eventId, int chanId) throws NotFound, SQLException{
+    public int getPairId(int eventId, int chanId) throws NotFound, SQLException{
         ofEventAndPair.setInt(1, eventId);
         ofEventAndPair.setInt(2, chanId);
         ResultSet rs = ofEventAndPair.executeQuery();
