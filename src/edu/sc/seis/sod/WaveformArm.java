@@ -23,7 +23,7 @@ import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import edu.sc.seis.sod.subsetter.waveformArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
-import edu.sc.seis.sod.subsetter.waveformArm.NullEventStationSubsetter;
+import edu.sc.seis.sod.subsetter.waveformArm.PassEventStation;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -675,7 +675,7 @@ public class WaveformArm implements Runnable {
 
     private WorkerThreadPool pool;
 
-    private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
+    private EventStationSubsetter eventStationSubsetter = new PassEventStation();
 
     private LocalSeismogramArm localSeismogramArm = null;
 
