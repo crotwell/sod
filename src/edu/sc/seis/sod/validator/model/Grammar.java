@@ -18,9 +18,9 @@ public class Grammar {
     }
 
     public List getDefs() {
-        List defs = new ArrayList();
-        defs.addAll(this.defs.values());
-        return defs;
+        List defList = new ArrayList();
+        defList.addAll(defs.values());
+        return defList;
     }
 
     public void include(Grammar grammar) {
