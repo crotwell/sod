@@ -18,14 +18,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveFormStatus{
-    public WaveformEventGroup(){ this(null); }
+    public WaveformEventGroup(){
+        useDefaultConfig();
+    }
     
-    public WaveformEventGroup(Element el){ super(el); }
-    
-    public void setUp(){ ecpListeners = new ArrayList(); }
+    public WaveformEventGroup(Element el){
+        parse(el);
+    }
     
     public Object getTemplate(String tag, Element el){
-        if(tag.equals("channelCount")) return new ChannelCount(el);
+        if(tag.equals("channelCount")) return new EventChannelStatus(el);
+        if(tag.equals("waveformEvents")) return new WaveformEventTemplateGenerator(el);
         return super.getTemplate(tag, el);
     }
     
@@ -36,12 +39,12 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
     }
     
     public void useDefaultConfig(){
-        templates.add(new ChannelCount(null));
+        templates.add(new EventChannelStatus(null));
         templates.add("\n");
     }
     
-    private class ChannelCount implements EventTemplate, WaveFormStatus{
-        public ChannelCount(Element el){
+    private class EventChannelStatus implements EventTemplate, WaveFormStatus{
+        public EventChannelStatus(Element el){
             ecpListeners.add(this);
             if(el != null && el.getChildNodes().getLength() != 0){
                 NodeList nl = el.getChildNodes();
@@ -95,5 +98,5 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
         private Map evChans = new HashMap();
     }
     
-    private List ecpListeners;
+    private List ecpListeners = new ArrayList();
 }
