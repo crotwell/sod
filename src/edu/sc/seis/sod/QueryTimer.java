@@ -7,15 +7,16 @@
 package edu.sc.seis.sod;
 
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.sod.database.SodJDBC;
+import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class QueryTimer{
-    public static final int QUERY_REPS = 10;
+    public static final int QUERY_REPS = 20;
     private static Connection conn;
     private static Statement stmt;
 
@@ -23,28 +24,60 @@ public class QueryTimer{
         new JDBCEventChannelStatus();
         conn = ConnMgr.createConnection();
         stmt = conn.createStatement();
-        String time = "SELECT DISTINCT eventid, time_stamp, eventcondition FROM origin, time, eventstatus " +
-            "WHERE origin_time_id = time_id"+
-            " ORDER BY time_stamp";
-        String magWithIn = "SELECT DISTINCT eventid, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
-            "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and  magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
-            " ORDER BY  magnitudevalue";
-        String depthWithIn = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
-            "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
-            "quantity_value IN (SELECT quantity_value FROM quantity WHERE quantity_id IN (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
-            " ORDER BY  quantity_value";
-        String magWithoutIn = "SELECT DISTINCT eventid, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
-            "WHERE magnitudevalue = (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
-            " ORDER BY  magnitudevalue";
-        String depthWithoutIn = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
-            "WHERE quantity_value = (SELECT quantity_value FROM quantity WHERE quantity_id = (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
-            " ORDER BY  quantity_value";
-        timeQuery(time, "Time");
-        timeQuery(magWithIn, "MagWithIn");
-        timeQuery(magWithoutIn, "MagWithoutIn");
-        timeQuery(depthWithIn, "DepthWithIn");
-        timeQuery(depthWithoutIn, "DepthWithoutIn");
+        //String depth = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
+        //    "WHERE quantity_value = (SELECT quantity_value FROM quantity WHERE quantity_id = (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
+        //    "and eventid = origin_event_id " +
+        //    " ORDER BY  quantity_value";
+        String subquery = "SELECT DISTINCT " +  JDBCStation.getNeededForStation() + " FROM station, channel, site, eventchannelstatus  " +
+            "WHERE eventid = 0 AND " +
+            "station.sta_id = site.sta_id  AND " +
+            "site.site_id = channel.site_id AND " +
+            "chan_id = channelid AND " +
+            "status = 2305";
+        String query = "SELECT DISTINCT " + JDBCStation.getNeededForStation() + " FROM station, channel, site, eventchannelstatus WHERE " +
+            "station.sta_id = site.sta_id  AND " +
+            "site.site_id = channel.site_id AND " +
+            "chan_id = channelid AND " +
+            "eventid = 0 AND " +
+            "status = 2305";
+
+        System.out.println("THE WORKS========================");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_ev ON eventchannelstatus( eventid)");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_status ON eventchannelstatus (status)");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_chan ON eventchannelstatus( channelid)");
+        stmt.executeUpdate("CREATE INDEX site_sta ON site( sta_id)");
+        stmt.executeUpdate("CREATE INDEX chan_site ON channel( site_id)");
+        timeQuery(subquery, "     sub");
+        timeQuery(query, "     reg");
+        stmt.executeUpdate("DROP INDEX evchanstatus_chan");
+        stmt.executeUpdate("DROP INDEX site_sta");
+        stmt.executeUpdate("DROP INDEX chan_site");
+        stmt.executeUpdate("DROP INDEX evchanstatus_ev");
+        stmt.executeUpdate("DROP INDEX evchanstatus_status");
+
+        System.out.println("CHANNEL========================");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_chan ON eventchannelstatus( channelid)");
+        timeQuery(subquery, "     sub");
+        timeQuery(query, "     reg");
+        stmt.executeUpdate("DROP INDEX evchanstatus_chan");
+
+        System.out.println("EVENT========================");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_ev ON eventchannelstatus( eventid)");
+        timeQuery(subquery, "     sub");
+        timeQuery(query, "     reg");
+        stmt.executeUpdate("DROP INDEX evchanstatus_ev");
+
+        System.out.println("STATUS========================");
+        stmt.executeUpdate("CREATE INDEX evchanstatus_status ON eventchannelstatus (status)");
+        timeQuery(subquery, "     sub");
+        timeQuery(query, "     reg");
+        stmt.executeUpdate("DROP INDEX evchanstatus_status");
+
+        System.out.println("PLAIN========================");
+        timeQuery(subquery, "     sub");
+        timeQuery(query, "     reg");
     }
+
     public static void timeQuery(String query, String name) throws SQLException{
         timeQuery(query, name, QUERY_REPS);
     }
