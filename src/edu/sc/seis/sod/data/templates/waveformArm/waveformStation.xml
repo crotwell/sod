@@ -62,7 +62,7 @@ Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($s
 <tr>
 #set ( $origin = $event.get_preferred_origin() )
 #set ( $eventDir = $fissures.formatDateForFile($origin) )
-<td><a href="../../$eventDir/$fissures.formatStation($station.get_id())/seismograms.html">$FERegion.getRegionName(${event.get_attributes().region})</a></td>
+<td><a href="../../Events/$eventDir/$fissures.formatStation($station.get_id())/seismograms.html">$FERegion.getRegionName(${event.get_attributes().region})</a></td>
 <td>$fissures.formatDate( $event.get_preferred_origin().getTime() )</td>
 <td>
 #foreach ($m in $origin.Magnitudes)
