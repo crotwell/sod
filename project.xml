@@ -11,8 +11,7 @@
   <currentVersion>1.0Beta</currentVersion>
   <inceptionYear>2002</inceptionYear>
   <package>edu.sc.seis.sod</package>
-  <shortDescription>Automated seismic data selection, download,
-    processing and saving, a Standing Order for Data.</shortDescription>
+  <shortDescription>Standing Order for Data.</shortDescription>
   <gumpRepositoryId>sod</gumpRepositoryId>
   <description> SOD automates the most tedious data selection,
     downloading and routine processing tasks, shortening the time
