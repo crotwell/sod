@@ -63,7 +63,7 @@
             </roles>
         </developer>
     </developers>
-
+    
     <dependencies>
         <dependency>
             <groupId>isti</groupId>
@@ -89,7 +89,7 @@
             <version>b9</version>
             <url>http://www.jdom.org</url>
         </dependency>
-
+        
         <dependency>
             <id>jing</id>
             <version>20030619</version>
@@ -135,7 +135,7 @@
             <artifactId>logkit</artifactId>
             <version>1.2</version>
         </dependency>
-
+        
         <dependency>
             <id>fissuresUtil</id>
             <version>1.0.8beta</version>
@@ -239,41 +239,41 @@
             <version>1.4</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
-
+        
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.0</version>
             <url>http://jakarta.apache.org/commons/collections</url>
         </dependency>
-
+        
         <dependency>
             <groupId>velocity-tools</groupId>
             <artifactId>velocity-tools-generic</artifactId>
             <version>1.1-rc1</version>
             <url>http://jakarta.apache.org/velocity</url>
         </dependency>
-       <dependency>
-  <groupId>stax</groupId>
-  <artifactId>jax-qname</artifactId>
-  <version>1.0</version>
-</dependency>
-<dependency>
-  <groupId>stax</groupId>
-  <artifactId>jsr173_api</artifactId>
-  <version>1.0</version>
-</dependency>
-<dependency>
-  <groupId>stax</groupId>
-  <artifactId>jsr173_ri</artifactId>
-  <version>1.0</version>
-</dependency>
-<dependency>
-  <groupId>stax</groupId>
-  <artifactId>namespace</artifactId>
-  <version>1.0</version>
-</dependency>
-
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>jax-qname</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>jsr173_api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>jsr173_ri</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>namespace</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
     </dependencies>
     <build>
         <nagEmailAddress>jaster@seis.sc.edu</nagEmailAddress>
@@ -313,26 +313,26 @@
                     <include>*.props</include>
                 </includes>
             </resource>
-        <resource>
-        <directory>scripts</directory>
-        <targetPath>edu/sc/seis/sod/data/configFiles</targetPath>
-        <includes>
-        <include>weed.xml</include>
-        <include>tutorial.xml</include>
-        <include>legacyExecute.xml</include>
-        <include>legacyExecuteMoVec.xml</include>
-        <include>realtime.xml</include>
-        <include>breqfast.xml</include>
-        <include>motionvector.xml</include>
-        </includes>
-        </resource>
-        <resource>
-        <directory>src/edu/sc/seis/sod/data</directory>
-        <targetPath>edu/sc/seis/sod/data</targetPath>
-        <includes>
-            <include>**/*</include>
-        </includes>
-        </resource>
+            <resource>
+                <directory>scripts</directory>
+                <targetPath>edu/sc/seis/sod/data/configFiles</targetPath>
+                <includes>
+                    <include>weed.xml</include>
+                    <include>tutorial.xml</include>
+                    <include>legacyExecute.xml</include>
+                    <include>legacyExecuteMoVec.xml</include>
+                    <include>realtime.xml</include>
+                    <include>breqfast.xml</include>
+                    <include>motionvector.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/edu/sc/seis/sod/data</directory>
+                <targetPath>edu/sc/seis/sod/data</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
         </resources>
     </build>
     <reports>
