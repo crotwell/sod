@@ -281,11 +281,11 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private String fileDir;
 
-    private EventFormatter eventFormatter;
+    private EventFormatter eventFormatter = new EventFormatter(true);
 
-    private StationFormatter stationFormatter;
+    private StationFormatter stationFormatter = new StationFormatter();
 
-    private ChannelFormatter chanFormatter;
+    private ChannelFormatter chanFormatter = new ChannelFormatter();
 
     private String prefix = "";
 
