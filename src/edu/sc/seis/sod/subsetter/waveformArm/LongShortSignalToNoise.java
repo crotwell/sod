@@ -61,7 +61,7 @@ public class LongShortSignalToNoise implements LocalSeismogramSubsetter {
 
     LongShortStoN sToN;
 
-    TimeInterval longTime = new TimeInterval(20, UnitImpl.SECOND);
+    TimeInterval longTime = new TimeInterval(100, UnitImpl.SECOND);
 
     TimeInterval shortTime = new TimeInterval(5, UnitImpl.SECOND);
 
