@@ -81,12 +81,17 @@ public class ExampleBuilder {
                     write(attrs[i], false);
                 }
             }
-            buf.append(closeBracket);
-            Form kid = ne.getChild();
-            if (kid != null){
-                write(kid, false);
+            if (ne.getChild() instanceof Empty){
+                System.out.println("ne.getChild() instanceof Empty");
+                buf.append(" /" + closeBracket + '\n');
+            } else {
+                buf.append(closeBracket);
+                Form kid = ne.getChild();
+                if (kid != null){
+                    write(kid, false);
+                }
+                buf.append(openBracket + '/' + ne.getName() + closeBracket + '\n');
             }
-            buf.append(openBracket + '/' + ne.getName() + closeBracket + '\n');
         } else if (f instanceof Text) {
             buf.append(DEFAULT_TEXT_VALUE);
         } else if (f instanceof Empty) {
