@@ -1,29 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/quantity.rng"/>
     <start combine="choice">
         <element name="phaseRequest">
-         <ref name="phaseRequest"/>
-         </element>
+            <ref name="phaseRequest"/>
+        </element>
     </start>
     <define name="phaseRequest">
-            <optional>
-                <element name="model">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="beginPhase">
-                <data type="string"/>
+        <optional>
+            <element name="model">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>prem</example>
+                    </xsd:annotation>
+                </data>
             </element>
-            <element name="beginOffset">
-                <ref name="time"/>
-            </element>
-            <element name="endPhase">
-                <data type="string"/>
-            </element>
-            <element name="endOffset">
-                <ref name="time"/>
-            </element>
+        </optional>
+        <element name="beginPhase">
+            <data type="string">
+                <xsd:annotation>
+                    <example>ttp</example>
+                </xsd:annotation>
+            </data>
+        </element>
+        <element name="beginOffset">
+            <xsd:annotation>
+                <example>
+                    <beginOffset>
+                        <unit>SECOND</unit>
+                        <value>-60</value>
+                    </beginOffset>
+                </example>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+        <element name="endPhase">
+            <data type="string">
+                <xsd:annotation>
+                    <example>tts</example>
+                </xsd:annotation>
+            </data>
+        </element>
+        <element name="endOffset">
+            <xsd:annotation>
+                <example>
+                    <endOffset>
+                        <unit>SECOND</unit>
+                        <value>360</value>
+                    </endOffset>
+                </example>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
     </define>
 </grammar>
