@@ -18,7 +18,7 @@ window.onload=function(){
 </head>
 <body>
 <div id="Header">
-<a href="../location.html"> Events</a>
+<a href="../event.html"> Events</a>
 <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
 </div>
 <div id="Content">

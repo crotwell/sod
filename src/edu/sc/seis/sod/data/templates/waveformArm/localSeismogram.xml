@@ -17,7 +17,7 @@ $velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin()
 </head>
 <body>
 <div id="Header">
-<a href="../../location.html"> Events</a> >
+<a href="../../event.html"> Events</a> >
 <a href="../event.html">
 $FERegion.getRegionName(${sod_event.get_attributes().region})
 $velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</a> >
