@@ -207,7 +207,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 
-    private EventArmProcess eventArmProcess;
+    private EventArmProcess eventArmProcess = new NullEventProcess();
 
     private edu.iris.Fissures.IfEvent.EventFinder finder = null;
 

@@ -13,6 +13,7 @@ import org.w3c.dom.*;
   /**
      * This subsetter specifies the depthRange for the origin
      * 
+     * <pre>
      *  &lt;stationDepthRange&gt;
      *      &lt;unitRange&gt;
      *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
@@ -46,6 +47,7 @@ import org.w3c.dom.*;
      *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
      *      &lt;/unitRange&gt;
      *  &lt;/stationDepthRange&gt;
+     * </pre>
      */
 
 public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange implements StationSubsetter{

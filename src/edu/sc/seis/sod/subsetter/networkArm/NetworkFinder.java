@@ -13,6 +13,7 @@ import org.apache.log4j.*;
 
 /**
  * This subsetter specifies the networkFinder.
+ * <pre>
  * 	&lt;networkFinder&gt;
  *		&lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
  *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
@@ -30,6 +31,7 @@ import org.apache.log4j.*;
  *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
  *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
  *	&lt;/networkFinder&gt;
+ * </pre>
  */
 
 public class NetworkFinder extends AbstractSource{

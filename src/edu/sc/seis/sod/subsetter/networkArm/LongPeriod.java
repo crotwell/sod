@@ -9,7 +9,9 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 /**
  * sample xml file
+ * <pre>
  * &lt;longPeriod/&gt;
+ * </pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

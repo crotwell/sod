@@ -26,8 +26,9 @@ public abstract class ExternalProcess implements Process {
 		}
 	    }
 	}
-	SodElement se = SodUtil.loadExternal(config, classname);
+	SodElement se = null;//SodUtil.loadExternal(config, classname);
 	process = (Process)se;
+	
     }
     
     Process process;

@@ -21,10 +21,14 @@ public class SodUtil {
 	
     }
         
-    public static synchronized SodElement loadExternal(Element config, 
-						       String classname) 
+    public static synchronized Object loadExternal(Element config)
+ 
 	throws ConfigurationException {
+	
 	try {
+	    String classname;
+	    Element classNameElement = SodUtil.getElement(config, "classname");
+	    classname = getNestedText(classNameElement);
 	    Class[] constructorArgTypes = new Class[1];
 	    constructorArgTypes[0] = Element.class;
 

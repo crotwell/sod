@@ -9,7 +9,9 @@ import org.w3c.dom.*;
 
 /**
  * specifies the networkCode.
+ * <pre>
  * &lt;networkCode&gt;&lt;value&gt;SP&lt;/value&gt;&lt;/networkCode&gt;
+ * </pre>
  */
 public class NetworkCode implements NetworkIdSubsetter {
 

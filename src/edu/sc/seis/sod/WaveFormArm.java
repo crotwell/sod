@@ -57,7 +57,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    if(eventAccess != null) {
 		if(createNewThread()) {
-		    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
+			    Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 								     eventStationSubsetter,
 								     fixedDataCenterSubsetter,
 								     localSeismogramArm,

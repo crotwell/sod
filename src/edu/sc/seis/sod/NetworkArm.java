@@ -292,7 +292,7 @@ public class NetworkArm {
     private SiteSubsetter siteSubsetter = new NullSiteSubsetter();
     private ChannelIdSubsetter channelIdSubsetter = new NullChannelIdSubsetter();
     private ChannelSubsetter channelSubsetter = new NullChannelSubsetter();
-    private NetworkArmProcess networkArmProcess = null;
+    private NetworkArmProcess networkArmProcess = new NullNetworkProcess();
 
     private edu.iris.Fissures.IfNetwork.NetworkFinder finder = null;
     private NetworkId[] networkIds; 

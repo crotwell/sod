@@ -10,7 +10,9 @@ import edu.iris.Fissures.*;
 /**
  * NetworkAttrName.java
  * sample xml file
+ * <pre>
  * &lt;networkAttrName&gt;&lt;value&gt;somename*lt;/value&gt;&lt;/networkAttrName&gt;
+ * </pre>
  *
  * Created: Thu Mar 14 14:02:33 2002
  *

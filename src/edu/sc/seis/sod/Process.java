@@ -11,5 +11,4 @@ package edu.sc.seis.sod;
  */
 
 public interface Process extends SodElement {
-    
 }// Process

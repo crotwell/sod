@@ -9,7 +9,9 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 /**
  * sample xml file
+ * <pre>
  * &lt;bandcode&gt;&lt;value&gt;B&lt;/value&gt;&lt;/bandCode&gt;
+ * </pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

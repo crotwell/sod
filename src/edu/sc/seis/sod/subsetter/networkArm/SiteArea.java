@@ -20,9 +20,9 @@ import edu.iris.Fissures.*;
  * and can be any one of GlobalArea or BoxArea or PointDistanceArea or FlinneEngdahlArea.
  * 
  * sample xml representation of SiteArea are
+ * <pre> 
  *
- *
-  *              &lt;siteArea&gt;
+ *              &lt;siteArea&gt;
  *                           &lt;boxArea&gt;
  *                                    &lt;latitudeRange&gt;
  *                                                   &lt;min&gt;30&lt;/min&gt;
@@ -34,6 +34,7 @@ import edu.iris.Fissures.*;
  *                                    &lt;/longitudeRange&gt;
  *                           &lt;/boxArea&gt;
  *              &lt;/siteArea&gt;
+ * </pre>
  */
 
 

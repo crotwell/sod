@@ -10,10 +10,12 @@ import edu.iris.Fissures.*;
 /**
  * channelAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
  * the max value of the sequence is unLimited.
+ * <pre>
  * &lt;siteIDAND&gt;
  *         &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
  *         &lt;siteCode&gt;&lt;value&gt;01&lt;/value&gt;&lt;/siteCode&gt;
  * &lt;/siteIDAND&gt;
+ * </pre>
  */
 
 public class SiteIDAND 

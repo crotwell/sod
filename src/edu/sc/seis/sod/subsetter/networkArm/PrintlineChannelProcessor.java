@@ -9,7 +9,9 @@ import java.io.*;
 
 /**
  * PrintlineChannelProcessor.java
+ * <pre>
  * &lt;printLineChannelProcessor/&gt;
+ * </pre>
  *
  * Created: Tue Mar 19 14:08:39 2002
  *

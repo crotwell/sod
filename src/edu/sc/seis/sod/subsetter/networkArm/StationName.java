@@ -10,7 +10,9 @@ import edu.iris.Fissures.*;
 /**
  * StationName.java
  * sample xml file
+ * <pre>
  *   &lt;stationName&gt;&lt;value&gt;00&lt;/value&gt;&lt;/stationName&gt;
+ * </pre>
  *
  * Created: Thu Mar 14 14:02:33 2002
  *

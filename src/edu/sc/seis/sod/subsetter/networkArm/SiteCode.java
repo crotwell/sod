@@ -11,7 +11,9 @@ import org.w3c.dom.*;
 /**
  * 
  * sample xml file
+ * <pre>
  * &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
+ * </pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

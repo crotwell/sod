@@ -21,6 +21,7 @@ import edu.iris.Fissures.*;
  * 
  * sample xml representation of StationArea are
  *
+ * <pre>
  *
  *              &lt;stationArea&gt;
  *                           &lt;boxArea&gt;
@@ -34,6 +35,7 @@ import edu.iris.Fissures.*;
  *                                    &lt;/longitudeRange&gt;
  *                           &lt;/boxArea&gt;
  *              &lt;/stationArea&gt;
+ * </pre>
  */
 
 
@@ -69,11 +71,11 @@ public class StationArea
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
 	if(area instanceof edu.iris.Fissures.BoxArea) {
 		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		
-		if(e.my_location.latitude >= boxArea.min_latitude 
+		if(e.my_location.latitude >= boxArea.min_latitude   
 		   && e.my_location.latitude <=boxArea.max_latitude
 		   && e.my_location.longitude >= boxArea.min_longitude
 		   && e.my_location.longitude <= boxArea.max_longitude) {
+		    System.out.println("returning true");
 		    return true;
 		} else return false;
 	
