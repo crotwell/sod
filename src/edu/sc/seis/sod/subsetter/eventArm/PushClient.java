@@ -27,7 +27,6 @@ public class PushClient
 	try {
        
 	   
-	    System.out.println("The name of the channel is "+channelName);
 	    //create and initialize orb
 	    org.omg.CORBA_2_3.ORB orb = (org.omg.CORBA_2_3.ORB) CommonAccess.getCommonAccess().getORB();
 	    edu.iris.Fissures.IfEvent.EventChannelFinder eventChannelFinder = null;
@@ -81,7 +80,6 @@ public class PushClient
 	    // Connect implementation to ProxyPushSupplier.
 	supplier = consumerAdmin.obtain_push_supplier();
 	supplier.connect_push_consumer(consumer);
-	System.out.println("NOw the system will be able to receive the events from the event channel");
 	    
         //
         // Activate the POAManager.
@@ -95,7 +93,6 @@ public class PushClient
 	//
 	orb.run();
 	} catch(Exception e) {
-	    System.out.println("Exception occured");
 
 	}
 	
