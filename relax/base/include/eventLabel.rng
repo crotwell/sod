@@ -10,11 +10,6 @@
                 <text/>
             </zeroOrMore>
             <optional>
-                <element name="separator">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
                 <element name="feRegionName">
                     <empty/>
                 </element>
