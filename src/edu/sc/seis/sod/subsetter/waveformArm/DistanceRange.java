@@ -13,6 +13,8 @@ import edu.sc.seis.TauP.*;
 import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
+import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
 
 
 /**
@@ -55,20 +57,12 @@ public class DistanceRange extends DistanceRangeSubsetter implements EventStatio
                                                          origin.my_location.longitude,
                                                          station.my_location.latitude,
                                                          station.my_location.longitude);
-        if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-            System.out.println("Distance: "+actualDistance+" true "+
-                                   origin.my_location.latitude+" "+
-                                   origin.my_location.longitude+" "+
-                                   station.my_location.latitude+" "+
-                                   station.my_location.longitude);
+        QuantityImpl dist = new QuantityImpl(actualDistance, UnitImpl.DEGREE);
+        if( dist.greaterThanEqual(getMinDistance()) &&
+           dist.lessThanEqual(getMaxDistance())) {
             return true;
 
         } else {
-            System.out.println("Distance: "+actualDistance+" false "+
-                                   origin.my_location.latitude+" "+
-                                   origin.my_location.longitude+" "+
-                                   station.my_location.latitude+" "+
-                                   station.my_location.longitude);
             return false;
         }
     }
