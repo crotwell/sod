@@ -151,7 +151,19 @@ public class NetworkArm {
      * @exception Exception if an error occurs
      */
     public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
-        if(!needsRefresh())  return netDbs;
+        if(!needsRefresh()) {
+            if (netDbs == null) {
+                netDbs = netTable.getAllNets(finder.getNetworkDC());
+                for (int i = 0; i < netDbs.length; i++) {
+                    // this is for the side effect of creating networkInfoTemplate stuff
+                    // avoids a null ptr later
+                    change(netDbs[i].getNetworkAccess(),
+                           Status.get(Stage.NETWORK_SUBSETTER,
+                                      Standing.SUCCESS));
+                }
+            }
+            return netDbs;
+        }
         statusChanged("Getting networks");
         logger.debug("Getting NetworkDBObjects from network");
         ArrayList networkDBs = new ArrayList();
@@ -219,7 +231,7 @@ public class NetworkArm {
 
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem in method getSuccessfulStations for net "+
-                                        NetworkIdUtil.toString(networkDbObject.getNetworkAccess().get_attributes().get_id()), e);
+                                              NetworkIdUtil.toString(networkDbObject.getNetworkAccess().get_attributes().get_id()), e);
         }
         StationDbObject[] rtnValues = new StationDbObject[arrayList.size()];
         rtnValues = (StationDbObject[]) arrayList.toArray(rtnValues);

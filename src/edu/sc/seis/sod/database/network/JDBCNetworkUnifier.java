@@ -9,6 +9,7 @@ package edu.sc.seis.sod.database.network;
 
 import edu.iris.Fissures.IfNetwork.*;
 
+import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccess;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.JDBCLocation;
 import edu.sc.seis.fissuresUtil.database.JDBCQuantity;
@@ -63,9 +64,10 @@ public class JDBCNetworkUnifier{
         return netDb.get(netDbId);
     }
 
-    public NetworkDbObject getNet(int netDbId, NetworkFinder nf) throws NetworkNotFound, NotFound, SQLException{
+    public NetworkDbObject getNet(int netDbId, NetworkDCOperations ndc) throws NetworkNotFound, NotFound, SQLException{
         NetworkId id = netDb.get(netDbId).get_id();
-        return new NetworkDbObject(netDbId, nf.retrieve_by_id(id));
+        NetworkAccess na = new BulletproofNetworkAccess(ndc.a_finder().retrieve_by_id(id), ndc, id);
+        return new NetworkDbObject(netDbId, na);
     }
 
     public NetworkDbObject getNet(ChannelDbObject chan, NetworkFinder nf) throws NotFound, SQLException, NetworkNotFound{
@@ -75,6 +77,15 @@ public class JDBCNetworkUnifier{
 
     public int put(NetworkAttr net) throws SQLException{
         return netDb.put(net);
+    }
+
+    public NetworkDbObject[] getAllNets(NetworkDCOperations ndc) throws SQLException, NotFound, NetworkNotFound {
+        int[] netIds = netDb.getAllNetworkDBIds();
+        NetworkDbObject[] out = new NetworkDbObject[netIds.length];
+        for (int i = 0; i < netIds.length; i++) {
+            out[i] = getNet(netIds[i], ndc);
+        }
+        return out;
     }
 
     private JDBCNetwork netDb;
