@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter;
+package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.sc.seis.sod.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
