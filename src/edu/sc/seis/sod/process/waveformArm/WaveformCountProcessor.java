@@ -16,21 +16,21 @@ import org.w3c.dom.Element;
 
 
 public class WaveformCountProcessor implements LocalSeismogramProcess {
-	public WaveformCountProcessor(Element config) throws SQLException {
-		jdbcEventChannelStatus= new JDBCEventChannelStatus();
-	}
-	
-	public LocalSeismogramResult process(EventAccessOperations event, Channel channel,
-										 RequestFilter[] original, RequestFilter[] available,
-										 LocalSeismogramImpl[] seismograms,
-										 CookieJar cookieJar) throws Exception {
-		 
-		int num_waveforms = jdbcEventChannelStatus.getNumOfStatus(Status.get(Stage.PROCESSOR,
-																			 Standing.SUCCESS));
-		FileWriter fileWriter = new FileWriter("waveforms.txt");
-		fileWriter.write("Number of Waveforms processed = " + num_waveforms);
-		fileWriter.close();
-		return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
-	}
-	JDBCEventChannelStatus jdbcEventChannelStatus;
+    public WaveformCountProcessor(Element config) throws SQLException {
+        jdbcEventChannelStatus= new JDBCEventChannelStatus();
+    }
+
+    public LocalSeismogramResult process(EventAccessOperations event, Channel channel,
+                                         RequestFilter[] original, RequestFilter[] available,
+                                         LocalSeismogramImpl[] seismograms,
+                                         CookieJar cookieJar) throws Exception {
+
+        int num_waveforms = jdbcEventChannelStatus.getNumOfStatus(Status.get(Stage.PROCESSOR,
+                                                                             Standing.SUCCESS));
+        FileWriter fileWriter = new FileWriter("waveforms.txt");
+        fileWriter.write("\n Number of Waveforms processed = " + num_waveforms + "\n");
+        fileWriter.close();
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+    }
+    JDBCEventChannelStatus jdbcEventChannelStatus;
 }
