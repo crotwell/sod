@@ -13,6 +13,7 @@
             <ref name="phaseCut"/>
             <ref name="rMean"/>
             <ref name="rTrend"/>
+            <ref name="taper"/>
             <ref name="externalSeismogramProcess"/>
         </choice>
     </define>
@@ -50,6 +51,11 @@
     </define>
     <define name="rTrend">
         <element name="rTrend">
+            <empty/>
+        </element>
+    </define>
+    <define name="taper">
+        <element name="taper">
             <empty/>
         </element>
     </define>
