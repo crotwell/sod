@@ -24,7 +24,7 @@ import edu.sc.seis.fissuresUtil.database.NotFound;
 public class JDBCConfig extends SodJDBC {
 
     public JDBCConfig(Connection conn) throws SQLException, IOException{
-        conn = ConnMgr.createConnection();
+        this.conn = conn;
         if (!DBUtil.tableExists("config", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("config.create"));
