@@ -12,14 +12,9 @@ package edu.sc.seis.sod.database;
  */
 
 public class DbObject {
-    public DbObject (int dbid){
-	this.dbid = dbid;
-    }
+    public DbObject (int dbid){ this.dbid = dbid; }
 
-    public int getDbId() {
-	return this.dbid;
-    }
+    public int getDbId() { return this.dbid; }
 
     private int dbid;
-    
 }// DbObject

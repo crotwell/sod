@@ -1,6 +1,6 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 /**
  * NetworkDbObject.java
  *
@@ -16,17 +16,17 @@ public class NetworkDbObject extends DbObject{
         super(dbid);
         this.networkAccess = networkAccess;
     }
-    
+
     public NetworkAccess getNetworkAccess() {
         return this.networkAccess;
     }
-    
+
     public String toString(){
         return networkAccess.get_attributes().get_code();
     }
-    
+
     public StationDbObject[] stationDbObjects = null;
-    
+
     private NetworkAccess networkAccess;
-    
+
 }// NetworkDbObject
