@@ -14,11 +14,7 @@ import org.w3c.dom.Element;
 
 public class NetworkInfoTemplateGeneratorEditor implements EditorPlugin {
     public JComponent getGUI(Element element) throws Exception {
-        Box b = Box.createHorizontalBox();
-        b.add(Box.createHorizontalStrut(10));
-        b.add(new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
-        b.add(Box.createHorizontalGlue());
-        return b;
+        return EditorUtil.getBoxWithLabel(element);
     }
 }
 
