@@ -26,4 +26,9 @@
                 <destination>walkthrough.html</destination>
                 <name>Walkthrough</name>
         </page>
+        <page>
+                <source>../xdocs/tutorial.xml</source>
+                <destination>tutorial.html</destination>
+                <name>XML-based Tutorial</name>
+        </page>
 </pages>
