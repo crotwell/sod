@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<outputLocation>
+<eventDir>rev/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></eventDir>
+<stationDir><networkCode/>.<stationCode/></stationDir>
+</outputLocation>
+<filename>seismograms.html</filename>
+<picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></picName>
+<html xmlns:xlink="http://www.w3.org/1999/xlink/">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+#set ( $station = $sod_channel.getSite().getStation() )
+#set ( $origin = $sod_event.get_preferred_origin() )
+<title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
+$velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
+<style media="all">@import "../../../main.css";</style>
+</head>
+<body>
+<div id="Header">
+<a href="../../../event.html"> Events</a> >
+<a href="../event.html">
+$FERegion.getRegionName(${sod_event.get_attributes().region})
+$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</a> >
+${station.getNetworkAttr().get_code()}.${station.get_code()}-$station.getName()
+</div>
+<div id="Content">
+<h1>Seismograms for this Event</h1>
+<h2>Event Info</h2>
+<table>
+<tr>
+<td><b>Region</b></td>
+<td>$FERegion.getRegionName(${sod_event.get_attributes().region})</td>
+</tr>
+<tr>
+<td><b>Time</b></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</td>
+</tr>
+<tr>
+<td><b>Magnitude</b></td>
+<td>
+#foreach ($m in $origin.Magnitudes)
+$fissures.formatMagnitude($m),
+#end</td>
+</tr>
+<tr>
+<td><b>Depth</b></td>
+<td>$fissures.formatQuantity($fissures.getDepth($origin.location))</td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td>$fissures.getLatitude($origin.location)</td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td>$fissures.getLongitude($origin.location)</td>
+</tr>
+<tr>
+<td><b>Distance</b></td>
+<td>$fissures.formatQuantity($fissures.getDistance($station.location, $origin.location))</td>
+</tr>
+<tr>
+<td><b>Azimuth</b></td>
+<td>$fissures.formatQuantity($fissures.getAzimuth($station.location, $origin.location))</td>
+</tr>
+<tr>
+<td><b>Back Azimuth</b></td>
+<td>$fissures.formatQuantity($fissures.getBackAzimuth($station.location, $origin.location))</td>
+</tr>
+</table>
+<h2>Station Info</h2>
+<table>
+<tr>
+<td><b>Id</b></td>
+<td>$station.get_code()</td>
+</tr>
+<tr>
+<td><b>Name</b></td>
+<td>$station.Name</td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td>$fissures.getLatitude($station.location)</td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td>$fissures.getLongitude($station.location)</td>
+</tr>
+<tr>
+<td><b>Begin Time</b></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeBegin($station.EffectiveTime))</td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeEnd($station.EffectiveTime))</td>
+</tr>
+</table>
+<h2>Seismograms</h2>
+<table>
+#set ( $count = 0)
+#foreach ($chanId in $allChanIds)
+#set ( $chanContext = $sod_cookieJar.get($chanId) )
+#set ( $flagData_P = $sod_cookieJar.get("SeismogramImageProcess_flagPixels_P"))
+#set ( $flagData_S = $sod_cookieJar.get("SeismogramImageProcess_flagPixels_S"))
+#set ( $channel = $chanContext.get("sod_channel") )
+<tr>
+<td><b>$fissures.formatChannel($channel.get_id())</b><br/>
+$!chanContext.sod_phaseStoN_ttp.value<br/>
+$!chanContext.sod_phaseStoN_ttp.when</td>
+<td>
+#if ($chanContext.status.Standing.equals($chanContext.status.Standing.getForName("SUCCESS")) || $chanContext.status.Standing.equals($chanContext.status.Standing.getForName("IN_PROG")))
+#set ($originalImg = ${fissures.filize(${fissures.formatChannel($channel.get_id())})})
+#set ($extension = "png")
+#set ($pLoc = "P_${originalImg}")
+#set ($sLoc = "S_${originalImg}")
+#set ($originalImgLoc = ${fissures.filize($originalImg,$extension)})
+#set ($pImage = ${fissures.filize($pLoc, $extension)})
+#set ($sImage = ${fissures.filize($sLoc, $extension)})
+<a>
+<img src="${originalImgLoc}" USEMAP="#map${count}"/>
+</a>
+<map name="map${count}">
+#set ($flag_P_LB_X = (${flagData_P.getFlagLoc()} - 10) )
+#set ($flag_P_UB_X = (${flagData_P.getFlagLoc()} + 10) )
+#set ($flag_P_LB_Y = ${flagData_P.getFlagBottom()} )
+#set ($flag_P_UB_Y = ${flagData_P.getFlagTop()} )
+<area shape="rectangle" coords="${flag_P_LB_X},${flag_P_UB_Y},${flag_P_UB_X},${flag_P_LB_Y}" href="${pImage}"/>
+#set ($flag_S_LB_X = (${flagData_S.getFlagLoc()} - 10) )
+#set ($flag_S_UB_X = (${flagData_S.getFlagLoc()} + 10) )
+#set ($flag_S_LB_Y = ${flagData_S.getFlagBottom()} )
+#set ($flag_S_UB_Y = ${flagData_S.getFlagTop()} )
+<area shape="rectangle" coords="${flag_S_LB_X},${flag_S_UB_Y},${flag_S_UB_X},${flag_S_LB_Y}" href="${sImage}"/>
+</map>
+
+#set ( $count = $count + 1)
+#else
+$chanContext.status <br/>
+#end
+</td>
+</tr>
+#end
+</table>
+</div>
+<div id="LeftColumn">
+<menu><template>jar:edu/sc/seis/sod/data/templates/menu.xml</template></menu>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
+</body>
+</html>
+</template>
+
+
+
