@@ -15,9 +15,19 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
         this(el, null);
     }
 
+    public ChannelFormatter(Element el, boolean filize) throws ConfigurationException {
+        this(el, null, filize);
+    }
+
     public ChannelFormatter(Element el, ChannelGroupTemplate cgt) throws ConfigurationException {
+        this(el, cgt, false);
+    }
+
+
+    public ChannelFormatter(Element el, ChannelGroupTemplate cgt, boolean filize) throws ConfigurationException {
         this.cgt = cgt;
-        parse(el);
+        parse(el, filize);
+        filizeResults = filize;
     }
 
     protected Object textTemplate(final String text) {
@@ -151,8 +161,14 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
             ChannelTemplate cur = (ChannelTemplate)it.next();
             buf.append(cur.getResult(chan));
         }
-        return buf.toString();
+        if(filizeResults) {
+            return FissuresFormatter.filize(buf.toString());
+        } else {
+            return buf.toString();
+        }
     }
+
+    boolean filizeResults = false;
 
     ChannelGroupTemplate cgt;
 }

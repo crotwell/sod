@@ -21,7 +21,7 @@ public class ResponseWriter implements NetworkArmProcess {
         String dirName = SodUtil.getNestedText(SodUtil.getElement(config, "directory"));
         directory = new File(dirName);
         directory.mkdirs();
-        cf = new ChannelFormatter(SodUtil.getElement(config, "filePattern"));
+        cf = new ChannelFormatter(SodUtil.getElement(config, "filePattern"), true);
     }
 
     public ResponseWriter (NetworkDC netdc){ this(netdc.a_finder()); }
