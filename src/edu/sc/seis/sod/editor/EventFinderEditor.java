@@ -40,7 +40,6 @@ public class EventFinderEditor extends ServerEditor implements EditorPlugin{
                     // skip as we deal with the server above
                     continue;
                 } else if(el.getTagName().equals("catalog")){
-                    System.out.println("add catalog to editor");
                     i++;
                     Box horiz = Box.createHorizontalBox();
                     horiz.add(Box.createHorizontalGlue());
