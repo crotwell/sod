@@ -227,7 +227,7 @@ public class NetworkArm {
      * @param networkDbObject a <code>NetworkDbObject</code> value
      * @return a <code>StationDbObject[]</code> value
      */
-    public StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
+    public synchronized StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
         if(networkDbObject.stationDbObjects != null) {
             return networkDbObject.stationDbObjects;
         }
