@@ -6,13 +6,14 @@
 
 package edu.sc.seis.sod.editor;
 
+import javax.swing.*;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.w3c.dom.Element;
@@ -30,6 +31,7 @@ public class TagChooser implements EditorPlugin {
         while (it.hasNext()) {
             subTypes.add(((ElementNode)it.next()).getName());
         }
+        Collections.sort(subTypes);
     }
 
     public JComponent getGUI(Element element) throws Exception {
@@ -43,9 +45,41 @@ public class TagChooser implements EditorPlugin {
         }
 
         Box b = Box.createHorizontalBox();
-        JButton replace = new JButton(new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png")));
-        JComboBox combo = new JComboBox(subTypes);
-        combo.setSelectedItem(element.getTagName());
+        JLabel replace = new JLabel(new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png")));
+        final JPopupMenu popup = new JPopupMenu();
+        ButtonGroup popupGroup = new ButtonGroup();
+        Iterator it = subTypes.iterator();
+        while(it.hasNext()) {
+            String ssType = (String)it.next();
+            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(ssType);
+            if (ssType.equals(element.getTagName())) {
+                menuItem.setSelected(true);
+            }
+            popup.add(menuItem);
+            popupGroup.add(menuItem);
+        }
+        replace.addMouseListener(new MouseAdapter() {
+                    public void mousePressed(MouseEvent e) {
+                        maybeShowPopup(e);
+                    }
+
+                    public void mouseReleased(MouseEvent e) {
+                        maybeShowPopup(e);
+                    }
+
+                    private void maybeShowPopup(MouseEvent e) {
+                        if (e.isPopupTrigger()) {
+                            System.out.println("Show popup");
+                            popup.show(e.getComponent(),
+                                       e.getX(),
+                                       e.getY());
+                        } else {
+                            System.out.println("No show popup");
+                        }
+                    }
+
+
+                });
         b.add(replace);
 
         EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
@@ -59,7 +93,7 @@ public class TagChooser implements EditorPlugin {
         return b;
     }
 
-    public Vector getSubTypes() {
+    public List getSubTypes() {
         return subTypes;
     }
 
@@ -69,7 +103,7 @@ public class TagChooser implements EditorPlugin {
 
     String subsetterType;
 
-    Vector subTypes = new Vector();
+    LinkedList subTypes = new LinkedList();
 
     class ComboElementReset implements ListSelectionListener {
 
