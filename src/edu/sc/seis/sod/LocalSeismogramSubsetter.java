@@ -18,8 +18,11 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 public interface LocalSeismogramSubsetter {
     
     public boolean accept(EventAccessOperations event, 
+			  NetworkAccessOperations network, 
 			  Channel channel, 
-			  LocalSeismogram[] seismograms,
+			  RequestFilter[] original, 
+			  RequestFilter[] available,
+			  LocalSeismogram[] seismograms, 
 			  CookieJar cookies);
 
     

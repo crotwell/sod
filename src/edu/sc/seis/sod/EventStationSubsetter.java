@@ -17,6 +17,9 @@ import edu.iris.Fissures.network.*;
 
 public interface EventStationSubsetter {
 
-    public boolean accept(EventAccessOperations event, Station station, CookieJar cookies);
+    public boolean accept(EventAccessOperations event, 
+			  NetworkAccessOperations network, 
+			  Station station, 
+			  CookieJar cookies);
     
 }// EventStationSubsetter

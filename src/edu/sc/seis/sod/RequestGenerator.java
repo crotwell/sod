@@ -18,8 +18,9 @@ import edu.iris.Fissures.event.*;
 
 public interface  RequestGenerator {
 
-    public RequestFilter generateRequest(EventAccessOperations event, 
-					 Channel channel, 
-					 CookieJar cookies);
+    public RequestFilter[] generateRequest(EventAccessOperations event, 
+					   NetworkAccessOperations network, 
+					   Channel channel, 
+					   CookieJar cookies);
     
 }// RequestGenerator

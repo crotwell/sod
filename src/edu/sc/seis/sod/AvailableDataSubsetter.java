@@ -17,6 +17,11 @@ import edu.iris.Fissures.network.*;
 
 public interface AvailableDataSubsetter {
 
-    public boolean accept(EventAccessOperations event, Station station, CookieJar cookies);
+    public boolean accept(EventAccessOperations event, 
+			  NetworkAccessOperations network, 
+			  Channel channel, 
+			  RequestFilter[] original, 
+			  RequestFilter[] available, 
+			  CookieJar cookies);
     
 }// AvailableDataSubsetter

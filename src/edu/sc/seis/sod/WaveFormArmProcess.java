@@ -14,6 +14,5 @@ import edu.iris.Fissures.IfNetwork.*;
 
 public interface WaveFormArmProcess extends Process {
 
-    public void process(CookieJar cookieJar);
     
 }// WaveFormProcess

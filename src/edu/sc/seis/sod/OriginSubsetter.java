@@ -13,6 +13,8 @@ import edu.iris.Fissures.IfEvent.*;
  */
 
 public interface OriginSubsetter extends Subsetter{
-    public boolean accept(Origin origin, CookieJar cookies);
+    public boolean accept(EventAccessOperations eventAccess,
+			  Origin origin, 
+			  CookieJar cookies);
     
 }// OriginSubsetter

@@ -14,6 +14,6 @@ import edu.iris.Fissures.IfEvent.*;
 
 public interface EventProcess extends Process {
 
-    public void process(EventAccessOperations event);
+    public void process(EventAccessOperations event, CookieJar cookies);
     
 }// EventProcess

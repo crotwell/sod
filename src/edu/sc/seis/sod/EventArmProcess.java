@@ -3,7 +3,7 @@ package edu.sc.seis.sod;
 import edu.iris.Fissures.IfEvent.*;
 
 /**
- * NetworkProcess.java
+ * EventProcess.java
  *
  *
  * Created: Tue Mar 19 14:10:08 2002
@@ -14,6 +14,6 @@ import edu.iris.Fissures.IfEvent.*;
 
 public interface EventArmProcess extends Process {
 
-    public void process(EventAccess network, Origin origin, CookieJar cookieJar);
+    public void process(EventAccessOperations event, CookieJar cookieJar);
     
 }// NetworkProcess

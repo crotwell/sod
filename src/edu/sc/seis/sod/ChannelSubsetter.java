@@ -13,6 +13,8 @@ import edu.iris.Fissures.network.*;
 
 public interface ChannelSubsetter extends Subsetter {
 
-    public boolean accept(Channel channel, CookieJar cookies);
+    public boolean accept(NetworkAccessOperations network,
+			  Channel channel, 
+			  CookieJar cookies);
     
 }// ChannelSubsetter

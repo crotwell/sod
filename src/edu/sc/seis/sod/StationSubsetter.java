@@ -15,6 +15,8 @@ import edu.iris.Fissures.network.*;
 
 public interface StationSubsetter extends Subsetter{
 
-    public boolean accept(Station station, CookieJar cookies);
+    public boolean accept(NetworkAccessOperations network,
+			  Station station,
+			  CookieJar cookies);
     
 }// StationSubsetter
