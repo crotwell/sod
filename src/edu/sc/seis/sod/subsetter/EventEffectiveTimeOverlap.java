@@ -17,19 +17,14 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
 
     public EventEffectiveTimeOverlap(EventAccessOperations event)
             throws NoPreferredOrigin {
-        super(createTimeRange(event, offset));
+        super(createTimeRange(event));
     } // EventEffectiveTimeOverlap constructor
 
-    static TimeRange createTimeRange(EventAccessOperations event,
-                                     TimeInterval offset)
+    static TimeRange createTimeRange(EventAccessOperations event)
             throws NoPreferredOrigin {
         MicroSecondDate originTime = new MicroSecondDate(event.get_preferred_origin().origin_time);
         return new TimeRange(originTime.getFissuresTime(),
-                             originTime.add(offset).getFissuresTime());
-    }
-
-    public static TimeInterval getOffset() {
-        return offset;
+                             originTime.add(DEFAULT_OFFSET).getFissuresTime());
     }
 
     public boolean overlaps(NetworkAttr net) {
@@ -48,5 +43,5 @@ public class EventEffectiveTimeOverlap extends EffectiveTimeOverlap {
         return overlaps(channel.effective_time);
     }
 
-    static final TimeInterval offset = new TimeInterval(3, UnitImpl.DAY);
+    static final TimeInterval DEFAULT_OFFSET = new TimeInterval(3, UnitImpl.DAY);
 } // EventEffectiveTimeOverlap
