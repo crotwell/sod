@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
@@ -12,7 +13,6 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -65,6 +66,10 @@ public class WaveformArm implements Runnable {
         return localSeismogramArm;
     }
 
+    public MotionVectorArm getMotionVectorArm() {
+        return motionVectorArm;
+    }
+
     public EventStationSubsetter getEventStationSubsetter() {
         return eventStationSubsetter;
     }
@@ -76,7 +81,7 @@ public class WaveformArm implements Runnable {
     //fills the eventchannel db with all available events and starts
     //WaveformWorkerUnits on all inserted event channel pairs
     //If there are no waiting events, this just returns
-    private void populateEventChannelDb()throws Exception{
+    private void populateEventChannelDb()throws Exception {
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()){
             EventEffectiveTimeOverlap overlap =
                 new EventEffectiveTimeOverlap(ev.getEvent());
@@ -132,8 +137,35 @@ public class WaveformArm implements Runnable {
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
         logger.debug(ExceptionReporterUtils.getMemoryUsage()+" got " + chans.length + " SuccessfulChannels");
-        for(int i = 0; i < chans.length; i++) {
-            startChannel(overlap, chans[i], ev);
+        if (motionVectorArm != null) {
+            Channel[] channels = new Channel[chans.length];
+            for (int i = 0; i < channels.length; i++) {
+                channels[i] = chans[i].getChannel();
+            }
+            LinkedList failures = new LinkedList();
+            ChannelGroup[] chanGroups = ChannelGroup.group(channels, failures);
+            for (int i = 0; i < chanGroups.length; i++) {
+                int[] pairIds = new int[3];
+                for (int j = 0; j < pairIds.length; j++) {
+                    for (int k = 0; k < chans.length; k++) {
+                        if (ChannelIdUtil.areEqual(chans[k].getChannel().get_id(), chanGroups[i].getChannels()[j].get_id())) {
+                            synchronized(evChanStatus){
+                                pairIds[j] = evChanStatus.put(ev.getDbId(),
+                                                              chans[k].getDbId(),
+                                                              Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                                                         Standing.INIT));
+
+                            }
+                            break;
+                        }
+                    }
+                }
+                invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(pairIds));
+            }
+        } else {
+            for(int i = 0; i < chans.length; i++) {
+                startChannel(overlap, chans[i], ev);
+            }
         }
     }
 
@@ -149,7 +181,7 @@ public class WaveformArm implements Runnable {
                                       Status.get(Stage.EVENT_STATION_SUBSETTER,
                                                  Standing.INIT));
         }
-        invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
+        invokeLaterAsCapacityAllows(new LocalSeismogramWaveformWorkUnit(pairId));
         retryIfNeededAndAvailable();
     }
 
@@ -169,27 +201,21 @@ public class WaveformArm implements Runnable {
         synchronized (eventRetryTable) {
             pairId = eventRetryTable.next();
         }
-        if(pairId != -1) return new RetryWaveformWorkUnit(pairId);
+        if(pairId != -1) {
+            if (motionVectorArm != null) {
+                int[] pairs = new int[3];
+GlobalExceptionHandler.handle("Retry on motion vector arm is BROKEN", new Exception());
+                return null;
+              //  return new RetryMotionVectorWaveformWorkUnit(pairs);
+            } else {
+                return new RetryWaveformWorkUnit(pairId);
+            }
+        }
         return null;
     }
 
     private int getNumRetryWaiting() {
         synchronized(retryNumLock){ return retryNum; }
-    }
-
-    private class RetryWaveformWorkUnit extends WaveformWorkUnit{
-        public RetryWaveformWorkUnit(int pairId){
-            super(pairId);
-            logger.debug("Retrying on pair id " + pairId);
-            synchronized(retryNumLock){  retryNum++; }
-        }
-
-        public void run(){
-            synchronized(retryNumLock){
-                retryNum--;
-            }
-            super.run();
-        }
     }
 
     /**
@@ -312,8 +338,12 @@ public class WaveformArm implements Runnable {
         }
     }
 
-    private class WaveformWorkUnit implements Runnable{
-        public WaveformWorkUnit(int pairId){
+    private interface WaveformWorkUnit extends Runnable{
+    }
+
+    private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
+
+        public LocalSeismogramWaveformWorkUnit(int pairId){
             this.pairId = pairId;
         }
 
@@ -363,6 +393,95 @@ public class WaveformArm implements Runnable {
         private int pairId;
     }
 
+
+    private class RetryWaveformWorkUnit extends LocalSeismogramWaveformWorkUnit{
+        public RetryWaveformWorkUnit(int pairId){
+            super(pairId);
+            logger.debug("Retrying on pair id " + pairId);
+            synchronized(retryNumLock){  retryNum++; }
+        }
+
+        public void run(){
+            synchronized(retryNumLock){
+                retryNum--;
+            }
+            super.run();
+        }
+    }
+
+
+    private class RetryMotionVectorWaveformWorkUnit extends MotionVectorWaveformWorkUnit {
+
+        public RetryMotionVectorWaveformWorkUnit(int[] pairId){
+            super(pairId);
+            logger.debug("Retrying on pair id " + pairId[0]+" "+pairId[1]+" "+pairId[2]);
+            synchronized(retryNumLock){  retryNum++; }
+        }
+
+        public void run(){
+            synchronized(retryNumLock){
+                retryNum--;
+            }
+            super.run();
+        }
+    }
+
+    private class MotionVectorWaveformWorkUnit implements WaveformWorkUnit {
+
+        public MotionVectorWaveformWorkUnit(int[] pairIds){
+            this.pairIds = pairIds;
+        }
+
+        public void run(){
+            try{
+                EventChannelGroupPair ecp = extractEventChannelGroupPair();
+                ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                      Standing.IN_PROG));
+                boolean accepted = false;
+                try {
+                    Station evStation = ecp.getChannelGroup().getChannels()[0].my_site.my_station;
+                    accepted = eventStationSubsetter.accept(ecp.getEvent(),
+                                                            evStation,
+                                                            ecp.getCookieJar());
+                } catch (Throwable e) {
+                    ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                             Standing.SYSTEM_FAILURE));
+                    return;
+                }
+                if(accepted){
+                    ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                          Standing.IN_PROG));
+                    motionVectorArm.processMotionVectorArm(ecp);
+                }else{
+                    ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                          Standing.REJECT));
+                }
+            }catch(Throwable t){
+                System.err.println(BIG_ERROR_MSG);
+                t.printStackTrace(System.err);
+                GlobalExceptionHandler.handle(BIG_ERROR_MSG, t);
+            }
+        }
+
+        private EventChannelGroupPair extractEventChannelGroupPair() throws Exception{
+            try {
+                EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
+                synchronized(evChanStatus){
+                    for (int i = 0; i < pairIds.length; i++) {
+                        pairs[i] = evChanStatus.get(pairIds[i], WaveformArm.this);
+                    }
+                }
+                return new EventChannelGroupPair(pairs);
+            } catch (NotFound e) {
+                throw new RuntimeException("Not found getting the event and channel ids from the event channel status db for a just gotten pair id.  This shouldn't happen.", e);
+            } catch (SQLException e) {
+                throw new RuntimeException("SQL Exception getting the event and channel ids from the event channel status db", e);
+            }
+        }
+
+        private int[] pairIds;
+    }
+
     private static final String BIG_ERROR_MSG = "An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu";
 
     private WorkerThreadPool pool;
@@ -370,6 +489,8 @@ public class WaveformArm implements Runnable {
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
 
     private LocalSeismogramArm localSeismogramArm = null;
+
+    private MotionVectorArm motionVectorArm = null;
 
     private NetworkArm networkArm = null;
 
