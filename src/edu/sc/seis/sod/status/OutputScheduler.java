@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.apache.log4j.Logger;
 
 public class OutputScheduler extends TimerTask{
     public OutputScheduler(){
@@ -28,6 +29,7 @@ public class OutputScheduler extends TimerTask{
         if(Start.getWaveformArm() != null && Start.getWaveformArm().isFinished()){
             runAll();
             t.cancel();
+            logger.debug("Output Scheduler done.");
         }
     }
 
@@ -52,4 +54,7 @@ public class OutputScheduler extends TimerTask{
 
     private Set runnables = Collections.synchronizedSet(new HashSet());
     private Timer t = new Timer();
+
+    private static final Logger logger = Logger.getLogger(OutputScheduler.class);
+
 }
