@@ -138,7 +138,7 @@ given in degrees. </description>
 magnitude with distance. </summary>
                     <description> If the magnitude of the event is greater than or equal
 to the linear interpolation at the event station distance,
-then the event statino pair is accepted. To reverse and take
+then the event station pair is accepted. To reverse and take
 events smaller than the linear interpolation, enclose this
 in an EventStationNOT. </description>
                     <example>
