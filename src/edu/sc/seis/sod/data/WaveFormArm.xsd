@@ -822,6 +822,7 @@
         <xsd:complexContent>
             <xsd:extension base="requestGeneratorType">
                 <xsd:sequence>
+                    <xsd:element name="model" type="xsd:string" minOccurs="0"/>
                     <xsd:element name="beginPhase" type="xsd:string"/>
                     <xsd:element name="beginOffset" type="timeIntervalType"/>
                     <xsd:element name="endPhase" type="xsd:string"/>
@@ -1050,6 +1051,73 @@
         </xsd:complexContent>
     </xsd:complexType>
     
+    <xsd:complexType name="phaseCutType">
+         <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Cuts seismograms relative to predicted phase arrival times. 
+                </summary>
+                <description>
+		Cuts seismogras relative to offsets from phase arrival time
+		predicted by TauP for the model. 
+                </description>
+                <example>
+                    <phaseCut>
+                       <model>prem</model>
+                       <beginPhase>P</beginPhase>
+                       <beginOffset>
+		          <unit>SECOND</unit>
+			  <value>-100</value>
+		       </beginOffset>
+                       <endPhase>P</endPhase>
+                       <endOffset>
+		          <unit>SECOND</unit>
+			  <value>-100</value>
+		       </endOffset>
+                    </phaseCut>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+       <xsd:complexContent>
+            <xsd:extension base="seismogramProcessType">
+                <xsd:sequence>
+                    <xsd:element name="model" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="beginPhase" type="xsd:string"/>
+                    <xsd:element name="beginOffset" type="timeIntervalType"/>
+                    <xsd:element name="endPhase" type="xsd:string"/>
+                    <xsd:element name="endOffset" type="timeIntervalType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="rMeanType">
+        <xsd:complexContent>
+            <xsd:extension base="seismogramProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="rTrendType">
+        <xsd:complexContent>
+            <xsd:extension base="seismogramProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="responseGainProcessorType"> 
+        <xsd:complexContent>
+            <xsd:extension base="seismogramProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
     <xsd:complexType name="sacSeismogramProcessType"> 
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1183,10 +1251,13 @@
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
     <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
     
-    <!-- element representing the process -->waw
+    <!-- element representing the process -->
     <xsd:element name="printlineSeismogramProcess" type="printLineSeismogramProcessorType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="sacFileProcessor" type="sacSeismogramProcessType" substitutionGroup="seismogramProcess"/>
-    <xsd:element name="responseGainProcessor" type="seismogramProcessType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="responseGainProcessor" type="responseGainProcessorType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="phaseCut" type="phaseCutType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="rMean" type="rMeanType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="rTrend" type="rTrendType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
