@@ -244,7 +244,7 @@ public class Start{
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
             exit("Problem in main, quiting: "+e.toString());
         }
-        logger.info("Done.");
+        logger.info("Finished starting all threads.");
     } // end of main ()
 
     private static void exit(String reason) {
