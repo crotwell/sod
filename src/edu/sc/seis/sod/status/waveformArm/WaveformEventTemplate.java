@@ -1,15 +1,5 @@
 package edu.sc.seis.sod.status.waveformArm;
 
-import edu.sc.seis.sod.status.*;
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.Stage;
-import edu.sc.seis.sod.Standing;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.status.eventArm.EventTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -17,12 +7,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
+import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FileWritingTemplate;
+import edu.sc.seis.sod.status.GenericTemplate;
+import edu.sc.seis.sod.status.MenuTemplate;
+import edu.sc.seis.sod.status.OutputScheduler;
+import edu.sc.seis.sod.status.Template;
+import edu.sc.seis.sod.status.TemplateFileLoader;
+import edu.sc.seis.sod.status.eventArm.EventTemplate;
 
 public class WaveformEventTemplate extends Template implements WaveformMonitor {
 
     public WaveformEventTemplate(Element el, String baseDir,
-            EventFormatter dirNameCreator, String pageName) throws IOException,
-            ConfigurationException {
+            EventFormatter dirNameCreator, String pageName)
+            throws ConfigurationException {
         this.baseDir = baseDir;
         this.dirNameCreator = dirNameCreator;
         this.pageName = pageName;
@@ -72,23 +77,6 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
             if(!toBeRendered.containsKey(loc)) {
                 toBeRendered.put(loc, ev);
                 OutputScheduler.getDefault().schedule(writer);
-            }
-        }
-    }
-
-    private final class StationImageMap implements EventTemplate {
-
-        public String getResult(EventAccessOperations ev) {
-            String areas = map.getStationImageMapAreas(ev);
-            if(areas != null) {
-                StringBuffer results = new StringBuffer();
-                results.append("<map name=\"stationImageMap\">\n");
-                results.append(areas);
-                results.append("</map>");
-                return results.toString();
-            } else {
-                update(ev, getOutputDirectory(ev), pageName);
-                return "";
             }
         }
     }
@@ -168,14 +156,9 @@ public class WaveformEventTemplate extends Template implements WaveformMonitor {
                 GlobalExceptionHandler.handle("Problem getting template for Menu",
                                               e);
             }
-        } else if(tag.equals("stationImageMap")) {
-            stationImageMap = new StationImageMap();
-            return stationImageMap;
         }
         return super.getTemplate(tag, el);
     }
-
-    private StationImageMap stationImageMap;
 
     private Map toBeRendered = Collections.synchronizedMap(new HashMap());
 

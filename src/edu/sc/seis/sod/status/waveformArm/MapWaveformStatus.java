@@ -23,7 +23,6 @@ import edu.sc.seis.fissuresUtil.map.colorizer.event.DefaultEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.DistanceLayer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
-import edu.sc.seis.fissuresUtil.map.layers.StationLoc;
 import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
@@ -85,28 +84,11 @@ public class MapWaveformStatus implements Runnable {
                                                 orig.my_location.longitude));
                 dl.eqSelectionChanged(selEvent);
                 final String fileLoc = fileLocs[i];
-                final EventAccessOperations curEvent = events[i];
                 SwingUtilities.invokeAndWait(new Runnable() {
 
                     public void run() {
                         try {
                             map.writeMapToPNG(fileLoc);
-                            //map.getStationLayer().printStationLocs();
-                            StationLoc[] stationLocs = map.getStationLayer()
-                                    .getStationLocs();
-                            StringBuffer curStations = new StringBuffer();
-                            for(int i = 0; i < stationLocs.length; i++) {
-                                Station station = stationLocs[i].getStation();
-                                curStations.append("<area href=\""
-                                        + station.my_network.get_code()
-                                        + "."
-                                        + station.get_code()
-                                        + "/seismograms.html\" shape=\"poly\" coords=\""
-                                        + stationLocs[i].getImageMapStylePoly()
-                                        + "\"/>");
-                            }
-                            eventsToStationImageMaps.put(curEvent,
-                                                         curStations.toString());
                         } catch(Throwable e) {
                             GlobalExceptionHandler.handle("problem writing map",
                                                           e);
@@ -142,16 +124,10 @@ public class MapWaveformStatus implements Runnable {
         }
     }
 
-    public String getStationImageMapAreas(EventAccessOperations event) {
-        return (String)eventsToStationImageMaps.get(event);
-    }
-
     private static final Status success = Status.get(Stage.PROCESSOR,
                                                      Standing.SUCCESS);
 
     private Map eventsToBeRendered = Collections.synchronizedMap(new HashMap());
-
-    private Map eventsToStationImageMaps = Collections.synchronizedMap(new HashMap());
 
     private MapPool pool;
 
