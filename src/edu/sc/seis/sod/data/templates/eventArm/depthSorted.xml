@@ -27,19 +27,19 @@ Events (sorted by depth)
 <td>Region</td>
 <td><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
-<td id="selected"><a href="depth.html">Depth</a></td>
-<td># Processed</td>
-<td># Rejected</td>
-<td># Retry</td>
+<td class="selected"><a href="depth.html">Depth</a></td>
+<td class="num">Successful Channels</td>
+<td class="num">Retry Channels</td>
+<td class="num">Rejected Channels</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
-<td id="selected"><depth/></td>
-<td><waveformChannels>SUCCESS</waveformChannels></td>
-<td><waveformChannels>REJECT</waveformChannels></td>
-<td><waveformChannels>RETRY</waveformChannels></td>
+<td class="selected"><depth/></td>
+<td class="num"><waveformChannels>SUCCESS</waveformChannels></td>
+<td class="num"><waveformChannels>RETRY</waveformChannels></td>
+<td class="num"><waveformChannels>REJECT</waveformChannels></td>
 </tr>
 </eventLabel><sorting><depth order="descending"/><status>SUCCESS</status></sorting></events>
 </table>
@@ -49,14 +49,14 @@ Events (sorted by depth)
 <td>Region</td>
 <td ><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
-<td id="selected"><a href="depth.html">Depth</a></td>
+<td class="selected"><a href="depth.html">Depth</a></td>
 <td>Status</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
-<td id="selected"><depth/></td>
+<td class="selected"><depth/></td>
 <td><eventStatus/></td>
 </tr>
 </eventLabel><sorting><depth order="descending"/><status>IN PROGRESS</status></sorting></events>
@@ -74,7 +74,7 @@ Events (sorted by depth)
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
-<td id="selected"><depth/></td>
+<td class="selected"><depth/></td>
 <td><eventStatus/></td>
 </tr>
 </eventLabel><sorting><depth order="descending"/><status>FAILED</status></sorting></events>

@@ -34,8 +34,8 @@ a {
 a:link {color:#09c;}
 a:visited {color:#07a;}
 a:hover {background-color:#ccc;}
-a:hover #Selected { background-color:#000;}
-td#Selected{
+a:hover.Selected { background-color:#000;}
+td.Selected{
     background-color:#eee;
 }
 td{
@@ -131,4 +131,7 @@ background:#9cf;
 #help{
     vertical-align:super;
     border:0;
+}
+.num{
+    text-align:center;
 }
