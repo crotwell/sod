@@ -63,10 +63,15 @@ def buildRunScripts(proj):
     return scripts
 
 def buildProfileScripts(proj):
+    scriptBuilder.setVarSh()
+    profileParams = sodScriptParameters([scriptBuilder.sharkParameters()])
+    profileParams.name='profile'
+    scripts = [scriptBuilder.build(profileParams, proj)]
     scriptBuilder.setVarWindows()
     profileParams = sodScriptParameters([scriptBuilder.profileParameters(), scriptBuilder.windowsParameters()])
     profileParams.name='profile'
-    return [scriptBuilder.build(profileParams, proj)]
+    scripts.append(scriptBuilder.build(profileParams, proj))
+    return scripts
 
 def buildQueryTimerScripts(proj):
     scriptBuilder.setVarSh()
