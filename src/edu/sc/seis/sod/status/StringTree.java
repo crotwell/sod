@@ -17,6 +17,14 @@ public abstract class StringTree {
         return name+":"+( boo ? OK : FAIL );
     }
 
+    public Object getName() {
+        return name;
+    }
+
+    public boolean isSuccess() {
+        return boo;
+    }
+
     protected Object name;
 
     protected boolean boo;

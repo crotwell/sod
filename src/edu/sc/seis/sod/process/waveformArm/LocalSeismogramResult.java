@@ -16,6 +16,10 @@ public class LocalSeismogramResult {
         this(success, seismograms, new StringTreeLeaf("", success));
     }
 
+    public LocalSeismogramResult(LocalSeismogramImpl[] seismograms, StringTree reason) {
+        this(reason.isSuccess(), seismograms,reason);
+    }
+
     public LocalSeismogramResult(boolean success, LocalSeismogramImpl[] seismograms, StringTree reason) {
         this.success = success;
         this.seismograms = seismograms;
