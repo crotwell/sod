@@ -48,7 +48,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         addSodExceptionListener(sodExceptionListener);
         processConfig(config);
     }
-    
+
     public void run() {
         try {
             processEventArm();
@@ -61,13 +61,13 @@ public class EventArm extends SodExceptionSource implements Runnable{
         // if eventChannelFinder is false ... i.e., if no eventChannel is configured
         // then the eventArm can signal end of processing
         // by setting the sourceAlive attribute of the EventQueue to be false.
-        
+
         if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
         logger.debug("After setting the source Alive to be false");
         logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "
                          +Start.getEventQueue().getLength());
     }
-    
+
     /**
      * This method processes the eventArm subsetters
      *
@@ -87,16 +87,21 @@ public class EventArm extends SodExceptionSource implements Runnable{
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter.eventArm");
-                if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventFinder) eventFinderSubsetter = (edu.sc.seis.sod.subsetter.eventArm.EventFinder)sodElement;
-                else if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder) eventChannelFinder = (edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder)sodElement;
-                else if(sodElement instanceof EventAttrSubsetter) {
+                if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventFinder) {
+                    eventFinderSubsetter = (edu.sc.seis.sod.subsetter.eventArm.EventFinder)sodElement;
+                } else if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder) {
+                        eventChannelFinder = (edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder)sodElement;
+                } else if(sodElement instanceof EventAttrSubsetter) {
                     eventAttrSubsetter = (EventAttrSubsetter) sodElement;
-                } else if(sodElement instanceof OriginSubsetter) originSubsetter = (OriginSubsetter)sodElement;
-                else if(sodElement instanceof EventArmProcess) eventArmProcess = (EventArmProcess)sodElement;
+                } else if(sodElement instanceof OriginSubsetter) {
+                    originSubsetter = (OriginSubsetter)sodElement;
+                } else if(sodElement instanceof EventArmProcess) {
+                    eventArmProcess = (EventArmProcess)sodElement;
+                }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
     }
-    
+
     public void processEventArm() throws Exception{
         if(eventChannelFinder != null) {
             eventChannelFinder.setEventArm(this);
@@ -104,10 +109,10 @@ public class EventArm extends SodExceptionSource implements Runnable{
             thread.setName("EventChannelFinder");
             thread.start();
         } else {
-            logger.debug("EventChannelFinder is NULL");
+            logger.info("EventChannelFinder is not being used.");
         }
         if(eventFinderSubsetter == null) return;
-        logger.debug("Event Finder query is being used");
+        logger.info("Event Finder query is being used");
         EventDC eventdc = eventFinderSubsetter.getEventDC();
         edu.iris.Fissures.IfEvent.EventFinder finder = eventdc.a_finder();
         String[] searchTypes;
@@ -134,7 +139,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
             searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
         }
         logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getTimeRange().start_time.date_time+" to "+eventFinderSubsetter.getEventTimeRange().getTimeRange().end_time.date_time);
-        
+
         String source = eventFinderSubsetter.getSourceName();
         String dns =  eventFinderSubsetter.getDNSName();
         EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
@@ -173,7 +178,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         }
         logger.debug("Finished processing the event arm.");
     }
-    
+
     private EventAccessOperations[] makeCacheEvents(EventAccessOperations[] uncached){
         EventAccessOperations[] cached = new EventAccessOperations[uncached.length];
         for(int counter = 0; counter < cached.length; counter++) {
@@ -181,19 +186,19 @@ public class EventArm extends SodExceptionSource implements Runnable{
         }
         return cached;
     }
-    
+
     private void handleEventAttrSubsetter(EventAccessOperations[] event)throws Exception{
         for (int i = 0; i < event.length; i++) {
             handleEventAttrSubsetter(event[i], event[i].get_attributes());
         }
     }
-    
+
     public void handleEventAttrSubsetter(EventAccessOperations eventAccess, EventAttr eventAttr) throws Exception {
         if(eventAttrSubsetter == null || eventAttrSubsetter.accept(eventAttr, null)) {
             handleOriginSubsetter(eventAccess, eventAccess.get_preferred_origin());
         }
     }
-    
+
     /**
      * handles the OriginSubsetter
      *
@@ -206,16 +211,16 @@ public class EventArm extends SodExceptionSource implements Runnable{
             handleEventArmProcess(eventAccess, origin);
         }
     }
-    
+
     public void handleEventArmProcess(EventAccessOperations eventAccess, Origin origin) throws Exception{
         Start.getEventQueue().push(eventFinderSubsetter.getDNSName(),
                                    eventFinderSubsetter.getSourceName(),
                                        (EventAccess)((CacheEvent)eventAccess).getEventAccess(),
                                    origin);
         eventArmProcess.process(eventAccess, null);
-        
+
     }
-    
+
     /**
      * this increments the passed in time by the amount of time each event
      * query is set to cover in the edu.sc.seis.sod.daystoincrement property
@@ -230,7 +235,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         MicroSecondDate incrementedDate = new MicroSecondDate(calendar.getTime());
         return incrementedDate.getFissuresTime();
     }
-    
+
     /**
      * checks to see if the eventArm is done processing for the time interval
      * specified in the configuration file.
@@ -242,7 +247,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         }
         return false;
     }
-    
+
     /**
      * Method pastNow checks if time is later than now
      *
@@ -250,9 +255,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
      *
      */
     private boolean pastNow(MicroSecondDate time){
-        return firstAfterSecond(time, new MicroSecondDate(ClockUtil.now()));
+        return firstAfterSecond(time, ClockUtil.now());
     }
-    
+
     /**
      * Method past checks if firstTime is later than second time
      *
@@ -262,7 +267,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         if(second.before(first) || second.equals(first)) return true;
         return false;
     }
-    
+
     /***
      * passivates the eventArm (makes it to sleep) based on the refreshInterval
      * and quitTime specified in the property file.
@@ -281,12 +286,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
         Start.getEventQueue().deleteTimeConfig();
         return false;
     }
-    
+
     /**
      * returns the increment value. This value is specified as a property in the
      * property file.
      */
-    
+
     private int getIncrement() {
         String value = props.getProperty("edu.sc.seis.sod.daystoincrement");
         if(value == null) return 1;
@@ -297,18 +302,18 @@ public class EventArm extends SodExceptionSource implements Runnable{
             return 1;
         }
     }
-    
+
     private EventFinder eventFinderSubsetter;
-    
+
     private EventChannelFinder eventChannelFinder = null;
-    
+
     private EventAttrSubsetter eventAttrSubsetter = new NullEventAttrSubsetter();
-    
+
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
-    
+
     private EventArmProcess eventArmProcess = new NullEventProcess();
-    
+
     private Properties props;
-    
+
     private static Logger logger = Logger.getLogger(EventArm.class);
 }// EventArm
