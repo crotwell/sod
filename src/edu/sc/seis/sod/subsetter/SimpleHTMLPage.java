@@ -16,10 +16,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SimpleHTMLPage{
-    public SimpleHTMLPage(String title, String fileName, File path){
+    public SimpleHTMLPage(String title, File location){
+        this(title, location, "Links");
+    }
+    
+    public SimpleHTMLPage(String title, File location, String linkSection){
         this.title = title;
-        this.path = path;
-        this.fileName = fileName;
+        this.location = location;
         allSimplePages.add(this);
     }
     
@@ -57,19 +60,84 @@ public class SimpleHTMLPage{
     public String getTitle(){ return title; }
     
     public File write(){
-        File output = new File(path, fileName);
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(location));
             writer.write(constructPage());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return output;
+        return location;
     }
     
     public String toString(){
-        return fileName;
+        return location.getName();
+    }
+    
+    public File getDirectory() throws IOException{
+        return location.getCanonicalFile().getParentFile();
+    }
+    
+    public String relativePathTo(SimpleHTMLPage otherPage) {
+        try {
+            File otherDir = otherPage.getDirectory();
+            int dist = getCommonBaseDistance(otherDir);
+            String path = dotsToCommonBase(dist);
+            path += path(otherPage.getCommonBaseDistance(getDirectory()),
+                         otherDir.getCanonicalFile());
+            return path + otherPage.toString();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Unable to get canonical representation of passed in file, so pathing is impossible");
+        }
+    }
+    
+    public String dotsToCommonBase(SimpleHTMLPage p) throws IOException{
+        return dotsToCommonBase(getCommonBaseDistance(p.getDirectory()));
+    }
+    
+    public String dotsToCommonBase(int layersAbove){
+        String dots = "";
+        for (int i = layersAbove;  i > 0; i--){
+            dots += "../";
+        }
+        return dots;
+    }
+    
+    public static String path(int layers, File location){
+        String path = "";
+        for (int i = 0; i < layers; i++) {
+            path = location.getName() + "/" + path;
+            location = location.getParentFile();
+        }
+        return path;
+    }
+    
+    public int getCommonBaseDistance(File location) {
+        try {
+            File[] locHierarchy = getHierarchy(location.getCanonicalFile());
+            File[] dirHierarchy = getHierarchy(getDirectory().getCanonicalFile());
+            if(!locHierarchy[0].equals(dirHierarchy[0])){
+                throw new IllegalArgumentException("No common base at all");
+            }
+            int i;
+            for(i = 1; i < locHierarchy.length && i < dirHierarchy.length; i++){
+                if(!locHierarchy[i].equals(dirHierarchy[i])) break;
+            }
+            return dirHierarchy.length - i;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Unable to get canonical files to traverse directory hierarchy");
+        }
+    }
+    
+    private static File[] getHierarchy(File f){
+        List hierarchy = getHierarchy(f, new ArrayList());
+        return (File[])hierarchy.toArray(new File[hierarchy.size()]);
+    }
+    
+    private static List getHierarchy(File f, List l){
+        if(f.getParent() != null) getHierarchy(f.getParentFile(), l);
+        l.add(f);
+        return l;
     }
     
     private String constructPage(){
@@ -141,13 +209,12 @@ public class SimpleHTMLPage{
                 while(it.hasNext()){
                     SimpleHTMLPage page = (SimpleHTMLPage)it.next();
                     if(page != SimpleHTMLPage.this){
-                        contents.append("<A HREF=" + page + ">" + page.getTitle() + "</A><br>\n");
+                        contents.append("<A HREF=" + relativePathTo(page) + ">" + page.getTitle() + "</A><br>\n");
                     }
                 }
             }
             return contents.toString();
         }
-        
     }
     
     private Section links = new LinkSection();
@@ -156,7 +223,7 @@ public class SimpleHTMLPage{
     
     private List sections = new ArrayList();
     
-    private File path;
+    private File location;
     
-    private String fileName, title;
+    private String title;
 }
