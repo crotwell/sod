@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.fissuresUtil.cache.RetryDataCenter;
+import edu.sc.seis.fissuresUtil.cache.RetrySeismogramDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
@@ -33,7 +33,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
         dns = getDNSName();
         objectName = getSourceName();
-        dataCenter = new RetryDataCenter(new NSSeismogramDC(dns, objectName, fissuresNamingService), 2);
+        dataCenter = new RetrySeismogramDC(new NSSeismogramDC(dns, objectName, fissuresNamingService), 2);
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
