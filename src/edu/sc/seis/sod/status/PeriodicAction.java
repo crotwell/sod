@@ -22,7 +22,7 @@ public abstract class PeriodicAction{
             if(!ClockUtil.now().subtract(lastAct).lessThan(ACTION_INTERVAL)){
                 actNow();
             }else if(!scheduled){
-                t.schedule(new ScheduledActor(), 120000);
+                t.schedule(new ScheduledActor(), (int)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND).get_value());
                 scheduled = true;
             }
         }
@@ -46,7 +46,7 @@ public abstract class PeriodicAction{
 
     private boolean scheduled = false;
     protected boolean v = false;
-    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(1, UnitImpl.MINUTE);
+    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(.5, UnitImpl.MINUTE);
     private MicroSecondDate lastAct = ClockUtil.now().subtract(ACTION_INTERVAL);
     private Object schedulingLock = new Object();
     private static Timer t = new Timer();
