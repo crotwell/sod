@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.database.Status;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -166,7 +167,7 @@ public class LocalSeismogramArm implements Subsetter{
         }
         if( passed ) {
             ecp.update("Finished request subsetter", Status.PROCESSING);
-            DataCenter dataCenter;
+            ProxySeismogramDC dataCenter;
             synchronized(seismogramDCLocator) {
                 dataCenter = seismogramDCLocator.getSeismogramDC(ecp.getEvent(),
                                                                  ecp.getNet(),
@@ -192,6 +193,10 @@ public class LocalSeismogramArm implements Subsetter{
                         try {
                             Thread.sleep(1000*retries);
                         } catch(InterruptedException ex) {}
+                        if (retries % 2 == 0) {
+                            //force reload from name service evey other try
+                            dataCenter.reset();
+                        }
                     } else {
                         throw e;
                     }
@@ -213,7 +218,7 @@ public class LocalSeismogramArm implements Subsetter{
 
 
     public void processAvailableDataSubsetter(EventChannelPair ecp,
-                                              DataCenter dataCenter,
+                                              ProxySeismogramDC dataCenter,
                                               RequestFilter[] infilters,
                                               RequestFilter[] outfilters)
         throws Exception {
@@ -248,6 +253,13 @@ public class LocalSeismogramArm implements Subsetter{
                         logger.debug("before retrieve_seismograms");
                         localSeismograms = dataCenter.retrieve_seismograms(infilters);
                         logger.debug("after successful retrieve_seismograms");
+                        if (localSeismograms.length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
+                    // must be server error
+                    logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
+                                    +ChannelIdUtil.toString(infilters[0].channel_id)
+                                    +" seis="
+                                    +ChannelIdUtil.toString(localSeismograms[0].channel_id));
+                        }
                         break;
                     } catch (org.omg.CORBA.SystemException e) {
                         retries++;
@@ -257,6 +269,10 @@ public class LocalSeismogramArm implements Subsetter{
                             try {
                                 Thread.sleep(1000*retries);
                             } catch(InterruptedException ex) {}
+                            if (retries % 2 == 0) {
+                                // reget from Name service every other time
+                                dataCenter.reset();
+                            }
                         } else {
                             throw e;
                         }

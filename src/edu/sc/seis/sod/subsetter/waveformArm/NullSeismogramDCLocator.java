@@ -1,14 +1,14 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-import edu.sc.seis.sod.*;
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
-
-
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SeismogramDCLocator;
+import edu.sc.seis.sod.SodElement;
+import org.w3c.dom.Element;
 
 /**
  * NullSeismogramDCLocator.java
@@ -20,7 +20,7 @@ import org.apache.log4j.*;
  * @version 1.0
  */
 public class NullSeismogramDCLocator
-    implements SodElement, SeismogramDCLocator 
+    implements SodElement, SeismogramDCLocator
  {
      public NullSeismogramDCLocator() {
     }
@@ -28,10 +28,10 @@ public class NullSeismogramDCLocator
     public NullSeismogramDCLocator(Element element) throws Exception{
 
     }
-    
-    public DataCenter getSeismogramDC(EventAccessOperations event, 
-                                      NetworkAccess network, 
-                                      Station station, 
+
+    public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
+                                      NetworkAccess network,
+                                      Station station,
                                       CookieJar cookies) throws Exception{
         throw new ConfigurationException("Cannot use NullSeismogramDCLocator to get a seismogramDC. There must be another type of SeismogramDCLocator within the configuration script");
     }

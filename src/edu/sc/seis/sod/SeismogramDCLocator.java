@@ -1,9 +1,9 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.IfSeismogramDC.*;
-import edu.iris.Fissures.IfNetwork.*;
-import edu.iris.Fissures.network.*;
-import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.Station;
+import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 
 /**
  * SeismogramDCLocator.java
@@ -16,10 +16,10 @@ import edu.iris.Fissures.IfEvent.*;
  */
 
 public interface SeismogramDCLocator {
-    
-    public DataCenter getSeismogramDC(EventAccessOperations event, 
-                                      NetworkAccess network, 
-                                      Station station, 
+
+    public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
+                                      NetworkAccess network,
+                                      Station station,
                                       CookieJar cookies) throws Exception;
 
 }// SeismogramDCLocator
