@@ -65,6 +65,14 @@
                 </section>
                 <section name="News">
                 <table id="entry">
+				<th>15 June 2004</th>
+				<tr>
+						<td>
+								<p>SOD 2.0 Beta 6 has been released.  It fixes some minor bugs in the scripts on Solaris and editor behaviour.  As always, it's available <a href="download.html">here.</a></p>
+						</td>
+				</tr>
+		</table>
+		<table id="entry">
                         <th>10 June 2004</th>
                         <tr>
                                 <td>
