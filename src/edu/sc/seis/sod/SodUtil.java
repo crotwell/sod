@@ -135,7 +135,6 @@ public class SodUtil {
 	String unitName = null;
 	NodeList children = config.getChildNodes();
 	Node node = children.item(0);
-	logger.debug(node.getNodeName());
 	if (node instanceof Text) {
 	    unitName = node.getNodeValue();
 	}
@@ -158,7 +157,6 @@ public class SodUtil {
 	Node node;
 	for (int i=0; i < children.getLength(); i++) {
 	    node = children.item(i);
-	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
 		String tagName = subElement.getTagName();
@@ -183,7 +181,6 @@ public class SodUtil {
 	edu.iris.Fissures.Time begin=null, end=null;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
-	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
 		Element subElement = (Element)node;
 		String tagName = subElement.getTagName();
