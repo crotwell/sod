@@ -1,65 +1,48 @@
 package edu.sc.seis.sod;
 
-
 import org.apache.log4j.Category;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class SimpleErrorHandler implements ErrorHandler {
 
-    //not sure why this is needed???
-    boolean warmup=false;
-
-    boolean foundError = false;
-
-            /** Warning. */
-    public void warning(SAXParseException ex) throws SAXException {
-    logger.warn(getLocationString(ex), ex);
-        foundError = true;
+    public SimpleErrorHandler(String filename) {
+        this.filename = filename;
     }
 
-    /** Error. */
-    public void error(SAXParseException ex)  throws SAXException {
-        if (warmup)
-            return;
-        foundError = true;
-    logger.error(getLocationString(ex), ex);
+    public void warning(SAXParseException ex) {
+        logger.warn(getLocationString(ex), ex);
     }
 
-    /** Fatal error. */
-    public void fatalError(SAXParseException ex) throws SAXException {
-        if (warmup)
-            return;
-
-        logger.fatal(getLocationString(ex), ex);
-                foundError = true;
-        throw ex;
+    public void error(SAXParseException ex) {
+        logger.warn(getLocationString(ex), ex);
     }
 
-    public boolean isFoundError() {
-        return foundError;
+    public void fatalError(SAXParseException ex) {
+        System.err.println("SOD had trouble loading the strategy file " + filename);
+        System.err.println("It appears there's something wrong on line "
+                + ex.getLineNumber());
+        System.err.println("SOD requires well formed XML files which means among other things that every start tag must be matched by an end tag, and that there can be only one root element.  To find out more about what could be wrong with this file, go to xmlIntro.html in the docs in the SOD distribution");
+        System.err.println(ex.getLocalizedMessage());
+        System.exit(1);
     }
 
-    /** Returns a string of the location. */
     private String getLocationString(SAXParseException ex) {
         StringBuffer str = new StringBuffer();
-
         String systemId = ex.getSystemId();
-        if (systemId != null) {
+        if(systemId != null) {
             int index = systemId.lastIndexOf('/');
-            if (index != -1)
-                systemId = systemId.substring(index + 1);
+            if(index != -1) systemId = systemId.substring(index + 1);
             str.append(systemId);
+            str.append(':');
         }
-        str.append(':');
         str.append(ex.getLineNumber());
         str.append(':');
         str.append(ex.getColumnNumber());
-
         return str.toString();
-
     } // getLocationString(SAXParseException):String
 
+    private String filename;
+
     private static Category logger = Category.getInstance(SimpleErrorHandler.class.getName());
- }
+}
