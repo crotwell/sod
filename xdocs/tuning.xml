@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
+<
+xml version="1.0"?>
 <document>
 
   <properties>
@@ -11,9 +12,7 @@
 <section name="Tuning SOD">
 <ul>
   <li>sod.event.QueryIncrement<br/>
-Setting this property (value and unit) to the smallest amount of time that is 
-very liely to get an event every time will speed up processing of early results
-as it limits the amount of per event work that sod must do at startup.
+Set this property to the smallest amount of time that is likely to get an event.  This will allow sod to start working on the first events more quicky as it limits the number of events it must process before it begins working on them individually.
   </li>
 </ul>
 
