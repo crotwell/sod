@@ -1,16 +1,19 @@
 #!/bin/sh
 MAVEN=~/.maven
 
-JACORB=$MAVEN/repository/JacORB/jars/JacORB-2.0beta3.jar
-# for orbacus
-OB=$MAVEN/repository/OB/jars/OB-4.1.0.jar
-OBNAMING=$MAVEN/repository/OBNaming/jars/OBNaming-4.1.0.jar
+JACORB_LIB=$MAVEN/repository/JacORB/jars
+JACORB=$JACORB_LIB/JacORB-2.0.jar
+JACORB_ANTLR=$JACORB_LIB/antlr-2.7.2.jar
+JACORB_AVALON=$JACORB_LIB/avalon-framework-4.1.5.jar
+JACORB_CONCURRENT=$JACORB_LIB/concurrent-1.3.2.jar
+JACORB_LOGKIT=$JACORB_LIB/logkit-1.2.jar
+
+
 
 SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta.jar
-FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.2beta.jar
-FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.1beta.jar
+FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.6beta.jar
+FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.4beta.jar
 FISSURESIDL=$MAVEN/repository/fissuresIDL/jars/fissuresIDL-1.0.jar
-GEOTOOLS=$MAVEN/repository/Geotools1/jars/geotools1.2.jar
 LOG4J=$MAVEN/repository/log4j/jars/log4j-1.2.8.jar
 TAUP=$MAVEN/repository/TauP/jars/TauP-1.1.4.jar
 XALAN=$MAVEN/repository/xalan/jars/xalan-2.5.1.jar
@@ -23,6 +26,10 @@ OPENMAP=$MAVEN/repository/openmap/jars/openmap-4.5.4.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
-# the jaco sh script preloads the orb, so it doesn't need to be in the classpath
-~/External/JacORB/bin/jaco  -Xmx256m -cp ${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.Start $*
+java -Djava.endorsed.dirs=${JACORB_LIB}  \
+    -Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB \
+    -Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton \
+    -Xmx256m \
+    -cp ${JACORB}:${JACORB_ANTLR}:${JACORB_AVALON}:${JACORB_CONCURRENT}:${JACORB_LOGKIT}:${OPENMAP}:${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} \
+    edu.sc.seis.sod.Start $*
 
