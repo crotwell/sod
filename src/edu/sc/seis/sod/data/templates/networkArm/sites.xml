@@ -14,6 +14,8 @@
 <a href="../stations.html"> <networkCode/></a>
 >
 <stationCode/>
+-
+<name/>
 </station>
 </div>
 <div id="Content">
@@ -23,6 +25,7 @@
 <tr id="title">
 <td>Id</td>
 <td>Begin Time</td>
+<td>End Time</td>
 <td>Latitude</td>
 <td>Longitude</td>
 <td>Elevation</td>
@@ -32,8 +35,9 @@
 <sites>
 <site>
 <tr>
-<td><a><attribute name="href"><siteCode/>-<beginTime>yyyyMMddHHmmss</beginTime>/channels.html</attribute><networkCode/>.<stationCode/>.<siteCode/></a></td>
+<td><a><attribute name="href"><siteCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/channels.html</attribute><networkCode/>.<stationCode/>.<siteCode/></a></td>
 <td><beginTime/></td>
+<td><endTime/></td>
 <td><lat/></td>
 <td><lon/></td>
 <td><elevation/></td>

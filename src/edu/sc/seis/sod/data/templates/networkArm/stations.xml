@@ -21,8 +21,10 @@
 <h2>Stations:</h2>
 <table>
 <tr id="title">
-<td>Code</td>
+<td>Id</td>
 <td>Name</td>
+<td>Begin Time</td>
+<td>End Time</td>
 <td>Latitude</td>
 <td>Longitude</td>
 <td>Status</td>
@@ -30,8 +32,10 @@
 <stations>
 <station>
 <tr>
-<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMddHHmmss</beginTime>/sites.html</attribute><stationCode/></a></td>
+<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/sites.html</attribute><networkCode/>.<stationCode/></a></td>
 <td><name/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
 <td><lat/></td>
 <td><lon/></td>
 <td><status/></td>
