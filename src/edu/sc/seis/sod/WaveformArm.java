@@ -291,7 +291,9 @@ public class WaveformArm implements Runnable {
                     break;
                 }
             }
-            if(pairGroup == null) { return null; }
+            if(pairGroup == null) {
+                throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "+ecp);
+            }
             int[] pairIds;
             synchronized(evChanStatus) {
                 pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
