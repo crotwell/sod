@@ -11,7 +11,7 @@
                 <description>The waveform arm takes the </description>
             </xsd:annotation>
             <externalRef href="localSeismogram.rng"/>
-            <externalRef href="motionVector.rng"/>
+            <externalRef href="waveformVectorArm.rng"/>
         </choice>
     </define>
 </grammar>
