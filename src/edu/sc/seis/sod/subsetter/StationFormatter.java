@@ -136,17 +136,17 @@ public class StationFormatter extends Template implements StationTemplate{
         else if (tag.equals("beginTime")){
             return new StationTemplate(){
                 public String getResult(Station sta){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, sta.get_id().begin_time);
-                    return btt.getResult();
+                    return btt.getResult(sta.get_id().begin_time);
                 }
+                TimeTemplate btt = new TimeTemplate(el);
             };
         }
         else if (tag.equals("endTime")){
             return new StationTemplate(){
                 public String getResult(Station sta){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, sta.effective_time.end_time);
-                    return btt.getResult();
+                    return btt.getResult(sta.effective_time.end_time);
                 }
+                TimeTemplate btt = new TimeTemplate(el);
             };
         }
         else if (tag.equals("beginTimeUnformatted")){

@@ -84,17 +84,17 @@ public class SiteFormatter extends Template implements SiteTemplate {
         else if (tag.equals("beginTime")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, site.get_id().begin_time);
-                    return btt.getResult();
+                    return btt.getResult(site.get_id().begin_time);
                 }
+                    TimeTemplate btt = new TimeTemplate(el);
             };
         }
         else if (tag.equals("endTime")){
             return new SiteTemplate(){
                 public String getResult(Site site){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, site.effective_time.end_time);
-                    return btt.getResult();
+                    return btt.getResult(site.effective_time.end_time);
                 }
+                TimeTemplate btt = new TimeTemplate(el);
             };
         }
         else if (tag.equals("status") && sgt != null){

@@ -6,7 +6,7 @@
 
 package edu.sc.seis.sod.subsetter;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.Time;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.w3c.dom.Element;
@@ -72,17 +72,18 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
         else if (tag.equals("beginTime")){
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, net.get_attributes().get_id().begin_time);
-                    return btt.getResult();
+                    return btt.getResult(net.get_attributes().get_id().begin_time);
                 }
+                TimeTemplate btt = new TimeTemplate(el);
+                    
             };
         }
         else if (tag.equals("endTime")){
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
-                    BeginTimeTemplate btt = new BeginTimeTemplate(el, net.get_attributes().effective_time.end_time);
-                    return btt.getResult();
+                    return btt.getResult(net.get_attributes().effective_time.end_time);
                 }
+                TimeTemplate btt = new TimeTemplate(el);
             };
         }
         else if (tag.equals("beginTimeUnformatted")){
@@ -128,9 +129,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
                 }
             };
         }
-        
         return null;
     }
-    
 }
 
