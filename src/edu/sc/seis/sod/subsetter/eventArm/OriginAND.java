@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
 import java.util.Iterator;
@@ -71,11 +72,11 @@ public final class OriginAND extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         while (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
-            if ( !filter.accept(event, e)) { return false;}
+            if ( !filter.accept(event, eventAttr, e)) { return false;}
         }
         return true;
     }

@@ -1,11 +1,10 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.ConfigurationException;
+import org.w3c.dom.Element;
 
 /**
  * originXOR contains a sequence of originSubsetters. The minimum value of the sequence is 2 and
@@ -49,10 +48,10 @@ public final class OriginXOR extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         OriginSubsetter filterA = (OriginSubsetter)filterList.get(0);
         OriginSubsetter filterB = (OriginSubsetter)filterList.get(1);
-        return ( filterA.accept(event, e) != filterB.accept(event, e));
+        return ( filterA.accept(event, eventAttr, e) != filterB.accept(event, eventAttr, e));
     }
 
 }// OriginXOR

@@ -8,6 +8,9 @@
         <include href="../base/include/range.rng"/>
         <define name="origin">
                 <choice>
+                        <ref name="name"/>
+                        <ref name="geographicalRegion"/>
+                        <ref name="seismicRegion"/>
                         <ref name="originTimeRange"/>
                         <externalRef href="../base/externalRef/magnitudeRange.rng"/>
                         <ref name="depthRange"/>
@@ -24,6 +27,62 @@
                         <ref name="NULL"/>
                 </choice>
         </define>
+    <define name="name">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the event name. </summary>
+                <description> Evaluates to true if the name of the event matches the string. </description>
+                <example>
+                    <eventAttrName>Fred</eventAttrName>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="eventAttrName">
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="geographicalRegion">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the geographic Flinn-Engdahl region number. </summary>
+                <description> Evaluates to true if the numerical value of the geographic region of
+                    the event matches one of the values in the list. </description>
+                <example>
+                    <geographicRegion>
+                        <value>12 47</value>
+                    </geographicRegion>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="geographicalRegion">
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
+    <define name="seismicRegion">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary> Matches the seismic Flinn-Engdahl region number. </summary>
+                <description> Evaluates to true if the numerical value of the seismic region of the
+                    event matches one of the values in the list. </description>
+                <example>
+                    <seismicRegion>
+                        <value>12 47</value>
+                    </seismicRegion>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="seismicRegion">
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
         <define name="originTimeRange">
                 <xsd:annotation>
                         <xsd:documentation xml:lang="en">

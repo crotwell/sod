@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
@@ -14,6 +15,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  */
 
 public interface OriginSubsetter extends Subsetter{
-    public boolean accept(EventAccessOperations eventAccess, Origin origin)
+    public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin)
         throws Exception;
 }// OriginSubsetter

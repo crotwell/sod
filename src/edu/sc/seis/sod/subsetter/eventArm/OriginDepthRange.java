@@ -1,14 +1,10 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.model.QuantityImpl;
+import org.w3c.dom.Element;
 
 /**
  * This subsetter specifies the depthRange for the origin
@@ -55,7 +51,7 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange imple
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin origin) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         QuantityImpl actualDepth = (QuantityImpl)origin.my_location.depth;
         if(actualDepth.greaterThanEqual((QuantityImpl)getMinDepth()) && actualDepth.lessThanEqual((QuantityImpl)getMaxDepth())) {
             return true;

@@ -83,8 +83,6 @@ public class EventArm implements Runnable{
                 Object sodElement = SodUtil.load(el, "eventArm");
                 if(sodElement instanceof EventFinder) {
                     eventFinderSubsetter = (EventFinder)sodElement;
-                }  else if(sodElement instanceof EventAttrSubsetter) {
-                    eventAttrSubsetter = (EventAttrSubsetter) sodElement;
                 } else if(sodElement instanceof OriginSubsetter) {
                     originSubsetter = (OriginSubsetter)sodElement;
                 } else if(sodElement instanceof EventArmProcess) {
@@ -262,20 +260,15 @@ public class EventArm implements Runnable{
         change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
                                  Standing.IN_PROG));
         EventAttr attr = event.get_attributes();
-        if(eventAttrSubsetter == null || eventAttrSubsetter.accept(attr)) {
-            Origin origin = event.get_preferred_origin();
-            if(originSubsetter.accept(event, origin)) {
-                change(event, Status.get(Stage.PROCESSOR,
-                                         Standing.IN_PROG));
-                process(event);
-                change(event, Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                         Standing.IN_PROG));
-            }else{
-                change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                         Standing.REJECT));
-            }
+        Origin origin = event.get_preferred_origin();
+        if(originSubsetter.accept(event, attr, origin)) {
+            change(event, Status.get(Stage.PROCESSOR,
+                                     Standing.IN_PROG));
+            process(event);
+            change(event, Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                     Standing.IN_PROG));
         }else{
-            change(event, Status.get(Stage.EVENT_ATTR_SUBSETTER,
+            change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                      Standing.REJECT));
         }
     }
@@ -436,8 +429,6 @@ public class EventArm implements Runnable{
     private TimeInterval increment, lag, refreshInterval;
 
     private EventFinder eventFinderSubsetter;
-
-    private EventAttrSubsetter eventAttrSubsetter = new NullEventAttrSubsetter();
 
     private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 

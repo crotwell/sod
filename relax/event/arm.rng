@@ -7,9 +7,6 @@
                 <externalRef href="source.rng"/>
             </oneOrMore>
             <optional>
-                <externalRef href="attr.rng"/>
-            </optional>
-            <optional>
                 <externalRef href="origin.rng"/>
             </optional>
             <zeroOrMore>

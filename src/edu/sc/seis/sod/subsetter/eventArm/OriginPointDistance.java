@@ -6,17 +6,14 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-
-
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-
-import org.w3c.dom.*;
-import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRangeSubsetter implements OriginSubsetter{
 
@@ -39,7 +36,7 @@ public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRange
      * given lat and lon.
      *
      */
-    public boolean accept(EventAccessOperations event, Origin origin) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);

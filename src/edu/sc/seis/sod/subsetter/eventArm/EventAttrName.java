@@ -1,7 +1,10 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -11,8 +14,15 @@ import org.w3c.dom.Element;
  *</pre>
  */
 
-public class EventAttrName implements EventAttrSubsetter {
-    public EventAttrName (Element config) throws ConfigurationException {}
+public class EventAttrName implements OriginSubsetter {
+    public EventAttrName (Element config) throws ConfigurationException {
+    name = SodUtil.getNestedText(config);
+    }
 
-    public boolean accept(EventAttr e) { return true; }
+    public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin) {
+        return name.equals(eventAttr);
+    }
+
+    String name;
+
 }// EventAttrName

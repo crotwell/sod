@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.ConfigurationException;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 /**
  * Contains a single OriginSubsetter. OriginArrayOR returns true when the contained originSubsetter is
  * true for any one of the origins.
@@ -29,13 +29,13 @@ public class OriginArrayOR  extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         while (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
             Origin[] origins = event.get_origins();
             for(int counter = 0; counter < origins.length; counter++) {
-                if (filter.accept(event, origins[counter])) { return true; }
+                if (filter.accept(event, eventAttr, origins[counter])) { return true; }
             }
         }
         return false;

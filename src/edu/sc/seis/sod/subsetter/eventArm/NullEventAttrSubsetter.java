@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
 
 /**
  * NullEventAttrSubsetter.java
@@ -12,8 +14,8 @@ import edu.iris.Fissures.IfEvent.EventAttr;
  * @version
  */
 
-public class NullEventAttrSubsetter implements EventAttrSubsetter {
+public class NullEventAttrSubsetter implements OriginSubsetter {
     public NullEventAttrSubsetter () {}
 
-    public boolean accept(EventAttr e) { return true; }
+    public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin) { return true; }
 }// NullEventAttrSubsetter

@@ -1,12 +1,10 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.model.*;
-import edu.iris.Fissures.*;
-import org.w3c.dom.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.SodUtil;
+import org.w3c.dom.Element;
 
 /**
  * This tag is used to specify the value of the catalog.
@@ -23,7 +21,7 @@ public class Contributor implements OriginSubsetter{
      * returns true if the contributor of the origin is same as the corresponding
      * contributor specified in the configuration file.
      */
-    public boolean accept(EventAccessOperations event, Origin origin) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         if(origin.contributor.equals(getContributor())) return true;
         return false;
     }

@@ -29,13 +29,13 @@ public class OriginArrayAND  extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         while (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
             Origin[] origins = event.get_origins();
             for(int counter = 0; counter < origins.length; counter++) {
-                if (!filter.accept(event, origins[counter])) { return false; }
+                if (!filter.accept(event, eventAttr, origins[counter])) { return false; }
             }
         }
         return true;

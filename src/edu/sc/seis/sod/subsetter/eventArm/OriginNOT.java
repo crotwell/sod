@@ -1,11 +1,11 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.ConfigurationException;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 /**
  * This subsetter is used to specify a negation of OriginSubsetter. This subsetter is accepted only when the included
@@ -28,11 +28,11 @@ public final class OriginNOT extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         if (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
-            if (filter.accept(event, e)) { return false; }
+            if (filter.accept(event, eventAttr, e)) { return false; }
         }
         return true;
     }

@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import edu.iris.Fissures.IfEvent.*;
-import edu.iris.Fissures.event.*;
-import edu.iris.Fissures.*;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.Origin;
+import org.w3c.dom.Element;
 
 /**
  * NullOriginSubsetter.java
@@ -22,7 +20,7 @@ public class NullOriginSubsetter implements OriginSubsetter {
 
     public NullOriginSubsetter (Element config) { }
 
-    public boolean accept(EventAccessOperations event, Origin e) throws Exception{
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         return true;
     }
 }// NullOriginSubsetter

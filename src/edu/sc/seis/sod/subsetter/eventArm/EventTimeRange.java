@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import org.w3c.dom.Element;
@@ -46,7 +47,7 @@ import org.w3c.dom.Element;
 public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implements OriginSubsetter {
     public EventTimeRange (Element config){ super(config); }
 
-    public boolean accept(EventAccessOperations event, Origin origin) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         MicroSecondDate actualDate = new MicroSecondDate(origin.origin_time);
         MicroSecondDate startDate = new MicroSecondDate(getStartTime());
         MicroSecondDate endDate = new MicroSecondDate(getEndTime());

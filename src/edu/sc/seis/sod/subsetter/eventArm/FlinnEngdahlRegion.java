@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
+public abstract class FlinnEngdahlRegion implements OriginSubsetter {
     /**
      * Creates a new <code>FlinnEngdahlRegion</code> instance.
      *
@@ -42,10 +42,10 @@ public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
 
     }
 
-    public boolean accept(EventAttr e) {
-        if(e.region.type.value() == getType().value()) {
+    public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin) {
+        if(eventAttr.region.type.value() == getType().value()) {
             for(int counter = 0; counter < regions.length; counter++) {
-                if(e.region.number == regions[counter].intValue()) {
+                if(eventAttr.region.number == regions[counter].intValue()) {
                     return true;
                 }
             }

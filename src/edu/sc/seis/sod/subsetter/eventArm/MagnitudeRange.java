@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.eventArm;
 
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -58,7 +59,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
         this.config = config;
     }
 
-    public boolean accept(EventAccessOperations event, Origin origin) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
         if(origin.magnitudes[0].value >= getMinValue() &&
            origin.magnitudes[0].value <= getMaxValue()) { return true;
         }else return false;

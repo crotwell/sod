@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+import edu.sc.seis.sod.subsetter.eventArm.OriginSubsetter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -60,7 +59,7 @@ public class EventArea implements OriginSubsetter,SodElement {
      * returns true if the given origin is within the area specified in the
      * configuration file else returns false.
      */
-    public boolean accept(EventAccessOperations event, Origin e) {
+    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) {
         if(area instanceof edu.iris.Fissures.BoxArea) {
             edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
 
