@@ -90,7 +90,13 @@ public class PhaseRequest implements RequestGenerator{
             origin.my_location.equals(prevOriginLoc) &&
             channel.my_site.my_location.equals(prevSiteLoc) ) {
             // don't need to do any work
-            return prevRequestFilter;
+            RequestFilter[] out = new RequestFilter[prevRequestFilter.length];
+            for (int i = 0; i < out.length; i++) {
+                out[i] = new RequestFilter(channel.get_id(),
+                                           prevRequestFilter[i].start_time,
+                                           prevRequestFilter[i].end_time);
+            }
+            return out;
         } else {
             prevOriginLoc = origin.my_location;
             prevSiteLoc = channel.my_site.my_location;
