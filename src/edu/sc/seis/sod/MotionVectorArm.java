@@ -333,7 +333,7 @@ public class MotionVectorArm implements Subsetter {
                 } // end of else
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="
-                                + after.subtract(before));
+                                + after.subtract(before).convertTo(UnitImpl.SECOND));
                 LinkedList tempForCast = new LinkedList();
                 for(int j = 0; j < localSeismograms[i].length; j++) {
                     if(localSeismograms[i][j] == null) {
