@@ -50,7 +50,8 @@ if __name__ == "__main__":
                       help="tar base name", metavar="NAME",
                       default=buildName(proj))
     parser.add_option("-e", "--external", dest="external",
-                      help="build dist for release.  The dist includes weed, tutorial and docs with this option specified as opposed to all config files in the scripts directory and no docs otherwise", default=False,
+                      help="build dist for release.  The dist includes weed, tutorial and docs with this option specified as opposed to all config files in the scripts directory and no docs otherwise",
+                      default=False,
                       action="store_true")
     options = parser.parse_args()[0]
     if options.external : buildExternal(proj, options.name)
