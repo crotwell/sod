@@ -4,7 +4,7 @@ package edu.sc.seis.sod.status.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.event.EventCondition;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -77,7 +77,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
         }
     }
 
-    public void change(EventAccessOperations event, EventCondition status) {
+    public void change(EventAccessOperations event, Status status) {
         write();
     }
 

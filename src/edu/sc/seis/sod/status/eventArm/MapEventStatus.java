@@ -6,9 +6,8 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.event.StatefulEvent;
-import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
@@ -41,7 +40,7 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventA
         actIfPeriodElapsed();
     }
 
-    public void change(EventAccessOperations event, EventCondition status){
+    public void change(EventAccessOperations event, Status status){
         actIfPeriodElapsed();
     }
 
