@@ -125,7 +125,6 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDistance(ArrayList list) {
-        System.out.println("getDistance via ArrayList");
         return getDistance((Station)list.get(0), (Origin)list.get(1));
     }
 
@@ -136,7 +135,6 @@ public class FissuresFormatter {
         if (origin == null) {
             throw new NullPointerException("origin is null");
         }
-        System.out.println("getDistance slat="+station.my_location.latitude+" olat="+origin.my_location.latitude);
         return getDistance(station.my_location, origin.my_location);
     }
 
