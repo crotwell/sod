@@ -163,7 +163,7 @@
         </dependency>
         <dependency>
             <id>mockFissures</id>
-            <version>0.2</version>
+            <version>0.3</version>
             <type>test</type>
         </dependency>
         <dependency>
