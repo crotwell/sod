@@ -24,15 +24,11 @@ Networks
 <th>Name</th>
 </tr>
 #foreach ( $net in $successful_networks )
-#set ($netyear = $fissures.networkCodeYear($net.getNetworkAccess()) )
-#set ($netCode = $fissures.formatNetwork($net.getNetworkAccess().get_attributes().get_id()) )
+#set ($netAccess = $net.getNetworkAccess())
+#set ($netCode = $fissures.formatNetwork($netAccess.get_attributes().get_id()) )
 <tr>
-#if ($net.getNetworkAccess().get_attributes().get_code().startsWith("X") || $net.getNetworkAccess().get_attributes().get_code().startsWith("X") || $net.getNetworkAccess().get_attributes().get_code().startsWith("X"))
-<td>$netyear</td>
-#else
-<td>$net.getNetworkAccess().get_attributes().get_code()</td>
-#end
-<td><a href="${netCode}.html">$fissures.networkName($net.getNetworkAccess())</a></td>
+<td>$netCode</td>
+<td><a href="${netCode}.html">$fissures.networkName($netAccess)</a></td>
 </tr>
 #end
 </table>
