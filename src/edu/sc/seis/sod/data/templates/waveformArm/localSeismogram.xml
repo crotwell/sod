@@ -55,15 +55,15 @@ $fissures.formatMagnitude($m),
 </tr>
 <tr>
 <td><b>Distance</b></td>
-<td>$fissures.getDistance($station.location, $origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getDistance($station.location, $origin.location))</td>
 </tr>
 <tr>
 <td><b>Azimuth</b></td>
-<td>$fissures.getAzimuth($station.location, $origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getAzimuth($station.location, $origin.location))</td>
 </tr>
 <tr>
 <td><b>Back Azimuth</b></td>
-<td>$fissures.getBackAzimuth($station.location, $origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getBackAzimuth($station.location, $origin.location))</td>
 </tr>
 </table>
 <h2>Station Info</h2>
