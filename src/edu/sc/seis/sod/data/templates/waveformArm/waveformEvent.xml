@@ -14,11 +14,11 @@
 > <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
 </div>
 <div id="Content">
-<h1>Channel information for this event</h1>
+<h1>Station information for this event</h1>
 <h2>Map:</h2>
 <img><attribute name="src"><map/></attribute></img><br/>
 Maps only update once every two minutes
-<h2>Channels:</h2>
+<h2>Stations:</h2>
 <table>
 <tr id="title">
 <td>Id</td>
@@ -26,34 +26,33 @@ Maps only update once every two minutes
 <td>End Time (GMT)</td>
 <td>Status</td>
 </tr>
-<channels>
+<stations>
 <statusFilter>
    <status>SUCCESS</status>
 </statusFilter>
-<channel><tr>
+<station><tr>
 <td>
-<a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
+<a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/></a>
 </td>
 <td><beginTime/></td>
 <td><endTime/></td>
 <td><attribute name="id"><status/></attribute><status/></td>
 </tr>
-</channel>
-</channels>
+</station>
+</stations>
 
-<channels>
+<stations>
 <statusFilter>
    <notStatus>SUCCESS</notStatus>
 </statusFilter>
-<channel><tr>
-<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>
-</td>
+<station><tr>
+<td><networkCode/>.<stationCode/></td>
 <td><beginTime/></td>
 <td><endTime/></td>
 <td><attribute name="id"><status/></attribute><status/></td>
 </tr>
-</channel>
-</channels>
+</station>
+</stations>
 </table>
 
 
