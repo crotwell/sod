@@ -279,7 +279,7 @@ public class Start {
 	
     private void handleStartupRunProperties() {
 		if(runProps.removeDatabase()) {
-			File dbDir = new File("SodDb");
+			File dbDir = new File(DATABASE_DIR);
 			if(dbDir.exists()) {
 				File[] dbFiles = dbDir.listFiles();
 				for(int i = 0; i < dbFiles.length; i++) {
@@ -296,7 +296,7 @@ public class Start {
 											  e);
 			}
 		} else {
-			File dbDir = new File("SodDb");
+			File dbDir = new File(DATABASE_DIR);
 			if(dbDir.exists()) {
 				try {
 					JDBCEventChannelStatus evChanStatusTable = new JDBCEventChannelStatus();
@@ -436,6 +436,8 @@ public class Start {
     private static String configFileName;
 	
     private static MicroSecondDate startTime;
+    
+    private static String DATABASE_DIR = "SodDb";
 	
     protected static int[] suspendedPairs = new int[0];
 	
