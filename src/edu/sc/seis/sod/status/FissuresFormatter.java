@@ -24,6 +24,7 @@ import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
+import java.text.SimpleDateFormat;
 
 /** this class largely exists as an access for various utility methods for
  * Velocity templates.*/
@@ -51,6 +52,9 @@ public class FissuresFormatter {
 
     public static String formatNetwork(NetworkId id) {
         return NetworkIdUtil.toStringNoDates(id);
+    }
+    public static String formatNetworkYear(NetworkId id) {
+        return NetworkIdUtil.toStringNoDates(id)+yearDateFormat.format(new MicroSecondDate(id.begin_time));
     }
 
     public static String networkName(NetworkAccess net) {
@@ -100,6 +104,8 @@ public class FissuresFormatter {
         return new QuantityImpl(d.getBaz(), UnitImpl.DEGREE);
     }
 
+    public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 }
+
 
 
