@@ -50,38 +50,17 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
         if(formatter == null  || config == null) {
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformConfig");
         }
+        template = new WaveformEventTemplate(config, fileDir, formatter, filename);
     }
 
     public void change(EventAccessOperations event, Status status) {
-        try {
-        getTemplate(event);
-        } catch (IOException e) {
-            String msg = "Got an IOException changing event status: ";
-            try {
-                msg += event.get_preferred_origin().origin_time.date_time;
-            } catch (NoPreferredOrigin ee) {
-                msg += " NoPreferredOrigin ";
+        if(!added){
+            if(Start.getWaveformArm() != null) {
+                Start.getWaveformArm().addStatusMonitor(template);
+                added = true;
             }
-            msg+=" status="+status.toString();
-            GlobalExceptionHandler.handle(msg, e);
-        } catch (ConfigurationException e) {
-            String msg = "Got an ConfigurationException changing event status: ";
-            try {
-                msg += event.get_preferred_origin().origin_time.date_time;
-            } catch (NoPreferredOrigin ee) {
-                msg += " NoPreferredOrigin ";
-            }
-            msg+=" status="+status.toString();
-            GlobalExceptionHandler.handle(msg, e);
         }
-    }
-
-    private synchronized WaveformEventTemplate getTemplate(EventAccessOperations ev) throws IOException, ConfigurationException {
-        if( ! eventTemplates.containsKey(ev)){
-            logger.debug("creating new template for "+ev+"  WaveformEventTemplateGenerator.hashCode="+this.hashCode());
-            eventTemplates.put(ev, new WaveformEventTemplate(config, fileDir, formatter.getResult(ev) + '/' + filename, ev));
-        }
-        return (WaveformEventTemplate)eventTemplates.get(ev);
+        template.update(event, status);
     }
 
     public void setArmStatus(String status) {}
@@ -90,15 +69,10 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
         // do nothing, just be a WaveformArmMonitor to be loaded in the WaveformArm
     }
 
-
-
+    private boolean added = false;
+    private WaveformEventTemplate template;
     private Element config;
-
     private EventFormatter formatter;
-
     private String fileDir, filename;
-
-    private Map eventTemplates = new HashMap();
-
     private static Logger logger = Logger.getLogger(WaveformEventTemplateGenerator.class);
 }
