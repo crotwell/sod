@@ -2536,6 +2536,24 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="networkStatusType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="externalNetworkStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="networkStatusType">
+                <xsd:sequence>
+                    <xsd:element name="classname" type="xsd:string"/>
+                    <xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="printLineChannelProcessorType">
         <xsd:complexContent>
             <xsd:extension base="internalProcessType">
@@ -2613,6 +2631,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="networkProcess" type="processType" abstract="true"/>
     <xsd:element name="printlineChannelProcessor" type="printLineChannelProcessorType"  substitutionGroup="networkProcess"/>
     <xsd:element name="externalNetworkProcess" type="externalNetworkProcessType" substitutionGroup="networkProcess"/>
+    <xsd:element name="networkStatus" type="networkStatusType" abstract="true"/>
+    <xsd:element name="externalNetworkStatus" type="externalNetworkStatusType" substitutionGroup="networkStatus"/>
+
 
     <xsd:complexType name="networkArmType">
         <xsd:complexContent>
@@ -2624,6 +2645,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                     <xsd:element ref="site"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="channel"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="networkProcess" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="networkStatus" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
