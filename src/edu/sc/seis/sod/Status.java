@@ -29,8 +29,16 @@ public class Status{
     public static final byte SPECIAL = 0, IN_PROG = 1, REJECT = 2, RETRY = 3,
         CORBA_FAILURE = 4, SYSTEM_FAILURE = 5;
 
-    public static final String[] TYPE_STRINGS = { "", "in progress", "rejected",
-            "scheduled for retry", "had a corba failure", "had a system failure" };
+    public static final String[] TYPE_STRINGS = new String[6];
+
+    static {
+        TYPE_STRINGS[SPECIAL]        = "";
+        TYPE_STRINGS[IN_PROG]        = "in progress";
+        TYPE_STRINGS[REJECT]         = "rejected";
+        TYPE_STRINGS[RETRY]          = "scheduled for retry";
+        TYPE_STRINGS[CORBA_FAILURE]  = "had a corba failure";
+        TYPE_STRINGS[SYSTEM_FAILURE] = "had a system failure";
+    };
 
     //These are the two SPECIAL type stages.  Specify SPECIAL for the type to
     //get to them
@@ -45,15 +53,25 @@ public class Status{
         EVENT_CHANNEL_SUBSETTER = 4, REQUEST_SUBSETTER = 5,
         AVAILABLE_DATA_SUBSETTER = 6, DATA_SUBSETTER = 7, PROCESSOR = 8, EVENT_CHANNEL_POPULATION = 9;
 
-    private static final String[] STAGE_STRINGS = { "Event attribute subsetter",
-            "Event origin subsetter", "Network subsetter", "Event station subsetter",
-            "Event channel subsetter", "Request subsetter",
-            "Available data subsetter", "Data subsetter", "Processor" };
+    private static final String[] STAGE_STRINGS = new String[10];
+
+    static {
+        STAGE_STRINGS[EVENT_ATTR_SUBSETTER]     = "Event attribute subsetter";
+        STAGE_STRINGS[EVENT_ORIGIN_SUBSETTER]   = "Event origin subsetter";
+        STAGE_STRINGS[NETWORK_SUBSETTER]        = "Network subsetter";
+        STAGE_STRINGS[EVENT_STATION_SUBSETTER]  = "Event station subsetter";
+        STAGE_STRINGS[EVENT_CHANNEL_SUBSETTER]  = "Event channel subsetter";
+        STAGE_STRINGS[REQUEST_SUBSETTER]        = "Request subsetter";
+        STAGE_STRINGS[AVAILABLE_DATA_SUBSETTER] = "Available data subsetter";
+        STAGE_STRINGS[DATA_SUBSETTER]           = "Data subsetter";
+        STAGE_STRINGS[PROCESSOR]                = "Processor" ;
+        STAGE_STRINGS[EVENT_CHANNEL_POPULATION] = "Event Channel Population" ;
+    }
 
     public static Status get(int stage, int type){
         if(type >= TYPE_STRINGS.length || stage >= STAGE_STRINGS.length){
             String msg = "You passed in a type byte of " + type +
-                        " and a stage byte of "+stage+
+                " and a stage byte of "+stage+
                 " but the allowable type range is from 0 to " +
                 TYPE_STRINGS.length + " and the allowable stage range is 0 to "
                 + STAGE_STRINGS.length;
