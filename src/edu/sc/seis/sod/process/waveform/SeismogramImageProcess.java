@@ -67,6 +67,16 @@ public class SeismogramImageProcess implements WaveformProcess {
                 dims = SodUtil.loadDimensions((Element)n);
             } else if(n.getNodeName().equals("showOnlyFirstArrivals")) {
                 showOnlyFirst = true;
+            } else if(n.getNodeName().equals("phaseNameMappings")) {
+                renamer = new PhasePhilter.PhaseRenamer(n);
+            } else if(n.getNodeName().equals("phaseFlags")) {
+                Element subEl = (Element)n;
+                NodeList flagEls = subEl.getElementsByTagName("phase");
+                phaseFlagNames = new String[flagEls.getLength()];
+                for(int j = 0; j < flagEls.getLength(); j++) {
+                    phaseFlagNames[j] = SodUtil.nodeValueOfXPath((Element)flagEls.item(j),
+                                                                 "text()");
+                }
             }
         }
         locator = new SeismogramImageOutputLocator(el);
@@ -108,7 +118,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                        original,
                        seismograms,
                        fileType,
-                       DEFAULT_PHASES,
+                       phaseFlagNames,
                        cookieJar);
     }
 
@@ -183,15 +193,13 @@ public class SeismogramImageProcess implements WaveformProcess {
                                                                       phases),
                                                  filterOffset);
         if(showOnlyFirst) {
-            Arrival s = PhasePhilter.findFirstS(arrivals);
-            Arrival p = PhasePhilter.findFirstP(arrivals);
-            arrivals = new Arrival[] {p, s};
+            arrivals = PhasePhilter.mindPsAndSs(arrivals);
         }
         final SodFlag[] flags = new SodFlag[arrivals.length];
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));
-            flags[i] = new SodFlag(flagTime, arrivals[i].getName(), bsd);
+            flags[i] = new SodFlag(flagTime, renamer.rename(arrivals[i]), bsd);
             bsd.add(flags[i]);
         }
         final String picFileName = locator.getLocation(event, channel, fileType);
@@ -251,9 +259,13 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     private PhaseWindow phaseWindow = null;
 
+    private PhasePhilter.PhaseRenamer renamer = new PhasePhilter.PhaseRenamer();
+
     private String modelName = "iasp91";
 
     private boolean relativeTime = false;
+
+    private String[] phaseFlagNames = DEFAULT_PHASES;
 
     private static TauP_Time tauptime = null;
 
