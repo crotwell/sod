@@ -63,24 +63,36 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 					       Channel channel,
 					       RequestFilter[] request, 
 					       CookieJar cookies) 
-	throws IOException, ConfigurationException {
-	if ( ! dataDirectory.exists()) {
-	    if ( ! dataDirectory.mkdirs()) {
-		throw new ConfigurationException("Unable to create directory."+dataDirectory);
-	    } // end of if (!)
-		
-	} // end of if (dataDirectory.exits())
-	
-	File bfFile = new File(dataDirectory, getFileName(event));
-	if (bfFile.exists()) {
-	    fileExists = true;
-	} else {
-	    fileExists = false;
-	} // end of else
-	
-	Writer out = new BufferedWriter(new FileWriter(bfFile.getAbsolutePath(), true));
+	throws IOException, ConfigurationException 
+    {
+
+    if ( out != null && event != lastEvent) {
+        out.close();
+        out = null;
+        lastEvent = event;
+    }
+
+    if (out == null ) {
+        logger.debug("opening file");
+        if ( ! dataDirectory.exists()) {
+            if ( ! dataDirectory.mkdirs()) {
+                throw new ConfigurationException("Unable to create directory."+dataDirectory);
+            } // end of if (!)
+            
+        } // end of if (dataDirectory.exits())
+
+        File bfFile = new File(dataDirectory, getFileName(event));
+        if (bfFile.exists()) {
+            fileExists = true;
+        } else {
+            fileExists = false;
+        } // end of else
+        out = new BufferedWriter(new FileWriter(bfFile.getAbsolutePath(), 
+                                                true));
+	}
 	
 	if ( ! fileExists) {
+        fileExists = true;
 	    // first tme to this event, insert headers
 	    out.write(".NAME "+getConfig("name")+nl);
 	    out.write(".INST "+getConfig("inst")+nl);
@@ -148,7 +160,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 		      +nl);
 	    
 	} // end of for (int i=0; i<request.length; i++)
-	out.close();
+    //	out.flush();
     }
 
     protected String getFileName(EventAccessOperations event) {
@@ -179,6 +191,13 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 	
     }
 
+    public void finalize() {
+        if (out != null) {
+            out.close();
+            out = null;
+        } // end of if ()
+    }
+
     static final String nl = "\n";
 
     SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd HH mm ss.");
@@ -191,6 +210,10 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
 
     File dataDirectory;
     boolean fileExists;
+
+    BufferedWriter out = null;
+    EventAccessOperations lastEvent = null;
+
     static Category logger = 
 	Category.getInstance(BreqFastAvailableData.class.getName());
     
