@@ -23,6 +23,20 @@
     
     <!-- abstractType networkID -->
     <xsd:complexType name="networkIDType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all NetworkId subsetters.
+                </summary>
+                <description>
+                    This is a place holder for NetworkId subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -30,6 +44,20 @@
     
     <!--abstractType networkAttr -->
     <xsd:complexType name="networkAttrType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all NetworkAttr subsetters.
+                </summary>
+                <description>
+                    This is a place holder for NetworkAttr subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -37,6 +65,20 @@
     
     <!-- abstractType stationID -->
     <xsd:complexType name="stationIDType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all StationId subsetters.
+                </summary>
+                <description>
+                    This is a place holder for StationId subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -44,6 +86,20 @@
     
     <!-- abstractType station -->
     <xsd:complexType name="stationType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all Station subsetters.
+                </summary>
+                <description>
+                    This is a place holder for Station subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -51,6 +107,20 @@
     
     <!-- abstractType siteID -->
     <xsd:complexType name="siteIDType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all SiteId subsetters.
+                </summary>
+                <description>
+                    This is a place holder for SiteId subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -58,6 +128,20 @@
     
     <!--abstracType site -->
     <xsd:complexType name="siteType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all SiteId subsetters.
+                </summary>
+                <description>
+                    This is a place holder for Site subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -65,6 +149,20 @@
     
     <!-- abstractType channelID -->
     <xsd:complexType name="channelIDType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all ChannelId subsetters.
+                </summary>
+                <description>
+                    This is a place holder for ChannelId subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -72,13 +170,54 @@
     
     <!-- abstractType channel -->
     <xsd:complexType name="channelType" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Abstract superclass of all Channel subsetters.
+                </summary>
+                <description>
+                    This is a place holder for Channel subsetters. See the
+                    list of known subclasses for subsetters that can be used.
+                </description>
+                <example>
+                    
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- NETWORKFINDER TYPE-->
+    
+    
     <xsd:complexType name="networkFinderType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Finds networks.
+                </summary>
+                <description>
+                    A Fissures/DHI NetworkDC service is located via the name
+                    and dns tags. The NetworkFinder is aquired from the NetworkDC,
+                    and a query is sent with the given arguments. The networks
+                    returned are then sent thrrough the NetworkArm for processing.
+                    An optional refresh interval can be given if sod should 
+                    periodically check for new channels.
+                </description>
+                <example>
+                    <networkFinder>
+                        <description>Connect to the IRIS networkDC</description>
+                        <name>IRIS_NetworkDC</name>
+                        <dns>edu/iris/dmc</dns>
+                        <refreshInterval>
+                            <unit>MINUTE</unit>
+                            <value>3000</value>
+                        </refreshInterval>
+                    </networkFinder>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkSource">
                 <xsd:sequence>	
@@ -90,6 +229,20 @@
     
     <!-- NETWORK CODE TYPE -->
     <xsd:complexType name="networkCodeType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Matches a given network code.
+                </summary>
+                <description>
+                    A network is accepted if its network code matches the given
+                    code exactly.
+                </description>
+                <example>
+                    <networkCode><value>IC</value></networkCode>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkIDType">
                 <xsd:sequence>
@@ -101,6 +254,24 @@
     
     <!-- NETWORKID AND TYPE -->
     <xsd:complexType name="networkIDANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between networkId subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <networkIdAND>
+                        <networkCode><value>IC</value></networkCode>
+                        <networkCode><value>IC</value></networkCode>
+                    </networkIdAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkIDType">
                 <xsd:sequence>
@@ -112,6 +283,24 @@
     
     <!-- NETWORKID OR TYPE -->
     <xsd:complexType name="networkIDORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between networkId subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <networkIdOR>
+                        <networkCode><value>CD</value></networkCode>
+                        <networkCode><value>IC</value></networkCode>
+                    </networkIdOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkIDType">
                 <xsd:sequence>
@@ -123,6 +312,23 @@
     
     <!-- NETWORKID XOR TYPE -->	
     <xsd:complexType name="networkIDXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between networkId subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included subsetters.
+                </description>
+                <example>
+                    <networkIdXOR>
+                        <networkCode><value>CD</value></networkCode>
+                        <networkCode><value>IC</value></networkCode>
+                    </networkIdXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkIDType">
                 <xsd:sequence>
@@ -134,6 +340,22 @@
     
     <!-- NETWORKID NOT TYPE -->
     <xsd:complexType name="networkIDNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an networkId subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included subsetter.
+                </description>
+                <example>
+                    <networkIdNOT>
+                        <networkCode><value>CD</value></networkCode>
+                    </networkIdNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkIDType">
                 <xsd:sequence>
@@ -145,6 +367,28 @@
     
     <!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
     <xsd:complexType name="networkeffectiveTimeOverlapType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Matches if the network overlaps the given time range.
+                </summary>
+                <description>
+                    Matches if the network overlaps the given time range.
+                </description>
+                <example>
+                    <networkeffectiveTimeOverlap>
+                        <description>
+                            Make sure the network was up during the time range we 
+                            are interested in.
+                        </description>
+                        <effectiveTimeOverlap>
+                            <min>20020701T00:00:00.001Z</min>
+                            <max>20021030T00:00:00.001Z</max>
+                        </effectiveTimeOverlap>
+                    </networkeffectiveTimeOverlap>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -154,8 +398,22 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- NETWORK ATTR NAME TYPE -->
     <xsd:complexType name="networkAttrNameType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Matches the name of a network.
+                </summary>
+                <description>
+                    Matches the name of a network.
+                </description>
+                <example>
+                    <networkAttrName>
+                        <value>Global Seismograph Network (GSN - IRIS/USGS)</value>
+                    </networkAttrName>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -165,8 +423,23 @@
         </xsd:complexContent>
     </xsd:complexType>	
     
-    <!-- NETWORK ATTR OWNER TYPE -->
     <xsd:complexType name="networkAttrOwnerType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Matches the owner of a network.
+                </summary>
+                <description>
+                    Matches the owner of a network. This is a simple string 
+                    comparision, and so care must be taken for it to be useful.
+                </description>
+                <example>
+                    <networkAttrOwner>
+                        <value>Scripps Institution of Oceanography</value>
+                    </networkAttrOwner>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -176,8 +449,32 @@
         </xsd:complexContent>
     </xsd:complexType>	
     
-    <!--NETWORKATTR AND TYPE-->
     <xsd:complexType name="networkAttrANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between networkAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <networkAttrAND>
+                        <networkAttrOwner>
+                            <value>Scripps Institution of Oceanography</value>
+                        </networkAttrOwner>
+                        <networkeffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </networkeffectiveTimeOverlap>
+                    </networkAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -189,6 +486,31 @@
     
     <!--NETWORKATTR OR TYPE-->
     <xsd:complexType name="networkAttrORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between networkAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <networkAttrOR>
+                        <networkAttrOwner>
+                            <value>Scripps Institution of Oceanography</value>
+                        </networkAttrOwner>
+                        <networkeffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </networkeffectiveTimeOverlap>
+                    </networkAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -200,6 +522,30 @@
     
     <!--NETWORKATTR XOR TYPE-->
     <xsd:complexType name="networkAttrXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between networkAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included subsetters.
+                </description>
+                <example>
+                    <networkAttrXOR>
+                        <networkAttrOwner>
+                            <value>Scripps Institution of Oceanography</value>
+                        </networkAttrOwner>
+                        <networkeffectiveTimeOverlap>
+                            <effectiveTimeOverlap>
+                                <min>20020701T00:00:00.001Z</min>
+                                <max>20021030T00:00:00.001Z</max>
+                            </effectiveTimeOverlap>
+                        </networkeffectiveTimeOverlap>
+                    </networkAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -211,6 +557,24 @@
     
     <!--NETWORKATTR NOT TYPE-->
     <xsd:complexType name="networkAttrNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an networkAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included subsetter.
+                </description>
+                <example>
+                    <networkAttrNOT>
+                        <networkAttrOwner>
+                            <value>Scripps Institution of Oceanography</value>
+                        </networkAttrOwner>
+                    </networkAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="networkAttrType">
                 <xsd:sequence>
@@ -222,6 +586,24 @@
     
     <!--STATIONID AND TYPE-->
     <xsd:complexType name="stationIDANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationIDType">
                 <xsd:sequence>
@@ -233,6 +615,24 @@
     
     <!--STATIONID OR TYPE-->	
     <xsd:complexType name="stationIDORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationIDType">
                 <xsd:sequence>
@@ -244,6 +644,23 @@
     
     <!--STATIONID XOR TYPE-->
     <xsd:complexType name="stationIDXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationIDType">
                 <xsd:sequence>
@@ -255,6 +672,22 @@
     
     <!--STATIONID NOT TYPE-->
     <xsd:complexType name="stationIDNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationIDType">
                 <xsd:sequence>
@@ -323,6 +756,24 @@
     
     <!--STATION AND TYPE-->
     <xsd:complexType name="stationANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -334,6 +785,24 @@
     
     <!--STATION OR TYPE-->	
     <xsd:complexType name="stationORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -345,6 +814,23 @@
     
     <!--STATION XOR TYPE-->
     <xsd:complexType name="stationXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -356,6 +842,22 @@
     
     <!--STATION NOT TYPE-->
     <xsd:complexType name="stationNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -379,6 +881,24 @@
     
     <!--SITEID AND TYPE-->
     <xsd:complexType name="siteIDANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteIDType">
                 <xsd:sequence>
@@ -390,6 +910,24 @@
     
     <!--SITEID OR TYPE-->	
     <xsd:complexType name="siteIDORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteIDType">
                 <xsd:sequence>
@@ -401,6 +939,23 @@
     
     <!--SITEID XOR TYPE-->
     <xsd:complexType name="siteIDXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteIDType">
                 <xsd:sequence>
@@ -412,6 +967,22 @@
     
     <!--SITEID NOT TYPE-->
     <xsd:complexType name="siteIDNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteIDType">
                 <xsd:sequence>
@@ -471,6 +1042,24 @@
     
     <!--SITE AND TYPE-->
     <xsd:complexType name="siteANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -482,6 +1071,24 @@
     
     <!--SITE OR TYPE-->
     <xsd:complexType name="siteORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -493,6 +1100,23 @@
     
     <!--SITE XOR TYPE-->
     <xsd:complexType name="siteXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -504,6 +1128,22 @@
     
     <!--SITE NOT TYPE-->
     <xsd:complexType name="siteNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="siteType">
                 <xsd:sequence>
@@ -517,6 +1157,24 @@
     
     <!--CHANNELID AND TYPE-->
     <xsd:complexType name="channelIDANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelIDType">
                 <xsd:sequence>
@@ -528,6 +1186,24 @@
     
     <!--CHANNELID OR TYPE-->	
     <xsd:complexType name="channelIDORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelIDType">
                 <xsd:sequence>
@@ -539,6 +1215,23 @@
     
     <!--CHANNELID XOR TYPE-->
     <xsd:complexType name="channelIDXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelIDType">
                 <xsd:sequence>
@@ -550,6 +1243,22 @@
     
     <!--CHANNELID NOT TYPE-->
     <xsd:complexType name="channelIDNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelIDType">
                 <xsd:sequence>
@@ -617,6 +1326,24 @@
     
     <!--CHANNEL AND TYPE-->
     <xsd:complexType name="channelANDType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical AND between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical AND of the outputs of all 
+                    included EventAttr subsetters. The subsetters after the
+                    first false outputed are not evaluated. 
+                </description>
+                <example>
+                    <eventAttrAND>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrAND>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelType">
                 <xsd:sequence>
@@ -628,6 +1355,24 @@
     
     <!--CHANNEL OR TYPE-->	
     <xsd:complexType name="channelORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical OR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical OR of the outputs of all 
+                    included EventAttr subsetters. If the first subsetters returns
+                    true then the second is not evaluated. 
+                </description>
+                <example>
+                    <eventAttrOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelType">
                 <xsd:sequence>
@@ -639,6 +1384,23 @@
     
     <!--CHANNEL XOR TYPE-->
     <xsd:complexType name="channelXORType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical XOR between EventAttr subsetters.
+                </summary>
+                <description>
+                    The output is the logical XOR of the outputs of all 
+                    included EventAttr subsetters.
+                </description>
+                <example>
+                    <eventAttrXOR>
+                        <eventAttrName>Fred</eventAttrName>
+                        <geographicRegion>47</geographicRegion>
+                    </eventAttrXOR>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelType">
                 <xsd:sequence>
@@ -650,6 +1412,22 @@
     
     <!--CHANNEL NOT TYPE-->
     <xsd:complexType name="channelNOTType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Logical NOT of an EventAttr subsetter.
+                </summary>
+                <description>
+                    The output is the logical NOT of the output of the 
+                    included EventAttr subsetter.
+                </description>
+                <example>
+                    <eventAttrNOT>
+                        <geographicRegion><value>47</value></geographicRegion>
+                    </eventAttrNOT>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="channelType">
                 <xsd:sequence>
