@@ -572,28 +572,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!-- END Origin -->
-    
-    <!-- BEGIN Event Process -->
-    
-    <!-- EVENT PROCESS TYPE -->
-    <xsd:complexType name="externalEventProcessType">
-        <xsd:complexContent>
-            <xsd:extension base="externalProcessType">
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <xsd:complexType name="printLineEventProcessType">
-        <xsd:complexContent>
-            <xsd:extension base="internalProcessType">
-                <xsd:sequence>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    
     <!-- ORIGIN ARRAY AND -->
     <xsd:complexType name="originArrayANDType">
         <xsd:complexContent>
@@ -615,7 +593,40 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+       
+    <!-- END Origin -->
     
+    <!-- BEGIN Event Process -->
+    
+    <!-- EVENT PROCESS TYPE -->
+    <xsd:complexType name="eventProcessType" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="subsetterType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="externalEventProcessType">
+        <xsd:complexContent>
+            <xsd:extension base="eventProcessType">
+                <xsd:sequence>
+                    <xsd:element name="classname" type="xsd:string"/>
+                    <xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="printLineEventProcessType">
+        <xsd:complexContent>
+            <xsd:extension base="eventProcessType">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+ 
     <!-- element representing the geographicalRegion and the substitutionGroup is eventAttr which is an abstract element -->
     <xsd:element name="geographicalRegion" type="geographicRegionType" substitutionGroup="eventAttr"/>
     
