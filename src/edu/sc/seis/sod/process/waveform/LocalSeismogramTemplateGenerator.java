@@ -63,7 +63,8 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
             seismoImageProcess = new SeismogramImageProcess(fileDir,
                                                             eventFormatter,
                                                             stationFormatter,
-                                                            chanFormatter);
+                                                            chanFormatter,
+                                                            "original_");
             waveformSeismogramConfig.removeChild(tmpEl);
         }
         if(fileDir == null || waveformSeismogramConfig == null
