@@ -41,6 +41,7 @@ public interface Form extends FormProvider{
      * @return  true if the passed in Form is directly descended from this Form
      */
     public boolean isAncestorOf(Form f);
+    public boolean isAncestorOf(Form f, Form root);
 
     /**
      * @return   this form set with parent as its parent, isFromDef returns true
@@ -48,6 +49,6 @@ public interface Form extends FormProvider{
      *
      */
     public Form deref(Form parent, Definition def);
-
+    
     public void accept(Tourist v);
 }
