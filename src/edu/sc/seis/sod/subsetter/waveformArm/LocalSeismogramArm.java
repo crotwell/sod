@@ -14,16 +14,33 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
-
 /**
- * LocalSeismogramArm.java
+ * sample xml
+ *&lt;localSeismogramArm&gt;
+ *	&lt;phaseRequest&gt;
+ *		&lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
+ *		&lt;beginOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;-120&lt;/value&gt;
+ *		&lt;/beginOffset&gt;
+ *		&lt;endPhase&gt;tts&lt;/endPhase&gt;
+ *		&lt;endOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;600&lt;/value&gt;
+ *		&lt;/endOffset&gt;
+ *	&lt;/phaseRequest&gt; 
  *
+ *	&lt;availableDataAND&gt;
+ *		&lt;nogaps/&gt;
+ *		&lt;fullCoverage/&gt;
+ *	&lt;/availableDataAND&gt; 
  *
- * Created: Fri Apr 12 12:48:03 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ *	&lt;sacFileProcessor&gt;
+ *		&lt;dataDirectory&gt;SceppEvents&lt;/dataDirectory&gt;
+ *	&lt;/sacFileProcessor&gt;
+ *&lt;/localSeismogramArm&gt;
  */
+
 
 public class LocalSeismogramArm implements Subsetter{
     public LocalSeismogramArm (Element config) throws ConfigurationException{

@@ -14,15 +14,22 @@ import java.util.*;
 
 import org.w3c.dom.*;
 
-/**
- * PhaseRequest.java
- *
- *
- * Created: Mon Apr  8 15:03:55 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+/** 
+ * sample xml file
+ *	&lt;phaseRequest&gt;
+ *		&lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
+ *       	&lt;beginOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;-120&lt;/value&gt;
+ *		&lt;/beginOffset&gt;
+ *		&lt;endPhase&gt;tts&lt;/endPhase&gt;
+ *		&lt;endOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;600&lt;/value&gt;
+ *		&lt;/endOffset&gt;
+ *	&lt;/phaseRequest&gt;
  */
+
 
 
 public class PhaseRequest implements RequestGenerator{
@@ -82,11 +89,9 @@ public class PhaseRequest implements RequestGenerator{
 	tauPTime.clearPhaseNames();
 	tauPTime.parsePhaseList(beginPhase.getPhase()+" "+endPhase.getPhase());
 	UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
-	originDepth = origin.my_location.depth.value;
-	if(!originUnit.equals(UnitImpl.KILOMETER)) {
-	    originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
-	}
-	tauPTime.setSourceDepth(origin.my_location.depth.value);
+	originDepth = origin.my_location.depth.convertTo(UnitImpl.KILOMETER).value;
+	
+	tauPTime.setSourceDepth(originDepth);
 	tauPTime.calculate(SphericalCoords.distance(origin.my_location.latitude, 
 						    origin.my_location.longitude,
 						    channel.my_site.my_station.my_location.latitude,

@@ -10,12 +10,13 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 
-
 /**
- * Describe class <code>AvailableDataXOR</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * eventAttrXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
+ * the max value of the sequence is 2.
+ *	&lt;availableDataXOR&gt;
+ *		&lt;nogaps/&gt;
+ *		&lt;fullCoverage/&gt;
+ *	&lt;/availableDataXOR&gt;
  */
 public class AvailableDataXOR 
     extends  WaveFormLogicalSubsetter 

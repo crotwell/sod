@@ -13,14 +13,13 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * BeginOffset.java
- *
- *
- * Created: Mon Apr  8 16:41:31 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
- */
+ * specifies the beginOffset
+ * 	&lt;beginOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;-120&lt;/value&gt;
+ * 	&lt;/beginOffset&gt;
+ */		
+ 
 
 public class BeginOffset extends Interval {
     /**

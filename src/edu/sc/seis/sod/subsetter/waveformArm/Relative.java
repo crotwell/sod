@@ -13,6 +13,49 @@ import edu.iris.Fissures.model.*;
 import java.util.*;
 import org.w3c.dom.*;
 
+/**
+ * sample xml
+ * &lt;relative&gt;
+ *	&lt;reference&gt;EVENT&lt;/reference&gt;
+ *	&lt;depthRange&gt;
+ *	        &lt;unitRange&gt;
+ *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *			&lt;min&gt;-1000&lt;/min&gt;
+ *			&lt;max&gt;1000&lt;/max&gt;
+ *		&lt;/unitRange&gt;
+ *	&lt;/depthRange&gt;
+ *	&lt;distanceRange&gt;
+ *		&lt;unit&gt;DEGREE&lt;/unit&gt;
+ *        	&lt;min&gt;60&lt;/min&gt;
+ *		&lt;max&gt;70&lt;/max&gt;
+ *	&lt;/distanceRange&gt;
+ * &lt;/relative&gt;
+ *  
+ *                       (or)
+ *
+ * &lt;relative&gt;
+ *	&lt;reference&gt;EVENT&lt;/reference&gt;
+ *	&lt;distanceRange&gt;
+ *		&lt;unit&gt;DEGREE&lt;/unit&gt;
+ *        	&lt;min&gt;60&lt;/min&gt;
+ *		&lt;max&gt;70&lt;/max&gt;
+ *	&lt;/distanceRange&gt;
+ * &lt;/relative&gt;
+ *
+ *                      (or)
+ *
+ * &lt;relative&gt;
+ *	&lt;reference&gt;EVENT&lt;/reference&gt;
+ *	&lt;depthRange&gt;
+ *	        &lt;unitRange&gt;
+ *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *			&lt;min&gt;-1000&lt;/min&gt;
+ *			&lt;max&gt;1000&lt;/max&gt;
+ *		&lt;/unitRange&gt;
+ *	&lt;/depthRange&gt;
+ * &lt;/relative&gt; 
+ */
+
 public class Relative extends PhaseInteractionType {
 
 	public Relative(Element config) throws ConfigurationException{

@@ -12,11 +12,15 @@ import edu.iris.Fissures.*;
 
 
 /**
- * Describe class <code>AvailableDataOR</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * This subsetter is used to specify a sequence of AvailableDataSubsetters. This subsetter is accepted when even one 
+ * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
+ * the availableDataOR is not accepted.
+ *	&lt;availableDataOR&gt;
+ *		&lt;nogaps/&gt;
+ *		&lt;fullCoverage/&gt;
+ *	&lt;/availableDataOR&gt;
  */
+
 public class AvailableDataOR 
     extends  WaveFormLogicalSubsetter 
     implements AvailableDataSubsetter {

@@ -9,13 +9,14 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
-
-/**
- * Describe class <code>EventChannelAND</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+/** 
+ * eventChannelAND contains a sequence of eventChannelSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
+ * &lt;eventChannelAND&gt;
+ * &lt;/eventChannelAND&gt;
  */
+ 
+
 public class EventChannelAND 
     extends  WaveFormLogicalSubsetter 
     implements EventChannelSubsetter {

@@ -10,13 +10,15 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 
-
-/**
- * Describe class <code>AvailableDataAND</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+/** 
+ * availableDataAND contains a sequence of availableSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
+ *	&lt;availableDataAND&gt;
+ *		&lt;nogaps/&gt;
+ *		&lt;fullCoverage/&gt;
+ *	&lt;/availableDataAND&gt;
  */
+
 public class AvailableDataAND 
     extends  WaveFormLogicalSubsetter 
     implements AvailableDataSubsetter {

@@ -9,13 +9,14 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
-
 /**
- * Describe class <code>EventChannelOR</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * This subsetter is used to specify a sequence of EventChannelSubsetters. This subsetter is accepted when even one 
+ * of the subsetters forming the sequence is accepted. If all the subsetters in the sequence are not accepted then
+ * the eventChannelOR is not accepted.
+ * &lt;eventChannelOR&gt;
+ * &lt;/eventChannelOR&gt;
  */
+
 public class EventChannelOR 
     extends  WaveFormLogicalSubsetter 
     implements EventChannelSubsetter {

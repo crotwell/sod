@@ -10,13 +10,15 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
 
-
 /**
- * Describe class <code>AvailableDataNOT</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * This subsetter is used to specify a negation of availableDataSubsetter. This subsetter is accepted only when the included
+ * subsetter is false.
+ *	&lt;availableDataAND&gt;
+ *		&lt;nogaps/&gt;
+ *	&lt;/availableDataAND&gt;
  */
+
+
 public class AvailableDataNOT 
     extends  WaveFormLogicalSubsetter 
     implements AvailableDataSubsetter {

@@ -11,13 +11,21 @@ import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
 
 /**
- * EmbeddedStationSubsetter.java
- *
- *
- * Created: Mon Apr  8 15:52:51 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the embeddedOriginSubsetter
+ * &lt;embeddedOriginSubsetter&gt;
+ *              &lt;stationArea&gt;
+ *                           &lt;boxArea&gt;
+ *                                    &lt;latitudeRange&gt;
+ *                                                   &lt;min&gt;30&lt;/min&gt;
+ *                                                   &lt;max&gt;33&lt;/max&gt;
+ *                                    &lt;/latitudeRange&gt;
+ *                                    &lt;longitudeRange&gt;
+ *                                                   &lt;min&gt;-100&lt;/min&gt;
+ *                                                   &lt;max&gt;100&lt;/max&gt;
+ *                                    &lt;/longitudeRange&gt;
+ *                           &lt;/boxArea&gt;
+ *              &lt;/stationArea&gt;
+ * &lt;/embeddedOriginSubsetter&gt;
  */
 
 public class EmbeddedStationSubsetter implements EventStationSubsetter{

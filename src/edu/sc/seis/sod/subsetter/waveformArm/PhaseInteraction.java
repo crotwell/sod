@@ -13,14 +13,29 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
-/**
- * PhaseInteraction.java
- *
- *
- * Created: Mon Apr  8 16:32:56 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+
+/** sample xml
+ * 	&lt;phaseInteraction&gt;
+ * 			&lt;modelName&gt;prem&lt;/modelName&gt;
+ *			&lt;phaseName&gt;PcP&lt;/phaseName&gt;
+ *			&lt;interactionStyle&gt;PATH&lt;/interactionStyle&gt;
+ *			&lt;interactionNumber&gt;1&lt;/interactionNumber&gt;
+ *			&lt;relative&gt;
+ *				&lt;reference&gt;EVENT&lt;/reference&gt;
+ * 				&lt;depthRange&gt;
+ *					&lt;unitRange&gt;
+ *						&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *						&lt;min&gt;-1000&lt;/min&gt;
+ *						&lt;max&gt;1000&lt;/max&gt;
+ *					&lt;/unitRange&gt;
+ *				&lt;/depthRange&gt;
+ *				&lt;distanceRange&gt;
+ *					&lt;unit&gt;DEGREE&lt;/unit&gt;
+ *					&lt;min&gt;60&lt;/min&gt;
+ *					&lt;max&gt;70&lt;/max&gt;
+ *				&lt;/distanceRange&gt;
+ *			&lt;/relative&gt;
+ *	&lt;/phaseInteraction&gt;
  */
 
 public class PhaseInteraction implements EventStationSubsetter {

@@ -14,14 +14,13 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * BackAzimuthRange.java
- *
- *
- * Created: Mon Apr  8 16:32:56 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the backAzimuth Range
+ * &lt;backAzimuthRange&gt;
+ *      &lt;min&gt;30&lt;/min&gt;
+ *      &lt;max&gt;180&lt;/max&gt;
+ * &lt;/backAzimuthRange&gt;
  */
+    
 
 public class BackAzimuthRange extends RangeSubsetter implements EventStationSubsetter {
     /**

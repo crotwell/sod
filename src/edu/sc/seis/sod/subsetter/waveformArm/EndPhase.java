@@ -11,13 +11,8 @@ import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
 
 /**
- * EndPhase.java
- *
- *
- * Created: Tue Apr  9 10:19:32 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the endPhase
+ * &lt;endPhase&gt;ttp&lt;/endPhase&gt;
  */
 
 public class EndPhase implements Subsetter{

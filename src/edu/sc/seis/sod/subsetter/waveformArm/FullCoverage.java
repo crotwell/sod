@@ -12,13 +12,8 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 import org.w3c.dom.*;
 
 /**
- * FullCoverage.java
- *
- *
- * Created: Tue Apr  9 10:27:12 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * sample xml
+ *&lt;fullCoverage/&gt;
  */
 
 public class FullCoverage implements AvailableDataSubsetter, SodElement{

@@ -15,13 +15,18 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * LinearDistanceMagnitudeRange.java
- *
- *
- * Created: Mon Apr  8 16:32:56 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * sample xml
+ *  &lt;linearDistanceMagnitude&gt;
+ *    &lt;magnitudeRange&gt;
+ *           &lt;description&gt;describes magnitude&lt;/description&gt;
+ *           &lt;magType&gt;mb&lt;/magType&gt;
+ *           &lt;min&gt;5.5&lt;/min&gt;
+ *     &lt;/magnitudeRange&gt;
+ *     &lt;distanceRange&gt;
+ *           &lt;unit&gt;DEGREE&lt;/unit&gt;
+ *           &lt;min&gt;30&lt;/min&gt;
+ *     &lt;/distanceRange&gt;
+ *  &lt;/linearDistanceMagnitude&gt;
  */
 
 public class LinearDistanceMagnitudeRange extends DistanceRange implements EventStationSubsetter {

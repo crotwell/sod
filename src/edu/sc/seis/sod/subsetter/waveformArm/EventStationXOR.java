@@ -9,13 +9,38 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
-
 /**
- * Describe class <code>EventStationXOR</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * eventStationXOR contains a sequence of eventAttrSubsetters. The minimum value of the sequence is 2 and
+ * the max value of the sequence is 2.
+ *	&lt;eventStationXOR&gt;
+ *		&lt;phaseExists&gt;
+ * 			&lt;modelName&gt;prem&lt;/modelName&gt;
+ *			&lt;phaseName&gt;ttp&lt;/phaseName&gt;
+ *		&lt;/phaseExists&gt;
+ *		&lt;phaseInteraction&gt;
+ *			&lt;modelName&gt;prem&lt;/modelName&gt;
+ *			&lt;phaseName&gt;PcP&lt;/phaseName&gt;
+ *			&lt;interactionStyle&gt;PATH&lt;/interactionStyle&gt;
+ *			&lt;interactionNumber&gt;1&lt;/interactionNumber&gt;
+ *			&lt;relative&gt;
+ *				&lt;reference&gt;EVENT&lt;/reference&gt;
+ *				&lt;depthRange&gt;
+ *					&lt;unitRange&gt;
+ *						&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *						&lt;min&gt;-1000&lt;/min&gt;
+ *						&lt;max&gt;1000&lt;/max&gt;
+ *					&lt;/unitRange&gt;
+ *				&lt;/depthRange&gt;
+ *				&lt;distanceRange&gt;
+ *					&lt;unit&gt;DEGREE&lt;/unit&gt;
+ *					&lt;min&gt;60&lt;/min&gt;
+ *					&lt;max&gt;70&lt;/max&gt;
+ *				&lt;/distanceRange&gt;
+ *			&lt;/relative&gt;
+ *		&lt;/phaseInteraction&gt;
+ *	&lt;/eventStationXOR&gt;
  */
+
 public class EventStationXOR 
     extends  WaveFormLogicalSubsetter 
     implements EventStationSubsetter {

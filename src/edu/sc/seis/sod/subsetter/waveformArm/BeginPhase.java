@@ -11,13 +11,8 @@ import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
 
 /**
- * BeginPhase.java
- *
- *
- * Created: Tue Apr  9 10:19:32 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the beginPhase
+ * &lt;beginPhase&gt;ttp&lt;/beginPhase&gt;
  */
 
 public class BeginPhase implements Subsetter {

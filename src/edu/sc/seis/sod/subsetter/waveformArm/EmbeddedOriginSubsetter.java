@@ -11,14 +11,16 @@ import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
 
 /**
- * EmbeddedOriginSubsetter.java
- *
- *
- * Created: Mon Apr  8 15:52:51 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the embeddedOriginSubsetter
+ * &lt;embeddedOriginSubsetter&gt;
+ *     &lt;magnitudeRange&gt;
+ *           &lt;description&gt;describes magnitude&lt;/description&gt;
+ *           &lt;magType&gt;mb&lt;/magType&gt;
+ *           &lt;min&gt;5.5&lt;/min&gt;
+ *     &lt;/magnitudeRange&gt;
+ * &lt;/embeddedOriginSubsetter&gt;
  */
+
 
 public class EmbeddedOriginSubsetter implements EventStationSubsetter{
     /**

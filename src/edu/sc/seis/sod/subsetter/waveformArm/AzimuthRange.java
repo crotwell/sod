@@ -13,15 +13,17 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
+
 /**
- * AzimuthRange.java
- *
- *
- * Created: Mon Apr  8 16:32:56 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * specifies the azimuth Range
+ * &lt;azimuthRange&gt;
+ *      &lt;min&gt;30&lt;/min&gt;
+ *      &lt;max&gt;180&lt;/max&gt;
+ * &lt;/azimuthRange&gt;
  */
+     
+
+
 
 public class AzimuthRange extends RangeSubsetter implements EventStationSubsetter {
     /**

@@ -13,6 +13,57 @@ import edu.iris.Fissures.model.*;
 import java.util.*;
 import org.w3c.dom.*;
 
+/**
+ * sample xml
+ * &lt;absolute&gt;
+ *      &lt;boxArea&gt;
+ *              &lt;latitudeRange&gt;
+ *                      &lt;min&gt;30&lt;/min&gt;
+ *                      &lt;max&gt;33&lt;/max&gt;
+ *              &lt;/latitudeRange&gt;
+ *              &lt;longitudeRange&gt;
+ *                      &lt;min&gt;-100&lt;/min&gt;
+ *                      &lt;max&gt;100&lt;/max&gt;
+ *              &lt;/longitudeRange&gt;
+ *      &lt;/boxArea&gt;
+ *	&lt;depthRange&gt;
+ *	        &lt;unitRange&gt;
+ *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *			&lt;min&gt;-1000&lt;/min&gt;
+ *			&lt;max&gt;1000&lt;/max&gt;
+ *		&lt;/unitRange&gt;
+ *	&lt;/depthRange&gt;
+ * &lt;/absolute&gt; 
+ *
+ *                      (or)
+ * 
+ *
+  * &lt;absolute&gt;
+ *      &lt;boxArea&gt;
+ *              &lt;latitudeRange&gt;
+ *                      &lt;min&gt;30&lt;/min&gt;
+ *                      &lt;max&gt;33&lt;/max&gt;
+ *              &lt;/latitudeRange&gt;
+ *              &lt;longitudeRange&gt;
+ *                      &lt;min&gt;-100&lt;/min&gt;
+ *                      &lt;max&gt;100&lt;/max&gt;
+ *              &lt;/longitudeRange&gt;
+ *      &lt;/boxArea&gt;
+ * &lt;/absolute&gt
+ *
+ *                      (or)
+ *
+ * &lt;absolute&gt;
+ *	&lt;depthRange&gt;
+ *	        &lt;unitRange&gt;
+ *			&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *			&lt;min&gt;-1000&lt;/min&gt;
+ *			&lt;max&gt;1000&lt;/max&gt;
+ *		&lt;/unitRange&gt;
+ *	&lt;/depthRange&gt;
+ * &lt;/absolute&gt
+ */
+
 public class Absolute extends PhaseInteractionType {
 
 	public Absolute(Element config) throws ConfigurationException{

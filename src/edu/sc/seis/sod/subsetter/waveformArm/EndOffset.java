@@ -13,14 +13,12 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * EndOffset.java
- *
- *
- * Created: Mon Apr  8 16:41:31 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
- */
+ * specifies the endOffset
+ * 	&lt;endOffset&gt;
+ *			&lt;unit&gt;SECOND&lt;/unit&gt;
+ *			&lt;value&gt;-120&lt;/value&gt;
+ * 	&lt;/endOffset&gt;
+ */	
 
 public class EndOffset extends Interval {
     /**

@@ -10,11 +10,38 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 
-/**
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+/** 
+ * eventStationAND contains a sequence of eventStationSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
+ *	&lt;eventStationAND&gt;
+ *		&lt;phaseExists&gt;
+ * 			&lt;modelName&gt;prem&lt;/modelName&gt;
+ *			&lt;phaseName&gt;ttp&lt;/phaseName&gt;
+ *		&lt;/phaseExists&gt;
+ *		&lt;phaseInteraction&gt;
+ *			&lt;modelName&gt;prem&lt;/modelName&gt;
+ *			&lt;phaseName&gt;PcP&lt;/phaseName&gt;
+ *			&lt;interactionStyle&gt;PATH&lt;/interactionStyle&gt;
+ *			&lt;interactionNumber&gt;1&lt;/interactionNumber&gt;
+ *			&lt;relative&gt;
+ *				&lt;reference&gt;EVENT&lt;/reference&gt;
+ *				&lt;depthRange&gt;
+ *					&lt;unitRange&gt;
+ *						&lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *						&lt;min&gt;-1000&lt;/min&gt;
+ *						&lt;max&gt;1000&lt;/max&gt;
+ *					&lt;/unitRange&gt;
+ *				&lt;/depthRange&gt;
+ *				&lt;distanceRange&gt;
+ *					&lt;unit&gt;DEGREE&lt;/unit&gt;
+ *					&lt;min&gt;60&lt;/min&gt;
+ *					&lt;max&gt;70&lt;/max&gt;
+ *				&lt;/distanceRange&gt;
+ *			&lt;/relative&gt;
+ *		&lt;/phaseInteraction&gt;
+ *	&lt;/eventStationAND&gt;
  */
+
 public class EventStationAND 
     extends  WaveFormLogicalSubsetter 
     implements EventStationSubsetter {

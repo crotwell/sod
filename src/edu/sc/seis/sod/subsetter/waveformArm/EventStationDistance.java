@@ -14,15 +14,17 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
+
 /**
- * EventStationDistance.java
- *
- *
- * Created: Mon Apr  8 16:32:56 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ * eventStattionSubsetter
+ *  &lt;eventStationDistance&gt;
+ *        &lt;distanceRange&gt;
+ *              &lt;unit&gt;DEGREE&lt;/unit&gt;
+ *              &lt;min&gt;30&lt;/min&gt;
+ *        &lt;/distanceRange&gt;
+ *  &lt;/eventStationDistance&gt;
  */
+
 
 public class EventStationDistance extends DistanceRange implements EventStationSubsetter {
     /**
