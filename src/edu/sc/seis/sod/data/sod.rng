@@ -5136,9 +5136,16 @@
                         </optional>
                     </interleave>
                 </element>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
-                <empty/>
+                <element name="id">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5246,11 +5253,13 @@
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="seismogramConfig">
-                    <element name="template">
-                        <data type="string"/>
+                <optional>
+                    <element name="seismogramConfig">
+                        <element name="template">
+                            <data type="string"/>
+                        </element>
                     </element>
-                </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
@@ -5369,9 +5378,16 @@
                         </optional>
                     </interleave>
                 </element>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
-                <empty/>
+                <element name="id">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5479,11 +5495,13 @@
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="seismogramConfig">
-                    <element name="template">
-                        <data type="string"/>
+                <optional>
+                    <element name="seismogramConfig">
+                        <element name="template">
+                            <data type="string"/>
+                        </element>
                     </element>
-                </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
@@ -5602,9 +5620,16 @@
                         </optional>
                     </interleave>
                 </element>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
-                <empty/>
+                <element name="id">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5712,11 +5737,13 @@
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="seismogramConfig">
-                    <element name="template">
-                        <data type="string"/>
+                <optional>
+                    <element name="seismogramConfig">
+                        <element name="template">
+                            <data type="string"/>
+                        </element>
                     </element>
-                </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
@@ -5835,9 +5862,16 @@
                         </optional>
                     </interleave>
                 </element>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
-                <empty/>
+                <element name="id">
+                    <data type="string"/>
+                </element>
             </element>
             <element name="responseGain">
                 <empty/>
@@ -5945,11 +5979,13 @@
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="seismogramConfig">
-                    <element name="template">
-                        <data type="string"/>
+                <optional>
+                    <element name="seismogramConfig">
+                        <element name="template">
+                            <data type="string"/>
+                        </element>
                     </element>
-                </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
