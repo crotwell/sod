@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../base/include/externalClass.rng"/>
+    <start>
+        <ref name="channelGroupSeismogramProcess"/>
+    </start>
+    <include href="../base/include/eventLabel.rng"/>
+    <include href="../base/include/quantity.rng"/>
+    <define name="channelGroupSeismogramProcess">
+        <choice>
+            <ref name="threeComponentData"/>
+            <ref name="ANDLocalSeismogramWrapper"/>
+            <ref name="ORLocalSeismogramWrapper"/>
+            <ref name="externalChannelGroupSeismogramProcess"/>
+            <ref name="channelGroupLegacyExecute"/>
+            <ref name="channelGroupFork"/>
+            <ref name="channelGroupAND"/>
+            <ref name="channelGroupOR"/>
+            <ref name="channelGroupNOT"/>
+            <ref name="channelGroupXOR"/>
+            <ref name="channelGroupAlwaysSuccess"/>
+            <!-- local seismogramProcesses directly in the motion vector arm
+              are treaded as if they are in a ANDLocalSeismogramWrapper -->
+            <externalRef href="seismogramProcess.rng"/>
+            <ref name="external"/>
+        </choice>
+    </define>
+    <define name="threeComponentData">
+        <element name="threeComponentData">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Checks for data in all three components. </summary>
+                    <description> If there is some data in all three components, then this returns
+                        true, if any are empty, then false. </description>
+                    <example>
+                        <threeComponentData/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="channelGroupForkProcess">
+        <element name="channelGroupForkProcess">
+            <zeroOrMore>
+                <ref name="channelGroupSeismogramProcess"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="ANDLocalSeismogramWrapper">
+        <element name="ANDLocalSeismogramWrapper">
+            <zeroOrMore>
+                <externalRef href="seismogramProcess.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="ORLocalSeismogramWrapper">
+        <element name="ORLocalSeismogramWrapper">
+            <zeroOrMore>
+                <externalRef href="seismogramProcess.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="externalChannelGroupSeismogramProcess">
+        <element name="externalChannelGroupSeismogramProcess">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="channelGroupLegacyExecute">
+        <element name="channelGroupLegacyExecute">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Executes an external program.</summary>
+                    <description>The channelGroupLegacyExecute processor is capable of running
+                        existing command line programs. It does this by passing the filenames of the
+                        seismograms saved by a earlier SaveSeismogramToFile processor to a program
+                        started with Runtime.exec(). </description>
+                    <example>
+                        <channelGroupLegacyExecute>
+                            <command>echo</command>
+                        </channelGroupLegacyExecute>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <optional>
+                <element name="prefix">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="command">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="workingDirectory">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="channelGroupFork">
+        <element name="channelGroupFork">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Forks the processing for three component data. </summary>
+                    <description>The seismograms are copied and sent through the fork allowing
+                        independent processing of the same data. The return value is true if all of
+                        the sub processors complete successfully, false otherwise. </description>
+                    <example>
+                        <channelGroupFork>
+                            <rmean/>
+                            <saveSeismogramToFile>
+                                <fileType>sac</fileType>
+                                <dataDirectory>POND_II</dataDirectory>
+                                <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                </eventDirLabel>
+                            </saveSeismogramToFile>
+                        </channelGroupFork>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="channelGroupSeismogramProcess"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="channelGroupAND">
+        <element name="channelGroupAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between channelGroup subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all included
+                        subsetters. The subsetters after the first false outputed are not evaluated.
+                        The seismic data passed down the chain is the data passed in, seismogram
+                        results of the contained processors are ignored.</description>
+                    <example>
+                        <channelGroupAND>
+                            <xyz/>
+                            <pdq/>
+                        </channelGroupAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="channelGroupSeismogramProcess"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channelGroupOR">
+        <element name="channelGroupOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between channelGroup subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all included
+                        subsetters. The subsetters after the first true outputed are not evaluated.
+                        The seismic data passed down the chain is the data passed in, seismogram
+                        results of the contained processors are ignored. </description>
+                    <example>
+                        <channelGroupOR>
+                            <xyz/>
+                            <pdq/>
+                        </channelGroupOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="channelGroupSeismogramProcess"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="channelGroupXOR">
+        <element name="channelGroupXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between channelGroup subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all included
+                        subsetters. The seismic data passed down the chain is the data passed in,
+                        seismogram results of the contained processors are ignored. </description>
+                    <example>
+                        <channelGroupXOR>
+                            <xyz/>
+                            <pdq/>
+                        </channelGroupXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="channelGroupSeismogramProcess"/>
+            <ref name="channelGroupSeismogramProcess"/>
+        </element>
+    </define>
+    <define name="channelGroupNOT">
+        <element name="channelGroupNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an channelGroup subsetter. </summary>
+                    <description> The output is the logical NOT of the output of the included
+                        subsetters. The seismic data passed down the chain is the data passed in,
+                        seismogram results of the contained processors are ignored.</description>
+                    <example>
+                        <channelGroupNOT>
+                            <xyz/>
+                        </channelGroupNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="channelGroupSeismogramProcess"/>
+        </element>
+    </define>
+    <define name="channelGroupAlwaysSuccess">
+        <element name="channelGroupAlwaysSuccess">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Executes a subprocessor, but always returns true.</summary>
+                    <description>This executes the enclosed processor, but always returns a success
+                        regardless of whether the enclosed processor succeeded or failed. </description>
+                    <example>
+                        <channelGroupAlwaysSuccess>
+                            <channelGroupFork>
+                                <rmean/>
+                                <saveSeismogramToFile>
+                                    <fileType>sac</fileType>
+                                    <dataDirectory>POND_II</dataDirectory>
+                                    <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+                                    </eventDirLabel>
+                                </saveSeismogramToFile>
+                            </channelGroupFork>
+                        </channelGroupAlwaysSuccess>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="channelGroupSeismogramProcess"/>
+        </element>
+    </define>
+    <define name="external">
+        <element name="externalWaveformVectorProcess">
+            <ref name="externalClass"/>
+        </element>
+    </define>
+</grammar>
