@@ -34,7 +34,6 @@ public class SiteCode implements SiteIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(SiteId siteId, CookieJar cookies) {
-	    System.out.println("The site code is  "+SodUtil.getNestedText(config));
 	    if(siteId.site_code.equals(SodUtil.getNestedText(config))) return true;
 	    else return false;
 

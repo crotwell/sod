@@ -24,7 +24,6 @@ public abstract class LogicalSubsetter implements Subsetter {
      */
     public LogicalSubsetter (Element config) throws ConfigurationException {
 	processConfig(config);
-	System.out.println(" &&&&&&&&&&&The size of filter list after processing in logicalSubsetter is "+filterList.size());
     }
     
     /**
@@ -50,7 +49,6 @@ public abstract class LogicalSubsetter implements Subsetter {
 		
 		Object obj = SodUtil.load(subElement, getPackageName());
 		if (obj instanceof Subsetter) {
-		    System.out.println("adding the $$$ to the filterList");
 		    filterList.add((Subsetter)obj);
 		} // end of if (sodElement instanceof EventAttrSubsetter)
 		

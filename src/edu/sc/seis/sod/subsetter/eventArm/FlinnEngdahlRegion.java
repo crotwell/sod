@@ -51,17 +51,12 @@ public abstract class FlinnEngdahlRegion implements EventAttrSubsetter {
 	
 	if(e.region.type.value() == getType().value()) {
 	     for(int counter = 0; counter < regions.length; counter++) {
-		System.out.println("The considered are type = "+getType().value()+" value "+regions[counter].intValue());
 		if(e.region.number == regions[counter].intValue()) {
-		    System.out.println("In FlinnEngdahlRegion returnign TRUE");
 		    return true;
 		}
 	    }
 
 	}
-	System.out.println("The regiontype is "+e.region.type.value());
-	System.out.println("The region value is "+e.region.number);
-	System.out.println("In FlinnEngdhal Region returning FALSE");
 	return false;
     }
 

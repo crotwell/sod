@@ -26,9 +26,8 @@ public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange impl
      *
      * @param config an <code>Element</code> value
      */
-    public StationDepthRange (Element config){
+    public StationDepthRange (Element config) throws Exception{
 	super(config);
-	System.out.println("IN DEPTH RANGE minimum depth is "+getUnitRange().min_value);
     }
     
     /**

@@ -42,11 +42,9 @@ public class EventStationOR
      */
     public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies)
 	throws Exception{
-	System.out.println("In EventStation OR "+filterList.size());
 	Iterator it = filterList.iterator();
 	
 	while(it.hasNext()) {
-	    System.out.println("In while loop of evnetstationOR");
 	    EventStationSubsetter filter = (EventStationSubsetter)it.next();
 	    if (filter.accept(o, network, station, cookies)) {
 		return true;

@@ -25,28 +25,18 @@ public class NetworkFinder extends AbstractSource{
      *
      * @param element an <code>Element</code> value
      */
-    public NetworkFinder (Element element){
+    public NetworkFinder (Element element) throws Exception{
 	super(element);
-	try{
-	    System.out.println("Now the source NetworkSource must be built");
 	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	    if(commonAccess == null) System.out.println("THe common Acces is null");
 	    fissuresNamingService = commonAccess.getFissuresNamingService();
 	    
-	    if(fissuresNamingService == null) System.out.println("NULLLLL");
-	    else System.out.println("NOT NULLLLL");
-	    System.out.println("The dns name is "+getDNSName());
-	    System.out.println("The object name is "+getSourceName());
 	    dns = getDNSName();
 	    objectName = getSourceName();
 	    Element subElement = SodUtil.getElement(element,"refreshInterval");
-	    refreshInterval = (RefreshInterval)SodUtil.load(subElement,"edu.sc.seis.sod.subsetter");
-
-	} catch(Exception e) {
-	    
-	    e.printStackTrace();
-	    
-	}
+	    if(subElement != null) {
+	    	Object obj = SodUtil.load(subElement, "edu.sc.seis.sod.subsetter");
+	    	refreshInterval = (RefreshInterval)obj;
+	    } else refreshInterval = null;	
 	
     }
 
@@ -55,16 +45,9 @@ public class NetworkFinder extends AbstractSource{
      *
      * @return a <code>NetworkDC</code> value
      */
-    public NetworkDC getNetworkDC() {
+    public NetworkDC getNetworkDC() throws Exception{
 
-	try {
 	    return fissuresNamingService.getNetworkDC(dns, objectName);	
-	} catch(Exception e) {
-
-	    System.out.println("Caught exception while getting networkDC ");
-
-	}
-	return null;
 
     }
 

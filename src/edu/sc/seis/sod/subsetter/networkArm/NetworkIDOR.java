@@ -47,11 +47,8 @@ public class NetworkIDOR
      * @exception Exception if an error occurs
      */
     public boolean accept(NetworkId e,  CookieJar cookies) throws Exception{
-	System.out.println("THe networkID to be checked in NetworkIDOR is "+e.network_code);
-	System.out.println("The size of the list is "+ filterList.size());
 	Iterator it = filterList.iterator();
 	while(it.hasNext()) {
-	    System.out.println("In while loop in accept method of NetworkIDOR");
 	    NetworkIdSubsetter filter = (NetworkIdSubsetter)it.next();
 	    if ( filter.accept(e, cookies)) {
 		return true;

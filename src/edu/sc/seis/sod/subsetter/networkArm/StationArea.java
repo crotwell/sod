@@ -48,11 +48,9 @@ public class StationArea
      */
     public StationArea (Element config) throws ConfigurationException {
 	NodeList children = config.getChildNodes();
-	System.out.println("In StationArea ");
 	for(int i = 0; i < children.getLength() ; i++) {
 		Node node = children.item(i);
 		if(node instanceof Element) {
-			System.out.println("Now it is time to get the Area");
 			area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "edu.sc.seis.sod");	
 			break;
 		}
@@ -69,22 +67,17 @@ public class StationArea
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Station e,  CookieJar cookies) {
-	System.out.println("now is the time to call accept on the area");	
 	if(area instanceof edu.iris.Fissures.BoxArea) {
 		edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
-		System.out.println("actual_latitude is "+e.my_location.latitude);
-		System.out.println("actual_longitude is "+e.my_location.longitude);
 		
 		if(e.my_location.latitude >= boxArea.min_latitude 
 		   && e.my_location.latitude <=boxArea.max_latitude
 		   && e.my_location.longitude >= boxArea.min_longitude
 		   && e.my_location.longitude <= boxArea.max_longitude) {
-		    System.out.println("RETURNING TRUE");
 		    return true;
 		} else return false;
 	
 	} else if(area instanceof GlobalArea) return true;
-	else System.out.println("The area is null");
 	return true;
 	
     }

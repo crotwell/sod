@@ -35,7 +35,6 @@ public class NetworkArm {
 	if ( ! config.getTagName().equals("networkArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a NetworkArm tag");
 	}
-	System.out.println("In Network Arm");
 	this.config = config;
 	processConfig();
 	//	processConfig(config);
@@ -124,7 +123,7 @@ public class NetworkArm {
      */
     public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) throws Exception{
 
-	System.out.println("The stationIdSubsetter is not null");
+	//System.out.println("The stationIdSubsetter is not null");
 	if(networkAttrSubsetter.accept(networkAttr, null)) { 
 	    Station[] stations = networkAccess.retrieve_stations();
 	    for(int subCounter = 0; subCounter < stations.length; subCounter++) {
@@ -240,16 +239,16 @@ public class NetworkArm {
      *
      * @return a <code>Channel[]</code> value
      */
-    public Channel[] getSuccessfulChannels() {
-	try {
-	    if(lastDate != null) {
-		RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+    public Channel[] getSuccessfulChannels() throws Exception{
+	    RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+	    if(lastDate != null && refreshInterval != null) {
+		//RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
 		Date currentDate = Calendar.getInstance().getTime();
 		MicroSecondDate lastTime = new MicroSecondDate(lastDate);
 		MicroSecondDate currentTime = new MicroSecondDate(currentDate);
 		TimeInterval timeInterval = currentTime.difference(lastTime);
 		int minutes = (int)timeInterval.value / (100*1000);
-		System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
+		//System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
 		if(minutes >= refreshInterval.getValue()) {
 		    processNetworkArm();
 		    lastDate = Calendar.getInstance().getTime();
@@ -259,10 +258,7 @@ public class NetworkArm {
 		 lastDate = Calendar.getInstance().getTime();
 		
 	    }
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
-	System.out.println("successfulChannels length is "+successfulChannels.length);
+	//System.out.println("successfulChannels length is "+successfulChannels.length);
 	return successfulChannels;
 	
     }

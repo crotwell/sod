@@ -26,9 +26,8 @@ public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange impleme
      *
      * @param config an <code>Element</code> value
      */
-    public SiteDepthRange (Element config){
+    public SiteDepthRange (Element config)throws Exception{
 	super(config);
-	System.out.println("IN DEPTH RANGE minimum depth is "+getUnitRange().min_value);
     }
     
     /**

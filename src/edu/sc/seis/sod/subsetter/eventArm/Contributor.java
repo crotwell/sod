@@ -41,7 +41,6 @@ public class Contributor implements OriginSubsetter{
     public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	if(origin.contributor.equals(getContributor())) return true;
 	
-	System.out.println("Contributor "+SodUtil.getNestedText(config));
 	return false;
     }
 

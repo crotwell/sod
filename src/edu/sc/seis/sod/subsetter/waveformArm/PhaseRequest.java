@@ -33,7 +33,6 @@ public class PhaseRequest implements RequestGenerator{
      */
     public PhaseRequest (Element config) throws ConfigurationException{
 
-	System.out.println("In the constructor of PhaseRequest");
 	NodeList childNodes = config.getChildNodes();
 	Node node;
 	for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -64,21 +63,9 @@ public class PhaseRequest implements RequestGenerator{
 			  NetworkAccess network, 
 			  Channel channel, 
 			  CookieJar cookies) throws Exception{
-	System.out.println("the begin phase is "+beginPhase.getPhase());
-	System.out.println("the end phase is "+endPhase.getPhase());
-	System.out.println("the beginOffset unit is "+beginOffset.getUnit());
-	System.out.println("the beginOffset value is "+beginOffset.getValue());
-	System.out.println("the endOffset unit is "+endOffset.getUnit());
-	System.out.println("the endOffset value is "+endOffset.getValue());
 	Origin origin = null;
-	try {
-	    origin = event.get_preferred_origin();
-	} catch(NoPreferredOrigin npoe) {
-	    
-	    System.out.println("caught Exception no Preferred Origin");
-	}
+	origin = event.get_preferred_origin();
 	edu.iris.Fissures.Time originTime = origin.origin_time;
-	System.out.println("originTime is "+origin.origin_time.date_time);
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
 	TimeInterval bInterval = new TimeInterval(beginOffset.getValue(), UnitImpl.SECOND);
 	TimeInterval eInterval = new TimeInterval(endOffset.getValue(), UnitImpl.SECOND);
@@ -93,8 +80,6 @@ public class PhaseRequest implements RequestGenerator{
                               );
 	
 	
-	System.out.println("beginTime is !!!!!!!!!!!!!!!!! "+bDate.getFissuresTime().date_time);
-	System.out.println("endTime is !!!!!!!!!!!!!!!!!"+eDate.getFissuresTime().date_time);
 	return filters;
 
     }

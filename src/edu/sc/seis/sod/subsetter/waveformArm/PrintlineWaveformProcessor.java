@@ -50,17 +50,6 @@ public class PrintlineWaveformProcessor implements LocalSeismogramProcess {
 			RequestFilter[] available,
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) {
-	try {
-	    /* System.out.println("Got "+seismograms.length+" seismograms for "+
-			       ChannelIdUtil.toStringNoDates(channel.get_id())+
-			       " for event in "+
-			       regions.getRegionName(event.get_attributes().region)+
-			       " at "+event.get_preferred_origin().origin_time.date_time);
-	    */
-	} catch(Exception e) {
-	    
-	    System.out.println("Exception caught while writing to file in PrintLineWaveformProcess");
-	}
 	
     }
    

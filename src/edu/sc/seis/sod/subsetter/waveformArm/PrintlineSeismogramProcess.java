@@ -53,7 +53,6 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
 	try {
 	      FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
 	    BufferedWriter bwriter = new BufferedWriter(fwriter);
-	    System.out.println(ChannelIdUtil.toString(channel.get_id()));
 	    String debugStr = "Got "+seismograms.length+" seismograms for "+
 		ChannelIdUtil.toStringNoDates(channel.get_id())+
 		" for event in "+

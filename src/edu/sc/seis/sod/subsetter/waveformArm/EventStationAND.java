@@ -41,7 +41,6 @@ public class EventStationAND
      */
     public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies) 
 	throws Exception{
-	System.out.println("In EventStation AND "+filterList.size());
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    EventStationSubsetter filter = (EventStationSubsetter)it.next();

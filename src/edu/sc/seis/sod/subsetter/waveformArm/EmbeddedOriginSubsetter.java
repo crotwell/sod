@@ -26,23 +26,17 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter{
      *
      * @param config an <code>Element</code> value
      */
-    public EmbeddedOriginSubsetter (Element config){
+    public EmbeddedOriginSubsetter (Element config) throws ConfigurationException{
 	
 	NodeList childNodes = config.getChildNodes();
 	Node node;
 	for(int counter = 0; counter < childNodes.getLength(); counter++) {
-	    try {
 		node = childNodes.item(counter);
 		if(node instanceof Element) {
-		    //  System.out.println("The tag name is "+((Element)childNodes.item(0)).getTagName());
 		    originSubsetter = (OriginSubsetter) SodUtil.load((Element)node,
 								 "edu.sc.seis.sod.subsetter.eventArm");
 		    break;
 		}
-	    } catch(ConfigurationException ce) {
-
-		System.out.println("Caught configuration Exception in EmbeddedOriginSubsetter");
-	    }
 	}
 	
     }

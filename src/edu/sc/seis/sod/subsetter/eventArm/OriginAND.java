@@ -41,8 +41,6 @@ public class OriginAND
      * @exception Exception if an error occurs
      */
     public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
-	//System.out.println("The size of filter List in originAND is ----------> "+filterList.size());
-	//System.exit(0);
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    OriginSubsetter filter = (OriginSubsetter)it.next();

@@ -30,18 +30,13 @@ public class WaveFormArm implements Runnable {
      * @param config an <code>Element</code> value
      * @param networkArm a <code>NetworkArm</code> value
      */
-    public WaveFormArm(Element config, NetworkArm networkArm) {
-		System.out.println("WAVE FORM ARM STARTED ");
+    public WaveFormArm(Element config, NetworkArm networkArm) throws Exception {
 		if ( ! config.getTagName().equals("waveFormArm")) {
 		    throw new IllegalArgumentException("Configuration element must be a waveFormArm tag");
 		}
-		System.out.println("In waveForm Arm");
-		try {
-		    processConfig(config);
-		} catch(ConfigurationException ce) {
+		//System.out.println("In waveForm Arm");
+		processConfig(config);
 
-		    System.out.println("Configuration Exception caught while processing WaveForm Arm");
-		}
 		this.config = config;
 		this.networkArm = networkArm;
     }
@@ -52,29 +47,28 @@ public class WaveFormArm implements Runnable {
      */
     public void run() {
 	EventAccess eventAccess = null;  
+	try {
 	do
 	{
 	  
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
-	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
-	    
-	    else {System.out.println("Event Access is VALID");
-	    //System.exit(0);
-	    }
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    if(eventAccess != null) {
 		Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
-							     eventStationSubsetter, 
+							     eventStationSubsetter,
+								fixedDataCenterSubsetter,
 								 localSeismogramArm,
 								 successfulChannels));
 		thread.start();
 	    }
 	    
-	    //	System.out.println("RETRIEVED THE EVENT ACCESS FROM EVENT QUEUE");
 	    
 	}while(eventAccess != null);
 
-	
+	} catch(Exception e) {
+
+		e.printStackTrace();
+	}
     }
 
     /**
@@ -99,7 +93,7 @@ public class WaveFormArm implements Runnable {
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
-	
+                else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;	
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
@@ -116,6 +110,8 @@ public class WaveFormArm implements Runnable {
     private NetworkArm networkArm = null;
     
     private Element config = null;
+
+    private FixedDataCenter fixedDataCenterSubsetter= null;
 
     static Category logger = 
 	Category.getInstance(WaveFormArm.class.getName());

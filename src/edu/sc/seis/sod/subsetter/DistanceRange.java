@@ -24,14 +24,8 @@ public class DistanceRange implements SodElement{
      *
      * @param config an <code>Element</code> value
      */
-    public DistanceRange (Element config){
-	try {
+    public DistanceRange (Element config) throws ConfigurationException{
 	    processConfig(config);
-	} catch(ConfigurationException ce) {
-
-	    System.out.println("Configuration Exception caught in DistanceRange");
-	}
-	
     }
     
     /**

@@ -23,27 +23,14 @@ public class FixedDataCenter extends AbstractSource implements SodElement{
      *
      * @param element an <code>Element</code> value
      */
-    public FixedDataCenter (Element element){
+    public FixedDataCenter (Element element) throws Exception{
 	super(element);
-	try{
-	    System.out.println("Now the source NetworkSource must be built");
 	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	    if(commonAccess == null) System.out.println("THe common Acces is null");
 	    fissuresNamingService = commonAccess.getFissuresNamingService();
 	    
-	    if(fissuresNamingService == null) System.out.println("NULLLLL");
-	    else System.out.println("NOT NULLLLL");
-	    System.out.println("The dns name is "+getDNSName());
-	    System.out.println("The object name is "+getSourceName());
 	    dns = getDNSName();
 	    objectName = getSourceName();
 
-	} catch(Exception e) {
-	    
-	    e.printStackTrace();
-	    
-	}
-	
     }
 
     /**
@@ -51,17 +38,8 @@ public class FixedDataCenter extends AbstractSource implements SodElement{
      *
      * @return a <code>DataCenter</code> value
      */
-    public DataCenter getSeismogramDC() {
-
-	try {
-	    return fissuresNamingService.getSeismogramDC(dns, objectName);	
-	} catch(Exception e) {
-
-	    System.out.println("Caught exception while getting networkDC ");
-
-	}
-	return null;
-
+    public DataCenter getSeismogramDC() throws Exception{
+	return fissuresNamingService.getSeismogramDC(dns, objectName);	
     }
 
    private FissuresNamingServiceImpl fissuresNamingService = null;

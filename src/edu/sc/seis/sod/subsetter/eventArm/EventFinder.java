@@ -26,19 +26,12 @@ public class EventFinder extends AbstractSource implements SodElement {
      *
      * @param config an <code>Element</code> value
      */
-    public EventFinder (Element config){
+    public EventFinder (Element config) throws Exception{
 	super(config);
 	this.config = config;
 	CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	if(commonAccess == null) System.out.println("THe common Acces is null");
-	try {
-	    processConfig();
-	    fissuresNamingService = commonAccess.getFissuresNamingService();
-	} catch(ConfigurationException ce) {
-	    System.out.println("Configuration Exception caught in EventFinder");
-	} catch(Exception e) {
-	    System.out.println("Caught Exception in the constructor of EventFinder");
-	}
+        processConfig();
+	fissuresNamingService = commonAccess.getFissuresNamingService();
        
     }
     
@@ -87,14 +80,9 @@ public class EventFinder extends AbstractSource implements SodElement {
      *
      * @return an <code>EventDC</code> value
      */
-    public EventDC getEventDC() {
+    public EventDC getEventDC() throws Exception{
 
-	try {
-	    return fissuresNamingService.getEventDC(getDNSName(), getSourceName());
-	} catch(Exception e) {
-	    System.out.println("Exception caught while obtaining the EventDC");
-	}
-	return null;
+	return fissuresNamingService.getEventDC(getDNSName(), getSourceName());
     }
 
     /**
@@ -103,7 +91,6 @@ public class EventFinder extends AbstractSource implements SodElement {
      * @return a <code>DepthRange</code> value
      */
     public OriginDepthRange getDepthRange() {
-	if(depthRange == null) System.out.println("Depth range is NULL");
 	return depthRange;
 
     }
@@ -126,7 +113,6 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public edu.iris.Fissures.Area getArea() {
 
-	System.out.println("returning Area");
 	return area;
 	
     }

@@ -21,8 +21,6 @@ public class NetworkCode implements NetworkIdSubsetter {
      * @param config an <code>Element</code> value
      */
     public NetworkCode(Element config) {
-		System.out.println("The name of the element passed to NetworkCode is "+config.getTagName());
-		System.out.println("The value of the Network Code is "+SodUtil.getNestedText(config));
 		this.config = config;
 	}
 
@@ -34,7 +32,6 @@ public class NetworkCode implements NetworkIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkId e, CookieJar cookies) {
-		System.out.println("The network Code that is checked is "+e.network_code);
 		if(e.network_code.equals(SodUtil.getNestedText(config))) return true;
 		else return false;
 

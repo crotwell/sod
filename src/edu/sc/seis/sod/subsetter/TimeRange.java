@@ -47,7 +47,6 @@ public abstract class TimeRange implements Subsetter{
 			else if(tagName.equals("endTime")) maxElement = (Element)node;
 		}
 	}
-	if(minElement == null || maxElement == null) System.out.println("one of the min or max ELements is null");
     }
 
     /**
@@ -59,7 +58,6 @@ public abstract class TimeRange implements Subsetter{
 	if(minElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(minElement);
 	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
-	System.out.println("The min time is "+effectiveTime);
 	return rtnTime;
     }
 
@@ -72,7 +70,6 @@ public abstract class TimeRange implements Subsetter{
 	if(maxElement == null) return null;
 	String effectiveTime = SodUtil.getNestedText(maxElement);
 	edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime, 0);
-	System.out.println("The max time is "+effectiveTime);
 	return rtnTime;
 
     }

@@ -28,7 +28,6 @@ public class OriginDepthRange extends edu.sc.seis.sod.subsetter.DepthRange imple
      */
     public OriginDepthRange (Element config){
 	super(config);
-	System.out.println("IN DEPTH RANGE minimum depth is "+getUnitRange().min_value);
     }
     
     /**

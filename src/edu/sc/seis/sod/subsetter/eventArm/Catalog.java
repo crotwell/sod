@@ -40,8 +40,6 @@ public class Catalog implements OriginSubsetter{
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
-	System.out.println("origin catalog "+origin.catalog);
-	System.out.println("Catalog "+SodUtil.getNestedText(config));
 	if(origin.catalog.equals(getCatalog())) return true;
 
 

@@ -30,7 +30,7 @@ public class EventStationDistance extends DistanceRange implements EventStationS
      *
      * @param config an <code>Element</code> value
      */
-    public EventStationDistance (Element config){
+    public EventStationDistance (Element config) throws ConfigurationException{
 	super(config);
     }
     
@@ -43,20 +43,14 @@ public class EventStationDistance extends DistanceRange implements EventStationS
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) {
-	System.out.println("In accept method of EventStationDistance");
+    public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) 
+  	throws Exception  {
 	Origin origin = null;
-	try {
 	    origin = eventAccess.get_preferred_origin();
-	} catch(NoPreferredOrigin npoe) {
-
-	    System.out.println("Couldnot get preferred origin ");
-	}
 	double actualDistance = SphericalCoords.distance(origin.my_location.latitude,
 							 origin.my_location.longitude,
 							 station.my_location.latitude,
 							 station.my_location.longitude);
-	System.out.println("The actual Distance of the Event from the station is "+actualDistance);
 	if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
 	    return true;
 	} else return false;

@@ -94,7 +94,7 @@ public class SodUtil {
 	    Class subsetterSubclass = 
 		Class.forName(packageName+"."+
 			      tagName);
-	    System.out.println("IN sod UTIL "+packageName+"."+tagName);	
+	    //System.out.println("IN sod UTIL "+packageName+"."+tagName);	
 	   
 	    Constructor constructor = 
 		subsetterSubclass.getConstructor(constructorArgTypes);
@@ -248,7 +248,7 @@ public class SodUtil {
 			if(node instanceof Element ) {
 
 				if(((Element)node).getTagName().equals(elementName)) {
-				    System.out.println("in sodUtil getElement, the element name is "+((Element)node).getTagName());
+				    //System.out.println("in sodUtil getElement, the element name is "+((Element)node).getTagName());
 				    return ((Element)node);
 				}
 			}
@@ -274,22 +274,22 @@ public class SodUtil {
 
 	/** returns the nested text in the tag **/
 	public static String getNestedText(Element config) {
-		System.out.println("The element name in sod util is "+config.getTagName());
+		//System.out.println("The element name in sod util is "+config.getTagName());
 		String rtnValue = null;
 		NodeList children = config.getChildNodes();
 		Node node;
 
-		System.out.println("The length of the children is "+children.getLength());
+		//System.out.println("The length of the children is "+children.getLength());
 		for(int i = 0; i < children.getLength(); i++) {
 			
 			node = children.item(i);
 			if (node instanceof Text){
-				System.out.println("In sodUtil textnode value is  "+node.getNodeValue());
+				//System.out.println("In sodUtil textnode value is  "+node.getNodeValue());
 				rtnValue =  node.getNodeValue();
 				//break;
 			}
 			else if(node instanceof Element) { 
-				System.out.println("in sod util tag name is "+((Element)node).getTagName());
+				//System.out.println("in sod util tag name is "+((Element)node).getTagName());
 				rtnValue = getNestedText((Element)node);
 				break;
 			}

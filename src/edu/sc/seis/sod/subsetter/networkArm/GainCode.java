@@ -22,7 +22,6 @@ public class GainCode implements ChannelIdSubsetter {
      */
     public GainCode(Element config) {
 	this.config = config;
-	System.out.println("GainCode must be considered");
     }
 
     /**
@@ -33,10 +32,7 @@ public class GainCode implements ChannelIdSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(ChannelId channelId, CookieJar cookies) {
-	//System.out.println("accepting the Gain Code "+channelId.channel_code.charAt(1));
        	if(channelId.channel_code.charAt(1) == SodUtil.getNestedText(config).charAt(0)) {
-	    // System.out.println("accepting the Gain Code "+channelId.channel_code.charAt(1));
-	    //System.exit(0);
 	    return true;
 	}
 	else return false;

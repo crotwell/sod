@@ -29,10 +29,12 @@ import org.apache.log4j.*;
 public class WaveFormArmThread implements Runnable{
     public WaveFormArmThread (EventAccess eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
+			      FixedDataCenter fixedDataCenterSubsetter, 
 			      LocalSeismogramArm localSeismogramArm,
 			      Channel[] successfulChannels){
 	this.eventAccess = eventAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
+	this.fixedDataCenterSubsetter = fixedDataCenterSubsetter;
 	this.localSeismogramArm = localSeismogramArm;
 	this.networkArm = networkArm;
 	this.successfulChannels = successfulChannels;
@@ -40,7 +42,6 @@ public class WaveFormArmThread implements Runnable{
 
     public void run() {
 	try {
-	    if(eventAccess == null){ System.out.println("EventAccess is NULL");System.exit(0);}
 	    processWaveFormArm(eventAccess);
 	} catch(Exception ce) {
 	    ce.printStackTrace();
@@ -59,11 +60,9 @@ public class WaveFormArmThread implements Runnable{
 
 	
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
-	    System.out.println("Calling accept on eventStationSubsetter");
-	    if(eventStationSubsetter == null) System.out.println("NULL");
-	    else System.out.println("NOT NULL");
 	    if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
-		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter]);  
+		 DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
+		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter], dataCenter);  
 	    }
 	}
 	
@@ -72,6 +71,8 @@ public class WaveFormArmThread implements Runnable{
     private EventAccess eventAccess;
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
+
+    private FixedDataCenter fixedDataCenterSubsetter = null;
 
     private LocalSeismogramArm localSeismogramArm = null;
 

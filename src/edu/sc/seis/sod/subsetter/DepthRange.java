@@ -25,9 +25,8 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange {
      *
      * @param config an <code>Element</code> value
      */
-    public DepthRange (Element config){
+    public DepthRange (Element config) throws Exception{
 	super(config);
-	System.out.println("IN DEPTH RANGE minimum depth is "+getUnitRange().min_value);
     }
  
     /**
@@ -36,7 +35,6 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange {
      * @return a <code>Quantity</code> value
      */
     public Quantity getMinDepth() {
-	System.out.println("minimum depth is "+getUnitRange().min_value);
 	return new QuantityImpl(getUnitRange().min_value, getUnitRange().the_units);
     }
 
@@ -46,7 +44,6 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange {
      * @return a <code>Quantity</code> value
      */
     public Quantity getMaxDepth() {
-	System.out.println("maximum depth is "+getUnitRange().max_value);
 	return new QuantityImpl(getUnitRange().max_value, getUnitRange().the_units);
     }
   

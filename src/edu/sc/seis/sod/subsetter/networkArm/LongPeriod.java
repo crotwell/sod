@@ -22,7 +22,6 @@ public class LongPeriod implements ChannelIdSubsetter {
      */
     public LongPeriod(Element config) {
 
-		System.out.println("LongPeriods must be considered");
 	}
 
     /**

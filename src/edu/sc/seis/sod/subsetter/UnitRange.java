@@ -22,14 +22,8 @@ public class UnitRange implements SodElement{
      *
      * @param config an <code>Element</code> value
      */
-    public UnitRange (Element config){
-	try {
+    public UnitRange (Element config) throws Exception{
 	    processConfig(config);
-	} catch(ConfigurationException ce) {
-
-	    System.out.println("Configuration Exception caught in UnitRange");
-	}
-	
     }
     
     /**

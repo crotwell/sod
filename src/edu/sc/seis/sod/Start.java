@@ -50,10 +50,9 @@ public class Start {
      *
      * @exception ConfigurationException if an error occurs
      */
-    public void start() throws ConfigurationException {
+    public void start() throws Exception {
 	Element docElement = document.getDocumentElement();
 	logger.info("start "+docElement.getTagName());
-	System.out.println("In the method start the tagName is "+docElement.getTagName());
 	NodeList children = docElement.getChildNodes();
 	Node node;
 	Class[] constructorArgTypes = new Class[1];
@@ -72,7 +71,6 @@ public class Start {
 		    eventArmThread.start();
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
-		    System.out.println("****** START OF NETWOTK ARM *********");
 		    networkArm = new NetworkArm(subElement);
 		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {

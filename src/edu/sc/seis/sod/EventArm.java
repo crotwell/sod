@@ -98,8 +98,6 @@ public class EventArm implements Runnable{
 
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
-	if(finder != null) System.out.println("Successful in getting the finder for Events");
-	else System.out.println("EventFinder is null");
 	String[] searchTypes = new String[0];
 
 	EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
@@ -168,7 +166,6 @@ public class EventArm implements Runnable{
      * @exception Exception if an error occurs
      */
     public void handleEventArmProcess(EventAccess eventAccess, Origin origin) throws Exception{
-	System.out.println("passed THE TEST ************************************************************");
 	Start.getEventQueue().push(eventAccess);
 	eventArmProcess.process(eventAccess, null);
 
@@ -176,9 +173,9 @@ public class EventArm implements Runnable{
 
     private edu.sc.seis.sod.subsetter.eventArm.EventFinder eventFinderSubsetter;
 
-    private edu.sc.seis.sod.EventAttrSubsetter eventAttrSubsetter = null;
+    private edu.sc.seis.sod.EventAttrSubsetter eventAttrSubsetter = new NullEventAttrSubsetter();
 
-    private OriginSubsetter originSubsetter;
+    private OriginSubsetter originSubsetter = new NullOriginSubsetter();
 
     private EventArmProcess eventArmProcess;
 

@@ -47,15 +47,12 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 				
 				String tagName = ((Element)node).getTagName();
 				if(tagName.equals("interval"))  {
-				     try {  
 					interval = (Interval)SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter");
-				     } catch(Exception e) {e.printStackTrace();}
 				}
 
 			}
 
 		}
-		if(interval == null) System.out.println("The interval is null");	
 	
 	}
 
@@ -69,10 +66,6 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
      */
     public boolean accept(NetworkAccess network,Channel channel, CookieJar cookies) throws Exception{
 
-		System.out.println("The min Value is "+getMinValue());
-		System.out.println("The max Value is "+getMaxValue());
-		System.out.println("The unit of the interval is "+interval.getUnit());
-		System.out.println("The value of the interval is "+interval.getValue());
 		
 		SamplingImpl channelSampling = (SamplingImpl)channel.sampling_info;
 		SamplingImpl minSampling = new SamplingImpl((int)getMinValue(), interval.getTimeInterval());
