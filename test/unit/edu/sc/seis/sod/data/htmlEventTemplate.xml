@@ -2,4 +2,6 @@
 <template><html><header><title font="testAttr">Event Arm</title></header><body>Event Arm Status:<status/>
 These are the events I'm watching:
 <events/>
-aren't they grand?</body></html></template>
+aren't they grand?<br/>
+And here's a link to a map <img src="eventMap.png"><attribute name="alt"><status/></attribute></img>
+</body></html></template>
