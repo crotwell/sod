@@ -10,6 +10,9 @@ package edu.sc.seis.sod.database.network;
 import edu.iris.Fissures.IfNetwork.*;
 
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.JDBCLocation;
+import edu.sc.seis.fissuresUtil.database.JDBCQuantity;
+import edu.sc.seis.fissuresUtil.database.JDBCTime;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.network.JDBCNetwork;
@@ -27,10 +30,13 @@ public class JDBCNetworkUnifier{
     }
 
     public JDBCNetworkUnifier(Connection conn) throws SQLException{
-        this.netDb = new JDBCNetwork(conn);
-        this.stationDb = new JDBCStation(conn);
-        this.siteDb = new JDBCSite(conn);
-        this.chanDb = new JDBCChannel(conn);
+        JDBCTime timeDb = new JDBCTime();
+        this.netDb = new JDBCNetwork(conn, timeDb);
+        JDBCQuantity quantDb = new JDBCQuantity(conn);
+        JDBCLocation locDb = new JDBCLocation(conn, quantDb);
+        this.stationDb = new JDBCStation(conn, locDb, netDb, timeDb);
+        this.siteDb = new JDBCSite(conn, locDb, stationDb, timeDb);
+        this.chanDb = new JDBCChannel(conn, quantDb, siteDb, timeDb);
     }
 
     public ChannelDbObject getChannel(int chanDbId) throws NotFound, SQLException{
