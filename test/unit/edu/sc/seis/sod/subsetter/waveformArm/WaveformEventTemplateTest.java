@@ -6,6 +6,10 @@
 
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
-public class WaveformEventTemplateTest{
-  
+import junit.framework.TestCase;
+
+public class WaveformEventTemplateTest extends TestCase{
+    public WaveformEventTemplateTest(String name){ super(name); }
+    
+    public void testPlaceholder(){ assertTrue(true); }
 }
