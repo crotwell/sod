@@ -48,7 +48,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
 
         grammar = new SchemaGrammer();
-
         frameName = "SOD Editor";
         tabs = true;
         initEditors();
@@ -79,14 +78,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     }
 
-
-    public void start() {
-        super.start();
-    }
-
-    public SchemaGrammer getGrammar() {
-        return grammar;
-    }
+    public SchemaGrammer getGrammar() {  return grammar; }
 
     SchemaGrammer grammar;
 
@@ -109,7 +101,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
     public EditorPlugin getCustomEditor(String tagName) {
         return (EditorPlugin)editors.get(tagName);
     }
-
 
     protected void initEditors() {
         editors.put("property", new PropertyEditor());
@@ -146,20 +137,35 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("catalog", new CatalogEditor());
         editors.put("contributor", new ContributorEditor());
         editors.put("unitRange", new UnitRangeEditor(DISTANCE_UNITS));
+        BooleanEditor bool = new BooleanEditor(this);
+        editors.put("siteOR", bool);
+        editors.put("channelOR", bool);
+        editors.put("stationOR", bool);
+        editors.put("originOR", bool);
+        editors.put("siteAND", bool);
+        editors.put("channelAND", bool);
+        editors.put("stationAND", bool);
+        editors.put("originAND", bool);
+        editors.put("siteNOT", bool);
+        editors.put("channelNOT", bool);
+        editors.put("stationNOT", bool);
+        editors.put("originNOT", bool);
         editors.put("latitudeRange", new LatitudeRangeEditor());
         editors.put("longitudeRange", new LongitudeRangeEditor());
         editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
-
-        TagChooser originTC = new TagChooser("origin", this);
-        List subTypes = originTC.getSubTypes();
-        Iterator it = subTypes.iterator();
-        while(it.hasNext()) {
-            String tagName = (String)it.next();
-            if (editors.containsKey(tagName)) {
-                // save original with _tagChooser appended
-                editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
+        String[] switchTypes = {"origin", "channel", "station", "site", "network"};
+        for (int i = 0; i < switchTypes.length; i++) {
+            Switcher originSwitcher = new Switcher(switchTypes[i], this);
+            List subTypes = originSwitcher.getSubTypes();
+            Iterator it = subTypes.iterator();
+            while(it.hasNext()) {
+                String tagName = (String)it.next();
+                if (editors.containsKey(tagName)) {
+                    // save original with _tagChooser appended
+                    editors.put(tagName+TagChooser.PLUGIN_SUFFIX, editors.get(tagName));
+                }
+                editors.put(tagName, originSwitcher);
             }
-            editors.put(tagName, originTC);
         }
     }
 
@@ -169,11 +175,11 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     private static final UnitImpl[] DISTANCE_UNITS = {  UnitImpl.KILOMETER };
 
-
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         SodGUIEditor gui = new SodGUIEditor(args);
         gui.start();
     }
 }
+
 
