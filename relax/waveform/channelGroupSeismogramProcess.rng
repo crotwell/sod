@@ -13,7 +13,6 @@
             <ref name="ANDLocalSeismogramWrapper" />
             <ref name="ORLocalSeismogramWrapper" />
             <ref name="externalChannelGroupSeismogramProcess" />
-            <ref name="phaseSignalToNoiseCalculator" />
             <ref name="channelGroupFork" />
             <ref name="channelGroupAND" />
             <ref name="channelGroupOR" />
@@ -68,37 +67,6 @@
             <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
-        </element>
-    </define>
-    <define name="phaseSignalToNoiseCalculator">
-    <!-- this is the same as phaseSignalToNoise in seismogramSubbsetter and
-         should probalby be a ref of some sort instead of this lame cut-paste
-         See also simialer in channelGroupSeismogramProcess
-     -->
-        <element name="phaseSignalToNoiseCalculator">
-            <optional>
-                <element name="modelName">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <element name="phaseName">
-                <data type="string"/>
-            </element>
-            <element name="shortOffsetBegin">
-                <ref name="time"/>
-            </element>
-            <element name="shortOffsetEnd">
-                <ref name="time"/>
-            </element>
-            <element name="longOffsetBegin">
-                <ref name="time"/>
-            </element>
-            <element name="longOffsetEnd">
-                <ref name="time"/>
-            </element>
-            <element name="ratio">
-                <data type="float"/>
-            </element>
         </element>
     </define>
     <define name="channelGroupFork">
