@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start combine="choice">
         <notAllowed/>
     </start>
-    <define name="latitude">
+    <define name="lat">
         <element name="latitude">
-            <data type="float"/>
+            <data type="float">
+                <xsd:annotation>
+                    <example>35</example>
+                </xsd:annotation>
+            </data>
         </element>
     </define>
-    <define name="longitude">
+    <define name="lon">
         <element name="longitude">
-            <data type="float"/>
+            <data type="float">
+                <xsd:annotation>
+                    <example>-80</example>
+                </xsd:annotation>
+            </data>
         </element>
     </define>
 </grammar>

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../include/quantity.rng"/>
     <start>
         <element name="refreshInterval">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Constrains how often the networks are refreshed</summary>
+                    <description>The network arm will go out and check all of the information its
+                        gotten at the period defined here. This allows for new networks and stations
+                        to be found midrun and then be processed for the rest of the time SOD runs.
+                        So if you have a run on networks that have new stations being added, setting
+                        this value will allow for those new stations to be processed by your run.</description>
+                </xsd:documentation>
+            </xsd:annotation>
             <ref name="time"/>
         </element>
     </start>
