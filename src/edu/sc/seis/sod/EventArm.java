@@ -133,9 +133,9 @@ public class EventArm implements Runnable{
                         // force trip back to name service
                         eventFinderSubsetter.forceGetEventDC();
                         GlobalExceptionHandler.handle("Got an Corba exception while trying query from "+
-                                                         queryStart.getFissuresTime().date_time+
-                                                         " to "+queryEnd.getFissuresTime().date_time+
-                                                         ", sleep for 1 minute before retrying. Num retries = "+numRetries, e);
+                                                          queryStart.getFissuresTime().date_time+
+                                                          " to "+queryEnd.getFissuresTime().date_time+
+                                                          ", sleep for 1 minute before retrying. Num retries = "+numRetries, e);
                         try {
                             Thread.sleep(60*1000);
                         }catch (InterruptedException ee) {}
@@ -170,11 +170,17 @@ public class EventArm implements Runnable{
     }
 
     private void waitForProcessing() throws SQLException {
-        while(eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                            Standing.IN_PROG)).length > 2) {
+        int numEvents;
+        while(true) {
+            synchronized(eventStatus) {
+                numEvents = eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                          Standing.IN_PROG)).length;
+            }
+            if (numEvents < 2) {return;}
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {}
+
         }
     }
 
@@ -229,11 +235,11 @@ public class EventArm implements Runnable{
             } catch (Exception e) {
                 // problem with this event, log it and go on
                 GlobalExceptionHandler.handle("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
-                                                 " Continuing with rest of events", e);
+                                                  " Continuing with rest of events", e);
             } catch (Throwable e) {
                 // problem with this event, log it and go on
                 GlobalExceptionHandler.handle("Caught an exception for event "+i+" "+bestEffortEventToString(events[i])+
-                                                 " Continuing with rest of events", e);
+                                                  " Continuing with rest of events", e);
             }
         }
     }
@@ -275,7 +281,9 @@ public class EventArm implements Runnable{
     }
 
     public void change(EventAccessOperations event, Status status) throws Exception{
-        eventStatus.setStatus(event, status);
+        synchronized(eventStatus) {
+            eventStatus.setStatus(event, status);
+        }
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
