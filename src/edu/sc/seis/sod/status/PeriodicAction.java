@@ -19,10 +19,10 @@ public abstract class PeriodicAction{
 
     public void actIfPeriodElapsed(){
         synchronized(schedulingLock) {
-            if(!ClockUtil.now().subtract(lastAct).lessThan(ACTION_INTERVAL)){
+            if(ClockUtil.now().subtract(lastAct).greaterThan(ACTION_INTERVAL)){
                 actNow();
             }else if(!scheduled){
-                t.schedule(new ScheduledActor(), (int)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND).get_value());
+                t.schedule(new ScheduledActor(), ACTION_INTERVAL_MILLIS);
                 scheduled = true;
             }
         }
@@ -33,19 +33,20 @@ public abstract class PeriodicAction{
     }
 
     private void actNow(){
+        synchronized(schedulingLock){
+            lastAct = ClockUtil.now();
+            scheduled = false;
+        }
         try{
             act();
         }catch(Throwable t){
             GlobalExceptionHandler.handle("Trouble running periodic action", t);
         }
-        synchronized(schedulingLock){
-            lastAct = ClockUtil.now();
-            scheduled = false;
-        }
     }
 
     private boolean scheduled = false;
     private static final TimeInterval ACTION_INTERVAL = new TimeInterval(.5, UnitImpl.MINUTE);
+    private static final long ACTION_INTERVAL_MILLIS = (long)ACTION_INTERVAL.convertTo(UnitImpl.MILLISECOND).get_value();
     private MicroSecondDate lastAct = ClockUtil.now().subtract(ACTION_INTERVAL);
     private Object schedulingLock = new Object();
     private static Timer t = new Timer();
