@@ -19,28 +19,33 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
 public class WaveformCountProcessor implements WaveformMonitor {
-	
+
     public WaveformCountProcessor(Element config) throws SQLException {
+        JDBCEventChannelStatus jdbcEventChannelStatus = new JDBCEventChannelStatus();
+        Status processorSuccess = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
+        waveformCounter = jdbcEventChannelStatus.getNumOfStatus(processorSuccess);
+
     }
-	public void update(EventChannelPair ecp) {
-		Status processorSuccess = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
-		if(ecp.getStatus() == processorSuccess) {
-			waveformCounter++;
-			FileWriter fileWriter = null;
-			try {
-				fileWriter = new FileWriter("waveforms.txt");
-				fileWriter.write("Number of Waveforms processed = " + waveformCounter);
-			}catch(IOException ie) {
-				GlobalExceptionHandler.handle("problem writing the waveformCount into file ",ie);
-			}finally {
-				try {
-					fileWriter.close();
-				}catch(IOException ie) {
-					GlobalExceptionHandler.handle("problem closing the output file" +
-													  "in WaveformCountProcessor ",ie);
-				}
-			}
-		}
-	}
-	int waveformCounter = 0;
+    public void update(EventChannelPair ecp) {
+        Status processorSuccess = Status.get(Stage.PROCESSOR,Standing.SUCCESS);
+        if(ecp.getStatus() == processorSuccess) {
+            waveformCounter++;
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter("waveforms.txt");
+                fileWriter.write("Number of Waveforms processed = " + waveformCounter);
+            }catch(IOException ie) {
+                GlobalExceptionHandler.handle("problem writing the waveformCount into file ",ie);
+            }finally {
+                try {
+                    fileWriter.close();
+                }catch(IOException ie) {
+                    GlobalExceptionHandler.handle("problem closing the output file" +
+                                                      "in WaveformCountProcessor ",ie);
+                }
+            }
+        }
+    }
+    int waveformCounter = 0;
 }
+
