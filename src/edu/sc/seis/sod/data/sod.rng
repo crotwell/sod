@@ -208,7 +208,7 @@
                                     <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml33"/>
+                                    <ref name="xml32"/>
                                     </choice>
                                     </oneOrMore>
                                 </element>
@@ -221,7 +221,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml32"/>
+                                    <ref name="xml31"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -236,7 +236,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml31"/>
+                                    <ref name="xml30"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -316,7 +316,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml29"/>
+                                    <ref name="xml28"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -328,7 +328,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml28"/>
+                                    <ref name="xml27"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -361,7 +361,7 @@
                             <oneOrMore>
                                 <choice>
                                     <text/>
-                                    <ref name="xml27"/>
+                                    <ref name="xml26"/>
                                 </choice>
                             </oneOrMore>
                         </element>
@@ -422,10 +422,7 @@
                         <ref name="availableData3"/>
                     </optional>
                     <zeroOrMore>
-                        <choice>
-                            <ref name="seismogramProcess4"/>
-                            <ref name="phaseRequest4"/>
-                        </choice>
+                        <ref name="seismogramProcess4"/>
                     </zeroOrMore>
                     <zeroOrMore>
                         <choice>
@@ -454,7 +451,7 @@
                                 <oneOrMore>
                                     <choice>
                                     <text/>
-                                    <ref name="xml45"/>
+                                    <ref name="xml44"/>
                                     </choice>
                                 </oneOrMore>
                             </element>
@@ -612,7 +609,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml41"/>
+                        <ref name="xml40"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1135,7 +1132,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml42"/>
+                        <ref name="xml41"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1251,7 +1248,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml37"/>
+                        <ref name="xml36"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1264,18 +1261,12 @@
             </element>
             <element name="ANDWaveformProcessWrapper">
                 <zeroOrMore>
-                    <choice>
-                        <ref name="seismogramProcess3"/>
-                        <ref name="phaseRequest3"/>
-                    </choice>
+                    <ref name="seismogramProcess3"/>
                 </zeroOrMore>
             </element>
             <element name="ORWaveformProcessWrapper">
                 <zeroOrMore>
-                    <choice>
-                        <ref name="seismogramProcess2"/>
-                        <ref name="phaseRequest2"/>
-                    </choice>
+                    <ref name="seismogramProcess2"/>
                 </zeroOrMore>
             </element>
             <element name="externalWaveformVectorProcess">
@@ -1329,10 +1320,7 @@
             <element name="waveformVectorAlwaysSuccess">
                 <ref name="waveformVectorProcess"/>
             </element>
-            <choice>
-                <ref name="seismogramProcess"/>
-                <ref name="phaseRequest"/>
-            </choice>
+            <ref name="seismogramProcess"/>
             <element name="externalWaveformVectorProcess">
                 <element name="classname">
                     <data type="string"/>
@@ -1394,7 +1382,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml35"/>
+                        <ref name="xml34"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1460,7 +1448,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml43"/>
+                        <ref name="xml42"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -1883,7 +1871,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml48"/>
+                        <ref name="xml47"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2264,7 +2252,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml39"/>
+                        <ref name="xml38"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2391,7 +2379,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml24"/>
+                        <ref name="xml23"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -2648,7 +2636,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml23"/>
+                        <ref name="xml22"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3152,7 +3140,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml26"/>
+                        <ref name="xml25"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3404,7 +3392,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml49"/>
+                        <ref name="xml48"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3656,7 +3644,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml46"/>
+                        <ref name="xml45"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -3908,7 +3896,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml34"/>
+                        <ref name="xml33"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4154,7 +4142,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml47"/>
+                        <ref name="xml46"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4277,7 +4265,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml25"/>
+                        <ref name="xml24"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4400,7 +4388,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml22"/>
+                        <ref name="xml49"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4523,7 +4511,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml36"/>
+                        <ref name="xml35"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -4646,7 +4634,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml38"/>
+                        <ref name="xml37"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5095,7 +5083,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml30"/>
+                        <ref name="xml29"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5297,7 +5285,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml40"/>
+                        <ref name="xml39"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5545,7 +5533,7 @@
                 <empty/>
             </element>
             <element name="phaseCut">
-                <ref name="phaseRequest3"/>
+                <ref name="phaseWindow3"/>
             </element>
             <element name="rMean">
                 <empty/>
@@ -5768,7 +5756,7 @@
                 <empty/>
             </element>
             <element name="phaseCut">
-                <ref name="phaseRequest4"/>
+                <ref name="phaseWindow4"/>
             </element>
             <element name="rMean">
                 <empty/>
@@ -5799,7 +5787,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml44"/>
+                        <ref name="xml43"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -5991,7 +5979,7 @@
                 <empty/>
             </element>
             <element name="phaseCut">
-                <ref name="phaseRequest2"/>
+                <ref name="phaseWindow2"/>
             </element>
             <element name="rMean">
                 <empty/>
@@ -6214,7 +6202,7 @@
                 <empty/>
             </element>
             <element name="phaseCut">
-                <ref name="phaseRequest"/>
+                <ref name="phaseWindow"/>
             </element>
             <element name="rMean">
                 <empty/>
@@ -7137,34 +7125,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml46">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml46"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="xml24">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml24"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="xml45">
         <element>
             <anyName/>
@@ -7501,6 +7461,34 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml24">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml24"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml46">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml46"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="freqUnit4">
         <choice>
             <element name="unit">
@@ -7645,12 +7633,6 @@
         <data type="string"/>
     </define>
     <define name="time11">
-        <data type="string"/>
-    </define>
-    <define name="time17">
-        <data type="string"/>
-    </define>
-    <define name="time25">
         <data type="string"/>
     </define>
     <define name="time10">
@@ -7802,30 +7784,16 @@
     <define name="time13">
         <data type="string"/>
     </define>
+    <define name="time25">
+        <data type="string"/>
+    </define>
+    <define name="time17">
+        <data type="string"/>
+    </define>
     <define name="trueOrFalse">
         <choice>
             <value>TRUE</value>
             <value>FALSE</value>
         </choice>
-    </define>
-    <define name="phaseRequest2">
-        <element name="phaseRequest">
-            <ref name="phaseWindow2"/>
-        </element>
-    </define>
-    <define name="phaseRequest3">
-        <element name="phaseRequest">
-            <ref name="phaseWindow3"/>
-        </element>
-    </define>
-    <define name="phaseRequest4">
-        <element name="phaseRequest">
-            <ref name="phaseWindow4"/>
-        </element>
-    </define>
-    <define name="phaseRequest">
-        <element name="phaseRequest">
-            <ref name="phaseWindow"/>
-        </element>
     </define>
 </grammar>
