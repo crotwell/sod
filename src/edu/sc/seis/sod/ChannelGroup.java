@@ -93,62 +93,64 @@ public class ChannelGroup {
 				key = key.substring(key.length()-1,key.length());
 				channelMap.put(key,channels[chnCnt]);
 			}
-			for(int ruleCnt = 0;ruleCnt < rules.length;ruleCnt++) {
-				boolean accept = true;
-				if(accept) {
-					NodeList children = rules[ruleCnt].getChildNodes();
-					for (int i=0; i<children.getLength(); i++) {
-						Node node = children.item(i);
-						if(node instanceof Element) {
-							Element el = (Element) node;
-							if(el.getTagName().equals("threeCharacterRule")) {
-								String orientationCodes = SodUtil.getNestedText(el);
-								char[] codes =  orientationCodes.trim().toCharArray();
-								LinkedList channelGroup = new LinkedList();
-								for(int codeCount=0;codeCount<codes.length;codeCount++) {
-									if(channelMap.get(""+codes[codeCount]) != null){
-										channelGroup.add(channelMap.get(""+codes[codeCount]));
-									}
-								}
-								if(channelGroup.size() == 3) {
-									Channel[] successfulChannels = (Channel[])channelGroup.toArray(new Channel[0]);
-									if(sanityCheck(successfulChannels)){
-										groupableChannels.add(channelGroup);
-										//remove the channels that are successfully grouped
-										for(int count=0;count<successfulChannels.length;count++){
-											chn.remove(successfulChannels[count]);
-											channelMap.remove(successfulChannels[count]);
+			if(rules != null) {
+				for(int ruleCnt = 0;ruleCnt < rules.length;ruleCnt++) {
+					boolean accept = true;
+					if(accept) {
+						NodeList children = rules[ruleCnt].getChildNodes();
+						for (int i=0; i<children.getLength(); i++) {
+							Node node = children.item(i);
+							if(node instanceof Element) {
+								Element el = (Element) node;
+								if(el.getTagName().equals("threeCharacterRule")) {
+									String orientationCodes = SodUtil.getNestedText(el);
+									char[] codes =  orientationCodes.trim().toCharArray();
+									LinkedList channelGroup = new LinkedList();
+									for(int codeCount=0;codeCount<codes.length;codeCount++) {
+										if(channelMap.get(""+codes[codeCount]) != null){
+											channelGroup.add(channelMap.get(""+codes[codeCount]));
 										}
 									}
-								}
-							}else {
-								Object subsetter = SodUtil.load(el,"networkArm");
-								if(subsetter instanceof NetworkSubsetter) {
-									NetworkId netId = channels[0].get_id().network_id;
-									NetworkDbObject[] networks = Start.getNetworkArm().getSuccessfulNetworks();
-									NetworkAttr netAttr = null;
-									for(int nCount = 0; nCount<networks.length;nCount++) {
-										if(NetworkIdUtil.areEqual(networks[nCount].getNetworkAccess().get_attributes().get_id(),netId)){
-											netAttr = networks[nCount].getNetworkAccess().get_attributes();
-										}
-										NetworkSubsetter netSubsetter = (NetworkSubsetter) subsetter;
-										if(!netSubsetter.accept(netAttr)) {
-											accept = false;
+									if(channelGroup.size() == 3) {
+										Channel[] successfulChannels = (Channel[])channelGroup.toArray(new Channel[0]);
+										if(sanityCheck(successfulChannels)){
+											groupableChannels.add(channelGroup);
+											//remove the channels that are successfully grouped
+											for(int count=0;count<successfulChannels.length;count++){
+												chn.remove(successfulChannels[count]);
+												channelMap.remove(successfulChannels[count]);
+											}
 										}
 									}
-								}else if(subsetter instanceof StationSubsetter) {
-									if(accept) {
-										StationSubsetter stationSubsetter = (StationSubsetter) subsetter;
-										if(!stationSubsetter.accept(channels[0].my_site.my_station)) {
-											accept = false;
-										}
-									}
-								}else if(subsetter instanceof ChannelSubsetter) {
-									if(accept) {
-										ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
-										for(int count =0;count<channels.length;count++) {
-											if(!channelSubsetter.accept(channels[count])){
+								}else {
+									Object subsetter = SodUtil.load(el,"networkArm");
+									if(subsetter instanceof NetworkSubsetter) {
+										NetworkId netId = channels[0].get_id().network_id;
+										NetworkDbObject[] networks = Start.getNetworkArm().getSuccessfulNetworks();
+										NetworkAttr netAttr = null;
+										for(int nCount = 0; nCount<networks.length;nCount++) {
+											if(NetworkIdUtil.areEqual(networks[nCount].getNetworkAccess().get_attributes().get_id(),netId)){
+												netAttr = networks[nCount].getNetworkAccess().get_attributes();
+											}
+											NetworkSubsetter netSubsetter = (NetworkSubsetter) subsetter;
+											if(!netSubsetter.accept(netAttr)) {
 												accept = false;
+											}
+										}
+									}else if(subsetter instanceof StationSubsetter) {
+										if(accept) {
+											StationSubsetter stationSubsetter = (StationSubsetter) subsetter;
+											if(!stationSubsetter.accept(channels[0].my_site.my_station)) {
+												accept = false;
+											}
+										}
+									}else if(subsetter instanceof ChannelSubsetter) {
+										if(accept) {
+											ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
+											for(int count =0;count<channels.length;count++) {
+												if(!channelSubsetter.accept(channels[count])){
+													accept = false;
+												}
 											}
 										}
 									}
@@ -157,15 +159,16 @@ public class ChannelGroup {
 						}
 					}
 				}
-			}
-			if(chn.size() > 0) {
-				failedList.addAll(chn);
+				if(chn.size() > 0) {
+					failedList.addAll(chn);
+				}
 			}
 		} catch (ConfigurationException e) {
 			GlobalExceptionHandler.handle("Error while loading Sod element in grouper",e);
 		}catch(Exception e ) {
 			GlobalExceptionHandler.handle("Exception while grouping channels",e);
 		}
+		
 		return groupableChannels;
 	}
 	
@@ -275,4 +278,5 @@ public class ChannelGroup {
 	private static final int MARGIN = 2;
 	private static final String grouperSchemaLoc = "edu/sc/seis/sod/data/grouper.rng";
 }
+
 
