@@ -247,7 +247,7 @@ public class Start {
         System.err.println("");
         System.err.println("Hope nevermore to look upon the heavens;");
         System.err.println("  I come to lead you to the other shore,");
-        System.err.println("  To the eternal shades in heat and frost.");
+        System.err.println("  To the eternal shades in heat and frost.\"");
         System.err.println();
         System.err.println();
         System.err.println(" ...a brave soul trudges on.");
