@@ -34,10 +34,10 @@ public class ChannelGroupNOT extends ChannelGroupFork {
         LocalSeismogramImpl[][] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
-        ChannelGroupLocalSeismogramProcess processor;
+        WaveformVectorProcess processor;
         Iterator it = cgProcessList.iterator();
         ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
-        processor = (ChannelGroupLocalSeismogramProcess)it.next();
+        processor = (WaveformVectorProcess)it.next();
         synchronized (processor) {
             result = processor.process(event,
                                        channelGroup,

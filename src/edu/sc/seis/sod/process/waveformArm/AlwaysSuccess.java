@@ -20,7 +20,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
 
-public class AlwaysSuccess implements LocalSeismogramProcess {
+public class AlwaysSuccess implements WaveformProcess {
 
     public AlwaysSuccess (Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -33,8 +33,8 @@ public class AlwaysSuccess implements LocalSeismogramProcess {
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveformArm");
-                if(sodElement instanceof LocalSeismogramProcess) {
-                    localSeisProcess = (LocalSeismogramProcess)sodElement;
+                if(sodElement instanceof WaveformProcess) {
+                    localSeisProcess = (WaveformProcess)sodElement;
                 } else {
                     logger.warn("Unknown tag in AlwaysSuccess config. " +sodElement);
                 } // end of else
@@ -67,7 +67,7 @@ public class AlwaysSuccess implements LocalSeismogramProcess {
     }
 
 
-    LocalSeismogramProcess localSeisProcess;
+    WaveformProcess localSeisProcess;
 
     private static final Logger logger = Logger.getLogger(AlwaysSuccess.class);
 

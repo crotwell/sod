@@ -17,7 +17,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
+public class PrintlineSeismogramProcess implements WaveformProcess {
 
     public PrintlineSeismogramProcess(Element config) {
         filename = SodUtil.getNestedText(config);

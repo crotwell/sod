@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import org.w3c.dom.Element;
 
 
-public class WaveformCountProcessor implements LocalSeismogramProcess {
+public class WaveformCountProcessor implements WaveformProcess {
     public WaveformCountProcessor(Element config) throws SQLException {
         jdbcEventChannelStatus= new JDBCEventChannelStatus();
     }

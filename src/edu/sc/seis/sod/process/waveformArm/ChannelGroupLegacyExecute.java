@@ -15,7 +15,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
-public class ChannelGroupLegacyExecute extends LegacyExecute implements ChannelGroupLocalSeismogramProcess {
+public class ChannelGroupLegacyExecute extends LegacyExecute implements WaveformVectorProcess {
 
     public ChannelGroupLegacyExecute(Element config) {
         super(config);

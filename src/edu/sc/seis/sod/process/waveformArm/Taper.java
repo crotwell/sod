@@ -15,7 +15,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
-public class Taper implements LocalSeismogramProcess {
+public class Taper implements WaveformProcess {
     public Taper (Element config) {
         int type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
         Element typeElement = SodUtil.getElement(config, "type");

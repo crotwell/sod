@@ -15,10 +15,10 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 8894 2004-05-25 00:51:30Z crotwell $
+ * @version $Id: RMean.java 10047 2004-08-05 21:26:00Z groves $
  */
 
-public class RMean implements LocalSeismogramProcess {
+public class RMean implements WaveformProcess {
     public RMean (Element config) {
         rmean = new edu.sc.seis.fissuresUtil.bag.RMean();
     }

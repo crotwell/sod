@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import org.w3c.dom.Element;
 import java.io.IOException;
 
-public class LegacyExecute implements LocalSeismogramProcess  {
+public class LegacyExecute implements WaveformProcess  {
 
     public LegacyExecute (Element config) {
 

@@ -31,10 +31,10 @@ public class SeismogramXOR extends ForkProcess {
                                          CookieJar cookieJar
                                         ) throws Exception {
         LocalSeismogramResult resultA, resultB;
-        LocalSeismogramProcess processorA, processorB;
+        WaveformProcess processorA, processorB;
         Iterator it = localSeisProcessList.iterator();
-        processorA = (LocalSeismogramProcess)it.next();
-        processorB = (LocalSeismogramProcess)it.next();
+        processorA = (WaveformProcess)it.next();
+        processorB = (WaveformProcess)it.next();
         synchronized (processorA) {
             resultA = processorA.process(event, channel, original,
                                          available, copySeismograms(seismograms), cookieJar);

@@ -18,9 +18,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProcess {
+public class ORLocalSeismogramWrapper implements WaveformVectorProcess {
 
-    public ORLocalSeismogramWrapper(LocalSeismogramProcess subsetter) {
+    public ORLocalSeismogramWrapper(WaveformProcess subsetter) {
         this.subsetter = subsetter;
     }
 
@@ -31,9 +31,9 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 Object obj = SodUtil.load((Element)node, "waveformArm");
-                if (obj instanceof LocalSeismogramProcess) {
+                if (obj instanceof WaveformProcess) {
                     subsetter =
-                        (LocalSeismogramProcess) obj;
+                        (WaveformProcess) obj;
                 } else {
                     throw new ConfigurationException("Object loaded is not an instance of LocalSeismogramProcess: "+obj.getClass().getName());
                 }
@@ -76,6 +76,6 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
         return "ORLocalSeismogramWrapper("+subsetter.toString()+")";
     }
 
-    LocalSeismogramProcess subsetter;
+    WaveformProcess subsetter;
 }
 

@@ -48,7 +48,7 @@ import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 
-public class SeismogramImageProcess implements LocalSeismogramProcess {
+public class SeismogramImageProcess implements WaveformProcess {
 
     private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
     private String fileDir;

@@ -18,9 +18,9 @@ import org.w3c.dom.Element;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 9982 2004-08-02 16:40:26Z groves $
+ * @version $Id: PhaseCut.java 10047 2004-08-05 21:26:00Z groves $
  */
-public class PhaseCut implements LocalSeismogramProcess {
+public class PhaseCut implements WaveformProcess {
 
     /**
      * Creates a new <code>PhaseCut</code> instance.

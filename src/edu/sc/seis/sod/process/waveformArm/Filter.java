@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class Filter implements LocalSeismogramProcess {
+public class Filter implements WaveformProcess {
 
     public Filter (Element config) throws ConfigurationException {
         this.config = config;

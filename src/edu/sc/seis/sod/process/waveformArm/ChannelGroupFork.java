@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ChannelGroupFork implements ChannelGroupLocalSeismogramProcess {
+public class ChannelGroupFork implements WaveformVectorProcess {
 
     public ChannelGroupFork(Element config) throws ConfigurationException {
         this.config = config;
@@ -37,10 +37,10 @@ public class ChannelGroupFork implements ChannelGroupLocalSeismogramProcess {
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveformArm");
-                if(sodElement instanceof ChannelGroupLocalSeismogramProcess) {
+                if(sodElement instanceof WaveformVectorProcess) {
                     cgProcessList.add(sodElement);
-                } else if(sodElement instanceof LocalSeismogramProcess) {
-                    cgProcessList.add(new ANDLocalSeismogramWrapper((LocalSeismogramProcess)sodElement));
+                } else if(sodElement instanceof WaveformProcess) {
+                    cgProcessList.add(new ANDLocalSeismogramWrapper((WaveformProcess)sodElement));
                 } else {
                     logger.warn("Unknown tag in MotionVectorArm config. " +sodElement.getClass().getName());
                 }
@@ -59,12 +59,12 @@ public class ChannelGroupFork implements ChannelGroupLocalSeismogramProcess {
         LocalSeismogramImpl[][] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
-        ChannelGroupLocalSeismogramProcess processor;
+        WaveformVectorProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = cgProcessList.iterator();
         ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
-            processor = (ChannelGroupLocalSeismogramProcess)it.next();
+            processor = (WaveformVectorProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event, channelGroup, original,
                                            available, result.getSeismograms(), cookieJar);

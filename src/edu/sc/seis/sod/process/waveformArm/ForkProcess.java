@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-public class ForkProcess implements LocalSeismogramProcess {
+public class ForkProcess implements WaveformProcess {
 
     public ForkProcess (Element config) throws ConfigurationException {
         this.config = config;
@@ -37,7 +37,7 @@ public class ForkProcess implements LocalSeismogramProcess {
                     continue;
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveformArm");
-                if(sodElement instanceof LocalSeismogramProcess) {
+                if(sodElement instanceof WaveformProcess) {
                     localSeisProcessList.add(sodElement);
                 } else {
                     logger.warn("Unknown tag in LocalSeismogramArm config. " +sodElement);
@@ -73,12 +73,12 @@ public class ForkProcess implements LocalSeismogramProcess {
         LocalSeismogramImpl[] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
-        LocalSeismogramProcess processor;
+        WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
         LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
-            processor = (LocalSeismogramProcess)it.next();
+            processor = (WaveformProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event, channel, original,
                                                 available, result.getSeismograms(), cookieJar);

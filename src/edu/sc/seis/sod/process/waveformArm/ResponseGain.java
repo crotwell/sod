@@ -19,10 +19,10 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGain.java 9541 2004-07-09 16:14:01Z groves $
+ * @version $Id: ResponseGain.java 10047 2004-08-05 21:26:00Z groves $
  */
 
-public class ResponseGain implements LocalSeismogramProcess {
+public class ResponseGain implements WaveformProcess {
     public LocalSeismogramResult process(EventAccessOperations event,
                                          Channel channel,
                                          RequestFilter[] original,

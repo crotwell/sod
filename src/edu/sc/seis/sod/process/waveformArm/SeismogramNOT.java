@@ -31,9 +31,9 @@ public class SeismogramNOT extends ForkProcess {
                                          CookieJar cookieJar
                                         ) throws Exception {
         LocalSeismogramResult result;
-        LocalSeismogramProcess processor;
+        WaveformProcess processor;
         Iterator it = localSeisProcessList.iterator();
-        processor = (LocalSeismogramProcess)it.next();
+        processor = (WaveformProcess)it.next();
         synchronized (processor) {
             result = processor.process(event, channel, original,
                                        available, copySeismograms(seismograms), cookieJar);

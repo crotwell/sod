@@ -34,13 +34,13 @@ public class ChannelGroupOR extends ChannelGroupFork {
         LocalSeismogramImpl[][] out = copySeismograms(seismograms);
 
         // pass originals to the contained processors
-        ChannelGroupLocalSeismogramProcess processor;
+        WaveformVectorProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = cgProcessList.iterator();
         ChannelGroupLocalSeismogramResult result = new ChannelGroupLocalSeismogramResult(seismograms, new StringTreeLeaf(this, true));
         boolean orResult = false;
         while (it.hasNext()  && ! orResult) {
-            processor = (ChannelGroupLocalSeismogramProcess)it.next();
+            processor = (WaveformVectorProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event,
                                            channelGroup,

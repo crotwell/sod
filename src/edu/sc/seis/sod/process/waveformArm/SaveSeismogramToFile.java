@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 
 
 
-public class SaveSeismogramToFile implements LocalSeismogramProcess{
+public class SaveSeismogramToFile implements WaveformProcess{
 
     /**
      * Creates a new <code>SacFileProcessor</code> instance.

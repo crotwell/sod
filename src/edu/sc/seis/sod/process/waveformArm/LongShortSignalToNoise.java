@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class LongShortSignalToNoise implements LocalSeismogramProcess {
+public class LongShortSignalToNoise implements WaveformProcess {
 
     public LongShortSignalToNoise(Element config) throws ConfigurationException{
         NodeList childNodes = config.getChildNodes();

@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
  * &lt;printlineWaveformProcessor/&gt;
  */
 
-public class NullWaveformProcess implements LocalSeismogramProcess {
+public class NullWaveformProcess implements WaveformProcess {
     /**
      * Creates a new <code>NullWaveformProcess</code> instance.
      *

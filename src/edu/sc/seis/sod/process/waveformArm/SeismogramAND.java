@@ -33,12 +33,12 @@ public class SeismogramAND extends ForkProcess {
                                          CookieJar cookieJar
                                         ) throws Exception {
 
-        LocalSeismogramProcess processor;
+        WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
         LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
-            processor = (LocalSeismogramProcess)it.next();
+            processor = (WaveformProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event,
                                            channel,

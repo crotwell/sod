@@ -31,10 +31,10 @@ public class ChannelGroupXOR extends ChannelGroupFork {
                                                      LocalSeismogramImpl[][] seismograms,
                                                      CookieJar cookieJar) throws Exception {
         ChannelGroupLocalSeismogramResult resultA, resultB;
-        ChannelGroupLocalSeismogramProcess processorA, processorB;
+        WaveformVectorProcess processorA, processorB;
         Iterator it = cgProcessList.iterator();
-        processorA = (ChannelGroupLocalSeismogramProcess)it.next();
-        processorB = (ChannelGroupLocalSeismogramProcess)it.next();
+        processorA = (WaveformVectorProcess)it.next();
+        processorB = (WaveformVectorProcess)it.next();
         synchronized (processorA) {
             resultA = processorA.process(event, channelGroup, original,
                                          available, copySeismograms(seismograms), cookieJar);

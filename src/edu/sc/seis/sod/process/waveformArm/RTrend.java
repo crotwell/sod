@@ -16,10 +16,10 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RTrend.java 8894 2004-05-25 00:51:30Z crotwell $
+ * @version $Id: RTrend.java 10047 2004-08-05 21:26:00Z groves $
  */
 
-public class RTrend implements LocalSeismogramProcess {
+public class RTrend implements WaveformProcess {
 
     /**
      * Creates a new <code>RTrend</code> instance.

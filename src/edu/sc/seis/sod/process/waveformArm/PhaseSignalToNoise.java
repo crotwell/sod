@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
  * The first trigger within the time window of the phase, if there is one, is
  * added to the cookieJar with key "sod_phaseStoN_"+phaseName for use by later
  * subsetters or later velocity output. */
-public class PhaseSignalToNoise  implements LocalSeismogramProcess {
+public class PhaseSignalToNoise  implements WaveformProcess {
 
     public PhaseSignalToNoise(Element config) throws ConfigurationException, TauModelException{
         NodeList childNodes = config.getChildNodes();

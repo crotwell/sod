@@ -33,14 +33,14 @@ public class SeismogramOR extends ForkProcess {
                                          CookieJar cookieJar
                                         ) throws Exception {
 
-        LocalSeismogramProcess processor;
+        WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
         LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms);
         boolean orResult = false;
         // loop until we hit a true, shortcircut, otherwise all are false and FAIL
         while (it.hasNext() && ! orResult) {
-            processor = (LocalSeismogramProcess)it.next();
+            processor = (WaveformProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event, channel, original,
                                            available, copySeismograms(seismograms), cookieJar);

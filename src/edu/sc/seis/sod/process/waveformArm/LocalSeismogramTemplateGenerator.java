@@ -27,7 +27,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
 
-public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess {
+public class LocalSeismogramTemplateGenerator implements WaveformProcess {
 
     private LocalSeismogramTemplate template;
 

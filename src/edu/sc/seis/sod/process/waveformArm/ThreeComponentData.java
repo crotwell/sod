@@ -13,7 +13,7 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
-public class ThreeComponentData implements ChannelGroupLocalSeismogramProcess {
+public class ThreeComponentData implements WaveformVectorProcess {
 
     public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,
                                                      ChannelGroup channelGroup,

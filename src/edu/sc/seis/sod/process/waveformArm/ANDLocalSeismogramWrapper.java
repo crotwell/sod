@@ -18,9 +18,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProcess {
+public class ANDLocalSeismogramWrapper implements WaveformVectorProcess {
 
-    public ANDLocalSeismogramWrapper(LocalSeismogramProcess subsetter) {
+    public ANDLocalSeismogramWrapper(WaveformProcess subsetter) {
         this.process = subsetter;
     }
 
@@ -31,13 +31,13 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 process =
-                    (LocalSeismogramProcess) SodUtil.load((Element)node, "waveformArm");
+                    (WaveformProcess) SodUtil.load((Element)node, "waveformArm");
                 break;
             }
         }
     }
 
-    public LocalSeismogramProcess getProcess() {
+    public WaveformProcess getProcess() {
         return process;
     }
 
@@ -74,6 +74,6 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
     }
 
 
-    LocalSeismogramProcess process;
+    WaveformProcess process;
 }
 
