@@ -17,11 +17,5 @@ public class Empty extends AbstractForm{
         return new Empty(newParent);
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Empty){ return super.equals(o); }
-        return false;
-    }
-
     public void accept(FormVisitor v) { v.visit(this);}
 }

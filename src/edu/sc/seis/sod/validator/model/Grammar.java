@@ -6,13 +6,22 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Grammar {
     public Grammar(String filename){
         this.filename = filename;
+    }
+
+    public List getDefs() {
+        List defs = new ArrayList();
+        defs.addAll(this.defs.values());
+        defs.add(start);
+        return defs;
     }
 
     public void include(Grammar grammar) {

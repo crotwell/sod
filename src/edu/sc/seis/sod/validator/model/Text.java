@@ -17,12 +17,6 @@ public class Text extends Empty{
         return new Text(newParent);
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if( o instanceof Text){ return super.equals(o); }
-        return false;
-    }
-
     public String toString(){ return "Any Text"; }
 
     public void accept(FormVisitor v) { v.visit(this);}

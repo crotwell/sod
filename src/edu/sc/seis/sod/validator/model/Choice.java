@@ -20,12 +20,6 @@ public class Choice
         return c;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Choice){ return super.equals(o); }
-        return false;
-    }
-
     public void accept(FormVisitor v) {
         v.visit(this);
         super.accept(v);

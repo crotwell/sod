@@ -20,15 +20,6 @@ public class Data extends AbstractForm{
         return new Data(getMin(), getMax(), getDatatype(), newParent);
     }
 
-    public boolean equals(Object o){
-        if(this == o){ return true; }
-        if(o instanceof Data){
-            return ((Data)o).getDatatype().equals(getDatatype())
-                && super.equals(o);
-        }
-        return false;
-    }
-
     public int hashCode(){ return super.hashCode() * 37 + datatype.hashCode(); }
 
     public ModelDatatype getDatatype(){ return datatype; }

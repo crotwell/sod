@@ -17,7 +17,9 @@ public abstract class AbstractGenitorForm extends AbstractForm implements Genito
         super(min, max, parent);
     }
 
-    void setChild(FormProvider child){ this.child = child; }
+    void setChild(FormProvider child){
+        this.child = child.copyWithNewParent(this);
+    }
 
     public boolean isAncestorOf(Form f){
         if(getChild().equals(f)){ return true; }

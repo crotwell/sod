@@ -39,18 +39,6 @@ public abstract class AbstractForm implements Form {
         return copy;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof AbstractForm){
-            AbstractForm af = (AbstractForm)o;
-            if(af.min == min && af.max == max){
-                if(af.parent != null && af.parent.equals(parent)){ return true; }
-                return af.parent == null && parent == null;
-            }
-        }
-        return false;
-    }
-
     public void setAnnotation(Annotation ann){ this.ann = ann; }
 
     public Annotation getAnnotation(){ return ann; }

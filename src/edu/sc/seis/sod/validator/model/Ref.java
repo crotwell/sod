@@ -35,16 +35,6 @@ public class Ref implements FormProvider{
         return derefedForm;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Ref){
-            Ref oRef = (Ref)o;
-            return oRef.owner.equals(owner) && oRef.name.equals(name) &&
-                oRef.parent.equals(parent);
-        }
-        return false;
-    }
-
     public int getMin() { return min; }
 
     public void setMin(int min) { this.min = min; }

@@ -17,12 +17,6 @@ public class Group extends AbstractMultigenitorForm {
         return g;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Group){ return super.equals(o); }
-        return false;
-    }
-
     public void accept(FormVisitor v) {
         v.visit(this);
         super.accept(v);

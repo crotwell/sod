@@ -17,12 +17,6 @@ public class Interleave extends AbstractMultigenitorForm {
         return i;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof Interleave){ return super.equals(o); }
-        return false;
-    }
-
     public void accept(FormVisitor v) {
         v.visit(this);
         super.accept(v);

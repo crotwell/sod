@@ -58,15 +58,6 @@ public class NamedElement extends AbstractGenitorForm{
         return copy;
     }
 
-    public boolean equals(Object o){
-        if(o == this){ return true; }
-        if(o instanceof NamedElement){
-            NamedElement otherNamed = (NamedElement)o;
-            return otherNamed.getName().equals(getName()) && super.equals(o);
-        }
-        return false;
-    }
-
     public String toString(){
         return getName();
     }

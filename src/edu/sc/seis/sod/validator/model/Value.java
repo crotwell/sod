@@ -36,18 +36,6 @@ public class Value extends Data{
         return new Value(getMin(), getMax(), value, getDatatype(), newParent);
     }
 
-    public boolean equals(Object o){
-        if(this == o){ return true; }
-        if(o instanceof Value){
-            return ((Value)o).getValue().equals(getValue()) && super.equals(o);
-        }
-        return false;
-    }
-
-    public int hashCode(){
-        return super.hashCode() * 37 + value.hashCode();
-    }
-
     public void accept(FormVisitor v) { v.visit(this);}
 
     private String value;
