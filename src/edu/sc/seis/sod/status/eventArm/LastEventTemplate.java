@@ -12,7 +12,7 @@ public class LastEventTemplate extends AllTypeTemplate{
     }
 
     public String getResult() {
-        if(Start.getEventArm() != null){
+        if(Start.getEventArm() != null && Start.getEventArm().getLastEvent() != null){
             return ef.getResult(Start.getEventArm().getLastEvent());
         }else{ return "None"; }
     }
