@@ -33,7 +33,8 @@ public class ExampleBuilder {
     }
 
     public void write(Form f, boolean ignoreMin){
-        if (f.getMin() == 0 && !ignoreMin) {
+        //System.out.println(ModelUtil.toString(f));
+        if (f.getMin() == 0 && !ignoreMin && !f.getAnnotation().getInclude()) {
             return;
         }
         //this attribute stuff is wrong.  Don't worry right now
@@ -61,11 +62,10 @@ public class ExampleBuilder {
                 }
             }
         } else if (f instanceof Value){
-            buf.append(DEFAULT_TEXT_VALUE);
+            buf.append(((Value)f).getValue());
         } else if (f instanceof Data){
             buf.append(DEFAULT_INT_VALUE);
         } else if (f instanceof DataList) {
-            System.out.println("datalist?");
         } else if (f instanceof Group || f instanceof Interleave) {
             MultigenitorForm m = (MultigenitorForm)f;
             Form[] kids = m.getChildren();
@@ -90,7 +90,6 @@ public class ExampleBuilder {
         } else if (f instanceof Text) {
             buf.append(DEFAULT_TEXT_VALUE);
         } else if (f instanceof Empty) {
-            System.out.println("empty?");
         }
     }
 
