@@ -19,5 +19,6 @@ originAND=Event Logical And
 originOR=Event Logical Or
 originXOR=Event Logical XOr
 originNOT=Event Logical Not
+originPointDistance=Distance from Event
 
 
