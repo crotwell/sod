@@ -71,7 +71,7 @@ public class JDBCNetworkUnifier{
         synchronized(ndc){
             na = ndc.a_finder().retrieve_by_id(id);
         }
-        na = BulletproofVestFactory.networkAccessVest(na, ndc);
+        na = BulletproofVestFactory.vestNetworkAccess(na, ndc);
         return new NetworkDbObject(netDbId, na);
     }
 
