@@ -48,6 +48,7 @@ public class PrintlineChannelProcessor implements NetworkArmProcess {
 	    
 	    }
 	} else {
+        System.out.println(ChannelIdUtil.toString(channel.get_id()));
 	} // end of else
 	
     }
