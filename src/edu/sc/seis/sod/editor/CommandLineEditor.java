@@ -5,32 +5,19 @@
  */
 
 package edu.sc.seis.sod.editor;
+import java.io.*;
+import org.w3c.dom.*;
+
+import edu.sc.seis.sod.SimpleErrorHandler;
 import edu.sc.seis.sod.Start;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.File;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import org.w3c.dom.DOMException;
-import org.apache.log4j.BasicConfigurator;
-import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
-import org.apache.xpath.XPathAPI;
 import javax.xml.transform.TransformerException;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import edu.sc.seis.fissuresUtil.xml.Writer;
+import org.apache.xpath.XPathAPI;
+import org.xml.sax.SAXException;
 
 
 
@@ -69,7 +56,7 @@ public class CommandLineEditor {
     }
 
     Document doReplacements(String[] args) throws ParserConfigurationException, TransformerException {
-        Document doc = start.getDocument();
+        Document doc = getDocument();
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-f")) {
                 i++;
@@ -99,7 +86,7 @@ public class CommandLineEditor {
     }
 
     void testXPath(String[] args) throws ParserConfigurationException, TransformerException {
-        Document doc = start.getDocument();
+        Document doc = getDocument();
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-f")) {
                 i++;
@@ -147,13 +134,16 @@ public class CommandLineEditor {
         File configFile = new File(configFilename);
         if (configFile.exists()) {
             InputStream in = new BufferedInputStream(new FileInputStream(configFile));
-            this.start = new Start(in, configFile.toURL());
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            docBuilder.setErrorHandler(new SimpleErrorHandler());
+            document =  docBuilder.parse(configFile);
         }
     }
 
     public void printOptions(DataOutputStream out) throws DOMException, IOException {
-        Document doc = start.getDocument();
-        printOptions(doc.getDocumentElement(), out);
+        printOptions(getDocument().getDocumentElement(), out);
     }
 
     protected void printOptions(Element element, DataOutputStream out) throws DOMException, IOException {
@@ -181,6 +171,10 @@ public class CommandLineEditor {
         }
     }
 
+    public Document getDocument() {
+        return document;
+    }
+
     /**
      *
      */
@@ -195,7 +189,7 @@ public class CommandLineEditor {
 
     String configFilename;
 
-    Start start;
+    private Document document;
 
     private static Logger logger = Logger.getLogger(CommandLineEditor.class);
 

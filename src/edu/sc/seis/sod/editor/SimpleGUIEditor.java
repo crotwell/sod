@@ -49,7 +49,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     public void start() {
         frame = new JFrame(frameName);
         frame.getContentPane().setLayout(new BorderLayout());
-        Document doc = start.getDocument();
+        Document doc = getDocument();
         if (tabs) {
             JTabbedPane tabs = new JTabbedPane();
             frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
@@ -105,7 +105,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             new BufferedWriter(new OutputStreamWriter(out));
         Writer xmlWriter = new Writer();
         xmlWriter.setOutput(buf);
-        xmlWriter.write(start.getDocument());
+        xmlWriter.write(getDocument());
     }
 
     void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {

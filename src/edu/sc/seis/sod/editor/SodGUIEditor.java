@@ -28,6 +28,7 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import java.awt.FileDialog;
+import edu.sc.seis.sod.Start;
 
 
 
@@ -42,7 +43,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     public void start() {
         super.start();
-
         JMenuBar menubar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem save = new JMenuItem("Save");
@@ -105,5 +105,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
         System.out.println("Done editing.");
     }
+
 }
+
 
