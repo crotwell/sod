@@ -9,8 +9,10 @@
 <style media="all">@import "../../../main.css";</style>
 <script type="text/javascript" src="../../../tableRuler.js"> </script>
 <script type="text/javascript" src="../../../sorttable.js"> </script>
+<script type="text/javascript" src="../../../footerPositioner.js"> </script>
 <script type="text/javascript">
 window.onload=function(){
+        positionFooter();
         tableruler();
         set_img_dir('../../../images/')
 }
