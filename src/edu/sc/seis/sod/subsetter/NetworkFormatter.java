@@ -60,7 +60,7 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
      */
     protected Object getTemplate(String tag, Element el) {
         
-        if (tag.equals("networkCode")){
+        if (tag.equals("code")){
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
                     return net.get_attributes().get_code();

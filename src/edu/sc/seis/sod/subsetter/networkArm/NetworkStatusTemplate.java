@@ -82,6 +82,10 @@ public class NetworkStatusTemplate extends FileWritingTemplate implements Networ
         this.status = status;
         write();
     }
+
+    private class StatusFormatter implements GenericTemplate{
+        public String getResult(){ return status; }
+    }
     
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
@@ -103,6 +107,9 @@ public class NetworkStatusTemplate extends FileWritingTemplate implements Networ
         else if (tag.equals("networks")) {
             t = new NetworkGroupTemplate(el);
             networkListeners.add(t);
+        }
+        else if (tag.equals("status")){
+            return new StatusFormatter();
         }
         return t;
     }
