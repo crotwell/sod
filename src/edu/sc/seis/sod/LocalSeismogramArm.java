@@ -1,13 +1,13 @@
 package edu.sc.seis.sod;
 import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.LocalSeismogram;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeUtils;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
@@ -49,25 +49,16 @@ import org.w3c.dom.NodeList;
  *&lt;/localSeismogramArm&gt;
  *</pre>
  */
-
-
 public class LocalSeismogramArm implements Subsetter{
     public LocalSeismogramArm (Element config) throws ConfigurationException{
         processConfig(config);
     }
 
-    /**
-     * Describe <code>processConfig</code> method here.
-     *
-     * @param config an <code>Element</code> value
-     * @exception ConfigurationException if an error occurs
-     */
     protected void processConfig(Element config)
         throws ConfigurationException {
         NodeList children = config.getChildNodes();
-        Node node;
         for (int i=0; i<children.getLength(); i++) {
-            node = children.item(i);
+            Node node = children.item(i);
             if (node instanceof Element) {
                 if (((Element)node).getTagName().equals("description")) {
                     // skip description element
@@ -75,19 +66,19 @@ public class LocalSeismogramArm implements Subsetter{
                 }
                 Object sodElement = SodUtil.load((Element)node,"waveFormArm");
                 if(sodElement instanceof EventChannelSubsetter) {
-                    eventChannelSubsetter = (EventChannelSubsetter)sodElement;
+                    eventChannel = (EventChannelSubsetter)sodElement;
                 } else if(sodElement instanceof RequestGenerator)  {
-                    requestGeneratorSubsetter = (RequestGenerator)sodElement;
+                    requestGenerator = (RequestGenerator)sodElement;
                 } else if(sodElement instanceof RequestSubsetter)  {
-                    requestSubsetter = (RequestSubsetter)sodElement;
+                    request = (RequestSubsetter)sodElement;
                 } else if(sodElement instanceof SeismogramDCLocator)  {
-                    seismogramDCLocator = (SeismogramDCLocator)sodElement;
+                    dcLocator = (SeismogramDCLocator)sodElement;
                 } else if(sodElement instanceof AvailableDataSubsetter)  {
-                    availableDataSubsetter = (AvailableDataSubsetter)sodElement;
+                    availData = (AvailableDataSubsetter)sodElement;
                 } else if(sodElement instanceof LocalSeismogramSubsetter)  {
-                    localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
+                    seisSubsetter = (LocalSeismogramSubsetter)sodElement;
                 } else if(sodElement instanceof LocalSeismogramProcess) {
-                    localSeisProcessList.add(sodElement);
+                    processes.add(sodElement);
                 } else {
                     logger.warn("Unknown tag in LocalSeismogramArm config. " +sodElement);
                 } // end of else
@@ -96,81 +87,69 @@ public class LocalSeismogramArm implements Subsetter{
 
     }
 
-    public void processLocalSeismogramArm(EventChannelPair ecp) throws Exception{
-        EventAccessOperations eventAccess = ecp.getEvent();
-        Channel channel = ecp.getChannel();
-        MicroSecondDate chanBegin = new MicroSecondDate(channel.effective_time.start_time);
-        MicroSecondDate chanEnd;
-        if(channel.effective_time.end_time != null) {
-            chanEnd = new MicroSecondDate(channel.effective_time.end_time);
-        } else chanEnd = TimeUtils.future;
-        if(chanEnd.before(chanBegin)) chanEnd = TimeUtils.future;
-        MicroSecondDate originTime = new MicroSecondDate(eventAccess.get_preferred_origin().origin_time);
-        // don't bother with channel if effective time does not
-        // overlap event time
-        EventEffectiveTimeOverlap eventOverlap =
-            new EventEffectiveTimeOverlap(eventAccess);
-        if ( ! eventOverlap.overlaps(channel)) {
-            logger.info("fail "+ChannelIdUtil.toString(channel.get_id())+" doesn't everlap originTime="+originTime+" plus "+EventEffectiveTimeOverlap.getOffset()+" endTime="+chanEnd+" begin="+chanBegin);
-            ecp.update("channel EffectiveTime does not overlap event",
-                       EventChannelCondition.SUBSETTER_FAILED);
-            return;
-        } // end of if ()
-        ecp.update("completedEffectiveTimeOverlaps",  EventChannelCondition.SUBSETTING);
-        processEventChannelSubsetter(ecp);
-
-    }
-
-    public void processEventChannelSubsetter(EventChannelPair ecp) throws Exception{
+    public void processLocalSeismogramArm(EventChannelPair ecp){
         boolean passed;
         EventAccessOperations eventAccess = ecp.getEvent();
         NetworkAccess networkAccess = ecp.getNet();
         Channel channel = ecp.getChannel();
-        synchronized (eventChannelSubsetter) {
-            passed = eventChannelSubsetter.accept(eventAccess, networkAccess,
-                                                  channel, null);
+        synchronized (eventChannel) {
+            try {
+                passed = eventChannel.accept(eventAccess, networkAccess,
+                                             channel, null);
+            } catch (Throwable e) {
+                handle(ecp, Status.EVENT_CHANNEL_SUBSETTER, e);
+                return;
+            }
         }
         if( passed ) {
-            ecp.update("Event Channel Subsetter Succeeded", EventChannelCondition.SUBSETTING);
+            ecp.update(Status.get(Status.REQUEST_SUBSETTER, Status.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {
             logger.info("FAIL event channel");
-            ecp.update("Event Channel Subsetter Failed",  EventChannelCondition.SUBSETTER_FAILED);
+            ecp.update(Status.get(Status.EVENT_CHANNEL_SUBSETTER,Status.REJECT));
         }
     }
 
-    public void processRequestGeneratorSubsetter(EventChannelPair ecp)
-        throws Exception {
-
+    public void processRequestGeneratorSubsetter(EventChannelPair ecp){
         RequestFilter[] infilters;
-        synchronized (requestGeneratorSubsetter) {
-            infilters=requestGeneratorSubsetter.generateRequest(ecp.getEvent(),
-                                                                ecp.getNet(),
-                                                                ecp.getChannel(),
-                                                                null);
+        synchronized (requestGenerator) {
+            try {
+                infilters=requestGenerator.generateRequest(ecp.getEvent(),
+                                                           ecp.getNet(),
+                                                           ecp.getChannel(),
+                                                           null);
+            } catch (Throwable e) {
+                handle(ecp, Status.REQUEST_SUBSETTER, e);
+                return;
+            }
         }
-        ecp.update("Finished generating requests",EventChannelCondition.SUBSETTING);
         processRequestSubsetter(ecp, infilters);
     }
 
-    public void processRequestSubsetter(EventChannelPair ecp, RequestFilter[] infilters)
-        throws Exception {
+    public void processRequestSubsetter(EventChannelPair ecp, RequestFilter[] infilters){
         boolean passed;
-        synchronized (requestSubsetter) {
-            passed = requestSubsetter.accept(ecp.getEvent(),
-                                             ecp.getNet(),
-                                             ecp.getChannel(),
-                                             infilters,
-                                             null);
+        synchronized (request) {
+            try {
+                passed = request.accept(ecp.getEvent(), ecp.getNet(), ecp.getChannel(),
+                                        infilters, null);
+            } catch (Throwable e) {
+                handle(ecp, Status.REQUEST_SUBSETTER, e);
+                return;
+            }
         }
         if( passed ) {
-            ecp.update("Finished request subsetter", EventChannelCondition.SUBSETTING);
+            ecp.update(Status.get(Status.AVAILABLE_DATA_SUBSETTER, Status.IN_PROG));
             ProxySeismogramDC dataCenter;
-            synchronized(seismogramDCLocator) {
-                dataCenter = seismogramDCLocator.getSeismogramDC(ecp.getEvent(),
-                                                                 ecp.getNet(),
-                                                                 ecp.getChannel().my_site.my_station,
-                                                                 null);
+            synchronized(dcLocator) {
+                try {
+                    dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
+                                                           ecp.getNet(),
+                                                           ecp.getChannel().my_site.my_station,
+                                                           null);
+                } catch (Throwable e) {
+                    handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                    return;
+                }
             }
             RequestFilter[] outfilters = null;
             logger.debug("Trying available_data for "+ChannelIdUtil.toString(infilters[0].channel_id)+
@@ -196,7 +175,8 @@ public class LocalSeismogramArm implements Subsetter{
                             dataCenter.reset();
                         }
                     } else {
-                        throw e;
+                        handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                        return;
                     }
                 }
             }
@@ -210,7 +190,7 @@ public class LocalSeismogramArm implements Subsetter{
             processAvailableDataSubsetter(ecp,dataCenter,infilters,outfilters);
         } else {
             logger.info("FAIL request subsetter");
-            ecp.update("Failed in the request subsetter",  EventChannelCondition.SUBSETTER_FAILED);
+            ecp.update(Status.get(Status.REQUEST_SUBSETTER, Status.REJECT));
         }
     }
 
@@ -218,19 +198,23 @@ public class LocalSeismogramArm implements Subsetter{
     public void processAvailableDataSubsetter(EventChannelPair ecp,
                                               ProxySeismogramDC dataCenter,
                                               RequestFilter[] infilters,
-                                              RequestFilter[] outfilters)
-        throws Exception {
+                                              RequestFilter[] outfilters){
         boolean passed;
-        synchronized (availableDataSubsetter) {
-            passed = availableDataSubsetter.accept(ecp.getEvent(),
-                                                   ecp.getNet(),
-                                                   ecp.getChannel(),
-                                                   infilters,
-                                                   outfilters,
-                                                   null);
+        synchronized (availData) {
+            try {
+                passed = availData.accept(ecp.getEvent(),
+                                          ecp.getNet(),
+                                          ecp.getChannel(),
+                                          infilters,
+                                          outfilters,
+                                          null);
+            } catch (Throwable e) {
+                handle(ecp, Status.AVAILABLE_DATA_SUBSETTER, e);
+                return;
+            }
         }
         if( passed ) {
-            ecp.update("passed available data", EventChannelCondition.SUBSETTING);
+            ecp.update(Status.get(Status.DATA_SUBSETTER, Status.IN_PROG));
             for (int i=0; i<infilters.length; i++) {
                 logger.debug("Getting seismograms "
                                  +ChannelIdUtil.toString(infilters[i].channel_id)
@@ -249,7 +233,12 @@ public class LocalSeismogramArm implements Subsetter{
                 while(retries < MAX_RETRY) {
                     try {
                         logger.debug("before retrieve_seismograms");
-                        localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                        try {
+                            localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                        } catch (FissuresException e) {
+                            handle(ecp, Status.DATA_SUBSETTER, e);
+                            return;
+                        }
                         logger.debug("after successful retrieve_seismograms");
                         if (localSeismograms.length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
                             // must be server error
@@ -272,13 +261,14 @@ public class LocalSeismogramArm implements Subsetter{
                                 dataCenter.reset();
                             }
                         } else {
-                            throw e;
+                            handle(ecp, Status.DATA_SUBSETTER, e);
+                            return;
                         }
                     }
                 }
 
             } else {
-                logger.debug("Failed, available data returned no requestFilters ");
+                logger.debug("Failed, retrieve data returned no requestFilters ");
                 localSeismograms = new LocalSeismogram[0];
             } // end of else
             MicroSecondDate after = new MicroSecondDate();
@@ -287,7 +277,7 @@ public class LocalSeismogramArm implements Subsetter{
             LinkedList tempForCast = new LinkedList();
             for (int i=0; i<localSeismograms.length; i++) {
                 if (localSeismograms[i] == null) {
-                    ecp.update("Failed due to malformed(null) seismograms being returned",  EventChannelCondition.FAILURE);
+                    ecp.update(Status.get(Status.DATA_SUBSETTER, Status.REJECT));
                     logger.error("Got null in seismogram array "+ChannelIdUtil.toString(ecp.getChannel().get_id()));
                     return;
                 }
@@ -305,35 +295,44 @@ public class LocalSeismogramArm implements Subsetter{
             } // end of for (int i=0; i<localSeismograms.length; i++)
             LocalSeismogramImpl[] tempLocalSeismograms =
                 (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
-
             processLocalSeismogramSubsetter(ecp, infilters, outfilters,
                                             tempLocalSeismograms);
         } else {
             logger.info("FAIL available data");
-            ecp.update("No available data",  EventChannelCondition.NO_AVAILABLE_DATA);
+            ecp.update(Status.get(Status.AVAILABLE_DATA_SUBSETTER,
+                                  Status.REJECT));
         }
     }
 
     public void processLocalSeismogramSubsetter(EventChannelPair ecp,
                                                 RequestFilter[] infilters,
                                                 RequestFilter[] outfilters,
-                                                LocalSeismogramImpl[] localSeismograms) throws Exception {
+                                                LocalSeismogramImpl[] localSeismograms) {
         boolean passed;
-        synchronized (localSeismogramSubsetter) {
-            passed = localSeismogramSubsetter.accept(ecp.getEvent(),
-                                                     ecp.getNet(),
-                                                     ecp.getChannel(),
-                                                     infilters,
-                                                     outfilters,
-                                                     localSeismograms,
-                                                     null);
+        synchronized (seisSubsetter) {
+            try {
+                passed = seisSubsetter.accept(ecp.getEvent(),
+                                              ecp.getNet(),
+                                              ecp.getChannel(),
+                                              infilters,
+                                              outfilters,
+                                              localSeismograms,
+                                              null);
+            } catch (Throwable e) {
+                handle(ecp, Status.DATA_SUBSETTER, e);
+                return;
+            }
         }
         if( passed ) {
-            ecp.update("passed local seismogram subsetter", EventChannelCondition.SUBSETTER_PASSED);
-            processSeismograms(ecp, infilters, outfilters, localSeismograms);
+            ecp.update(Status.get(Status.PROCESSOR, Status.IN_PROG));
+            try {
+                processSeismograms(ecp, infilters, outfilters, localSeismograms);
+            } catch (Throwable e) {
+                handle(ecp, Status.DATA_SUBSETTER, e);
+            }
         } else {
             logger.info("FAIL seismogram subsetter");
-            ecp.update("failed local seismogram subsetter",  EventChannelCondition.SUBSETTER_FAILED);
+            ecp.update(Status.get(Status.DATA_SUBSETTER, Status.REJECT));
         }
 
     }
@@ -343,46 +342,50 @@ public class LocalSeismogramArm implements Subsetter{
                                    RequestFilter[] outfilters,
                                    LocalSeismogramImpl[] localSeismograms)
         throws Exception {
-        ecp.update("Starting processing", EventChannelCondition.PROCESSING);
         LocalSeismogramProcess processor;
-        Iterator it = localSeisProcessList.iterator();
+        Iterator it = processes.iterator();
         while (it.hasNext()) {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
-                localSeismograms = processor.process(ecp.getEvent(),
-                                                     ecp.getNet(),
-                                                     ecp.getChannel(),
-                                                     infilters,
-                                                     outfilters,
-                                                     localSeismograms,
-                                                     null);
+                try {
+                    localSeismograms = processor.process(ecp.getEvent(),
+                                                         ecp.getNet(),
+                                                         ecp.getChannel(),
+                                                         infilters,
+                                                         outfilters,
+                                                         localSeismograms,
+                                                         null);
+                } catch (Throwable e) { handle(ecp, Status.PROCESSOR, e); }
             }
         } // end of while (it.hasNext())
         logger.debug("finished with "+
                          ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id()));
-        ecp.update("Finished with processing", EventChannelCondition.SUCCESS);
+        ecp.update(Status.get(Status.SPECIAL, Status.SUCCESS));
     }
 
-    private EventChannelSubsetter eventChannelSubsetter =
-        new NullEventChannelSubsetter();
+    private static void handle(EventChannelPair ecp, int stage, Throwable t){
+        if(t instanceof org.omg.CORBA.SystemException){
+            ecp.update(t, Status.get(stage, Status.CORBA_FAILURE));
+        }else{
+            ecp.update(t, Status.get(stage, Status.SYSTEM_FAILURE));
+        }
+    }
 
-    private RequestGenerator requestGeneratorSubsetter =
-        new NullRequestGenerator();
+    private EventChannelSubsetter eventChannel =new NullEventChannelSubsetter();
 
-    private RequestSubsetter requestSubsetter = new NullRequestSubsetter();
+    private RequestGenerator requestGenerator = new NullRequestGenerator();
 
-    private AvailableDataSubsetter availableDataSubsetter =
-        new NullAvailableDataSubsetter();
+    private RequestSubsetter request = new NullRequestSubsetter();
 
-    private LocalSeismogramSubsetter localSeismogramSubsetter =
+    private AvailableDataSubsetter availData = new NullAvailableDataSubsetter();
+
+    private LocalSeismogramSubsetter seisSubsetter =
         new NullLocalSeismogramSubsetter();
 
-    private LinkedList localSeisProcessList = new LinkedList();
+    private LinkedList processes = new LinkedList();
 
-    private SeismogramDCLocator seismogramDCLocator=
-        new NullSeismogramDCLocator();
+    private SeismogramDCLocator dcLocator = new NullSeismogramDCLocator();
 
     private static final Logger logger =Logger.getLogger(LocalSeismogramArm.class);
-
 }// LocalSeismogramArm
 

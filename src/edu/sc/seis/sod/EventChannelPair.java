@@ -6,7 +6,6 @@
 
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -14,7 +13,6 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
-import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import org.apache.log4j.Logger;
 
 public class EventChannelPair{
@@ -29,17 +27,12 @@ public class EventChannelPair{
 
     public int getPairId(){ return pairId; }
 
-    public void update(Exception e, String info, EventChannelCondition status) {
-        if (e instanceof FissuresException) {
-            FissuresException fe = (FissuresException)e;
-            info = info+" FissuresException: code="+fe.the_error.error_code+" "+fe.the_error.error_description;
-        }
-        CommonAccess.handleException(info, e);
-        update(info, status);
+    public void update(Throwable e, Status status) {
+        CommonAccess.handleException(toString(), e);
+        update(status);
     }
 
-    public void update(String info, EventChannelCondition status){
-        this.info = info;
+    public void update(Status status){
         this.status = status;
         if(owner != null)owner.setStatus(this);
     }
@@ -62,17 +55,14 @@ public class EventChannelPair{
 
     public String toString(){
         return "EventChannelPair: " + getEvent() + " " +
-            ChannelIdUtil.toString(getChannel().get_id()) + " " + getStatus() +
-            " " + info;
+            ChannelIdUtil.toString(getChannel().get_id()) + " " + getStatus();
     }
 
     public int getChannelDbId(){ return chan.getDbId(); }
 
     public int getEventDbId() { return event.getDbId(); }
 
-    public EventChannelCondition getStatus(){ return status; }
-
-    public String getInfo(){ return info; }
+    public Status getStatus(){ return status; }
 
     public Channel getChannel() { return chan.getChannel(); }
 
@@ -80,9 +70,7 @@ public class EventChannelPair{
 
     public NetworkAccess getNet(){ return net.getNetworkAccess(); }
 
-    private String info;
-
-    private EventChannelCondition status;
+    private Status status;
 
     private EventDbObject event;
 
