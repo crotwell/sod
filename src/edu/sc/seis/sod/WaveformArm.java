@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 import java.util.*;
 
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
@@ -317,15 +318,24 @@ public class WaveformArm implements Runnable {
                 EventChannelPair ecp = extractEventChannelPair();
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
+                boolean accepted = false;
                 try {
+                    Station evStation = ecp.getChannel().my_site.my_station;
                     eventStationSubsetter.accept(ecp.getEvent(),
-                                                 ecp.getChannel().my_site.my_station);
-                } catch (Exception e) {
+                                                 evStation);
+                } catch (Throwable e) {
                     ecp.update(e, Status.get(Stage.EVENT_STATION_SUBSETTER,
                                              Standing.SYSTEM_FAILURE));
+                    return;
                 }
-                ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.IN_PROG));
-                localSeismogramArm.processLocalSeismogramArm(ecp);
+                if(accepted){
+                    ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
+                                          Standing.IN_PROG));
+                    localSeismogramArm.processLocalSeismogramArm(ecp);
+                }else{
+                    ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                          Standing.REJECT));
+                }
             }catch(Throwable t){
                 System.err.println("An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu");
                 t.printStackTrace(System.err);
