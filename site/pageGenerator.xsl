@@ -100,14 +100,14 @@
     <xsl:template name="header">
         <xsl:param name="base" select="$base"/>
         <div id="header">
-            <a href="http://seis.sc.edu/SOD">
+            <a href="http://www.seis.sc.edu/SOD">
                 <img class="left">
                     <xsl:attribute name="src">
                         <xsl:value-of select="concat($base, 'images/full-sodlogo-y100.gif')"/>
                     </xsl:attribute>
                 </img>
             </a>
-            <a href="http://seis.sc.edu/">
+            <a href="http://www.seis.sc.edu/">
                 <img class="right">
                     <xsl:attribute name="src">
                         <xsl:value-of select="concat($base, 'seisheader100.jpg')"/>
