@@ -277,44 +277,44 @@
             <element name="eventDirLabel">
                 <ref name="eventLabel"/>
             </element>
-             <optional>
-            	<element name="id">
-            		<data type="string"/>
-            	</element>
+            <optional>
+                <element name="id">
+                    <data type="string"/>
+                </element>
             </optional>
         </element>
     </define>
-   <define name="recordSectionDisplayGenerator">
-         <element name="recordSectionDisplayGenerator">
+    <define name="recordSectionDisplayGenerator">
+        <element name="recordSectionDisplayGenerator">
             <xsd:annotation>
                 <summary>Generates the recordsection display for each event</summary>
-                <description>Reads the dsml file created by the saveSeismogramToFile processor
-                and generates the recordsection image file</description>
+                <description>Reads the dsml file created by the saveSeismogramToFile processor and
+                    generates the recordsection image file</description>
                 <example>
                     <recordSectionDisplayGenerator>
-                    	<id>RecordSection_</id>
-                    	<displayOption>BEST</displayOption>
-                    	<fileNameBase>recordSection</fileNameBase>
-                    	<numSeisPerRecordSection>10</numSeisPerRecordSection>
+                        <id>RecordSection_</id>
+                        <displayOption>BEST</displayOption>
+                        <fileNameBase>recordSection</fileNameBase>
+                        <numSeisPerRecordSection>10</numSeisPerRecordSection>
                     </recordSectionDisplayGenerator>
                 </example>
             </xsd:annotation>
             <element name="id">
-            	<data type="string"/>
+                <data type="string"/>
             </element>
             <element name="displayOption">
-	            <choice>
-		            <value>BEST</value>
-		            <value>ALL</value>
-	            </choice>
+                <choice>
+                    <value>BEST</value>
+                    <value>ALL</value>
+                </choice>
             </element>
             <element name="fileNameBase">
-            	<data type="string"/>
+                <data type="string"/>
             </element>
             <element name="numSeisPerRecordSection">
-            	<data type="integer"/>
-           	</element>
-         </element>
+                <data type="integer"/>
+            </element>
+        </element>
     </define>
     <define name="externalWaveformProcess">
         <element name="externalWaveformProcess">
@@ -475,15 +475,28 @@
                 </element>
             </optional>
             <optional>
-                <element name="seismogramConfig">
-                    <element name="template">
-                        <data type="string">
-                            <xsd:annotation>
-                                <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
-                            </xsd:annotation>
-                        </data>
+                <choice>
+                    <element name="seismogramConfig">
+                        <element name="template">
+                            <data type="string">
+                                <xsd:annotation>
+                                    <example>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</example>
+                                </xsd:annotation>
+                            </data>
+                        </element>
                     </element>
-                </element>
+                    <element name="outputLocationCreators">
+                        <element name="eventDir">
+                            <externalRef href="../base/externalRef/anyXML.rng"/>
+                        </element>
+                        <element name="stationDir">
+                            <externalRef href="../base/externalRef/anyXML.rng"/>
+                        </element>
+                        <element name="picName">
+                            <externalRef href="../base/externalRef/anyXML.rng"/>
+                        </element>
+                    </element>
+                </choice>
             </optional>
             <optional>
                 <element name="prefix">
