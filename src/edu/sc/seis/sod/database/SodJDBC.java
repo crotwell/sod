@@ -12,9 +12,6 @@ import java.io.IOException;
 public class SodJDBC{
     static{
         ConnMgr.addPropsLocation("edu/sc/seis/sod/database/props/");
-        try {
-            ConnMgr.setDB();
-        } catch (IOException e) { throw new RuntimeException("Some props weren't found!");}
     }
 }
 
