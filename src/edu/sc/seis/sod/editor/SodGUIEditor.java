@@ -35,6 +35,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
     }
 
     JComponent getCompForElement(Element element) {
+        System.out.println("getCompForElement("+element.getTagName());
         try {
             String tag = element.getTagName();
             if (editors.containsKey(tag)){
@@ -80,7 +81,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new UnitRangeEditor(ANGLE_UNITS, 0, 180, 5, true));
         editors.put("phaseRequest", new PhaseRequestEditor());
-        editors.put("sacFileProcessor", new SacFileEditor(this));
         editors.put("originPointDistance", new OriginPointDistanceEditor());
         editors.put("originPointAzimuth", new OriginPointAzimuthEditor());
         editors.put("originPointBackAzimuth", new OriginPointBackAzimuthEditor());
