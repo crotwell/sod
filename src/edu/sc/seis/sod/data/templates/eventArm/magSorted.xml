@@ -17,11 +17,11 @@ Events (sorted by magnitude)
 </div>
 <div id="Content">
 <h1>Events</h1>
-<h2>Status:</h2>
+<h2>Status:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <armStatus/><br/>
-<h2>Map:</h2>
+<h2>Map:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
-<h2>Successful:</h2>
+<h2>Successful:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>
@@ -43,7 +43,7 @@ Events (sorted by magnitude)
 </tr>
 </eventLabel><sorting><magnitude order="descending"/><status>SUCCESS</status></sorting></events>
 </table>
-<h2>In progress:</h2>
+<h2>In progress:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>
@@ -61,7 +61,7 @@ Events (sorted by magnitude)
 </tr>
 </eventLabel><sorting><magnitude order="descending"/><status>IN PROGRESS</status></sorting></events>
 </table>
-<h2>Failed:</h2>
+<h2>Failed:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>

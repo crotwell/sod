@@ -17,20 +17,20 @@ Events (sorted by depth)
 </div>
 <div id="Content">
 <h1>Events</h1>
-<h2>Status:</h2>
+<h2>Status:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <armStatus/><br/>
-<h2>Map:</h2>
+<h2>Map:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
-<h2>Successful:</h2>
+<h2>Successful:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>
 <td><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
 <td id="selected"><a href="depth.html">Depth</a></td>
-<td># Processed Channels</td>
-<td># Rejected Channels</td>
-<td># Retry Channels</td>
+<td># Processed</td>
+<td># Rejected</td>
+<td># Retry</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
@@ -43,7 +43,7 @@ Events (sorted by depth)
 </tr>
 </eventLabel><sorting><depth order="descending"/><status>SUCCESS</status></sorting></events>
 </table>
-<h2>In progress:</h2>
+<h2>In progress:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>
@@ -61,7 +61,7 @@ Events (sorted by depth)
 </tr>
 </eventLabel><sorting><depth order="descending"/><status>IN PROGRESS</status></sorting></events>
 </table>
-<h2>Failed:</h2>
+<h2>Failed:<a href="help/eventPageHelp.html#Tables"><img id="help" src="images/helpmark.png"/></a></h2>
 <table class="ruler">
 <tr class="title">
 <td>Region</td>
