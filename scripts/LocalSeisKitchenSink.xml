@@ -20,7 +20,7 @@
             <unit>DAY</unit>
         </maxRetryDelay>
         <waveformWorkerThreads>1</waveformWorkerThreads>
-        <removeDatabase>TRUE</removeDatabase>
+        <removeDatabase>FALSE</removeDatabase>
         <eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
     </properties>
     <eventArm>
