@@ -5,10 +5,10 @@
         <ref name="channelGroupSeismogramProcess"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
-    <include href="seismogramProcess.rng"/>
     <define name="channelGroupSeismogramProcess">
         <choice>
-            <externalRef name="seismogramProcess.rng"/>
+            <externalRef href="seismogramProcess.rng"/>
+            <ref name="channelGroupForkProcess" />
         </choice>
     </define>
     <define name="channelGroupForkProcess">

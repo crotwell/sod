@@ -2,11 +2,11 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
         <include href="phaseRequest.rng"/>
     <start>
-        <element name="motionvectorArm">
+        <element name="motionVectorArm">
             <optional>
                 <externalRef href="eventChannelGroup.rng"/>
             </optional>
-            <element name="channelGroupRequestGenerator">
+            <element name="requestGeneratorWrapper">
                 <element name="phaseRequest">
                     <ref name="phaseRequest"/>
                 </element>

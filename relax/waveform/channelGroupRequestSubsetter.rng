@@ -41,7 +41,7 @@
                     vector arm. </description>
                 <example>
                     <ORRequestSubsetterWrapper>
-                        <requestPrint>
+                        <requestPrint/>
                     </ORRequestSubsetterWrapper>
                 </example>
             </xsd:documentation>

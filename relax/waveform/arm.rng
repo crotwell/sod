@@ -5,7 +5,10 @@
                         <optional>
                                 <externalRef href="eventStation.rng"/>
                         </optional>
-                        <externalRef href="localSeismogram.rng"/>
+                        <choice>
+                           <externalRef href="localSeismogram.rng"/>
+                           <externalRef href="motionVector.rng"/>
+                        </choice>
                         <zeroOrMore>
                                 <externalRef href="status.rng"/>
                         </zeroOrMore>

@@ -288,6 +288,8 @@ public class WaveformArm implements Runnable {
                     eventStationSubsetter = (EventStationSubsetter)sodElement;
                 }else if(sodElement instanceof LocalSeismogramArm){
                     localSeismogramArm = (LocalSeismogramArm)sodElement;
+                }else if(sodElement instanceof MotionVectorArm){
+                    motionVectorArm = (MotionVectorArm)sodElement;
                 }else if(sodElement instanceof WaveformArmMonitor){
                     addStatusMonitor((WaveformArmMonitor)sodElement);
                 }else {
@@ -525,6 +527,7 @@ public class WaveformArm implements Runnable {
     private int poolLineCapacity = 100, retryNum;
     private Object retryNumLock = new Object();
 }
+
 
 
 

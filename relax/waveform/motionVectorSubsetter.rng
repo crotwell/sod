@@ -2,7 +2,7 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
-        <ref name="motionVectorSubsetter.rng"/>
+        <ref name="motionVectorSubsetter"/>
     </start>
     <define name="motionVectorSubsetter">
         <choice>
@@ -27,7 +27,7 @@
             </xsd:documentation>
         </xsd:annotation>
         <element name="ANDLocalSeismogramSubsetterWrapper">
-            <externalRef href="availableData.rng"/>
+            <externalRef href="seismogramSubsetter.rng"/>
         </element>
     </define>
     <define name="ORLocalSeismogramSubsetterWrapper">
@@ -41,13 +41,13 @@
                     vector arm. </description>
                 <example>
                     <ORLocalSeismogramSubsetterWrapper>
-                        <xxx>
+                        <xxx/>
                     </ORLocalSeismogramSubsetterWrapper>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <element name="ORLocalSeismogramSubsetterWrapper">
-            <externalRef href="localSeismogram.rng"/>
+            <externalRef href="seismogramSubsetter.rng"/>
         </element>
     </define>
 </grammar>
