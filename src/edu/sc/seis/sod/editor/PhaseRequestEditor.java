@@ -13,6 +13,7 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
@@ -22,60 +23,54 @@ import org.w3c.dom.Text;
 public class PhaseRequestEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
-
-        Box box = Box.createVerticalBox();
-        Box topRow = Box.createHorizontalBox();
-        box.add(topRow);
-        Box modelRow = Box.createHorizontalBox();
-        box.add(modelRow);
-        Box botRowA = Box.createHorizontalBox();
-        box.add(botRowA);
-        Box botRowB = Box.createHorizontalBox();
-        box.add(botRowB);
-
-        topRow.add(new JLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
-        topRow.add(Box.createGlue());
-
-        modelRow.add(Box.createRigidArea(new Dimension(10, 10)));
+        Box modelBox = Box.createHorizontalBox();
         Element modelElement = (Element)XPathAPI.selectSingleNode(element, "model");
-        modelRow.add(new JLabel(SimpleGUIEditor.getDisplayName(modelElement.getTagName())));
-        modelRow.add(EditorUtil.getComboBox(modelElement, MODEL_NAMES));
+        modelBox.add(EditorUtil.getLabel(SimpleGUIEditor.getDisplayName(modelElement.getTagName())));
+        modelBox.add(EditorUtil.getComboBox(modelElement, MODEL_NAMES));
+        modelBox.add(Box.createHorizontalGlue());
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3,5));
+        Box phaseBox = Box.createHorizontalBox();
+        phaseBox.add(makePhaseEditor(element));
+        phaseBox.add(Box.createHorizontalGlue());
 
-        botRowA.add(Box.createRigidArea(new Dimension(10, 10)));
-        botRowA.add(panel);
+        Box vertBox = Box.createVerticalBox();
+        vertBox.add(modelBox);
+        vertBox.add(phaseBox);
 
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Phase"));
-        panel.add(new JLabel("Offset"));
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
+        vertBox.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
+        return vertBox;
+    }
 
-        panel.add(new JLabel("Begin"));
+    private JComponent makePhaseEditor(Element element) throws TransformerException{
+        JPanel phaseOffsetEditor = new JPanel();
+        phaseOffsetEditor.setLayout(new GridLayout(3,5));
+        phaseOffsetEditor.add(new JLabel(""));
+        phaseOffsetEditor.add(new JLabel("Phase"));
+        phaseOffsetEditor.add(new JLabel("Offset"));
+        phaseOffsetEditor.add(new JLabel(""));
+        phaseOffsetEditor.add(new JLabel(""));
+
+        phaseOffsetEditor.add(EditorUtil.getLabel("Begin"));
         Node node = XPathAPI.selectSingleNode(element, "beginPhase/text()");
         Text text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        phaseOffsetEditor.add(EditorUtil.getTextField(text));
         node = XPathAPI.selectSingleNode(element, "beginOffset/value/text()");
         text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        phaseOffsetEditor.add(EditorUtil.getTextField(text));
         node = XPathAPI.selectSingleNode(element, "beginOffset/unit");
-        panel.add(EditorUtil.getComboBox((Element)node, TIME_UNITS));
-        panel.add(Box.createGlue());
+        phaseOffsetEditor.add(EditorUtil.getComboBox((Element)node, TIME_UNITS));
+        phaseOffsetEditor.add(Box.createGlue());
 
-        panel.add(new JLabel("End"));
+        phaseOffsetEditor.add(EditorUtil.getLabel("End"));
         node = XPathAPI.selectSingleNode(element, "endPhase/text()");
         text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        phaseOffsetEditor.add(EditorUtil.getTextField(text));
         node = XPathAPI.selectSingleNode(element, "endOffset/value/text()");
         text = (Text)node;
-        panel.add(EditorUtil.getTextField(text));
+        phaseOffsetEditor.add(EditorUtil.getTextField(text));
         node = XPathAPI.selectSingleNode(element, "endOffset/unit");
-        panel.add(EditorUtil.getComboBox((Element)node, TIME_UNITS));
-        panel.add(Box.createGlue());
-
-        return box;
+        phaseOffsetEditor.add(EditorUtil.getComboBox((Element)node, TIME_UNITS));
+        return phaseOffsetEditor;
     }
 
     public static final String[] MODEL_NAMES = { "iasp91", "prem" };
