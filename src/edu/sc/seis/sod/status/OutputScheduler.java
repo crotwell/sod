@@ -17,20 +17,16 @@ import java.util.TimerTask;
 
 public class OutputScheduler extends TimerTask{
     public OutputScheduler(){
-        System.out.println("ACTION INTERVAL IS " + ACTION_INTERVAL_MILLIS);
         t.schedule(this, 10000, ACTION_INTERVAL_MILLIS);
     }
 
     public void schedule(Runnable a){ runnables.add(a); }
 
     public void run() {
-        System.out.println("RUNNING OUTPUTSCHEDULER");
         runAll();
         if(Start.getWaveformArm() != null && Start.getWaveformArm().isFinished()){
-            System.out.println("WAVEFORMARM IS DEAD");
             runAll();
             t.cancel();
-            System.out.println("CANCELLDED!!");
         }
     }
 
@@ -40,12 +36,9 @@ public class OutputScheduler extends TimerTask{
             currentRunnables = (Runnable[])runnables.toArray(currentRunnables);
             runnables.clear();
         }
-        System.out.println("RUNNING ALL, OR " + currentRunnables.length + " RUNNABLES");
         for (int i = 0; i < currentRunnables.length; i++) {
-            System.out.println(currentRunnables[i]);
             currentRunnables[i].run();
         }
-        System.out.println("DONE");
     }
 
     private static final TimeInterval ACTION_INTERVAL = new TimeInterval(30, UnitImpl.SECOND);
