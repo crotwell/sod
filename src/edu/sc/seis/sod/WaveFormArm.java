@@ -69,7 +69,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	pool = new ThreadPool(threadPoolSize, this);
     }
 
-    private synchronized void  restoreDb() {
+    private synchronized void  restoreDb()  throws InvalidDatabaseStateException{
 	//	Connection connection = Start.getWaveformQueue().getConnection(
 	//	synchronized(connection) {
 	int[] ids = Start.getWaveformQueue().getIds();
@@ -92,11 +92,13 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
 	EventAccessOperations eventAccess = null;  
 	int eventid;
-	restoreDb();
+	
 		
 	//ThreadPool pool = new ThreadPool(5);
 	//getThreadGroup().list();
-		try {
+	try {
+	    restoreDb();
+
 	    int i = 0;
 	    //get the first event from the eventQueue.
 	    eventid = Start.getEventQueue().pop();
@@ -219,12 +221,15 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    //the state of the waveform database consistent.
 	    restoreDb();
 	 
-	  	}  catch(Exception e) {
+	  	} catch(InvalidDatabaseStateException idse) {
+		    logger.fatal("Invalid database StateException", idse);
+		    notifyListeners(this, idse);
+		} catch(Exception e) {
 		    logger.fatal("Problem running waveform arm", e);
 		    notifyListeners(this, e);
 		} finally {
 		    //pool.finished();
-	} // end of finally
+		} // end of finally
 	
     }
 
@@ -282,7 +287,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     public synchronized void setFinalStatus(EventDbObject eventDbObject,
 					    ChannelDbObject channelDbObject,
 					    Status status,
-					    String reason) {
+					    String reason) throws InvalidDatabaseStateException{
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
 	Channel channel = channelDbObject.getChannel();
 	int eventid = eventDbObject.getDbId();
@@ -311,7 +316,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
     
     
-    private synchronized void updateChannelCount(int eventid, int channelid, EventAccessOperations eventAccess) {
+    private synchronized void updateChannelCount(int eventid, 
+						 int channelid, 
+						 EventAccessOperations eventAccess) throws InvalidDatabaseStateException{
 	Connection connection = Start.getWaveformQueue().getConnection();
 	synchronized(connection) {
 	int sitedbid = networkArm.getSiteDbId(channelid);
@@ -322,17 +329,17 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	logger.debug("Channel count before is "+count+" the channelid is "+channelid+
 	"eventid is  "+eventid);
 
-	if(count == -1) { 
-	    logger.fatal("The coutn is -1, exiting!!! A "); 
-	    System.exit(0); 
-	}
+
+	if(count == -1) { throw new InvalidDatabaseStateException("Channel Count is -1"); }
+
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
 	      count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);
 	  if(count == -1) { 
-	      logger.fatal("The channel count after decr is -1, exiting!!! B"); 
-	      System.exit(0);
+	      logger.debug("The channel count after decr is -1 "); 
+	      throw new InvalidDatabaseStateException("Channel Count is -1");
 	  }
+
 	}
 	write("Channel count afer is "+Start.getWaveformQueue().getChannelCount(eventid, sitedbid)+
 	"channelid is "+channelid+" eventid is "+eventid);
@@ -348,24 +355,29 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	}
     }
 	
-    private synchronized void updateSiteCount(int eventid, int sitedbid, EventAccessOperations eventAccess) {
+    private synchronized void updateSiteCount(int eventid, 
+					      int sitedbid, 
+					      EventAccessOperations eventAccess) throws InvalidDatabaseStateException{
 	
 	boolean flag = false;
 	int stationdbid = networkArm.getStationDbId(sitedbid);
 	int count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
 	int unfinishedCount = Start.getWaveformQueue().unfinishedSiteCount(eventid, stationdbid);
+
 	if(count == -1) { 
-	    logger.fatal("COuntis -1, exiting!!! C"); 
-	    System.exit(0);
+	    logger.debug("COuntis -1");
+	    throw new InvalidDatabaseStateException("site Count is -1");
 	}
 	write("site count before is "+count+" the siteid is "+sitedbid
 	+" eventid is "+eventid);
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementSiteCount(eventid, stationdbid);
-	count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
-	if(count == -1) {
-	    logger.debug("The site count after is -1, exiting!!! D"); 
-	    System.exit(0);}
+
+		count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
+		if(count == -1) {
+		    logger.debug("The site count after is -1 "); 
+		    throw new InvalidDatabaseStateException("site Count is -1");
+		}
 	}
 	write("site count after is "+Start.getWaveformQueue().getSiteCount(eventid, stationdbid)+
 		"the siteid is "+sitedbid+" eventid is "+eventid);
@@ -377,7 +389,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
     }
     
-    private synchronized void updateStationCount(int eventid, int stationdbid, EventAccessOperations eventAccess) {
+    private synchronized void updateStationCount(int eventid, 
+						 int stationdbid, 
+						 EventAccessOperations eventAccess) throws InvalidDatabaseStateException{
 
 	boolean flag = false;
 	int networkdbid = networkArm.getNetworkDbId(stationdbid);
@@ -385,16 +399,20 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	int unfinishedCount = Start.getWaveformQueue().unfinishedStationCount(eventid, networkdbid);
 	write("the station count before is "+count+" the stationid is "+stationdbid+
 	" eventid is "+eventid);
+
 	if(count == -1) {
-	    logger.debug("The COunt is -1 , exiting!!! E"); 
-	    System.exit(0);
+	    logger.debug("The COunt is -1 ");
+	    throw new InvalidDatabaseStateException("station Count is -1");	    
 	}
+
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementStationCount(eventid, networkdbid);
-	count = Start.getWaveformQueue().getStationCount(eventid, networkdbid);
-	if(count == -1) {
-	    logger.debug("The stationcount afrter is -1 , exiting F");
-	    System.exit(0); }
+
+		count = Start.getWaveformQueue().getStationCount(eventid, networkdbid);
+		if(count == -1) {
+		    logger.debug("The stationcount afrter is -1 ");
+		    throw new InvalidDatabaseStateException("station Count is -1");
+		}
 	}
 	write("the station count after is "+Start.getWaveformQueue().getStationCount(eventid, networkdbid)+
 		" the stationid is "+stationdbid+" evetnid is "+eventid);
@@ -405,27 +423,33 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	}
     }
 
-    private synchronized void updateNetworkCount(int eventid, int networkdbid, EventAccessOperations eventAccess) {
+    private synchronized void updateNetworkCount(int eventid, 
+						 int networkdbid, 
+						 EventAccessOperations eventAccess) throws InvalidDatabaseStateException{
 	
 	boolean flag = false;
 	int count = Start.getWaveformQueue().getNetworkCount(eventid);
 	int unfinishedCount = Start.getWaveformQueue().unfinishedNetworkCount(eventid);
 	write("the network count before is "+count+" the networkid is "+networkdbid+
 	" eventid is "+eventid);
+
 	if(count == -1) {
-	    logger.debug("The count is -1 , exiting!!! G"); 
-	    System.exit(0);
+	    logger.debug("The count is -1 ");
+	    throw new InvalidDatabaseStateException("Network Count is -1");
 	}
+
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementNetworkCount(eventid);
+
 		count = Start.getWaveformQueue().getNetworkCount(eventid);
 		if(count == -1) {
-		    logger.debug("The net count after is -1, exiting!!! H"); 
-		    System.exit(0);
+		    logger.debug("The net count after is -1"); 
+		    throw new InvalidDatabaseStateException("Network Count is -1");
 		}
+
 	}
 	write("the network count after is "+Start.getWaveformQueue().getNetworkCount(eventid)+
-		" the networkid is "+networkdbid+" evetnid is "+eventid);	
+	      " the networkid is "+networkdbid+" evetnid is "+eventid);	
 	//    Start.getWaveformQueue().deleteNetworkInfo(eventid, networkdbid);
 	if(count <= 1) {
 	    flag = true;
@@ -433,7 +457,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	}
     }
     
-    private synchronized void updateEventStatus(int eventid, EventAccessOperations eventAccess) {
+    private synchronized void updateEventStatus(int eventid, 
+						EventAccessOperations eventAccess) throws InvalidDatabaseStateException{
 	    //delete the row corresponding to eventid from
 	    // the waveform database.
 	    //   Start.getWaveformQueue().deleteInfo(eventid);
@@ -610,16 +635,15 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		    channelDbObject = new ChannelDbObject(channelid, networkArm.getChannel(channelid));
 		}
 	    } catch(Throwable ce) {
-		logger.fatal("Fatal error, exiting!!! I", ce);
-		System.exit(0);
+		ce.printStackTrace();
 	    }
-	    setFinalStatus(eventDbObject, channelDbObject,
-	    Status.PROCESSING, "still didnot even form the waveformThread Runnable");
+	   //  setFinalStatus(eventDbObject, channelDbObject,
+// 	    Status.PROCESSING, "still didnot even form the waveformThread Runnable");
 	    if(eventid == 11 && channelid == 27) {
 		logger.debug("got the needed one");
 		logger.debug("The eventid is "+eventDbObject.getDbId());
 		logger.debug("The channelid is "+channelDbObject.getDbId());
-		//	System.exit(0);
+
 	    }
 	    //networkArm.getChannel(networkid);
 		NetworkAccess networkAccess = null;
@@ -638,11 +662,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    paramChannels[0] = channelDbObject;
 	   } catch(Throwable ce) {
 		ce.printStackTrace();
-		logger.fatal("Fatal exception, exiting!!! J", ce);
-		setFinalStatus(eventDbObject, channelDbObject, 
-				Status.PROCESSING,
-				"Exception occured ");
-			System.exit(0);
+		/*setFinalStatus(eventDbObject, channelDbObject, 
+			       Status.PROCESSING,
+			       "Exception occured ");*/
+
 	   }
 	    Runnable work = new WaveFormArmThread(eventDbObject, 
 						  eventStationSubsetter,
@@ -711,7 +734,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		it.next();
 	    }
 	    logger.debug("Returning from the finished method");
-	    //System.exit(0);
+
 	}
 
 
