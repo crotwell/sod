@@ -8,6 +8,7 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.IfNetwork.StationId;
@@ -27,6 +28,7 @@ import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 /** this class largely exists as an access for various utility methods for
  * Velocity templates.*/
 public class FissuresFormatter {
+
     public static String formatQuantity(QuantityImpl q) {
         return UnitDisplayUtil.formatQuantityImpl(q);
     }
@@ -38,14 +40,25 @@ public class FissuresFormatter {
     public static String formatChannel(ChannelId id) {
         return ChannelIdUtil.toStringNoDates(id);
     }
+
     public static String formatSite(SiteId id) {
         return SiteIdUtil.toStringNoDates(id);
     }
+
     public static String formatStation(StationId id) {
         return StationIdUtil.toStringNoDates(id);
     }
+
     public static String formatNetwork(NetworkId id) {
         return NetworkIdUtil.toStringNoDates(id);
+    }
+
+    public static String networkName(NetworkAccess net) {
+        return net.get_attributes().name;
+    }
+
+    public static String networkCodeYear(NetworkAccess net) {
+        return net.get_attributes().get_code()+net.get_attributes().get_id().begin_time.date_time.substring(0, 4);
     }
 
     public static QuantityImpl getDepth(Location loc) {

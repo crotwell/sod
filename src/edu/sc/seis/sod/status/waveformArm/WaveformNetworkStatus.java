@@ -10,12 +10,14 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.FileWritingTemplate;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.networkArm.NetworkArmContext;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
@@ -36,7 +38,7 @@ import org.w3c.dom.NodeList;
 public class WaveformNetworkStatus implements WaveformArmMonitor, NetworkArmMonitor {
 
     public WaveformNetworkStatus(Element config) throws SQLException, MalformedURLException, IOException {
-        networkArmContext = new NetworkArmContext();
+        networkArmContext = new NetworkArmContext(CookieJar.getCommonContext());
         NodeList nl = config.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
@@ -52,14 +54,14 @@ public class WaveformNetworkStatus implements WaveformArmMonitor, NetworkArmMoni
         if (fileDir == null){
             fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
-        String template = "";
+
         URL templateURL = TemplateFileLoader.getUrl(this.getClass().getClassLoader(), networkTemplate);
         BufferedReader read = new BufferedReader(new InputStreamReader(templateURL.openStream()));
         String line;
         while ((line = read.readLine()) != null) {
-            template += line;
+            template += line+System.getProperty("line.separator");
         }
-
+        read.close();
         if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
     }
 
@@ -78,23 +80,37 @@ public class WaveformNetworkStatus implements WaveformArmMonitor, NetworkArmMoni
     }
 
     public void change(NetworkAccess networkAccess, Status s) {
-        StringWriter out = new StringWriter();
-
-        try {
-        // the new VeocityContext "wrapper" is to help with a possible memory leak
-        // due to velocity gathering introspection information,
-        // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
-        boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(networkArmContext),
-                                                                                 out,
-                                                                                 "localSeismogramTemplate",
-                                                                                 template);
-        } catch (Exception e) {
-            GlobalExceptionHandler.handle(e);
+        if ( ! scheduled) {
+            scheduled = true;
+            OutputScheduler.getDefault().schedule(new Runnable() {
+                        public void run() {
+                            scheduled = false;
+                            StringWriter out = new StringWriter();
+                            try {
+                                // the new VeocityContext "wrapper" is to help with a possible memory leak
+                                // due to velocity gathering introspection information,
+                                // see http://jakarta.apache.org/velocity/developer-guide.html#Other%20Context%20Issues
+                                boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(new VelocityContext(networkArmContext),
+                                                                                                         out,
+                                                                                                         "waveformNetworkStatus",
+                                                                                                         template);
+                                FileWritingTemplate.write(fileDir+"/waveformNetworks.html",
+                                                          out.getBuffer().toString());
+                                System.out.println("Output is: "+out);
+                            } catch (Exception e) {
+                                GlobalExceptionHandler.handle(e);
+                            }
+                        }
+                    });
         }
     }
 
     public void change(Site site, Status s) {
     }
+
+    /** so that we don't schedule more than one runnable to unpdate
+     * the networks page, as they would be identical. */
+    private boolean scheduled = false;
 
     private NetworkArmContext networkArmContext;
 

@@ -602,6 +602,16 @@
                                 </attribute>
                             </element>
                         </element>
+                        <element name="waveformNetworkStatus">
+                            <optional>
+                                <element name="fileDir">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
+                            <element name="networkTemplate">
+                                <data type="string"/>
+                            </element>
+                        </element>
                     </choice>
                 </zeroOrMore>
             </element>

@@ -4,16 +4,14 @@
 <body>
 <table>
 #foreach ( $net in $network_arm_successful )
+#set ($netyear = $fissures.networkCodeYear($net.getNetworkAccess()) )
 <tr>
-#if ($net.getNetworkAccess().get_attributes().get_code().startsWith("X") ||
-     $net.getNetworkAccess().get_attributes().get_code().startsWith("X") ||
-     $net.getNetworkAccess().get_attributes().get_code().startsWith("X"))
-<td>$net.getNetworkAccess().get_attributes().get_code()$velocity_date.format("yyyy", $net.get_id())</td>
+#if ($net.getNetworkAccess().get_attributes().get_code().startsWith("X") || $net.getNetworkAccess().get_attributes().get_code().startsWith("X") || $net.getNetworkAccess().get_attributes().get_code().startsWith("X"))
+<td>$netyear</td>
 #else
 <td>$net.getNetworkAccess().get_attributes().get_code()</td>
 #end
-<td><a href="$net.getNetworkAccess().get_attributes().get_code()$velocity_date.format("yyyy", $net.get_id())_stations">$net.getNetworkAccess().get_attributes().name</a></td>
-<td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
+<td><a href="${netyear}_stations">$fissures.networkName($net.getNetworkAccess())</a></td>
 </tr>
 #end
 </table>
