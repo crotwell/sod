@@ -34,7 +34,7 @@ public class UnitRange implements SodElement{
                 if(tagName.equals("unit")) unitRangeElement = config;
             }
         }
-        unitRange = (edu.iris.Fissures.UnitRange) SodUtil.load(unitRangeElement, "");
+        unitRange =  SodUtil.loadUnitRange(unitRangeElement);
     }
 
     public edu.iris.Fissures.UnitRange  getUnitRange() { return unitRange; }
