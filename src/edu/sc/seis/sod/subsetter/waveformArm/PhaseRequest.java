@@ -172,12 +172,12 @@ public class PhaseRequest implements RequestGenerator{
 
 	edu.iris.Fissures.Time originTime = origin.origin_time;
 	MicroSecondDate originDate = new MicroSecondDate(originTime);
-	TimeInterval bInterval = 
-	    new TimeInterval(beginOffset.getValue()+arrivalStartTime, 
-			     UnitImpl.SECOND);
-	TimeInterval eInterval = 
-	    new TimeInterval(endOffset.getValue()+arrivalEndTime, 
-			     UnitImpl.SECOND);
+	TimeInterval bInterval = beginOffset.getTimeInterval();
+	bInterval = bInterval.add(new TimeInterval(arrivalStartTime, 
+						   UnitImpl.SECOND));
+	TimeInterval eInterval = endOffset.getTimeInterval();
+	eInterval = eInterval.add(new TimeInterval(arrivalEndTime, 
+						   UnitImpl.SECOND));
 	MicroSecondDate bDate = originDate.add(bInterval);
 	MicroSecondDate eDate = originDate.add(eInterval);
 	RequestFilter[] filters;
