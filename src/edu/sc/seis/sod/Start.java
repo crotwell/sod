@@ -42,7 +42,13 @@ public class Start implements SodExceptionListener {
         try {
             if(!Validator.validate(createInputSource(confFilename))){
                 logger.info("Invalid config file!");
+                System.err.println();
+                System.err.println("******************************************************************");
+                System.err.println();
                 System.err.println("Invalid config file! Abandon all hope ye who continue running SOD!");
+                System.err.println();
+                System.err.println("******************************************************************");
+                System.err.println();
             }else{
                 logger.info("Valid config file");
             }
@@ -52,7 +58,7 @@ public class Start implements SodExceptionListener {
             System.exit(0);
         }
     }
-    
+
     private InputSource createInputSource(String loc) throws IOException{
         InputStream in = null;
         if(loc.startsWith("http:") || loc.startsWith("ftp:")){
@@ -65,19 +71,19 @@ public class Start implements SodExceptionListener {
         }
         return new InputSource(new BufferedInputStream(in));
     }
-    
+
     public static WaveFormArm getWaveformArm() {
         return waveform;
     }
-    
+
     public static EventArm getEventArm() {
         return event;
     }
-    
+
     public static NetworkArm getNetworkArm() {
         return network;
     }
-    
+
     public static Document createDoc(InputSource source)
         throws SAXException, IOException, ParserConfigurationException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -87,7 +93,7 @@ public class Start implements SodExceptionListener {
         Document doc =  builder.parse(source);
         return doc;
     }
-    
+
     public void createArms() throws Exception {
         Element docElement = document.getDocumentElement();
         logger.info("start "+docElement.getTagName());
@@ -115,31 +121,31 @@ public class Start implements SodExceptionListener {
                     waveform = new WaveFormArm(el, network, this, poolSize);
                     waveFormArmThread = new Thread(waveform, "waveFormArm Thread");
                     waveFormArmThread.start();
-                    
+
                 }  else {
                     logger.debug("process "+el.getTagName());
                 }
             }
         }
     }
-    
+
     public static Properties getProperties() {
         return props;
     }
-    
+
     public Document getDocument(){ return document; }
-    
+
     public static WaveformQueue getWaveformQueue(){ return waveformQueue; }
-    
+
     public static Queue getEventQueue(){ return eventQueue; }
-    
+
     public static void main (String[] args) {
         try {
             Start.props  = System.getProperties();
             // get some defaults
             loadProps((Start.class).getClassLoader().getResourceAsStream(DEFAULT_PROPS));
             String confFilename = null;
-            
+
             for (int i=0; i<args.length-1; i++) {
                 if (args[i].equals("-props")) {
                     // override with values in local directory,
@@ -152,13 +158,13 @@ public class Start implements SodExceptionListener {
             }
             PropertyConfigurator.configure(props);
             logger.info("logging configured");
-            
+
             if (confFilename == null) {
                 System.err.println("No configuration file given, quiting....");
                 return;
             }
             Start start = new Start(confFilename);
-            
+
             //now override the properties with the properties specified
             // in the configuration file.
             Element docElement = start.getDocument().getDocumentElement();
@@ -169,24 +175,24 @@ public class Start implements SodExceptionListener {
             } else {
                 logger.debug("No properties specified in the configuration file");
             }
-            
+
             //here the orb must be initialized ..
             //configure commonAccess
             CommonAccess.getCommonAccess().initORB(args, props);
-            
+
             checkRestartOptions();
-            
+
             //configure the eventQueue and waveformQueue.
             eventQueue = new HSqlDbQueue(props);
             eventQueue.clean();
             waveformQueue = new WaveformDbQueue(props);
             waveformQueue.clean();
-            
+
             logger.info("Start start()");
             start.createArms();
             eventArmThread.join();
             waveFormArmThread.join();
-            
+
             eventQueue.closeDatabase();
             logger.debug("Did not track the Thread bug Yet. so using System.exit()");
             System.exit(1);
@@ -199,7 +205,7 @@ public class Start implements SodExceptionListener {
         }
         logger.info("Done.");
     } // end of main ()
-    
+
     private static void loadProps(InputStream propStream){
         try {
             props.load(propStream);
@@ -210,12 +216,12 @@ public class Start implements SodExceptionListener {
             System.exit(0);
         }
     }
-    
+
     public void sodExceptionHandler(SodException sodException) {
         logger.fatal("Caught Exception in start because of the Listener",
                      sodException.getThrowable());
     }
-    
+
     private static  void checkRestartOptions() {
         Start.REMOVE_DATABASE = isRemoveDatabase();
         Start.QUIT_TIME = getQuitTime();
@@ -223,7 +229,7 @@ public class Start implements SodExceptionListener {
         Start.GET_NEW_EVENTS = isGetNewEvents();
         Start.REFRESH_INTERVAL = getRefreshInterval();
     }
-    
+
     private static boolean isRemoveDatabase() {
         String str = props.getProperty("edu.sc.seis.sod.database.remove");
         if(str != null) {
@@ -231,7 +237,7 @@ public class Start implements SodExceptionListener {
         }
         return false;
     }
-    
+
     private static int getRefreshInterval() {
         String str = props.getProperty("edu.sc.seis.sod.database.eventRefreshInterval");
         if(str != null) {
@@ -243,7 +249,7 @@ public class Start implements SodExceptionListener {
         }
         return 30;
     }
-    
+
     private static int getQuitTime() {
         String str = props.getProperty("edu.sc.seis.sod.database.quitTime");
         if(str != null) {
@@ -255,7 +261,7 @@ public class Start implements SodExceptionListener {
         }
         return 30;
     }
-    
+
     private static boolean isReOpenEvents() {
         String str = props.getProperty("edu.sc.seis.sod.database.reopenEvents");
         if(str != null) {
@@ -263,7 +269,7 @@ public class Start implements SodExceptionListener {
         }
         return false;
     }
-    
+
     private static boolean isGetNewEvents() {
         String str = props.getProperty("edu.sc.seis.sod.database.getNewEvents");
         if(str != null) {
@@ -271,41 +277,41 @@ public class Start implements SodExceptionListener {
         }
         return false;
     }
-    
+
     public static final String
         DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.SAXParser";
-    
+
     public static boolean REMOVE_DATABASE = false;
-    
+
     //later quitetime must be changed relatively
     public static int QUIT_TIME = 30; //quit time in terms of number of days;
-    
+
     public static boolean RE_OPEN_EVENTS = false;
-    
+
     public static boolean GET_NEW_EVENTS = false;
-    
+
     public static int REFRESH_INTERVAL = 30;
-    
+
     private static Properties props = null;
-    
+
     private Document document;
-    
+
     private static Logger logger = Logger.getLogger(Start.class);
-    
+
     private static WaveformQueue waveformQueue;
-    
+
     private static Queue eventQueue;
-    
+
     private static Thread waveFormArmThread;
-    
+
     private static Thread eventArmThread;
-    
+
     private static WaveFormArm waveform;
-    
+
     private static EventArm event;
-    
+
     private static NetworkArm network;
-    
+
     private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
 
