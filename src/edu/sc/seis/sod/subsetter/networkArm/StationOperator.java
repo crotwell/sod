@@ -9,8 +9,8 @@ import edu.iris.Fissures.*;
 
 /**
  * StationOperator.java
- *
- *
+ * sample xml file
+ *   &lt;stationOperator&gt;&lt;value&gt;00&lt;/value&gt;&lt;/stationOperator&gt;
  * Created: Thu Mar 14 14:02:33 2002
  *
  * @author <a href="mailto:">Philip Crotwell</a>

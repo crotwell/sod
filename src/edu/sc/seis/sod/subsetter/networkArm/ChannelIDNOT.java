@@ -14,7 +14,7 @@ import edu.iris.Fissures.*;
  * sample xml file
  *<body><pre><bold>
  *&lt;channelIDNOT&gt;
- *      &lt;broadband/&gt;
+ *   &lt;bandcode&gt;&lt;value&gt;B&lt;/value&gt;&lt;/bandCode&gt;
  * &lt;/channelIDNOT&gt;
  * </bold></pre></body>
  *

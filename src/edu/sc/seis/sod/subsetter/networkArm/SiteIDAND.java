@@ -8,13 +8,12 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.*;
 
 /**
- * SiteIDAND.java
- *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * channelAND contains a sequence of channelSubsetters. The minimum value of the sequence is 0 and
+ * the max value of the sequence is unLimited.
+ * &lt;siteIDAND&gt;
+ *         &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
+ *         &lt;siteCode&gt;&lt;value&gt;01&lt;/value&gt;&lt;/siteCode&gt;
+ * &lt;/siteIDAND&gt;
  */
 
 public class SiteIDAND 

@@ -12,7 +12,7 @@ import edu.iris.Fissures.*;
  *the max value of the sequence is 2.
  *  
  * sample xml file
- *<body><pre><bold>
+ *<pre><bold>
  *&lt;stationXOR&gt;
  *               &lt;stationArea&gt;
  *		    &lt;boxArea&gt;
@@ -33,7 +33,7 @@ import edu.iris.Fissures.*;
  *			&lt;/effectiveTimeOverlap&gt;
  *		&lt;/stationeffectiveTimeOverlap&gt;
  *&lt;/stationXOR&gt;
- * </bold></pre></body>
+ * </bold></pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

@@ -12,7 +12,7 @@ import edu.iris.Fissures.*;
  *the max value of the sequence is 2.
  * 
  * sample xml file
- *<body><pre><bold>
+ *<pre><bold>
  * &lt;networkAttrXOR&gt;
  *	&lt;networkeffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
@@ -27,7 +27,7 @@ import edu.iris.Fissures.*;
  *              &lt;/effectiveTimeOverlap&gt;
  *	&lt;/networkeffectiveTimeOverlap&gt;
  * &lt;/networkAttrXOR&gt;
- * </bold></pre></body>
+ *</pre></body>
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0

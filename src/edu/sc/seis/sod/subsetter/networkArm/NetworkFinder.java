@@ -9,14 +9,27 @@ import edu.iris.Fissures.IfNetwork.*;
 
 import org.w3c.dom.*;
 import org.apache.log4j.*;
+
+
 /**
- * NetworkFinder.java
+ * This subsetter specifies the networkFinder.
+ * 	&lt;networkFinder&gt;
+ *		&lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
+ *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
+ *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
+ *		&lt;refreshInterval&gt;
+ *			&lt;unit&gt;MINUTE&lt;/unit&gt;
+ *			&lt;value&gt;30&lt;/value&gt;
+ *		&lt;/refreshInterval&gt;
+ *	&lt;/networkFinder&gt;
  *
- *
- * Created: Wed Mar 20 14:27:42 2002
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version
+ *                     (or)
+ * 
+ * 	&lt;networkFinder&gt;
+ *		&lt;description&gt;Connect to the SCEPP networkDC&lt;/description&gt;
+ *		&lt;name&gt;SCEPPNetworkDC&lt;/name&gt;
+ *		&lt;dns&gt;edu/sc/seis&lt;/dns&gt;
+ *	&lt;/networkFinder&gt;
  */
 
 public class NetworkFinder extends AbstractSource{

@@ -12,12 +12,12 @@ import edu.iris.Fissures.*;
  * the max value of the sequence is 2.
  *
  * sample xml file
- *<body><pre><bold>
+ *<body><pre>
  *&lt;channelIDXOR&gt;
- *      &lt;broadband/&gt;
- *      &lt;longPeriod/&gt;
- * &lt;/channelIDXOR&gt;
- * </bold></pre></body>
+ *   &lt;bandcode&gt;&lt;value&gt;B&lt;/value&gt;&lt;/bandCode&gt;
+ *   &lt;gaincode&gt;&lt;value&gt;Z&lt;/value&gt;&lt;/gainCode&gt;
+ *&lt;/channelIDXOR&gt;
+ * </bold></pre>
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0

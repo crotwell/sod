@@ -10,15 +10,43 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
-/**
- * SiteDepthRange.java
- *
- *
- * Created: Tue Apr  2 13:34:59 2002
- *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
- */
+ /**
+     * This subsetter specifies the depthRange for the origin
+     * 
+     *  &lt;siteDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *           &lt;min&gt;10&lt;/min&gt;
+     *           &lt;max&gt;100&lt;/max&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/siteDepthRange&gt;
+     * 
+     *                  (or)
+     *
+     *  &lt;siteDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *           &lt;min&gt;10&lt;/min&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/siteDepthRange&gt;
+     *
+     *                  (or)
+     *
+     *  &lt;siteDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+       *           &lt;max&gt;100&lt;/max&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/siteDepthRange&gt;
+     * 
+     *                  (or)
+     *
+     *  &lt;siteDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+      *      &lt;/unitRange&gt;
+     *  &lt;/siteDepthRange&gt;
+     */
 
 public class SiteDepthRange extends edu.sc.seis.sod.subsetter.DepthRange implements SiteSubsetter{
     /**

@@ -14,8 +14,15 @@ import edu.iris.Fissures.*;
  * sample xml file
  *<body><pre><bold>
  *&lt;siteNOT&gt;
+ *  &lt;siteDepthRange&gt;
+ *      &lt;unitRange&gt;
+ *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+ *           &lt;min&gt;10&lt;/min&gt;
+ *           &lt;max&gt;100&lt;/max&gt;
+ *      &lt;/unitRange&gt;
+ *  &lt;/siteDepthRange&gt;
  *&lt;/siteNOT&gt;
- * </bold></pre></body>
+ * </bold></pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

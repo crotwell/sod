@@ -9,7 +9,7 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 /**
  * sample xml file
- * &lt;broadband/&gt;
+ * &lt;orientationCode&gt;&lt;value&gt;Z &lt;/value&gt;&lt;/orientationCode&gt;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

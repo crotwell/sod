@@ -12,12 +12,12 @@ import edu.iris.Fissures.*;
  *the max value of the sequence is 2.
  *  
  * sample xml file
- *<body><pre><bold>
+ *<pre><bold>
  *&lt;siteIDXOR&gt;
  *	&lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
  *	&lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
  *&lt;/siteIDXOR&gt;
- * </bold></pre></body>
+ * </bold></pre>
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

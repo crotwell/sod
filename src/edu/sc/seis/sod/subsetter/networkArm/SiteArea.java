@@ -22,7 +22,7 @@ import edu.iris.Fissures.*;
  * sample xml representation of SiteArea are
  *
  *
-  *              &lt;stationArea&gt;
+  *              &lt;siteArea&gt;
  *                           &lt;boxArea&gt;
  *                                    &lt;latitudeRange&gt;
  *                                                   &lt;min&gt;30&lt;/min&gt;
@@ -33,7 +33,7 @@ import edu.iris.Fissures.*;
  *                                                   &lt;max&gt;100&lt;/max&gt;
  *                                    &lt;/longitudeRange&gt;
  *                           &lt;/boxArea&gt;
- *              &lt;/stationArea&gt;
+ *              &lt;/siteArea&gt;
  */
 
 

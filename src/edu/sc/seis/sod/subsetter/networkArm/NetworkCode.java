@@ -8,10 +8,8 @@ import edu.iris.Fissures.network.*;
 import org.w3c.dom.*;
 
 /**
- * Describe class <code>NetworkCode</code> here.
- *
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * specifies the networkCode.
+ * &lt;networkCode&gt;&lt;value&gt;SP&lt;/value&gt;&lt;/networkCode&gt;
  */
 public class NetworkCode implements NetworkIdSubsetter {
 

@@ -9,7 +9,8 @@ import edu.iris.Fissures.*;
 
 /**
  * NetworkAttrOwner.java
- *
+ * sample xmlfile
+ * &lt;networkAttrOwner&gt;&lt;value&gt;somename*lt;/value&gt;&lt;/networkAttrOwner&gt;
  *
  * Created: Thu Mar 14 14:02:33 2002
  *

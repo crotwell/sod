@@ -9,8 +9,9 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * Describe class <code>SiteCode</code> here.
- *
+ * 
+ * sample xml file
+ * &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */

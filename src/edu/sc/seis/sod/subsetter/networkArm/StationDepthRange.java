@@ -10,15 +10,43 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
-/**
- * StationDepthRange.java
- *
- *
- * Created: Tue Apr  2 13:34:59 2002
- *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
- */
+  /**
+     * This subsetter specifies the depthRange for the origin
+     * 
+     *  &lt;stationDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *           &lt;min&gt;10&lt;/min&gt;
+     *           &lt;max&gt;100&lt;/max&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/stationDepthRange&gt;
+     * 
+     *                  (or)
+     *
+     *  &lt;stationDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *           &lt;min&gt;10&lt;/min&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/stationDepthRange&gt;
+     *
+     *                  (or)
+     *
+     *  &lt;stationDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *           &lt;max&gt;100&lt;/max&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/stationDepthRange&gt;
+     * 
+     *                  (or)
+     *
+     *  &lt;stationDepthRange&gt;
+     *      &lt;unitRange&gt;
+     *           &lt;unit&gt;KILOMETER&lt;/unit&gt;
+     *      &lt;/unitRange&gt;
+     *  &lt;/stationDepthRange&gt;
+     */
 
 public class StationDepthRange extends edu.sc.seis.sod.subsetter.DepthRange implements StationSubsetter{
     /**

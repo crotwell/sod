@@ -16,8 +16,8 @@ import edu.iris.Fissures.*;
  * sample xml file
  *<body><pre><bold>
  *&lt;channelIDAND&gt;
- *      &lt;broadband/&gt;
- *      &lt;longPeriod/&gt;
+ *   &lt;bandcode&gt;&lt;value&gt;B&lt;/value&gt;&lt;/bandCode&gt;
+ *   &lt;bandcode&gt;&lt;value&gt;N&lt;/value&gt;&lt;/bandCode&gt;    
  * &lt;/channelIDAND&gt;
  * </bold></pre></body>
  *
