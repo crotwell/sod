@@ -25,15 +25,6 @@ public class Annotation {
     }
 
     public String getDescription() {
-        Form f = getFormProvider().getForm();
-        if(desc == null && f.isFromDef() && f instanceof MultigenitorForm) {
-            Definition def = f.getDef();
-            return "This contains all of the "
-                    + def.getName()
-                    + " tactics.  It is not a real "
-                    + def.getName()
-                    + " tactic.  Instead of using this directly in the strategy file, use one of the tactics listed in the 'This consists of' section of this page.";
-        }
         return desc;
     }
 
@@ -100,8 +91,8 @@ public class Annotation {
         }
         return buf.toString();
     }
-    
-    public Annotation makeCopyWithNewFormProvider(FormProvider fp){
+
+    public Annotation makeCopyWithNewFormProvider(FormProvider fp) {
         Annotation copy = new Annotation();
         copy.summary = summary;
         copy.desc = desc;
