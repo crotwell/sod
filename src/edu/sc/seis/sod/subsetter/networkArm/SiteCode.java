@@ -25,7 +25,13 @@ public class SiteCode implements SiteSubsetter {
      */
     public SiteCode(Element config) {
         this.config = config;
-
+        this.code = SodUtil.getNestedText(config);
+        if (code == null || code.length() == 0) {
+            // site codes can be space-space and some
+            // xml editors will pruge the empty space, so we take
+            // the empty siteCode tag to mean space-space
+            code = "  ";
+        }
     }
 
     /**
@@ -37,12 +43,12 @@ public class SiteCode implements SiteSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(NetworkAccess network, Site site, CookieJar cookies) {
-        if(site.get_id().site_code.equals(SodUtil.getNestedText(config))) return true;
+        if(site.get_id().site_code.equals(code)) return true;
         else return false;
 
     }
 
     private Element config = null;
 
-
+    private String code;
 }
