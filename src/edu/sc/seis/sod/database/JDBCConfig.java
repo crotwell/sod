@@ -13,11 +13,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.xml.sax.InputSource;
 
 public class JDBCConfig extends SodJDBC {
 
@@ -43,12 +45,18 @@ public class JDBCConfig extends SodJDBC {
     }
 
     public static String getConfigString(File configFile) throws IOException{
-        BufferedReader r1 = new BufferedReader(new FileReader(configFile));
+        return getConfigString(new BufferedReader(new FileReader(configFile)));
+    }
+
+    public static String getConfigString(InputSource is) throws IOException{
+        InputStreamReader isr = new InputStreamReader(is.getByteStream());
+        return getConfigString(new BufferedReader(isr));
+    }
+
+    private static String getConfigString(BufferedReader r1) throws IOException{
         StringBuffer buf = new StringBuffer();
         String line;
-        while((line = r1.readLine()) != null){
-            buf.append(line);
-        }
+        while((line = r1.readLine()) != null){ buf.append(line); }
         r1.close();
         return buf.toString();
     }
