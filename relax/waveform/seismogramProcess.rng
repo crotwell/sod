@@ -458,6 +458,21 @@
         </element>
     </define>
     <define name="legacyExecute">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Executes an external program.</summary>
+                <description>The legacyExecute processor is capable of running existing
+                        command line programs. It does this by passing the filename
+                        of the seismograms saved by a earlier SaveSeismogramToFile
+                        processor to a program started with Runtime.exec().
+                </description>
+                <example>
+                    <legacyExecute>
+                        <command>echo</command>
+                    </legacyExecute>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
         <element name="legacyExecute">
             <optional>
                 <element name="prefix">
@@ -468,7 +483,7 @@
                 <data type="string"/>
             </element>
             <optional>
-                <element name="dataDirectory">
+                <element name="workingDirectory">
                     <data type="string"/>
                 </element>
             </optional>
