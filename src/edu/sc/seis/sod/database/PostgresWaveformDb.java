@@ -21,15 +21,37 @@ public class PostgresWaveformDb extends AbstractWaveformDatabase{
 	try { 
 	    Statement stmt = connection.createStatement();
 	    stmt.executeUpdate("CREATE SEQUENCE waveformconfigsequence");
-	    stmt.executeUpdate("CREATE table waveformdatabase "+
-			       " ( waveformid int PRIMARY KEY DEFAULT nextval('waveformconfigsequence'), "+
-			       " waveformeventid int CONSTRAINT eventfkey REFERENCES eventconfig(eventid), "+
+	    
+	    stmt.executeUpdate(" CREATE TABLE waveformdb "+
+			       " ( waveformeventid int, "+
+			       " numnetworks int, "+
+			       " CONSTRAINT nfkey FOREIGN KEY(waveformeventid) REFERENCES eventconfig(eventid)) ");
+	    
+	    stmt.executeUpdate(" CREATE TABLE waveformnetworkdb "+
+			       " ( waveformeventid int, "+
 			       " waveformnetworkid int, "+
-			       //" networkdatabase(networkid), "+
-			       " status int , "+
-			       " last_time timestamp, "+
+			       " numstations int, "+
+			       " qtime timestamp) ");
+	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
+			       " ( waveformeventid int, "+
+			       " waveformstationid int, "+
+			       " numsites int, "+
+			       " qtime timestamp) ");
+
+	    stmt.executeUpdate(" CREATE TABLE waveformsitedb "+
+			       " ( waveformeventid int, "+
+			       " waveformsiteid int, "+
+			       " numchannels int, "+
+			       " qtime timestamp) ");
+
+	    stmt.executeUpdate(" CREATE TABLE waveformchanneldb "+
+			       " ( waveformid int PRIMARY KEY DEFAULT nextval('waveformconfigsequence'),"+
+			       " waveformeventid int, "+
+			       " waveformchannelid int, "+
+			       " qtime timestamp , "+
+			       " status int, "+
 			       " numretrys int, "+
-			       " reason text )");
+			       " reason VARCHAR)");
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}

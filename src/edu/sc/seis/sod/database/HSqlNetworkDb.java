@@ -27,14 +27,36 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " serverName VARCHAR, "+
 			       " serverDNS VARCHAR, "+
 			       " network_code VARCHAR, "+
-			       " station_code VARCHAR, "+
-			       " site_code VARCHAR, "+
-			       " channel_code VARCHAR, "+
 			       " network_time timestamp, "+
 			       " nleapseconds int, "+
+			       " nqtime timestamp, "+
+			       " status int, "+
+			       " networkAccessIOR VARCHAR)");
+	    stmt.executeUpdate("CREATE TABLE stationdatabase "+
+			       " (stationid int IDENTITY PRIMARY KEY, "+
+			       " networkid int, "+
+			       " station_code VARCHAR, "+
+			       " station_time timestamp, "+
+			       " stleapseconds int, "+
+			       " stqtime timestamp, "+
+			       " status int)");
+	    stmt.executeUpdate("CREATE TABLE sitedatabase "+
+			       " (siteid int IDENTITY PRIMARY KEY, "+
+			       " stationid int, "+
+			       " site_code VARCHAR, "+
+			       " site_time timestamp, "+
+			       " sleapseconds int, "+
+			       " sqtime timestamp, "+
+			       " status int)");
+	    stmt.executeUpdate("CREATE TABLE channeldatabase "+
+			       " (channelid int IDENTITY PRIMARY KEY, "+
+			       " siteid int, "+
+			       " channel_code VARCHAR, "+
 			       " channel_time timestamp, "+
 			       " cleapseconds int, "+
-			       " channelIdIOR VARCHAR)");
+			       " cqtime timestamp, "+
+			       " status int)");
+			       
 	        
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();

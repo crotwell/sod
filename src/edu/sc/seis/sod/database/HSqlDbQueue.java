@@ -26,8 +26,8 @@ public class HSqlDbQueue implements Queue {
 	Properties props = new Properties();
 	this.props = props;
 	eventDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getEventDatabase();
-	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
-	delete(Status.COMPLETE_SUCCESS);
+	//	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
+	//	delete(Status.COMPLETE_SUCCESS);
     }
 
     public HSqlDbQueue(Properties props) {
@@ -38,6 +38,10 @@ public class HSqlDbQueue implements Queue {
 	else { 
 		eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
 	}
+
+    }
+
+    public void updateEventDatabase() {
 	if(getPersistanceType(props) == 0) {
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	    delete(Status.COMPLETE_SUCCESS);

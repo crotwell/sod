@@ -13,51 +13,67 @@ import edu.iris.Fissures.IfNetwork.*;
  */
 
 public interface  NetworkDatabase {
-   //  public void put(String serverName,
-// 		    String serverDNS,
-// 		    String network_code,
-// 		    String station_code,
-// 		    String site_code,
-// 		    String channel_code,
-// 		    edu.iris.Fissures.Time network_time,
-// 		    edu.iris.Fissures.Time channel_time,
-// 		    String channelIdIOR);
-
-   public int put(String serverName,
-		   String serverDNS,
-		   Channel channel,
-		   NetworkAccess networkAccess);
     
+    public int putNetwork(String serverName,
+			  String serverDNS,
+			  NetworkAccess networkAccess);
 
-    public int getId(String serverName,
-		     String serverDNS,
-		     Channel channel);
+    public int putStation(NetworkDbObject networkDbObject,
+			  Station station);
 
+    public int putSite(StationDbObject stationDbObject,
+		       Site site);
+    
+    public int putChannel(SiteDbObject siteDbObject,
+			  Channel channel);
+    
+    public int getNetworkDbId(int stationdbid);
+    
+    public int getStationDbId(int sitedbid);
+
+    public int getSiteDbId(int channeldbid);
+
+    public int getNetworkDbId(NetworkAccess networkAccess);
+    
+    public int getStationDbId(NetworkDbObject networkDbObject,
+			      Station station);
+
+    public int getSiteDbId(StationDbObject stationDbObject,
+			   Site site);
+
+    public int getChannelDbId(SiteDbObject siteDbObject,
+			      Channel channel);
+
+    public NetworkAccess getNetworkAccess(int networkid);
+
+    public Station getStation(int stationid);
+ 
+    public Site getSite(int siteid);
+
+    public Channel getChannel(int channelid);
+
+    public NetworkId getNetworkId(int networkid);
+
+    public StationId getStationId(int stationid);
+
+    public SiteId getSiteId(int siteid);
+
+    public ChannelId getChannelId(int channelid);
+
+    public NetworkDbObject[] getNetworks();
+
+    public StationDbObject[] getStations(int networkid);
+
+    public SiteDbObject[] getSites(int stationid);
+
+    public ChannelDbObject[] getChannels(int siteid);
+  
     public void setTime(String serverName, String serverDNS, edu.iris.Fissures.Time time);
     
     public edu.iris.Fissures.Time getTime(String serverName, String serverDNS);
     
     public void incrementTime(String serverName, String serverDNS, int numDays);
 
-    public Channel[] getChannels();
-
-    public int[] getIds();
-
-    public Channel getChannel(int dbid);
-    
-    public NetworkAccess getNetworkAccess(int dbid);
-    
-    
-
-//     public int get(String serverName,
-// 		   String serverDNS,
-// 		   String network_code,
-// 		   String station_code,
-// 		   String site_code,
-// 		   String channel_code,
-// 		   edu.iris.Fissures.Time network_time,
-// 		   edu.iris.Fissures.Time channel_time);
-    
-    
+   
     
 }// NetworkDatabase

@@ -37,7 +37,8 @@ public class SodUtil {
 	    Constructor constructor = 
 		externalClass.getConstructor(constructorArgTypes);
 	    Object[] constructorArgs = new Object[1];
-	    constructorArgs[0] = config;
+	    Element passedElement = SodUtil.getElement(config, "parameterArray");
+	    constructorArgs[0] = passedElement;
 	    Object obj = 
 		constructor.newInstance(constructorArgs);
 	    return (SodElement)obj;

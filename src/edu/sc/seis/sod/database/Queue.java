@@ -85,4 +85,6 @@ public interface Queue {
     public void incrementTime(String serverName,
 			      String serverDNS,
 			      int numDays);
+
+    public void updateEventDatabase();
 }

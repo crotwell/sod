@@ -32,175 +32,337 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
     private void init() {
 	try {
 	    create();
-	    getStmt = connection.prepareStatement("SELECT serverName, "+
-						  " serverDNS, "+
-						  " network_code, "+
-						  " station_code, "+
-						  " site_code, "+
-						  " channel_code, "+
-						  " network_time, "+
-						  " channel_time, "+
-						  " nleapseconds, "+
-						  " cleapseconds "+
-						  " FROM networkdatabase "+
-						  " WHERE networkid = ? ");
 	    
-	    putStmt = connection.prepareStatement(" INSERT INTO networkdatabase "+
-						  " (serverName, "+
-						  " serverDNS, "+
-						  " network_code, "+
-						  " station_code, "+
-						  " site_code, "+
-						  " channel_code, "+
-						  " network_time, "+
-						  " channel_time, "+
-						  " nleapseconds, "+
-						  " cleapseconds, "+
-						  " channelIdIOR) "+
-						  " VALUES "+
-						  " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+	    netPutStmt = connection.prepareStatement("INSERT INTO networkdatabase "+
+						    " ( serverName, "+
+						    " serverDNS, "+
+						    " network_code, "+
+						    " network_time, "+
+						    " nleapseconds, "+
+						    " nqtime, "+
+						    " status, "+
+						    " networkAccessIOR ) "+
+						    " VALUES(?,?,?,?,?,?,?,?)");
 
-	    getIdStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase "+
-						    " WHERE "+
-						   //" serverName = ? AND "+
-						    //" serverDNS = ? AND " +
-						    " network_code = ? AND "+
-						    " station_code = ? AND "+
-						    " site_code = ? AND "+
-						    " channel_code = ? AND "+
-						    " network_time = ? AND "+
-						    " channel_time = ? ");
-
-
-	    getIdsStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase ");
+	    netIdStmt = connection.prepareStatement(" SELECT networkid FROM networkdatabase "+
+						     " WHERE network_code = ? AND "+
+						     " network_time = ? AND "+
+						     " nleapseconds = ? ");
+						     
 	    
-	    getChannelByIdStmt = connection.prepareStatement(" SELECT channelIdIOR FROM networkdatabase "+
-							 " WHERE networkid = ? ");
+	    stationPutStmt = connection.prepareStatement("INSERT INTO stationdatabase "+
+							 " (networkid, "+
+							 " station_code, "+
+							 " station_time, "+
+							 " stleapseconds, "+
+							 " stqtime, "+
+							 " status )"+
+							 " VALUES(?,?,?,?,?,?)");
+	    
+	    stationIdStmt =  connection.prepareStatement("SELECT stationid FROM stationdatabase "+
+							 " WHERE networkid = ? AND "+
+							 " station_code = ?  AND "+
+							 " station_time = ? AND "+
+							 " stleapseconds = ? ");
+	    sitePutStmt = connection.prepareStatement("INSERT INTO sitedatabase "+
+						      " ( stationid, "+
+						      " site_code, "+
+						      " site_time, "+
+						      " sleapseconds, "+
+						      " sqtime, "+
+						      " status ) "+
+						      " VALUES(?,?,?,?,?,?)");
+	    siteIdStmt = connection.prepareStatement(" SELECT siteid FROM sitedatabase "+
+						     " WHERE stationid = ? AND "+
+						     " site_code = ? AND "+
+						     " site_time = ? AND "+
+						     " sleapseconds = ? ");
+	    
 
+	    channelPutStmt = connection.prepareStatement(" INSERT INTO channeldatabase "+
+							 " ( siteid, "+
+							 " channel_code, "+
+							 " channel_time, "+
+							 " cleapseconds, "+
+							 " cqtime, "+
+							 " status ) "+
+							 " VALUES(?, ?, ?, ?, ?, ?)");
+	    
+	    channelIdStmt = connection.prepareStatement(" SELECT channelid FROM channeldatabase "+
+							" WHERE siteid = ? AND "+
+							" channel_code = ?  AND "+
+							" channel_time = ? AND "+
+							" cleapseconds = ? ");
+
+	    getNetStmt = connection.prepareStatement(" SELECT network_code, "+
+						     " network_time, "+
+						     " nleapseconds, "+
+						     " networkAccessIOR "+
+						     " FROM networkdatabase "+
+						     " WHERE networkid = ? ");
+	    
+	    getStationStmt = connection.prepareStatement(" SELECT station_code, "+
+							 " station_time, "+
+							 " stleapseconds, "+
+							 " networkid "+
+							 " FROM stationdatabase "+
+							 " WHERE stationid = ? ");
+	    
+	    getSiteStmt = connection.prepareStatement(" SELECT site_code, "+
+						      " site_time, "+
+						      " sleapseconds, "+
+						      " stationid "+
+						      " FROM sitedatabase "+
+						      " WHERE siteid = ? ");
+	    
+	    getChannelStmt = connection.prepareStatement(" SELECT channel_code, "+
+							 " channel_time,  "+
+							 " cleapseconds, "+
+							 " siteid "+
+							 " FROM channeldatabase "+
+							 " WHERE channelid = ? ");
+
+	    networkIdsStmt = connection.prepareStatement(" SELECT networkid FROM "+
+							    " networkdatabase ");
+
+	    stationIdsStmt = connection.prepareStatement(" SELECT stationid FROM "+
+							    " stationdatabase "+
+							    " WHERE networkid = ? ");
+	    
+	    siteIdsStmt = connection.prepareStatement(" SELECT siteid FROM "+
+							 " sitedatabase "+
+							 " WHERE stationid = ? ");
+
+	    channelIdsStmt = connection.prepareStatement(" SELECT channelid FROM "+
+							    " channeldatabase "+
+							    " WHERE siteid = ? ");
+	    
 	} catch(Exception e) {
 	    e.printStackTrace();
 	}
 
     }
+
     
-    private void put(String serverName,
-		    String serverDNS,
-		    String network_code,
-		    String station_code,
-		    String site_code,
-		    String channel_code,
-		    edu.iris.Fissures.Time network_time,
-		    edu.iris.Fissures.Time channel_time,
-		    String channelIdIOR) {
+
+    public int putNetwork(String serverName,
+			  String serverDNS,
+			  NetworkAccess networkAccess) {
 	try {
-	    int index = insert(0,putStmt,
-			       1,
-			       serverName,
-			       serverDNS,
-			       network_code,
-			       station_code,
-			       site_code,
-			       channel_code,
-			       network_time,
-			       channel_time);
-	    
-	    putStmt.setInt(index++, network_time.leap_seconds_version);
-	    putStmt.setInt(index++, channel_time.leap_seconds_version);
-	    
-	    String ior = new String("test");
-	    putStmt.setString(index++, channelIdIOR);
-	   	    putStmt.executeUpdate();
+	    int dbid = getNetworkDbId(networkAccess);
+	    if(dbid != -1) return dbid;
+	    NetworkId networkId = networkAccess.get_attributes().get_id();
+	    if(netPutStmt == null) System.out.println("netPUtStmt is null");
+	    else System.out.println("NetputStmt is not NULLL");
+	    netPutStmt.setString(1, serverName);
+	    netPutStmt.setString(2, serverDNS);
+	    netPutStmt.setString(3, networkId.network_code);
+	    MicroSecondDate microSecondDate  = new MicroSecondDate(networkId.begin_time);
+	    netPutStmt.setTimestamp(4, microSecondDate.getTimestamp());
+	    netPutStmt.setInt(5, networkId.begin_time.leap_seconds_version);
+	    netPutStmt.setTimestamp(6, (new MicroSecondDate()).getTimestamp());
+	    netPutStmt.setInt(7, Status.NEW.getId());
+	    String networkAccessIor = null;
+	    try { 
+		org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
+		networkAccessIor = orb.object_to_string((org.omg.CORBA.Object)networkAccess);
+	    } catch(ConfigurationException cfe) {
+		cfe.printStackTrace();
+	    }
+	    netPutStmt.setString(8, networkAccessIor);
+	    netPutStmt.executeUpdate();
+	    return getNetworkDbId(networkAccess);
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
-		       
+	return -1;
     }
 
-    public int put(String serverName,
-		   String serverDNS,
-		   Channel channel,
-		   NetworkAccess networkAccess) {
-	int dbid = getId(serverName,
-			 serverDNS,
-			 channel);
-	if(dbid != -1) return dbid;
-	String network_code = channel.get_id().network_id.network_code;
-	String station_code =  channel.get_id().station_code;
-	String site_code = channel.get_id().site_code;
-	String channel_code = channel.get_id().channel_code;
-	edu.iris.Fissures.Time network_time = channel.get_id().network_id.begin_time;
-	edu.iris.Fissures.Time channel_time = channel.get_id().begin_time;
-	String networkAccessIor = null;
-	try { 
-	    org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
-	    networkAccessIor = orb.object_to_string((org.omg.CORBA.Object)networkAccess);
-	} catch(ConfigurationException cfe) {
-	    cfe.printStackTrace();
-	}
-	put(serverName,
-	    serverDNS,
-	    network_code,
-	    station_code,
-	    site_code,
-	    channel_code,
-	    network_time,
-	    channel_time,
-	    networkAccessIor);
-	return getId(serverName, 
-		     serverDNS,
-		     channel);
-	    
-    }
-    
-    private int insert(int option,PreparedStatement stmt,
-		       int index,
-		       String serverName,
-		       String serverDNS,
-		       String network_code,
-		       String station_code,
-		       String site_code,
-		       String channel_code,
-		       edu.iris.Fissures.Time network_time,
-		       edu.iris.Fissures.Time channel_time) {
+    public int getNetworkDbId(NetworkAccess networkAccess) {
 	try {
-	   if(option == 0) {
-	    stmt.setString(index++, serverName);
-	    stmt.setString(index++, serverDNS);
-	  }
-	    stmt.setString(index++, network_code);
-	    stmt.setString(index++, station_code);
-	    stmt.setString(index++, site_code);
-	    stmt.setString(index++, channel_code);
-	    MicroSecondDate microSecondDate = new MicroSecondDate(network_time);
-	    stmt.setTimestamp(index++, microSecondDate.getTimestamp());
-	    microSecondDate = new MicroSecondDate(channel_time);
-	    stmt.setTimestamp(index++, microSecondDate.getTimestamp());
+	    NetworkId networkId = networkAccess.get_attributes().get_id();
+	    netIdStmt.setString(1, networkId.network_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(networkId.begin_time);
+	    netIdStmt.setTimestamp(2, microSecondDate.getTimestamp());
+	    netIdStmt.setInt(3, networkId.begin_time.leap_seconds_version);
+	    ResultSet rs = netIdStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
-	return index;
+	return -1;
+    }
+
+    public int putStation(NetworkDbObject networkDbObject, Station station) {
+	try {
+	    int dbid = getStationDbId(networkDbObject, station);
+	    if(dbid != -1) return dbid;
+	    int networkdbid = networkDbObject.getDbId();
+	    stationPutStmt.setInt(1, networkdbid);
+	    StationId stationId = station.get_id();
+	    stationPutStmt.setString(2, stationId.station_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(stationId.begin_time);
+	    stationPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    stationPutStmt.setInt(4, stationId.begin_time.leap_seconds_version);
+	    stationPutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+	    stationPutStmt.setInt(6, Status.NEW.getId());
+	    stationPutStmt.executeUpdate();
+	    return getStationDbId(networkDbObject, station);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+					
+	return -1;
+    }
+
+   
+    
+    public int getStationDbId(NetworkDbObject networkDbObject, Station station) {
+	try {
+	    int networkdbid = networkDbObject.getDbId();
+	    stationIdStmt.setInt(1, networkdbid);
+	    StationId stationId = station.get_id();
+	    stationIdStmt.setString(2, stationId.station_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(stationId.begin_time);
+	    stationIdStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    stationIdStmt.setInt(4, stationId.begin_time.leap_seconds_version);
+	    ResultSet rs = stationIdStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+    }
+
+    public int putSite(StationDbObject stationDbObject,
+		       Site site) {
+
+	try {
+	    int dbid = getSiteDbId(stationDbObject,
+				   site);
+	    if(dbid != -1) return dbid;
+	    
+	    int stationdbid = stationDbObject.getDbId();
+	    sitePutStmt.setInt(1, stationdbid);
+	    SiteId siteId =  site.get_id();
+	    sitePutStmt.setString(2, siteId.site_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(siteId.begin_time);
+	    sitePutStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    sitePutStmt.setInt(4, siteId.begin_time.leap_seconds_version);
+	    sitePutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+	    sitePutStmt.setInt(6, Status.NEW.getId());
+	    sitePutStmt.executeUpdate();
+	    return getSiteDbId(stationDbObject,
+			       site);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
     }
     
-    public int getId(String serverName,
-		   String serverDNS,
-		   String network_code,
-		   String station_code,
-		   String site_code,
-		   String channel_code,
-		   edu.iris.Fissures.Time network_time,
-		   edu.iris.Fissures.Time channel_time) {
+    public int getSiteDbId(StationDbObject stationDbObject,
+			   Site site) {
+	
 	try {
-	    insert(1,getIdStmt,
-		   1,
-		   serverName,
-		   serverDNS,
-		   network_code,
-		   station_code,
-		   site_code,
-		   channel_code,
-		   network_time,
-		   channel_time);
-	    ResultSet rs = getIdStmt.executeQuery();
+	    int stationdbid = stationDbObject.getDbId();
+	    siteIdStmt.setInt(1, stationdbid);
+	    SiteId siteId = site.get_id();
+	    siteIdStmt.setString(2, siteId.site_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(siteId.begin_time);
+	    siteIdStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    siteIdStmt.setInt(4, siteId.begin_time.leap_seconds_version);
+	    ResultSet rs = siteIdStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+	
+    }
+
+    public int putChannel(SiteDbObject siteDbObject,
+			  Channel  channel) {
+
+	try {
+	    int dbid = getChannelDbId(siteDbObject,
+				      channel);
+	    System.out.println("**** INSETING CHANNEL INTO DATABASE "+dbid);
+	    if(dbid != -1) return dbid;
+	    channelPutStmt.setInt(1, siteDbObject.getDbId());
+	    ChannelId channelId = channel.get_id();
+	    channelPutStmt.setString(2, channelId.channel_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(channelId.begin_time);
+	    channelPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    channelPutStmt.setInt(4, channelId.begin_time.leap_seconds_version);
+	    channelPutStmt.setTimestamp(5, (new MicroSecondDate()).getTimestamp());
+	    channelPutStmt.setInt(6,  Status.NEW.getId());
+	    channelPutStmt.executeUpdate();
+	    return getChannelDbId(siteDbObject,
+				  channel);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+    }
+
+    public int getChannelDbId(SiteDbObject siteDbObject,
+			      Channel channel) {
+
+	try {
+	    channelIdStmt.setInt(1, siteDbObject.getDbId());
+	    ChannelId channelId = channel.get_id();
+	    channelIdStmt.setString(2, channelId.channel_code);
+	    MicroSecondDate microSecondDate = new MicroSecondDate(channelId.begin_time);
+	    channelIdStmt.setTimestamp(3, microSecondDate.getTimestamp());
+	    channelIdStmt.setInt(4, channelId.begin_time.leap_seconds_version);
+	    ResultSet rs = channelIdStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt(1);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+    }
+
+
+    public int getSiteDbId(int channelDbId) {
+	try {
+
+	    getChannelStmt.setInt(1, channelDbId);
+	    ResultSet rs = getChannelStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt("siteid");
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+    }
+
+    public int getStationDbId(int siteDbId) {
+	try {
+	    getSiteStmt.setInt(1, siteDbId);
+	    ResultSet rs = getSiteStmt.executeQuery();
+	    if(rs.next()) {
+		return rs.getInt("stationid");
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return -1;
+    }
+
+    public int getNetworkDbId(int stationDbId) {
+	try {
+	    getStationStmt.setInt(1, stationDbId);
+	    ResultSet rs = getStationStmt.executeQuery();
 	    if(rs.next()) {
 		return rs.getInt("networkid");
 	    }
@@ -208,46 +370,267 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	    sqle.printStackTrace();
 	}
 	return -1;
-
     }
 
-    public int getId(String serverName,
-		     String serverDNS,
-		     Channel channel) {
-	String network_code = channel.get_id().network_id.network_code;
-	String station_code =  channel.get_id().station_code;
-	String site_code = channel.get_id().site_code;
-	String channel_code = channel.get_id().channel_code;
-	edu.iris.Fissures.Time network_time = channel.get_id().network_id.begin_time;
-	edu.iris.Fissures.Time channel_time = channel.get_id().begin_time;
-	return getId(serverName,
-	      serverDNS,
-	      network_code,
-	      station_code,
-	      site_code,
-	      channel_code,
-	      network_time,
-	      channel_time);
-	      
-    }
-
-
-    public int[] getIds() {
+    public NetworkAccess getNetworkAccess(int networkid) {
 	try {
-	    ResultSet rs = getIdsStmt.executeQuery();
-	    ArrayList arrayList = new ArrayList();
-	    while(rs.next()) {
-		arrayList.add(new Integer(rs.getInt(1)));
+	    
+	    //dont forget to revalidate the obtained networkAccess..
+	    getNetStmt.setInt(1, networkid);
+	    ResultSet rs = getNetStmt.executeQuery();
+	    if(rs.next()) {
+		String ior = rs.getString("networkAccessIOR");
+		//System.out.println("ChannelId that is obtained is "+ior);
+		org.omg.CORBA.ORB orb = CommonAccess.getCommonAccess().getORB();
+		org.omg.CORBA.Object obj = orb.string_to_object(ior);
+		NetworkAccess networkAccess = NetworkAccessHelper.narrow(obj);
+		return networkAccess;
 	    }
-	    int[] rtnValues = new int[arrayList.size()];
-	    for(int counter = 0; counter < arrayList.size(); counter++) {
-		rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	} catch(Exception sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+
+
+    public NetworkId getNetworkId(int networkid) {
+	try {
+	    getNetStmt.setInt(1, networkid);
+	    ResultSet rs = getNetStmt.executeQuery();
+	    if(rs.next()) {
+		edu.iris.Fissures.Time networkTime = new MicroSecondDate(rs.getTimestamp("network_time")).getFissuresTime();
+		networkTime.leap_seconds_version = rs.getInt("nleapseconds");
+		String network_code =  rs.getString("network_code");
+		return new NetworkId(network_code,
+				     networkTime);
 	    }
-	    return rtnValues;
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
 	}
-	return new int[0];
+	return null;
+    }
+
+    public StationId getStationId(int stationid) {
+	try {
+	    int networkid = getNetworkDbId(stationid);
+	    NetworkId networkId = getNetworkId(networkid);
+	    getStationStmt.setInt(1, stationid);
+	    ResultSet rs = getStationStmt.executeQuery();
+	    if(rs.next()) {
+		String station_code = rs.getString("station_code");
+		edu.iris.Fissures.Time stationTime = new MicroSecondDate(rs.getTimestamp("station_time")).getFissuresTime();
+		stationTime.leap_seconds_version = rs.getInt("stleapseconds");
+		return new StationId(networkId,
+				     station_code,
+				     stationTime);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+    public Station getStation(int stationid) {
+
+	try {
+	    getStationStmt.setInt(1, stationid);
+	    ResultSet rs = getStationStmt.executeQuery();
+	    if(rs.next()) {
+		Site site = getSite(rs.getInt("siteid"));
+		if(site != null) {
+		    return site.my_station;
+		}
+	    }
+	    
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+
+
+    public Site getSite(int siteid) {
+
+	int stationid = getStationDbId(siteid);
+	int networkid = getNetworkDbId(stationid);
+	StationId stationId = getStationId(stationid);
+	NetworkAccess networkAccess = getNetworkAccess(networkid);
+	Channel[] channels = networkAccess.retrieve_for_station(stationId);
+	if(channels.length != 0) {
+	    return channels[0].my_site;
+	}
+	return null;
+    }
+    
+    public SiteId getSiteId(int siteid) {
+	try {
+	    int stationid = getStationDbId(siteid);
+	    StationId stationId = getStationId(stationid);
+	    NetworkId networkId = stationId.network_id;
+	    getSiteStmt.setInt(1, siteid);
+	    ResultSet rs = getSiteStmt.executeQuery();
+	    if(rs.next()) {
+		edu.iris.Fissures.Time siteTime = new MicroSecondDate(rs.getTimestamp("site_time")).getFissuresTime();
+		siteTime.leap_seconds_version = rs.getInt("sleapseconds");
+	    
+		return new SiteId(networkId,
+				  stationId.station_code,
+				  rs.getString("site_code"),
+				  siteTime);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+
+    public Channel getChannel(int channelid) {
+	int siteid = getSiteDbId(channelid);
+	int stationid = getStationDbId(siteid);
+	int networkid = getNetworkDbId(stationid);
+	NetworkAccess networkAccess = getNetworkAccess(networkid);
+	ChannelId channelId = getChannelId(channelid);
+	try {
+	    Channel channel = networkAccess.retrieve_channel(channelId);
+	    return channel;
+	} catch(ChannelNotFound cnf) {
+	    cnf.printStackTrace();
+	}
+	return null;
+    }
+    
+    public ChannelId getChannelId(int channelid) {
+	try {
+	    int siteid = getSiteDbId(channelid);
+	    SiteId siteId = getSiteId(siteid);
+	    NetworkId networkId = siteId.network_id;
+	    
+	    getChannelStmt.setInt(1, channelid);
+	    ResultSet rs = getChannelStmt.executeQuery();
+	    if(rs.next()) {
+		edu.iris.Fissures.Time channelTime = new MicroSecondDate(rs.getTimestamp("channel_time")).getFissuresTime();
+		channelTime.leap_seconds_version = rs.getInt("cleapseconds");
+		return new ChannelId(networkId,
+				     siteId.station_code,
+				     siteId.site_code,
+				     rs.getString("channel_code"),
+				     channelTime);
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	return null;
+    }
+
+
+    public int[] getNetworkDbIds() {
+	ArrayList arrayList = new ArrayList();
+	try {
+	    ResultSet rs = networkIdsStmt.executeQuery();
+	    while(rs.next()) {
+		arrayList.add(new Integer(rs.getInt(1)));
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	int[] rtnValues = new int[arrayList.size()];
+	for(int counter = 0; counter < arrayList.size(); counter++) {
+	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	}
+	return rtnValues;
+    }
+
+    public int[] getStationDbIds(int networkid) {
+	ArrayList arrayList = new ArrayList();
+	try {
+	    stationIdsStmt.setInt(1, networkid);
+	    ResultSet rs = stationIdsStmt.executeQuery();
+	    while(rs.next()) {
+		arrayList.add(new Integer(rs.getInt(1)));
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	int[] rtnValues = new int[arrayList.size()];
+	for(int counter = 0; counter < arrayList.size(); counter++) {
+	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	}
+	return rtnValues;
+    }
+
+    public int[] getSiteDbIds(int stationid) {
+	ArrayList arrayList = new ArrayList();
+	try {
+	    siteIdsStmt.setInt(1, stationid);
+	    ResultSet rs = siteIdsStmt.executeQuery();
+	    while(rs.next()) {
+		arrayList.add(new Integer(rs.getInt(1)));
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	int[] rtnValues = new int[arrayList.size()];
+	for(int counter = 0; counter < arrayList.size(); counter++) {
+	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	}
+	return rtnValues;
+    }  
+    
+    public int[] getChannelDbIds(int siteid) {
+	ArrayList arrayList = new ArrayList();
+	try {
+	    channelIdsStmt.setInt(1, siteid);
+	    ResultSet rs = channelIdsStmt.executeQuery();
+	    while(rs.next()) {
+		arrayList.add(new Integer(rs.getInt(1)));
+	    }
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+	int[] rtnValues = new int[arrayList.size()];
+	for(int counter = 0; counter < arrayList.size(); counter++) {
+	    rtnValues[counter] = ((Integer)arrayList.get(counter)).intValue();
+	}
+	return rtnValues;
+    }
+    
+    public NetworkDbObject[] getNetworks() {
+	int[] ids = getNetworkDbIds();
+	NetworkDbObject[] rtnValues = new NetworkDbObject[ids.length];
+	for(int counter = 0; counter < ids.length; counter++) {
+	    rtnValues[counter] = new NetworkDbObject(ids[counter],
+						     getNetworkAccess(ids[counter]));
+	}
+	return rtnValues;
+    }
+
+    public StationDbObject[] getStations(int networkid) {
+	int[] ids = getStationDbIds(networkid);
+	StationDbObject[] rtnValues = new StationDbObject[ids.length];
+	for(int counter = 0; counter < ids.length; counter++) {
+	    rtnValues[counter] = new StationDbObject(ids[counter],
+						     getStation(ids[counter]));
+	}
+	return rtnValues;
+    }
+
+    public SiteDbObject[] getSites(int stationid) {
+	int[] ids = getSiteDbIds(stationid);
+	SiteDbObject[] rtnValues = new SiteDbObject[ids.length];
+	for(int counter = 0; counter < ids.length; counter++) {
+	    rtnValues[counter] = new SiteDbObject(ids[counter],
+						  getSite(ids[counter]));
+	}
+	return rtnValues;
+    }
+
+    public ChannelDbObject[] getChannels(int siteid) {
+	int[] ids = getChannelDbIds(siteid);
+	ChannelDbObject[] rtnValues = new ChannelDbObject[ids.length];
+	for(int counter = 0; counter < ids.length; counter++) {
+	    rtnValues[counter] = new ChannelDbObject(ids[counter],
+						     getChannel(ids[counter]));
+	}
+	return rtnValues;
     }
 
     public String getTimeConfigName() {
@@ -269,152 +652,41 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 					  numDays);
     }
 
-
-    public Channel[] getChannels() {
-	try {
-
-	    int[] ids = getIds();
-	    Channel[] rtnValues = new Channel[ids.length];
-	    for(int counter = 0; counter < ids.length; counter++) {
-
-		rtnValues[counter] = getChannel(ids[counter]);
-	    }
-	    return rtnValues;
-	} catch(Exception e) {
-	    e.printStackTrace();
-	    return new Channel[0];
-	}
-    }
-    
-    public Channel getChannel(int dbid) {
-	try {
-	    NetworkAccess networkAccess = getNetworkAccess(dbid);
-	    // here I must revalidate
-	    //System.out.println("before retrieveing the channel");
-	    //System.out.println(networkAccess.get_attributes().name);
-	    Channel channel = networkAccess.retrieve_channel(getChannelId(dbid));
-	    //System.out.println("After retrieveing the channel");
-	    return channel;
-       	} catch(Exception sqle) {
-	    sqle.printStackTrace();
-	}
-	return null;
-    }
-
-    public NetworkAccess getNetworkAccess(int dbid) {
-	try {
-	    getChannelByIdStmt.setInt(1, dbid);
-	    ResultSet rs = getChannelByIdStmt.executeQuery();
-	    if(rs.next()) {
-		String ior = rs.getString("channelIdIOR");
-		//System.out.println("ChannelId that is obtained is "+ior);
-		org.omg.CORBA.ORB orb = CommonAccess.getCommonAccess().getORB();
-		org.omg.CORBA.Object obj = orb.string_to_object(ior);
-		NetworkAccess networkAccess = NetworkAccessHelper.narrow(obj);
-		return networkAccess;
-	    }
-	} catch(Exception sqle) {
-	    sqle.printStackTrace();
-	}
-	return null;
-    }
-    
-    public NetworkId getNetworkId(int dbid) {
-	String network_code = getNetworkCode(dbid);
-	edu.iris.Fissures.Time network_time = getNetworkTime(dbid);
-	return new NetworkId(network_code, network_time);
-    }
-
-    private String getNetworkCode(int dbid) {
-	return (String)getField(3, dbid);
-    }
-
-    private String getStationCode(int dbid) {
-	return (String)getField(4, dbid);
-    }
-
-    private String getSiteCode(int dbid) {
-	return (String)getField(5, dbid);
-    }
-
-    private String getChannelCode(int dbid) {
-	return (String)getField(6, dbid);
-    }
-
-    private edu.iris.Fissures.Time getNetworkTime(int dbid) {
-	edu.iris.Fissures.Time rtnTime = (edu.iris.Fissures.Time)getField(7, dbid);
-	rtnTime.leap_seconds_version = ((Integer)getField(9, dbid)).intValue();
-	return rtnTime;
-
-    }
-    
-    private edu.iris.Fissures.Time getChannelTime(int dbid) {
-	edu.iris.Fissures.Time rtnTime = (edu.iris.Fissures.Time)getField(8, dbid);
-	rtnTime.leap_seconds_version = ((Integer)getField(10, dbid)).intValue();
-	return rtnTime;
-    }
-
-    
-
-    public ChannelId getChannelId(int dbid) {
-
-	String station_code = getStationCode(dbid);
-	String site_code = getSiteCode(dbid);
-	String channel_code = getChannelCode(dbid);
-	edu.iris.Fissures.Time channel_time = getChannelTime(dbid);
-	NetworkId networkId = getNetworkId(dbid);
-	return new ChannelId(networkId,
-			     station_code,
-			     site_code,
-			     channel_code,
-			     channel_time);
-			     
-    }
-
-    
-
-    private java.lang.Object getField(int index, int dbid) {
-	try {
-	    getStmt.setInt(1, dbid);
-	    ResultSet rs = getStmt.executeQuery();
-	    if(rs.next()) {
-		switch(index) {
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:  
-		    return rs.getString(index);
-		    
-		case 7:
-		case 8:  
-		    return (new MicroSecondDate(rs.getTimestamp(index))).getFissuresTime();
-		case 9:
-		case 10:
-		    return new Integer(rs.getInt(index));
-		    
-		}
-		
-	    }
-	} catch(SQLException sqle) {
-	    sqle.printStackTrace();
-	    
-	}
-	return null;
-    }
-
-
     protected Connection connection;
 
-    private PreparedStatement getStmt;
-    
-    private PreparedStatement putStmt;
-    
-    private PreparedStatement getIdStmt;
+    private PreparedStatement netGetStmt;
 
-    private PreparedStatement getIdsStmt;
+    private PreparedStatement netPutStmt;
 
-    private PreparedStatement getChannelByIdStmt;
+    private PreparedStatement stationGetStmt;
+
+    private PreparedStatement netIdStmt;
+
+    private PreparedStatement stationPutStmt;
     
+    private PreparedStatement stationIdStmt;
+       
+    private PreparedStatement sitePutStmt;
+
+    private PreparedStatement siteIdStmt;
+
+    private PreparedStatement channelPutStmt;
+
+    private PreparedStatement channelIdStmt;
+
+    private PreparedStatement getNetStmt;
+
+    private PreparedStatement getStationStmt;
+    
+    private PreparedStatement getSiteStmt;
+
+    private PreparedStatement getChannelStmt;
+
+    private PreparedStatement networkIdsStmt;
+    
+    private PreparedStatement channelIdsStmt;
+    
+    private PreparedStatement stationIdsStmt;
+
+    private PreparedStatement siteIdsStmt;
 }// AbstractNetworkDatabase

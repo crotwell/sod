@@ -6,6 +6,7 @@ import edu.sc.seis.sod.subsetter.waveFormArm.*;
 
 import edu.sc.seis.fissuresUtil.cache.*;
 
+import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 
@@ -47,6 +48,16 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	this.sodExceptionListener = sodExceptionListener;
 	pool = new ThreadPool(5, this);
     }
+
+    private void restoreDb() {
+	int[] ids = Start.getWaveformQueue().getIds();
+	for(int counter = 0; counter < ids.length; counter++) {
+	    int eventid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
+	    int channelid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
+	    EventAccessOperations eventAccess = Start.getEventQueue().getEventAccess(eventid);
+	    updateDatabase(eventid, channelid, eventAccess);
+	}
+    }
 	
     /**
      * Describe <code>run</code> method here.
@@ -55,6 +66,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     public void run() {
 	EventAccessOperations eventAccess = null;  
 	int eventid;
+	restoreDb();
+	Start.getEventQueue().updateEventDatabase();
+		
 	//ThreadPool pool = new ThreadPool(5);
 	//getThreadGroup().list();
 		try {
@@ -64,49 +78,58 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
 	    // if(Start.getEventQueue().getLength() < 4) notifyAll();
 	    while(eventid != -1) {
-		int[] successfulChannels = 
-		    networkArm.getSuccessfulChannels();
-		//when the threads are really changed to per channel base ..
-		// the below for loop must be removed...
-		for(int counter = 0; counter < successfulChannels.length; counter++) {
-		 //    Channel[] paramChannels = new Channel[1];
-// 		    Start.getWaveformQueue().push(eventid, successfulChannels[counter]);
-			
-// 		    paramChannels[0] = networkArm.getChannel(successfulChannels[counter]);
-// 		    eventAccess = Start.getEventQueue().getEventAccess(eventid);
-		  
-// 		    NetworkAccess networkAccess = networkArm.getNetworkAccess(successfulChannels[counter]);
-// 		    Runnable work = new WaveFormArmThread(eventAccess, 
-// 							  eventStationSubsetter,
-// 							  seismogramDCLocator,
-// 							  localSeismogramArm,
-// 							  networkAccess,
-// 							  paramChannels, 
-// 							  this,
-// 							  sodExceptionListener);
-	
-		    
-		    Start.getWaveformQueue().push(eventid, successfulChannels[counter]);
-		    
-		    // pool.doWork(work);
-		}
+		eventAccess =
+		    Start.getEventQueue().getEventAccess(eventid);
+		waveformStatusProcess.begin(eventAccess);
+		NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
+		Start.getWaveformQueue().putInfo(eventid, networks.length);
+		for(int netcounter = 0; netcounter < networks.length; netcounter++) {
+		    waveformStatusProcess.begin(eventAccess, networks[netcounter].getNetworkAccess());
+		    StationDbObject[] stations = networkArm.getSuccessfulStations(networks[netcounter]);
+		    Start.getWaveformQueue().putNetworkInfo(eventid,
+							    networks[netcounter].getDbId(),
+							    stations.length,
+							    new MicroSecondDate());
+		    for(int stationcounter = 0; stationcounter < stations.length; stationcounter++) {
+			waveformStatusProcess.begin(eventAccess, stations[stationcounter].getStation());
+			SiteDbObject[] sites = networkArm.getSuccessfulSites(networks[netcounter], 
+								     stations[stationcounter]);
+			Start.getWaveformQueue().putStationInfo(eventid,
+								stations[stationcounter].getDbId(),
+								sites.length,
+								new MicroSecondDate());
+			for(int sitecounter = 0; sitecounter < sites.length; sitecounter++) {
+			    waveformStatusProcess.begin(eventAccess, sites[sitecounter].getSite());
+			    ChannelDbObject[] successfulChannels = 
+				networkArm.getSuccessfulChannels(networks[netcounter], sites[sitecounter]);
+			    Start.getWaveformQueue().putSiteInfo(eventid,
+								 sites[sitecounter].getDbId(),
+								 successfulChannels.length,
+								 new MicroSecondDate());
+			    //when the threads are really changed to per channel base ..
+			    // the below for loop must be removed...
+			    for(int counter = 0; counter < successfulChannels.length; counter++) {
+				channelDbObjectMap.put( (new Integer(successfulChannels[counter].getDbId())).toString(),
+						     successfulChannels[counter]);
+				
+				Start.getWaveformQueue().push(eventid, successfulChannels[counter].getDbId());
+				// pool.doWork(work);
+			    }
 		
+			
+			}//end of for sitecounter
+		    }//end of for stationcounter
+		}//end of for netcounter
 		eventid = 
 		    Start.getEventQueue().pop();
-	    }   
+	    }
 	    logger.debug("CALLING THE FINISHED METHOD OF THE POOL");
-	    //pool.finished();
 	    Start.getWaveformQueue().setSourceAlive(false);
-	     pool.join(); 
-	    logger.debug("The active count is "+Thread.activeCount());
-	    System.out.println("Before exiting the wave form arm ");
-	    //getThreadGroup().list();
-	    //Thread.sleep(10000);
-	    //logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!MUST EXIT THE RUN METHOD THE WAVEFORMARMTHREAD NOW");
- 	}  catch(Exception e) {
-	    logger.fatal("Problem running waveform arm", e);
-	    notifyListeners(this, e);
-	} finally {
+	    pool.join(); 
+	  	}  catch(Exception e) {
+		    logger.fatal("Problem running waveform arm", e);
+		    notifyListeners(this, e);
+		} finally {
 	    //pool.finished();
 	} // end of finally
 	
@@ -133,7 +156,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramArm) localSeismogramArm = (LocalSeismogramArm)sodElement;
-                else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement;	
+                else if(sodElement instanceof SeismogramDCLocator) seismogramDCLocator = (SeismogramDCLocator)sodElement; 
+		else if(sodElement instanceof WaveformStatusProcess) waveformStatusProcess = (WaveformStatusProcess)sodElement;
+
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
@@ -143,39 +168,81 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	notifyAll();
     }
 
-    public synchronized int getNetworkId(Channel channel) {
-	return networkArm.getNetworkId(channel);
-    }
+   //  public synchronized int getNetworkId(Channel channel) {
+// 	return networkArm.getNetworkId(channel);
+//     }
 
     public synchronized int getEventId(EventAccess eventAccess) {
 	return Start.getEventQueue().getEventId(eventAccess);
     }
 
-    public synchronized void setFinalStatus(EventAccessOperations eventAccess,
-					    Channel channel,
+    public synchronized void setFinalStatus(EventDbObject eventDbObject,
+					    ChannelDbObject channelDbObject,
 					    Status status,
 					    String reason) {
-	int eventid = getEventId((EventAccess)
-		((CacheEvent)eventAccess).getEventAccess());
-	int networkid = getNetworkId(channel);
-	Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, networkid),
-	status, reason);
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	Channel channel = channelDbObject.getChannel();
+	int eventid = eventDbObject.getDbId();
+	int channelid = channelDbObject.getDbId();
+
+	Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
+					   status, reason);
+	waveformStatusProcess.end(eventAccess, channel, status, reason);
+	updateDatabase(eventid, channelid, eventAccess);
+
+    }
+    
+    private void updateDatabase(int eventid, int channelid, EventAccessOperations eventAccess) {
+	int sitedbid = networkArm.getSiteDbId(channelid);
+	int stationdbid = -1, networkdbid = -1;
+	Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
+	Start.getWaveformQueue().deleteChannelInfo(eventid, channelid);
+	 
+	boolean flag = false;
+	if(Start.getWaveformQueue().getChannelCount(eventid, sitedbid) <= 0) {
+	    //decrement corresponding station reference count..
+	    //delete the corresponding entry from the wavefrom sitedb
+	    flag = true;
+	}
+	   
+	if(flag) {
+	    flag = false;
+	    stationdbid = networkArm.getStationDbId(sitedbid);
+	    Start.getWaveformQueue().decrementSiteCount(eventid, stationdbid);
+	    Start.getWaveformQueue().deleteSiteInfo(eventid, sitedbid);
+	    if(Start.getWaveformQueue().getSiteCount(eventid, stationdbid) <= 0) {
+		flag = true;
+	    }
+	}
+
+	if(flag) {
+
+	    flag = false;
+	    networkdbid = networkArm.getNetworkDbId(stationdbid);
+	    Start.getWaveformQueue().decrementStationCount(eventid, networkdbid);
+	    Start.getWaveformQueue().deleteStationInfo(eventid, stationdbid);
+	    if(Start.getWaveformQueue().getStationCount(eventid, networkdbid) <= 0) {
+		flag = true;
+	    }
+	}
+
+	if(flag) {
+	    flag = false;
+	    Start.getWaveformQueue().decrementNetworkCount(eventid);
+	    Start.getWaveformQueue().deleteNetworkInfo(eventid, networkdbid);
+	    if(Start.getWaveformQueue().getNetworkCount(eventid) <= 0) {
+		flag = true;
+	    }
+	}
 	
-	//now check if the eventn from the event database must be deleted..
-	try {
-	    if(Start.getWaveformQueue().getSuccessfulChannelCount(eventid) == 0) {
-		Start.getWaveformQueue().delete(eventid);
-		Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
-						     Status.COMPLETE_SUCCESS);
-	    } // else {
-// 		Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
-// 						     Status.COMPLETE_REJECT);
-// 	    }
-	} catch(Exception e) {
-	    e.printStackTrace();
+	if(flag) {
+	    //delete the row corresponding to eventid from
+	    // the waveform database.
+	    Start.getWaveformQueue().deleteInfo(eventid);
+	    Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
+						 Status.COMPLETE_SUCCESS);
 	}
     }
-
 
     class ThreadWorker extends Thread {
 
@@ -249,20 +316,32 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    int waveformid = Start.getWaveformQueue().pop();
 	    if(waveformid == -1) return null;
 	    int eventid = Start.getWaveformQueue().getWaveformEventId(waveformid);
-	    int networkid = Start.getWaveformQueue().getWaveformNetworkId(waveformid);
+	    int channelid = Start.getWaveformQueue().getWaveformChannelId(waveformid);
 	    
 	    EventAccessOperations eventAccess =
 		Start.getEventQueue().getEventAccess(eventid);
-	    Channel channel= networkArm.getChannel(networkid);
-	    NetworkAccess networkAccess =
-		networkArm.getNetworkAccess(networkid);
-	    Channel[] paramChannels = new Channel[1];
-	    paramChannels[0] = channel;
-	    Runnable work = new WaveFormArmThread(eventAccess, 
+	    EventDbObject eventDbObject = new EventDbObject(eventid, eventAccess);
+	    ChannelDbObject channelDbObject = null;
+	    if(	((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString())) != null) {
+		channelDbObject = ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString()));
+	    } else {
+		channelDbObject = new ChannelDbObject(channelid, networkArm.getChannel(channelid));
+	    }
+	    //networkArm.getChannel(networkid);
+	    int siteid =
+		networkArm.getSiteDbId(channelid);
+	    int stationid = networkArm.getStationDbId(siteid);
+	    int networkid = networkArm.getNetworkDbId(stationid);
+	    NetworkAccess networkAccess = networkArm.getNetworkAccess(networkid);
+	    NetworkDbObject networkDbObject = new NetworkDbObject(networkid, networkAccess);
+	    ChannelDbObject[] paramChannels = new ChannelDbObject[1];
+	    paramChannels[0] = channelDbObject;
+	    //    waveformStatusProcess.begin(eventAccess, channel);
+	    Runnable work = new WaveFormArmThread(eventDbObject, 
 						  eventStationSubsetter,
 						  seismogramDCLocator,
 						  localSeismogramArm,
-						  networkAccess,
+						  networkDbObject,
 						  paramChannels, 
 						  waveformArm,
 						  sodExceptionListener);
@@ -335,6 +414,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     }
 
     
+    
 
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
 
@@ -349,6 +429,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     private SeismogramDCLocator seismogramDCLocator= null;
 
     private SodExceptionListener sodExceptionListener;
+
+    private WaveformStatusProcess waveformStatusProcess = null;
+
+    HashMap channelDbObjectMap = new HashMap();
+
+    HashMap eventDbObjectMap = new HashMap();
 
     static Category logger = 
 	Category.getInstance(WaveFormArm.class.getName());

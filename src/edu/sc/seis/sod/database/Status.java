@@ -34,6 +34,22 @@ public class Status {
     public int getId() {
 	return this.status;
     }
+
+    public String toString() {
+	switch(status) {
+	case 0:
+	    return "NEW";
+	case 1:
+	    return "PROCESSING";
+	case 2:
+	    return "COMPLETE_SUCCESS";
+	case 3:
+	    return "COMPLETE_REJECT";
+	default:
+	    return "COMPLETE_SUCCESS";
+	}
+
+    }
     
     public final static Status NEW = new Status(0);
 

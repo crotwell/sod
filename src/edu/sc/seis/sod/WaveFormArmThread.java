@@ -29,12 +29,13 @@ import org.apache.log4j.*;
  */
 
 public class WaveFormArmThread extends SodExceptionSource implements Runnable{
-    public WaveFormArmThread (EventAccessOperations eventAccess, 
+    public WaveFormArmThread (EventDbObject eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
 			      SeismogramDCLocator seismogramDCLocator, 
 			      LocalSeismogramArm localSeismogramArm,
-			      NetworkAccess networkAccess,
-			      Channel[] successfulChannels, WaveFormArm parent, 
+			      NetworkDbObject networkAccess,
+			      ChannelDbObject[] successfulChannels, 
+			      WaveFormArm parent, 
 			      SodExceptionListener sodExceptionListener){
 	this.eventAccess = eventAccess;
 	this.networkAccess = networkAccess;
@@ -64,30 +65,33 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @exception Exception if an error occurs
      */
-    public void processWaveFormArm(EventAccessOperations eventAccess) throws Exception{
+    public void processWaveFormArm(EventDbObject eventDbObject) throws Exception{
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	if (successfulChannels[0]  == null) System.out.println("Chan is NULL");
+	else System.out.println("channel is NOT NULL");
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
 	    boolean bESS;
 		    synchronized(eventStationSubsetter) {
 		bESS = eventStationSubsetter.accept(eventAccess, 
-						 networkAccess, 
-						 successfulChannels[counter].my_site.my_station, 
+						 networkAccess.getNetworkAccess(), 
+						 successfulChannels[counter].getChannel().my_site.my_station, 
 						 null);
 		if(!bESS) {
-			parent.setFinalStatus(eventAccess,
-					      successfulChannels[counter],
-					      Status.COMPLETE_REJECT,
-					      "EventStationSubsetterFailed");
+		    parent.setFinalStatus(eventDbObject,
+					  successfulChannels[counter],
+					  Status.COMPLETE_REJECT,
+					  "EventStationSubsetterFailed");
 		}
 	    }
 	    if( bESS ) {
 		DataCenter dataCenter;
 		synchronized(seismogramDCLocator) {
 		    dataCenter = seismogramDCLocator.getSeismogramDC(eventAccess, 
-								     networkAccess,
-								     successfulChannels[counter].my_site.my_station,
+								     networkAccess.getNetworkAccess(),
+								     successfulChannels[counter].getChannel().my_site.my_station,
 								     null);
 		}
-		localSeismogramArm.processLocalSeismogramArm(eventAccess, 
+		localSeismogramArm.processLocalSeismogramArm(eventDbObject, 
 							     networkAccess, 
 							     successfulChannels[counter], 
 							     dataCenter,
@@ -99,9 +103,9 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 	//parent.signalWaveFormArm();
     }
 
-     private EventAccessOperations eventAccess;
+     private EventDbObject eventAccess;
 
-    private NetworkAccess networkAccess;
+    private NetworkDbObject networkAccess;
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
@@ -111,7 +115,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 
     private NetworkArm networkArm;
 
-    private Channel[] successfulChannels;
+    private ChannelDbObject[] successfulChannels;
     
     private WaveFormArm parent;
 

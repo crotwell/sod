@@ -20,16 +20,39 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
     
     public void create() {
 	try {
-	Statement stmt = connection.createStatement();
-	stmt.executeUpdate(" CREATE TABLE waveformdatabase "+
-			   " ( waveformid int IDENTITY PRIMARY KEY, "+
-			   " waveformeventid int, "+
-			   "waveformnetworkid int,  "+// FOREIGN KEY REFERENCES networkdatabase(networkid), "+
-			   " status int, "+
-			   " last_time timestamp, "+
-			   " numretrys int, "+
-			   " reason VARCHAR, "+
-			   " CONSTRAINT nfkey FOREIGN KEY(waveformeventid) REFERENCES eventconfig(eventid)) ");
+	    Statement stmt = connection.createStatement();
+	    stmt.executeUpdate(" CREATE TABLE waveformdb "+
+			       " ( waveformeventid int, "+
+			       " numnetworks int, "+
+			       " CONSTRAINT nfkey FOREIGN KEY(waveformeventid) REFERENCES eventconfig(eventid)) ");
+	    
+	    stmt.executeUpdate(" CREATE TABLE waveformnetworkdb "+
+			       " ( waveformeventid int, "+
+			       " waveformnetworkid int, "+
+			       " numstations int, "+
+			       " qtime timestamp) ");
+	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
+			       " ( waveformeventid int, "+
+			       " waveformstationid int, "+
+			       " numsites int, "+
+			       " qtime timestamp) ");
+
+	    stmt.executeUpdate(" CREATE TABLE waveformsitedb "+
+			       " ( waveformeventid int, "+
+			       " waveformsiteid int, "+
+			       " numchannels int, "+
+			       " qtime timestamp) ");
+	    stmt.executeUpdate(" CREATE TABLE waveformchanneldb "+
+			       " ( waveformid  int IDENTITY PRIMARY KEY,"+
+			       " waveformeventid int, "+
+			       " waveformchannelid int, "+
+			       " qtime timestamp , "+
+			       " status int, "+
+			       " numretrys int, "+
+			       " reason VARCHAR)");
+			      
+
+	    
 	} catch(SQLException sqle) {
 		sqle.printStackTrace();
 	}

@@ -83,17 +83,22 @@ public class LocalSeismogramArm implements Subsetter{
 				+sodElement);
 		} // end of else
 		
+
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 
     }
 
-    public void processLocalSeismogramArm(EventAccessOperations eventAccess, 
-					  NetworkAccess networkAccess, 
-					  Channel channel, 
+    public void processLocalSeismogramArm(EventDbObject eventDbObject, 
+					  NetworkDbObject networkDbObject, 
+					  ChannelDbObject channelDbObject, 
 
 					  DataCenter dataCenter,
 					  WaveFormArm waveformArm) throws Exception{
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel = channelDbObject.getChannel();
+	
 	MicroSecondDate chanBegin = new MicroSecondDate(channel.effective_time.start_time);
 	MicroSecondDate chanEnd;
 	if(channel.effective_time.end_time != null) {
@@ -116,16 +121,16 @@ public class LocalSeismogramArm implements Subsetter{
 	    || chanEnd.before(originTime)) {
 	    // channel doesn't overlap origin
 	    logger.info("fail "+ChannelIdUtil.toString(channel.get_id())+" doesn't everlap originTime="+originTime+" endTime="+chanEnd+" begin="+chanBegin);
-	    waveformArm.setFinalStatus(eventAccess,
-				       channel,
+	    waveformArm.setFinalStatus(eventDbObject,
+				       channelDbObject,
 				       Status.COMPLETE_REJECT,
 				       "channelEffectiveTimeOverlaps doesnot match");
 	    return;
 	}
 	
-	processEventChannelSubsetter(eventAccess, 
-				     networkAccess, 
-				     channel, 
+	processEventChannelSubsetter(eventDbObject, 
+				     networkDbObject, 
+				     channelDbObject, 
 				     dataCenter,
 				     waveformArm);
 	
@@ -136,11 +141,17 @@ public class LocalSeismogramArm implements Subsetter{
      *
      * @exception Exception if an error occurs
      */
-    public void processEventChannelSubsetter(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel,
-    DataCenter dataCenter,
-    WaveFormArm waveformArm) throws Exception{
+    public void processEventChannelSubsetter(EventDbObject eventDbObject,
+					     NetworkDbObject networkDbObject, 
+					     ChannelDbObject channelDbObject,
+					     DataCenter dataCenter,
+					     WaveFormArm waveformArm) throws Exception{
 
 	boolean b;
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel = channelDbObject.getChannel();
+	
 	synchronized (eventChannelSubsetter) {
 	    b = eventChannelSubsetter.accept(eventAccess, 
 					     networkAccess, 
@@ -148,17 +159,17 @@ public class LocalSeismogramArm implements Subsetter{
 					     null);
 	}
 	if( b ) {
-	     processRequestGeneratorSubsetter(eventAccess, 
-					      networkAccess, 
-					      channel, 
-					      dataCenter,
-					      waveformArm
-					      );
+	    processRequestGeneratorSubsetter(eventDbObject, 
+					     networkDbObject, 
+					     channelDbObject, 
+					     dataCenter,
+					     waveformArm
+					     );
 	} else {
-		waveformArm.setFinalStatus(eventAccess,
-				      channel,
-				      Status.COMPLETE_REJECT,
-				      "EventChannelSubsetterfailed");
+	    waveformArm.setFinalStatus(eventDbObject,
+				       channelDbObject,
+				       Status.COMPLETE_REJECT,
+				       "EventChannelSubsetterfailed");
 	}
     }
 
@@ -167,14 +178,17 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processRequestGeneratorSubsetter</code> method here.
      *
      */
-    public void processRequestGeneratorSubsetter(EventAccessOperations eventAccess, 
-						 NetworkAccess networkAccess, 
-						 Channel channel, 
+    public void processRequestGeneratorSubsetter(EventDbObject eventDbObject, 
+						 NetworkDbObject networkDbObject, 
+						 ChannelDbObject channelDbObject, 
 						 DataCenter dataCenter,
 						 WaveFormArm waveformArm) 
 	throws Exception
     {
 	RequestFilter[] infilters;
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel = channelDbObject.getChannel();
 	synchronized (requestGeneratorSubsetter) {
 	    infilters = 
 		requestGeneratorSubsetter.generateRequest(eventAccess, 
@@ -190,9 +204,9 @@ public class LocalSeismogramArm implements Subsetter{
 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 
-	processAvailableDataSubsetter(eventAccess, 
-				      networkAccess, 
-				      channel, 
+	processAvailableDataSubsetter(eventDbObject, 
+				      networkDbObject, 
+				      channelDbObject, 
 				      dataCenter, 
 				      infilters, 
 				      outfilters,
@@ -203,9 +217,9 @@ public class LocalSeismogramArm implements Subsetter{
      * Describe <code>processAvailableDataSubsetter</code> method here.
      *
      */
-    public void processAvailableDataSubsetter(EventAccessOperations eventAccess, 
-					      NetworkAccess networkAccess, 
-					      Channel channel,
+    public void processAvailableDataSubsetter(EventDbObject eventDbObject, 
+					      NetworkDbObject networkDbObject, 
+					      ChannelDbObject channelDbObject,
 					      DataCenter dataCenter,
 					      RequestFilter[] infilters,
 					      RequestFilter[] outfilters,
@@ -213,6 +227,10 @@ public class LocalSeismogramArm implements Subsetter{
 	throws Exception
     {
 	boolean b;
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel = channelDbObject.getChannel();
+	
 	synchronized (availableDataSubsetter) {
 	    b = availableDataSubsetter.accept(eventAccess, 
 					      networkAccess, 
@@ -228,7 +246,6 @@ public class LocalSeismogramArm implements Subsetter{
 	    LocalSeismogram[] localSeismograms;
 	    if (outfilters.length != 0) {
 		localSeismograms = dataCenter.retrieve_seismograms(infilters);
-		//localSeismograms = new LocalSeismogram[0];
 	    } else {
 		localSeismograms = new LocalSeismogram[0];
 	    } // end of else
@@ -244,29 +261,32 @@ public class LocalSeismogramArm implements Subsetter{
 		}
 	    } // end of for (int i=0; i<localSeismograms.length; i++)
 	    
-	    processLocalSeismogramSubsetter(eventAccess, 
-					    networkAccess, 
-					    channel, 
+	    processLocalSeismogramSubsetter(eventDbObject, 
+					    networkDbObject, 
+					    channelDbObject, 
 					    infilters, 
 					    outfilters, 
 					    localSeismograms,
 					    waveformArm);
 	} else {
-		waveformArm.setFinalStatus(eventAccess,
-				      channel,
-				      Status.COMPLETE_REJECT,
-				      "AvailableDataSubsetterFailed");
+	    waveformArm.setFinalStatus(eventDbObject,
+				       channelDbObject,
+				       Status.COMPLETE_REJECT,
+				       "AvailableDataSubsetterFailed");
 	}
     }
     
-    public void processLocalSeismogramSubsetter	(EventAccessOperations eventAccess, 
-						 NetworkAccess networkAccess, 
-						 Channel channel, 
+    public void processLocalSeismogramSubsetter	(EventDbObject eventDbObject, 
+						 NetworkDbObject networkDbObject, 
+						 ChannelDbObject channelDbObject, 
 						 RequestFilter[] infilters, 
 						 RequestFilter[] outfilters, 
 						 LocalSeismogram[] localSeismograms,
 						 WaveFormArm waveformArm) throws Exception { 
 	boolean b;
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel= channelDbObject.getChannel();
 	synchronized (localSeismogramSubsetter) {
 	    b = localSeismogramSubsetter.accept(eventAccess, 
 						networkAccess, 
@@ -278,32 +298,34 @@ public class LocalSeismogramArm implements Subsetter{
 	}
 	if( b ) {
 
-	    processSeismograms(eventAccess, 
-			       networkAccess, 
-			       channel, 
+	    processSeismograms(eventDbObject, 
+			       networkDbObject, 
+			       channelDbObject, 
 			       infilters, 
 			       outfilters, 
 			       localSeismograms,
 			       waveformArm);
-
 	} else {
-		waveformArm.setFinalStatus(eventAccess,
-				      channel,
+	    waveformArm.setFinalStatus(eventDbObject,
+				       channelDbObject,
 				      Status.COMPLETE_REJECT,
 				      "LocalSeismogramSubsetterFailed");
 	}
 	    
     }
     
-    public void processSeismograms(EventAccessOperations eventAccess, 
-				   NetworkAccess networkAccess, 
-				   Channel channel, 
+    public void processSeismograms(EventDbObject eventDbObject, 
+				   NetworkDbObject networkDbObject, 
+				   ChannelDbObject channelDbObject, 
 				   RequestFilter[] infilters, 
 				   RequestFilter[] outfilters, 
 				   LocalSeismogram[] localSeismograms,
 				   WaveFormArm waveformArm) 
 	throws Exception 
     {
+	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
+	NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+	Channel channel = channelDbObject.getChannel();
 	synchronized (waveFormArmProcessSubsetter) {
 	waveFormArmProcessSubsetter.process(eventAccess, 
 					    networkAccess, 
@@ -315,10 +337,10 @@ public class LocalSeismogramArm implements Subsetter{
 	}
 	logger.debug("finished with "+
 		     ChannelIdUtil.toStringNoDates(channel.get_id()));
-	waveformArm.setFinalStatus(eventAccess,
-			      channel,
-			      Status.COMPLETE_REJECT,
-			      "successful");
+	waveformArm.setFinalStatus(eventDbObject,
+				   channelDbObject,
+				   Status.COMPLETE_SUCCESS,
+				   "successful");
     }
 
 
@@ -336,6 +358,8 @@ public class LocalSeismogramArm implements Subsetter{
 
     private LocalSeismogramProcess waveFormArmProcessSubsetter = 
 	new NullWaveformProcess();
+
+   
     
     static Category logger = 
 	Category.getInstance(LocalSeismogramArm.class.getName());
