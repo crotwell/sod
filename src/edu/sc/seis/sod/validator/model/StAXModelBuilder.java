@@ -220,6 +220,10 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         example = example.trim();
                         note.setExample(example.replaceAll("[ \\t]{" + j + "}",
                                                            ""));
+                    } else if(!reader.getLocalName().equals("documentation")){
+                        System.out.println("Unrecognized tag "
+                                + reader.getLocalName() + " in annotation in "
+                                + definedGrammar);
                     }
                 }
             }
