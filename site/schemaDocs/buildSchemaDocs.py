@@ -1,5 +1,6 @@
 #! /usr/bin/python -O
 import sys, signal, os
+from os.path import join
 sys.path.append('../../../devTools/maven')
 import scriptBuilder, ProjectParser, depCopy
 sys.path.append('../../')
@@ -26,6 +27,11 @@ def main(argv):
     for modTime in fileModTimes:
         if modTime > generateTime:
             doTheWork = True
+    for root, dirs, files in os.walk('../../relax'):
+        if not root.count('CVS') > 0:
+            for file in files:
+                if not file.startswith('.') and os.stat(join(root, file)).st_mtime > generateTime:
+                    doTheWork = True
     if doTheWork:
         build.buildSchemaDocScripts(proj)
         depCopy.copy(proj)
@@ -36,7 +42,7 @@ def main(argv):
             os.spawnlp(os.P_WAIT, 'schemaDocumenter.sh', 'sh', 'schemaDocumenter.sh')
         print 'done'
     else:
-        print "not running schemaDocumenter.  The jars haven't changed and neither have the templates"
+        print "nothing chaged"
 
 if __name__ == "__main__":
     main(sys.argv[1:])
