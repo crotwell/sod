@@ -1,7 +1,6 @@
 buildSite.sh
-echo 'tarring site'
-tar cf sodSite.tar generatedSite/*
+cd generatedSite
 echo 'copying site to pooh'
-scp sodSite.tar pooh:.
+scp -r * sac@pooh:/seis/raid1/Apache/htdocs/SOD
 echo done
 
