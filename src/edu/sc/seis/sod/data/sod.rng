@@ -5343,6 +5343,9 @@
             <element name="seismogramNOT">
                 <ref name="seismogramProcess3"/>
             </element>
+            <element name="waveformCountProcessor">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess2">
@@ -5567,6 +5570,9 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess2"/>
+            </element>
+            <element name="waveformCountProcessor">
+                <empty/>
             </element>
         </choice>
     </define>
@@ -5793,6 +5799,9 @@
             <element name="seismogramNOT">
                 <ref name="seismogramProcess4"/>
             </element>
+            <element name="waveformCountProcessor">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess">
@@ -6018,6 +6027,9 @@
             <element name="seismogramNOT">
                 <ref name="seismogramProcess"/>
             </element>
+            <element name="waveformCountProcessor">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess5">
@@ -6242,6 +6254,9 @@
             </element>
             <element name="seismogramNOT">
                 <ref name="seismogramProcess5"/>
+            </element>
+            <element name="waveformCountProcessor">
+                <empty/>
             </element>
         </choice>
     </define>
