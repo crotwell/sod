@@ -1,19 +1,20 @@
 package edu.sc.seis.sod.subsetter.origin;
 
-import edu.iris.Fissures.IfEvent.EventDCOperations;
-import edu.sc.seis.fissuresUtil.cache.NSEventDC;
-import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
-import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.AbstractSource;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.iris.Fissures.IfEvent.EventDCOperations;
+import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
+import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
+import edu.sc.seis.sod.CommonAccess;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.subsetter.AbstractSource;
 
 
 public class EventFinder extends AbstractSource implements SodElement {
@@ -51,14 +52,13 @@ public class EventFinder extends AbstractSource implements SodElement {
     }
 
     public EventDCOperations forceGetEventDC(){
-        eventDC = getEventDC();
-        eventDC.reset();
+        getEventDC().reset();
         return eventDC;
     }
 
-    public NSEventDC getEventDC(){
+    public ProxyEventDC getEventDC(){
         if (eventDC == null) {
-            eventDC = new NSEventDC(getDNSName(), getSourceName(), fisName);
+            eventDC = BulletproofVestFactory.vestEventDC(getDNSName(), getSourceName(), fisName);
         }
         return eventDC;
     }
@@ -81,7 +81,7 @@ public class EventFinder extends AbstractSource implements SodElement {
 
     private FissuresNamingService fisName;
 
-    private NSEventDC eventDC;
+    private ProxyEventDC eventDC;
 
     private List catalogs = new ArrayList();
 
