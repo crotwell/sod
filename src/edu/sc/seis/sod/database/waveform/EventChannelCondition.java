@@ -3,7 +3,7 @@ package edu.sc.seis.sod.database.waveform;
 import org.apache.log4j.lf5.LogLevel;
 
 public class EventChannelCondition{
-
+    
     private EventChannelCondition(int number, String name){
         this.number = number;
         this.name = name;
@@ -28,19 +28,20 @@ public class EventChannelCondition{
     }
     
     public static final EventChannelCondition NEW = new EventChannelCondition(0, "New");
-    public static final EventChannelCondition SUBSETTER_PASSED = new EventChannelCondition(1, "SubsetterPassed");
-    public static final EventChannelCondition SUBSETTER_FAILED = new EventChannelCondition(2, "SubsetterFailed");
-    public static final EventChannelCondition PROCESSOR_FAILED = new EventChannelCondition(3, "ProcessorFailed");
-    public static final EventChannelCondition PROCESSOR_PASSED = new EventChannelCondition(4, "ProcessorComplete");
-    public static final EventChannelCondition SUCCESS = new EventChannelCondition(5, "Success");
-    public static final EventChannelCondition FAILURE = new EventChannelCondition(6, "Failed");
-    public static final EventChannelCondition SUBSETTER_STARTED = new EventChannelCondition(7, "SubsetterStarted");
+    public static final EventChannelCondition SUBSETTING = new EventChannelCondition(1, "Started Subsetters");
+    public static final EventChannelCondition SUBSETTER_PASSED = new EventChannelCondition(2, "Subsetted");
+    public static final EventChannelCondition SUBSETTER_FAILED = new EventChannelCondition(3, "Failed Subsetting");
+    public static final EventChannelCondition PROCESSING = new EventChannelCondition(4, "Processing");
+    public static final EventChannelCondition SUCCESS = new EventChannelCondition(6, "Success");
+    public static final EventChannelCondition FAILURE = new EventChannelCondition(7, "Failed");
     public static final EventChannelCondition RETRY = new EventChannelCondition(8, "Retry");
+    public static final EventChannelCondition NO_AVAILABLE_DATA = new EventChannelCondition(9, "No Available Data");
+    public static final EventChannelCondition CORBA_FAILURE = new EventChannelCondition(10, "Corba Failure");
     
     
-    public static final EventChannelCondition[] statii = { NEW, SUBSETTER_PASSED,
-            SUBSETTER_FAILED, PROCESSOR_FAILED, PROCESSOR_PASSED, SUCCESS,
-            FAILURE};
+    public static final EventChannelCondition[] statii = { NEW, SUBSETTING,
+            SUBSETTER_PASSED, SUBSETTER_FAILED, PROCESSING, SUCCESS, FAILURE,
+            RETRY, NO_AVAILABLE_DATA};
     
     public String toString(){ return name; }
     
@@ -58,6 +59,6 @@ public class EventChannelCondition{
     private int number;
     
     private String name;
-
+    
 }
 
