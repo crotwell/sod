@@ -247,6 +247,12 @@ public class NetworkArm {
         return rtnValues;
     }
 
+    /** a bit of a hack, because network status monitors get Stations and not
+     * StationDBIds. */
+    public int getStationDbId(Station station) throws SQLException {
+        return netTable.put(station);
+    }
+
     /**
      * Obtains the Channels corresponding to the stationDbObject, retrievesthe station from each channel
      * and processes the channels using SiteIdSubsetter and SiteSubsetter  and returns an array of
