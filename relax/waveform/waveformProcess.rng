@@ -471,7 +471,7 @@
             </optional>
             <optional>
                 <element name="fileDir">
-                    <data type="string"/>
+                    <externalRef href="../base/externalRef/anyXML.rng"/>
                 </element>
             </optional>
             <optional>
@@ -514,6 +514,16 @@
                         <value>png</value>
                         <value>pdf</value>
                     </choice>
+                </element>
+            </optional>
+            <optional>
+                <element name="dimension">
+                    <element name="width">
+                        <data type="integer"/>
+                    </element>
+                    <element name="height">
+                        <data type="integer"/>
+                    </element>
                 </element>
             </optional>
         </element>
