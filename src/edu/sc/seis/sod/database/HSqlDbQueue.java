@@ -142,7 +142,7 @@ public class HSqlDbQueue implements Queue {
 
     }
 
-    public synchronized void setFinalStatus(EventAccess eventAccess, Status status) {
+    public synchronized void setFinalStatus(EventAccessOperations eventAccess, Status status) {
 	
 	int dbid = eventDatabase.get(eventAccess);
 	Status st = eventDatabase.getStatus(dbid);
@@ -238,8 +238,8 @@ public class HSqlDbQueue implements Queue {
 
     }
    
-    public int getEventId(EventAccess eventAccess) {
-	return eventDatabase.get(eventAccess);
+    public int getEventId(EventAccessOperations eventAccess) {
+        return eventDatabase.get(eventAccess);
     }
 
   
