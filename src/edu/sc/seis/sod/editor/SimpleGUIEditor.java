@@ -71,13 +71,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         fileDialog.show();
                         String outfilename = fileDialog.getFile();
                         if (outfilename != null) {
-                        File outfile = new File(outfilename);
-                        try {
-                            save(outfile);
-                        } catch (IOException ex) {
-                            GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                            File outfile = new File(outfilename);
+                            try {
+                                save(outfile);
+                            } catch (IOException ex) {
+                                GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
+                            }
                         }
-                    }
                     }
                 });
         JMenuItem quit = new JMenuItem("Quit");
@@ -98,10 +98,15 @@ public class SimpleGUIEditor extends CommandLineEditor {
             JPanel panel;
             for (int j = 0; j < list.getLength(); j++) {
                 if (list.item(j) instanceof Element) {
+                    NodeList sublist = ((Element)list.item(j)).getChildNodes();
                     Box box = Box.createVerticalBox();
-                    box.add(getCompForElement((Element)list.item(j)));
+                    for (int i = 0; i < sublist.getLength(); i++) {
+                        if (sublist.item(i) instanceof Element) {
+                            box.add(getCompForElement((Element)sublist.item(i)));
+                        }
+                    }
                     box.add(Box.createGlue());
-                    tabs.add(((Element)list.item(j)).getTagName(), box);
+                    tabs.add(EditorUtil.capFirstLetter(((Element)list.item(j)).getTagName()), box);
                 }
             }
         } else {
