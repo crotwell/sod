@@ -203,7 +203,6 @@ public class HSqlDbQueue implements Queue {
 	    }
 	    return null;
 	} else {
-	    EventDC eventDC = getEventDC(dbid);
 	    return obj;
 	}
 
