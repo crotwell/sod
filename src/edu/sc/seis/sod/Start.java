@@ -59,6 +59,15 @@ public class Start{
                 System.err.println();
                 System.err.println("******************************************************************");
                 System.err.println();
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        Thread.sleep(1000);
+                        System.err.print(" *");
+                    }
+                    catch (InterruptedException e) {
+                    }
+                }
+                System.err.println(" ...a brave soul trudges on.");
             }else{
                 logger.info("Valid config file");
             }
