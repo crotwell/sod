@@ -5,6 +5,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.status.IndexTemplate;
 import edu.sc.seis.sod.validator.Validator;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -37,6 +38,7 @@ public class Start{
     public Start (String confFilename, String[] args) throws Exception{
         try {
             document = createDoc(createInputSource(confFilename));
+            configFile = confFilename;
         } catch (Exception e) {
             CommonAccess.handleException(e, "Trouble creating xml document");
         }
@@ -75,9 +77,14 @@ public class Start{
         return ClockUtil.now().subtract(startTime);
     }
     
-    public static String getRunName(){ return "Your Sod"; }
+    public static String getConfigFileName(){ return configFile; }
     
-    public static MicroSecondDate startTime;
+    public static String getRunName(){
+        if(runName == null){
+            runName = props.getProperty("sod.start.RunName", "Your Sod");
+        }
+        return runName;
+    }
     
     protected void initDocument(String[] args) throws Exception {
         // get some defaults
@@ -126,17 +133,11 @@ public class Start{
         return new InputSource(new BufferedInputStream(in));
     }
     
-    public static WaveFormArm getWaveformArm() {
-        return waveform;
-    }
+    public static WaveFormArm getWaveformArm() { return waveform; }
     
-    public static EventArm getEventArm() {
-        return event;
-    }
+    public static EventArm getEventArm() { return event; }
     
-    public static NetworkArm getNetworkArm() {
-        return network;
-    }
+    public static NetworkArm getNetworkArm() { return network; }
     
     public static Document createDoc(InputSource source)
         throws SAXException, IOException, ParserConfigurationException{
@@ -181,6 +182,10 @@ public class Start{
                     logger.debug("process "+el.getTagName());
                 }
             }
+        }
+        String indexPageDir = props.getProperty("sod.start.IndexPageDirectory");
+        if(indexPageDir != null){
+            new IndexTemplate(indexPageDir);
         }
     }
     
@@ -274,9 +279,7 @@ public class Start{
     
     private static boolean isReopenEvents() {
         String str = props.getProperty("sod.start.ReopenEvents");
-        if(str != null && str.equalsIgnoreCase("true")) {
-            return true;
-        }
+        if(str != null && str.equalsIgnoreCase("true"))  return true;
         return false;
     }
     
@@ -300,6 +303,10 @@ public class Start{
     private static EventArm event;
     
     private static NetworkArm network;
+    
+    private static String configFile, runName = null;
+    
+    private static MicroSecondDate startTime;
     
     private static String DEFAULT_PROPS = "edu/sc/seis/sod/sod.prop";
 }// Start
