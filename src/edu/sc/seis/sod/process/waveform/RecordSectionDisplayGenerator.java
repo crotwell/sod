@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import java.net.URL;
+import java.util.ArrayList;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -33,8 +34,13 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public RecordSectionDisplayGenerator(Element config)
             throws ConfigurationException {
-        this.config = config;
         this.id = SodUtil.getText(SodUtil.getElement(config, "id"));
+        this.displayOption = SodUtil.getText(SodUtil.getElement(config,
+                                                                "displayOption"));
+        this.fileNameBase = SodUtil.getText(SodUtil.getElement(config,
+                                                               "fileNameBase"));
+        this.numSeisPerImage = new Integer(SodUtil.getText(SodUtil.getElement(config,
+                                                                              "numSeisPerRecordSection"))).intValue();
     }
 
     public SaveSeismogramToFile getSaveSeismogramToFile()
@@ -61,14 +67,13 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             IncomprehensibleDSMLException, UnsupportedFileTypeException,
             ConfigurationException {
         try {
-            fileNameCounter = 1;
             saveSeisToFile = getSaveSeismogramToFile();
             DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
                     .toURI()
                     .toURL());
             String[] dataSeisNames = ds.getDataSetSeismogramNames();
             int numDSSeismograms = dataSeisNames.length;
-            dss = new DataSetSeismogram[numDSSeismograms];
+            DataSetSeismogram[] dss = new DataSetSeismogram[numDSSeismograms];
             for(int i = 0; i < numDSSeismograms; i++) {
                 dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
             }
@@ -84,7 +89,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         for(int i = 0; i < dataSeis.length; i++) {
             QuantityImpl distance = DisplayUtils.calculateDistance(dataSeis[i]);
             for(int j = 0; j < dataSeis.length; j++) {
-                if(distance.lessThan(DisplayUtils.calculateDistance(dataSeis[j]))) {
+                if(distance.greaterThan(DisplayUtils.calculateDistance(dataSeis[j]))) {
                     DataSetSeismogram tempSeis = dataSeis[i];
                     dataSeis[i] = dataSeis[j];
                     dataSeis[j] = tempSeis;
@@ -93,69 +98,75 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         }
     }
 
-    private void outputRecordSections(EventAccessOperations event,
-                                      DataSetSeismogram[] dataSeis)
+    public void outputRecordSections(EventAccessOperations event,
+                                     DataSetSeismogram[] dataSeis)
             throws IOException {
         int length = dataSeis.length;
-        sort(dataSeis);
-        RecordSectionDisplay recordSectionDisplay = new RecordSectionDisplay();
-        if(length > 0 && length <= 6) {
-            writeImage(dss, event);
-            return;
-        } else {
-            DataSetSeismogram[] tempDSS = new DataSetSeismogram[6];
-            int maxIndex = 0;
-            int spacing = length / 6;
-            for(int i = 0; i < spacing; i++) {
-                int j = 0;
-                for(int seisCount=0;seisCount<6;seisCount++){
-                    maxIndex = j + i;
-                    tempDSS[seisCount] = dataSeis[maxIndex];
-                    j += spacing;
+        boolean bestDisplay = false;
+        if(displayOption.equals("BEST")) {
+            bestDisplay = true;
+        }
+        if(length > 0) {
+            int fileNameCounter = 0;
+            if(length <= numSeisPerImage) {
+                writeImage(dataSeis, event, fileNameBase + fileExtension);
+                return;
+            } else {
+                sort(dataSeis);
+                DataSetSeismogram[] tempDSS;
+                int spacing = length / numSeisPerImage;
+                int imageCount = bestDisplay ? 1 : spacing;
+                for(int i = 0; i < imageCount; i++) {
+                    tempDSS = new DataSetSeismogram[numSeisPerImage];
+                    int index = i;
+                    for(int j = 0; j < numSeisPerImage; j++) {
+                        tempDSS[j] = dataSeis[index];
+                        index += spacing;
+                    }
+                    String fileName = (i == 0 ? (fileNameBase + fileExtension)
+                            : (fileNameBase + fileNameCounter + fileExtension));
+                    writeImage(tempDSS, event, fileName);
+                    fileNameCounter++;
                 }
-                writeImage(tempDSS, event);
-            }
-            if((length % 6) != 0) {
-                tempDSS = new DataSetSeismogram[length - maxIndex - 1];
-                for(int k = 0; k < length - maxIndex - 1; k++) {
-                    tempDSS[k] = dataSeis[maxIndex + k + 1];
-                }
-                if((length - maxIndex - 1) > 0) {
-                    writeImage(tempDSS, event);
+                if(!bestDisplay) {
+                    if((length % numSeisPerImage) != 0) {
+                        int maxIndex = numSeisPerImage * spacing - 1;
+                        tempDSS = new DataSetSeismogram[length - maxIndex - 1];
+                        for(int k = 0; k < length - maxIndex - 1; k++) {
+                            tempDSS[k] = dataSeis[maxIndex + k + 1];
+                        }
+                            writeImage(tempDSS, event, fileNameBase
+                                    + fileNameCounter + fileExtension);
+                    }
                 }
             }
         }
     }
 
     private void writeImage(DataSetSeismogram[] dataSeis,
-                            EventAccessOperations event) throws IOException {
+                            EventAccessOperations event,
+                            String fileName) throws IOException {
         File parentDir = saveSeisToFile.getEventDirectory(event);
         RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
         rsDisplay.add(dataSeis);
         try {
-            File outPNG = new File(parentDir, fileBase + fileNameCounter
-                    + fileExtension);
+            File outPNG = new File(parentDir, fileName);
             rsDisplay.outputToPNG(outPNG, new Dimension(500, 500));
-            fileNameCounter++;
         } catch(IOException e) {
             throw new IOException("Problem writing recordSection output to PNG "
                     + e);
         }
     }
 
-    public DataSetSeismogram[] dss;
-
     private SaveSeismogramToFile saveSeisToFile;
-
-    private Element config;
 
     private String id;
 
-    private int counter;
+    private int numSeisPerImage=6;
 
-    private int fileNameCounter;
+    private String displayOption = "";
 
-    private final static String fileBase = "recordSection";
+    private String fileNameBase = "RecordSection";//default
 
     private final static String fileExtension = ".png";
 }
