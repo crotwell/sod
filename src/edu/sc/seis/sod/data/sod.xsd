@@ -12,7 +12,7 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
  <xsd:annotation>
   <xsd:documentation xml:lang="en">
             Schema for the SOD
-  </xsd:documentation> 
+  </xsd:documentation>
  </xsd:annotation>
 
     <xsd:complexType name="sodType">
@@ -3647,11 +3647,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
                           <magType>M</magType>
                           <min>5.5</min>
                       </magnitudeRange>
-                   <distanceRange>
                        <unit>DEGREE</unit>
                        <min>30</min>
                        <max>90</max>
-                   </distanceRange>
                    </linearDistanceMagnitudeRange>
                 </example>
             </xsd:documentation>
@@ -3660,7 +3658,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
             <xsd:extension base="eventStationType">
                 <xsd:sequence>
                     <xsd:element ref="magnitudeRange"/>
-                    <xsd:element ref="distanceRange"/>
+                    <xsd:element name="unit" type="unitType"/>
+                    <xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
