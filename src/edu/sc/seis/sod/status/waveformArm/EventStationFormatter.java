@@ -10,7 +10,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Stage;
@@ -22,6 +21,7 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.StationTemplate;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,53 +47,25 @@ public class EventStationFormatter extends StationFormatter{
 
     private class SuccessfulQuery implements StationTemplate{
         public String getResult(Station station) {
-            return "" + queryStatus(station, Status.get(Stage.PROCESSOR,
-                                                        Standing.SUCCESS));
+            return "" + queryStatus(station, success);
         }
     }
 
     private class FailedQuery implements StationTemplate{
         public String getResult(Station station) {
-            List statii = new ArrayList();
-            statii.add(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.REJECT));
-            statii.add(Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE));
-            statii.add(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.REJECT));
-            statii.add(Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.SYSTEM_FAILURE));
-            statii.add(Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT));
-            statii.add(Status.get(Stage.REQUEST_SUBSETTER, Standing.SYSTEM_FAILURE));
-            statii.add(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.SYSTEM_FAILURE));
-            statii.add(Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE));
-            statii.add(Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE));
-            Iterator it = statii.iterator();
-            int numOfStatus = 0;
-            while(it.hasNext()){
-                Status cur = (Status)it.next();
-                numOfStatus +=  queryStatus(station, cur);
-            }
-            return "" + numOfStatus;
+            return "" + queryStatus(station, failed);
         }
     }
 
     private class RetryQuery implements StationTemplate{
         public String getResult(Station station) {
-            List statii = new ArrayList();
-            statii.add(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT));
-            statii.add(Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE));
-            statii.add(Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE));
-            statii.add(Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE));
-            Iterator it = statii.iterator();
-            int numOfStatus = 0;
-            while(it.hasNext()){
-                Status cur = (Status)it.next();
-                numOfStatus +=  queryStatus(station, cur);
-            }
-            return "" + numOfStatus;
+            return "" + queryStatus(station, retry);
         }
     }
 
 
 
-    private int queryStatus(Station s, Status status){
+    private int queryStatus(Station s, PreparedStatement stmt){
         int id = -1;
         try {
             NetworkDbObject[] netDbs = Start.getNetworkArm().getSuccessfulNetworks();
@@ -117,7 +89,7 @@ public class EventStationFormatter extends StationFormatter{
             throw new RuntimeException("The network arm knows nothing about station " + StationIdUtil.toString(s.get_id()));
         }
         try {
-            synchronized(evStatus){ return evStatus.getNum(ev, status, id); }
+            synchronized(evStatus){ return evStatus.getNum(stmt, ev, id); }
         } catch (Exception e) {
             GlobalExceptionHandler.handle("Trouble getting channels out of the db", e);
         }
@@ -125,9 +97,42 @@ public class EventStationFormatter extends StationFormatter{
     }
 
     private static JDBCEventChannelStatus evStatus;
+    private static PreparedStatement retry, failed, success;
+
+    private static String getStatusRequest(Status[] statii){
+        String request = "( status = " + statii[0].getAsShort();
+        for (int i = 1; i < statii.length; i++) {
+            request += " OR status = " + statii[i].getAsShort();
+        }
+        request += ")";
+        return request;
+    }
+
     static{
         try {
             evStatus = new JDBCEventChannelStatus();
+            String baseStatement = "SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE " +
+                "eventid = ? AND " +
+                "eventchannelstatus.channelid = channel.chan_id AND " +
+                "channel.site_id = site.site_id AND site.sta_id = ?";
+            success = evStatus.prepareStatement(baseStatement + " AND status = " + Status.get(Stage.PROCESSOR,
+                                                                                              Standing.SUCCESS).getAsShort());
+            Status[] failedStatus = new Status[]{Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.REJECT),
+                    Status.get(Stage.EVENT_STATION_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.REJECT),
+                    Status.get(Stage.EVENT_CHANNEL_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.REQUEST_SUBSETTER, Standing.REJECT),
+                    Status.get(Stage.REQUEST_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.DATA_SUBSETTER, Standing.SYSTEM_FAILURE),
+                    Status.get(Stage.PROCESSOR, Standing.SYSTEM_FAILURE)};
+            failed = evStatus.prepareStatement(baseStatement + " AND " + getStatusRequest(failedStatus));
+            Status[] retryStatus = new Status[]{
+                Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.REJECT),
+                    Status.get(Stage.AVAILABLE_DATA_SUBSETTER, Standing.CORBA_FAILURE),
+                    Status.get(Stage.DATA_SUBSETTER, Standing.CORBA_FAILURE),
+                    Status.get(Stage.PROCESSOR, Standing.CORBA_FAILURE)};
+            retry = evStatus.prepareStatement(baseStatement + " AND " + getStatusRequest(retryStatus));
         } catch (SQLException e) {
             GlobalExceptionHandler.handle(e);
         }
