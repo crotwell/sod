@@ -29,8 +29,6 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
 
     public void write(){ w.actIfPeriodElapsed(); }
 
-    private static final TimeInterval TWO_MINUTES = new TimeInterval(2, UnitImpl.MINUTE);
-
     private MicroSecondDate lastWriteTime;
 
     public String getResult() {
