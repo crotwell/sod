@@ -11,7 +11,7 @@
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 #set ( $station = $sod_channel.getSite().getStation() )
 #set ( $origin = $sod_event.get_preferred_origin() )
-<title>Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
+<title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
 $velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
 <style media="all">@import "../../main.css";</style>
 </head>
