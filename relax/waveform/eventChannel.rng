@@ -12,6 +12,7 @@
             <ref name="eventChannelOR"/>
             <ref name="eventChannelXOR"/>
             <ref name="eventChannelNOT"/>
+            <ref name="PASS"/>
         </choice>
     </define>
     <define name="embeddedEventStation">
@@ -160,4 +161,20 @@
             <ref name="eventChannel"/>
         </element>
     </define>
+    <define name="PASS">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Always returns true. </summary>
+                                <description> Simple subsetter that always returns true, useful for testing. </description>
+                                <example>
+                                        <passEventChannel/>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="passEventChannel">
+                        <zeroOrMore>
+                                <ref name="eventChannel"/>
+                        </zeroOrMore>
+                </element>
+        </define>
 </grammar>
