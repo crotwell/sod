@@ -40,6 +40,8 @@ public abstract class Template{
             return textTemplate(Start.getConfigFileName());
         }else if(tag.equals("htmlConfigFileLoc")){
             return textTemplate(IndexTemplate.getHtmlConfigFileName());
+        }else if(tag.equals("errorCount")){
+            return new ErrorCountTemplate();
         }
         return null;
     }
