@@ -11,8 +11,26 @@
        <property name="fisUtil" value="../fissuresUtil/dist/lib/fissuresUtil.jar" />
        <property name="geotools" value="../geotools/src/dist/lib/geotools.jar" />
        <property name="log4j" value="../jars/log4j.jar" />
+       <property name="xerces" value="../Xerces/xercesImpl.jar" />
+       <property name="xmlAPI" value="../Xerces/xmlParserAPIs.jar" />
        <property name="taup" value="../jars/taup.jar" />
+       <property name="orbacus" value="../OrbacusSignedJars/dist" />
        <property file="../KeySigning/ant.props" />
+
+       <path id="myclasspath" >
+           <pathelement location="${build}" />
+           <pathelement location="${fis}/dist/lib/FissuresImpl.jar" />
+           <pathelement location="${fis}/dist/lib/FissuresIDL.jar" />
+           <pathelement location="${fisUtil}" />
+           <pathelement location="${geotools}" />
+           <pathelement location="${xerces}" />
+           <pathelement location="${xmlAPI}" />
+           <pathelement location="${log4j}" />
+           <pathelement location="${taup}" />
+           <pathelement location="${orbacus}/OB.jar" />
+           <pathelement location="${orbacus}/OBNaming.jar" />
+           <pathelement location="${orbacus}/OBEvent.jar" />
+       </path>
 
        <target name="prepare">
          <!-- Create the time stamp -->
@@ -28,7 +46,8 @@
        <target name="javacompile" 
                depends="prepare">
          <!-- Compile the java code from ${src} into ${build} -->
-         <javac destdir="${build}" classpath="${build}:${fis}/dist/lib/FissuresImpl.jar:${fis}/dist/lib/FissuresIDL.jar:${fisUtil}:${geotools}:external/xerces.jar:${log4j}:${taup}">
+         <javac destdir="${build}" >
+            <classpath refid="myclasspath" />
             <src path="${src}" />
             <include name="edu/sc/seis/**/*.java" />
          </javac>
@@ -43,7 +62,8 @@
 
        <target name="testcompile" depends="javacompile">
          <!-- Compile the java code from ${src} into ${build} -->
-         <javac destdir="${build}" classpath="${build}:../fissures/build:../fissures/IDL/dist/lib/FissuresIDL.jar" >
+         <javac destdir="${build}" >
+            <classpath refid="myclasspath" />
             <src path="${src}" />
             <include name="test/edu/sc/seis/**/*.java" />
          </javac>
@@ -53,20 +73,22 @@
            <java fork="yes" classname="junit.swingui.TestRunner"
                  taskname="junit" failonerror="true" >
               <arg value="test.edu.sc.seis.database.AllJUnitTests"/>
-              <classpath>
-                <pathelement location="${build}" />
-                <pathelement location="../fissures/build" />
-                <pathelement location="../fissures/IDL/dist/lib/FissuresIDL.jar" />
-              </classpath>
+            <classpath refid="myclasspath" />
            </java>
        </target>
 
        <target name="javadoc" depends="prepare">
          <!-- Compile the javadocs from ${src} into ${javadocs} -->
          <javadoc destdir="${javadocs}" sourcepath="${src}" 
-packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  maxmemory="64m" >
+packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  
+maxmemory="64m" >
+            <classpath refid="myclasspath" />
 
-        <link href="http://www.seis.sc.edu/software/Fissures/idljava_docs" />
+        <link href="http://www.seis.sc.edu/software/Fissures/current/dist/doc/javadocs/" />
+        <link href="http://www.seis.sc.edu/software/Fissures/current/dist/doc/idljava_docs/" />
+        <link href="http://www.seis.sc.edu/software/Fissures/fissuresUtil/dist/doc/javadocs/" />
+        <link href="http://java.sun.com/products/jdk/1.3/docs/api/" />
+        <link href="http://www.w3.org/DOM/2000/12/dom2-javadoc/" />
          </javadoc>
        </target>
 
@@ -81,7 +103,7 @@ packagenames="edu.sc.seis.sod.*,edu.sc.seis.sod.filter.*"  maxmemory="64m" >
                   keystore="../KeySigning/SCEPPKeystore"/>
        </target>
 
-       <target name="dist" depends="testcompile, signjar">
+       <target name="dist" depends="testcompile, signjar, javadoc">
          <copy todir="${dist}/doc" >
               <fileset dir=".">
 		            <include name="xml" />
