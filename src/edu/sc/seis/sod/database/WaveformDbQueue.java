@@ -18,25 +18,19 @@ import java.util.Properties;
 
 public class WaveformDbQueue implements WaveformQueue{
     public WaveformDbQueue (Properties props){
-    waveformDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getWaveformDatabase();
-    if(getPersistanceType(props) == 0) {
-        waveformDatabase.updateStatus(Status.PROCESSING, Status.NEW);
-        //restoreDb();
-        //delete(Status.COMPLETE_SUCCESS);
-    } else {
-        // waveformDatabase(Status.COMPLETE_SUCCESS);
-        // waveformDatab(Status.PROCESSING);
+        waveformDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getWaveformDatabase();
+        if(getPersistanceType(props) == 0) {
+            waveformDatabase.updateStatus(Status.PROCESSING, Status.NEW);
+        }
     }
-        
-    }
-
-  
+    
+    
     
     public void push(int waveformeventid,
-             int siteid,
-             int waveformnetworkid) {
+                     int siteid,
+                     int waveformnetworkid) {
         Object connection = getConnection();
-    
+        
         synchronized(connection) {
             waveformDatabase.putChannelInfo(waveformeventid,
                                             waveformnetworkid,
@@ -44,21 +38,21 @@ public class WaveformDbQueue implements WaveformQueue{
                                             ClockUtil.now());
             connection.notifyAll();
         }
-
+        
     }
-
-    public void clean() {
-    if(Start.REMOVE_DATABASE == true) {
-        waveformDatabase.clean();
-    }
-    }
-
-   
-    public long pop() {
     
+    public void clean() {
+        if(Start.REMOVE_DATABASE == true) {
+            waveformDatabase.clean();
+        }
+    }
+    
+    
+    public long pop() {
+        
         Object connection = getConnection();
         synchronized(connection) {
-        
+            
             long dbid = waveformDatabase.getFirst();
             while(dbid == -1 && sourceAlive == true ) {
                 try {
@@ -68,25 +62,25 @@ public class WaveformDbQueue implements WaveformQueue{
                 }
                 dbid = waveformDatabase.getFirst();
             }
-              return dbid;
+            return dbid;
         }
     }
-
-
+    
+    
     public synchronized long getWaveformId(int waveformeventid, int waveformnetworkid) {
         long rtnValue =  waveformDatabase.getChannelDbId(waveformeventid,
                                                          waveformnetworkid);
-         return rtnValue;
+        return rtnValue;
     }
-
+    
     public synchronized void setStatus(long dbid, Status newStatus) {
         waveformDatabase.updateStatus(dbid, newStatus);
     }
-
+    
     public synchronized void setStatus(long dbid, Status newStatus, String reason) {
         waveformDatabase.updateStatus(dbid, newStatus, reason);
     }
-
+    
     public synchronized int getWaveformEventId(long dbid) {
         return waveformDatabase.getWaveformEventId(dbid);
     }
@@ -94,8 +88,8 @@ public class WaveformDbQueue implements WaveformQueue{
     public synchronized int getWaveformChannelId(long dbid) {
         return waveformDatabase.getWaveformChannelId(dbid);
     }
-
-
+    
+    
     /**
      * sets if the source i.e., the thread which pushes objects into the queue
      * is alive
@@ -103,192 +97,192 @@ public class WaveformDbQueue implements WaveformQueue{
      * @param value a <code>boolean</code> value
      */
     public synchronized void setSourceAlive(boolean value) {
-    this.sourceAlive = value;
-    notifyAll();
+        this.sourceAlive = value;
+        notifyAll();
     }
     
-
-//  /**
-//      * returns the length of the queue.
-//      *
-//      * @return an <code>int</code> value
-//      */
-//     public synchronized int getLength() {
-//  int numNew = waveformDatabase.getCount(Status.NEW);
-//  int numProcessing = waveformDatabase.getCount(Status.PROCESSING);
-//  int numSuccessful = waveformDatabase.getCount(Status.COMPLETE_SUCCESS);
-//  return (numNew + numProcessing);
-//     }
     
-   
+    //  /**
+    //      * returns the length of the queue.
+    //      *
+    //      * @return an <code>int</code> value
+    //      */
+    //     public synchronized int getLength() {
+    //  int numNew = waveformDatabase.getCount(Status.NEW);
+    //  int numProcessing = waveformDatabase.getCount(Status.PROCESSING);
+    //  int numSuccessful = waveformDatabase.getCount(Status.COMPLETE_SUCCESS);
+    //  return (numNew + numProcessing);
+    //     }
+    
+    
     public void delete(int waveformEventid) {
-    waveformDatabase.delete(waveformEventid);
-    }
-
-    public synchronized int putInfo(int waveformeventid, int numNetworks) {
-    return waveformDatabase.putInfo(waveformeventid,
-                    numNetworks);
-    }
-
-    public synchronized int putNetworkInfo(int waveformeventid,
-                  int networkid,
-                  int numStations,
-                  MicroSecondDate date) {
-    return waveformDatabase.putNetworkInfo(waveformeventid,
-                       networkid,
-                       numStations,
-                       date);
+        waveformDatabase.delete(waveformEventid);
     }
     
-
+    public synchronized int putInfo(int waveformeventid, int numNetworks) {
+        return waveformDatabase.putInfo(waveformeventid,
+                                        numNetworks);
+    }
+    
+    public synchronized int putNetworkInfo(int waveformeventid,
+                                           int networkid,
+                                           int numStations,
+                                           MicroSecondDate date) {
+        return waveformDatabase.putNetworkInfo(waveformeventid,
+                                               networkid,
+                                               numStations,
+                                               date);
+    }
+    
+    
     public synchronized int putStationInfo(int waveformeventid,
-                       int stationid,
-                       int networkid,
-                       int numSites,
-                       MicroSecondDate date) {
-
-    return waveformDatabase.putStationInfo(waveformeventid,
-                           stationid,
-                           networkid,
-                           numSites,
-                           date);
+                                           int stationid,
+                                           int networkid,
+                                           int numSites,
+                                           MicroSecondDate date) {
+        
+        return waveformDatabase.putStationInfo(waveformeventid,
+                                               stationid,
+                                               networkid,
+                                               numSites,
+                                               date);
     }
-
+    
     public synchronized int putSiteInfo(int waveformeventid,
-                    int siteid,
-                    int stationid,
-                    int numChannels,
-                    MicroSecondDate date) {
-    return waveformDatabase.putSiteInfo(waveformeventid,
-                        siteid,
-                        stationid,
-                        numChannels,
-                        date);
+                                        int siteid,
+                                        int stationid,
+                                        int numChannels,
+                                        MicroSecondDate date) {
+        return waveformDatabase.putSiteInfo(waveformeventid,
+                                            siteid,
+                                            stationid,
+                                            numChannels,
+                                            date);
     }
-
-   //  public synchronized int putChannelInfo(int waveformeventid,
-//                     int channelid,
-//                     int siteid,
-//                     MicroSecondDate date) {
-//  return waveformDatabase.putChannelInfo(waveformeventid,
-//                         channelid,
-//                         siteid,
-//                         date);
-//     }
-
+    
+    //  public synchronized int putChannelInfo(int waveformeventid,
+    //                     int channelid,
+    //                     int siteid,
+    //                     MicroSecondDate date) {
+    //  return waveformDatabase.putChannelInfo(waveformeventid,
+    //                         channelid,
+    //                         siteid,
+    //                         date);
+    //     }
+    
     public synchronized void decrementNetworkCount(int waveformeventid) {
-    waveformDatabase.decrementNetworkCount(waveformeventid);
+        waveformDatabase.decrementNetworkCount(waveformeventid);
     }
-
+    
     public synchronized void decrementStationCount(int waveformeventid, int networkid) {
-    waveformDatabase.decrementStationCount(waveformeventid, networkid);
+        waveformDatabase.decrementStationCount(waveformeventid, networkid);
     }
-
+    
     public synchronized void decrementSiteCount(int waveformeventid, int stationid) {
-    waveformDatabase.decrementSiteCount(waveformeventid, stationid);
+        waveformDatabase.decrementSiteCount(waveformeventid, stationid);
     }
-
+    
     public synchronized void decrementChannelCount(int waveformeventid, int siteid) {
-    waveformDatabase.decrementChannelCount(waveformeventid, siteid);
+        waveformDatabase.decrementChannelCount(waveformeventid, siteid);
     }
-
+    
     public void incrementNetworkCount(int waveformeventid) {
-    waveformDatabase.incrementNetworkCount(waveformeventid);
+        waveformDatabase.incrementNetworkCount(waveformeventid);
     }
-
+    
     public void incrementStationCount(int waveformeventid, int networkid) {
-    waveformDatabase.incrementStationCount(waveformeventid, networkid);
+        waveformDatabase.incrementStationCount(waveformeventid, networkid);
     }
-
+    
     public void incrementSiteCount(int waveformeventid, int stationid) {
-    waveformDatabase.incrementSiteCount(waveformeventid, stationid);
+        waveformDatabase.incrementSiteCount(waveformeventid, stationid);
     }
-
+    
     public void incrementChannelCount(int waveformeventid, int siteid) {
-    waveformDatabase.incrementChannelCount(waveformeventid, siteid);
+        waveformDatabase.incrementChannelCount(waveformeventid, siteid);
     }
-
+    
     public synchronized int getNetworkCount(int waveformeventid) {
-    return waveformDatabase.getNetworkCount(waveformeventid);
+        return waveformDatabase.getNetworkCount(waveformeventid);
     }
-
+    
     public synchronized int getStationCount(int waveformeventid, int networkid) {
-    return waveformDatabase.getStationCount(waveformeventid, networkid);
+        return waveformDatabase.getStationCount(waveformeventid, networkid);
     }
-
+    
     public synchronized int getSiteCount(int waveformeventid, int stationid) {
-    return waveformDatabase.getSiteCount(waveformeventid, stationid);
+        return waveformDatabase.getSiteCount(waveformeventid, stationid);
     }
-
+    
     public synchronized int getChannelCount(int waveformeventid, int siteid) {
-    return waveformDatabase.getChannelCount(waveformeventid, siteid);
+        return waveformDatabase.getChannelCount(waveformeventid, siteid);
     }
     
     public int unfinishedNetworkCount(int waveformeventid) {
-    return waveformDatabase.unfinishedNetworkCount(waveformeventid);
+        return waveformDatabase.unfinishedNetworkCount(waveformeventid);
     }
     
     public int unfinishedStationCount(int waveformeventid, int networkid) {
-    return waveformDatabase.unfinishedStationCount(waveformeventid, networkid);
+        return waveformDatabase.unfinishedStationCount(waveformeventid, networkid);
     }
-
+    
     public int unfinishedSiteCount(int waveformeventid, int stationid) {
-    return waveformDatabase.unfinishedSiteCount(waveformeventid, stationid);
+        return waveformDatabase.unfinishedSiteCount(waveformeventid, stationid);
     }
-
+    
     public int unfinishedChannelCount(int waveformeventid, int siteid) {
-    return waveformDatabase.unfinishedChannelCount(waveformeventid, siteid);
+        return waveformDatabase.unfinishedChannelCount(waveformeventid, siteid);
     }
-
+    
     public void deleteInfo(int waveformeventid) {
-    waveformDatabase.deleteInfo(waveformeventid);
+        waveformDatabase.deleteInfo(waveformeventid);
     }
-
+    
     public void deleteNetworkInfo(int waveformeventid, int networkid) {
-    waveformDatabase.deleteNetworkInfo(waveformeventid, networkid);
+        waveformDatabase.deleteNetworkInfo(waveformeventid, networkid);
     }
-
+    
     public void deleteStationInfo(int waveformeventid, int stationid) {
-    waveformDatabase.deleteStationInfo(waveformeventid, stationid);
+        waveformDatabase.deleteStationInfo(waveformeventid, stationid);
     }
-
+    
     public void deleteSiteInfo(int waveformeventid, int siteid) {
-    waveformDatabase.deleteSiteInfo(waveformeventid, siteid);
+        waveformDatabase.deleteSiteInfo(waveformeventid, siteid);
     }
-
+    
     public void deleteChannelInfo(int waveformeventid, int channelid) {
-    waveformDatabase.deleteChannelInfo(waveformeventid, channelid);
+        waveformDatabase.deleteChannelInfo(waveformeventid, channelid);
     }
-
+    
     public synchronized long[] getIds() {
-    return waveformDatabase.getIds();
+        return waveformDatabase.getIds();
     }
-
-
+    
+    
     public synchronized void beginTransaction() {
-    waveformDatabase.beginTransaction();
+        waveformDatabase.beginTransaction();
     }
-
+    
     public synchronized void endTransaction() {
-    waveformDatabase.endTransaction();
+        waveformDatabase.endTransaction();
     }
-
+    
     public Object getConnection() {
         return waveformDatabase.getConnection();
     }
-
-     private int getPersistanceType(Properties props) {
-     
-    String value = props.getProperty("edu.sc.seis.sod.persistencetype");
-    if(value == null) value = "ATLEASTONCE";
-    if(value.equalsIgnoreCase("ATMOSTONCE")) return 1;
-    else return 0;
-     }
-
+    
+    private int getPersistanceType(Properties props) {
+        
+        String value = props.getProperty("edu.sc.seis.sod.persistencetype");
+        if(value == null) value = "ATLEASTONCE";
+        if(value.equalsIgnoreCase("ATMOSTONCE")) return 1;
+        else return 0;
+    }
+    
     
     
     private WaveformDatabase waveformDatabase;
-
+    
     private boolean sourceAlive = true;
     
 }// WaveformDbQueue
