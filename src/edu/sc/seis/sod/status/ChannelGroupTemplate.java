@@ -28,7 +28,8 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
             while(it.hasNext()){
                 Channel curChan = (Channel)it.next();
                 Status status = (Status)channelMap.get(curChan);
-                if ((useStanding.size()==0 && ! notUseStanding.contains(status.getStanding())) || useStanding.contains(status.getStanding()) ) {
+                if ((useStanding.size()==0 && ! notUseStanding.contains(status.getStanding()))
+                    || useStanding.contains(status.getStanding())) {
                     Iterator templateIt = templates.iterator();
                     while(templateIt.hasNext()){
                         buf.append(((ChannelTemplate)templateIt.next()).getResult(curChan));
@@ -47,6 +48,7 @@ public class ChannelGroupTemplate extends Template implements GenericTemplate{
 
     public void change(Channel chan, Status status){
         synchronized(channelMap) {
+            if(status == null)throw new IllegalArgumentException("Status should not be null");
             channelMap.put(chan, status);
         }
     }
