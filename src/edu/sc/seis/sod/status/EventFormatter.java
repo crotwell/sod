@@ -244,7 +244,7 @@ public class EventFormatter extends Template implements EventTemplate{
         throw new IllegalArgumentException("No magnitudes on event");
     }
 
-    private static Origin getOrigin(EventAccessOperations event){
+    public static Origin getOrigin(EventAccessOperations event){
         return EventUtil.extractOrigin(event);
     }
 
