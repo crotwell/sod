@@ -3,41 +3,45 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-<title>Stations</title>
-<style media="all">@import "../../main.css";</style>
+<title>Channels</title>
+<style media="all">@import "../../../../main.css";</style>
 </head>
 <body>
 <div id="Header">
-<a href="../networks.html"> Networks</a>
-<network>
+<site>
+<a href="../../../networks.html"> Networks</a>
 >
-<networkCode/>
--
-<name/>
-</network>
+<a href="../../stations.html"> <networkCode/></a>
+>
+<a href="../sites.html"> <stationCode/></a>
+>
+<siteCode/>
+</site>
 </div>
 <div id="Content">
-<h1>Stations in this network</h1>
-<h2>Stations:</h2>
+<h1>Channels in this site</h1>
+<h2>Channels:</h2>
 <table>
 <tr id="title">
-<td>Code</td>
-<td>Name</td>
+<td>Id</td>
 <td>Latitude</td>
 <td>Longitude</td>
+<td>Azimuth</td>
+<td>Dip</td>
 <td>Status</td>
 </tr>
-<stations>
-<station>
+<channels>
+<channel>
 <tr>
-<td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMddHHmmss</beginTime>/sites.html</attribute><stationCode/></a></td>
-<td><name/></td>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
 <td><lat/></td>
 <td><lon/></td>
+<td><azimuth/></td>
+<td><dip/></td>
 <td><status/></td>
 </tr>
-</station>
-</stations>
+</channel>
+</channels>
 </table>
 </div>
 <div id="Menu">
@@ -53,4 +57,5 @@
 </body>
 </html>
 </template>
+
 

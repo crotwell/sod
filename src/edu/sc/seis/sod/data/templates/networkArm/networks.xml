@@ -23,8 +23,8 @@ Networks
 </tr>
 <networks>
 <tr><network>
-<td><code/></td>
-<td><a><attribute name="href"><code/>-<firstWord/>/stations.html"</attribute><name/></a></td>
+<td><networkCode/></td>
+<td><a><attribute name="href"><networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
 <td><status/></td>
 </network></tr>
 </networks>
@@ -33,7 +33,7 @@ Networks
 <div id="Menu">
 <ul>
 <li><a href="location.html">Events</a></li>
-<li><a href="network.html">Networks</a></li>
+<li><a href="networks.html">Networks</a></li>
 </ul>
 </div>
 </body>
