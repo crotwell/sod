@@ -26,7 +26,7 @@ This indicates the items inside the group(the ones next to the black vertical li
                 </section>
                 <section name="optional">
 <p>
-f an item has 'optional' showing up after it, you can include it in your SOD config file or you can leave it out entirely.
+If an item has 'optional' showing up after it, you can include it in your SOD config file or you can leave it out entirely.
 </p>
                 </section>
         </body>
