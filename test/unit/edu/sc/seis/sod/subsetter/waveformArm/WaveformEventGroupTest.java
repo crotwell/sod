@@ -1,47 +1,50 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.InvalidDatabaseStateException;
 import edu.sc.seis.sod.XMLConfigUtil;
 import edu.sc.seis.sod.database.Status;
+import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.subsetter.waveFormArm.WaveformEventGroup;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
 import org.xml.sax.SAXException;
 
 public class WaveformEventGroupTest extends TestCase{
     public WaveformEventGroupTest(String name){ super(name); }
-
-    public void setUp(){
+    
+    public void setUp() throws NotFound, SQLException{
         ect = new WaveformEventGroup();
         simpleECP = MockECP.getECP(MockEventAccessOperations.createEvent());
         successify(simpleECP);
     }
-
+    
     public void testNoChannels(){
         assertEquals("", ect.getResult());
     }
-
+    
     public void testUpdateSingleChannel() throws Exception {
         ect.update(simpleECP);
         assertEquals("1\n", ect.getResult());
     }
-
+    
     public void testUpdateSecondChannel() throws Exception {
         ect.update(simpleECP);
         ect.update(generateSecondChannelECP());
         assertEquals("2\n", ect.getResult());
     }
-
+    
     public void testAddSecondEvent() throws Exception {
         ect.update(simpleECP);
         ect.update(generateDiffEventECP());
         assertEquals("1\n1\n", ect.getResult());
     }
-
+    
     public void testComplexConfig() throws Exception {
         try {
             ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount/>    <eventLabel><feRegionName/></eventLabel><sorting><time order=\"reverse\"/></sorting>\n</events>"));
@@ -51,7 +54,7 @@ public class WaveformEventGroupTest extends TestCase{
         ect.update(generateSecondChannelECP());
         assertEquals("1    GERMANY\n2    CENTRAL ALASKA\n", ect.getResult());
     }
-
+    
     public void testRejectMonitor() throws Exception {
         try{
             ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount><COMPLETE_REJECT/><COMPLETE_SUCCESS/></channelCount>\n</events>"));
@@ -60,34 +63,26 @@ public class WaveformEventGroupTest extends TestCase{
         ect.update(simpleECP);
         assertEquals("2\n", ect.getResult());
     }
-
-    private EventChannelPair generateSecondChannelECP() {
+    
+    private EventChannelPair generateSecondChannelECP() throws NotFound, SQLException {
         return successify(MockECP.getECP(MockChannel.createOtherChan()));
     }
-
-    private EventChannelPair generateDiffEventECP(){
+    
+    private EventChannelPair generateDiffEventECP() throws NotFound, SQLException{
         return successify(MockECP.getECP(MockEventAccessOperations.createFallEvent()));
     }
-
-    private EventChannelPair successify(EventChannelPair ecp){
-        try {
-            ecp.update("Testing Success", Status.COMPLETE_SUCCESS);
-            return ecp;
-        } catch (InvalidDatabaseStateException e) {
-            throw new IllegalArgumentException("MockECP shouldn't throw an InvalidDatabaseState Exception");
-        }
+    
+    private EventChannelPair successify(EventChannelPair ecp) throws NotFound, SQLException{
+        ecp.update("Testing Success", EventChannelCondition.SUCCESS);
+        return ecp;
     }
-
-    private EventChannelPair rejectify(EventChannelPair ecp) {
-        try {
-            ecp.update("Testing Reject", Status.COMPLETE_REJECT);
-            return ecp;
-        } catch (InvalidDatabaseStateException e) {
-            throw new IllegalArgumentException("MockECP shouldn't throw an InvalidDatabaseState Exception");
-        }
+    
+    private EventChannelPair rejectify(EventChannelPair ecp) throws NotFound, SQLException {
+        ecp.update("Testing Reject", EventChannelCondition.FAILURE);
+        return ecp;
     }
-
+    
     private EventChannelPair simpleECP;
-
+    
     private WaveformEventGroup ect;
 }
