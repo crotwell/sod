@@ -80,20 +80,20 @@
 		<networkCode><value>US</value></networkCode>
 	</networkIDOR>
 
-	<networkeffectiveTimeOverlap>
+	<networkEffectiveTimeOverlap>
 		<description>Make sure the network was up during the time range we are interested in. Somewhat redundant since we are only getting one network.</description>
 		<effectiveTimeOverlap>
 			<min>20020701T00:00:00.001Z</min>
 			<max>20021030T00:00:00.001Z</max>
 		</effectiveTimeOverlap>
-	</networkeffectiveTimeOverlap>
+	</networkEffectiveTimeOverlap>
 
-        <stationeffectiveTimeOverlap>
+        <stationEffectiveTimeOverlap>
 		<effectiveTimeOverlap>
 			<min>20020701T00:00:00.001Z</min>
 			<max>20021030T00:00:00.001Z</max>
 		</effectiveTimeOverlap>
-        </stationeffectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
 
 <!-- only get site 00 or space-space-->
         <siteIDOR>
@@ -107,12 +107,12 @@
 		<bandCode><value>L</value></bandCode>
 	</channelIDOR>
 
-        <channeleffectiveTimeOverlap>
+        <channelEffectiveTimeOverlap>
 		<effectiveTimeOverlap>
 			<min>20020701T00:00:00.001Z</min>
 			<max>20020630T00:00:00.001Z</max>
 		</effectiveTimeOverlap>
-        </channeleffectiveTimeOverlap>
+        </channelEffectiveTimeOverlap>
 
 	<sampling>
 		<min>1</min>
