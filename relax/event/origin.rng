@@ -9,6 +9,7 @@
         <include href="../base/include/quantity.rng"/>
         <define name="origin">
                 <choice>
+                        <ref name="removeEventDuplicate"/>
                         <ref name="name"/>
                         <ref name="geographicalRegion"/>
                         <ref name="seismicRegion"/>
@@ -305,9 +306,13 @@
                         <element name="timeVariance">
                             <ref name="time" />
                         </element>
+                    </optional>
+                    <optional>
                         <element name="depthVariance">
                             <ref name="length" />
                         </element>
+                    </optional>
+                    <optional>
                         <element name="distanceVariance">
                             <ref name="length" />
                         </element>
