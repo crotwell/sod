@@ -59,6 +59,7 @@ Structure of a SOD configuration file.
         &lt;localSeismogramArm&gt;
             &lt;<a href="#eventChannelType">eventChannel</a>&gt;
             &lt;<a href="#requestGeneratorType">requestGenerator</a>&gt;
+            &lt;<a href="#requestSubsetterType">requestSubsetter</a>&gt;
             &lt;<a href="#dataCenterType">dataCenter</a>&gt;
             &lt;<a href="#availableDataType">availableData</a>&gt;
             &lt;<a href="#seismogramType">seismogram</a>&gt;
@@ -112,7 +113,7 @@ Structure of a SOD configuration file.
       <p>
         <xsl:text> extends </xsl:text>
         <xsl:variable name="base" select="xsd:complexContent/xsd:extension/@base"/>
-        <a href="#{$base}">
+        <a href="{$base}.html">
           <xsl:value-of select="$base"/>
         </a>
       </p>
@@ -126,7 +127,7 @@ Structure of a SOD configuration file.
       <xsl:for-each select="//xsd:complexType[xsd:complexContent/xsd:extension/@base=$tag-name]" >
         <xsl:sort select="@name" />
         <xsl:variable name="subclass" select="@name"/>
-        <tr><td><a href="#{$subclass}">
+        <tr><td><a href="{$subclass}.html">
           <xsl:value-of select="$subclass"/>
         </a></td>
         <td><xsl:value-of select="xsd:annotation/xsd:documentation/summary" />
@@ -186,7 +187,7 @@ Structure of a SOD configuration file.
         <xsl:value-of select="@name" />
         <xsl:text> </xsl:text>
           <xsl:variable name="type" select="@type" />
-        <a href="#{$type}">
+        <a href="{$type}.html">
           <xsl:value-of select="$type" />
         </a>
         <xsl:choose>
@@ -316,18 +317,17 @@ All Classes
 <table BORDER="0" WIDTH="100%">
 
       <xsl:for-each select="//xsd:include" >
-        <p>Found an include bbb <xsl:value-of select="@schemaLocation" /></p>
         <xsl:for-each select="document(@schemaLocation)/xsd:schema/xsd:complexType">
           <xsl:sort select="@name" />
 <tr>
 <td>
 <a TARGET="classFrame">
-  <xsl:attribute name="HREF">
-    <xsl:value-of select="@name"/><xsl:text>.html</xsl:text>
-  </xsl:attribute>
-          <xsl:value-of select="@name"/><br/>
+   <xsl:attribute name="HREF">
+   <xsl:value-of select="@name"/>
+   <xsl:text>.html</xsl:text>
+   </xsl:attribute>
+   <xsl:value-of select="@name"/>
 </a>
-<br/>
 </td>
 </tr>
         </xsl:for-each>
@@ -394,6 +394,7 @@ All Classes
       &lt;localSeismogramArm&gt;
          &lt;<a  TARGET="packageFrame" href="eventChannelType_subTypes.html">eventChannel</a>&gt;
          &lt;<a  TARGET="packageFrame" href="requestGeneratorType_subTypes.html">requestGenerator</a>&gt;
+         &lt;<a  TARGET="packageFrame" href="requestSubsetterType_subTypes.html">requestSubsetter</a>&gt;
          &lt;<a  TARGET="packageFrame" href="dataCenterType_subTypes.html">dataCenter</a>&gt;
          &lt;<a  TARGET="packageFrame" href="availableDataType_subTypes.html">availableData</a>&gt;
          &lt;<a  TARGET="packageFrame" href="seismogramType_subTypes.html">seismogram</a>&gt;
@@ -460,6 +461,7 @@ All Classes
       &lt;localSeismogramArm&gt;
          &lt;<a href="eventChannelType.html">eventChannel</a>&gt;
          &lt;<a href="requestGeneratorType.html">requestGenerator</a>&gt;
+         &lt;<a href="requestSubsetterType.html">requestSubsetter</a>&gt;
          &lt;<a href="dataCenterType.html">dataCenter</a>&gt;
          &lt;<a href="availableDataType.html">availableData</a>&gt;
          &lt;<a href="seismogramType.html">seismogram</a>&gt;
@@ -479,7 +481,11 @@ All Classes
     <xsl:if test="@abstract='true'" >
       <redirect:write file="{@name}_subTypes.html" >
         <html>
+<title>
+<xsl:value-of select="$tag-name"/>
+</title>
           <body>
+            <h3><xsl:value-of select="$tag-name" /></h3><br/>
             <xsl:for-each select="//xsd:complexType[xsd:complexContent/xsd:extension/@base=$tag-name]" >
               <xsl:sort select="@name" />
               <xsl:variable name="subclass" select="@name"/>
