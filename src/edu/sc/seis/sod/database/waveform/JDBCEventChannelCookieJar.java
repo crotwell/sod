@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.Serializable;
 
 public class JDBCEventChannelCookieJar extends SodJDBC{
 
@@ -36,12 +37,37 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
                                                  "VALUES (? , ?, ?)");
         insertString = conn.prepareStatement("INSERT into eventchannelcookiejar (pairid, name, valuestring) " +
                                                  "VALUES (? , ?, ?)");
+        insertObject = conn.prepareStatement("INSERT into eventchannelcookiejar (pairid, name, valueobject) " +
+                                                 "VALUES (? , ?, ?)");
         updateDouble = conn.prepareStatement("UPDATE eventchannelcookiejar SET value = ? WHERE pairid = ? and name = ?");
         updateString = conn.prepareStatement("UPDATE eventchannelcookiejar SET valuestring = ? WHERE pairid = ? and name = ?");
+        updateObject = conn.prepareStatement("UPDATE eventchannelcookiejar SET valueobject = ? WHERE pairid = ? and name = ?");
         get = conn.prepareStatement("SELECT * FROM eventchannelcookiejar WHERE pairid = ? and name = ?");
         getForPair = conn.prepareStatement("SELECT * FROM eventchannelcookiejar WHERE pairid = ?");
         getForName = conn.prepareStatement("SELECT * FROM eventchannelcookiejar WHERE name = ?");
         remove = conn.prepareStatement("DELETE from eventchannelcookiejar WHERE pairid = ? and name = ?");
+    }
+
+    /**
+     * Method put
+     *
+     * @param    pairId              an int
+     * @param    name                a  String
+     * @param    value               a  Serializable
+     *
+     */
+    public void put(int pairId, String name, Serializable value) throws SQLException {
+        if (get(pairId, name) == null) {
+            insertObject.setInt(1, pairId);
+            insertObject.setString(2, name);
+            insertObject.setObject(3, value);
+            insertObject.executeUpdate();
+        } else {
+            updateObject.setObject(1, value);
+            updateObject.setInt(2, pairId);
+            updateObject.setString(3, name);
+            updateObject.executeUpdate();
+        }
     }
 
     public PreparedStatement prepareStatement(String stmt) throws SQLException {
@@ -116,7 +142,12 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
         if (s != null) {
             return new CookieJarResult(pairId, name, s);
         } else {
-            return new CookieJarResult(pairId, name, rs.getDouble("value"));
+            Object o = rs.getObject("valueObject");
+            if (o != null) {
+                return new CookieJarResult(pairId, name, o);
+            } else {
+                return new CookieJarResult(pairId, name, rs.getDouble("value"));
+            }
         }
     }
 
@@ -152,7 +183,7 @@ public class JDBCEventChannelCookieJar extends SodJDBC{
     }
 
 
-    private PreparedStatement insertDouble, insertString, updateDouble, updateString, get, getForPair, getForName, remove;
+    private PreparedStatement insertDouble, insertString, insertObject, updateDouble, updateString, updateObject, get, getForPair, getForName, remove;
 
     private JDBCEventChannelStatus statusTable;
     private Connection conn;

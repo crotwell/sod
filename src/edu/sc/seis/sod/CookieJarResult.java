@@ -23,6 +23,11 @@ public class CookieJarResult {
         this.valueDbl = value;
     }
 
+    public CookieJarResult(int pairId, String name, Object value) {
+        this(pairId, name);
+        this.valueObj = value;
+    }
+
     public int getPairId() { return pairId; }
 
     public String getName() { return name; }
@@ -31,10 +36,13 @@ public class CookieJarResult {
 
     public double getValueDouble() { return valueDbl; }
 
+    public Object getValueObject() { return valueObj; }
+
     int pairId;
     String name;
     String valueStr;
     double valueDbl;
+    Object valueObj;
 
 }
 

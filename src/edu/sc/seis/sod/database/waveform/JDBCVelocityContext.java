@@ -8,6 +8,7 @@ package edu.sc.seis.sod.database.waveform;
 
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
+import java.io.Serializable;
 import java.sql.SQLException;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
@@ -35,8 +36,10 @@ public class JDBCVelocityContext extends AbstractContext {
                 jdbcCookieJar.put(pairId, name, (String)value);
             } else if (value instanceof Double) {
                 jdbcCookieJar.put(pairId, name, ((Double)value).doubleValue());
+            }  else if (value instanceof Serializable) {
+                jdbcCookieJar.put(pairId, name, (Serializable)value);
             } else {
-                throw new IllegalArgumentException("value must be a string or a Double: "+value.getClass().getName());
+                throw new IllegalArgumentException("value must be a String or a Double or a Serializable: "+value.getClass().getName());
             }
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("Problem putting value for name="+name, e);

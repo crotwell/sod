@@ -19,6 +19,7 @@ eventchannelcookiejar.create=CREATE TABLE eventchannelcookiejar( pairid int, \
                                                                  name varchar, \
                                                                  value double, \
                                                                  valuestring varchar, \
+                                                                 valueobject object, \
                                                                  UNIQUE (pairid, name))
 
 EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
