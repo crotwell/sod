@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <name>sod</name>
   <id>sod</id>
+  <name>sod</name>
+  <currentVersion>1.0Beta</currentVersion>
   <organization>
     <name>Seismology at the University of South Carolina</name>
     <url>http://www.seis.sc.edu</url>
     <logo>http://www.seis.sc.edu/images/header.gif</logo>
   </organization>
-  <currentVersion>1.0Beta</currentVersion>
   <inceptionYear>2002</inceptionYear>
   <package>edu.sc.seis.sod</package>
-  <shortDescription>Standing Order for Data.</shortDescription>
-  <gumpRepositoryId>sod</gumpRepositoryId>
-  <description> SOD automates the most tedious data selection,
+  <description>SOD automates the most tedious data selection,
     downloading and routine processing tasks, shortening the time
     between idea and science.</description>
+  <shortDescription>Standing Order for Data.</shortDescription>
   <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
   <siteAddress>www.seis.sc.edu</siteAddress>
   <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.artifactId}</siteDirectory>
   <distributionSite>www.seis.sc.edu</distributionSite>
   <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository</distributionDirectory>
-  <mailingList>
-    <name>fissures-dev</name>
-    <subscribe>majordomo@iris.washington.edu</subscribe>
-    <unsubscribe>majordomo@iris.washington.edu</unsubscribe>
-  </mailingList>
   <repository>
     <connection>scm:cvs:local:anonymous@cvs.seis.sc.edu:/opt/local/Internal/CvsR oot:seis/${pom.artifactId}</connection>
     <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/seis/${pom.artifactId}</url>
   </repository>
+  <mailingLists>
+     <mailingList>
+       <name>sod</name>
+       <subscribe>http://mail.seis.sc.edu/mailman/listinfo/sod</subscribe>
+       <unsubscribe>http://mail.seis.sc.edu/mailman/listinfo/sod</unsubscribe>
+     </mailingList>
+  </mailingLists>
   <developers>
     <developer>
       <name>Philip Crotwell</name>
@@ -214,15 +215,30 @@
       <version>20030807</version>
       <url>http://wwws.sun.com/software/xml/developers/multischema/</url>
     </dependency>
+    <dependency>   
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.4-rc1</version>
+      <url>http://jakarta.apache.org/velocity</url>                      
+    </dependency> 
+    <dependency>   
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.0</version>
+      <url>http://jakarta.apache.org/commons/collections</url>
+    </dependency> 
   </dependencies>
   <build>
     <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
-    <unitTestSourceDirectory>test/unit</unitTestSourceDirectory>
     <sourceDirectory>src</sourceDirectory>
+    <unitTestSourceDirectory>test/unit</unitTestSourceDirectory>
     <unitTest>
       <includes>
         <include>**/*Test*.java</include>
       </includes>
+      <excludes>
+        <exclude>XMLConfigUtil.java</exclude>
+      </excludes>
       <resources>
         <resource>
           <directory>test/unit/edu/sc/seis/sod/data</directory>
@@ -232,9 +248,6 @@
           </includes>
         </resource>
       </resources>
-      <excludes>
-        <exclude>XMLConfigUtil.java</exclude>
-      </excludes>
     </unitTest>
     <resources>
       <resource>
