@@ -833,6 +833,29 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="nullOriginSubsetterType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>
+                    Always returns true.
+                </summary>
+                <description>
+                    Simple subsetter that always returns true, useful for testing.
+                </description>
+                <example>
+                    <nullOriginSubsetter>
+                    </nullOriginSubsetter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="originType">
+                <xsd:sequence>
+                    <xsd:element ref="origin" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <!-- ORIGIN AND TYPE -->
     <xsd:complexType name="originANDType">
@@ -1059,6 +1082,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
 
     <!-- element representing originNOT -->
     <xsd:element name="originNOT" type="originNOTType" substitutionGroup="origin"/>
+
+    <!-- element representing originNOT -->
+    <xsd:element name="nullOriginSubsetter" type="nullOriginSubsetterType" substitutionGroup="origin"/>
 
     <!-- element representing timeRange -->
     <xsd:element name="originTimeRange" type="originTimeRangeType" substitutionGroup="origin"/>
