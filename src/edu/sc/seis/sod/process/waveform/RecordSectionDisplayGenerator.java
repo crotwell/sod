@@ -46,15 +46,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
                 + " DataSetSeismograms from DSML file for event in "
                 + regionName + " at " + dateTime;
         logger.debug(msg);
-<<<<<<< RecordSectionDisplayGenerator.java
         outputBestRecordSection(event, dss);
-=======
-        if(displayOption.equals("BEST")) {
-            outputBestRecordSection(event, dss);
-        } else {
-            outputAllRecordSections(event, dss);
-        }
->>>>>>> 1.35
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
