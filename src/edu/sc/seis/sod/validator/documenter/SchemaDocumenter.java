@@ -7,13 +7,10 @@
 package edu.sc.seis.sod.validator.documenter;
 
 
+import edu.sc.seis.sod.validator.model.*;
+
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.validator.ModelWalker;
-import edu.sc.seis.sod.validator.model.Definition;
-import edu.sc.seis.sod.validator.model.Form;
-import edu.sc.seis.sod.validator.model.MultigenitorForm;
-import edu.sc.seis.sod.validator.model.NamedElement;
-import edu.sc.seis.sod.validator.model.StAXModelBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Collection;
@@ -48,9 +45,10 @@ public class SchemaDocumenter {
         Iterator it = defs.iterator();
         while(it.hasNext()){
             Definition cur = (Definition)it.next();
-            //if(makePath(cur).equals("properties/start")){
+            Annotation an = cur.getForm().getAnnotation();
+            if(!an.hasExample()){
                 render(c, ve, cur, transformer);
-            //}
+            }
         }
         //writeTree(c, ve, handler.getRoot(), transformer);
     }
@@ -60,27 +58,41 @@ public class SchemaDocumenter {
     public static void render(VelocityContext c, VelocityEngine ve,
                               Definition def, Transformer t) throws Exception{
         String path = makePath(def);
+        //System.out.println("path created");
         File xmlFile = new File("xml/" + path + ".xml");
+        //System.out.println("file created");
         if(!renderLocs.add(path)){
             System.out.println("FUCKED UP");
             System.exit(0);
         }
+        //System.out.println("past if");
         xmlFile.getParentFile().mkdirs();
-        System.out.println("writin " + xmlFile);
+        System.out.println("writin' " + xmlFile);
         FileWriter fw = new FileWriter(xmlFile);
+        //System.out.println("created filewriter");
         c.put("def", def);
+        //System.out.println("put def");
         ve.mergeTemplate("elementPage.vm", new VelocityContext(c), fw);
+        //System.out.println("merged Template");
         fw.close();
+        //System.out.println("closed filewriter");
 
         String outputLoc = "../generatedSite/tagDocs/"+ path + ".html";
+        //System.out.println("created outputloc");
         File htmlFile = new File(outputLoc);
+        //System.out.println("created htmlFile");
         htmlFile.getParentFile().mkdirs();
+        //System.out.println("made dirs");
         String relPath = SodUtil.getRelativePath(outputLoc,
                                                  "../generatedSite/",
                                                  "/");
+        //System.out.println("created relpath");
         relPath = relPath.substring(0, relPath.length() - "../generatedSite".length());
+        //System.out.println("truncated relpath");
         t.setParameter("base", relPath);
+        //System.out.println("set parameter");
         t.transform(new StreamSource("xml/"+path+".xml"), new StreamResult(htmlFile));
+        //System.out.println("transformed");
     }
 
     public static Definition getNearestDef(Form f){

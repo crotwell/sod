@@ -47,6 +47,7 @@ public class ExampleBuilder {
         }
         if (requiredExample != null && f.equals(requiredExample.getFormProvider().getForm())){
             buf.append(requiredExample.getExample(false));
+            return;
         }
         //this attribute stuff is wrong.  Don't worry right now
         if (f instanceof Attribute){

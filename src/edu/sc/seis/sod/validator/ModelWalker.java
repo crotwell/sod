@@ -30,7 +30,9 @@ public class ModelWalker {
             }else if(root instanceof MultigenitorForm){
                 MultigenitorForm multiRoot = (MultigenitorForm)root;
                 Form[] kids = multiRoot.getChildren();
+                printThisStuff("getContainingDefs loop");
                 for (int i = 0; i < kids.length; i++) {
+                    printThisStuff("i = " + i);
                     getContainingDefs(kids[i], def, accumDefs);
                 }
             }
@@ -51,7 +53,9 @@ public class ModelWalker {
             }else if(root instanceof MultigenitorForm){
                 MultigenitorForm multiRoot = (MultigenitorForm)root;
                 Form[] kids = multiRoot.getChildren();
+                printThisStuff("getAllInstances loop");
                 for (int i = 0; i < kids.length; i++) {
+                    printThisStuff("i = " + i);
                     getAllInstances(kids[i], def, accumInstance);
                 }
             }
@@ -66,7 +70,9 @@ public class ModelWalker {
             }else if(root instanceof MultigenitorForm){
                 MultigenitorForm multiRoot = (MultigenitorForm)root;
                 Form[] kids = multiRoot.getChildren();
+                printThisStuff("getInstance loop");
                 for (int i = 0; i < kids.length; i++) {
+                    printThisStuff("i = " + i);
                     Form result = getInstance(kids[i], def);
                     if(result != null){ return result; }
                 }
@@ -91,14 +97,18 @@ public class ModelWalker {
         } else if (f instanceof Choice){
             Choice c = (Choice)f;
             Form[] kids = c.getChildren();
+            printThisStuff("Choice Loop");
             for (int i = 0; i < kids.length; i++) {
+                printThisStuff("i = " + i);
                 if (!requiresSelfReferentiality(kids[i])) return false;
             }
             return true;
         } else if (f instanceof Interleave || f instanceof Group){
             MultigenitorForm multi = (MultigenitorForm)f;
             Form[] kids = multi.getChildren();
+            printThisStuff("MultigenitorForm Loop");
             for (int i = 0; i < kids.length; i++) {
+                printThisStuff("i = " + i);
                 if (requiresSelfReferentiality(kids[i])) return false;
             }
             return true;
@@ -107,6 +117,7 @@ public class ModelWalker {
     }
 
     public static boolean lineageContainsRefTo(Form f, Definition def){
+        printThisStuff("lineageContainsRefTo "); // + ModelUtil.toString(f));
         Form parent = f.getParent();
         if(parent != null){
             if(def.equals(parent.getDef())){ return true; }
@@ -117,6 +128,7 @@ public class ModelWalker {
 
     public static NamedElement getDescendantTowards(NamedElement parent,
                                                     NamedElement result){
+        printThisStuff("getDescendantTowards ");// + ModelUtil.toString(parent) + ", " + ModelUtil.toString(result));
         Form child = parent.getChild();
         if(child instanceof NamedElement && isTowards(child, result)){
             return (NamedElement)child;
@@ -129,7 +141,9 @@ public class ModelWalker {
     private static NamedElement getDescendantTowards(MultigenitorForm f,
                                                      NamedElement result){
         Form[] kids = f.getChildren();
+        printThisStuff("getDescendantTowards loop");
         for (int i = 0; i < kids.length; i++) {
+            printThisStuff("i = " + i);
             if(kids[i] instanceof NamedElement && isTowards(kids[i], result)){
                 return (NamedElement)kids[i];
             }else if(kids[i] instanceof MultigenitorForm){
@@ -148,7 +162,18 @@ public class ModelWalker {
     public static NamedElement[] getSiblings(NamedElement brother){
         Form parent = brother.getParent();
         if(parent == null){ return new NamedElement[]{brother}; }
-        while(! (parent instanceof NamedElement)){ parent = parent.getParent();}
+        printThisStuff("getSiblings loop");
+        while(! (parent instanceof NamedElement)){
+            printThisStuff("! (parent instanceof NamedElement)");
+            parent = parent.getParent();
+        }
         return ((NamedElement)parent).getElementalChildren();
     }
+
+    public static void printThisStuff(String string){
+        if (isOkayToPrint)
+            System.out.println(string);
+    }
+
+    public static boolean isOkayToPrint = false;
 }
