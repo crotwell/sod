@@ -16,6 +16,7 @@
                     of a station.</description>
             </xsd:annotation>
             <ref name="code"/>
+            <ref name="regExp"/>
             <ref name="name"/>
             <ref name="operator"/>
             <ref name="depthRange"/>
@@ -34,6 +35,7 @@
     <define name="stationLogical">
         <choice>
             <ref name="code"/>
+            <ref name="regExp"/>
             <ref name="name"/>
             <ref name="operator"/>
             <ref name="depthRange"/>
@@ -61,6 +63,21 @@
                     <example>ANMO</example>
                 </xsd:annotation>
             </data>
+        </element>
+    </define>
+    <define name="regExp">
+        <element name="stationRegularExpression">
+            <xsd:annotation>
+                <summary>Matches a station if it's network code and station code match a regular
+                    expression</summary>
+            </xsd:annotation>
+            <element name="url">
+                <data type="string">
+                    <xsd:annotation>
+                        <example>http://seis.sc.edu/GEE/Dynamic/GEE_2.1/configs/filterStations.txt</example>
+                    </xsd:annotation>
+                </data>
+            </element>
         </element>
     </define>
     <define name="name">

@@ -105,7 +105,7 @@
     </define>
     <define name="siteLogical">
         <choice>
-            <ref name="code3"/>
+            <ref name="code4"/>
             <ref name="depthRange4"/>
             <ref name="effectiveTimeOverlap4"/>
             <ref name="area4"/>
@@ -120,7 +120,7 @@
     </define>
     <define name="siteLogical2">
         <choice>
-            <ref name="code5"/>
+            <ref name="code6"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
             <ref name="area6"/>
@@ -217,9 +217,9 @@
     </define>
     <define name="stationPointBackAzimuth4">
         <element name="stationPointBackAzimuth">
-            <ref name="range3"/>
-            <ref name="lat3"/>
-            <ref name="lon3"/>
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
         </element>
     </define>
     <define name="stationPointBackAzimuth2">
@@ -231,9 +231,9 @@
     </define>
     <define name="stationPointBackAzimuth3">
         <element name="stationPointBackAzimuth">
-            <ref name="range2"/>
-            <ref name="lat2"/>
-            <ref name="lon2"/>
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
         </element>
     </define>
     <define name="stationPointBackAzimuth">
@@ -271,6 +271,13 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="OR">
+        <element name="channelOR">
+            <oneOrMore>
+                <ref name="channelLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="OR7">
         <element name="siteOR">
             <oneOrMore>
@@ -285,16 +292,9 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="OR">
-        <element name="channelOR">
-            <oneOrMore>
-                <ref name="channelLogical"/>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="site">
         <choice>
-            <ref name="code3"/>
+            <ref name="code4"/>
             <ref name="depthRange4"/>
             <ref name="effectiveTimeOverlap4"/>
             <ref name="area4"/>
@@ -307,7 +307,7 @@
     </define>
     <define name="site2">
         <choice>
-            <ref name="code5"/>
+            <ref name="code6"/>
             <ref name="depthRange6"/>
             <ref name="effectiveTimeOverlap7"/>
             <ref name="area6"/>
@@ -786,6 +786,20 @@
             </element>
         </element>
     </define>
+    <define name="regExp4">
+        <element name="stationRegularExpression">
+            <element name="url">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="regExp">
+        <element name="stationRegularExpression">
+            <element name="url">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
     <define name="operator2">
         <element name="stationOperator">
             <data type="string"/>
@@ -801,18 +815,32 @@
             <data type="string"/>
         </element>
     </define>
+    <define name="regExp2">
+        <element name="stationRegularExpression">
+            <element name="url">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="regExp3">
+        <element name="stationRegularExpression">
+            <element name="url">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
     <define name="operator3">
         <element name="stationOperator">
             <data type="string"/>
         </element>
     </define>
     <define name="code6">
-        <element name="stationCode">
+        <element name="siteCode">
             <data type="string"/>
         </element>
     </define>
     <define name="code4">
-        <element name="stationCode">
+        <element name="siteCode">
             <data type="string"/>
         </element>
     </define>
@@ -821,13 +849,13 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="code3">
-        <element name="siteCode">
+    <define name="code5">
+        <element name="stationCode">
             <data type="string"/>
         </element>
     </define>
-    <define name="code5">
-        <element name="siteCode">
+    <define name="code3">
+        <element name="stationCode">
             <data type="string"/>
         </element>
     </define>
@@ -838,15 +866,16 @@
     </define>
     <define name="stationLogical3">
         <choice>
-            <ref name="code4"/>
-            <ref name="name3"/>
+            <ref name="code5"/>
+            <ref name="regExp4"/>
+            <ref name="name4"/>
             <ref name="operator4"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap5"/>
             <ref name="area5"/>
             <ref name="stationPointDistance4"/>
-            <ref name="stationPointAzimuth4"/>
-            <ref name="stationPointBackAzimuth4"/>
+            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointBackAzimuth3"/>
             <ref name="AND4"/>
             <ref name="OR5"/>
             <ref name="NOT5"/>
@@ -857,15 +886,16 @@
     </define>
     <define name="stationLogical4">
         <choice>
-            <ref name="code2"/>
-            <ref name="name2"/>
+            <ref name="code3"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
             <ref name="operator3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
             <ref name="area3"/>
             <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth3"/>
-            <ref name="stationPointBackAzimuth3"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointBackAzimuth4"/>
             <ref name="AND5"/>
             <ref name="OR6"/>
             <ref name="NOT6"/>
@@ -876,8 +906,9 @@
     </define>
     <define name="stationLogical2">
         <choice>
-            <ref name="code6"/>
-            <ref name="name4"/>
+            <ref name="code2"/>
+            <ref name="regExp2"/>
+            <ref name="name2"/>
             <ref name="operator2"/>
             <ref name="depthRange2"/>
             <ref name="effectiveTimeOverlap2"/>
@@ -896,6 +927,7 @@
     <define name="stationLogical">
         <choice>
             <ref name="code"/>
+            <ref name="regExp"/>
             <ref name="name"/>
             <ref name="operator"/>
             <ref name="depthRange"/>
@@ -915,6 +947,7 @@
     <define name="station">
         <choice>
             <ref name="code"/>
+            <ref name="regExp"/>
             <ref name="name"/>
             <ref name="operator"/>
             <ref name="depthRange"/>
@@ -932,8 +965,9 @@
     </define>
     <define name="station2">
         <choice>
-            <ref name="code6"/>
-            <ref name="name4"/>
+            <ref name="code2"/>
+            <ref name="regExp2"/>
+            <ref name="name2"/>
             <ref name="operator2"/>
             <ref name="depthRange2"/>
             <ref name="effectiveTimeOverlap2"/>
@@ -950,15 +984,16 @@
     </define>
     <define name="station3">
         <choice>
-            <ref name="code4"/>
-            <ref name="name3"/>
+            <ref name="code5"/>
+            <ref name="regExp4"/>
+            <ref name="name4"/>
             <ref name="operator4"/>
             <ref name="depthRange5"/>
             <ref name="effectiveTimeOverlap5"/>
             <ref name="area5"/>
             <ref name="stationPointDistance4"/>
-            <ref name="stationPointAzimuth4"/>
-            <ref name="stationPointBackAzimuth4"/>
+            <ref name="stationPointAzimuth3"/>
+            <ref name="stationPointBackAzimuth3"/>
             <ref name="AND4"/>
             <ref name="OR5"/>
             <ref name="NOT5"/>
@@ -968,15 +1003,16 @@
     </define>
     <define name="station4">
         <choice>
-            <ref name="code2"/>
-            <ref name="name2"/>
+            <ref name="code3"/>
+            <ref name="regExp3"/>
+            <ref name="name3"/>
             <ref name="operator3"/>
             <ref name="depthRange3"/>
             <ref name="effectiveTimeOverlap3"/>
             <ref name="area3"/>
             <ref name="stationPointDistance3"/>
-            <ref name="stationPointAzimuth3"/>
-            <ref name="stationPointBackAzimuth3"/>
+            <ref name="stationPointAzimuth4"/>
+            <ref name="stationPointBackAzimuth4"/>
             <ref name="AND5"/>
             <ref name="OR6"/>
             <ref name="NOT6"/>
@@ -1378,16 +1414,16 @@
     </define>
     <define name="stationPointAzimuth3">
         <element name="stationPointAzimuth">
-            <ref name="range2"/>
-            <ref name="lat2"/>
-            <ref name="lon2"/>
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
         </element>
     </define>
     <define name="stationPointAzimuth4">
         <element name="stationPointAzimuth">
-            <ref name="range3"/>
-            <ref name="lat3"/>
-            <ref name="lon3"/>
+            <ref name="range2"/>
+            <ref name="lat2"/>
+            <ref name="lon2"/>
         </element>
     </define>
     <define name="channelLogical">
@@ -1741,20 +1777,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml12">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml12"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="xml4">
         <element>
             <anyName/>
@@ -1807,6 +1829,20 @@
                     </attribute>
                     <text/>
                     <ref name="xml2"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml12">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml12"/>
                 </choice>
             </oneOrMore>
         </element>
