@@ -34,15 +34,15 @@ These values can be changed and SOD can do quite a bit more things, but this is
 a minimal set parameters. One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is currently
 no way to automatically group these related origins into a single event based on
-the information that the DMC has, these origins each appear in separate events.
+the information to which the DMC has access , these origins each appear in separate events.
 So, it is usually wise to pick a particular catalog to avoid duplicate
-processing. The default here is the PREF catalog from the DMC. PREF is not a true
+processing of events. The default here is the PREF catalog from the DMC. PREF is not a true
 catalog, but rather something that the DMC Event server understands as the "best"
-catalog depending on the time range. The weeklies, or WHDF, catalog from the
+catalog depending on the time of the request. The weeklies, or WHDF, catalog from the
 NEIC is another common one for historical data and if you
 are doing a SOD run and want near real time data, then you probably want to
 use FINGER catalog as that has a short delay from earthquake occurring to the
-location being in the FINGER catalog.
+location being included in the catalog.
 </p>
 <p>
 After the query to the remote event server, we have our events locally and
@@ -63,7 +63,7 @@ learn, so click away!
 <p>
 The Network tab is the other side of the coin, once you have earthquakes, you must
 pick stations in order to ask for data. This query is sent to the IRIS Network
-server. We will get only stations in the II network, sites (which loosely correspond
+server. We will get all stations in the II network, sites (which loosely correspond
 to seed loc ids) that are either space-space or 00 and channels that are long
 period. The construction is that the band code must be L and the gain code
 cannot be O. This accepts both LH? and LL? channels, but rejects LOG channels.
@@ -80,8 +80,8 @@ in new and interesting ways.
 You will also notice that there are quite a few effective time subsetters. These
 are not strictly required, and the SOD run would likely generate the same exact
 result if they were not there, but adding them allows SOD to be more efficient.
-By rejecting stations and channels that were not in existence at the time of
-the earthquake, SOD is able to avoid a significant number of calls on the remote
+By rejecting stations and channels that were not in existence at the time covered
+by your earthquake request, SOD is able to avoid a significant number of calls on the remote
 server. For example, if you eliminate a station, SOD need not retrieve the
 channels for that station. In general, SOD will run faster if you try to
 eliminate as much as possible as early as possible.
@@ -159,7 +159,23 @@ Although there is a GUI for editing the configuration files, SOD itself is not
 a GUI application. This is done intentionally as SOD will likely be a long running
 background processes, and so command line execution is the preferred way. So, to
 start a SOD run, you need to save the XML configuration file to disk. Then start
-it up with <code>sod.sh -f mysod.xml</code>.
+it up with <code>sod.sh -f mysod.xml</code>. Once SOD is started, open the
+<code>index.html</code> file withing the <code>status</code> directory. You will
+see a map of the events that have been found as well as some statistics about
+the run. The Networks link show which networks, stations and channels were
+accepted by SOD. The Events link in the menu on the left takes you to a page with the
+same map, but with a list of the accepted events below. Each event link goes to
+a summary for that event showing which stations were accepted. The stations
+in the list are links that show more information about the station and event as
+well as which channels retrieved data, and a image of the seimogram if it was
+successful.
+</p>
+<p>
+You should also look at the Errors page, as any problems that occur will be
+reported there. Also, the Wily link takes you to the Wily DHI status monitor.
+Wily will show it if one of the servers is down. The Configuration link shows the
+original configuration file. This is mostly useful if the status pages from a SOD
+run are on a web server.
 </p>
 </section>
 
@@ -178,3 +194,4 @@ event station pairs.
 </section>
 </body>
 </document>
+
