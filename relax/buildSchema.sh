@@ -1,5 +1,8 @@
 #!/bin/sh
-REPOSITORY=${HOME}/repository
+REPOSITORY=${HOME}/.repository
+
+echo CLASSPATH is...
+echo `./classpath_creator.sh -seperator \: `
 
 echo writing schema
 java -cp `./classpath_creator.sh -seperator \: ` com.sun.msv.writer.relaxng.Driver sod.rng > ../src/edu/sc/seis/sod/data/sod.rng 
