@@ -237,11 +237,9 @@ public class Start implements SodExceptionListener {
         if(str != null) {
             try {
                 return Integer.parseInt(str);
-            } catch(NumberFormatException nfe) {
-                return 30;
-            }
+            } catch(NumberFormatException nfe) {}
         }
-        return 30;
+        return REFRESH_INTERVAL;
     }
 
     private static int getQuitTime() {
@@ -249,17 +247,15 @@ public class Start implements SodExceptionListener {
         if(str != null) {
             try {
                 return Integer.parseInt(str);
-            } catch(NumberFormatException nfe) {
-                return 30;
-            }
+            } catch(NumberFormatException nfe) {}
         }
-        return 30;
+        return QUIT_TIME;
     }
 
     private static boolean isReOpenEvents() {
         String str = props.getProperty("edu.sc.seis.sod.database.reopenEvents");
-        if(str != null) {
-            if(str.equalsIgnoreCase("true")) {return true; }
+        if(str != null && str.equalsIgnoreCase("true")) {
+            return true;
         }
         return false;
     }
