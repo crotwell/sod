@@ -40,7 +40,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
                 return super.getCompForElement(element);
             }
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("Can't get component for "+element.getTagName()+", using default. "+e);
+            e.printStackTrace();
             return super.getCompForElement(element);
         }
     }
@@ -61,6 +62,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("gainCode", netCodeEdit);
         editors.put("orientationCode", netCodeEdit);
         editors.put("boxArea", new BoxAreaEditor());
+        editors.put("distanceRange", new DistanceRangeEditor());
     }
 
     protected HashMap editors = new HashMap();
