@@ -5,6 +5,13 @@
  */
 
 package edu.sc.seis.sod.status.networkArm;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
@@ -12,6 +19,7 @@ import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
@@ -21,16 +29,6 @@ import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.networkArm.ChannelsInStationTemplate;
-import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
-import edu.sc.seis.sod.status.networkArm.StationsInNetworkTemplate;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     private String fileDir, netsOutputFileName, stasOutputFileName, sitesOutputFileName, chansOutputFileName;
@@ -108,6 +106,23 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         } catch (ConfigurationException e) {
             String msg = "Got an ConfigurationException changing station status: ";
             msg += StationIdUtil.toString(station.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        }
+    }
+
+    public void change(Site site, Status status){
+        try {
+            ChannelsInStationTemplate cst = getChannelsInStationTemplate(site.my_station);
+            cst.change(site, status);
+        } catch (IOException e) {
+            String msg = "Got an IOException changing channel status: ";
+            msg += SiteIdUtil.toString(site.get_id());
+            msg+=" status="+status.toString();
+            GlobalExceptionHandler.handle(msg, e);
+        } catch (ConfigurationException e) {
+            String msg = "Got an ConfigurationException changing channel status: ";
+            msg += SiteIdUtil.toString(site.get_id());
             msg+=" status="+status.toString();
             GlobalExceptionHandler.handle(msg, e);
         }
@@ -210,10 +225,6 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     public void setArmStatus(String status)  throws IOException {
         netTemplate.setArmStatus(status);
-    }
-
-    public void change(Site site, Status status){
-        // noImpl
     }
 }
 
