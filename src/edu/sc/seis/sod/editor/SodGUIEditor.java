@@ -150,6 +150,18 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("channelNOT", bool);
         editors.put("stationNOT", bool);
         editors.put("originNOT", bool);
+        editors.put("eventStationAND", bool);
+        editors.put("eventStationOR", bool);
+        editors.put("eventStationNOT", bool);
+        editors.put("eventChannelAND", bool);
+        editors.put("eventChannelOR", bool);
+        editors.put("eventChannelNOT", bool);
+        editors.put("availableDataNOT", bool);
+        editors.put("availableDataAND", bool);
+        editors.put("availableDataOR", bool);
+        editors.put("localSeismogramNOT", bool);
+        editors.put("localSeismogramAND", bool);
+        editors.put("localSeismogramOR", bool);
         editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new LatitudeRangeEditor());
         editors.put("longitudeRange", new LongitudeRangeEditor());
