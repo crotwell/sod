@@ -92,4 +92,6 @@ filePattern=File Pattern
 resp=IRIS Resp File
 polezero=SAC Pole Zero
 
+eventChannelPairProcessing=Event-Channel Pairs Processed
+
 
