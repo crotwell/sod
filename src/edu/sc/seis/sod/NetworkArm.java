@@ -202,7 +202,7 @@ public class NetworkArm {
                 for(int i = 0; i < constrainingCodes.length; i++) {
                     NetworkAccess[] found = netFinder.retrieve_by_code(constrainingCodes[i]);
                     for(int j = 0; j < found.length; j++) {
-                        constrainedNets.add(found[i]);
+                        constrainedNets.add(found[j]);
                     }
                 }
                 allNets = (NetworkAccess[])constrainedNets.toArray(new NetworkAccess[0]);
