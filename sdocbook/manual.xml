@@ -63,7 +63,7 @@ shown below are merely placeholders. In addition to the specialized subsetters,
 subsetter location, there are eventAttrAND, eventAttrOR, eventAttrXOR and 
 eventAttrNOT. Each of these logical subsetters take as subtags any subsetter
 of the same type allowing the creation of complex subsetters from the existing
-simple ones.
+simple ones. See the sod tag documentation at <ulink url="http://www.seis.sc.edu/software/sod/sodDocs">http://www.seis.sc.edu/software/sod/sodDocs</ulink>.
 </para>
 <programlisting>
 &lt;sod&gt;
@@ -87,10 +87,11 @@ simple ones.
     &lt;/networkArm&gt;
     &lt;waveFormArm&gt;
         &lt;eventStation&gt;
-        &lt;dataCenter&gt;
         &lt;localSeismogramArm&gt;
             &lt;eventChannel&gt;
             &lt;requestGenerator&gt;
+            &lt;requestSubsetter&gt;
+            &lt;dataCenter&gt;
             &lt;availableData&gt;
             &lt;waveForm&gt;
             &lt;localSeismogramProcess&gt;
