@@ -22,6 +22,7 @@
             <ref name="alwaysSuccess"/>
             <ref name="phaseSignalToNoise" />
             <ref name="seismogramImageProcess" />
+            <ref name="legacyExecute" />
             <ref name="seismogramAND"/>
             <ref name="seismogramOR"/>
             <ref name="seismogramXOR"/>
@@ -311,6 +312,23 @@
             </optional>
             <optional>
                 <element name="fileType">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="legacyExecute">
+        <element name="legacyExecute">
+            <optional>
+                <element name="prefix">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="command">
+                <data type="string"/>
+            </element>
+            <optional>
+                <element name="dataDirectory">
                     <data type="string"/>
                 </element>
             </optional>

@@ -11,20 +11,19 @@ import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FissuresFormatter;
-import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.io.BufferedReader;
 import java.io.File;
@@ -100,17 +99,17 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
 
         createMasterDS();
 
-//        OutputScheduler.getDefault().scheduleForExit(new Runnable(){
-//                    public void run() {
-//                        if (lastDataSetStaxWriter != null){
-//                            try {
-//                                lastDataSetStaxWriter.close();
-//                            } catch (Exception e) {
-//                                GlobalExceptionHandler.handle(e);
-//                            }
-//                        }
-//                    }
-//                });
+        //        OutputScheduler.getDefault().scheduleForExit(new Runnable(){
+        //                    public void run() {
+        //                        if (lastDataSetStaxWriter != null){
+        //                            try {
+        //                                lastDataSetStaxWriter.close();
+        //                            } catch (Exception e) {
+        //                                GlobalExceptionHandler.handle(e);
+        //                            }
+        //                        }
+        //                    }
+        //                });
     }
 
     public LocalSeismogramResult process(EventAccessOperations event,
@@ -131,8 +130,12 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
             return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         }
 
-        saveInDataSet(event, channel, seismograms, fileType);
-
+        URLDataSetSeismogram urlDSS = saveInDataSet(event, channel, seismograms, fileType);
+        URL[] urls = urlDSS.getURLs();
+        for (int i = 0; i < urls.length; i++) {
+            cookieJar.put(getCookieName(prefix, channel.get_id(), i),
+                          urls[i].getFile());
+        }
         boolean found = false;
         Iterator it = masterDSNames.iterator();
         while (it.hasNext()) {
@@ -146,6 +149,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         }
 
         return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public static String getCookieName(String prefix, ChannelId channel, int i) {
+        return  COOKIE_PREFIX+prefix+ChannelIdUtil.toString(channel)+"_"+i;
     }
 
     protected  void createMasterDS() throws ConfigurationException {
@@ -274,9 +281,11 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
                                                         channel,
                                                         event,
                                                         fileType);
+
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
             seisFileTypeArray[i] = fileType;  // all are the same
+
             bytesWritten += seisFile.length();
         }
         URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
@@ -388,7 +397,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
         }
 
         //if (lastDataSetStaxWriter != null){
-            //lastDataSetStaxWriter.close();
+        //lastDataSetStaxWriter.close();
         //}
         //lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
         lastDataSet = dataset;
@@ -453,6 +462,8 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess{
     String subDS = "";
 
     String prefix = "";
+
+    public static final String COOKIE_PREFIX = "SeisFile_";
 
     EventFormatter nameGenerator = null;
 

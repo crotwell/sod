@@ -5311,6 +5311,21 @@
                     </element>
                 </optional>
             </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <element name="seismogramAND">
                 <oneOrMore>
                     <ref name="seismogramProcess3"/>
@@ -5517,6 +5532,21 @@
                 </optional>
                 <optional>
                     <element name="fileType">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="dataDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -5731,6 +5761,21 @@
                     </element>
                 </optional>
             </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <element name="seismogramAND">
                 <oneOrMore>
                     <ref name="seismogramProcess4"/>
@@ -5941,6 +5986,21 @@
                     </element>
                 </optional>
             </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <element name="seismogramAND">
                 <oneOrMore>
                     <ref name="seismogramProcess"/>
@@ -6147,6 +6207,21 @@
                 </optional>
                 <optional>
                     <element name="fileType">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="dataDirectory">
                         <data type="string"/>
                     </element>
                 </optional>
