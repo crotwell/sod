@@ -51,25 +51,31 @@ public class EventFinder extends AbstractSource implements SodElement {
 	
 	NodeList childNodes = config.getChildNodes();
 	Node node;
+	catalogs = new ArrayList();
+	contributors = new ArrayList();
 	for(int counter = 0; counter < childNodes.getLength(); counter++) {
 
 	    node = childNodes.item(counter);
 	    if(node instanceof Element) {
 
 		String tagName = ((Element)node).getTagName();
-		if(!tagName.equals("name") && !tagName.equals("dns") && !tagName.equals("catalog") && !tagName.equals("contributor")) {
+		if(!tagName.equals("name") && !tagName.equals("dns")) {
 
 
 		    Object object = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter.eventArm");
-		    if(tagName.equals("depthRange")) depthRange = ((DepthRange)object);
+		    if(tagName.equals("originDepthRange")) depthRange = ((OriginDepthRange)object);
 		    else if(tagName.equals("eventTimeRange")) eventTimeRange = ((EventTimeRange)object);
 		    else if(tagName.equals("magnitudeRange")) magnitudeRange = (MagnitudeRange)object;
 		    else if(object instanceof edu.iris.Fissures.Area) area = (edu.iris.Fissures.Area)object;
-
-		}  else if(tagName.equals("catalog")) catalog = SodUtil.getNestedText((Element)node);
-		else if(tagName.equals("contributor")) contributor = SodUtil.getNestedText((Element)node);
-		  
-
+		    else if(tagName.equals("catalog")) {
+			catalog = (Catalog)object;
+			catalogs.add(catalog.getCatalog());
+		    }
+		    else if(tagName.equals("contributor")) {
+			contributor = (Contributor)object;
+			contributors.add(contributor.getContributor());
+		    }
+		} 
 	    }
 
 	}
@@ -96,8 +102,8 @@ public class EventFinder extends AbstractSource implements SodElement {
      *
      * @return a <code>DepthRange</code> value
      */
-    public DepthRange getDepthRange() {
-
+    public OriginDepthRange getDepthRange() {
+	if(depthRange == null) System.out.println("Depth range is NULL");
 	return depthRange;
 
     }
@@ -120,7 +126,7 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public edu.iris.Fissures.Area getArea() {
 
-
+	System.out.println("returning Area");
 	return area;
 	
     }
@@ -143,8 +149,8 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public String[] getCatalogs() {
 
-	String[] rtnValues = new String[1];
-	rtnValues[0] = catalog;
+	String[] rtnValues = new String[catalogs.size()];
+	rtnValues = (String[]) catalogs.toArray(rtnValues);
 	return rtnValues;
     }
 
@@ -155,8 +161,8 @@ public class EventFinder extends AbstractSource implements SodElement {
      */
     public String[] getContributors() {
 
-	String[] rtnValues = new String[1];
-	rtnValues[0] = contributor;
+	String[] rtnValues = new String[contributors.size()];
+	rtnValues = (String[])contributors.toArray(rtnValues);
 	return rtnValues;
     }
 
@@ -166,11 +172,15 @@ public class EventFinder extends AbstractSource implements SodElement {
 			   
     private Element config = null;
 
-    private String catalog;
+    private Catalog catalog;
 
-    private String contributor;
+    private Contributor contributor;
 
-    private DepthRange depthRange;
+    private ArrayList catalogs;
+
+    private ArrayList contributors;
+
+    private OriginDepthRange depthRange;
 
     private MagnitudeRange magnitudeRange;
 
