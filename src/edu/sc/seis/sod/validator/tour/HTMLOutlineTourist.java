@@ -47,12 +47,14 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Data d) {
         genericVisit(d);
+        result.append("<b>");
         if(d.isFromDef()) {
             result.append(getDefLink(d));
         } else {
             result.append("<a href=\"" + getDatatypeHREF(d) + "\">"
                     + d.getDatatype() + "</a>");
         }
+        result.append("</b>");
     }
 
     public void visit(Empty e) {}
@@ -124,12 +126,12 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Text t) {
         genericVisit(t);
-        result.append("<a href=\"" + getDatatypeHREF(t) + "\">Any Text</a>");
+        result.append("<b><a href=\"" + getDatatypeHREF(t) + "\">Any Text</a></b>");
     }
 
     public void visit(Value v) {
         genericVisit(v);
-        result.append("<div>\"" + v.getValue() + "\"</div>\n");
+        result.append("<div>\"<b>" + v.getValue() + "\"</b></div>\n");
     }
 
     public void visit(NotAllowed na) {}
