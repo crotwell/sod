@@ -112,6 +112,11 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
 		cst.change(channel, status);
     }
 	
+	public void change(Site site, RunStatus status) throws Exception {
+		ChannelsInStationTemplate cst = getChannelsInStationTemplate(site.my_station);
+		cst.change(site, status);
+    }
+	
     public NetworkStatusTemplate getNetworkStatusTemplate(){
 		return netTemplate;
     }
@@ -202,10 +207,6 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
 	
     public void setArmStatus(String status)  throws IOException {
 		netTemplate.setArmStatus(status);
-    }
-	
-    public void change(Site site, RunStatus status) throws Exception {
-		// noImpl
     }
 }
 

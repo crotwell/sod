@@ -5,14 +5,15 @@
  */
 
 package edu.sc.seis.sod.status.networkArm;
-import edu.sc.seis.sod.subsetter.networkArm.*;
-
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
+import edu.sc.seis.sod.status.SiteGroupTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
+import edu.sc.seis.sod.subsetter.networkArm.NetworkInfoTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
     
     private Station station;
     private List channelListeners = new ArrayList();
+	private List siteListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInStationTemplate.class);
     
     public ChannelsInStationTemplate(Element el, String baseDir, String outputLocation, Station sta) throws IOException{
@@ -39,6 +41,11 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
             channelListeners.add(cgt);
             return cgt;
         }
+		else if (tag.equals("sites")){
+			SiteGroupTemplate sgt = new SiteGroupTemplate(el);
+			siteListeners.add(sgt);
+			return sgt;
+		}
         else if (tag.equals("station")){
             return new MyStationTemplate(el);
         }
@@ -58,6 +65,14 @@ public class ChannelsInStationTemplate extends NetworkInfoTemplate{
         }
         write();
     }
+	
+	public void change(Site site, RunStatus status) throws IOException {
+		Iterator it = siteListeners.iterator();
+		while (it.hasNext()){
+			((SiteGroupTemplate)it.next()).change(site, status);
+		}
+		write();
+	}
     
     private class MyStationTemplate implements GenericTemplate{
         public MyStationTemplate(Element el){ formatter = new StationFormatter(el); }

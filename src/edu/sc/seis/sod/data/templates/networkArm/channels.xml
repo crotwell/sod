@@ -35,7 +35,6 @@
 <td><b>Longitude</b></td>
 <td><lon/></td>
 </tr>
-
 <tr>
 <td><b>Begin Time</b></td>
 <td><beginTime/></td>
@@ -64,6 +63,31 @@
 </tr>
 </channel>
 </channels>
+</table>
+<h2>Sites:</h2>
+<table>
+<tr id="title">
+<td>Id</td>
+<td>Begin Time (GMT)</td>
+<td>End Time (GMT)</td>
+<td>Latitude</td>
+<td>Longitude</td>
+<td>Depth</td>
+<td>Status</td>
+</tr>
+<sites>
+<site>
+<tr>
+<td><networkCode/>.<stationCode/>.<siteCode/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
+<td><lat/></td>
+<td><lon/></td>
+<td><depth/></td>
+<td><attribute name="id"><status/></attribute><status/></td>
+</tr>
+</site>
+</sites>
 </table>
 </div>
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
