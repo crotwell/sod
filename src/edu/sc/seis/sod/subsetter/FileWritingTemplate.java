@@ -18,7 +18,7 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
         try {
             outFile.getCanonicalFile().getParentFile().mkdirs();
         } catch (IOException e) {
-            CommonAccess.getCommonAccess().handleException(e, "Trouble making directories for output location for an external file template");
+            CommonAccess.handleException(e, "Trouble making directories for output location for an external file template");
         }
         return loc;
     }
