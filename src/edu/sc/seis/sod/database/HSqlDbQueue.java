@@ -75,7 +75,9 @@ public class HSqlDbQueue implements Queue {
 	try {
 	    if(waitFlag){  
 		System.out.println("&*********************&&&&&&&&&&&&&&&&&&& Waiting in push ");
+		System.out.println("Before Wait push of queue");
 		wait();
+		System.out.println("After Wait push of queue");
 	    }
 	} catch(InterruptedException ie) {}
 
@@ -106,9 +108,10 @@ public class HSqlDbQueue implements Queue {
 				     depth,
 				     origin_time,
 				     eventAccessIOR);
+	System.out.println("&&&&&&&&&&&&&&&&&    &&&&&&&&&&& &&&&&&   &&&&&&&&&The dbid that is obtained is "+dbid);
 	notifyAll();
 	
-	System.out.println("The dbid that is obtained is "+dbid);
+
     }
 
     public synchronized void setFinalStatus(EventAccess eventAccess, Status status) {
@@ -138,9 +141,13 @@ public class HSqlDbQueue implements Queue {
 	    (dbid == -1 && sourceAlive == true)){
 	    try {
 		System.out.println("Waiting in POP())))))))))))))))()()()()()()()()()()()()()()()()()(");
+		System.out.println("Before Wait in pop of Queue");
 		wait();
+		System.out.println("After Wait in pop of Queue");
 		dbid = eventDatabase.getFirst(Status.NEW);
-	    } catch(InterruptedException ie) { ie.printStackTrace();}
+	    } catch(InterruptedException ie) { 
+		ie.printStackTrace();
+	    }
 
 	}
 	org.omg.CORBA.ORB orb = null;
@@ -235,6 +242,7 @@ public class HSqlDbQueue implements Queue {
      */
     public synchronized void setSourceAlive(boolean value) {
 	this.sourceAlive = value;
+	System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SET SOURCE ALIVE = "+sourceAlive);
 	notifyAll();
     }
     
@@ -283,6 +291,10 @@ public class HSqlDbQueue implements Queue {
 	    e.printStackTrace();
 	    return null;
 	}
+    }
+
+    public void closeDatabase() {
+	eventDatabase.close();
     }
     
     private boolean sourceAlive = true;

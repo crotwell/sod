@@ -389,6 +389,15 @@ public abstract class AbstractDatabase implements EventDatabase{
         }
 
     }
+
+    public void close() {
+	try {
+	    delete(Status.COMPLETE_SUCCESS);
+	    getConnection().close();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
     
     private PreparedStatement putStmt;
     

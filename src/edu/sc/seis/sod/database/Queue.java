@@ -68,6 +68,8 @@ public interface Queue {
 
 
     public void waitForProcessing();
+
+    public void closeDatabase();
    
 	
 }

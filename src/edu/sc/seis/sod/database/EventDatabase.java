@@ -60,4 +60,6 @@ public interface EventDatabase {
     public String getObject(int eventid);
 
     public String getDatabaseName();
+
+    public void close();
 }// EventDatabase

@@ -29,7 +29,7 @@ public class EventConfigDb {
 	try {
 	    String driverName = "org.hsqldb.jdbcDriver";
 	    Class.forName(driverName).newInstance();
-	    Connection connection = DriverManager.getConnection("jdbc:hsqldb:myhsqldb", "sa", "");
+	    connection = DriverManager.getConnection("jdbc:hsqldb:myhsqldb", "sa", "");
 	    Statement stmt = connection.createStatement();
 	    try {
 		stmt.executeUpdate("CREATE TABLE timeconfig "+
@@ -157,6 +157,17 @@ public class EventConfigDb {
 	    return null;
 	}
     }
+
+    public void close() {
+	try {
+	    connection.close();
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+				    
+    }
+
+    private Connection connection;
 
     private String serverDNS;
 
