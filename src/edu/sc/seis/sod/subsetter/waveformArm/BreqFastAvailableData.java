@@ -126,7 +126,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
                           +"~"
                           +nl);
             for (int j=0; j<o.magnitudes.length; j++) {
-                out.write(".MAGNITUDE ~"+o.magnitudes[j].type+"~"+o.magnitudes[j].value+"~"+nl);
+                out.write(".MAGNITUDE ~"+o.magnitudes[j].value+"~"+o.magnitudes[j].type+"~"+nl);
             } // end of for (int j=0; j<o.magnitude.length; j++)
 
 
