@@ -167,7 +167,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             netPutStmt.setTimestamp(4, microSecondDate.getTimestamp());
             netPutStmt.setInt(5, networkId.begin_time.leap_seconds_version);
             netPutStmt.setTimestamp(6, (ClockUtil.now()).getTimestamp());
-            netPutStmt.setInt(7, Status.get(Status.NETWORK_SUBSETTER,
+            netPutStmt.setInt(7, Status.get(Status.SPECIAL,
                                             Status.NEW).getAsByte());
             String networkAccessIor = null; org.omg.CORBA_2_3.ORB orb = CommonAccess.getCommonAccess().getORB();
             while (networkAccess instanceof RetryNetworkAccess || networkAccess instanceof CacheNetworkAccess) {
@@ -216,7 +216,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             stationPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             stationPutStmt.setInt(4, stationId.begin_time.leap_seconds_version);
             stationPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            stationPutStmt.setInt(6, Status.get(Status.NETWORK_SUBSETTER,
+            stationPutStmt.setInt(6, Status.get(Status.SPECIAL,
                                                 Status.NEW).getAsByte());
             stationPutStmt.executeUpdate();
             return getStationDbId(networkDbObject, station);
@@ -264,7 +264,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             sitePutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             sitePutStmt.setInt(4, siteId.begin_time.leap_seconds_version);
             sitePutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            sitePutStmt.setInt(6, Status.get(Status.NETWORK_SUBSETTER,
+            sitePutStmt.setInt(6, Status.get(Status.SPECIAL,
                                              Status.NEW).getAsByte());
             sitePutStmt.executeUpdate();
             return getSiteDbId(stationDbObject,
@@ -311,7 +311,7 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
             channelPutStmt.setTimestamp(3, microSecondDate.getTimestamp());
             channelPutStmt.setInt(4, channelId.begin_time.leap_seconds_version);
             channelPutStmt.setTimestamp(5, (ClockUtil.now()).getTimestamp());
-            channelPutStmt.setInt(6,  Status.get(Status.NETWORK_SUBSETTER,
+            channelPutStmt.setInt(6,  Status.get(Status.SPECIAL,
                                                  Status.NEW).getAsByte());
             channelPutStmt.executeUpdate();
             return getChannelDbId(siteDbObject,
