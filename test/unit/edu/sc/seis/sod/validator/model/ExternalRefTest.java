@@ -18,7 +18,10 @@ public class ExternalRefTest extends TestCase{
         //modBuild.getRoot().accept(new FormPrinter(8));
         assertTrue(modBuild.getRoot() instanceof NamedElement);
         NamedElement wrapper = (NamedElement)modBuild.getRoot();
-        MostBasicTest.checkMostBasicStructure(wrapper.getChild());
+        assertTrue(wrapper.getChild() instanceof Group);
+        Group child = (Group)wrapper.getChild();
+        MostBasicTest.checkMostBasicStructure(child.getChildren()[0]);
+        MostBasicTest.checkMostBasicStructure(child.getChildren()[1]);
     }
 }
 

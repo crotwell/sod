@@ -17,14 +17,11 @@ public class SelfRefTest extends TestCase {
     public void testSelfReferential() throws IOException, XMLStreamException{
         StAXModelBuilder modBuild = new StAXModelBuilder("jar:edu/sc/seis/sod/data/validator/selfReferential.rng");
         //modBuild.getRoot().accept(new FormPrinter(8));
-        assertTrue(modBuild.getRoot() instanceof NamedElement);
-        NamedElement nameElRoot = (NamedElement)modBuild.getRoot();
-        assertEquals("baseElement", nameElRoot.getName());
-        assertTrue(nameElRoot.getChild() instanceof Group);
-        Group suppliedGroup = (Group)nameElRoot.getChild();
-        assertEquals(2, suppliedGroup.getChildren().length);
+        assertTrue(modBuild.getRoot() instanceof Group);
+        Group rootGroup = (Group)modBuild.getRoot();
+        assertEquals(2, rootGroup.getChildren().length);
 
-        Form[] groupKids = suppliedGroup.getChildren();
+        Form[] groupKids = rootGroup.getChildren();
         assertTrue(groupKids[0] instanceof NamedElement);
         assertFalse(groupKids[0].isFromDef());
 
