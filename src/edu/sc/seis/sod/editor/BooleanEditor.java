@@ -22,7 +22,6 @@ import javax.swing.border.Border;
 public class BooleanEditor implements EditorPlugin{
     public BooleanEditor(SodGUIEditor editor){
         this.editor = editor;
-        initInserters();
     }
 
     public JComponent getGUI(Element element) throws Exception {
@@ -53,19 +52,16 @@ public class BooleanEditor implements EditorPlugin{
             b.add(comps[comps.length - 1]);
             String ssType = name.substring(0, name.length() - type.length());
             System.out.println(ssType);
-            b.add(((Inserter)inserters.get(ssType)).getGUI(element));
+            Inserter ins = (Inserter)inserters.get(ssType);
+            if (ins == null) {
+                ins =new Inserter(ssType, editor);
+                inserters.put(ssType, ins);
+            }
+            b.add(ins.getGUI(element));
             if(type == AND){ b.setBorder(AND_BORDER);}
             else{ b.setBorder(OR_BORDER); }
             return b;
         }
-    }
-
-    private void initInserters(){
-        inserters.put("channel", new Inserter("channel", editor));
-        inserters.put("station", new Inserter("station", editor));
-        inserters.put("site", new Inserter("site", editor));
-        inserters.put("network", new Inserter("network", editor));
-        inserters.put("origin", new Inserter("origin", editor));
     }
 
     private static Border AND_BORDER = new TitledBorder("All of these");
