@@ -32,7 +32,7 @@ Maps only update once every two minutes
 </td>
 <td><beginTime/></td>
 <td><endTime/></td>
-<td><attribute name="id"><status/></attribute><status/><status/></td>
+<td><attribute name="id"><status/></attribute><status/></td>
 </tr>
 </channel></channels>
 </table>
@@ -40,7 +40,7 @@ Maps only update once every two minutes
 <div id="Menu">
 <ul>
 <li>
-<a href="../location.html">Events</a>
+<a href="../time.html">Events</a>
 </li>
 <li>
 <a href="../networks.html">Networks</a>
