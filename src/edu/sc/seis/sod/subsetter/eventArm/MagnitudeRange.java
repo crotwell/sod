@@ -7,6 +7,7 @@ import edu.sc.seis.sod.subsetter.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
+import java.util.ArrayList;
 
 import org.w3c.dom.*;
 
@@ -53,22 +54,13 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
      */
     public MagnitudeRange (Element config) throws ConfigurationException{
 	super(config);
-	    processConfig(config);
+	this.config = config;
+	// processConfig(config);
     }
     
     private void processConfig(Element config) throws ConfigurationException {
 	
-	NodeList childNodes = config.getChildNodes();
-	Node node;
-	for(int counter  = 0; counter < childNodes.getLength(); counter++) {
-	    node = childNodes.item(counter);
-	    if(node instanceof Element) {
 
-		String tagName = ((Element)node).getTagName();
-		if(tagName.equals("magType")) magType = (MagType)SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter");
-			
-	    }
-	}
 	
     }
 
@@ -89,13 +81,18 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     }
 
     /**
+       NEED TO CHANGE the getMinMagnitude() and getMaxMagnitude() to getMinValue() and getMaxvalue() or avoid them
+       all together as they exist in the super classs
+    ***/
+
+    /**
      * Describe <code>getMinMagnitude</code> method here.
      *
      * @return a <code>Magnitude</code> value
      */
     public Magnitude getMinMagnitude() {
 	
-	return new Magnitude(magType.getType(), getMinValue(), null);
+	return new Magnitude("ms", getMinValue(), null);
 	
     }
     
@@ -106,10 +103,32 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
      */
     public Magnitude getMaxMagnitude() {
 
-	return new Magnitude(magType.getType(), getMaxValue(), null);
+	return new Magnitude("ms", getMaxValue(), null);
 
     }
 
-    edu.sc.seis.sod.subsetter.MagType magType = null;
+    public String[] getSearchTypes() throws ConfigurationException{
+
+	ArrayList arrayList = new ArrayList();
+	NodeList childNodes = config.getChildNodes();
+	Node node;
+	for(int counter  = 0; counter < childNodes.getLength(); counter++) {
+	    node = childNodes.item(counter);
+	    if(node instanceof Element) {
+		
+		String tagName = ((Element)node).getTagName();
+		if(tagName.equals("magType")){
+		    MagType magType = (MagType)SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter");
+		    arrayList.add(magType.getType());
+		}
+		
+	    }
+	}
+	String[] searchTypes = new String[arrayList.size()];
+	searchTypes = (String[])arrayList.toArray(searchTypes);
+	return searchTypes;
+    }
+
+    private Element config; 
     
 }// MagnitudeRange
