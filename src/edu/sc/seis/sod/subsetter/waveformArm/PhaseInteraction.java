@@ -159,8 +159,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                 if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
                     timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.KILOMETER);
                 }
-                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMinDistance();
-                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMaxDistance();
+                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMin();
+                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMax();
 
             } else {
                 minDistance = timeDistDistance;
@@ -215,8 +215,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                 if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
                     timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.DEGREE);
                 }
-                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMinDistance();
-                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMaxDistance();
+                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMin();
+                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMax();
 
             } else {
                 minDistance = timeDistDistance;

@@ -293,7 +293,7 @@
                     <ref name="network"/>
                 </optional>
                 <optional>
-                    <ref name="station4"/>
+                    <ref name="station3"/>
                 </optional>
                 <optional>
                     <ref name="site"/>
@@ -742,19 +742,19 @@
     <define name="eventStation3">
         <choice>
             <element name="distanceRange">
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
             <element name="embeddedOriginSubsetter">
                 <ref name="origin4"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station3"/>
+                <ref name="station4"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -770,7 +770,7 @@
                         <data type="float"/>
                     </element>
                 </element>
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1139,7 +1139,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range6"/>
+                    <ref name="range5"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1149,7 +1149,25 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range6"/>
+                <ref name="range5"/>
+            </element>
+            <element name="originPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range5"/>
+            </element>
+            <element name="originPointBackAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range5"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1337,6 +1355,24 @@
                 </element>
             </element>
             <element name="originPointDistance">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range7"/>
+            </element>
+            <element name="originPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range7"/>
+            </element>
+            <element name="originPointBackAzimuth">
                 <element name="latitude">
                     <data type="double"/>
                 </element>
@@ -1539,6 +1575,24 @@
                 </element>
                 <ref name="range9"/>
             </element>
+            <element name="originPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range9"/>
+            </element>
+            <element name="originPointBackAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range9"/>
+            </element>
             <element name="eventArea">
                 <choice>
                     <element name="boxArea">
@@ -1721,7 +1775,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range5"/>
+                    <ref name="range4"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1731,7 +1785,25 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range5"/>
+                <ref name="range4"/>
+            </element>
+            <element name="originPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range4"/>
+            </element>
+            <element name="originPointBackAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range4"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1919,6 +1991,24 @@
                 </element>
             </element>
             <element name="originPointDistance">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range3"/>
+            </element>
+            <element name="originPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range3"/>
+            </element>
+            <element name="originPointBackAzimuth">
                 <element name="latitude">
                     <data type="double"/>
                 </element>
@@ -3726,12 +3816,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range4"/>
+                <ref name="range6"/>
             </element>
         </zeroOrMore>
     </define>

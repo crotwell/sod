@@ -41,9 +41,9 @@ public class DistanceRange extends DistanceRangeSubsetter implements EventStatio
                                                          station.my_location.latitude,
                                                          station.my_location.longitude);
         QuantityImpl dist = new QuantityImpl(actualDistance, UnitImpl.DEGREE);
-        if( dist.greaterThanEqual(getMinDistance()) &&
-           dist.lessThanEqual(getMaxDistance())) {
-            logger.debug("Distance ok "+dist+" from "+getMinDistance()+" "+getMaxDistance());
+        if( dist.greaterThanEqual(getMin()) &&
+           dist.lessThanEqual(getMax())) {
+            logger.debug("Distance ok "+dist+" from "+getMin()+" "+getMax());
             return true;
 
         } else {

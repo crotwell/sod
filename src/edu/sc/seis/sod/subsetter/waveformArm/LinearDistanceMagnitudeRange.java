@@ -46,8 +46,8 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter impleme
                                                          originLoc.longitude,
                                                          stationLoc.latitude,
                                                          stationLoc.longitude);
-        if( actualDistance >= getMinDistance().value && actualDistance <= getMaxDistance().value) {
-            double resultantMagnitude = magnitudeRange.getMinValue() + (actualDistance - getMinDistance().value)*(double)(magnitudeRange.getMaxValue() - magnitudeRange.getMinValue())/(getMinDistance().value - getMaxDistance().value);
+        if( actualDistance >= getMin().value && actualDistance <= getMax().value) {
+            double resultantMagnitude = magnitudeRange.getMinValue() + (actualDistance - getMin().value)*(double)(magnitudeRange.getMaxValue() - magnitudeRange.getMinValue())/(getMin().value - getMax().value);
             if(origin.magnitudes[0].value >= resultantMagnitude) {
                 return true;
             }

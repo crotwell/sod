@@ -26,16 +26,16 @@ public class DistanceRangeSubsetter implements SodElement{
         unitRange = SodUtil.loadUnitRange(config);
     }
 
-    public edu.iris.Fissures.UnitRange  getDistanceRange() { return unitRange; }
+    public edu.iris.Fissures.UnitRange  getUnitRange() { return unitRange; }
 
-    public QuantityImpl getMinDistance() {
-        return new QuantityImpl(getDistanceRange().min_value,
-                                getDistanceRange().the_units);
+    public QuantityImpl getMin() {
+        return new QuantityImpl(getUnitRange().min_value,
+                                getUnitRange().the_units);
     }
 
-    public QuantityImpl getMaxDistance() {
-        return new QuantityImpl(getDistanceRange().max_value,
-                                getDistanceRange().the_units);
+    public QuantityImpl getMax() {
+        return new QuantityImpl(getUnitRange().max_value,
+                                getUnitRange().the_units);
     }
 
     private edu.iris.Fissures.UnitRange unitRange;

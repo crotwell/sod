@@ -15,7 +15,7 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRangeSubsetter implements OriginSubsetter{
+public class OriginPointDistance extends AbstractOriginPoint implements OriginSubsetter{
 
 
     /**
@@ -25,10 +25,6 @@ public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRange
      */
     public OriginPointDistance (Element config) throws Exception{
         super(config);
-        NodeList nodeList = config.getElementsByTagName("latitude");
-        latitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
-        nodeList = config.getElementsByTagName("longitude");
-        longitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
     }
 
     /**
@@ -40,15 +36,13 @@ public class OriginPointDistance extends edu.sc.seis.sod.subsetter.DistanceRange
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
-        if (getMinDistance().convertTo(UnitImpl.DEGREE).get_value() <= distaz.delta &&
-            getMaxDistance().convertTo(UnitImpl.DEGREE).get_value() >= distaz.delta) {
+        if (getMin().convertTo(UnitImpl.DEGREE).get_value() <= distaz.delta &&
+            getMax().convertTo(UnitImpl.DEGREE).get_value() >= distaz.delta) {
             return true;
         } else {
             return false;
         }
     }
 
-    double latitude = 0.0;
-    double longitude = 0.0;
 }
 
