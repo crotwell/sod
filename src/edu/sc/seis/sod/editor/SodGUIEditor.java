@@ -72,7 +72,6 @@ public class SodGUIEditor extends SimpleGUIEditor {
         BasicConfigurator.configure();
         SodGUIEditor gui = new SodGUIEditor(args);
         gui.start();
-        System.out.println("Done editing.");
     }
 
 }
