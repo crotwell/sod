@@ -79,7 +79,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      */
     protected void processConfig(Element config) 
 	throws ConfigurationException {
-;
+
 	Start.getEventQueue().setSourceAlive(true);
 	NodeList children = config.getChildNodes();
 	Node node;
