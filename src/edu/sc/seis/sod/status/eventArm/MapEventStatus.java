@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.Status;
 
 public class MapEventStatus extends PeriodicAction implements SodElement, EventArmMonitor{
     protected String fileLoc;
