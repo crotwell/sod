@@ -9,29 +9,58 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamException;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import sun.security.action.GetPropertyAction;
 import edu.sc.seis.sod.validator.Validator;
 import edu.sc.seis.sod.validator.model.Annotation;
 import edu.sc.seis.sod.validator.model.Form;
+import edu.sc.seis.sod.validator.model.GenitorForm;
 import edu.sc.seis.sod.validator.model.ModelUtil;
+import edu.sc.seis.sod.validator.model.MultigenitorForm;
 import edu.sc.seis.sod.validator.model.StAXModelBuilder;
-import edu.sc.seis.sod.validator.tour.FormPrinter;
-import edu.sc.seis.sod.validator.tour.MaximalVisitGuide;
-import edu.sc.seis.sod.validator.tour.MinimalVisitGuide;
-import edu.sc.seis.sod.validator.tour.TourGuide;
 
 public class ExampleValidator {
 
     public static void validate(String exampleContainingSchemaLoc)
-            throws IOException, XMLStreamException, SAXException {
+            throws IOException, XMLStreamException {
         StAXModelBuilder modelBuilder = new StAXModelBuilder(exampleContainingSchemaLoc);
-        Annotation[] anns = modelBuilder.getAnnotations();
         Form root = modelBuilder.getRoot().getForm();
-        //validate(anns, root, 0, 20);
+        Annotation[] anns = findUniqueAnnotations(root);
         validate(anns, root, 0, anns.length);
+    }
+
+    private static Annotation[] findUniqueAnnotations(Form root) {
+        List l = new ArrayList();
+        findUniqueAnnotations(root, l, new HashSet());
+        return (Annotation[])l.toArray(new Annotation[l.size()]);
+    }
+
+    private static void findUniqueAnnotations(Form root,
+                                              List annotations,
+                                              Set visitedDefs) {
+        if(root.isFromDef()) {
+            if(visitedDefs.contains(root.getDef().toString())) { return; }
+            visitedDefs.add(root.getDef().toString());
+        }
+        if(root.getAnnotation().hasExampleFromAnnotation()) {
+            annotations.add(root.getAnnotation());
+        }
+        if(root instanceof GenitorForm) {
+            findUniqueAnnotations(((GenitorForm)root).getChild(),
+                                  annotations,
+                                  visitedDefs);
+        } else if(root instanceof MultigenitorForm) {
+            Form[] kids = ((MultigenitorForm)root).getChildren();
+            for(int i = 0; i < kids.length; i++) {
+                findUniqueAnnotations(kids[i], annotations, visitedDefs);
+            }
+        }
     }
 
     private static void validate(Annotation[] anns,
@@ -39,44 +68,28 @@ public class ExampleValidator {
                                  int start,
                                  int end) {
         Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
-        //Validator validator = new Validator("/Users/oliverpa/Code/seis/sod/relax/event/origin.rng");
-        ExampleBuilder eBuild;
         int totalInserted = 0;
+        int totalValid = 0;
         File file = new File("tempEx");
         for(int i = start; i < end || i == anns.length - 1; i++) {
             try {
-                System.out.println("-----------------------------------");
-                System.out.println("ann #" + i);
-                eBuild = new ExampleBuilder(false);
+                ExampleBuilder eBuild = new ExampleBuilder(false);
                 eBuild.setRequiredExample(anns[i]);
                 eBuild.write(root);
                 if(eBuild.isExampleInserted()) {
                     totalInserted++;
                 }
                 String example = eBuild.toString();
-                //printExamples("CURRENT EXAMPLE", new String[]{example});
                 FileWriter fw = new FileWriter(file);
                 fw.write(example);
                 fw.close();
                 InputSource in = new InputSource(new FileInputStream(file));
                 String[] examples = new String[] {anns[i].getExample(false),
                                                   example};
-                //printExamples("Example " + i, examples);
-                System.out.println("lineage: "
-                        + ModelUtil.getLineageString(anns[i].getFormProvider()
-                                .getForm()));
                 if(!validator.validate(in, true)) {
-//                    System.out.println("lineage: "
-//                            + ModelUtil.getLineageString(anns[i].getFormProvider()
-//                                    .getForm()));
-                    //System.out.println("NOT VALID");
                     printExamples("NOT VALID", examples);
                 } else {
-                    //if(anns[i].getExample(false).startsWith("<networkOwner>"))
-                    // {
-                    //System.out.println("VALID!!!");
-                    printExamples("VALID!!!", examples);
-                    //}
+                    totalValid++;
                 }
                 file.delete();
             } catch(Exception e) {
@@ -84,12 +97,16 @@ public class ExampleValidator {
             }
         }
         int numAnns = end - start;
-        System.out.println("number of examples: " + numAnns);
-        System.out.println("number inserted: " + totalInserted);
-        double hitRatio = (double)totalInserted / (double)numAnns;
-        System.out.println("hit ratio: " + hitRatio);
+        System.out.println(getPercentage(numAnns, totalInserted) + "% inserted");
+        System.out.println(getPercentage(numAnns, totalValid)+ "% valid");
     }
 
+    public static double getPercentage(double total, double actual){
+        if(actual == total){ return 100; }
+        double percentage = actual/total * 100;
+        return percentage - percentage%.01;
+    }
+    
     public static void printExamples(String prefix, String[] examples) {
         StringBuffer buf = new StringBuffer();
         buf.append(prefix + ": inserted example: \n");
@@ -108,9 +125,8 @@ public class ExampleValidator {
         return buf.toString();
     }
 
-    public static void main(String[] args) throws SAXException, IOException,
+    public static void main(String[] args) throws IOException,
             XMLStreamException {
-        validate("/Users/oliverpa/Code/seis/sod/relax/sod.rng");
-        //validate("/Users/oliverpa/Code/seis/sod/relax/event/origin.rng");
+        validate("f:/seis/sod/relax/sod.rng");
     }
 }
