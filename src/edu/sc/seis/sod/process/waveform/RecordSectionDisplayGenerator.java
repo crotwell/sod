@@ -18,35 +18,55 @@ import org.w3c.dom.Element;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.awt.Dimension;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
+import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
+import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 
 public class RecordSectionDisplayGenerator implements WaveformProcess{
 	
-	public RecordSectionDisplayGenerator(Element config) {
-		
+	public RecordSectionDisplayGenerator(Element config) throws ConfigurationException {
+	
+	}
+	public SaveSeismogramToFile getSaveSeismogramToFile() throws ConfigurationException {
+		WaveformProcess[] waveformProcesses = Start.getWaveformArm().getLocalSeismogramArm().getProcesses();
+		for(int i=0;i<waveformProcesses.length;i++) {
+			if(waveformProcesses[i] instanceof SaveSeismogramToFile) {
+				return (SaveSeismogramToFile) waveformProcesses[i];
+			}
+		}
+		throw new ConfigurationException("RecordSectionDisplayGenerator needs a SaveSeismogramToFile process");
 	}
 	public WaveformResult process(EventAccessOperations event, Channel channel,
 								  RequestFilter[] original, RequestFilter[] available,
 								  LocalSeismogramImpl[] seismograms,
-								  CookieJar cookieJar) throws Exception {
-		/*	try {
-			DataSet ds = DataSetToXML.load(SaveSeismogramToFile.getDSMLFile(event).toURI().toURL());
-			dss = new DataSetSeismogram[ds.getDataSetSeismogramNames().length];
-			for(int i=0;i<ds.getDataSetSeismogramNames().length;i++){
-				dss[i] = ds.getDataSetSeismogram(ds.getDataSetSeismogramNames()[i]);
+								  CookieJar cookieJar) throws ParserConfigurationException,
+								  IOException, IncomprehensibleDSMLException,
+								  UnsupportedFileTypeException, ConfigurationException   {
+		try {
+				saveSeisToFile = getSaveSeismogramToFile();
+			DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event).toURI().toURL());
+			String[] dataSeisNames = ds.getDataSetSeismogramNames();
+			int numDSSeismograms = dataSeisNames.length;
+			dss = new DataSetSeismogram[numDSSeismograms];
+			for(int i=0;i<numDSSeismograms;i++){
+				dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
 			}
-			RecordSectionDisplay display = new RecordSectionDisplay();
-			display.add(dss);
+			RecordSectionDisplay recordSectiondisplay = new RecordSectionDisplay();
+			recordSectiondisplay.add(dss);
 			try {
-				File outPNG = new File(SaveSeismogramToFile.getEventDirectory(event),"recordSection.png");
-				display.outputToPNG(outPNG,new Dimension(500,500));
+				File outPNG = new File(saveSeisToFile.getEventDirectory(event),"recordSection.png");
+				recordSectiondisplay.outputToPNG(outPNG,new Dimension(500,500));
 			} catch (IOException e) {
 				throw new IOException("Problem writing recordSection output to PNG " +e);
 			}
 		}catch(IOException e) {
-			throw new IOException("Problem opening dsml file" + e);
-			
-		 } */
+			throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator" + e);
+		}
 		return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
 	}
 	public DataSetSeismogram[] dss;
+	private SaveSeismogramToFile saveSeisToFile;
 }
