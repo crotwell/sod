@@ -13,18 +13,18 @@
             <name>sod.start.ReopenEvents</name>
             <value>true</value>
         </property>
-        
-        
+
+
         <property>
             <name>edu.sc.seis.sod.waveformarm.threads</name>
             <value>1</value>
         </property>
-        
+
         <property>
             <name>edu.sc.seis.sod.databasetype</name>
             <value>edu.sc.seis.sod.database.HSqlDbManager</value>
         </property>
-        
+
         <!-- amount of time per request to eventFinder -->
         <property>
             <name>sod.event.QueryIncrement.value</name>
@@ -34,7 +34,7 @@
             <name>sod.event.QueryIncrement.unit</name>
             <value>week</value>
         </property>
-        
+
         <!-- don't go back and reask server for events that may have
          appeared in server after this was first run. -->
         <property>
@@ -67,7 +67,7 @@
             </originDepthRange>
             <eventTimeRange>
                 <timeRange>
-                    <startTime>20040331T00:00:00.001Z</startTime>
+                    <startTime>20040425T00:00:00.001Z</startTime>
                     <endTime>20050131T23:59:59.999Z</endTime>
                 </timeRange>
             </eventTimeRange>
@@ -92,7 +92,7 @@
         <eventStatusTemplate>
             <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
         </eventStatusTemplate>
-        
+
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -143,7 +143,7 @@
             <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
             <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
         </networkInfoTemplateGenerator>
-        
+
     </networkArm>
     <waveformArm>
         <eventStationOR>
@@ -164,7 +164,7 @@
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
+
             <eventStationAND>
                 <embeddedOriginSubsetter>
                     <magnitudeRange>
@@ -182,7 +182,7 @@
                     </originDepthRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
+
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -196,7 +196,7 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
+
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -210,7 +210,7 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
+
             <linearDistanceMagnitudeRange>
                 <magnitudeRange>
                     <min>4.9</min>
@@ -220,7 +220,7 @@
                 <min>30</min>
                 <max>60</max>
             </linearDistanceMagnitudeRange>
-            
+
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
@@ -234,9 +234,9 @@
                     </magnitudeRange>
                 </embeddedOriginSubsetter>
             </eventStationAND>
-            
+
         </eventStationOR>
-        
+
         <localSeismogramArm>
             <phaseRequest>
                 <model>prem</model>
@@ -256,27 +256,29 @@
                 <dns>edu/iris/dmc</dns>
             </fixedDataCenter>
             <someCoverage/>
-            
+
             <phaseSignalToNoise>
-                <longTime>
-                    <unit>SECOND</unit>
-                    <value>100</value>
-                </longTime>
-                <shortTime>
-                    <value>6</value><unit>SECOND</unit>
-                </shortTime>
-                <delayTime>
-                    <value>80</value><unit>SECOND</unit>
-                </delayTime>
-                <ratio>1</ratio>
                 <modelName>prem</modelName>
-                <phaseName>P</phaseName>
-                <triggerWindow>
-                    <value>5</value>
+                <phaseName>ttp</phaseName>
+                <shortOffsetBegin>
                     <unit>SECOND</unit>
-                </triggerWindow>
+                    <value>-5</value>
+                </shortOffsetBegin>
+                <shortOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>5</value>
+                </shortOffsetEnd>
+                <longOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-105</value>
+                </longOffsetBegin>
+                <longOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </longOffsetEnd>
+                <ratio>2</ratio>
             </phaseSignalToNoise>
-            
+
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
                 <dataDirectory>BUD_II</dataDirectory>
@@ -284,11 +286,11 @@
                     Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
                 </eventDirLabel>
             </saveSeismogramToFile>
-            <localSeismogramTemplateGenerator>  
+            <localSeismogramTemplateGenerator>
                 <fileDir>status</fileDir>
                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
             </localSeismogramTemplateGenerator>
-            
+
         </localSeismogramArm>
         <waveformEventTemplateGenerator>
             <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
