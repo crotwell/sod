@@ -24,7 +24,7 @@ public class StationFormatter extends Template implements StationTemplate{
         templates.add(textTemplate("."));
         templates.add(getTemplate("stationCode", null));
         templates.add(textTemplate("."));
-        templates.add(getTemplate("beginTimeUnformatted", null));
+        templates.add(getTemplate("beginTime", null));
     }
 
     public StationFormatter(Element el) throws ConfigurationException {
