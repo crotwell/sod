@@ -45,7 +45,7 @@ public class SimpleWaveFormHTMLStatusTest extends TestCase{
     
     private String EVENT_OUTPUT = "CENTRAL ALASKA | 01/01/1970 00:00:00 GMT | Mag: 5.0 | Depth: 0.00 km";
     
-    private String EVENT_FILE_LOC = "0101197000000000/event.html";
+    private String EVENT_FILE_LOC = "CENTRAL_ALASKA_19700101T00_00_00.000Z/event.html";
     
     private String oneEventWaveform =
         "<html>\n" +
