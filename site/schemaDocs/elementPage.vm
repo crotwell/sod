@@ -64,7 +64,7 @@
 
 <document>
     <properties>
-        <title>SOD Tag Docs - #print($def) Tag</title>
+        <title>SOD Strategy File Reference - #print($def) Tag</title>
     </properties>
     <body>
 	<section name="#print($def)">
