@@ -9,15 +9,15 @@ package edu.sc.seis.sod.editor;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.status.eventArm.EventStatus;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.status.EventFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.swing.JTextArea;
 
-public class TextAreaStatusDisplay implements EventStatus, WaveFormStatus {
+public class TextAreaStatusDisplay implements EventArmMonitor, WaveformArmMonitor {
     TextAreaStatusDisplay() {
         this.area  = new JTextArea();
         area.setLineWrap(true);

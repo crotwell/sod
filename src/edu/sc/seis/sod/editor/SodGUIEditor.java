@@ -6,24 +6,17 @@
 
 package edu.sc.seis.sod.editor;
 
-import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.status.eventArm.EventStatus;
-import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.EventFormatter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
