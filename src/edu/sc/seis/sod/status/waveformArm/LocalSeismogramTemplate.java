@@ -11,6 +11,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
@@ -43,7 +46,8 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         //I intend to do something fancier very soon
         Iterator it = channelListeners.iterator();
         while (it.hasNext()){
-            ((ChannelGroupTemplate)it.next()).change(chan, null);
+            ((ChannelGroupTemplate)it.next()).change(chan, Status.get(Stage.PROCESSOR,
+                                                                     Standing.SUCCESS));
         }
         write();
     }
