@@ -88,15 +88,20 @@
             </choice>
         </element>
     </define>
+    <define name="degrees" combine="choice">
+        <element name="unit">
+                <value>DEGREE</value>
+        </element>
+    </define>
     <define name="timeUnit" combine="choice">
         <element name="unit">
             <choice>
+                <value>HOUR</value>
                 <value>NANOSECOND</value>
                 <value>MICROSECOND</value>
                 <value>MILLISECOND</value>
                 <value>SECOND</value>
                 <value>MINUTE</value>
-                <value>HOUR</value>
                 <value>DAY</value>
                 <value>WEEK</value>
                 <value>FORTNIGHT</value>

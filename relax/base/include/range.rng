@@ -9,18 +9,53 @@
         <ref name="lengthUnit"/>
         <optional>
             <element name="min">
-            <xsd:annotation>
-                <include />
-            </xsd:annotation>
-                <data type="double"/>
+                <xsd:annotation>
+                    <include/>
+                </xsd:annotation>
+                <data type="double">
+                    <xsd:annotation>
+                        <example>0</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </optional>
         <optional>
             <element name="max">
-            <xsd:annotation>
-                <include />
-            </xsd:annotation>
-                <data type="double"/>
+                <xsd:annotation>
+                    <include/>
+                </xsd:annotation>
+                <data type="double">
+                    <xsd:annotation>
+                        <example>36</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+        </optional>
+    </define>
+    <define name="degreeRange">
+        <ref name="degrees"/>
+        <optional>
+            <element name="min">
+                <xsd:annotation>
+                    <include/>
+                </xsd:annotation>
+                <data type="double">
+                    <xsd:annotation>
+                        <example>18</example>
+                    </xsd:annotation>
+                </data>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <xsd:annotation>
+                    <include/>
+                </xsd:annotation>
+                <data type="double">
+                    <xsd:annotation>
+                        <example>75</example>
+                    </xsd:annotation>
+                </data>
             </element>
         </optional>
     </define>

@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/timeRange.rng"/>
     <include href="../base/include/range.rng"/>
-    <include href="../base/include/source.rng"/>
     <start combine="choice">
         <choice>
             <ref name="eventFinder"/>
         </choice>
     </start>
     <define name="eventFinder">
-
         <element name="eventFinder">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Retrieve events from an EventFinder. </summary>
-                    <description> A Fissures/DHI EventDC service is located via the name
-                                        and dns tags. The EventFinder is aquired from the EventDC,
-                                        and a query is sent with the given arguments. The events
-                                        returned are then sent thrrough the EventArm for processing. </description>
+                    <description> A Fissures/DHI EventDC service is located via the name and dns
+                        tags. The EventFinder is aquired from the EventDC, and a query is sent with
+                        the given arguments. The events returned are then sent thrrough the EventArm
+                        for processing. </description>
                     <example>
                         <eventFinder>
                             <name>IRIS_EventDC</name>
@@ -56,7 +55,8 @@
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
-            <ref name="source"/>
+            <ref name="name"/>
+            <ref name="dns"/>
             <externalRef href="../base/externalRef/area.rng"/>
             <optional>
                 <externalRef href="../base/externalRef/originDepthRange.rng"/>
@@ -71,6 +71,47 @@
             <zeroOrMore>
                 <externalRef href="contributor.rng"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="name">
+        <element name="name">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Name of an event server</summary>
+                    <description>The server's name is used in combination with a dns value to find
+                        an event DC. The name "IRIS_EventDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
+                        be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>IRIS_EventDC</value>
+                <value>NCEDC_EventDC</value>
+                <value>NCSN_EventDC</value>
+                <value>SCEPPEventDC</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="dns">
+        <element name="dns">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>DNS location of an event server</summary>
+                    <description>The server's dns is used in combination with a name value to find
+                        an event DC. The name "IRIS_EventDC" must be used in combination with the
+                        "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
+                        be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
+                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>edu/iris/dmc</value>
+                <value>edu/berkley/geo/quake</value>
+                <value>edu/sc/seis</value>
+                <data type="string"/>
+            </choice>
         </element>
     </define>
 </grammar>

@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0">
-    <include href="../base/include/source.rng"/>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="fixedDataCenter">
-            <ref name="source"/>
+            <ref name="name"/>
+            <ref name="dns"/>
         </element>
     </start>
+    <define name="name">
+        <element name="name">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Name of a data center</summary>
+                    <description>The server's name is used in combination with a dns value to find a
+                        data center. The names "IRIS_BudDataCenter", "IRIS_PondDataCenter", and
+                        "IRIS_ArchiveDataCenter" must be used in combination with the "edu/iris/dmc"
+                        dns value. The name "NCEDC_DataCenter" must be used in conjunction with the
+                        "edu/berkley/geo/quake" dns value. The name "SCEPPSeismogramDC" must be used
+                        in conjunction with a DNS value "edu/sc/seis".</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>IRIS_BudDataCenter</value>
+                <value>IRIS_PondDataCenter</value>
+                <value>IRIS_ArchiveDataCenter</value>
+                <value>NCEDC_DataCenter</value>
+                <value>SCEPPSeismogramDC</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
+    <define name="dns">
+        <element name="dns">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>DNS location of a data center</summary>
+                    <description>The server's dns is used in combination with a name value to find a
+                        server from a seismogram DC. The names "IRIS_BudDataCenter",
+                        "IRIS_PondDataCenter", and "IRIS_ArchiveDataCenter" must be used in
+                        combination with the "edu/iris/dmc" dns value. The name "NCEDC_DataCenter"
+                        must be used in conjunction with the "edu/berkley/geo/quake" dns value. The
+                        name "SCEPPSeismogramDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <choice>
+                <value>edu/iris/dmc</value>
+                <value>edu/berkley/geo/quake</value>
+                <value>edu/sc/seis</value>
+                <data type="string"/>
+            </choice>
+        </element>
+    </define>
 </grammar>

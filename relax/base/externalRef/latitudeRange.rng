@@ -3,7 +3,7 @@
     <include href="../include/range.rng"/>
     <start combine="choice">
         <element name="latitudeRange">
-            <ref name="range"/>
+            <ref name="degreeRange"/>
         </element>
     </start>
 </grammar>

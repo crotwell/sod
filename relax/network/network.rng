@@ -72,12 +72,6 @@
 				<xsd:documentation xml:lang="en">
 					<summary> Matches if the network overlaps the given time range. </summary>
 					<description> Matches if the network overlaps the given time range. </description>
-					<example>
-						<networkEffectiveTimeOverlap>
-							<startTime>20020701T00:00:00.001Z</startTime>
-							<endTime>20021030T00:00:00.001Z</endTime>
-						</networkEffectiveTimeOverlap>
-					</example>
 				</xsd:documentation>
 			</xsd:annotation>
 			<ref name="timeRange"/>
