@@ -5,6 +5,7 @@ import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.sac.*;
 import edu.sc.seis.fissuresUtil.xml.*;
 import edu.sc.seis.sod.*;
+import edu.sc.seis.sod.subsetter.NameGenerator;
 import edu.iris.Fissures.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
@@ -81,11 +82,9 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		} // end of if (!)
 		
 	    } // end of if (dataDirectory.exits())
-	    String eventDirName = 
-		regions.getRegionName(event.get_attributes().region)+
-		" "+event.get_preferred_origin().origin_time.date_time;
-	    eventDirName = eventDirName.replace(' ', '_');
-	    eventDirName = eventDirName.replace(',', '_');
+	    String eventDirName = getLabel(event);
+
+
 	    File eventDirectory = new File(dataDirectory, eventDirName);
 	    if ( ! eventDirectory.exists()) {
 		if ( ! eventDirectory.mkdirs()) {
@@ -171,6 +170,35 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	}
 	return seismograms;
     }
+
+    protected String getLabel(EventAccessOperations event) {
+        Element labelConfig = SodUtil.getElement(config, "eventDirLabel");
+        if (labelConfig == null) {
+            String eventFileName = 
+                regions.getRegionName(event.get_attributes().region);
+            try {
+                eventFileName+=
+                    " "+event.get_preferred_origin().origin_time.date_time;
+            } catch (NoPreferredOrigin e) {
+                eventFileName+=" "+eventFileNum;
+                eventFileNum++;
+            } // end of try-catch
+            
+            eventFileName = eventFileName.replace(' ', '_');
+            eventFileName = eventFileName.replace(',', '_');
+            return eventFileName;
+        } // end of if (labelConfig == null)
+
+        if (nameGenerator == null) {
+            nameGenerator = new NameGenerator(labelConfig);
+        }
+        return nameGenerator.getName(event);
+	
+    }
+
+    int eventFileNum = 1;
+
+    NameGenerator nameGenerator = null;
    
     ParseRegions regions;
 

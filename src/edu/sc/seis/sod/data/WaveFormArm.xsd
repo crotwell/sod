@@ -1319,6 +1319,7 @@
             <xsd:extension base="seismogramProcessType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
+                    <xsd:element name="eventDirLabel" type="eventLabelType" minOccurs="0" />
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -1343,7 +1344,7 @@
 
 
     
-    <xsd:complexType name="breqfastLabelType" mixed="true" >
+    <xsd:complexType name="eventLabelType" mixed="true" >
         <xsd:all>
            <xsd:element name="separator" type="xsd:string" minOccurs="0" />
            <xsd:element name="feRegionName" >
@@ -1373,7 +1374,7 @@
             <xsd:extension base="availableDataType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
-                    <xsd:element name="label" type="breqfastLabelType" minOccurs="0" />
+                    <xsd:element name="label" type="eventLabelType" minOccurs="0" />
                     <xsd:element name="name" type="xsd:string"/>
                     <xsd:element name="inst" type="xsd:string"/>
                     <xsd:element name="mail" type="xsd:string"/>
@@ -1395,7 +1396,7 @@
             <xsd:extension base="requestSubsetterType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
-                    <xsd:element name="label" type="breqfastLabelType" minOccurs="0" />
+                    <xsd:element name="label" type="eventLabelType" minOccurs="0" />
                     <xsd:element name="name" type="xsd:string"/>
                     <xsd:element name="inst" type="xsd:string"/>
                     <xsd:element name="mail" type="xsd:string"/>
