@@ -85,6 +85,10 @@ background:#eee;
 	padding-left:15px;
 }
 
+#menu .last{
+	border-bottom: none;
+}
+
 #menu #lastUL{
 	border-top:none;
 }
