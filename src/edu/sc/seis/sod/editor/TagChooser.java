@@ -8,6 +8,7 @@ package edu.sc.seis.sod.editor;
 
 import javax.swing.*;
 
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
@@ -45,7 +46,9 @@ public class TagChooser implements EditorPlugin {
         }
 
         Box b = Box.createHorizontalBox();
-        JLabel replace = new JLabel(new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png")));
+        ImageIcon recycleIcon = new ImageIcon(this.getClass().getClassLoader().getResource("edu/sc/seis/sod/editor/recycle.png"));
+        JButton replace = new JButton(recycleIcon);
+        replace.setMargin(new Insets(1,1,1,1));
         final JPopupMenu popup = new JPopupMenu();
         ButtonGroup popupGroup = new ButtonGroup();
         Iterator it = subTypes.iterator();
@@ -82,7 +85,7 @@ public class TagChooser implements EditorPlugin {
                 });
         Box vBox = Box.createVerticalBox();
         vBox.add(replace);
-        vBox.add(Box.createGlue());
+        vBox.add(Box.createVerticalGlue());
         b.add(vBox);
 
         EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+PLUGIN_SUFFIX);
@@ -122,4 +125,5 @@ public class TagChooser implements EditorPlugin {
         Element current;
     }
 }
+
 
