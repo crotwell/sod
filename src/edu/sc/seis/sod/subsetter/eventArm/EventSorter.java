@@ -74,14 +74,12 @@ public class EventSorter{
                     " ORDER BY time_stamp";
             }else if(sortType.getNodeName().equals("magnitude")){
                 query = "SELECT DISTINCT eventid, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
-                    "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
-                    "magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
+                    "WHERE magnitudevalue = (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
                     extraClause +
                     " ORDER BY  magnitudevalue";
             }else if(sortType.getNodeName().equals("depth")){
                 query = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
-                    "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
-                    "quantity_value IN (SELECT quantity_value FROM quantity WHERE quantity_id IN (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
+                    "WHERE quantity_value = (SELECT quantity_value FROM quantity WHERE quantity_id = (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
                     extraClause +
                     " ORDER BY  quantity_value";
             }
