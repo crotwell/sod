@@ -33,6 +33,12 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                     return chan.get_id().network_id.network_code;
                 }
             };
+        }else if(tag.equals("channelCode")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+                    return chan.get_code();
+                }
+            };
         }else if(tag.equals("siteCode")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
@@ -40,10 +46,16 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                 }
             };
         }else if(tag.equals("beginTime")) return new BeginTimeTemplate(el);
-        else if(tag.equals("orientation")){
+        else if(tag.equals("dip")){
             return new ChannelTemplate(){
                 public String getResult(Channel chan) {
-                    return chan.an_orientation.azimuth + " az " + chan.an_orientation.dip + " dip";
+                    return Float.toString(chan.an_orientation.dip);
+                }
+            };
+        }else if(tag.equals("azimuth")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+                    return Float.toString(chan.an_orientation.azimuth);
                 }
             };
         }else if(tag.equals("name")){
