@@ -207,7 +207,7 @@ public class FissuresFormatter {
         fileName = fileName.trim();
         fileName = fileName.replaceAll("\r?\n *", "");
         fileName = fileName.replaceAll(" *\r?\n", "");
-        fileName = fileName.replaceAll("[ :]", "_");
+        fileName = fileName.replaceAll("[ :,]", "_");
         fileName = fileName.replaceAll("[\t\f]", "");
         return fileName.trim();
     }
