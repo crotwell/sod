@@ -11,10 +11,6 @@ import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCRecordSectionChannel extends SodJDBC {
 
-    static {
-        ConnMgr.addPropsLocation("edu/sc/seis/sod/database/props/");
-    }
-
     public JDBCRecordSectionChannel(String tableName,
             String eventRecSecTableName) throws SQLException {
         this(tableName, eventRecSecTableName, ConnMgr.createConnection());
@@ -22,15 +18,15 @@ public class JDBCRecordSectionChannel extends SodJDBC {
 
     public JDBCRecordSectionChannel(String tableName,
             String eventRecSecTableName, Connection conn) throws SQLException {
-        this.conn=conn;
-        this.tableName=tableName;
-        this.eventRecSecTableName=eventRecSecTableName;
+        this.conn = conn;
+        this.tableName = tableName;
+        this.eventRecSecTableName = eventRecSecTableName;
         String createStmt = "CREATE TABLE " + tableName
                 + "(recSecId int,channelid int)";
         String insertStmt = "INSERT INTO " + tableName
                 + "(recSecId, channelid) VALUES (?, ?)";
         String updateRecordSectionStmt = "UPDATE " + tableName
-                + " SET  recSecId=? WHERE recSecId=?";
+                + " SET  recSecId=? WHERE recSecId=? and channelid=?";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -51,6 +47,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
             int curRecSecId = getRecSecId(eventId, channelId);
             updateRecordSection.setInt(1, newRecSecId);
             updateRecordSection.setInt(2, curRecSecId);
+            updateRecordSection.setInt(3, channelId);
             updateRecordSection.executeUpdate();
         } catch(SQLException e) {
             throw new RuntimeException("Running the SQL query "
@@ -65,14 +62,14 @@ public class JDBCRecordSectionChannel extends SodJDBC {
     }
 
     public int getRecSecId(int eventId, int channelId) throws SQLException {
-        if(getRecSecId==null){
+        if(getRecSecId == null) {
             String getRecSecIdStmt = "SELECT recSecId FROM "
-                + tableName
-                + " recSecChannel,"
-                + eventRecSecTableName
-                + " eventRecSec WHERE "
-                + "eventRecSec.recSecId=recSecChannel.recSecId AND eventid=? AND channelid=?";
-            getRecSecId=conn.prepareStatement(getRecSecIdStmt);
+                    + tableName
+                    + " recSecChannel,"
+                    + eventRecSecTableName
+                    + " eventRecSec WHERE "
+                    + "eventRecSec.recSecId=recSecChannel.recSecId AND eventid=? AND channelid=?";
+            getRecSecId = conn.prepareStatement(getRecSecIdStmt);
         }
         getRecSecId.setInt(1, eventId);
         getRecSecId.setInt(2, channelId);
@@ -87,7 +84,10 @@ public class JDBCRecordSectionChannel extends SodJDBC {
     }
 
     PreparedStatement insert, updateRecordSection, getRecSecId;
+
     Connection conn;
+
     String tableName;
+
     String eventRecSecTableName;
 }
