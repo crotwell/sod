@@ -44,7 +44,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
     }
 
     protected Object getTemplate(String tag, Element el) throws ConfigurationException {
-        if(tag.equals("stations")) {
+        if(tag.equals("eventStations")) {
             return new EventStationGroupTemplate(el, event);
         }else if(tag.equals("map")){
             try {
