@@ -54,7 +54,6 @@ public class NetworkArm {
         Node node;
         for (int i=0; i<children.getLength(); i++) {
             node = children.item(i);
-            logger.debug(node.getNodeName());
             if (node instanceof Element) {
                 if (((Element)node).getTagName().equals("description")) {
                     // skip description element
@@ -609,7 +608,6 @@ public class NetworkArm {
      */
     public StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
         if(networkDbObject.stationDbObjects != null) {
-            logger.debug("returning from the cache");
             return networkDbObject.stationDbObjects;
         } 
         ArrayList arrayList = new ArrayList();
@@ -647,7 +645,6 @@ public class NetworkArm {
      */
     public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject, StationDbObject stationDbObject) {
         if(stationDbObject.siteDbObjects != null) {
-            logger.debug("returning from the cache");
             return stationDbObject.siteDbObjects;
         }
         ArrayList arrayList = new ArrayList();

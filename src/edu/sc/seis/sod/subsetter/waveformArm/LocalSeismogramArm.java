@@ -267,7 +267,7 @@ public class LocalSeismogramArm implements Subsetter{
                                           outfilters,
                                           waveformArm);
         } else {
-            logger.info("FAIL available data");
+            logger.info("FAIL request subsetter");
             waveformArm.setFinalStatus(eventDbObject,
                                        channelDbObject,
                                        Status.COMPLETE_REJECT,
