@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import org.w3c.dom.DOMException;
+import org.apache.log4j.BasicConfigurator;
 
 
 
@@ -33,12 +34,21 @@ public class CommandLineEditor {
         processArgs();
     }
 
-    void processArgs() {
-
+    void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException {
+        boolean help = false;
         for (int i = 0; i < args.length; i++) {
             if (i < args.length-1 && args[i].equals("-f")) {
                 configFilename = args[i+1];
+                initConfigFile();
+            } else if (args[i].equals("-help")) {
+                help = true;
             }
+        }
+
+        if (help) {
+            printOptions(new DataOutputStream(System.out));
+        } else {
+
         }
     }
 
@@ -50,7 +60,7 @@ public class CommandLineEditor {
         }
     }
 
-    public void printOptions(String configFilename, DataOutputStream out) throws DOMException, IOException {
+    public void printOptions(DataOutputStream out) throws DOMException, IOException {
         Document doc = start.getDocument();
         printOptions(doc.getDocumentElement(), out);
     }
@@ -63,8 +73,20 @@ public class CommandLineEditor {
                 printOptions((Element)n, out);
             } else if (n instanceof Text) {
                 Text textNode = (Text)n;
-                out.writeBytes(textNode.getParentNode().getNodeName()+"  "+textNode.getNodeValue());
+                if ( ! textNode.getNodeValue().trim().equals("")) {
+                    out.writeBytes(getFullName((Element)textNode.getParentNode())+"  "+textNode.getNodeValue()+"\n");
+                } else {
+                    // ignore whitespace
+                }
             }
+        }
+    }
+
+    protected String getFullName(Element e) {
+        if (e.getParentNode() != null && e.getParentNode() instanceof Element) {
+            return getFullName((Element)e.getParentNode())+"."+e.getTagName();
+        } else {
+            return e.getTagName();
         }
     }
 
@@ -72,7 +94,9 @@ public class CommandLineEditor {
      *
      */
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
+        BasicConfigurator.configure();
         CommandLineEditor cle = new CommandLineEditor(args);
+        System.out.println("Done editing.");
     }
 
     String[] args;
