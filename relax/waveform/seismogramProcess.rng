@@ -217,7 +217,7 @@
                 <description>Applys a taper to the seismograms. The type can be
                 one of HANNING, HAMMIN or COSINE, with HANNING the default. The
                 width is given as a fraction of the seismogram length, and so
-                should be &lt; 0.5 as otherwise the begin and end taper will
+                should be  0.5 as otherwise the begin and end taper will
                 overlap each other. 0.05 is the default.</description>
                 <example>
                    <taper>
@@ -236,9 +236,9 @@
             <optional>
                 <element name="type">
                     <choice>
-                        <value>HANNING</value>
-                        <value>HAMMING</value>
-                        <value>COSINE</value>
+                        <value>hanning</value>
+                        <value>hamming</value>
+                        <value>cosine</value>
                     </choice>
                 </element>
             </optional>
@@ -284,8 +284,8 @@
         <element name="saveSeismogramToFile">
             <element name="fileType">
                 <choice>
-                    <value>SAC</value>
-                    <value>MSEED</value>
+                    <value>sac</value>
+                    <value>mseed</value>
                 </choice>
             </element>
             <optional>

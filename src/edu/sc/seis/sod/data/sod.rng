@@ -4,59 +4,61 @@
         <element name="sod">
             <optional>
                 <element name="properties">
-                    <optional>
-                        <element name="runName">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="statusBase">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventQueryIncrement">
-                            <ref name="time7"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventRefreshInterval">
-                            <ref name="time7"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventLag">
-                            <ref name="time7"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="maxRetryDelay">
-                            <ref name="time7"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="waveformWorkerThreads">
-                            <text/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="reopenEvents">
-                            <ref name="trueOrFalse"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="removeDatabase">
-                            <ref name="trueOrFalse"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventChannelPairProcessing">
-                            <choice>
-                                <value>atLeastOnce</value>
-                                <value>atMostOnce</value>
-                            </choice>
-                        </element>
-                    </optional>
+                    <interleave>
+                        <optional>
+                            <element name="runName">
+                                <text/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="statusBase">
+                                <text/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="eventQueryIncrement">
+                                <ref name="time7"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="eventRefreshInterval">
+                                <ref name="time7"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="eventLag">
+                                <ref name="time7"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="maxRetryDelay">
+                                <ref name="time7"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="waveformWorkerThreads">
+                                <text/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="reopenEvents">
+                                <ref name="trueOrFalse"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="removeDatabase">
+                                <ref name="trueOrFalse"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="eventChannelPairProcessing">
+                                <choice>
+                                    <value>atLeastOnce</value>
+                                    <value>atMostOnce</value>
+                                </choice>
+                            </element>
+                        </optional>
+                    </interleave>
                 </element>
             </optional>
             <element name="eventArm">
@@ -5072,7 +5074,10 @@
             </element>
             <element name="saveSeismogramToFile">
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -5157,6 +5162,15 @@
                         <data type="float"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>hanning</value>
+                            <value>hamming</value>
+                            <value>cosine</value>
+                        </choice>
+                    </element>
+                </optional>
             </element>
             <element name="externalSeismogramProcess">
                 <element name="classname">
@@ -5198,7 +5212,11 @@
                     <data type="int"/>
                 </element>
                 <element name="filterType">
-                    <data type="string"/>
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
                 </element>
             </element>
             <element name="forkProcess">
@@ -5300,7 +5318,10 @@
             </element>
             <element name="saveSeismogramToFile">
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -5385,6 +5406,15 @@
                         <data type="float"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>hanning</value>
+                            <value>hamming</value>
+                            <value>cosine</value>
+                        </choice>
+                    </element>
+                </optional>
             </element>
             <element name="externalSeismogramProcess">
                 <element name="classname">
@@ -5426,7 +5456,11 @@
                     <data type="int"/>
                 </element>
                 <element name="filterType">
-                    <data type="string"/>
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
                 </element>
             </element>
             <element name="forkProcess">
@@ -5528,7 +5562,10 @@
             </element>
             <element name="saveSeismogramToFile">
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -5613,6 +5650,15 @@
                         <data type="float"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>hanning</value>
+                            <value>hamming</value>
+                            <value>cosine</value>
+                        </choice>
+                    </element>
+                </optional>
             </element>
             <element name="externalSeismogramProcess">
                 <element name="classname">
@@ -5654,7 +5700,11 @@
                     <data type="int"/>
                 </element>
                 <element name="filterType">
-                    <data type="string"/>
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
                 </element>
             </element>
             <element name="forkProcess">
@@ -5756,7 +5806,10 @@
             </element>
             <element name="saveSeismogramToFile">
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -5841,6 +5894,15 @@
                         <data type="float"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>hanning</value>
+                            <value>hamming</value>
+                            <value>cosine</value>
+                        </choice>
+                    </element>
+                </optional>
             </element>
             <element name="externalSeismogramProcess">
                 <element name="classname">
@@ -5882,7 +5944,11 @@
                     <data type="int"/>
                 </element>
                 <element name="filterType">
-                    <data type="string"/>
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
                 </element>
             </element>
             <element name="forkProcess">
@@ -5984,7 +6050,10 @@
             </element>
             <element name="saveSeismogramToFile">
                 <element name="fileType">
-                    <data type="string"/>
+                    <choice>
+                        <value>sac</value>
+                        <value>mseed</value>
+                    </choice>
                 </element>
                 <optional>
                     <element name="prefix">
@@ -6069,6 +6138,15 @@
                         <data type="float"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="type">
+                        <choice>
+                            <value>hanning</value>
+                            <value>hamming</value>
+                            <value>cosine</value>
+                        </choice>
+                    </element>
+                </optional>
             </element>
             <element name="externalSeismogramProcess">
                 <element name="classname">
@@ -6110,7 +6188,11 @@
                     <data type="int"/>
                 </element>
                 <element name="filterType">
-                    <data type="string"/>
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
                 </element>
             </element>
             <element name="forkProcess">

@@ -17,12 +17,24 @@ import org.w3c.dom.Element;
 
 public class Taper implements LocalSeismogramProcess {
     public Taper (Element config) {
+        int type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+        Element typeElement = SodUtil.getElement(config, "type");
+        if (typeElement != null) {
+            String typeStr = SodUtil.getText(typeElement);
+            if (typeStr.equals("hanning")) {
+                type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+            } else if (typeStr.equals("hamming")) {
+                type = edu.sc.seis.fissuresUtil.bag.Taper.HANNING;
+            } else if (typeStr.equals("cosine")) {
+                type = edu.sc.seis.fissuresUtil.bag.Taper.COSINE;
+            }
+        }
         Element widthElement = SodUtil.getElement(config, "width");
         if (widthElement != null) {
             float width = Float.parseFloat(SodUtil.getText(widthElement));
-            taper = new edu.sc.seis.fissuresUtil.bag.Taper(width);
+            taper = new edu.sc.seis.fissuresUtil.bag.Taper(type, width);
         } else {
-            taper = new edu.sc.seis.fissuresUtil.bag.Taper();
+            taper = new edu.sc.seis.fissuresUtil.bag.Taper(type);
         }
     }
 
