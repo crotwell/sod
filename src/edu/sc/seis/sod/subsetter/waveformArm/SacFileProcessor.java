@@ -2,13 +2,17 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.sac.*;
+import edu.sc.seis.fissuresUtil.xml.*;
 import edu.sc.seis.sod.*;
+import edu.iris.Fissures.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.seismogramDC.*;
+import javax.xml.parsers.*;
+
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
@@ -87,23 +91,61 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		} // end of if (!)
 	    } // end of if (dataDirectory.exits())
 
+	    // load dataset if it already exists
+	    File dsFile = new File(eventDirName, eventDirName+".dsml");
+	    XMLDataSet dataset;
+	    if (dsFile.exists()) {
+		dataset = XMLDataSet.load(dsFile.toURL());
+	    } else {
+		DocumentBuilderFactory factory
+		    = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = factory.newDocumentBuilder();
+		dataset = new XMLDataSet(docBuilder, 
+					 eventDirectory.toURL(), 
+					 "genid"+Math.round(Math.random()*Integer.MAX_VALUE),
+					 eventDirName,
+					 System.getProperty("user.name"));
+	    } // end of else
+
 	    SacTimeSeries sac;
+	    String seisFilename = "";
 	    for (int i=0; i<seismograms.length; i++) {
-		File seisFile = new File(eventDirectory, 
-					 ChannelIdUtil.toStringNoDates(seismograms[i].channel_id));
+		seisFilename = ChannelIdUtil.toStringNoDates(seismograms[i].channel_id);
+		File seisFile = new File(eventDirectory, seisFilename); 
 		int n =0;
 		while (seisFile.exists()) {
 		    n++;
-		    seisFile = new File(eventDirectory,
-					ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n);
+		    
+		    seisFilename = 
+			ChannelIdUtil.toStringNoDates(seismograms[i].channel_id)+"."+n;
+		    seisFile = new File(eventDirectory, seisFilename);
 		} // end of while (seisFile.exists())
-		
-		sac = FissuresToSac.getSAC((LocalSeismogramImpl)seismograms[i],
+		LocalSeismogramImpl lseis = 
+		    (LocalSeismogramImpl)seismograms[i];
+		sac = FissuresToSac.getSAC(lseis,
 					   channel,
 					   event.get_preferred_origin());
 		sac.write(seisFile);
-	    } // end of for (int i=0; i<seismograms.length; i++)
-	    
+		AuditInfo[] audit = new AuditInfo[1];
+		audit[0] = new AuditInfo(System.getProperty("user.name"),
+					 "seismogram loaded via sod.");
+		dataset.addSeismogramRef(seisFile.toURL(), 
+					 lseis.getName(), 
+					 new Property[0], 
+					 lseis.parm_ids,
+					 audit);
+	    }
+	    try {
+		File outFile = new File(eventDirName, eventDirName+".dsml");
+		OutputStream fos = new BufferedOutputStream(
+				      new FileOutputStream(outFile));
+		dataset.write(fos);
+		fos.close();
+	    } catch(Exception ex) {
+		System.out.println("EXCEPTION CAUGHT WHILE trying to save dataset"
+				   +ex.toString());
+		ex.printStackTrace();
+	    }
 	} catch(Exception e) {
 	    
 	    System.out.println("Exception caught while writing to file in PrintLineWaveformProcess");
