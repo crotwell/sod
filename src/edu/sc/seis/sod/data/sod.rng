@@ -213,7 +213,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any2"/>
+                                <ref name="any3"/>
                             </zeroOrMore>
                         </element>
                     </choice>
@@ -233,7 +233,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any3"/>
+                                <ref name="any4"/>
                             </zeroOrMore>
                         </element>
                         <element name="eventStatusTemplate">
@@ -311,7 +311,7 @@
                                 <data type="string"/>
                             </element>
                             <zeroOrMore>
-                                <ref name="any4"/>
+                                <ref name="any5"/>
                             </zeroOrMore>
                         </element>
                     </choice>
@@ -737,7 +737,7 @@
     <define name="eventStation3">
         <choice>
             <element name="distanceRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="embeddedOriginSubsetter">
                 <ref name="origin3"/>
@@ -746,10 +746,10 @@
                 <ref name="station4"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -765,7 +765,7 @@
                         <data type="float"/>
                     </element>
                 </element>
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1716,7 +1716,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range5"/>
+                    <ref name="range6"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1726,7 +1726,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range5"/>
+                <ref name="range6"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1910,7 +1910,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range4"/>
+                    <ref name="range5"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1920,7 +1920,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range4"/>
+                <ref name="range5"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -3607,12 +3607,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range6"/>
+                <ref name="range4"/>
             </element>
         </zeroOrMore>
     </define>
@@ -3900,6 +3900,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="any6">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any6"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="any">
         <element>
             <anyName/>
@@ -4012,7 +4026,7 @@
                     <data type="string"/>
                 </element>
                 <zeroOrMore>
-                    <ref name="any5"/>
+                    <ref name="any6"/>
                 </zeroOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
@@ -4152,7 +4166,7 @@
                     <data type="string"/>
                 </element>
                 <zeroOrMore>
-                    <ref name="any"/>
+                    <ref name="any2"/>
                 </zeroOrMore>
             </element>
             <element name="localSeismogramTemplateGenerator">
@@ -4710,6 +4724,14 @@
                     <ref name="channelGroupSeismogramProcess"/>
                 </zeroOrMore>
             </element>
+            <element name="externalChannelGroupSeismogramProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <zeroOrMore>
+                    <ref name="any"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="SignalToNoiseBase2">
@@ -4865,6 +4887,35 @@
             </element>
         </optional>
     </define>
+    <define name="range7">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
     <define name="range5">
         <element name="unit">
             <choice>
@@ -4982,35 +5033,6 @@
         </optional>
     </define>
     <define name="range6">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
-    </define>
-    <define name="range7">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>

@@ -9,12 +9,23 @@
         <choice>
             <externalRef href="seismogramProcess.rng"/>
             <ref name="channelGroupForkProcess" />
+            <ref name="externalChannelGroupSeismogramProcess" />
         </choice>
     </define>
     <define name="channelGroupForkProcess">
         <element name="channelGroupForkProcess">
             <zeroOrMore>
                 <ref name="channelGroupSeismogramProcess"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="externalChannelGroupSeismogramProcess">
+        <element name="externalChannelGroupSeismogramProcess">
+            <element name="classname">
+                <data type="string"/>
+            </element>
+            <zeroOrMore>
+                <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
         </element>
     </define>
