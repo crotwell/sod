@@ -40,7 +40,7 @@ public class PhaseExists
      */
     public boolean accept(EventAccessOperations o, NetworkAccess network, Station station,  CookieJar cookies)
 	throws Exception{
-	return false;
+	return true;
     }
 
 }// PhaseExists

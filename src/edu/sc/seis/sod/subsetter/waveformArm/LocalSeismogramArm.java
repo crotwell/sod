@@ -103,7 +103,6 @@ public class LocalSeismogramArm implements Subsetter{
     public void processRequestGeneratorSubsetter
 	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter dataCenter) throws Exception{
 	RequestFilter[] infilters = requestGeneratorSubsetter.generateRequest(eventAccess, networkAccess, channel, null); 
-	System.out.println("==========    GET AVAILABLE DATA ======================== ");
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 	{
 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
@@ -118,7 +117,6 @@ public class LocalSeismogramArm implements Subsetter{
     public void processAvailableDataSubsetter
 	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter dataCenter, RequestFilter[] infilters, RequestFilter[] outfilters) throws Exception{
 	if(availableDataSubsetter.accept(eventAccess, networkAccess, channel, infilters, outfilters, null)) {
-	    System.out.println("============   GET SEISMOGRAMS ===============");
 	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(outfilters);
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
 	}
