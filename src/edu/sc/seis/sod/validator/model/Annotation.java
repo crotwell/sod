@@ -5,6 +5,7 @@
  */
 
 package edu.sc.seis.sod.validator.model;
+import edu.sc.seis.sod.validator.example.*;
 
 import edu.sc.seis.sod.validator.ModelWalker;
 
