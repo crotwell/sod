@@ -184,11 +184,8 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                 //in the waveformDatabase.
                 Start.getEventQueue().setFinalStatus(eventAccess,
                                                      Status.AWAITING_FINAL_STATUS);
-                //  Start.getWaveformQueue().endTransaction();
-                //get the next event.
                 eventid = Start.getEventQueue().pop();
             }
-            
             //signals the waveformQueue the end of
             //processing of all the events.
             Start.getWaveformQueue().setSourceAlive(false);
@@ -205,10 +202,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         } catch(Throwable e) {
             logger.fatal("Problem running waveform arm", e);
             notifyListeners(this, e);
-        } finally {
-            //pool.finished();
-        } // end of finally
-        
+        }
     }
     
     /**
