@@ -5,9 +5,11 @@
         <xsl:include href="pageGenerator.xsl"/>
         <xsl:template match="/pages">
                 <xsl:for-each select="page">
-                        <redirect:write select="concat(../baseDirectory/text(), destination/text())">
-                                <xsl:apply-templates select="document(source/text())"/>
-                        </redirect:write>
+                        <xsl:if test="contains(source/text(), '.xml')">
+							<redirect:write select="concat(../baseDirectory/text(), destination/text())">
+                            	    <xsl:apply-templates select="document(source/text())"/>
+	                        </redirect:write>
+						</xsl:if>
                 </xsl:for-each>
         </xsl:template>
 </xsl:stylesheet>
