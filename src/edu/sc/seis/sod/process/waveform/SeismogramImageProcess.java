@@ -89,10 +89,9 @@ public class SeismogramImageProcess implements WaveformProcess {
                 prefix = SodUtil.getNestedText((Element)n);
             } else if(n.getNodeName().equals("fileType")) {
                 defaultFileType = SodUtil.getNestedText((Element)n);
-            }else if(n.getNodeName().equals("putDataInCookieJar")){
+            } else if(n.getNodeName().equals("putDataInCookieJar")) {
                 putDataInCookieJar = true;
             }
-            
         }
         if(fileDir == null) {
             fileDir = FileWritingTemplate.getBaseDirectoryName();
@@ -238,21 +237,17 @@ public class SeismogramImageProcess implements WaveformProcess {
                          * Currently only the regions around first P and first S
                          * Flags are made clickable
                          */
-                        int pFlagCount = NUM_PFLAGS_MARKED;
-                        int sFlagCount = NUM_SFLAGS_MARKED;
+                        int pLeft = NUM_P_TO_MARK;
+                        int sLeft = NUM_S_TO_MARK;
                         for(int i = 0; i < arrivals.length; i++) {
                             String phase = arrivals[i].getName();
-                            if(((phase.startsWith("P") && (pFlagCount != 0)))
-                                    || (phase.startsWith("S") && (sFlagCount != 0))) {
-                                if(phase.startsWith("P")) {
-                                    pFlagCount--;
-                                } else if(phase.startsWith("S")) {
-                                    sFlagCount--;
-                                }
-                                FlagData flagData = flags[i].getFlagData();
-                                cookieJar.put(prefix
-                                        + "SeismogramImageProcess_flagPixels_"
-                                        + arrivals[i].getName(), flagData);
+                            FlagData flagData = flags[i].getFlagData();
+                            if(phase.startsWith("P") && pLeft-- > 0) {
+                                cookieJar.put(prefix + COOKIE_KEY + "P",
+                                              flagData);
+                            } else if(phase.startsWith("S") && sLeft-- > 0) {
+                                cookieJar.put(prefix + COOKIE_KEY + "S",
+                                              flagData);
                             }
                         }
                     }
@@ -294,11 +289,13 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     public static final String PNG = "png";
 
+    public static final String COOKIE_KEY = "SeismogramImageProcess_flagPixels_";
+
     private static final String[] DEFAULT_PHASES = {"ttp", "tts"};
 
-    private static final int NUM_PFLAGS_MARKED = 1;
+    private static final int NUM_P_TO_MARK = 1;
 
-    private static final int NUM_SFLAGS_MARKED = 1;
+    private static final int NUM_S_TO_MARK = 1;
 
     private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
 
