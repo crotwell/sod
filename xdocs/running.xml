@@ -7,31 +7,18 @@
                 <section name="Starting SOD">
                         <section name="Solaris, MacOSX, Linux, etc">
                                 <p>If you're on a Unix-like OS, use the sod.sh script in the bin
-                                        directory. To run it, cd to SOD's bin directory and execute
-                                        'sod.sh -f <em>config file name</em>'. The -f option
+                                        directory. To run it, execute sod.sh with the arguments '-f <em>config file name</em>'. The -f option
                                         specifies the config file SOD uses to set up its arms. The
                                         command 'sod.sh -f ../docs/tutorial.xml' runs the same
                                         tutorial that the editor opens by default.</p>
                         </section>
                         <section name="Windows">
                                 <p> SOD runs are currently started with a .bat file in Windows. To
-                                        execute it, open a command window and cd to the bin
-                                        directory in the place you unpacked sod. Execute the command
-                                        'sod.bat -f <em>config file name</em>'. This will start SOD
+                                        execute it, open a command window execute sod.bat with the arguments
+                                        ' -f <em>config file name</em>'. This will start SOD
                                         using the config file specified after the -f flag. The
-                                        command 'sod.bat -f ../docs/tutorial.xml' starts SOD with
+                                        command 'sod.bat -f ../docs/tutorial.xml' in the bin directory starts SOD with
                                         the same tutorial config file used by the editor.</p>
-                        </section>
-                        <section name="Running in a directory other than bin">
-                                <p>SOD's scripts use the variable SOD_HOME to locate SOD's lib
-                                        directory, and it's initially set to be one directory above
-                                        sod.sh. So, as long as you run the scripts from the bin
-                                        directory everything goes off smoothly. If you'd rather run
-                                        sod from another directory(so you can use the same config
-                                        file outputlocations, but not have a second run overwrite
-                                        the first), just set SOD_HOME in sod.sh to the directory
-                                        where SOD was unpacked. This will allow SOD to run from
-                                        anywhere and still find its lib directory.</p>
                         </section>
                 </section>
                 <section name="Figuring out what SOD is doing using HTML status">
