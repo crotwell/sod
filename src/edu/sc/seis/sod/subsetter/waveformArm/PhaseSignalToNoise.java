@@ -69,7 +69,6 @@ public class PhaseSignalToNoise extends LongShortSignalToNoise {
                     bestTrigger = triggers[i];
                 }
                 if (bestTrigger != null) {
-                    System.out.println("sod_phaseStoN_"+phaseName+"  "+ bestTrigger.getValue()+"  "+ChannelIdUtil.toStringNoDates(channel.get_id())+"  "+event);
                     cookieJar.put("sod_phaseStoN_"+phaseName, bestTrigger);
                     return true;
                 }
