@@ -17,7 +17,7 @@ import org.apache.log4j.*;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 2923 2002-11-18 14:23:00Z crotwell $
+ * @version $Id: PhaseCut.java 2933 2002-11-18 17:57:51Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -57,6 +57,7 @@ public class PhaseCut implements LocalSeismogramProcess {
 	    new LocalSeismogramImpl[seismograms.length];
 	RequestFilter[] cutRequest = 
 	    phaseRequest.generateRequest(event, network, channel, cookies);
+	logger.debug("Cutting from "+cutRequest[0].start_time.date_time+" to "+cutRequest[0].end_time.date_time);
 	Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time), 
 			  new MicroSecondDate(cutRequest[0].end_time));
 	for (int i=0; i<seismograms.length; i++) {
@@ -68,5 +69,8 @@ public class PhaseCut implements LocalSeismogramProcess {
     Element config;
 
     PhaseRequest phaseRequest;
+
+    static Category logger = 
+	Category.getInstance(PhaseRequest.class.getName());
 
 }// PhaseCut
