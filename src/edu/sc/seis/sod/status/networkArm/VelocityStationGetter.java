@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.fissuresUtil.database.network.JDBCStation;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -25,7 +26,7 @@ import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class VelocityStationGetter {
 
-    public VelocityStationGetter(NetworkAccess net) {
+    public VelocityStationGetter(NetworkId net) {
         this.net = net;
     }
 
@@ -33,8 +34,7 @@ public class VelocityStationGetter {
         List out = new LinkedList();
         NetworkDbObject[] nets = Start.getNetworkArm().getSuccessfulNetworks();
         for (int i = 0; i < nets.length; i++) {
-            if (NetworkIdUtil.areEqual(nets[i].getNetworkAccess().get_attributes().get_id(),
-                                       net.get_attributes().get_id())) {
+            if (NetworkIdUtil.areEqual(nets[i].getNetworkAccess().get_attributes().get_id(), net)) {
                 StationDbObject[] sta = Start.getNetworkArm().getSuccessfulStations(nets[i]);
                 for (int j = 0; j < sta.length; j++) {
                     out.add(sta[j]);
@@ -67,7 +67,7 @@ public class VelocityStationGetter {
         return rs.getInt(1);
     }
 
-    NetworkAccess net;
+    NetworkId net;
 
     private static JDBCEventChannelStatus evStatus;
     private static JDBCStation stationTable;

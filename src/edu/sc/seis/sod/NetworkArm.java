@@ -16,6 +16,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkDCOperations;
 import edu.iris.Fissures.IfNetwork.NetworkId;
+import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -64,11 +65,12 @@ public class NetworkArm {
         processConfig(config);
     }
 
-    public NetworkAccess getNetwork(NetworkId network_id) {
-        for(int i = 0; i < netDbs.length; i++) {
-            if(NetworkIdUtil.areEqual(netDbs[i].getNetworkAccess()
+    public NetworkAccess getNetwork(NetworkId network_id) throws Exception {
+        NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
+        for(int i = 0; i < tmpNetDbs.length; i++) {
+            if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
                     .get_attributes()
-                    .get_id(), network_id)) { return netDbs[i].getNetworkAccess(); }
+                    .get_id(), network_id)) { return tmpNetDbs[i].getNetworkAccess(); }
         }
         throw new IllegalArgumentException("No network for id: "
                 + NetworkIdUtil.toString(network_id));
@@ -167,10 +169,13 @@ public class NetworkArm {
      * NetworkDbObjects.
      * 
      * @return a <code>NetworkDbObject[]</code> value
+     * @throws NotFound
+     * @throws SQLException
+     * @throws NetworkNotFound
      * @exception Exception
      *                if an error occurs
      */
-    public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
+    public NetworkDbObject[] getSuccessfulNetworks() throws NetworkNotFound, SQLException, NotFound  {
         if(!needsRefresh()) {
             if(netDbs == null) {
                 netDbs = netTable.getAllNets(getNetworkDC());

@@ -10,6 +10,8 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
@@ -44,12 +46,16 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     public void setArmStatus(String status) throws Exception {}
 
     public void change(Station station, Status s) {
-        VelocityContext context = new VelocityContext(networkArmContext);
-        NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.my_network.get_id());
-        context.put("network", networkAccess);
-        context.put("stations", new VelocityStationGetter(networkAccess));
-        String id = NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id());
-        scheduleOutput("waveformStations/"+ id +".html", context);
+        try {
+            VelocityContext context = new VelocityContext(networkArmContext);
+            NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.my_network.get_id());
+            context.put("network", networkAccess);
+            context.put("stations", new VelocityStationGetter(station.my_network.get_id()));
+            String id = NetworkIdUtil.toStringNoDates(station.my_network.get_id());
+            scheduleOutput("waveformStations/"+ id +".html", context);
+        } catch (Throwable e) {
+            GlobalExceptionHandler.handle("Can't set status("+s+") for "+StationIdUtil.toString(station.get_id()), e);
+        }
     }
 
     public void change(Channel channel, Status s) {}
