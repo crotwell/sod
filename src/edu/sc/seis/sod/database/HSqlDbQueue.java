@@ -255,9 +255,9 @@ public class HSqlDbQueue implements Queue {
 
 
     public  synchronized void waitForProcessing() {
-        if(getLength() > 4) {
+        while(getLength() > 4) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {}
         }
     }
