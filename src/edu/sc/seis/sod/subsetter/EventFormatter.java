@@ -82,11 +82,11 @@ public class EventFormatter extends Template implements EventTemplate{
         return null;
     }
     
-    private static String format(double d){
+    private String format(double d){
         return defaultDecimalFormat.format(d);
     }
     
-    private static DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
+    private  DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
     
     private class RegionName implements EventTemplate{
         public String getResult(EventAccessOperations ev){
@@ -119,7 +119,7 @@ public class EventFormatter extends Template implements EventTemplate{
         templates.add(new Time());
     }
     
-    public String getResult(EventAccessOperations event) {
+    public synchronized String getResult(EventAccessOperations event) {
         StringBuffer name = new StringBuffer();
         Iterator it = templates.iterator();
         while(it.hasNext()){
@@ -140,7 +140,7 @@ public class EventFormatter extends Template implements EventTemplate{
         return fileName.trim();
     }
     
-    private static String getMag(EventAccessOperations event){
+    private String getMag(EventAccessOperations event){
         Magnitude[] mags = getOrigin(event).magnitudes;
         if (mags.length > 0)  return format(mags[0].value);
         throw new IllegalArgumentException("No magnitudes on event");
