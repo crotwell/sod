@@ -10,5 +10,7 @@ import org.relaxng.datatype.Datatype;
 
 public interface ModelDatatype extends Datatype{
     public String getDescription();
+    
+    public String getExampleValue();
 }
 
