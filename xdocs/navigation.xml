@@ -9,6 +9,7 @@
     <menu name="Essentials">
       <item name="Front Page"            href="/index.html"/>
       <item name="News &amp; Status"     href="/news.html"/>
+      <item name="XML Tag Docs"          href="/sodDocs/index.html"/>
       <item name="Bugs and Problems"          href="/bugs.html"/>
     </menu>
 
