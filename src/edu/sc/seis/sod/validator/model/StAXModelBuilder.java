@@ -171,6 +171,14 @@ public class StAXModelBuilder implements XMLStreamConstants{
                 }else if(reader.getLocalName().equals("description")){
                     reader.next();
                     note.setDescription(reader.getText());
+                } else if(reader.getLocalName().equals("example")){
+                    reader.next();
+                    StringBuffer buf = new StringBuffer();
+                    while (reader.getEventType()!= XMLStreamConstants.END_ELEMENT || !reader.getLocalName().equals("example")){
+                        buf.append(XMLUtil.readEvent(reader));
+                        reader.next();
+                    }
+                    note.setExample(buf.toString());
                 }
             }
         }
