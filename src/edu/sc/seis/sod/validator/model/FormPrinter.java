@@ -15,14 +15,11 @@ public class FormPrinter implements FormVisitor{
 
     public void visit(Attribute attr) {
         String print = "@" + attr.getName() + " " + getCardinality(attr);
-        if(attr.getAnnotation() != null){
-            print += " " + attr.getAnnotation().getSummary();
-        }
-        printAndIncreaseDepth(print);
+        printAndIncreaseDepth(print, attr);
     }
 
     public void visit(Choice choice) {
-        printAndIncreaseDepth("Choice " + getCardinality(choice));
+        printAndIncreaseDepth("Choice " + getCardinality(choice), choice);
     }
 
     private String getCardinality(Form choice) {
@@ -30,31 +27,29 @@ public class FormPrinter implements FormVisitor{
     }
 
     public void visit(Data d) {
-        print("Data: " + d.getDatatype() + " " + getCardinality(d));
+        print("Data: " + d.getDatatype() + " " + getCardinality(d), d);
     }
 
-    public void visit(Empty e) { print("Empty"); }
+    public void visit(Empty e) { print("Empty", e); }
 
     public void visit(Group g) {
-        printAndIncreaseDepth("Group" + " " + getCardinality(g));
+        String print ="Group" + " " + getCardinality(g);
+        printAndIncreaseDepth(print, g);
     }
 
     public void visit(Interleave i) {
-        printAndIncreaseDepth("Interleave" + " " + getCardinality(i));
+        printAndIncreaseDepth("Interleave" + " " + getCardinality(i), i);
     }
 
-    public void visit(NotAllowed na) { print("Not Allowed"); }
+    public void visit(NotAllowed na) { print("Not Allowed", na); }
 
 
     public void visit(NamedElement ne) {
         String print = ne.getName() + " " + getCardinality(ne);
-        if(ne.getAnnotation() != null){
-            print += " " + ne.getAnnotation().getSummary();
-        }
-        printAndIncreaseDepth(print);
+        printAndIncreaseDepth(print, ne);
     }
 
-    public void visit(Text t) { print("Text"); }
+    public void visit(Text t) { print("Text", t); }
 
     public void leave(Attribute attr) { depth--; }
 
@@ -67,19 +62,18 @@ public class FormPrinter implements FormVisitor{
     public void leave(NamedElement ne) { depth--; }
 
     public void visit(Value v) {
-        print("Value: " + v.getValue() + " " + v.getDatatype() + " " + getCardinality(v));
+        print("Value: " + v.getValue() + " " + v.getDatatype() + " " + getCardinality(v), v);
     }
 
-    private void printAndIncreaseDepth(String s) {
-        print(s);
+    private void printAndIncreaseDepth(String s, Form f) {
+        print(s, f);
         depth++;
     }
-    private void print(String s){
+    private void print(String s, Form f){
         for (int i = 0; i < depth; i++) { System.out.print(indent); }
-        System.out.println(s);
+        System.out.println(s + " " + f.getAnnotation().getSummary());
     }
 
     private int depth = 0;
     private String indent = "";
 }
-
