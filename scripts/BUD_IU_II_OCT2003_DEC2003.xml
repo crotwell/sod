@@ -81,36 +81,36 @@
         <value>3000</value>
       </refreshInterval>
     </networkFinder>
-    <networkAND>
+    <networkOR>
       <networkCode>II</networkCode>
       <networkCode>IU</networkCode>
-    </networkAND>
-    <stationEffectiveTimeOverlap>
-      <effectiveTimeOverlap>
-        <min>20031010T00:00:00.001Z</min>
-        <max>20031231T23:59:59.999Z</max>
-      </effectiveTimeOverlap>
-    </stationEffectiveTimeOverlap>
-    <siteAND>
-      <siteOR>
-        <siteCode>ADK</siteCode>
-        <siteCode>KIP</siteCode>
-        <siteCode>TEIG</siteCode>
-        <siteCode>PET</siteCode>
-        <siteCode>SBA</siteCode>
-        <siteCode>LVZ</siteCode>
-        <siteCode>RPN</siteCode>
-        <siteCode>EFI</siteCode>
-        <siteCode>KIV</siteCode>
-        <siteCode>KDAK</siteCode>
-      </siteOR>
-      <siteEffectiveTimeOverlap>
+    </networkOR>
+    <stationAND>
+      <stationOR>
+        <stationCode>ADK</stationCode>
+        <stationCode>KIP</stationCode>
+        <stationCode>TEIG</stationCode>
+        <stationCode>PET</stationCode>
+        <stationCode>SBA</stationCode>
+        <stationCode>LVZ</stationCode>
+        <stationCode>RPN</stationCode>
+        <stationCode>EFI</stationCode>
+        <stationCode>KIV</stationCode>
+        <stationCode>KDAK</stationCode>
+      </stationOR>
+      <stationEffectiveTimeOverlap>
         <effectiveTimeOverlap>
           <min>20031010T00:00:00.001Z</min>
           <max>20031231T23:59:59.999Z</max>
         </effectiveTimeOverlap>
-      </siteEffectiveTimeOverlap>
-    </siteAND>
+      </stationEffectiveTimeOverlap>
+    </stationAND>
+    <siteEffectiveTimeOverlap>
+        <effectiveTimeOverlap>
+          <min>20031010T00:00:00.001Z</min>
+          <max>20031231T23:59:59.999Z</max>
+        </effectiveTimeOverlap>
+    </siteEffectiveTimeOverlap>
     <channelAND>
       <bandCode>B</bandCode>
       <channelNOT>
