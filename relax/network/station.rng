@@ -14,6 +14,9 @@
             <ref name="depthRange"/>
             <ref name="effectiveTimeOverlap"/>
             <ref name="area"/>
+            <ref name="stationPointDistance" />
+            <ref name="stationPointAzimuth" />
+            <ref name="stationPointBackAzimuth" />
             <ref name="AND"/>
             <ref name="OR"/>
             <ref name="XOR"/>
@@ -131,6 +134,89 @@
             <externalRef href="../base/externalRef/area.rng"/>
         </element>
     </define>
+        <define name="stationPointDistance">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Distance range from a fixed point. </summary>
+                                <description> True if the station is within the
+                                given distance range of the given lat and lon. </description>
+                                <example>
+                                        <stationPointDistance>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </stationPointDistance>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="stationPointDistance">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+                </element>
+        </define>
+        <define name="stationPointAzimuth">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Azimuth (point to station) range from a fixed point. </summary>
+                                <description> True if the station is within the
+                                given azimuth range of the given lat and lon. In keeping with
+                                common seismic terminology, azimuth is measured from the point to the station.</description>
+                                <example>
+                                        <stationPointAzimuth>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </stationPointAzimuth>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="stationPointAzimuth">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+                </element>
+        </define>
+        <define name="stationPointBackAzimuth">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Back azimuth (station to point) range from a fixed point. </summary>
+                                <description> True if the station is within the
+                                given back azimuth range of the given lat and lon. In keeping with
+                                common seismic terminology, back azimuth is measured from the station to the point. </description>
+                                <example>
+                                        <stationPointBackAzimuth>
+                                                <unit>DEGREE</unit>
+                                                <min>30</min>
+                                                <max>90</max>
+                                                <latitude>35</latitude>
+                                                <longitude>-85</longitude>
+                                        </stationPointBackAzimuth>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="stationPointBackAzimuth">
+                    <element name="latitude">
+                        <data type="double"/>
+                    </element>
+                    <element name="longitude">
+                        <data type="double"/>
+                    </element>
+                    <ref name="range"/>
+                </element>
+        </define>
     <define name="AND">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">

@@ -202,33 +202,7 @@
                 <data type="string"/>
             </element>
             <element name="stationDepthRange">
-                <element name="unit">
-                    <choice>
-                        <value>KILOMETER</value>
-                        <value>METER</value>
-                        <value>CENTIMETER</value>
-                        <value>NANOMETER</value>
-                        <value>MICROMETER</value>
-                        <value>MICRON</value>
-                        <value>MILLIMETER</value>
-                        <value>PICOMETER</value>
-                        <value>INCH</value>
-                        <value>FOOT</value>
-                        <value>MILE</value>
-                        <value>DEGREE</value>
-                        <value>RADIAN</value>
-                    </choice>
-                </element>
-                <optional>
-                    <element name="min">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="double"/>
-                    </element>
-                </optional>
+                <ref name="range"/>
             </element>
             <element name="stationEffectiveTimeOverlap">
                 <element name="startTime">
@@ -339,6 +313,33 @@
                         <empty/>
                     </element>
                 </choice>
+            </element>
+            <element name="stationPointDistance">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range"/>
+            </element>
+            <element name="stationPointAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range"/>
+            </element>
+            <element name="stationPointBackAzimuth">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range"/>
             </element>
             <element name="stationAND">
                 <oneOrMore>
@@ -460,6 +461,35 @@
                 <ref name="channel"/>
             </element>
         </choice>
+    </define>
+    <define name="range">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
     </define>
     <define name="channelCodeUtil">
         <data type="string">
