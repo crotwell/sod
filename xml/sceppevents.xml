@@ -169,7 +169,7 @@
 	<eventStationAND>
 		<phaseExists>
 			<modelName>prem</modelName>
-			<phaseName>P</phaseName>
+			<phaseName>ttp</phaseName>
 		</phaseExists>
 		<phaseInteraction>
 			<modelName>prem</modelName>
@@ -195,7 +195,7 @@
 	</eventStationAND>
 
 	<fixedDataCenter>
-		<name>SCEPPSeismogramDC</name>
+		<name>SCEPPeismogramDC</name>
 		<dns>edu/sc/seis</dns>
 	</fixedDataCenter>
 	<localSeismogramArm>
