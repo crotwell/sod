@@ -1,4 +1,5 @@
 package edu.sc.seis.sod.status.eventArm;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
@@ -17,10 +18,11 @@ import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.OutputScheduler;
 
-public class MapEventStatus implements SodElement, EventMonitor, Runnable{
+public class MapEventStatus implements SodElement, EventMonitor, Runnable {
+
     private String fileLoc;
 
-    public MapEventStatus(Element element){
+    public MapEventStatus(Element element) {
         this(element, false);
     }
 
@@ -29,26 +31,36 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable{
      * xlink:href of the passed in element, and if addToEventArm is true, it
      * adds itself to the EventArm's status listeners
      */
-    public MapEventStatus(Element element, boolean addToEventArm){
+    public MapEventStatus(Element element, boolean addToEventArm) {
+        this(getLocation(element), addToEventArm);
+    }
+
+    public MapEventStatus(String location, boolean addToEventArm) {
         try {
             events = new JDBCEventStatus();
-        } catch (SQLException e) {
-            GlobalExceptionHandler.handle("Trouble creating event status db for use in map", e);
+        } catch(SQLException e) {
+            GlobalExceptionHandler.handle("Trouble creating event status db for use in map",
+                                          e);
         }
-        fileLoc = getLocation(element);
-        if(addToEventArm){Start.getEventArm().add(this);}
+        fileLoc = location;
+        if(addToEventArm) {
+            Start.getEventArm().add(this);
+        }
         run();
     }
 
-    public static String getLocation(Element el){
-        return FileWritingTemplate.getBaseDirectoryName() + '/' + el.getAttribute("xlink:href");
+    public static String getLocation(Element el) {
+        return FileWritingTemplate.getBaseDirectoryName() + '/'
+                + el.getAttribute("xlink:href");
     }
 
-    public void change(EventAccessOperations event, Status status){
+    public void change(EventAccessOperations event, Status status) {
         OutputScheduler.getDefault().schedule(this);
     }
 
-    public String getLocation(){ return fileLoc; }
+    public String getLocation() {
+        return fileLoc;
+    }
 
     public void run() {
         OpenMap map = pool.getMap();
@@ -57,21 +69,21 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable{
                 EventLayer el = map.getEventLayer();
                 el.eventDataChanged(new EQDataEvent(events.getAll()));
                 map.writeMapToPNG(fileLoc);
-            } catch (SQLException e) {
+            } catch(SQLException e) {
                 GlobalExceptionHandler.handle(e);
             }
-        } catch (IOException e) {
+        } catch(IOException e) {
             throw new RuntimeException("Trouble writing map", e);
-        }finally{
+        } finally {
             pool.returnMap(map);
         }
     }
 
-    public void setArmStatus(String status){}// noImpl
+    public void setArmStatus(String status) {}// noImpl
 
     private static MapPool pool = new MapPool(1, new FreshnessEventColorizer());
+
     private JDBCEventStatus events;
+
     private static Logger logger = Logger.getLogger(MapEventStatus.class);
 }
-
-
