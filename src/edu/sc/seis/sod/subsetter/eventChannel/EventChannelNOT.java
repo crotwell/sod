@@ -6,6 +6,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * Describe class <code>EventChannelNOT</code> here.
@@ -20,14 +23,15 @@ public final class EventChannelNOT extends EventChannelLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o,
+    public StringTree accept(EventAccessOperations o,
                           Channel channel,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
-        while(it.hasNext()) {
+        if(it.hasNext()) {
             EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
-            if(!filter.accept(o, channel, cookieJar)) { return false; }
+            StringTree result = filter.accept(o, channel, cookieJar);
+            return new StringTreeBranch(this, result.isSuccess(), result);
         }
-        return true;
+        return new StringTreeLeaf(this, true, "empty NOT");
     }
 }// EventChannelAND

@@ -11,6 +11,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public class EventVectorOR extends EventVectorLogicalSubsetter implements
         EventVectorSubsetter {
@@ -19,14 +21,18 @@ public class EventVectorOR extends EventVectorLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           ChannelGroup channel,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
+        StringTree[] result = new StringTree[filterList.size()];
+        int i=0;
         while(it.hasNext()) {
             EventVectorSubsetter filter = (EventVectorSubsetter)it.next();
-            if(!filter.accept(event, channel, cookieJar)) { return false; }
+            result[i] = filter.accept(event, channel, cookieJar);
+            if(!result[i].isSuccess()) { break; }
+            i++;
         }
-        return true;
+        return new StringTreeBranch(this, result[i].isSuccess(), result);
     }
 }

@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.WaveformResult;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
@@ -75,7 +76,7 @@ public class LocalSeismogramArm implements Subsetter {
     }
 
     public void processLocalSeismogramArm(EventChannelPair ecp) {
-        boolean passed;
+        StringTree passed;
         EventAccessOperations eventAccess = ecp.getEvent();
         Channel channel = ecp.getChannel();
         synchronized(eventChannel) {
@@ -88,7 +89,7 @@ public class LocalSeismogramArm implements Subsetter {
                 return;
             }
         }
-        if(passed) {
+        if(passed.isSuccess()) {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {

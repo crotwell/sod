@@ -23,6 +23,7 @@ import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
@@ -67,7 +68,7 @@ public class MotionVectorArm implements Subsetter {
     }
 
     public void processMotionVectorArm(EventChannelGroupPair ecp) {
-        boolean passed;
+        StringTree passed;
         EventAccessOperations eventAccess = ecp.getEvent();
         ChannelGroup channel = ecp.getChannelGroup();
         synchronized(eventChannelGroup) {
@@ -80,7 +81,7 @@ public class MotionVectorArm implements Subsetter {
                 return;
             }
         }
-        if(passed) {
+        if(passed.isSuccess()) {
             ecp.update(Status.get(Stage.REQUEST_SUBSETTER, Standing.IN_PROG));
             processRequestGeneratorSubsetter(ecp);
         } else {

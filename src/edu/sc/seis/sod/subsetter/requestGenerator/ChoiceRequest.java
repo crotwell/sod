@@ -13,6 +13,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 
@@ -44,9 +45,11 @@ public class ChoiceRequest implements RequestGenerator {
         Iterator it = choices.iterator();
         while(it.hasNext()) {
             Choice c = (Choice)it.next();
-            if(c.accept(event, channel, cookieJar)) { return c.generateRequest(event,
-                                                                               channel,
-                                                                               cookieJar); }
+            if(c.accept(event, channel, cookieJar).isSuccess()) {
+                return c.generateRequest(event,
+                                         channel,
+                                         cookieJar);
+            }
         } // end of while (it.hasNext())
         if(otherwise != null) {
             return otherwise.generateRequest(event, channel, cookieJar);
@@ -91,7 +94,7 @@ public class ChoiceRequest implements RequestGenerator {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
-        public boolean accept(EventAccessOperations event,
+        public StringTree accept(EventAccessOperations event,
                               Channel channel,
                               CookieJar cookieJar) throws Exception {
             return eventChannelSubsetter.accept(event, channel, cookieJar);
@@ -127,12 +130,12 @@ public class ChoiceRequest implements RequestGenerator {
             return requestGenerator.generateRequest(event, channel, cookieJar);
         }
 
-        public boolean accept(EventAccessOperations event,
+        public StringTree accept(EventAccessOperations event,
                               Channel channel,
                               CookieJar cookieJar) throws Exception {
             return eventStationSubsetter.accept(event,
                                                 channel.my_site.my_station,
-                                                cookieJar).isSuccess();
+                                                cookieJar);
         }
 
         EventStationSubsetter eventStationSubsetter;

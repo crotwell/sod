@@ -5,6 +5,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 
 /**
@@ -20,15 +22,15 @@ public class PassEventChannel implements EventChannelSubsetter,
 
     public PassEventChannel(Element config) {}
 
-    public boolean accept(EventAccessOperations o,
+    public StringTree accept(EventAccessOperations o,
                           Channel channel,
                           CookieJar cookieJar) {
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           ChannelGroup channel,
                           CookieJar cookieJar) throws Exception {
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 }// NullEventChannelSubsetter

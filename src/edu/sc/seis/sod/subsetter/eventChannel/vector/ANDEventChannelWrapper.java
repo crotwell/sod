@@ -13,6 +13,8 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
 public class ANDEventChannelWrapper implements EventVectorSubsetter {
@@ -34,15 +36,18 @@ public class ANDEventChannelWrapper implements EventVectorSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           ChannelGroup channelGroup,
                           CookieJar cookieJar) throws Exception {
-        for(int i = 0; i < channelGroup.getChannels().length; i++) {
-            if(!subsetter.accept(event,
-                                 channelGroup.getChannels()[i],
-                                 cookieJar)) { return false; }
+        StringTree[] results = new StringTree[channelGroup.getChannels().length];
+        int i;
+        for(i = 0; i < channelGroup.getChannels().length; i++) {
+            results[i] = subsetter.accept(event,
+                                          channelGroup.getChannels()[i],
+                                          cookieJar);
+            if(! results[i].isSuccess()) { break; }
         }
-        return true;
+        return new StringTreeBranch(this, results[i].isSuccess(), results);
     }
 
     EventChannelSubsetter subsetter;

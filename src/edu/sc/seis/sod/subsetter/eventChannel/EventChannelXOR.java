@@ -5,6 +5,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public final class EventChannelXOR extends EventChannelLogicalSubsetter
         implements EventChannelSubsetter {
@@ -13,13 +15,13 @@ public final class EventChannelXOR extends EventChannelLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Channel channel,
                           CookieJar cookieJar) throws Exception {
         EventChannelSubsetter filterA = (EventChannelSubsetter)filterList.get(0);
         EventChannelSubsetter filterB = (EventChannelSubsetter)filterList.get(1);
-        return (filterA.accept(event, channel, cookieJar) != filterB.accept(event,
-                                                                            channel,
-                                                                            cookieJar));
+        StringTree resultA = filterA.accept(event, channel, cookieJar);
+        StringTree resultB = filterB.accept(event, channel, cookieJar);
+        return new StringTreeBranch(this, resultA.isSuccess() != resultB.isSuccess(), new StringTree[] { resultA, resultB});
     }
 }// EventChannelXOR
