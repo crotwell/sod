@@ -127,6 +127,10 @@ public class FissuresFormatter {
         return false;
     }
 
+    public static boolean isEmpty(Object[] array) {
+        return array.length == 0;
+    }
+
     public static MicroSecondDate getEffectiveBegin(Station station) {
         return new MicroSecondDate(station.effective_time.start_time);
     }
