@@ -152,7 +152,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     JComponent getDefaultCompForElement(Element element) {
-        JLabel label = new JLabel(element.getTagName());
+        JLabel label = new JLabel(getDisplayName(element.getTagName()));
         Box box = Box.createVerticalBox();
         JComponent comp = getCompForAttributes(element);
         if (comp != null) {
@@ -198,13 +198,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         for (int i = 0; i < list.getLength(); i++) {
             if (list.item(i) instanceof Attr) {
                 Attr attr = (Attr)list.item(i);
-                JLabel label = new JLabel(attr.getName());
-                nameCol.add(label);
-                JTextField textField = new JTextField();
-                textField.setText(attr.getNodeValue());
-                TextListener textListen = new TextListener(attr);
-                textField.getDocument().addDocumentListener(textListen);
-                valCol.add(textField);
+                valCol.add(EditorUtil.getLabeledTextField(attr));
             }
         }
         return box;
