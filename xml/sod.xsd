@@ -11,6 +11,7 @@
 	
 	
 	<!-- Include the external schemas necessary for this schema -->
+	<xsd:include schemaLocation="./utilities.xsd"/>
 	<xsd:include schemaLocation="./EventArm.xsd"/>
 	<xsd:include schemaLocation="./NetworkArm.xsd"/>
 	<xsd:include schemaLocation="./WaveFormArm.xsd"/>
