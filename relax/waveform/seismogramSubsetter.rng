@@ -121,15 +121,28 @@
     </define>
     <define name="phaseSignalToNoise">
         <element name="phaseSignalToNoise">
-            <ref name="SignalToNoiseBase"/>
-            <element name="modelName">
-                <data type="string"/>
-            </element>
+            <optional>
+                <element name="modelName">
+                    <data type="string"/>
+                </element>
+            <optional>
             <element name="phaseName">
                 <data type="string"/>
             </element>
-            <element name="triggerWindow">
+            <element name="shortOffsetBegin">
                 <ref name="time"/>
+            </element>
+            <element name="shortOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="longOffsetBegin">
+                <ref name="time"/>
+            </element>
+            <element name="longOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="ratio">
+                <data type="float"/>
             </element>
         </element>
     </define>

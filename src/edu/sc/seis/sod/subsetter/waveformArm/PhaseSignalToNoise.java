@@ -13,16 +13,19 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
+import edu.sc.seis.fissuresUtil.bag.SimplePhaseStoN;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
  * trigger exists within +- the time interval for the given phase name. Uses the
@@ -31,20 +34,59 @@ import org.w3c.dom.Element;
  * The first trigger within the time window of the phase, if there is one, is
  * added to the cookieJar with key "sod_phaseStoN_"+phaseName for use by later
  * subsetters or later velocity output. */
-public class PhaseSignalToNoise extends LongShortSignalToNoise {
+public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
 
-    public PhaseSignalToNoise(Element config) throws ConfigurationException{
-        super(config);
-        Element element = SodUtil.getElement(config,"modelName");
-        if(element != null) modelName = SodUtil.getNestedText(element);
-        phaseName = SodUtil.getNestedText(SodUtil.getElement(config, "phaseName"));
-        triggerWindow = SodUtil.loadTimeInterval(SodUtil.getElement(config, "triggerWindow"));
-        triggerWindow = (TimeInterval)triggerWindow.convertTo(UnitImpl.SECOND);
+    public PhaseSignalToNoise(Element config) throws ConfigurationException, TauModelException{
+        NodeList childNodes = config.getChildNodes();
+        Node node;
+        TimeInterval shortOffsetBegin=null, shortOffsetEnd=null;
+        TimeInterval longOffsetBegin=null, longOffsetEnd=null;
+        for(int counter = 0; counter < childNodes.getLength(); counter++) {
+            node = childNodes.item(counter);
+            if(node instanceof Element) {
+                Element element = (Element)node;
+                if(element.getTagName().equals("phase")) {
+                    phaseName = SodUtil.getNestedText(element);
+                } else if(element.getTagName().equals("modelName")) {
+                    modelName = SodUtil.getNestedText(element);
+                }else if(element.getTagName().equals("ratio")) {
+                    ratio = Float.parseFloat(SodUtil.getNestedText(element));
+                } else if(element.getTagName().equals("shortOffsetBegin")) {
+                    SodElement sodElement =
+                        (SodElement) SodUtil.load(element,
+                                                  waveformArmPackage);
+                    shortOffsetBegin = ((BeginOffset)sodElement).getTimeInterval();
+                } else if(element.getTagName().equals("shortOffsetEnd")) {
+                    SodElement sodElement =
+                        (SodElement) SodUtil.load(element,
+                                                  waveformArmPackage);
+                    shortOffsetEnd = ((BeginOffset)sodElement).getTimeInterval();
+                } else if(element.getTagName().equals("longOffsetBegin")) {
+                    SodElement sodElement =
+                        (SodElement) SodUtil.load(element,
+                                                  waveformArmPackage);
+                    longOffsetBegin = ((BeginOffset)sodElement).getTimeInterval();
+                } else if(element.getTagName().equals("longOffsetEnd")) {
+                    SodElement sodElement =
+                        (SodElement) SodUtil.load(element,
+                                                  waveformArmPackage);
+                    longOffsetEnd = ((BeginOffset)sodElement).getTimeInterval();
+                }
+            }
+        }
         try {
             taupUtil = new TauPUtil(modelName);
         } catch (TauModelException e) {
             throw new ConfigurationException("Couldn't initialize travel time calculator", e);
         }
+
+        phaseStoN = new SimplePhaseStoN(phaseName,
+                                        shortOffsetBegin,
+                                        shortOffsetEnd,
+                                        longOffsetBegin,
+                                        longOffsetEnd,
+                                        modelName,
+                                        taupUtil);
     }
 
     public boolean accept(EventAccessOperations event,
@@ -53,33 +95,23 @@ public class PhaseSignalToNoise extends LongShortSignalToNoise {
                           RequestFilter[] available,
                           LocalSeismogramImpl[] seismograms,
                           CookieJar cookieJar) throws Exception {
-        LongShortTrigger[] triggers = calcTriggers(seismograms);
-        if (triggers.length != 0) {
-            // don't waste time on time calc if no triggers
-            Origin origin = event.get_preferred_origin();
-            MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
-            Arrival[] arrivals  = taupUtil.calcTravelTimes(channel.my_site.my_station, origin, new String[] {phaseName});
-            if (arrivals.length == 0) { return false; }
-            LongShortTrigger bestTrigger = null;
-            for (int i = 0; i < triggers.length; i++) {
-                double triggerSeconds =
-                    triggers[i].getWhen().subtract(originTime).convertTo(UnitImpl.SECOND).get_value();
-                if ( Math.abs(arrivals[0].getTime() - triggerSeconds) < triggerWindow.get_value() &&
-                        (bestTrigger == null || triggers[i].getValue() > bestTrigger.getValue())) {
-                    bestTrigger = triggers[i];
-                }
-                if (bestTrigger != null) {
-                    cookieJar.put("sod_phaseStoN_"+phaseName, bestTrigger);
-                    return true;
-                }
-            }
+
+        if (seismograms.length == 0 ) { return false; }
+        LongShortTrigger trigger = phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
+        if (trigger.getValue() > ratio) {
+            cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
+            return true;
         }
         return false;
     }
 
+    protected SimplePhaseStoN phaseStoN;
+
+    protected float ratio = 1.0f;
+
     protected String phaseName;
 
-    protected String modelName;
+    protected String modelName = "prem";
 
     protected TimeInterval triggerWindow;
 
