@@ -15,8 +15,10 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.PrintWriter;
 import org.w3c.dom.Element;
+import java.io.IOException;
 
 public class LegacyExecute implements LocalSeismogramProcess  {
 
@@ -38,6 +40,15 @@ public class LegacyExecute implements LocalSeismogramProcess  {
                 command = cmdString;
             } // end of if (dataDirectory.exits())
         }
+
+        Element workElement = SodUtil.getElement(config, "workingDirectory");
+        if (workElement != null) {
+            String workingDirectoryStr =
+                SodUtil.getText(workElement);
+            if ( workingDirectoryStr != null && workingDirectoryStr.length() != 0) {
+                workingDirectory = new File(workingDirectoryStr);
+            } // end of if (dataDirectory.exits())
+        }
     }
 
     /**
@@ -50,13 +61,21 @@ public class LegacyExecute implements LocalSeismogramProcess  {
                                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar)
         throws Exception {
         LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
+        System.arraycopy(seismograms, 0, out, 0, out.length);
         String args = command;
         for (int i=0; i<seismograms.length; i++) {
-            out[i] = seismograms[i];
             args += " "+(String)cookieJar.get(SaveSeismogramToFile.getCookieName(prefix, channel.get_id(), i));
         } // end of for (int i=0; i<seismograms.length; i++)
+        int exitValue = process(args);
+        return new LocalSeismogramResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
+    }
 
-        Process process = Runtime.getRuntime().exec(args);
+    int process(String args) throws InterruptedException, IOException {
+        if (workingDirectory != null) {
+            workingDirectory.mkdirs();
+        }
+
+        Process process = Runtime.getRuntime().exec(args, null, workingDirectory);
         StreamPump outPump = new StreamPump(process.getInputStream(),
                                             new BufferedWriter(new PrintWriter(System.out)));
         StreamPump errPump = new StreamPump(process.getErrorStream(),
@@ -64,12 +83,13 @@ public class LegacyExecute implements LocalSeismogramProcess  {
         outPump.start();
         errPump.start();
         int exitValue = process.waitFor();
-        return new LocalSeismogramResult(out, new StringTreeLeaf(this, exitValue==0, "exit value="+exitValue));
+        return exitValue;
     }
 
     String command;
 
     String prefix = "";
 
+    File workingDirectory = null;
 }
 
