@@ -1,0 +1,122 @@
+/**
+ * JDBCEventStatus.java
+ *
+ * @author Created by Omnicore CodeGuide
+ */
+
+package edu.sc.seis.sod.database.event;
+
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
+import edu.sc.seis.sod.database.SodJDBC;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JDBCEventStatus extends SodJDBC{
+    public JDBCEventStatus() throws SQLException{
+        Connection conn = ConnMgr.getConnection();
+        this.ea = new JDBCEventAccess(conn);
+        if(!DBUtil.tableExists("eventstatus", conn)){
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
+        }
+        getStatus = conn.prepareStatement("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
+        putEvent = conn.prepareStatement("INSERT into eventstatus ( eventcondition, eventid ) " +
+                                             "VALUES (?, ?)");
+        updateStatus = conn.prepareStatement("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
+        getAllOfEventArmStatus = conn.prepareStatement(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
+    }
+    
+    public void restartCompletedEvents() throws SQLException {
+        CacheEvent[] events = getAll(EventCondition.SUCCESS);
+        for (int i = 0; i < events.length; i++) {
+            setStatus(events[i], EventCondition.PROCESSOR_PASSED);
+        }
+    }
+    
+    public CacheEvent[] getAll(EventCondition status) throws SQLException {
+        getAllOfEventArmStatus.setInt(1, status.getNumber());
+        return extractEvents(getAllOfEventArmStatus);
+    }
+    
+    private CacheEvent[] extractEvents(PreparedStatement eventStatement)
+        throws SQLException{
+        ResultSet rs = eventStatement.executeQuery();
+        List evs = new ArrayList();
+        while(rs.next()){
+            try {
+                evs.add(ea.getEvent(rs.getInt("eventid")));
+            } catch (NotFound e) {
+                throw new RuntimeException("this shouldn't happen, the id's in this table are foreign keys from the eventaccess table",
+                                           e);
+            }
+        }
+        return (CacheEvent[])evs.toArray(new CacheEvent[evs.size()]);
+    }
+    
+    
+    public CacheEvent[] getAll() throws SQLException {
+        return ea.getAllEvents();
+    }
+    
+    public EventCondition getStatus(int dbId) throws SQLException, NotFound{
+        getStatus.setInt(1, dbId);
+        ResultSet rs = getStatus.executeQuery();
+        if(rs.next())return EventCondition.getByNumber(rs.getInt("eventcondition"));
+        throw new NotFound("There is no status for that id");
+    }
+    
+    public CacheEvent getEvent(int dbId) throws NotFound, SQLException{
+        return ea.getEvent(dbId);
+    }
+    
+    public int setStatus(EventAccessOperations ev,  EventCondition status)
+        throws SQLException {
+        int id = ea.put(ev, null, null, null);
+        setStatus(id, status);
+        return id;
+    }
+    
+    public void setStatus(int eventId, EventCondition status) throws SQLException{
+        if(tableContains(eventId)){
+            insert(updateStatus, eventId, status.getNumber());
+        }else{
+            insert(putEvent, eventId, status.getNumber());
+        }
+    }
+    
+    public boolean tableContains(int dbId) throws SQLException{
+        try{
+            getStatus(dbId);
+        }catch(NotFound e){ return false; }
+        return true;
+    }
+    
+    public void insert(PreparedStatement stmt, int id, int eventArmStatus) throws SQLException{
+        stmt.setInt(1, eventArmStatus);
+        stmt.setInt(2, id);
+        stmt.executeUpdate();
+    }
+    
+    public int getNext() throws SQLException{
+        Statement stmt = ConnMgr.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " + EventCondition.PROCESSOR_PASSED.getNumber());
+        if(rs.next()) return rs.getInt("eventid");
+        return -1;
+    }
+    
+    private JDBCEventAccess ea;
+    
+    private PreparedStatement getStatus, putEvent, updateStatus,
+        getAllOfEventArmStatus, getAllOfWaveformArmStatus,
+        getWaveformStatus;
+}

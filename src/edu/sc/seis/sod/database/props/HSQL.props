@@ -1,0 +1,3 @@
+URL=jdbc:hsqldb:SodDb
+
+EventChannelSeq.nextVal=CALL NEXT VALUE FOR EventChannelSeq

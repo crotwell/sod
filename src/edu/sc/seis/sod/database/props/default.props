@@ -1,0 +1,17 @@
+eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition int, \
+                                             PRIMARY KEY( eventid ))
+eventquerytimes.create=CREATE TABLE eventquerytimes (starttime timestamp, \
+                                                    endtime timestamp, \
+                                                    server varchar, \
+                                                    dns varchar, \
+                                                    UNIQUE (server, dns))
+eventchannelstatus.create=CREATE TABLE eventchannelstatus( pairid int, \
+                                                           eventid int, \
+                                                           channelid int, \
+                                                           status int, \
+                                                           PRIMARY KEY (pairid), \
+                                                           UNIQUE (eventid, channelid))
+                                    
+
+EventChannelSeq.create=CREATE SEQUENCE EventChannelSeq
+EventChannelSeq.nextVal=SELECT NEXTVAL ('EventChannelSeq')
