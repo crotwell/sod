@@ -7,13 +7,15 @@
 package edu.sc.seis.sod.editor;
 
 import edu.iris.Fissures.model.UnitImpl;
-import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.fissuresUtil.exceptionHandler.FilterReporter;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
+import org.omg.CORBA.COMM_FAILURE;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -32,8 +35,18 @@ import org.xml.sax.SAXException;
 
 public class SodGUIEditor extends SimpleGUIEditor {
 
+    static {
+        GlobalExceptionHandler.registerWithAWTThread();
+    }
+
     SodGUIEditor(String[] args) throws IOException, ParserConfigurationException, TransformerException, DOMException, SAXException, Exception {
         super(args);
+
+        List ignoreList = new ArrayList();
+        // silently eat CommFailure
+        ignoreList.add(COMM_FAILURE.class);
+        GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
+
         grammar = new SchemaGrammer();
 
         frameName = "SOD Editor";
@@ -157,6 +170,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
+
 
 
 
