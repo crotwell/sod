@@ -13,15 +13,13 @@ import org.w3c.dom.Element;
  */
 public class GainCode implements ChannelSubsetter {
     public GainCode(Element config) {
-        this.config = config;
+        acceptedGain = SodUtil.getNestedText(config).charAt(0);
     }
 
-    public boolean accept(Channel channel) throws Exception {
-        if(channel.get_id().channel_code.charAt(1) == SodUtil.getNestedText(config).charAt(0)) {
-            return true;
-        } else return false;
-
+    public boolean accept(Channel channel){
+        return channel.get_id().channel_code.charAt(1) == acceptedGain;
     }
 
+    private char acceptedGain;
     private Element config;
 }//GainCode
