@@ -12,7 +12,7 @@
 <p>
 We shall assume that you have successfully downloaded and extracted SOD from
 its tar or zip file. If not please have a look at the
-<a href="install.html">installation</a> document. This document cover SOD from
+<a href="install.html">installation</a> document. This document covers SOD from
 the point of view of the GUI editor. If you would like a lower level, XML based
 view of how SOD works, please see the ***TODO*** tutorial document.
 </p>
@@ -21,17 +21,18 @@ Change into the SOD directory, where you should see various files and subdirecto
 Start up the GUI editor, by running <code>./bin/editor.sh</code> or <code>bin\editor.bat</code>.
 The editor should start with the tutorial configuration preloaded. This is
 contained within the editor, so there is no need to worry about messing anything
-up as it can be reset by choosing ***TODO*** from the ***TODO*** menu. You will
+up as it can be reset by choosing Open Tutorial from the File menu. You will
 see several tabs which cover the various sections of a SOD run. We will cover each
 in turn.
 </p>
+<section name="Properties">
+<p>
+The Properties tab configures various run encompassing settings.  The various items in this tab configure big pieces of SOD functionality such as where to write status files and how often to check for events.  Basically, anything that doesn't fit in a specific arm gets stuck here.  These items do make more sense in the context of specific run settings, so we'll refer back to the Properties tab as we get to configuration items that relate to these settings.
+</p>
+</section>
 <section name="Event">
 <p>
-The Event tab, also known as the Event Arm, selects which events are of interest.
-The tutorial configuration file by default gets events from the IRIS Event server
-from anywhere in the world with magnitude greater than 6 during January of 2003.
-These values can be changed and SOD can do quite a bit more things, but this is
-a minimal set parameters. One subtle point is that a single real earthquake will
+The Event tab contains the settings for the Event Arm.  These settings indicate who SOD should ask for events, which ones are of interest to this run, and what, if anything, to do with them.  The first part of the Event Arm's configuration defines the query to send to an event server.  The tutorial configuration file uses the IRIS Event server to get events.  It restricts the events returned by the query to be of magnitude greater than 6 during January of 2003 but allows them to come from anywhere in the world.  One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is currently
 no way to automatically group these related origins into a single event based on
 the information to which the DMC has access , these origins each appear in separate events.
@@ -42,14 +43,17 @@ catalog depending on the time of the request. The weeklies, or WHDF, catalog fro
 NEIC is another common one for historical data and if you
 are doing a SOD run and want near real time data, then you probably want to
 use FINGER catalog as that has a short delay from earthquake occurring to the
-location being included in the catalog.
+location being included in the catalog.  However since this tutorial run is historical, PREF is a good choice.These values can be changed and SOD has many more settings , but this is a nice minimal set of parameters.   This covers what SOD will ask for in its event queries, and who it will ask, but there's a property setting in this run that affects the event query.  In the Properties tab the setting 'Event Query Increment' is set to 1 week.  This tells SOD how much of your event query to ask for in a single query to the event server.  A good general rule here is to make this value just large enough to ensure that at least one event will come back from every query.  For this run, we're getting earthquakes of magnitude 6 or higher throughout the world, and about 200 of those happen every year, so 1 week is a decent value for the event query increment for this run.
 </p>
 <p>
 After the query to the remote event server, we have our events locally and
-could do some subsetting based on the origin, but for the tutorial we will
+could add some additional subsetting based on the origin that can't be done with simple query based subsetting, but for the tutorial we will
 assume all of these events are fine. Just to make running
 sod a little more interesting, we will include an event processor. This one just
-prints out a line every time an event arrives. This finishes the event arm.
+prints out every event's information on arrival.
+</p>
+<p>
+The tutorial's Event Arm also contains three Event Status generators.  Each of these generates a HTML page in the Status Directory set in the properties tab with all of the events SOD has gotten and their status in the run sorted by the criteria listed in the pull down box.  So after you've started a run, you can go to the directory set in the properties tab (status by default) and look at event.html, depth.html and magnitude.html in your web browser to see what the event arm is doing.
 </p>
 <p>
 Feel free to modify any of these values to customize your search. Be aware that
@@ -90,15 +94,12 @@ eliminate as much as possible as early as possible.
 
 <section name="Waveform">
 <p>
-The Waveform tab shows what event-channel pairs are accepted, and what data
-to ask for. The first item is a distance range subsetter. Only events that
+The Waveform tab contains the settings for the waveform arm.  This arm finishes up the work started by the event and network arms.  It pairs up all the channels from the network arm with all of the events from the event arm and runs various subsetters over them to eliminate unwanted items.
+The first subsetter is a distance range subsetter. Only events that
 are at least 30, but less than 90, degrees away from the station are processed.
 This is an example of a type of subsetting that cannot be performed within the
 event or network tabs and it involves a combination of both the event and
 station information.
-</p>
-<p>
-The next item is the ***TODO***
 </p>
 <p>
 The Phase Request selects the time range, relative to particular phases, for
