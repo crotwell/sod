@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class MapEventStatus implements SodElement, EventArmMonitor, Runnable{
-    protected String fileLoc;
+    private String fileLoc;
 
     public MapEventStatus(Element element){
         this(element, false);
@@ -37,9 +37,13 @@ public class MapEventStatus implements SodElement, EventArmMonitor, Runnable{
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("Trouble creating event status db for use in map", e);
         }
-        fileLoc = FileWritingTemplate.getBaseDirectoryName() + '/' + element.getAttribute("xlink:href");
+        fileLoc = getLocation(element);
         if(addToEventArm){Start.getEventArm().add(this);}
         run();
+    }
+
+    public static String getLocation(Element el){
+        return FileWritingTemplate.getBaseDirectoryName() + '/' + el.getAttribute("xlink:href");
     }
 
     public void change(EventAccessOperations event, Status status){
