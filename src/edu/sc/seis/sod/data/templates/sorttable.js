@@ -35,7 +35,6 @@ function ts_makeSortable(table) {
         if(name.length > 0 && name.indexOf('initiallySorted') != -1) {
             sortedColumn = cell;
             if(name.indexOf('descending')){ order = "sortdir='down' "; }
-            window.alert(cell.className);
         }
         var txt = ts_getInnerText(cell);
         cell.innerHTML = '<a href="#" class="sortheader" onclick="ts_resortTable(this);return false;">'+txt+'<span class="sortarrow" ' + order + '><img src="'+img_dir+'none.gif"/></span></a>';
