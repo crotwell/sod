@@ -43,10 +43,7 @@ public class ExampleBuilder {
 
     public void setRequiredExample(Annotation ann) {
         this.requiredExample = ann;
-        System.out.println("REQUIRED EXAMPLE SET: "
-                + ModelUtil.toString(ann.getFormProvider().getForm()));
-        //System.out.println("Lineage: " +
-        // ModelUtil.getLineageString(ann.getFormProvider().getForm()));
+        this.requiredForm = ann.getFormProvider().getForm();
     }
 
     public boolean isExampleInserted() {
@@ -58,36 +55,15 @@ public class ExampleBuilder {
     }
 
     public void write(Form f, boolean ignoreMin) {
-        if(requiredExample != null) {
-            if(f instanceof NamedElement
-                    && ((NamedElement)f).getName().equals("OriginOR")) {
-                System.out.println("f is OriginOR!");
-                Form ex = requiredExample.getFormProvider().getForm();
-                if(ex instanceof NamedElement
-                        && ((NamedElement)f).getName().equals("OriginOR")) {
-                    System.out.println("OriginOR should be inserted, damn it");
-                }
+        if(f.getMin() == 0 && !ignoreMin && !f.getAnnotation().getInclude()
+                && !ModelWalker.isTowards(f, requiredForm)){ 
+            return; 
             }
-        }
-        if(f.getMin() == 0 && !ignoreMin && !f.getAnnotation().getInclude()) {
-            //System.out.println("f.getMin() == 0 && !ignoreMin &&
-            // !f.getAnnotation().getInclude()");
-            if(requiredExample == null
-                    || !isTowardsOrInLineage(f,
-                                             requiredExample.getFormProvider()
-                                                     .getForm())) {
-                //System.out.println("requiredExample == null ||
-                // !ModelWalker.isTowards(f,
-                // requiredExample.getFormProvider().getForm())");
-                return;
-            }
-        }
-        if(requiredExample != null
-                && f.equals(requiredExample.getFormProvider().getForm())) {
-            System.out.println("REQUIRED EXAMPLE INSERTED: "
-                    + ModelUtil.toString(f));
+        if(f.equals(requiredForm)) {
             exampleInserted = true;
             buf.append(requiredExample.getExample(false));
+            requiredExample = null;
+            requiredForm = null;
             return;
         }
         //this attribute stuff is wrong. Don't worry right now
@@ -107,28 +83,21 @@ public class ExampleBuilder {
                 attrQueue.remove(attr);
             }
         } else if(f instanceof Choice) {
-            //System.out.println("f instanceof Choice");
             Choice c = (Choice)f;
             Form[] children = c.getChildren();
-            //System.out.println("choice is: " + ModelUtil.toString(c));
-            if(requiredExample != null
-                    && isTowardsOrInLineage(f,
-                                            requiredExample.getFormProvider()
-                                                    .getForm())) {
-
-                System.out.println("Found choice towards required");
+            if(ModelWalker.getDistance(f, requiredForm) != -1) {
+                int minDist = Integer.MAX_VALUE;
+                Form chosenChild = null;
                 for(int i = 0; i < children.length; i++) {
-                    if(isTowardsOrInLineage(children[i],
-                                            requiredExample.getFormProvider()
-                                                    .getForm())) {
-                        /*System.out.println("istowards chosen "
-                                + ModelUtil.toString(children[i]));*/
-                        write(children[i], true);
-                        break;
+                    int curDist = ModelWalker.getDistance(children[i],
+                                                          requiredForm);
+                    if(curDist > -1 && curDist < minDist) {
+                        minDist = curDist;
+                        chosenChild = children[i];
                     }
                 }
+                write(chosenChild, true);
             } else {
-                System.out.println("Found choice not towards required");
                 for(int i = 0; i < children.length; i++) {
                     if(!ModelWalker.requiresSelfReferentiality(children[i])) {
                         //System.out.println("otherwise chosen " +
@@ -139,10 +108,8 @@ public class ExampleBuilder {
                 }
             }
         } else if(f instanceof Value) {
-            //System.out.println("f instanceof Value");
             buf.append(((Value)f).getValue());
         } else if(f instanceof Data) {
-            //System.out.println("f instanceof Data");
             if(f.getAnnotation().hasExampleFromAnnotation()) {
                 buf.append(f.getAnnotation().getExample(false));
             } else {
@@ -150,8 +117,6 @@ public class ExampleBuilder {
             }
         } else if(f instanceof DataList) {} else if(f instanceof Group
                 || f instanceof Interleave) {
-            //System.out.println("f instanceof Group || f instanceof
-            // Interleave");
             MultigenitorForm m = (MultigenitorForm)f;
             Form[] kids = m.getChildren();
             for(int i = 0; i < kids.length; i++) {
@@ -162,7 +127,6 @@ public class ExampleBuilder {
                 }
             }
         } else if(f instanceof NamedElement) {
-            //System.out.println("f instanceof NamedElement");
             NamedElement ne = (NamedElement)f;
             buf.append(openBracket + ne.getName());
             if(ne.getAttributes() != null) {
@@ -185,15 +149,8 @@ public class ExampleBuilder {
                         + '\n');
             }
         } else if(f instanceof Text) {
-            //System.out.println("f instanceof Text");
             buf.append(DEFAULT_TEXT_VALUE);
         } else if(f instanceof Empty) {}
-    }
-
-    public static boolean isTowardsOrInLineage(Form parent, Form result) {
-        //return ModelWalker.isTowards(parent, result)
-        //        || ModelWalker.isInLineage(parent, result);
-        return ModelWalker.isInLineage(parent, result);
     }
 
     public String toString() {
@@ -216,6 +173,8 @@ public class ExampleBuilder {
     private String openBracket, closeBracket;
 
     private Annotation requiredExample = null;
+
+    private Form requiredForm;
 
     private boolean exampleInserted = false;
 
