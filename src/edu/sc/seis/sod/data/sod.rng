@@ -6795,11 +6795,6 @@
             <element name="threeComponentData">
                 <empty/>
             </element>
-            <element name="channelGroupForkProcess">
-                <zeroOrMore>
-                    <ref name="channelGroupSeismogramProcess"/>
-                </zeroOrMore>
-            </element>
             <element name="ANDLocalSeismogramWrapper">
                 <zeroOrMore>
                     <ref name="seismogramProcess3"/>
@@ -6845,6 +6840,28 @@
                 <element name="ratio">
                     <data type="float"/>
                 </element>
+            </element>
+            <element name="channelGroupFork">
+                <zeroOrMore>
+                    <ref name="channelGroupSeismogramProcess"/>
+                </zeroOrMore>
+            </element>
+            <element name="channelGroupAND">
+                <oneOrMore>
+                    <ref name="channelGroupSeismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupOR">
+                <oneOrMore>
+                    <ref name="channelGroupSeismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="channelGroupNOT">
+                <ref name="channelGroupSeismogramProcess"/>
+            </element>
+            <element name="channelGroupXOR">
+                <ref name="channelGroupSeismogramProcess"/>
+                <ref name="channelGroupSeismogramProcess"/>
             </element>
             <ref name="seismogramProcess"/>
         </choice>
