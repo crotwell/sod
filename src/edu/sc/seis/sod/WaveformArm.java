@@ -77,10 +77,8 @@ public class WaveformArm implements Runnable {
             //set the status of the event to be SUCCESS implying that
             //that all the network information for this particular event is inserted
             //in the waveformDatabase.
-            synchronized(eventStatus){
-                eventStatus.setStatus(ev.getEvent(),Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                               Standing.SUCCESS));
-            }
+            Start.getEventArm().change(ev.getEvent(),Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                                Standing.SUCCESS));
         }
     }
 
