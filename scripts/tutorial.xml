@@ -60,7 +60,7 @@
       <contributor>NEIC</contributor>
     </eventFinder>
 
-    <printlineEventProcess/>
+    <printLineEventProcess/>
   </eventArm>
 
   <networkArm>
@@ -83,27 +83,28 @@
       </effectiveTimeOverlap>
     </stationEffectiveTimeOverlap>
 
-    <siteIDAND>
-      <siteEfffectiveTimeOverlap>
-        <effectiveTimeOverlap>
-          <min>20030101T00:00:00.001Z</min>
-          <max>20030131T23:59:59.999Z</max>
-        </effectiveTimeOverlap>
-      </siteEfffectiveTimeOverlap>
-      <siteIDOR>
-        <siteCode><value>  </value></siteCode>
-        <siteCode><value>00</value></siteCode>
-      <siteIDOR>
-    </siteIDAND>
+    <siteIDOR>
+      <siteCode><value>  </value></siteCode>
+      <siteCode><value>00</value></siteCode>
+    </siteIDOR>
+
+    <siteEffectiveTimeOverlap>
+      <effectiveTimeOverlap>
+        <min>20030101T00:00:00.001Z</min>
+        <max>20030131T23:59:59.999Z</max>
+      </effectiveTimeOverlap>
+    </siteEffectiveTimeOverlap>
 
     <bandCode><value>L</value></bandCode>
 
-    <channelEfffectiveTimeOverlap>
+    <channelEffectiveTimeOverlap>
         <effectiveTimeOverlap>
             <min>20030101T00:00:00.001Z</min>
             <max>20030131T23:59:59.999Z</max>
         </effectiveTimeOverlap>
-    </channelEfffectiveTimeOverlap>
+    </channelEffectiveTimeOverlap>
+
+    <printlineChannelProcessor/>
   </networkArm>
 
   <waveFormArm>
