@@ -19,6 +19,7 @@ import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -159,6 +160,11 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         return template;
     }
 
+    public File getOutputFile(EventAccessOperations event, Channel chan) {
+        return new File(new File(fileDir), getOutputLocation(event, chan));
+    }
+
+    /** this is relative to the status directory */
     public String getOutputLocation(EventAccessOperations event, Channel chan) {
         return eventFormatter.getResult(event) + '/'
                 + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
