@@ -5,7 +5,6 @@
  */
 
 package edu.sc.seis.sod.subsetter;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.RunStatus;
 import java.util.HashMap;

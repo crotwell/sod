@@ -62,7 +62,6 @@ public class StationFormatter extends Template implements StationTemplate{
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected Object getTemplate(String tag, Element el) {
-
         if (tag.equals("name")){
             return new StationTemplate(){
                 public String getResult(Station sta){

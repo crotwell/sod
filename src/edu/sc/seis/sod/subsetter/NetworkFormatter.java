@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.subsetter;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import org.w3c.dom.Element;
 
 
@@ -74,6 +75,14 @@ public class NetworkFormatter extends Template implements NetworkTemplate{
             return new NetworkTemplate(){
                 public String getResult(NetworkAccess net){
                     return net.get_attributes().name;
+                }
+            };
+        }
+        else if (tag.equals("firstWord")){
+            return new NetworkTemplate(){
+                public String getResult(NetworkAccess net){
+                    StringTokenizer tok = new StringTokenizer(net.get_attributes().name, " /,.-");
+                    return tok.nextToken();
                 }
             };
         }
