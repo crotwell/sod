@@ -6,6 +6,8 @@ import java.util.*;
 import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
@@ -16,6 +18,7 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
+import edu.sc.seis.sod.database.network.JDBCNewChannels;
 import edu.sc.seis.sod.process.networkArm.NetworkArmProcess;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
 import java.sql.SQLException;
@@ -23,8 +26,6 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.iris.Fissures.network.StationIdUtil;
 
 /**
  * Handles the subsetting of the Channels.
@@ -41,6 +42,8 @@ public class NetworkArm {
         try{
             queryTimeTable = new JDBCQueryTime();
             netTable = new JDBCNetworkUnifier();
+            newChanTable = new JDBCNewChannels();
+            //networkStatusTable = new JDBCNetworkStatus();
         }catch(SQLException e){}
         processConfig(config);
     }
@@ -125,7 +128,11 @@ public class NetworkArm {
         try {
             databaseTime = queryTimeTable.getQuery(finder.getSourceName(),
                                                    finder.getDNSName());
+            if (firstTimeThrough){
+                firstTimeThrough = !firstTimeThrough;
+            }
         } catch (NotFound e) {
+            firstTimeThrough = true;
             logger.debug("The query database has no info about the network arm.  Hopefull this the first time through");
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("The query database threw this exception trying to find info about the network arm's current finder.  This bodes ill",
@@ -191,6 +198,7 @@ public class NetworkArm {
                     change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                   Standing.REJECT));
                 }
+
             } catch(Throwable th) {
                 GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
             }
@@ -341,7 +349,18 @@ public class NetworkArm {
                 change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
                                                         Standing.IN_PROG));
                 if(channelSubsetter.accept(channels[subCounter])) {
-                    int dbid = netTable.put(channels[subCounter]);
+                    int dbid;
+                    try{
+                        dbid = netTable.getChannelDb().getDBId(channels[subCounter].get_id(),
+                                                               channels[subCounter].my_site);
+                    }
+                    catch (NotFound e){
+                        dbid = netTable.put(channels[subCounter]);
+                        if (!firstTimeThrough){
+                            newChanTable.put(dbid);
+                        }
+                    }
+
                     channelMap.put(new Integer(dbid), channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                           channels[subCounter]);
@@ -351,6 +370,7 @@ public class NetworkArm {
                     processNetworkArm(networkAccess, channels[subCounter]);
                     change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
                                                             Standing.SUCCESS));
+
                 }else change(channels[subCounter], Status.get(Stage.NETWORK_SUBSETTER,
                                                               Standing.REJECT));
             }
@@ -412,6 +432,12 @@ public class NetworkArm {
     }
 
     private void change(NetworkAccess na, Status newStatus) {
+        //try{
+        //    networkStatusTable.setStatus(na.get_attributes(), newStatus);
+        //}
+        //catch(SQLException e){
+        //    GlobalExceptionHandler.handle("something wrong changing status in database", e);
+        //}
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
@@ -454,8 +480,11 @@ public class NetworkArm {
     private List networkArmProcesses = new ArrayList();
     private JDBCQueryTime queryTimeTable;
     private JDBCNetworkUnifier netTable;
+    private JDBCNewChannels newChanTable;
+    //private JDBCNetworkStatus networkStatusTable;
     private NetworkDbObject[] netDbs;
     private List statusMonitors = new ArrayList();
+    private boolean firstTimeThrough = false;
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 }// NetworkArm
 
