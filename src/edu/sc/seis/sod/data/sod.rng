@@ -18,77 +18,21 @@
             </optional>
             <element name="eventArm">
                 <oneOrMore>
-                    <choice>
-                        <element name="eventFinder">
-                            <ref name="source"/>
-                            <choice>
-                                <element name="boxArea">
-                                    <element name="latitudeRange">
-                                    <element name="unit">
-                                    <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                    </choice>
-                                    </element>
-                                    <optional>
-                                    <element name="min">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="max">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    </element>
-                                    <element name="longitudeRange">
-                                    <element name="unit">
-                                    <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                    </choice>
-                                    </element>
-                                    <optional>
-                                    <element name="min">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    <optional>
-                                    <element name="max">
-                                    <data type="double"/>
-                                    </element>
-                                    </optional>
-                                    </element>
-                                </element>
-                                <element name="pointArea">
-                                    <element name="latitude">
-                                    <data type="float"/>
-                                    </element>
-                                    <element name="longitude">
-                                    <data type="float"/>
-                                    </element>
+                    <element name="eventFinder">
+                        <optional>
+                            <element name="description">
+                                <data type="string"/>
+                            </element>
+                        </optional>
+                        <element name="name">
+                            <data type="string"/>
+                        </element>
+                        <element name="dns">
+                            <data type="string"/>
+                        </element>
+                        <choice>
+                            <element name="boxArea">
+                                <element name="latitudeRange">
                                     <element name="unit">
                                     <choice>
                                     <value>KILOMETER</value>
@@ -117,13 +61,7 @@
                                     </element>
                                     </optional>
                                 </element>
-                                <element name="globalArea">
-                                    <empty/>
-                                </element>
-                            </choice>
-                            <optional>
-                                <element name="originDepthRange">
-                                    <element name="unitRange">
+                                <element name="longitudeRange">
                                     <element name="unit">
                                     <choice>
                                     <value>KILOMETER</value>
@@ -151,58 +89,122 @@
                                     <data type="double"/>
                                     </element>
                                     </optional>
-                                    </element>
-                                </element>
-                            </optional>
-                            <element name="eventTimeRange">
-                                <element name="timeRange">
-                                    <element name="startTime">
-                                    <data type="string"/>
-                                    </element>
-                                    <element name="endTime">
-                                    <data type="string"/>
-                                    </element>
                                 </element>
                             </element>
-                            <optional>
-                                <element name="magnitudeRange">
-                                    <zeroOrMore>
+                            <element name="pointArea">
+                                <element name="latitude">
+                                    <data type="float"/>
+                                </element>
+                                <element name="longitude">
+                                    <data type="float"/>
+                                </element>
+                                <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                </element>
+                                <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                </optional>
+                                <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                </optional>
+                            </element>
+                            <element name="globalArea">
+                                <empty/>
+                            </element>
+                        </choice>
+                        <optional>
+                            <element name="originDepthRange">
+                                <element name="unitRange">
+                                    <element name="unit">
+                                    <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                    </choice>
+                                    </element>
+                                    <optional>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                    <optional>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                    </optional>
+                                </element>
+                            </element>
+                        </optional>
+                        <element name="eventTimeRange">
+                            <element name="timeRange">
+                                <element name="startTime">
+                                    <data type="string"/>
+                                </element>
+                                <element name="endTime">
+                                    <data type="string"/>
+                                </element>
+                            </element>
+                        </element>
+                        <optional>
+                            <element name="magnitudeRange">
+                                <zeroOrMore>
                                     <element name="magType">
                                     <data type="string"/>
                                     </element>
-                                    </zeroOrMore>
-                                    <element name="min">
+                                </zeroOrMore>
+                                <element name="min">
                                     <data type="float"/>
-                                    </element>
-                                    <element name="max">
+                                </element>
+                                <element name="max">
                                     <data type="float"/>
-                                    </element>
                                 </element>
-                            </optional>
-                            <zeroOrMore>
-                                <element name="catalog">
-                                    <data type="string"/>
-                                </element>
-                            </zeroOrMore>
-                            <zeroOrMore>
-                                <element name="contributor">
-                                    <data type="string"/>
-                                </element>
-                            </zeroOrMore>
-                        </element>
-                        <element name="eventChannelFinder">
-                            <ref name="source"/>
-                            <element name="eventchannelname">
+                            </element>
+                        </optional>
+                        <zeroOrMore>
+                            <element name="catalog">
                                 <data type="string"/>
                             </element>
-                        </element>
-                    </choice>
+                        </zeroOrMore>
+                        <zeroOrMore>
+                            <element name="contributor">
+                                <data type="string"/>
+                            </element>
+                        </zeroOrMore>
+                    </element>
                 </oneOrMore>
                 <optional>
                     <ref name="eventAttr"/>
                 </optional>
                 <optional>
-                    <ref name="origin"/>
+                    <ref name="origin2"/>
                 </optional>
                 <zeroOrMore>
                     <choice>
@@ -290,7 +292,7 @@
                     <ref name="network"/>
                 </optional>
                 <optional>
-                    <ref name="station"/>
+                    <ref name="station2"/>
                 </optional>
                 <optional>
                     <ref name="site"/>
@@ -399,7 +401,10 @@
                             <element name="printlineSeismogramProcess">
                                 <empty/>
                             </element>
-                            <element name="sacFileProcessor">
+                            <element name="saveSeismogramToFile">
+                                <element name="fileType">
+                                    <data type="string"/>
+                                </element>
                                 <element name="dataDirectory">
                                     <data type="string"/>
                                 </element>
@@ -569,20 +574,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="any3">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="any3"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="any4">
         <element>
             <anyName/>
@@ -593,6 +584,20 @@
                     </attribute>
                     <text/>
                     <ref name="any4"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="any3">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any3"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -901,19 +906,6 @@
             </element>
         </choice>
     </define>
-    <define name="source">
-        <optional>
-            <element name="description">
-                <data type="string"/>
-            </element>
-        </optional>
-        <element name="name">
-            <data type="string"/>
-        </element>
-        <element name="dns">
-            <data type="string"/>
-        </element>
-    </define>
     <define name="network">
         <choice>
             <element name="networkCode">
@@ -1033,10 +1025,10 @@
                                     <value>STATION</value>
                                 </choice>
                             </element>
-                            <ref name="phaseInteractionBase"/>
+                            <ref name="phaseInteractionBase2"/>
                         </element>
                         <element name="absolute">
-                            <ref name="phaseInteractionBase"/>
+                            <ref name="phaseInteractionBase2"/>
                         </element>
                     </choice>
                 </zeroOrMore>
@@ -1046,19 +1038,19 @@
     <define name="eventStation">
         <choice>
             <element name="distanceRange">
-                <ref name="range3"/>
+                <ref name="range"/>
             </element>
             <element name="embeddedOriginSubsetter">
-                <ref name="origin2"/>
+                <ref name="origin"/>
             </element>
             <element name="embeddedStationSubsetter">
-                <ref name="station2"/>
+                <ref name="station"/>
             </element>
             <element name="azimuthRange">
-                <ref name="range3"/>
+                <ref name="range"/>
             </element>
             <element name="backAzimuthRange">
-                <ref name="range3"/>
+                <ref name="range"/>
             </element>
             <element name="linearDistanceMagnitudeRange">
                 <element name="magnitudeRange">
@@ -1074,7 +1066,7 @@
                         <data type="float"/>
                     </element>
                 </element>
-                <ref name="range3"/>
+                <ref name="range"/>
             </element>
             <element name="eventStationAND">
                 <oneOrMore>
@@ -1122,10 +1114,10 @@
                                     <value>STATION</value>
                                 </choice>
                             </element>
-                            <ref name="phaseInteractionBase2"/>
+                            <ref name="phaseInteractionBase"/>
                         </element>
                         <element name="absolute">
-                            <ref name="phaseInteractionBase2"/>
+                            <ref name="phaseInteractionBase"/>
                         </element>
                     </choice>
                 </zeroOrMore>
@@ -1159,7 +1151,7 @@
             </element>
             <element name="originDepthRange">
                 <element name="unitRange">
-                    <ref name="range"/>
+                    <ref name="range3"/>
                 </element>
             </element>
             <element name="originPointDistance">
@@ -1169,7 +1161,7 @@
                 <element name="longitude">
                     <data type="double"/>
                 </element>
-                <ref name="range"/>
+                <ref name="range3"/>
             </element>
             <element name="eventArea">
                 <choice>
@@ -1305,183 +1297,6 @@
             <element name="nullOriginSubsetter">
                 <zeroOrMore>
                     <ref name="origin2"/>
-                </zeroOrMore>
-            </element>
-        </choice>
-    </define>
-    <define name="origin3">
-        <choice>
-            <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
-                </element>
-            </element>
-            <element name="magnitudeRange">
-                <zeroOrMore>
-                    <element name="magType">
-                        <data type="string"/>
-                    </element>
-                </zeroOrMore>
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="originDepthRange">
-                <element name="unitRange">
-                    <ref name="range4"/>
-                </element>
-            </element>
-            <element name="originPointDistance">
-                <element name="latitude">
-                    <data type="double"/>
-                </element>
-                <element name="longitude">
-                    <data type="double"/>
-                </element>
-                <ref name="range4"/>
-            </element>
-            <element name="eventArea">
-                <choice>
-                    <element name="boxArea">
-                        <element name="latitudeRange">
-                            <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
-                            </element>
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                        <element name="longitudeRange">
-                            <element name="unit">
-                                <choice>
-                                    <value>KILOMETER</value>
-                                    <value>METER</value>
-                                    <value>CENTIMETER</value>
-                                    <value>NANOMETER</value>
-                                    <value>MICROMETER</value>
-                                    <value>MICRON</value>
-                                    <value>MILLIMETER</value>
-                                    <value>PICOMETER</value>
-                                    <value>INCH</value>
-                                    <value>FOOT</value>
-                                    <value>MILE</value>
-                                    <value>DEGREE</value>
-                                    <value>RADIAN</value>
-                                </choice>
-                            </element>
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </element>
-                    <element name="pointArea">
-                        <element name="latitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="longitude">
-                            <data type="float"/>
-                        </element>
-                        <element name="unit">
-                            <choice>
-                                <value>KILOMETER</value>
-                                <value>METER</value>
-                                <value>CENTIMETER</value>
-                                <value>NANOMETER</value>
-                                <value>MICROMETER</value>
-                                <value>MICRON</value>
-                                <value>MILLIMETER</value>
-                                <value>PICOMETER</value>
-                                <value>INCH</value>
-                                <value>FOOT</value>
-                                <value>MILE</value>
-                                <value>DEGREE</value>
-                                <value>RADIAN</value>
-                            </choice>
-                        </element>
-                        <optional>
-                            <element name="min">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="max">
-                                <data type="double"/>
-                            </element>
-                        </optional>
-                    </element>
-                    <element name="globalArea">
-                        <empty/>
-                    </element>
-                </choice>
-            </element>
-            <element name="catalog">
-                <data type="string"/>
-            </element>
-            <element name="contributor">
-                <data type="string"/>
-            </element>
-            <element name="originArrayAND">
-                <ref name="origin3"/>
-            </element>
-            <element name="originArrayOR">
-                <ref name="origin3"/>
-            </element>
-            <element name="originAND">
-                <oneOrMore>
-                    <ref name="origin3"/>
-                </oneOrMore>
-            </element>
-            <element name="originOR">
-                <oneOrMore>
-                    <ref name="origin3"/>
-                </oneOrMore>
-            </element>
-            <element name="originXOR">
-                <ref name="origin3"/>
-                <ref name="origin3"/>
-            </element>
-            <element name="originNOT">
-                <ref name="origin3"/>
-            </element>
-            <element name="nullOriginSubsetter">
-                <zeroOrMore>
-                    <ref name="origin3"/>
                 </zeroOrMore>
             </element>
         </choice>
@@ -1659,6 +1474,183 @@
             <element name="nullOriginSubsetter">
                 <zeroOrMore>
                     <ref name="origin"/>
+                </zeroOrMore>
+            </element>
+        </choice>
+    </define>
+    <define name="origin3">
+        <choice>
+            <element name="originTimeRange">
+                <element name="timeRange">
+                    <element name="startTime">
+                        <data type="string"/>
+                    </element>
+                    <element name="endTime">
+                        <data type="string"/>
+                    </element>
+                </element>
+            </element>
+            <element name="magnitudeRange">
+                <zeroOrMore>
+                    <element name="magType">
+                        <data type="string"/>
+                    </element>
+                </zeroOrMore>
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="originDepthRange">
+                <element name="unitRange">
+                    <ref name="range4"/>
+                </element>
+            </element>
+            <element name="originPointDistance">
+                <element name="latitude">
+                    <data type="double"/>
+                </element>
+                <element name="longitude">
+                    <data type="double"/>
+                </element>
+                <ref name="range4"/>
+            </element>
+            <element name="eventArea">
+                <choice>
+                    <element name="boxArea">
+                        <element name="latitudeRange">
+                            <element name="unit">
+                                <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                </choice>
+                            </element>
+                            <optional>
+                                <element name="min">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="max">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                        </element>
+                        <element name="longitudeRange">
+                            <element name="unit">
+                                <choice>
+                                    <value>KILOMETER</value>
+                                    <value>METER</value>
+                                    <value>CENTIMETER</value>
+                                    <value>NANOMETER</value>
+                                    <value>MICROMETER</value>
+                                    <value>MICRON</value>
+                                    <value>MILLIMETER</value>
+                                    <value>PICOMETER</value>
+                                    <value>INCH</value>
+                                    <value>FOOT</value>
+                                    <value>MILE</value>
+                                    <value>DEGREE</value>
+                                    <value>RADIAN</value>
+                                </choice>
+                            </element>
+                            <optional>
+                                <element name="min">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                            <optional>
+                                <element name="max">
+                                    <data type="double"/>
+                                </element>
+                            </optional>
+                        </element>
+                    </element>
+                    <element name="pointArea">
+                        <element name="latitude">
+                            <data type="float"/>
+                        </element>
+                        <element name="longitude">
+                            <data type="float"/>
+                        </element>
+                        <element name="unit">
+                            <choice>
+                                <value>KILOMETER</value>
+                                <value>METER</value>
+                                <value>CENTIMETER</value>
+                                <value>NANOMETER</value>
+                                <value>MICROMETER</value>
+                                <value>MICRON</value>
+                                <value>MILLIMETER</value>
+                                <value>PICOMETER</value>
+                                <value>INCH</value>
+                                <value>FOOT</value>
+                                <value>MILE</value>
+                                <value>DEGREE</value>
+                                <value>RADIAN</value>
+                            </choice>
+                        </element>
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                    <element name="globalArea">
+                        <empty/>
+                    </element>
+                </choice>
+            </element>
+            <element name="catalog">
+                <data type="string"/>
+            </element>
+            <element name="contributor">
+                <data type="string"/>
+            </element>
+            <element name="originArrayAND">
+                <ref name="origin3"/>
+            </element>
+            <element name="originArrayOR">
+                <ref name="origin3"/>
+            </element>
+            <element name="originAND">
+                <oneOrMore>
+                    <ref name="origin3"/>
+                </oneOrMore>
+            </element>
+            <element name="originOR">
+                <oneOrMore>
+                    <ref name="origin3"/>
+                </oneOrMore>
+            </element>
+            <element name="originXOR">
+                <ref name="origin3"/>
+                <ref name="origin3"/>
+            </element>
+            <element name="originNOT">
+                <ref name="origin3"/>
+            </element>
+            <element name="nullOriginSubsetter">
+                <zeroOrMore>
+                    <ref name="origin3"/>
                 </zeroOrMore>
             </element>
         </choice>
@@ -2214,6 +2206,35 @@
             </element>
         </choice>
     </define>
+    <define name="range4">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+            </choice>
+        </element>
+        <optional>
+            <element name="min">
+                <data type="double"/>
+            </element>
+        </optional>
+        <optional>
+            <element name="max">
+                <data type="double"/>
+            </element>
+        </optional>
+    </define>
     <define name="range5">
         <element name="unit">
             <choice>
@@ -2244,35 +2265,6 @@
         </optional>
     </define>
     <define name="range2">
-        <element name="unit">
-            <choice>
-                <value>KILOMETER</value>
-                <value>METER</value>
-                <value>CENTIMETER</value>
-                <value>NANOMETER</value>
-                <value>MICROMETER</value>
-                <value>MICRON</value>
-                <value>MILLIMETER</value>
-                <value>PICOMETER</value>
-                <value>INCH</value>
-                <value>FOOT</value>
-                <value>MILE</value>
-                <value>DEGREE</value>
-                <value>RADIAN</value>
-            </choice>
-        </element>
-        <optional>
-            <element name="min">
-                <data type="double"/>
-            </element>
-        </optional>
-        <optional>
-            <element name="max">
-                <data type="double"/>
-            </element>
-        </optional>
-    </define>
-    <define name="range4">
         <element name="unit">
             <choice>
                 <value>KILOMETER</value>
@@ -2719,6 +2711,11 @@
             </element>
         </choice>
     </define>
+    <define name="channelCodeUtil">
+        <data type="string">
+            <param name="pattern">[A-Z]{1}</param>
+        </data>
+    </define>
     <define name="phaseInteractionBase">
         <zeroOrMore>
             <choice>
@@ -2824,12 +2821,12 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range5"/>
+                <ref name="range"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range5"/>
+                <ref name="range"/>
             </element>
         </zeroOrMore>
     </define>
@@ -2938,19 +2935,14 @@
         </zeroOrMore>
         <zeroOrMore>
             <element name="depthRange">
-                <ref name="range3"/>
+                <ref name="range5"/>
             </element>
         </zeroOrMore>
         <zeroOrMore>
             <element name="distanceRange">
-                <ref name="range3"/>
+                <ref name="range5"/>
             </element>
         </zeroOrMore>
-    </define>
-    <define name="channelCodeUtil">
-        <data type="string">
-            <param name="pattern">[A-Z]{1}</param>
-        </data>
     </define>
     <define name="channelCodeUtil2">
         <data type="string">
