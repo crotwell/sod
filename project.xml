@@ -180,7 +180,7 @@
         </dependency>
         <dependency>
             <id>hsqldb</id>
-            <version>1.7.2-rc5</version>
+            <version>1.7.2-rc6b</version>
             <url>http://hsqldb.sourceforge.net</url>
         </dependency>
         <dependency>
