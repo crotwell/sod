@@ -189,7 +189,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
-                        save(System.out);
                         System.exit(0);
                     }
                 });
