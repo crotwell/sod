@@ -23,81 +23,82 @@ import org.w3c.dom.Element;
 
 public class IndexTemplate extends FileWritingTemplate implements WaveformArmMonitor{
     public IndexTemplate() throws IOException {
-		this(FileWritingTemplate.getBaseDirectoryName());
+        this(FileWritingTemplate.getBaseDirectoryName());
     }
-	
+
     public IndexTemplate(String dirName) throws IOException{
-		super(dirName, "index.html");
-		try {
-			initExceptionHandler();
-			Element template = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
-															  indexLoc);
-			parse(template);
-			write();
-			FileWritingTemplate help = new FileWritingTemplate(dirName + "/help/", "eventPageHelp.html");
-			help.parse(TemplateFileLoader.getTemplate(getClass().getClassLoader(),
-													  eventPageHelp));
-			help.write();
-			SodUtil.copyFile(cssLoc, dirName+"/main.css");
-			SodUtil.copyFile(sortLoc, dirName+"/sorttable.js");
-			SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
-			SodUtil.copyFile(helpMark, dirName + "/images/helpmark.png");
-			/* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
-			convertToHTML(Start.getConfigFileName(),dirName);
-			SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + Start.getConfigFileName());
-		} catch (Exception e) {
-			GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
-		}
+        super(dirName, "index.html");
+        try {
+            initExceptionHandler();
+            Element template = TemplateFileLoader.getTemplate(getClass().getClassLoader(),
+                                                              indexLoc);
+            parse(template);
+            write();
+            FileWritingTemplate help = new FileWritingTemplate(dirName + "/help/", "eventPageHelp.html");
+            help.parse(TemplateFileLoader.getTemplate(getClass().getClassLoader(),
+                                                      eventPageHelp));
+            help.write();
+            SodUtil.copyFile(cssLoc, dirName+"/main.css");
+            SodUtil.copyFile(sortLoc, dirName+"/sorttable.js");
+            SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
+            SodUtil.copyFile(helpMark, dirName + "/images/helpmark.png");
+            String configFileLoc = Start.getConfigFileName();
+            String configFileName = new File(configFileLoc).getName();
+            /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
+            convertToHTML(configFileLoc, dirName);
+            SodUtil.copyFile(Start.getConfigFileName(), dirName + "/" + configFileName);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handle("unexpected problem creating index.html page", e);
+        }
     }
-	
+
     public void update(EventChannelPair ecp) { write(); }
-	
-	
+
+
     /** Exists so IndexTemplate can be created before arms, in order for exceptions
-	 * in initialization to be in the status pages.*/
+     * in initialization to be in the status pages.*/
     public void performRegistration() {
-		Start.getEventArm().add(mapEventStatus);
-		Start.getWaveformArm().addStatusMonitor(this);
+        Start.getEventArm().add(mapEventStatus);
+        Start.getWaveformArm().addStatusMonitor(this);
     }
-	
+
     protected Object getTemplate(String tagName, Element el) throws ConfigurationException  {
-		if(tagName.equals("eventMap")){
-			mapEventStatus = new MapEventStatus(el, false);
-			return new RelativeLocationTemplate(getOutputLocation(),
-												mapEventStatus.getLocation());
-		}
-		return super.getTemplate(tagName, el);
+        if(tagName.equals("eventMap")){
+            mapEventStatus = new MapEventStatus(el, false);
+            return new RelativeLocationTemplate(getOutputLocation(),
+                                                mapEventStatus.getLocation());
+        }
+        return super.getTemplate(tagName, el);
     }
-	
+
     protected void initExceptionHandler() throws IOException {
-		File errorDir = new File(getOutputDirectory(), "Errors");
-		errorDir.mkdirs();
-		GlobalExceptionHandler.add(new HTMLReporter(errorDir));
+        File errorDir = new File(getOutputDirectory(), "Errors");
+        errorDir.mkdirs();
+        GlobalExceptionHandler.add(new HTMLReporter(errorDir));
     }
-	private void convertToHTML(String xmlFile, String dirName) throws TransformerException, FileNotFoundException, MalformedURLException, TransformerConfigurationException, IOException {
-		
-		String xslFileName = dirName +"/xmlverbatimwrapper.xsl";
-		SodUtil.copyFile(xslWrapperFileLoc,xslFileName);
-		SodUtil.copyFile(supportXslFileLoc,dirName+"/xmlverbatim.xsl");
-		SodUtil.copyFile(cssFileLoc,dirName+"/xmlverbatim.css");
-		String fileName = xmlFile.substring(0,xmlFile.indexOf(".xml"));
-		String htmlFile = dirName + "/" + fileName + ".html";
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Transformer transformer = tFactory.newTransformer(new StreamSource(xslFileName));
-		transformer.transform(new StreamSource(xmlFile), new StreamResult(new FileOutputStream(htmlFile)));
+    private void convertToHTML(String configFileLoc, String statusDir) throws TransformerException, FileNotFoundException, MalformedURLException, TransformerConfigurationException, IOException {
+        String xslFileName = statusDir +"/xmlverbatimwrapper.xsl";
+        SodUtil.copyFile(xslWrapperFileLoc,xslFileName);
+        SodUtil.copyFile(supportXslFileLoc,statusDir+"/xmlverbatim.xsl");
+        SodUtil.copyFile(cssFileLoc,statusDir+"/xmlverbatim.css");
+        String fileName = configFileLoc.substring(0, configFileLoc.indexOf(".xml"));
+        String htmlFile = statusDir + "/" + new File(fileName).getName() + ".html";
+        TransformerFactory tFactory = TransformerFactory.newInstance();
+        Transformer transformer = tFactory.newTransformer(new StreamSource(xslFileName));
+        transformer.transform(new StreamSource(configFileLoc), new StreamResult(new FileOutputStream(htmlFile)));
     }
-	
-	
-	private MapEventStatus mapEventStatus;
-	
-	private static String indexLoc = "jar:edu/sc/seis/sod/data/templates/index.xml";
-	private static String cssLoc = "jar:edu/sc/seis/sod/data/templates/main.css";
-	private static String sortLoc = "jar:edu/sc/seis/sod/data/templates/sorttable.js";
-	private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
-	private static String helpMark = "jar:edu/sc/seis/sod/data/templates/defaults/helpmark.png";
-	private static String eventPageHelp = "jar:edu/sc/seis/sod/data/templates/defaults/eventPageHelp.xml";
-	private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
-	private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
-	private static String cssFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.css";
+
+
+    private MapEventStatus mapEventStatus;
+
+    private static String indexLoc = "jar:edu/sc/seis/sod/data/templates/index.xml";
+    private static String cssLoc = "jar:edu/sc/seis/sod/data/templates/main.css";
+    private static String sortLoc = "jar:edu/sc/seis/sod/data/templates/sorttable.js";
+    private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
+    private static String helpMark = "jar:edu/sc/seis/sod/data/templates/defaults/helpmark.png";
+    private static String eventPageHelp = "jar:edu/sc/seis/sod/data/templates/defaults/eventPageHelp.xml";
+    private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
+    private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
+    private static String cssFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.css";
 }
 
