@@ -1,12 +1,14 @@
 package edu.sc.seis.sod;
 
-import org.w3c.dom.*;
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * AbstractSource.java
- * This class acts as an abstract super class for source. 
- * 
+ * This class acts as an abstract super class for source.
+ *
  *
  * Created: Wed Mar 20 13:52:55 2002
  *
@@ -15,39 +17,28 @@ import org.apache.log4j.*;
  */
 
 public abstract class AbstractSource implements Source{
-    /**
-     * Creates a new <code>AbstractSource</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
     public AbstractSource (Element config){
-	this.config = config;
+        NodeList children = config.getChildNodes();
+        for(int i=0; i<children.getLength(); i++) {
+            if (children.item(i) instanceof Element) {
+                Element el = (Element)children.item(i);
+                String tagName  = el.getTagName();
+                if(tagName.equals("dns")) dns = SodUtil.getText(el);
+                else if(tagName.equals("name"))name = SodUtil.getText(el);
+            }
+        }
     }
-
+    
     /**
-     * returns the DNSName of the server. 
+     * returns the DNSName of the server.
      * The context underwhich the objectName is registered in the CORBA naming service.
      *
      * @return a <code>String</code> value
      */
-    public String getDNSName() {
-
-	NodeList children = config.getChildNodes();
-	Node node;
-	for (int i=0; i<children.getLength(); i++) {
-	    node = children.item(i);
-	    if (node instanceof Element) {
-		String tagName  = ((Element)node).getTagName();
-		if(tagName.equals("dns")) {
-
-		    return SodUtil.getText((Element)node);
-
-		}
-	    } // end of if (node instanceof Element)
-	} // end of for (int i=0; i<children.getSize(); i++)
-	return null;
+    public String getDNSName() {// end of for (int i=0; i<children.getSize(); i++)
+        return dns;
     }
-
+    
     /**
      * returns the sourceName of the server. The name to which the server's servant instance is bound
      * in the CORBA naming service.
@@ -55,25 +46,10 @@ public abstract class AbstractSource implements Source{
      * @returns a <code>String</code> value
      */
     public String getSourceName() {
-	NodeList children = config.getChildNodes();
-	Node node;
-	for (int i=0; i<children.getLength(); i++) {
-	    node = children.item(i);
-	    if (node instanceof Element) {
-		String tagName  = ((Element)node).getTagName();
-		if(tagName.equals("name")) {
-
-		    return SodUtil.getText((Element)node);
-
-		}
-	    } // end of if (node instanceof Element)
-	} // end of for (int i=0; i<children.getSize(); i++)
-	return null;
-
+        return name;
     }
-  
-    private Element config;
-   
-    static Category logger = 
-	Category.getInstance(AbstractSource.class.getName());
+    
+    private String name, dns;
+    
+    private static Logger logger = Logger.getLogger(AbstractSource.class);
 }// AbstractSource
