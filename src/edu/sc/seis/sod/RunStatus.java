@@ -52,6 +52,7 @@ public class RunStatus{
                cond == EventChannelCondition.NO_AVAILABLE_DATA ||
                cond == EventChannelCondition.CORBA_FAILURE) return FAILED;
         else if(cond == EventChannelCondition.SUBSETTER_PASSED ||
+				cond == EventChannelCondition.SUCCESS ||
                 cond == EventChannelCondition.PROCESSING) return PASSED;
         else return UNKNOWN;
     }
