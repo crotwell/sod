@@ -38,8 +38,8 @@ XSD=${MAVEN}/msv/jars/xsdlib-20030807.jar
 XERCES=${MAVEN}/xerces/jars/xerces-2.4.0.jar
 ISORELAX=${MAVEN}/msv/jars/isorelax-20030807.jar
 RNGCONV=${MAVEN}/rngconv/jars/rngconv-20030225.jar
-
-FULLPATH=${MSV}${SEP}${RELAXDATA}${SEP}${XSD}${SEP}${XERCES}${SEP}${ISORELAX}${SEP}${RNGCONV}
+SOD=${MAVEN}/sod/jars/sod-1.0beta.jar
+FULLPATH=${MSV}${SEP}${RELAXDATA}${SEP}${XSD}${SEP}${XERCES}${SEP}${ISORELAX}${SEP}${RNGCONV}${SEP}${SOD}
 
 echo $FULLPATH
 exit 0
