@@ -65,7 +65,6 @@ public class LocalSeismogramArm implements Subsetter{
 	Node node;
 	for (int i=0; i<children.getLength(); i++) {
 	    node = children.item(i);
-	    logger.debug(node.getNodeName());
 	    if (node instanceof Element) {
 		if (((Element)node).getTagName().equals("description")) {
 		    // skip description element
@@ -100,7 +99,10 @@ public class LocalSeismogramArm implements Subsetter{
 
 	if(eventChannelSubsetter.accept(eventAccess, networkAccess, channel, null)) {
 	    //processFixedDataCenter(eventAccess, networkAccess, channel);
-	     processRequestGeneratorSubsetter(eventAccess, networkAccess, channel, dataCenter);
+	     processRequestGeneratorSubsetter(eventAccess, 
+					      networkAccess, 
+					      channel, 
+					      dataCenter);
 	}
     }
 
@@ -130,11 +132,14 @@ public class LocalSeismogramArm implements Subsetter{
 							channel, 
 							null); 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
-	if (outfilters.length != 0) {
+
 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
-	} else {
-	    logger.debug("available data returned no filters for "+ChannelIdUtil.toString(channel.get_id()));
-	} // end of else
+
+// 	if (outfilters.length != 0) {
+// 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
+// 	} else {
+// 	    logger.debug("available data returned no filters for "+ChannelIdUtil.toString(channel.get_id()));
+// 	} // end of else
 	
 	
     }
@@ -158,13 +163,14 @@ public class LocalSeismogramArm implements Subsetter{
 					 outfilters, 
 					 null)) {
 	    logger.debug("BEFORE getting seismograms "+infilters.length+" "+outfilters.length);
-	    for (int i=0; i<outfilters.length; i++) {
-		logger.debug("Getting seismograms "+ChannelIdUtil.toStringNoDates(outfilters[i].channel_id)+" from "+outfilters[i].start_time.date_time+" to "+outfilters[i].end_time.date_time);
+	    logger.debug("Using infilters, fix this when DMC fixes server");
+	    for (int i=0; i<infilters.length; i++) {
+		logger.debug("Getting seismograms "+ChannelIdUtil.toString(infilters[i].channel_id)+" from "+infilters[i].start_time.date_time+" to "+infilters[i].end_time.date_time);
 		 
 	    } // end of for (int i=0; i<outFilters.length; i++)
 	    
 	    MicroSecondDate before = new MicroSecondDate();
-	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(outfilters);
+	    LocalSeismogram[] localSeismograms = dataCenter.retrieve_seismograms(infilters);
 	    MicroSecondDate after = new MicroSecondDate();
 	    logger.debug("After getting seismograms "+after.subtract(before));
 	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
@@ -186,8 +192,6 @@ public class LocalSeismogramArm implements Subsetter{
 	(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
 
 	waveFormArmProcessSubsetter.process(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null);
-	System.out.println(" ~~~~~~~~ GOT "+localSeismograms.length+" seismograms");
-	
     }
 
 
