@@ -130,7 +130,24 @@ public class Start {
 	    
             logger.info("Logging configured");
 
-	    InputStream in = new BufferedInputStream(new FileInputStream("/home/telukutl/sod/xml/network.xml"));
+
+	    String filename 
+		= props.getProperty("edu.sc.seis.sod.configuration");
+	    if (filename == null) {
+		filename = "edu/sc/seis/sod/data/DefaultConfig.xml";		 
+	    } // end of if (filename == null)
+	    
+	    InputStream in;
+	    if (filename.startsWith("http:") || filename.startsWith("ftp:")) {
+		java.net.URL url = new java.net.URL(filename);
+		java.net.URLConnection conn = url.openConnection();
+		in = new BufferedInputStream(conn.getInputStream());
+	    } else {
+		in = new BufferedInputStream(new FileInputStream(filename));
+	    } // end of else
+	    
+
+	    //n = new BufferedInputStream(new FileInputStream("/home/telukutl/sod/xml/network.xml"));
 	    Start start = new Start(in);
             logger.info("Start init()");
 	    start.init();

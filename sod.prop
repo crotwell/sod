@@ -28,4 +28,4 @@ ooc.orb.oa.thread_pool=10
 #
 #ooc.orb.service.NameService=corbaloc:iiop:piglet.seis.sc.edu:7771/NameService
 ooc.orb.service.NameService=corbaloc:iiop:pooh.seis.sc.edu:7371/NameService
-
+edu.sc.seis.sod.configuration =/home/telukutl/sod/xml/network.xml
