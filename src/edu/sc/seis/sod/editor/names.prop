@@ -104,3 +104,17 @@ linearDistanceMagnitudeRange=Linear Distance with Magnitude
 
 legacyExecute=Legacy Execute
 channelGroupLegacyExecute=Channel Group Legacy Execute
+command=Command
+
+breqFastRequestSubsetter=BREQFast Request Subsetter
+dataDirectory=Data Directory
+name=Name
+inst=Institution
+mail=Mailing Address
+email=Email Address
+phone=Phone Number
+fax=Fax Number
+media=Media
+altmedia1=Alt. Media 1
+altmedia2=Alt. Media 2
+quality=Quality

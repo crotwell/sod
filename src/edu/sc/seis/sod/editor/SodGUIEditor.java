@@ -114,6 +114,8 @@ public class SodGUIEditor extends SimpleGUIEditor {
         
         editors.put("legacyExecute", new LegacyExecuteEditor());
         editors.put("channelGroupLegacyExecute", new LegacyExecuteEditor());
+        
+        editors.put("breqFastRequestSubsetter", new BreqFastRequestSubsetterEditor());
 
         BooleanEditor bool = new BooleanEditor(this);
         String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "requestSubsetter", "seismogram"};
