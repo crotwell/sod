@@ -26,10 +26,8 @@ public class ChoiceRequest implements RequestGenerator {
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 Element element = (Element)node;
-                if(element.getTagName().equals("eventChannelChoice")) {
-                    choices.add(new EventChannelChoice(element));
-                } else if(element.getTagName().equals("eventStationChoice")) {
-                    choices.add(new EventStationChoice(element));
+                if(element.getTagName().equals("choice")) {
+                    choices.add(new Choice(element));
                 } else if(element.getTagName().equals("otherwise")) {
                     otherwise = (RequestGenerator)SodUtil.load((Element)node,
                                                                "requestGenerator");
@@ -62,14 +60,11 @@ public class ChoiceRequest implements RequestGenerator {
 
     protected RequestGenerator otherwise = null;
 
-    abstract class Choice implements RequestGenerator, EventChannelSubsetter {
+    class Choice implements RequestGenerator, EventChannelSubsetter {
 
         RequestGenerator requestGenerator;
-    }
-
-    class EventChannelChoice extends Choice {
-
-        EventChannelChoice(Element config) throws ConfigurationException {
+        
+        Choice(Element config) throws ConfigurationException {
             NodeList childNodes = config.getChildNodes();
             Node node;
             for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -103,41 +98,4 @@ public class ChoiceRequest implements RequestGenerator {
         EventChannelSubsetter eventChannelSubsetter;
     }
 
-    class EventStationChoice extends Choice {
-
-        EventStationChoice(Element config) throws ConfigurationException {
-            NodeList childNodes = config.getChildNodes();
-            Node node;
-            for(int counter = 0; counter < childNodes.getLength(); counter++) {
-                node = childNodes.item(counter);
-                if(node instanceof Element) {
-                    SodElement sodElement = (SodElement)SodUtil.load((Element)node,
-                                                                     new String[] {"requestGenerator",
-                                                                                   "eventStation"});
-                    if(sodElement instanceof RequestGenerator) {
-                        requestGenerator = (RequestGenerator)sodElement;
-                    } else if(sodElement instanceof EventStationSubsetter) {
-                        eventStationSubsetter = (EventStationSubsetter)sodElement;
-                    }
-                } // end of else
-            }
-        }
-
-        public RequestFilter[] generateRequest(EventAccessOperations event,
-                                               Channel channel,
-                                               CookieJar cookieJar)
-                throws Exception {
-            return requestGenerator.generateRequest(event, channel, cookieJar);
-        }
-
-        public StringTree accept(EventAccessOperations event,
-                              Channel channel,
-                              CookieJar cookieJar) throws Exception {
-            return eventStationSubsetter.accept(event,
-                                                channel.my_site.my_station,
-                                                cookieJar);
-        }
-
-        EventStationSubsetter eventStationSubsetter;
-    }
 }// PhaseRequest
