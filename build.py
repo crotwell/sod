@@ -30,12 +30,20 @@ class editor(sodScriptParameters):
         self.mainclass='edu.sc.seis.sod.editor.SodGUIEditor'
         self.name='sodeditor'
 
+class kill(sodScriptParameters):
+    def __init__(self, mods):
+        sodScriptParameters.__init__(self, [])
+        for mod in mods: self.update(mod)
+        self.mainclass='edu.sc.seis.sod.SodKiller'
+        self.name='killSod'
+
 
 def buildAllScripts(proj):
     scripts = buildRunScripts(proj)
     scripts.extend(buildQueryTimerScripts(proj))
     scripts.extend(buildEditorScripts(proj))
     scripts.extend(buildProfileScripts(proj))
+    scripts.extend(buildKillScripts(proj))
     return scripts
 
 def buildRunScripts(proj):
@@ -63,6 +71,13 @@ def buildEditorScripts(proj):
     scripts = [scriptBuilder.build(editor([]), proj)]
     scriptBuilder.setVarWindows()
     scripts.append(scriptBuilder.build(editor([scriptBuilder.windowsParameters()]), proj))
+    return scripts
+
+def buildKillScripts(proj):
+    scriptBuilder.setVarSh()
+    scripts = [scriptBuilder.build(kill([]), proj)]
+    scriptBuilder.setVarWindows()
+    scripts.append(scriptBuilder.build(kill([scriptBuilder.windowsParameters()]), proj))
     return scripts
 
 def buildJars(sodProj, clean=False):
