@@ -43,7 +43,6 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
 			Node n = nl.item(i);
 			if (n.getNodeName().equals("fileDir")){
 				fileDir = n.getFirstChild().getNodeValue();
-				System.out.println("fileDir = " + fileDir);
 			}
 			else if (n.getNodeName().equals("netConfig")){
 				netConfig = TemplateFileLoader.getTemplate((Element)n);

@@ -29,12 +29,10 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
 	
 	private static String extractConstructorArg(Element el) throws IOException, SAXException, ParserConfigurationException, DOMException{
 		String fileDir = SodUtil.getElement(el, "fileDir").getFirstChild().getNodeValue();
-		System.out.println("fileDir: " + fileDir);
 		Element eventConfigEl = SodUtil.getElement(el, "eventConfig");
 		Element templateConfig = TemplateFileLoader.getTemplate(eventConfigEl);
 		Element fileNameElement = SodUtil.getElement(templateConfig, "filename");
 		String filename = fileNameElement.getFirstChild().getNodeValue();
-		System.out.println("filename: " + filename);
 		
 		return fileDir + '/' + filename;
 	}
@@ -70,8 +68,6 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
 		}
 		
 		public String getResult(){
-			System.out.println("fileloc: " + fileLoc);
-			System.out.println("getFilename(): " + getOutputDirectory() + '/' + getFilename());
 			return SodUtil.getRelativePath(getOutputDirectory().toString() + '/' + getFilename(), fileLoc, "/");
 		}
 	}
