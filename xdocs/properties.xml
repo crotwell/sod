@@ -33,7 +33,7 @@ Most properties are like this.  The name element specifies which property you're
 	&lt;value&gt;1&lt;/value&gt;
 &lt;property&gt;
 </source>
-<p>Those that don't are properties used to specify a unit based value like the above. This property is setting the amount of time sod waits for events to show up after the end date specified in the event arm, or the event lag.  These properties require two property elements in the properties element.  The first has a name element with the property's name as a value with .unit appended to it.  The value value takes the time's unit.  The second property element has a name value of the properties name with .value appended to it.  The value value for this element is used to specify the number of the units specifed in the previous element to use.  This example property is setting the event lag to be one week.
+<p>The other type of property isused to specify a unit based value like the above. This property is setting the amount of time sod waits for events to show up after the end date specified in the event arm, or the event lag.  These properties require two property elements in the properties element.  The first has a name element with the property's name as a value with .unit appended to it.  The value element's value is the time's unit.  The second property element has a name lement value of the properties name with .value appended to it.  The value element's value is the number of the units specifed in the previous element to use.  This example property is setting the event lag to be one week.
 </p>
 <b>Acceptable units</b>
 <ul>
