@@ -1,6 +1,6 @@
 /**
  * LocalSeismogramTemplateGenerator.java
- *
+ * 
  * @author Created by Philip Oliver-Paull
  */
 package edu.sc.seis.sod.process.waveform;
@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -19,7 +18,6 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.ChannelFormatter;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
@@ -45,32 +43,18 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
 
     public LocalSeismogramTemplateGenerator(Element el) throws Exception {
         Element waveformSeismogramConfig = TemplateFileLoader.getTemplate(el);
-        Node tmpEl = SodUtil.getElement(waveformSeismogramConfig,
-                                        "outputLocation");
-        Node tmpEl2 = SodUtil.getElement((Element)tmpEl, "eventDir");
-        eventFormatter = new EventFormatter((Element)tmpEl2);
-        tmpEl2 = SodUtil.getElement((Element)tmpEl, "stationDir");
-        stationFormatter = new StationFormatter((Element)tmpEl2);
-        waveformSeismogramConfig.removeChild(tmpEl);
-        tmpEl = SodUtil.getElement(waveformSeismogramConfig, "filename");
-        if(tmpEl != null) {
-            fileName = tmpEl.getFirstChild().getNodeValue();
-            waveformSeismogramConfig.removeChild(tmpEl);
+        Element outputLocEl = SodUtil.getElement(waveformSeismogramConfig,
+                                                 "outputLocation");
+        SeismogramImageOutputLocator out = SeismogramImageOutputLocator.createForLocalSeismogramTemplate(outputLocEl);
+        waveformSeismogramConfig.removeChild(outputLocEl);
+        seismoImageProcess = new SeismogramImageProcess(out);
+        Element fileEl = SodUtil.getElement(waveformSeismogramConfig,
+                                            "filename");
+        if(fileEl != null) {
+            fileName = fileEl.getFirstChild().getNodeValue();
+            waveformSeismogramConfig.removeChild(fileEl);
         }
-        tmpEl = SodUtil.getElement(waveformSeismogramConfig, "picName");
-        if(tmpEl != null) {
-            ChannelFormatter chanFormatter = new ChannelFormatter((Element)tmpEl);
-            seismoImageProcess = new SeismogramImageProcess(fileDir,
-                                                            eventFormatter,
-                                                            stationFormatter,
-                                                            chanFormatter,
-                                                            "original_");
-            waveformSeismogramConfig.removeChild(tmpEl);
-        }
-        if(fileDir == null || waveformSeismogramConfig == null
-                || eventFormatter == null || stationFormatter == null) {
-            throw new IllegalArgumentException("The configuration element must contain a fileDir and a template");
-        }
+        if(waveformSeismogramConfig == null) { throw new IllegalArgumentException("The configuration requires a template"); }
         if(fileName != null) {
             template = new LocalSeismogramTemplate(waveformSeismogramConfig,
                                                    fileDir + "/");
@@ -103,11 +87,11 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
     }
 
     public WaveformResult process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms,
-                                         CookieJar cookieJar) throws Exception {
+                                  Channel channel,
+                                  RequestFilter[] original,
+                                  RequestFilter[] available,
+                                  LocalSeismogramImpl[] seismograms,
+                                  CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
         if(seismoImageProcess != null) {
             seismoImageProcess.process(event,
@@ -124,8 +108,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
         } else {
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
-        return new WaveformResult(seismograms,
-                                         new StringTreeLeaf(this, true));
+        return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
     public File getOutputFile(EventAccessOperations event, Channel chan) {
