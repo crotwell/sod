@@ -118,6 +118,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
         editors.put("sacFileProcessor", new SacFileEditor(this));
+        editors.put("originPointDistance", new OriginPointDistanceEditor(this));
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
 
         TagChooser originTC = new TagChooser("origin", this);
@@ -143,3 +144,4 @@ public class SodGUIEditor extends SimpleGUIEditor {
         gui.start();
     }
 }
+
