@@ -49,6 +49,8 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.subsetter.waveformArm.PhaseRequest;
 import edu.sc.seis.sod.subsetter.waveformArm.PhaseWindow;
+import edu.sc.seis.sod.SodFlag;
+import edu.sc.seis.sod.FlagData;
 
 public class SeismogramImageProcess implements WaveformProcess {
 	
@@ -136,7 +138,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 								  RequestFilter[] available,
 								  LocalSeismogramImpl[] seismograms, CookieJar cookieJar
 								 ) throws Exception {
-		return process(event, channel, original, seismograms, fileType);
+		return process(event, channel, original, seismograms, fileType,cookieJar);
     }
 	
     /** allows specifying a fileType, png or pdf. */
@@ -144,9 +146,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 								  Channel channel,
 								  RequestFilter[] original,
 								  LocalSeismogramImpl[] seismograms,
-								  final String fileType
+								  final String fileType,CookieJar cookieJar
 								 ) throws Exception {
-		return process(event, channel, original, seismograms, fileType, phases);
+		return process(event, channel, original, seismograms, fileType, phases,cookieJar);
     }
 	
     /** allows specifying a fileType, png or pdf, and a list of phases.*/
@@ -155,9 +157,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 								  RequestFilter[] original,
 								  LocalSeismogramImpl[] seismograms,
 								  final String fileType,
-								  String[] phases
+								  String[] phases,CookieJar cookieJar
 								 ) throws Exception {
-		return process(event, channel, original, seismograms, fileType, phases, relativeTime);
+		return process(event, channel, original, seismograms, fileType, phases, relativeTime,cookieJar);
     }
 	
 	
@@ -168,7 +170,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 								  LocalSeismogramImpl[] seismograms,
 								  final String fileType,
 								  String[] phases,
-								  boolean relTime
+								  boolean relTime,final CookieJar cookieJar
 								 ) throws Exception {
 		logger.debug("process() called");
 		
@@ -182,10 +184,12 @@ public class SeismogramImageProcess implements WaveformProcess {
 		
 		MemoryDataSetSeismogram memDSS = null;
 		PhaseRequest phaseRequest = null;
+		String prefix = "";
 		if(phaseWindow == null) {
 			memDSS = new MemoryDataSetSeismogram(original[0], "");
 			memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
 			memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
+			prefix = "original_";
 		}else {
 			phaseRequest = phaseWindow.getPhaseRequest();
 			RequestFilter[] request = phaseRequest.generateRequest(event,channel,null);
@@ -198,16 +202,19 @@ public class SeismogramImageProcess implements WaveformProcess {
 		}
 		DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "+memDSS.getName(), "temp", new AuditInfo[0]);
 		dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
-		dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
+		dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
 		bsd.add(new MemoryDataSetSeismogram[]{memDSS});
 		
 		Origin origin = EventUtil.extractOrigin(event);
-		MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
-		Arrival[] arrivals =
+		final MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
+		final Arrival[] arrivals =
 			tauP.calcTravelTimes(channel.my_site.my_station, origin, phases);
+		final SodFlag[] flags = new SodFlag[arrivals.length];
+		final String phasePrefix = prefix;
 		for (int i = 0; i < arrivals.length; i++) {
 			MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(), UnitImpl.SECOND));
-			bsd.add(new Flag(flagTime, arrivals[i].getName()));
+			flags[i] = new SodFlag(flagTime, arrivals[i].getName(),bsd);
+			bsd.add(flags[i]);
 		}
 		
 		final String picFileName = FissuresFormatter.filize(fileDir + '/'
@@ -225,15 +232,20 @@ public class SeismogramImageProcess implements WaveformProcess {
 							} else {
 								bsd.outputToPNG(new File(picFileName), dimension);
 							}
+							for (int i = 0; i < arrivals.length; i++) {
+								FlagData flagData = flags[i].getFlagData();
+								cookieJar.put(phasePrefix + "SeismogramImageProcess_flagPixels_" + arrivals[i].getName(),flagData);
+							}
 						} catch (Throwable e) {
 							GlobalExceptionHandler.handle("unable to save seismogram image to "+ picFileName, e);
 						}
 					}
 				});
 		
+		
 		return new WaveformResult(true, seismograms, new StringTreeLeaf(this, true));
     }
-	
+	private CookieJar cookierJar = null;
     private static TauP_Time tauptime = null;
     private static Dimension dimension = new Dimension(500, 200);
     private static String[] phases = {"P", "S"};
@@ -242,6 +254,7 @@ public class SeismogramImageProcess implements WaveformProcess {
     private String prefix = "";
     private String fileType = PNG;
     private boolean relativeTime = false;
+	private static int prefixCount = 1;
     public static final String PDF = "pdf";
     public static final String PNG = "png";
 }
