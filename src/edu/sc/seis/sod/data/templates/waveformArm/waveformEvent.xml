@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<template><html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title>Events</title>
+<style media="all">@import "../../main.css";</style>
+</head>
+<body>
+<div id="Header">
+<a href="../location.html"> Events</a>
+> <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
+</div>
+<div id="Content">
+<h1>Channel information for this event</h1>
+<h2>Channels:</h2>
+<table>
+<tr id="title">
+<td>Id</td>
+<td>Latitude</td>
+<td>Longitude</td>
+<td>Azimuth</td>
+<td>Dip</td>
+<td>Status</td>
+</tr>
+<channels><channel><tr>
+<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td><lat/></td>
+<td><lon/></td>
+<td><dip/></td>
+<td><azimuth/></td>
+<td><status/></td>
+</tr>
+</channel></channels>
+</table>
+<h2>Map:</h2>
+<img><attribute name="src"><map/></attribute></img>
+</div>
+<div id="Menu">
+<ul>
+<li>
+<a href="../location.html">Events</a><br />
+<ul>
+<li><a href="../location.html" id="Submenu">Location</a></li>
+<li><a href="../time.html" id="Submenu">Time</a></li>
+<li><a href="../mag.html" id="Submenu">Magnitude</a></li>
+<li><a href="../depth.html" id="Submenu">Depth</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</body>
+</html></template>
