@@ -7,12 +7,6 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches events whose time occurs within the given range</summary>
-                    <example>
-                        <originTimeRange>
-                            <startTime>20010101T00:00:00Z</startTime>
-                            <endTime>20011231T00:00:00Z</endTime>
-                        </originTimeRange>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="timeRange"/>

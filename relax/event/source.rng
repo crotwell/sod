@@ -18,40 +18,6 @@
                         tags. The EventFinder is aquired from the EventDC, and a query is sent with
                         the given arguments. The events returned are then sent thrrough the EventArm
                         for processing. </description>
-                    <example>
-                        <eventFinder>
-                            <name>IRIS_EventDC</name>
-                            <dns>edu/iris/dmc</dns>
-                            <boxArea>
-                                <latitudeRange>
-                                    <unit>DEGREE</unit>
-                                    <min>-90</min>
-                                    <max>90</max>
-                                </latitudeRange>
-                                <longitudeRange>
-                                    <unit>DEGREE</unit>
-                                    <min>-180</min>
-                                    <max>180</max>
-                                </longitudeRange>
-                            </boxArea>
-                            <originDepthRange>
-                                <unit>KILOMETER</unit>
-                                <min>0</min>
-                                <max>1000</max>
-                            </originDepthRange>
-                            <originTimeRange>
-                                <startTime>20030101T00:00:00.001Z</startTime>
-                                <endTime>20030131T23:59:59.999Z</endTime>
-                            </originTimeRange>
-                            <magnitudeRange>
-                                <magType>mb</magType>
-                                <min>6.0</min>
-                                <max>10.0</max>
-                            </magnitudeRange>
-                            <catalog>FINGER</catalog>
-                            <contributor>NEIC</contributor>
-                        </eventFinder>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="name"/>
