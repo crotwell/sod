@@ -19,10 +19,6 @@ public class SodFlag extends Flag {
 		super(flagTime,name,seis);
 		this.bsd = bsd;
 	}
-	public void draw(Graphics2D canvas, Dimension size,
-					 TimeEvent timeEvent, AmpEvent ampEvent) {
-		super.draw(canvas,size,timeEvent,ampEvent);
-	}
 	public int getFlagLocation(Dimension size, MicroSecondTimeRange timeRange) {
 		int relFlagLocation = super.getFlagLocation(size,timeRange);
 		int ampBorderWidth = bsd.get(BasicSeismogramDisplay.CENTER_LEFT).getWidth();
