@@ -28,12 +28,10 @@
             <dns>edu/iris/dmc</dns>
             <boxArea>
                 <latitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-90</min>
                     <max>90</max>
                 </latitudeRange>
                 <longitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-180</min>
                     <max>180</max>
                 </longitudeRange>
@@ -126,21 +124,6 @@
                 <passEventChannel/>
             </eventVectorOR>
             <eventVectorOR>
-                <eventVectorXOR>
-                    <ANDEventChannelWrapper>
-                        <embeddedChannel>
-                            <bandCode>B</bandCode>
-                        </embeddedChannel>
-                    </ANDEventChannelWrapper>
-                    <ANDEventChannelWrapper>
-                        <embeddedChannel>
-                            <bandCode>B</bandCode>
-                        </embeddedChannel>
-                    </ANDEventChannelWrapper>
-                </eventVectorXOR>
-                <passEventChannel/>
-            </eventVectorOR>
-            <eventVectorOR>
                 <eventVectorNOT>
                     <OREventChannelWrapper>
                         <embeddedChannel>
@@ -204,17 +187,6 @@
                 <passVectorRequest/>
             </vectorRequestOR>
             <vectorRequestOR>
-                <vectorRequestXOR>
-                    <ANDRequestWrapper>
-                        <requestPrint/>
-                    </ANDRequestWrapper>
-                    <ANDRequestWrapper>
-                        <requestPrint/>
-                    </ANDRequestWrapper>
-                </vectorRequestXOR>
-                <passVectorRequest/>
-            </vectorRequestOR>
-            <vectorRequestOR>
                 <vectorRequestNOT>
                     <ANDRequestWrapper>
                         <requestPrint/>
@@ -241,17 +213,6 @@
                 <passVectorAvailableData/>
             </vectorAvailableDataOR>
             <vectorAvailableDataOR>
-                <vectorAvailableDataXOR>
-                    <ANDAvailableDataWrapper>
-                        <noGaps/>
-                    </ANDAvailableDataWrapper>
-                    <ANDAvailableDataWrapper>
-                        <noGaps/>
-                    </ANDAvailableDataWrapper>
-                </vectorAvailableDataXOR>
-                <passVectorAvailableData/>
-            </vectorAvailableDataOR>
-            <vectorAvailableDataOR>
                 <vectorAvailableDataNOT>
                     <ANDAvailableDataWrapper>
                         <noGaps/>
@@ -267,15 +228,15 @@
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <ANDLocalSeismogramWrapper>
+                <ANDWaveformProcessWrapper>
                     <rMean/>
                     <rMean/>
-                </ANDLocalSeismogramWrapper>
+                </ANDWaveformProcessWrapper>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <ORLocalSeismogramWrapper>
+                <ORWaveformProcessWrapper>
                     <phaseSignalToNoise>
                         <modelName>prem</modelName>
                         <phaseName>ttp</phaseName>
@@ -297,45 +258,37 @@
                         </longOffsetEnd>
                         <ratio>2</ratio>
                     </phaseSignalToNoise>
-                </ORLocalSeismogramWrapper>
+                </ORWaveformProcessWrapper>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <vectorLegacyExecute>
+                <legacyVectorExecute>
                     <command>echo</command>
-                </vectorLegacyExecute>
+                </legacyVectorExecute>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <vectorAND>
+                <waveformVectorAND>
                     <rMean/>
                     <responseGain/>
-                </vectorAND>
+                </waveformVectorAND>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <vectorOR>
+                <waveformVectorOR>
                     <rMean/>
                     <responseGain/>
-                </vectorOR>
+                </waveformVectorOR>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <waveformVectorFork>
             <waveformVectorAlwaysSuccess>
-                <vectorXOR>
-                    <threeComponentData/>
-                    <threeComponentData/>
-                </vectorXOR>
-            </waveformVectorAlwaysSuccess>
-        </waveformVectorFork>
-        <waveformVectorFork>
-            <waveformVectorAlwaysSuccess>
-                <vectorNOT>
+                <waveformVectorNOT>
                     <responseGain/>
-                </vectorNOT>
+                </waveformVectorNOT>
             </waveformVectorAlwaysSuccess>
         </waveformVectorFork>
         <alwaysSuccess>

@@ -29,12 +29,10 @@
             <dns>edu/iris/dmc</dns>
             <boxArea>
                 <latitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-90</min>
                     <max>90</max>
                 </latitudeRange>
                 <longitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-180</min>
                     <max>180</max>
                 </longitudeRange>
@@ -91,13 +89,6 @@
                 <passNetwork/>
             </networkOR>
             <networkOR>
-                <networkXOR>
-                    <networkCode>II</networkCode>
-                    <networkCode>II</networkCode>
-                </networkXOR>
-                <passNetwork/>
-            </networkOR>
-            <networkOR>
                 <networkNOT>
                     <networkCode>II</networkCode>
                 </networkNOT>
@@ -136,12 +127,10 @@
                 <stationArea>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-90</min>
                             <max>90</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-180</min>
                             <max>180</max>
                         </longitudeRange>
@@ -180,13 +169,6 @@
                 <passStation/>
             </stationOR>
             <stationOR>
-                <stationXOR>
-                    <stationCode>AAK</stationCode>
-                    <stationCode>AAK</stationCode>
-                </stationXOR>
-                <passStation/>
-            </stationOR>
-            <stationOR>
                 <stationNOT>
                     <stationCode>AAK</stationCode>
                 </stationNOT>
@@ -217,24 +199,15 @@
                 <siteArea>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-90</min>
                             <max>90</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-180</min>
                             <max>180</max>
                         </longitudeRange>
                     </boxArea>
                 </siteArea>
-                <passSite/>
-            </siteOR>
-            <siteOR>
-                <siteXOR>
-                    <siteCode>00</siteCode>
-                    <siteCode>00</siteCode>
-                </siteXOR>
                 <passSite/>
             </siteOR>
             <siteOR>
@@ -299,13 +272,6 @@
                     <min>-10</min>
                     <max>10</max>
                 </orientationDipRange>
-                <passChannel/>
-            </channelOR>
-            <channelOR>
-                <channelXOR>
-                    <channelCode>BHZ</channelCode>
-                    <channelCode>BHZ</channelCode>
-                </channelXOR>
                 <passChannel/>
             </channelOR>
             <channelOR>

@@ -28,12 +28,10 @@
             <dns>edu/iris/dmc</dns>
             <boxArea>
                 <latitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-90</min>
                     <max>90</max>
                 </latitudeRange>
                 <longitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-180</min>
                     <max>180</max>
                 </longitudeRange>

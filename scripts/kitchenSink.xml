@@ -28,12 +28,10 @@
             <dns>edu/iris/dmc</dns>
             <boxArea>
                 <latitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-90</min>
                     <max>90</max>
                 </latitudeRange>
                 <longitudeRange>
-                    <unit>DEGREE</unit>
                     <min>-180</min>
                     <max>180</max>
                 </longitudeRange>
@@ -168,24 +166,15 @@
                 <eventArea>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-90</min>
                             <max>90</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-180</min>
                             <max>180</max>
                         </longitudeRange>
                     </boxArea>
                 </eventArea>
-                <passOrigin/>
-            </originOR>
-            <originOR>
-                <originXOR>
-                    <seismicRegion>12</seismicRegion>
-                    <seismicRegion>12</seismicRegion>
-                </originXOR>
                 <passOrigin/>
             </originOR>
             <originOR>
@@ -230,13 +219,6 @@
                 <passNetwork/>
             </networkOR>
             <networkOR>
-                <networkXOR>
-                    <networkCode>II</networkCode>
-                    <networkCode>II</networkCode>
-                </networkXOR>
-                <passNetwork/>
-            </networkOR>
-            <networkOR>
                 <networkNOT>
                     <networkCode>II</networkCode>
                 </networkNOT>
@@ -275,12 +257,10 @@
                 <stationArea>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-90</min>
                             <max>90</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-180</min>
                             <max>180</max>
                         </longitudeRange>
@@ -319,13 +299,6 @@
                 <passStation/>
             </stationOR>
             <stationOR>
-                <stationXOR>
-                    <stationCode>AAK</stationCode>
-                    <stationCode>AAK</stationCode>
-                </stationXOR>
-                <passStation/>
-            </stationOR>
-            <stationOR>
                 <stationNOT>
                     <stationCode>AAK</stationCode>
                 </stationNOT>
@@ -356,24 +329,15 @@
                 <siteArea>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-90</min>
                             <max>90</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>-180</min>
                             <max>180</max>
                         </longitudeRange>
                     </boxArea>
                 </siteArea>
-                <passSite/>
-            </siteOR>
-            <siteOR>
-                <siteXOR>
-                    <siteCode>00</siteCode>
-                    <siteCode>00</siteCode>
-                </siteXOR>
                 <passSite/>
             </siteOR>
             <siteOR>
@@ -438,13 +402,6 @@
                     <min>-10</min>
                     <max>10</max>
                 </orientationDipRange>
-                <passChannel/>
-            </channelOR>
-            <channelOR>
-                <channelXOR>
-                    <channelCode>BHZ</channelCode>
-                    <channelCode>BHZ</channelCode>
-                </channelXOR>
                 <passChannel/>
             </channelOR>
             <channelOR>
@@ -527,21 +484,6 @@
                 <passEventStation/>
             </eventStationOR>
             <eventStationOR>
-                <eventStationXOR>
-                    <distanceRange>
-                        <unit>DEGREE</unit>
-                        <min>0</min>
-                        <max>10</max>
-                    </distanceRange>
-                    <distanceRange>
-                        <unit>DEGREE</unit>
-                        <min>0</min>
-                        <max>10</max>
-                    </distanceRange>
-                </eventStationXOR>
-                <passEventStation/>
-            </eventStationOR>
-            <eventStationOR>
                 <eventStationNOT>
                     <distanceRange>
                         <unit>DEGREE</unit>
@@ -555,12 +497,10 @@
                 <midPoint>
                     <boxArea>
                         <latitudeRange>
-                            <unit>DEGREE</unit>
                             <min>20</min>
                             <max>40</max>
                         </latitudeRange>
                         <longitudeRange>
-                            <unit>DEGREE</unit>
                             <min>75</min>
                             <max>85</max>
                         </longitudeRange>
@@ -601,20 +541,6 @@
                 <passEventChannel/>
             </eventChannelOR>
             <eventChannelOR>
-                <eventChannelXOR>
-                    <embeddedEventStation>
-                        <distanceRange>
-                            <unit>DEGREE</unit>
-                            <min>40</min>
-                        </distanceRange>
-                    </embeddedEventStation>
-                    <embeddedChannel>
-                        <bandCode>B</bandCode>
-                    </embeddedChannel>
-                </eventChannelXOR>
-                <passEventChannel/>
-            </eventChannelOR>
-            <eventChannelOR>
                 <eventChannelNOT>
                     <embeddedEventStation>
                         <distanceRange>
@@ -640,13 +566,6 @@
             </endOffset>
         </phaseRequest>
         <requestAND>
-            <requestOR>
-                <requestXOR>
-                    <requestPrint/>
-                    <requestPrint/>
-                </requestXOR>
-                <passRequest/>
-            </requestOR>
             <requestOR>
                 <requestNOT>
                     <requestPrint/>
@@ -696,13 +615,6 @@
             </availableDataOR>
             <availableDataOR>
                 <someCoverage/>
-                <passAvailableData/>
-            </availableDataOR>
-            <availableDataOR>
-                <availableDataXOR>
-                    <noGaps/>
-                    <fullCoverage/>
-                </availableDataXOR>
                 <passAvailableData/>
             </availableDataOR>
             <availableDataOR>
@@ -834,14 +746,6 @@
                     <rMean/>
                     <rTrend/>
                 </seismogramAND>
-            </alwaysSuccess>
-        </forkProcess>
-        <forkProcess>
-            <alwaysSuccess>
-                <seismogramXOR>
-                    <rMean/>
-                    <rTrend/>
-                </seismogramXOR>
             </alwaysSuccess>
         </forkProcess>
         <forkProcess>
