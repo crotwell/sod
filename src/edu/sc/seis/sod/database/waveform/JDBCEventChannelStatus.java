@@ -336,7 +336,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
     public int[] getSuspendedEventChannelPairs(String processingRule)
         throws SQLException {
         Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                             Standing.IN_PROG);
+                                             Standing.INIT);
         Status processorInit = Status.get(Stage.PROCESSOR, Standing.INIT);
         Status processorSuccess = Status.get(Stage.PROCESSOR, Standing.SUCCESS);
         Stage[] stages = {Stage.EVENT_STATION_SUBSETTER,
