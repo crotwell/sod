@@ -1,11 +1,12 @@
-<?xml version="1.0"?>
 <html>
 <header><title>$runName - Networks in the waveform arm</title>
 <style media="all">@import "../main.css";</style>
-<script type="text/javascript" src="../tableRuler.js"> </script>
 <script type="text/javascript" src="../sorttable.js"> </script>
+<script type="text/javascript" src="../tableRuler.js"> </script>
+<script type="text/javascript" src="../footerPositioner.js"> </script>
 <script type="text/javascript">
 window.onload=function(){
+        positionFooter();
         tableruler();
         set_img_dir('../images/')
 }
@@ -22,7 +23,6 @@ Networks
 <th>Code</th>
 <th>Name</th>
 </tr>
-#set( $extraRows = 10 )
 #foreach ( $net in $successful_networks )
 #set ($netyear = $fissures.networkCodeYear($net.getNetworkAccess()) )
 #set ($netCode = $fissures.formatNetwork($net.getNetworkAccess().get_attributes().get_id()) )
@@ -34,12 +34,6 @@ Networks
 #end
 <td><a href="${netCode}.html">$fissures.networkName($net.getNetworkAccess())</a></td>
 </tr>
-#set( $extraRows = $extraRows - 1 )
-#end
-#if ( $extraRows > 0 )
-#foreach ( $row in [1..$extraRows])
-<tr><td>&nbsp</td></tr>
-#end
 #end
 </table>
 </div>

@@ -1,23 +1,23 @@
-<?xml version="1.0"?>
 <html>
 <header>
 <title>$runName - $network.get_attributes().get_code() in the waveform arm</title>
 <style media="all">@import "../main.css";</style>
 <script type="text/javascript" src="../tableRuler.js"> </script>
+<script type="text/javascript" src="../sorttable.js"></script>
+<script type="text/javascript" src="../footerPositioner.js"> </script>
 <script type="text/javascript">
 window.onload=function(){
+        positionFooter();
         tableruler();
         set_img_dir('../images/')
 }
 </script>
-<script type="text/javascript" src="../sorttable.js"></script>
 </header>
 <body>
 <div id="Header">
 $network.get_attributes().get_code() $fissures.networkName($network)
 </div>
 <div id="Content">
-#set( $extraRows = 20 )
 <table class="sortable ruler" id="stationtable">
 <tr class="title">
 <th>Code</th>
@@ -40,12 +40,6 @@ $network.get_attributes().get_code() $fissures.networkName($network)
 <td>$stations.getNumFailed($staDb)</td>
 <td>$stations.getNumRetry($staDb)</td>
 </tr>
-#set( $extraRows = $extraRows - 1 )
-#end
-#if ( $extraRows > 0 )
-#foreach ( $row in [1..$extraRows])
-<tr><td>&nbsp;</td></tr>
-#end
 #end
 </table>
 </div>
