@@ -95,7 +95,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = getDocument();
         if (tabs) {
-            frame.getContentPane().add(new JScrollPane(getTabPane()), BorderLayout.CENTER);
+            frame.getContentPane().add(getTabPane(), BorderLayout.CENTER);
             // put each top level sod element in a panel
             NodeList list = doc.getDocumentElement().getChildNodes();
             for (int j = 0; j < list.getLength(); j++) {
@@ -112,7 +112,9 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     panel.add(box, BorderLayout.NORTH);
                     String tabName = getDisplayName(((Element)list.item(j)).getTagName());
                     tabPane.add(EditorUtil.capFirstLetter(tabName),
-                                panel);
+                                new JScrollPane(panel,
+                                                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
                 }
             }
         } else {
