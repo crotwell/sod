@@ -34,11 +34,11 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
             logger.debug("Distance ok " + dist + " from " + getMin() + " "
                     + getMax());
-            return new StringTreeLeaf(this, true);
+            return new StringTreeLeaf("DistanceRange("+getMin()+", "+getMax()+")", true);
         } else {
-            return new StringTreeLeaf(this, false);
+            return new StringTreeLeaf("DistanceRange("+getMin()+", "+getMax()+")", false, dist.toString());
         }
     }
 
-    private static Logger logger = Logger.getLogger(DistanceRange.class);
+    private static final Logger logger = Logger.getLogger(DistanceRange.class);
 }// EventStationDistance

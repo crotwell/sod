@@ -32,7 +32,7 @@ public final class EventStationAND extends EventStationLogicalSubsetter
         if (reasons.size() < filterList.size()) {
             reasons.add(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
-        return new StringTreeBranch(this,
+        return new StringTreeBranch("EventStationAND",
                                     result.isSuccess(),
                                         (StringTree[])reasons.toArray(new StringTree[0]));
     }
