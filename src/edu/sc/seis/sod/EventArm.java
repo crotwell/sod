@@ -111,10 +111,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	if(eventFinderSubsetter == null) return;
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
-	String[] searchTypes = new String[3];
-	searchTypes[0] = "MB";
-	searchTypes[1] = "ML";
-	searchTypes[2] = "MS";
+	String[] searchTypes = new String[1];
+	searchTypes[0] = "%";
 
 	EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
        
@@ -183,7 +181,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
      */
     public void handleEventAttrSubsetter(EventAccess eventAccess, EventAttr eventAttr) throws Exception {
 
-	if(eventAttrSubsetter.accept(eventAttr, null)) {
+	if(eventAttrSubsetter == null || eventAttrSubsetter.accept(eventAttr, null)) {
 	    try {	 
 		handleOriginSubsetter(eventAccess, eventAccess.get_preferred_origin());
 	    } catch(Exception e) {return;}
