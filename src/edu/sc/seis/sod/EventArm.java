@@ -137,6 +137,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
                         // go away once the server is fixed/restarted, so we
                         // log the error and sleep before retrying
                         numRetries++;
+                        // force trip back to name service
+                        eventFinderSubsetter.forceGetEventDC();
                         CommonAccess.handleException("Got an UNKNOWN while trying query from "+
                                                          queryStart.getFissuresTime().date_time+
                                                          " to "+queryEnd.getFissuresTime().date_time+
