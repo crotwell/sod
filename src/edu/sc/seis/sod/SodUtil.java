@@ -359,15 +359,10 @@ public class SodUtil {
      */
     public static Element getElement(Element config, String elementName) {
         NodeList children = config.getChildNodes();
-        Node node;
         for(int counter = 0; counter < children.getLength(); counter++) {
-            node = children.item(counter);
-            if(node instanceof Element) {
-                if(((Element)node).getTagName().equals(elementName)) {
-                    //logger.debug("in sodUtil getElement, the element name is
-                    // "+((Element)node).getTagName());
-                    return ((Element)node);
-                }
+            if(children.item(counter) instanceof Element) {
+                Element el = (Element)children.item(counter);
+                if(el.getTagName().equals(elementName)) { return el; }
             }
         }
         return null;
