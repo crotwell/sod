@@ -18,6 +18,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FissuresFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -281,7 +282,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
     protected File getEventDirectory(EventAccessOperations event)
         throws ConfigurationException {
         String eventDirName = getLabel(event);
-        File eventDirectory = new File(dataDirectory, EventFormatter.filize(eventDirName));
+        File eventDirectory = new File(dataDirectory, FissuresFormatter.filize(eventDirName));
         if ( ! eventDirectory.exists()) {
             if ( ! eventDirectory.mkdirs()) {
                 throw new ConfigurationException("Unable to create directory."+eventDirectory);

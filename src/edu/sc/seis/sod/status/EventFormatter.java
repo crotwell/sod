@@ -207,19 +207,12 @@ public class EventFormatter extends Template implements EventTemplate{
         while(it.hasNext()){
             name.append(((EventTemplate)it.next()).getResult(event));
         }
-        if(filizeResults) return filize(name.toString());
+        if(filizeResults) return FissuresFormatter.filize(name.toString());
         return name.toString();
     }
 
     public String getFilizedName(EventAccessOperations event) {
-        return filize(getResult(event));
-    }
-
-    public static String filize(String fileName){
-        fileName = fileName.trim();
-        fileName = fileName.replaceAll("[ :]", "_");
-        fileName = fileName.replaceAll("[\t\n\f\r]", "");
-        return fileName.trim();
+        return FissuresFormatter.filize(getResult(event));
     }
 
     private String getMag(EventAccessOperations event){

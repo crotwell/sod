@@ -138,6 +138,13 @@ public class FissuresFormatter {
         return ClockUtil.now();
     }
 
+    public static String filize(String fileName){
+        fileName = fileName.trim();
+        fileName = fileName.replaceAll("[ :]", "_");
+        fileName = fileName.replaceAll("[\t\n\f\r]", "");
+        return fileName.trim();
+    }
+
     public static SimpleDateFormat yearDateFormat = new SimpleDateFormat("yyyy");
 
     public static SimpleDateFormat longFileFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
