@@ -7,10 +7,34 @@
 package edu.sc.seis.sod.validator;
 import edu.sc.seis.sod.validator.model.Definition;
 import edu.sc.seis.sod.validator.model.Form;
+import edu.sc.seis.sod.validator.model.GenitorForm;
 import edu.sc.seis.sod.validator.model.MultigenitorForm;
 import edu.sc.seis.sod.validator.model.NamedElement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModelWalker {
+    public static Form[] getAllInstances(Form root, Definition def){
+        List instances = new ArrayList();
+        getAllInstances(root, def, instances);
+        return (Form[])instances.toArray(new Form[instances.size()]);
+    }
+
+    public static void getAllInstances(Form root, Definition def, List accumInstance){
+        if(!isSelfReferential(root)){
+            if(def.equals(root.getDef())){ accumInstance.add(root); }
+            if(root instanceof GenitorForm){
+                getAllInstances(((GenitorForm)root).getChild(), def, accumInstance);
+            }else if(root instanceof MultigenitorForm){
+                MultigenitorForm multiRoot = (MultigenitorForm)root;
+                Form[] kids = multiRoot.getChildren();
+                for (int i = 0; i < kids.length; i++) {
+                    getAllInstances(kids[i], def, accumInstance);
+                }
+            }
+        }
+    }
+
     public static boolean isSelfReferential(Form f){
         if(f.isFromDef()){  return lineageContainsRefTo(f, f.getDef()); }
         return false;
