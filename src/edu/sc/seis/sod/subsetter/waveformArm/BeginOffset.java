@@ -22,12 +22,16 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class BeginOffset extends Interval implements PhaseRequestSubsetter{
+public class BeginOffset extends Interval {
     public BeginOffset (Element config){
 	super(config);
     }
 
-    public boolean accept(CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, 
+			  NetworkAccess network, 
+			  Channel channel, 
+			  CookieJar cookies){
+
 
 	return true;
 

@@ -30,7 +30,7 @@ public class ChannelIDXOR
 	super(config);
     }
 
-    public boolean accept(ChannelId e,  CookieJar cookies) {
+    public boolean accept(ChannelId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    ChannelIdSubsetter filter = (ChannelIdSubsetter)it.next();

@@ -56,7 +56,12 @@ public class NetworkArm {
 
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	processNetworkArm();	
+	try {
+	    processNetworkArm();	
+	} catch(Exception e) {
+
+	    System.out.println("Exception caught while processing Network Arm");
+	}
     }
 
     /*
@@ -65,7 +70,7 @@ public class NetworkArm {
      *and checks if the networkId is accepted by the networkIdSubsetter.
      **/
     
-    public void processNetworkArm() {
+    public void processNetworkArm() throws Exception{
 
 
 	NetworkDC netdc = networkFinderSubsetter.getNetworkDC();
@@ -81,7 +86,7 @@ public class NetworkArm {
 	}
     }
 
-    public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) {
+    public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) throws Exception{
 
 	System.out.println("The stationIdSubsetter is not null");
 	if(networkAttrSubsetter.accept(networkAttr, null)) { 
@@ -93,14 +98,14 @@ public class NetworkArm {
 
     }
 
-    public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station) {
+    public void handleStationIdSubsetter(NetworkAccess networkAccess, Station  station) throws Exception{
 	
 	if(stationIdSubsetter.accept(station.get_id(), null)) {
 	    handleStationSubsetter(networkAccess, station); 
 	}
     }
 
-    public void handleStationSubsetter(NetworkAccess networkAccess, Station station) {
+    public void handleStationSubsetter(NetworkAccess networkAccess, Station station) throws Exception{
 	
 	if(stationSubsetter.accept(networkAccess, station, null)) {
 	    Channel[] channels = networkAccess.retrieve_for_station(station.get_id());
@@ -110,21 +115,21 @@ public class NetworkArm {
 	}
     }
 				       
-    public void handleSiteIdSubsetter(NetworkAccess networkAccess, Channel channel) {
+    public void handleSiteIdSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 	
 	if(siteIdSubsetter.accept(channel.my_site.get_id(), null)) {
 	    handleSiteSubsetter(networkAccess, channel);
 	}
     }
 
-    public void handleSiteSubsetter(NetworkAccess networkAccess, Channel channel) {
+    public void handleSiteSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(siteSubsetter.accept(networkAccess, channel.my_site, null)) {
 	    handleChannelIdSubsetter(networkAccess, channel);
 	}
     }
 
-    public void handleChannelIdSubsetter(NetworkAccess networkAccess, Channel channel) {
+    public void handleChannelIdSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(channelIdSubsetter.accept(channel.get_id(), null)) {
 	    handleChannelSubsetter(networkAccess, channel);
@@ -132,14 +137,14 @@ public class NetworkArm {
        
     }
     
-    public void handleChannelSubsetter(NetworkAccess networkAccess, Channel channel) {
+    public void handleChannelSubsetter(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	if(channelSubsetter.accept(networkAccess, channel, null)) {
 	    handleNetworkArmProcess(networkAccess, channel);
 	}
     }
 
-    public void handleNetworkArmProcess(NetworkAccess networkAccess, Channel channel) {
+    public void handleNetworkArmProcess(NetworkAccess networkAccess, Channel channel) throws Exception{
 
 	networkArmProcess.process(networkAccess, channel, null);
 

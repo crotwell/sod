@@ -40,7 +40,7 @@ public class NetworkAttrXOR
 	super(config);
     }
 
-    public boolean accept(NetworkAttr e,  CookieJar cookies) {
+    public boolean accept(NetworkAttr e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    NetworkAttrSubsetter filter = (NetworkAttrSubsetter)it.next();

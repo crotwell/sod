@@ -45,6 +45,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter, Subsetter
     public boolean accept(EventAccessOperations eventAccess, NetworkAccess network, Station station, CookieJar cookies) {
 
 	//return originSubsetter.accept(null, cookies);
+	return true;
 
     }
  

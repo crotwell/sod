@@ -7,6 +7,8 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
+import edu.iris.Fissures.IfSeismogramDC.*;
+
 import org.w3c.dom.*;
 
 /**
@@ -24,7 +26,13 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement{
 	
     }
     
-    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, 
+			  NetworkAccess network, 
+			  Channel channel, 
+			  RequestFilter[] original, 
+			  RequestFilter[] available, 
+			  CookieJar cookies) {
+
 	return true;
     }
     

@@ -44,7 +44,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
 	
     }
 
-    public boolean accept(Origin origin, CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	if(origin.magnitudes[0].value >= getMinMagnitude().value &&
 	   origin.magnitudes[0].value <= getMaxMagnitude().value)
 	    return true;

@@ -26,7 +26,7 @@ public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implemen
 	super(config);
     }
 
-    public boolean accept(Origin origin, CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	
 	MicroSecondDate actualDate = new MicroSecondDate(origin.origin_time);
 	MicroSecondDate startDate = new MicroSecondDate(getStartTime());

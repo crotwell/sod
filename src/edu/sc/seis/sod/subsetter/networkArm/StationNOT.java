@@ -39,7 +39,7 @@ public class StationNOT
 	super(config);
     }
 
-    public boolean accept(NetworkAccess  network, Station e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess  network, Station e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    StationSubsetter filter = (StationSubsetter)it.next();

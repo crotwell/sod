@@ -32,7 +32,7 @@ public class NetworkIDAND
 	super(config);
     }
 
-    public boolean accept(NetworkId e,  CookieJar cookies) {
+    public boolean accept(NetworkId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    NetworkIdSubsetter filter = (NetworkIdSubsetter)it.next();

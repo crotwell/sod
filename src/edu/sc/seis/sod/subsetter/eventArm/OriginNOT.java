@@ -25,11 +25,11 @@ public class OriginNOT
 	super(config);
     }
 
-    public boolean accept(Origin e,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    OriginSubsetter filter = (OriginSubsetter)it.next();
-	    if (filter.accept(e, cookies)) {
+	    if (filter.accept(event, e, cookies)) {
 		return false;
 	    }
 	}

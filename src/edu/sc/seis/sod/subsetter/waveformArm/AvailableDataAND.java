@@ -24,7 +24,7 @@ public class AvailableDataAND
 			  Channel channel, 
 			  RequestFilter[] original, 
 			  RequestFilter[] available, 
-			  CookieJar cookies) {
+			  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();

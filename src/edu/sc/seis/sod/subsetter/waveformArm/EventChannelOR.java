@@ -18,7 +18,8 @@ public class EventChannelOR
 	super(config);
     }
 
-    public boolean accept(EventAccessOperations o, NetworkAccess network, Channel channel,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations o, NetworkAccess network, Channel channel,  CookieJar cookies)
+	throws Exception{
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    EventChannelSubsetter filter = (EventChannelSubsetter)it.next();

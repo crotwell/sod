@@ -60,7 +60,13 @@ public class EventArm implements Runnable{
 		else if(sodElement instanceof EventArmProcess) eventArmProcess = (EventArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	processEventArm();
+	try {
+	    processEventArm();
+	} catch(Exception e) {
+
+	    System.out.println("Exception caught while processing the EventArm");
+	}
+
 	System.out.println("The number of events in the eventQueue are "
 	+Start.getEventQueue().getLength());
 	Start.getEventQueue().pop();
@@ -69,7 +75,7 @@ public class EventArm implements Runnable{
 	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());
     }
 
-    public void processEventArm() {
+    public void processEventArm() throws Exception{
 
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
@@ -102,7 +108,7 @@ public class EventArm implements Runnable{
 	System.out.println("The number of events returned are "+eventAccess.length);
     }
 
-    public void handleEventAttrSubsetter(EventAccess eventAccess, EventAttr eventAttr) {
+    public void handleEventAttrSubsetter(EventAccess eventAccess, EventAttr eventAttr) throws Exception {
 
 	if(eventAttrSubsetter.accept(eventAttr, null)) {
 	    try {	 
@@ -111,20 +117,20 @@ public class EventArm implements Runnable{
 	}
     }
 
-    public void handleOriginSubsetter(EventAccess eventAccess, Origin origin) {
+    public void handleOriginSubsetter(EventAccess eventAccess, Origin origin) throws Exception{
 
 
-	if(originSubsetter.accept(origin, null)) {
+	if(originSubsetter.accept(eventAccess, origin, null)) {
 	    
 	    handleEventArmProcess(eventAccess, origin);
 	}
 	
     }
 
-    public void handleEventArmProcess(EventAccess eventAccess, Origin origin) {
+    public void handleEventArmProcess(EventAccess eventAccess, Origin origin) throws Exception{
 	//System.out.println("passed THE TEST ************************************************************");
 	Start.getEventQueue().push(eventAccess);
-	eventArmProcess.process(eventAccess, origin, null);
+	eventArmProcess.process(eventAccess, null);
 
     }
 

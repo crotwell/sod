@@ -25,7 +25,7 @@ public class SiteIDAND
 	super(config);
     }
 
-    public boolean accept(SiteId e,  CookieJar cookies) {
+    public boolean accept(SiteId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    SiteIdSubsetter filter = (SiteIdSubsetter)it.next();

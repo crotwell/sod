@@ -25,7 +25,7 @@ public class EventAttrAND
 	super(config);
     }
 
-    public boolean accept(EventAttr e,  CookieJar cookies) {
+    public boolean accept(EventAttr e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    EventAttrSubsetter filter = (EventAttrSubsetter)it.next();

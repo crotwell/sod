@@ -45,7 +45,7 @@ public class ChannelXOR
 	super(config);
     }
 
-    public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) {
+    public boolean accept(NetworkAccess network,Channel e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    ChannelSubsetter filter = (ChannelSubsetter)it.next();

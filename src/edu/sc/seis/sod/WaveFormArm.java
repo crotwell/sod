@@ -60,15 +60,20 @@ public class WaveFormArm implements Runnable {
 		if(sodElement instanceof EventStationSubsetter) eventStationSubsetter = (EventStationSubsetter)sodElement;
 		else if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
 		else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;
-		else if(sodElement instanceof PhaseRequestSubsetter) phaseRequestSubsetter = (PhaseRequestSubsetter)sodElement;
+		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof WaveFormArmProcess) waveFormArmProcessSubsetter = (WaveFormArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	processWaveFormArm();	
+	try {
+	    processWaveFormArm();	
+	} catch(Exception e) {
+
+	    System.out.println("Exception caught while processing Waveform Arm");
+	}
     }
 
-    public void processWaveFormArm() {
+    public void processWaveFormArm() throws Exception{
 
 	if(eventStationSubsetter.accept(null, null, null, null)) {
 	    processEventChannelSubsetter();
@@ -76,7 +81,7 @@ public class WaveFormArm implements Runnable {
 	
     }
 
-    public void processEventChannelSubsetter() {
+    public void processEventChannelSubsetter() throws Exception{
 
 	if(eventChannelSubsetter.accept(null, null, null, null)) {
 	    processFixedDataCenter();
@@ -87,11 +92,11 @@ public class WaveFormArm implements Runnable {
 	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
 	if(dataCenter == null) System.out.println("****** Data Center is NULL ******");
 	else System.out.println("****** Data Center is NOT NULL ******");
-	processPhaseRequestSubsetter();
+	processRequestGeneratorSubsetter();
 	
     }
 
-    public void processPhaseRequestSubsetter() {
+    public void processRequestGeneratorSubsetter() {
 
 	//if(phaseRequestSubsetter.accept(null)) 
 	{
@@ -111,7 +116,7 @@ public class WaveFormArm implements Runnable {
 
     private FixedDataCenter fixedDataCenterSubsetter = null;
     
-    private PhaseRequestSubsetter phaseRequestSubsetter = new NullPhaseRequestSubsetter();
+    private RequestGenerator requestGeneratorSubsetter = new NullRequestGenerator();
     
     private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
 

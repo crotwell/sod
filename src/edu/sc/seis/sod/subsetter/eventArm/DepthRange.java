@@ -26,7 +26,7 @@ public class DepthRange extends edu.sc.seis.sod.subsetter.UnitRange implements O
 	
     }
     
-    public boolean accept(Origin origin, CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, Origin origin, CookieJar cookies) {
 	double actualDepth = origin.my_location.depth.value;
 	if(actualDepth >= getMinDepth().value && actualDepth <= getMaxDepth().value) {
 	    return true;

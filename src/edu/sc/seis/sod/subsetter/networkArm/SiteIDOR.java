@@ -26,11 +26,11 @@ public class SiteIDOR
     extends  NetworkLogicalSubsetter 
     implements SiteIdSubsetter {
     
-    public SiteIDOR (Element config) throws ConfigurationException {
+    public SiteIDOR (Element config) throws ConfigurationException{
 	super(config);
     }
 
-    public boolean accept(SiteId e,  CookieJar cookies) {
+    public boolean accept(SiteId e,  CookieJar cookies) throws Exception{
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    SiteIdSubsetter filter = (SiteIdSubsetter)it.next();

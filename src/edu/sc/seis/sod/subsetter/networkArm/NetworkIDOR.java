@@ -32,7 +32,7 @@ public class NetworkIDOR
 	super(config);
     }
 
-    public boolean accept(NetworkId e,  CookieJar cookies) {
+    public boolean accept(NetworkId e,  CookieJar cookies) throws Exception{
 	System.out.println("THe networkID to be checked in NetworkIDOR is "+e.network_code);
 	System.out.println("The size of the list is "+ filterList.size());
 	Iterator it = filterList.iterator();

@@ -2,6 +2,14 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
 
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+
+import edu.iris.Fissures.IfSeismogramDC.*;
+
 import org.w3c.dom.*;
 
 /**
@@ -14,15 +22,17 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class PhaseRequest implements PhaseRequestSubsetter{
+public class PhaseRequest implements RequestGenerator{
     public PhaseRequest (Element config){
 	
     }
 
-    public boolean accept(CookieJar cookies) {
-
-
-	return true;
+    public RequestFilter[] generateRequest(EventAccessOperations event, 
+			  NetworkAccess network, 
+			  Channel channel, 
+			  CookieJar cookies){
+	
+	return null;
 
     }
     

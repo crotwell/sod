@@ -21,7 +21,7 @@ public class PrintLineEventProcess implements EventArmProcess {
 	
     }
 
-    public void process(EventAccess event, Origin origin, CookieJar cookies) {
+    public void process(EventAccessOperations event, CookieJar cookies) {
 	try {
 	    FileWriter fwriter = new FileWriter("_my_event_temp_", true);
 	    BufferedWriter bwriter = new BufferedWriter(fwriter);

@@ -2,6 +2,12 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
 
+import edu.iris.Fissures.IfEvent.*;
+import edu.iris.Fissures.event.*;
+
+import edu.iris.Fissures.IfNetwork.*;
+import edu.iris.Fissures.network.*;
+
 import org.w3c.dom.*;
 
 /**
@@ -14,12 +20,16 @@ import org.w3c.dom.*;
  * @version
  */
 
-public class BeginPhase implements PhaseRequestSubsetter{
+public class BeginPhase  {
     public BeginPhase (Element config){
 	this.config = config;
     }
 
-    public boolean accept(CookieJar cookies) {
+    public boolean accept(EventAccessOperations event, 
+			  NetworkAccess network, 
+			  Channel channel, 
+			  CookieJar cookies){
+
 
 
 	return true;
