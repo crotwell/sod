@@ -17,39 +17,45 @@ import java.util.List;
 
 public class SimpleHTMLPage{
     public SimpleHTMLPage(String title, File location){
-        this(title, location, "Links");
+        this(title, location, true);
     }
     
-    public SimpleHTMLPage(String title, File location, String linkSection){
+    public SimpleHTMLPage(String title, File location, boolean inAllLinks){
         this.title = title;
         this.location = location;
-        allSimplePages.add(this);
+        if(location.getParentFile() != null) location.getParentFile().mkdirs();
+        this.inAllLinks = inAllLinks;
+        if(inAllLinks) allInterlinkedPages.add(this);
     }
     
     public void append(String sectionName, String text){
         append(sectionName, text, -1);
     }
     
-    public void append(String name, String text, int pos){
-        Section sec = getSection(name);
+    public void append(String sectionName, String text, int pos){
+        PageSection sec = getSection(sectionName);
         if(sec == null){
             if(pos < 0)
-                sections.add(sections.size(),new Section(name, text + "<br>\n"));
+                sections.add(sections.size(),new PageSection(sectionName, text + "<br>\n"));
             else
-                sections.add(pos, new Section(name, text + "<br>\n"));
+                sections.add(pos, new PageSection(sectionName, text + "<br>\n"));
         }else{
             sec.append(text + "<br>\n");
         }
+    }
+    
+    public void add(PageSection sec){
+        sections.add(sec);
     }
     
     public void clear(String section){
         if(getSection(section) != null) getSection(section).clear();
     }
     
-    public Section getSection(String name){
+    public PageSection getSection(String name){
         Iterator it = sections.iterator();
         while(it.hasNext()){
-            Section cur = (Section)it.next();
+            PageSection cur = (PageSection)it.next();
             if(cur.getName().equals(name)){
                 return cur;
             }
@@ -62,7 +68,7 @@ public class SimpleHTMLPage{
     public File write(){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(location));
-            writer.write(constructPage());
+            writer.write(generatePage());
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,8 +80,13 @@ public class SimpleHTMLPage{
         return location.getName();
     }
     
-    public File getDirectory() throws IOException{
-        return location.getCanonicalFile().getParentFile();
+    public File getDirectory(){
+        try{
+            return location.getCanonicalFile().getParentFile();
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
     }
     
     public String relativePathTo(SimpleHTMLPage otherPage) {
@@ -91,7 +102,7 @@ public class SimpleHTMLPage{
         }
     }
     
-    public String dotsToCommonBase(SimpleHTMLPage p) throws IOException{
+    public String dotsToCommonBase(SimpleHTMLPage p){
         return dotsToCommonBase(getCommonBaseDistance(p.getDirectory()));
     }
     
@@ -140,7 +151,7 @@ public class SimpleHTMLPage{
         return l;
     }
     
-    private String constructPage(){
+    public String generatePage(){
         String header = "<html>\n<header><title>" + title + "</title></header>\n";
         StringBuffer body = new StringBuffer("<body>\n");
         body.append(constructSections());
@@ -152,78 +163,22 @@ public class SimpleHTMLPage{
         Iterator it = sections.iterator();
         StringBuffer contents = new StringBuffer("");
         while(it.hasNext()){
-            contents.append(((Section)it.next()).getSection());
+            contents.append(((PageSection)it.next()).getSection());
         }
-        contents.append(links.getSection());
+        if(inAllLinks) contents.append(interlinkedPages.getSection());
         return contents.toString();
     }
     
-    private class Section{
-        public Section(String name){
-            this(name, "");
-        }
-        
-        public Section(String name, String text){
-            this.name = name;
-            append(text);
-        }
-        
-        public void clear(){ contents = new StringBuffer(""); }
-        
-        public void append(String newContents){
-            if(contents.toString().equals("")) contents = new StringBuffer(newContents);
-            else contents.append(newContents);
-        }
-        
-        public String getName(){ return name; }
-        
-        public String getContents(){ return contents.toString(); }
-        
-        public String getSection(){
-            return "<b>" + name +":</b><br>\n" + getContents();
-        }
-        
-        public boolean equals(Object other){
-            if(other instanceof Section){
-                if(((Section)other).getName().equals(name)){
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        private String name;
-        
-        private StringBuffer contents = new StringBuffer("");
-    }
+    private static List allInterlinkedPages = Collections.synchronizedList(new ArrayList());
     
-    private class LinkSection extends Section{
-        public LinkSection(){
-            super("Links");
-        }
-        
-        public String getContents(){
-            StringBuffer contents = new StringBuffer("");
-            synchronized(allSimplePages){
-                Iterator it = allSimplePages.iterator();
-                while(it.hasNext()){
-                    SimpleHTMLPage page = (SimpleHTMLPage)it.next();
-                    if(page != SimpleHTMLPage.this){
-                        contents.append("<A HREF=" + relativePathTo(page) + ">" + page.getTitle() + "</A><br>\n");
-                    }
-                }
-            }
-            return contents.toString();
-        }
-    }
+    private PageSection interlinkedPages = new LinkSection(this, "Links", allInterlinkedPages);
     
-    private Section links = new LinkSection();
-    
-    private static List allSimplePages = Collections.synchronizedList(new ArrayList());
-    
-    private List sections = new ArrayList();
+    protected List sections = new ArrayList();
     
     private File location;
     
     private String title;
+    
+    private boolean inAllLinks;
 }
+
