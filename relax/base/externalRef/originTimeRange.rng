@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="../include/timeRange.rng" />
+    <start combine="choice">
+        <element name="originTimeRange">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matchs events who's preferred origin's origin time occurs
+                                        within the given time range. </summary>
+                    <description/>
+                    <example>
+                        <originTimeRange>
+                            <startTime>20010101T00:00:00Z</startTime>
+                            <endTime>20011231T00:00:00Z</endTime>
+                        </originTimeRange>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="timeRange"/>
+        </element>
+    </start>
+</grammar>
