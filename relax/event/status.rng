@@ -12,6 +12,7 @@
                         <ref name="simpleHTMLEventStatus"/>
                         <ref name="externalEventStatus"/>
                         <ref name="eventStatusTemplate"/>
+                        <ref name="mapEventStatus"/>
                 </choice>
         </define>
         <define name="simpleHTMLEventStatus">
@@ -19,6 +20,11 @@
                         <element name="outputDirectory">
                                 <data type="string"/>
                         </element>
+                </element>
+        </define>
+        <define name="mapEventStatus">
+                <element name="mapEventStatus">
+                        <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
                 </element>
         </define>
         <define name="eventStatusTemplate">
