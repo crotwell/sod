@@ -23,28 +23,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
+import java.io.IOException;
+import org.apache.log4j.Logger;
 
 public class MapWaveFormStatus implements WaveFormStatus {
-    
+
     private String fileLoc;
     private Map eventMap = new HashMap();
     private Map channelMap = new HashMap();
     private MapPool pool;
-    
+
     public MapWaveFormStatus(Element element) {
         this(element.getAttribute("xlink:href"));
     }
-    
+
     public MapWaveFormStatus(String fileLoc){
         this(fileLoc, new MapPool(1));
     }
-    
+
     public MapWaveFormStatus(String fileLoc, MapPool pool){
         this.fileLoc = fileLoc;
         this.pool = pool;
         write();
     }
-    
+
     public void write(){
         synchronized(channelMap){
             OpenMap map = pool.getMap();
@@ -79,11 +81,15 @@ public class MapWaveFormStatus implements WaveFormStatus {
                 EventAccessOperations ev = (EventAccessOperations)it.next();
                 el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
             }
+            try {
             map.writeMapToPNG(fileLoc);
+            } catch (IOException e) {
+                logger.error("unable to save map to "+fileLoc, e);
+            }
             pool.returnMap(map);
         }
     }
-    
+
     public void update(EventChannelPair ecp) {
         if(add(ecp.getEvent())){
             add(ecp.getChannel(), ecp.getStatus());
@@ -91,7 +97,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
         }else if(add(ecp.getChannel(), ecp.getStatus()))
             write();
     }
-    
+
     public boolean add(Channel chan, Status status){
         if(channelMap.containsKey(chan)){
             channelMap.put(chan, status);
@@ -99,7 +105,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
         }else if (channelMap.get(chan) != status) return true;
         return false;
     }
-    
+
     public boolean add(EventAccessOperations ev){
         if (!eventMap.containsKey(ev)){
             eventMap.put(ev, null);
@@ -107,4 +113,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
         }
         return false;
     }
+
+    private static Logger logger = Logger.getLogger(MapWaveFormStatus.class);
+
 }
