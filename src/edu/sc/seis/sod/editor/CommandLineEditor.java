@@ -10,6 +10,7 @@ import org.w3c.dom.*;
 
 import edu.sc.seis.sod.SimpleErrorHandler;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -135,17 +136,23 @@ public class CommandLineEditor {
     }
 
     private void initConfigFile() throws FileNotFoundException, ParserConfigurationException, IOException, SAXException {
-        File configFile = new File(getConfigFilename());
-        if (configFile.exists()) {
-            InputStream in = new BufferedInputStream(new FileInputStream(configFile));
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            docBuilder.setErrorHandler(new SimpleErrorHandler());
-            document =  docBuilder.parse(configFile);
-        } else {
-            throw new FileNotFoundException("Can't find "+configFilename);
+        InputStream in ;
+        if(getConfigFilename().startsWith("jar")){
+            in = TemplateFileLoader.getUrl(getClass().getClassLoader(),
+                                           getConfigFilename()).openStream();
+        }else{
+            File configFile = new File(getConfigFilename());
+            if (configFile.exists()) {
+                in = new BufferedInputStream(new FileInputStream(configFile));}
+            else {
+                throw new FileNotFoundException("Can't find "+configFilename);
+            }
         }
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = factory.newDocumentBuilder();
+        docBuilder.setErrorHandler(new SimpleErrorHandler());
+        document =  docBuilder.parse(in);
     }
 
     public void printOptions(DataOutputStream out) throws DOMException, IOException {
