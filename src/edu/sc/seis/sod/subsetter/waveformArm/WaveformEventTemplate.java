@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.subsetter.ChannelGroupTemplate;
@@ -35,7 +35,8 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             Iterator it = waveformStatusListeners.iterator();
             while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
             it = channelListeners.iterator();
-            while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(), null);
+            while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(),
+                                                                         RunStatus.translate(ecp.getStatus()));
             write();
         }
     }
