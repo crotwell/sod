@@ -54,6 +54,10 @@ public class CookieJar {
                                                              context);
     }
 
+    public EventChannelPair getEventChannelPair() {
+        return ecp;
+    }
+
     /**
      * Returns the Velocity Context that stores the put data
      * 
