@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
@@ -10,28 +11,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
+import edu.iris.Fissures.IfEvent.EventIdHelper;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.borders.DistanceBorder;
 import edu.sc.seis.fissuresUtil.display.borders.TimeBorder;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
+import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.CustomLayOutConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.IndividualizedAmpConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.RMeanAmpConfig;
@@ -40,6 +51,7 @@ import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.IncomprehensibleDSMLException;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.MotionVectorArm;
@@ -151,100 +163,109 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             throws ParserConfigurationException, IOException,
             IncomprehensibleDSMLException, UnsupportedFileTypeException,
             ConfigurationException, NotFound, SQLException,
-            InterruptedException {
+            InterruptedException, NoPreferredOrigin {
         try {
             saveSeisToFile = getSaveSeismogramToFile();
             DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
                     .toURI()
                     .toURL());
             String[] dataSeisNames = ds.getDataSetSeismogramNames();
-            int numDSSeismograms = dataSeisNames.length;
-            DataSetSeismogram[] dss = new DataSetSeismogram[numDSSeismograms];
-            for(int i = 0; i < numDSSeismograms; i++) {
+            DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
+            for(int i = 0; i < dataSeisNames.length; i++) {
                 dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
             }
+            String regionName = ParseRegions.getInstance()
+                    .getRegionName(event.get_attributes().region);
+            String dateTime = event.get_preferred_origin().origin_time.date_time;
+            String msg = "Got " + dss.length
+                    + " DataSetSeismograms from DSML file for event in "
+                    + regionName + " at " + dateTime;
+            logger.debug(msg);
             if(displayOption.equals("BEST")) {
                 outputBestRecordSection(event, dss);
             } else {
                 outputAllRecordSections(event, dss);
             }
         } catch(IOException e) {
+            logger.debug("Problem opening dsml file in RecordSectionDisplayGenerator",
+                         e);
             throw new IOException("Problem opening dsml file in RecordSectionDisplayGenerator"
                     + e);
         }
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public DataSetSeismogram[] getBestSeismos(EventAccessOperations event,
-                                              DataSetSeismogram[] dataSeis) {
-        sortByDistance(dataSeis);
-        ArrayList dssList = new ArrayList();
-        DataSetSeismogram[] bestSeismos = null;
+    public double getIdealSpacing() {
+        return getRange() / (numSeisPerRecSec - 1);
+    }
+
+    public double getRange() {
+        return distRange.getMaxDistance() - distRange.getMinDistance();
+    }
+
+    public DataSetSeismogram[] getBestSeismos(DataSetSeismogram[] dataSeis) {
         if(dataSeis.length > 0) {
+            sortByDistance(dataSeis);
+            HashMap distMap = new HashMap();
+            for(int i = 0; i < dataSeis.length; i++) {
+                QuantityImpl distance = DisplayUtils.calculateDistance(dataSeis[i]);
+                distMap.put(dataSeis[i], distance);
+            }
+            ArrayList dssList = new ArrayList();
             if(dataSeis.length == 1) {
                 dssList.add(dataSeis[0]);
             } else {
-                double range = (distRange.getMaxDistance() - distRange.getMinDistance());
-                double spacing = range / (numSeisPerRecSec - 1);
-                DataSetSeismogram lastFrontSeis = dataSeis[0];
+                dssList.add(dataSeis[0]);
+                double curDist = ((QuantityImpl)distMap.get(dataSeis[0])).get_value();
+                double spacing = getIdealSpacing();
+                while(curDist <= getRange()) {
+                    DataSetSeismogram curSeis = getNext(dataSeis,
+                                                        curDist,
+                                                        distMap);
+                    if(curSeis != null) {
+                        if(!dssList.contains(curSeis)) {
+                            dssList.add(curSeis);
+                        }
+                        curDist = ((QuantityImpl)distMap.get(curSeis)).get_value();
+                    } else {
+                        curDist += spacing;
+                    }
+                }
+                //Add the farthest seismogram but remove any seismogram already
+                // added that was closer than minSpacing.
+                DataSetSeismogram lastAddedSeis = (DataSetSeismogram)dssList.get(dssList.size() - 1);
                 DataSetSeismogram lastSeis = dataSeis[dataSeis.length - 1];
-                DataSetSeismogram lastBackSeis = lastSeis;
-                double curFrontDistance = DisplayUtils.calculateDistance(lastFrontSeis)
-                        .get_value();
-                double lastSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
-                        .get_value();
-                DataSetSeismogram curSeis = null;
-                double firstSeisDistance = curFrontDistance;
-                double curBackDistance = lastSeisDist;
-                dssList.add(lastFrontSeis);
-                while(curFrontDistance <= range / 2) {
-                    curSeis = getNextSeis(dataSeis,
-                                          lastFrontSeis,
-                                          curFrontDistance,
-                                          spacing);
-                    if(curSeis != null) {
-                        dssList.add(curSeis);
-                        curFrontDistance = DisplayUtils.calculateDistance(curSeis)
-                                .get_value();
-                        lastFrontSeis = curSeis;
-                    }
-                    curFrontDistance += spacing;
-                }
-                while(curBackDistance > range / 2) {
-                    curSeis = getNextSeis(dataSeis,
-                                          lastBackSeis,
-                                          curBackDistance,
-                                          spacing);
-                    if(curSeis != null) {
-                        dssList.add(curSeis);
-                        curBackDistance = DisplayUtils.calculateDistance(curSeis)
-                                .get_value();
-                        lastBackSeis = curSeis;
-                    }
-                    curBackDistance -= spacing;
-                }
-                double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
-                        .get_value();
-                double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
-                        .get_value();
-                if(Math.abs(lastFrontSeisDist - lastBackSeisDist) < minSpacing) {
+                boolean addLastSeis = (((QuantityImpl)distMap.get(lastSeis)).get_value()
+                        - ((QuantityImpl)distMap.get(lastAddedSeis)).get_value() >= minSpacing) ? true
+                        : false;
+                if(!addLastSeis) {
                     dssList.remove(dssList.size() - 1);
                 }
-                if(Math.abs(firstSeisDistance - lastSeisDist) >= minSpacing) {
-                    dssList.add(lastSeis);
-                }
+                dssList.add(lastSeis);
             }
-            bestSeismos = new DataSetSeismogram[dssList.size()];
+            DataSetSeismogram[] bestSeismos = new DataSetSeismogram[dssList.size()];
             bestSeismos = (DataSetSeismogram[])dssList.toArray(bestSeismos);
-           
+            return bestSeismos;
         }
-        return bestSeismos;
+        return null;
+    }
+
+    private DataSetSeismogram getNext(DataSetSeismogram[] seismos,
+                                      double curDist,
+                                      HashMap distMap) {
+        double spacing = getIdealSpacing();
+        for(int i = 0; i < seismos.length; i++) {
+            double distance = ((QuantityImpl)distMap.get(seismos[i])).get_value();
+            if(distance >= (curDist + minSpacing)
+                    && (distance <= curDist + spacing)) { return seismos[i]; }
+        }
+        return null;
     }
 
     public void outputBestRecordSection(EventAccessOperations event,
                                         DataSetSeismogram[] dataSeis)
             throws IOException, NotFound, SQLException {
-        DataSetSeismogram[] bestSeismos = getBestSeismos(event, dataSeis);
+        DataSetSeismogram[] bestSeismos = getBestSeismos(dataSeis);
         if(bestSeismos != null) {
             writeImage(bestSeismos, event, fileNameBase + fileExtension);
         }
@@ -253,38 +274,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     public void outputBestRecordSection(EventAccessOperations event,
                                         DataSetSeismogram[] dataSeis,
                                         OutputStream out) throws IOException {
-        DataSetSeismogram[] bestSeismos = getBestSeismos(event, dataSeis);
+        DataSetSeismogram[] bestSeismos = getBestSeismos(dataSeis);
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(bestSeismos);
         rsDisplay.outputToPNG(out, recSecDim);
-    }
-
-    public DataSetSeismogram getNextSeis(DataSetSeismogram[] dataSeis,
-                                         DataSetSeismogram lastSeis,
-                                         double curDistance,
-                                         double idealSpacing) {
-        double maxDist = idealSpacing / 2;
-        double upperDistBound = curDistance + maxDist;
-        double lastSeisDist = DisplayUtils.calculateDistance(lastSeis)
-                .get_value();
-        DataSetSeismogram bestSeis = null;
-        for(int i = 0; i < dataSeis.length; i++) {
-            double seisDistance = DisplayUtils.calculateDistance((dataSeis[i]))
-                    .get_value();
-            double distanceBetween = Math.abs(curDistance - seisDistance);
-            //include the seismogram only if it is exactly in the center or the
-            //upper half of the distance interval window,
-            //to make sure that there is no overlap in the interval.
-            if((distanceBetween < maxDist || (distanceBetween == maxDist && seisDistance < curDistance))
-                    && (Math.abs(seisDistance - lastSeisDist) >= minSpacing)) {
-                bestSeis = dataSeis[i];
-                maxDist = distanceBetween;
-            }
-            if(seisDistance > upperDistBound) {
-                break;
-            }
-        }
-        return bestSeis;
     }
 
     public void outputAllRecordSections(EventAccessOperations event,
@@ -340,10 +333,12 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             recSecId = eventRecordSection.insert(eventId, fullName);
         } else {
             recSecId = eventRecordSection.getRecSecId(eventId, fullName);
-            recordSectionChannel.deleteRecSec(recSecId);
+            int deleteCnt = recordSectionChannel.deleteRecSec(recSecId);
         }
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(dataSeis);
+        logger.debug("Added " + dataSeis.length
+                + " seismograms to RecordSectionDisplay");
         try {
             File outPNG = new File(base + "/" + fullName);
             rsDisplay.outputToPNG(outPNG, recSecDim);
@@ -355,6 +350,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                 recordSectionChannel.insert(recSecId, channelId, pixelInfo);
             }
         } catch(IOException e) {
+            logger.debug("Problem writing recordsection output to PNG", e);
             throw new IOException("Problem writing recordSection output to PNG "
                     + e);
         }
@@ -458,6 +454,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private String fileNameBase = "recordsection";
 
     private double percentSeisHeight = 10;
+
+    static Category logger = Category.getInstance(RecordSectionDisplayGenerator.class.getName());
 
     private double minSpacing = 10;
 
