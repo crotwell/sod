@@ -24,7 +24,7 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
     public void write() throws IOException {
         synchronized(scheduled) {
             if (scheduled.equals(Boolean.FALSE)) {
-                t.schedule(new ScheduledWriter(), 90000);
+				t.schedule(new ScheduledWriter(), 90000);
                 scheduled = new Boolean(true);
             }
         }
