@@ -59,4 +59,10 @@ public interface EventDatabase {
 
     public String getObject(int eventid);
 
+    public void setTime(edu.iris.Fissures.Time time);
+
+    public edu.iris.Fissures.Time getTime();
+
+    public void incrementTime(int numDays);
+
 }// EventDatabase

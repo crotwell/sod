@@ -9,6 +9,7 @@ public class PostgresDatabase extends AbstractDatabase {
     
     public PostgresDatabase(Connection connection) {
 	super(connection);
+	configDatabase = new PostgresConfigDatabase(connection);
     }
     
 	
@@ -44,7 +45,12 @@ public class PostgresDatabase extends AbstractDatabase {
 	public String getTableName() {
 		return "eventConfig";	
 	}
+
+	public ConfigDatabase getConfigDatabase() {
+		return this.configDatabase;
+	}
 	
-	private Connection connection;
+
+	private ConfigDatabase configDatabase;
 	
 }

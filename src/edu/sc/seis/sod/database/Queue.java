@@ -71,5 +71,9 @@ public interface Queue {
 
     public void closeDatabase();
    
-	
+    public void setTime(edu.iris.Fissures.Time time);
+
+    public edu.iris.Fissures.Time getTime();
+
+    public void incrementTime(int numDays);
 }

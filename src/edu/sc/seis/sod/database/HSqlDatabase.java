@@ -27,6 +27,7 @@ public class HSqlDatabase extends AbstractDatabase{
 
     public HSqlDatabase (Connection connection) {
 	super(connection);
+	this.configDatabase = new HSqlConfigDatabase(connection);
     }
 
     public void create() {
@@ -58,7 +59,11 @@ public class HSqlDatabase extends AbstractDatabase{
     public String getTableName() {
 		return "eventconfig";	
 	}
+
+    public ConfigDatabase getConfigDatabase() {
+	return this.configDatabase;
+    }
     
-    
+    private ConfigDatabase configDatabase;    
     
 }// HSqlDatabase

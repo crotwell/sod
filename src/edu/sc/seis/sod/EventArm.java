@@ -180,8 +180,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	System.out.println("At the start of the process eventArm");
 	//getThreadGroup().list();
 
-	ConfigDatabase eventConfigDb = DatabaseManager.getDatabaseManager(props, "hsqldb").getConfigDatabase();
-	edu.iris.Fissures.Time startTime = eventConfigDb.getTime();
+	edu.iris.Fissures.Time startTime = Start.getEventQueue().getTime();
 	System.out.println("At the start of the process eventArm after instantiaing eventConfigDb");
 	//getThreadGroup().list();
 
@@ -220,7 +219,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 				    );
 	    
 	    logger.debug("The number of events returned are "+eventAccessOrig.length);
-	    Thread.sleep(10000);
+	    //Thread.sleep(10000);
 		EventAccessOperations[] eventAccess = 
 		new EventAccessOperations[eventAccessOrig.length];
 	    for(int counter = 0; counter < eventAccess.length; counter++) {
@@ -230,21 +229,21 @@ public class EventArm extends SodExceptionSource implements Runnable{
 		handleEventAttrSubsetter(eventAccess[counter], attr);
 		
 	    }
-	    startTime = eventConfigDb.getTime();
+	    startTime = Start.getEventQueue().getTime();
 	    if(startTime == null) {
 		logger.debug("times is not stored in the database so store it");
 		startTime = eventFinderSubsetter.getEventTimeRange().getStartTime();
 
-		eventConfigDb.setTime(startTime);
-		eventConfigDb.incrementTime(getIncrementValue());
-		startTime = eventConfigDb.getTime();
-		eventConfigDb.incrementTime(getIncrementValue());
+		Start.getEventQueue().setTime(startTime);
+		Start.getEventQueue().incrementTime(getIncrementValue());
+		startTime = Start.getEventQueue().getTime();
+		Start.getEventQueue().incrementTime(getIncrementValue());
 	    } else {
 		//here delete all the events in the queue from the 
 		//previous day that are successful or failed
 		Start.getEventQueue().delete(Status.COMPLETE_SUCCESS);
 		Start.getEventQueue().delete(Status.COMPLETE_REJECT);
-		eventConfigDb.incrementTime(getIncrementValue());
+		Start.getEventQueue().incrementTime(getIncrementValue());
 	    }
 	
 	    endTime = calculateEndTime(startTime, 

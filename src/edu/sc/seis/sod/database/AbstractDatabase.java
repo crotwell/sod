@@ -26,6 +26,7 @@ public abstract class AbstractDatabase implements EventDatabase{
 	init();
     }
 
+   public abstract ConfigDatabase getConfigDatabase();
 
     public abstract void create();
     
@@ -369,6 +370,18 @@ public abstract class AbstractDatabase implements EventDatabase{
             return index;
         }
 
+    }
+
+    public void setTime(edu.iris.Fissures.Time time) {
+	getConfigDatabase().setTime(time);
+    }
+
+    public edu.iris.Fissures.Time getTime() {
+	return getConfigDatabase().getTime();
+    }
+
+    public void incrementTime(int numDays) {
+	getConfigDatabase().incrementTime(numDays);
     }
     
     protected Connection connection;

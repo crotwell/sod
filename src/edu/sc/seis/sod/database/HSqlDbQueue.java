@@ -32,8 +32,12 @@ public class HSqlDbQueue implements Queue {
 
     public HSqlDbQueue(Properties props) {
 	this.props = props;
-	if(getDatabaseType(props) == 0) eventDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getEventDatabase();
-	else eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
+	if(getDatabaseType(props) == 0) { 
+		eventDatabase = DatabaseManager.getDatabaseManager(props, "hsqldb").getEventDatabase();
+	}
+	else { 
+		eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
+	}
 	if(getPersistanceType(props) == 0) {
 	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	    delete(Status.COMPLETE_SUCCESS);
@@ -299,6 +303,18 @@ public class HSqlDbQueue implements Queue {
 	if(getDatabaseType(props) == 0) DatabaseManager.getDatabaseManager(props, "hsqldb").close();
 	else DatabaseManager.getDatabaseManager(props, "postgres").close();
     }
+
+    public void setTime(edu.iris.Fissures.Time time) {
+	eventDatabase.setTime(time);
+    }
+
+    public edu.iris.Fissures.Time getTime() {
+	return eventDatabase.getTime();
+    }
+
+    public void incrementTime(int days) {
+	eventDatabase.incrementTime(days);	
+    }
     
     Properties props;
     
@@ -313,7 +329,5 @@ public class HSqlDbQueue implements Queue {
     private PreparedStatement getStmt;
 
     private PreparedStatement getMaxIdStmt;
-
-  
   
 }// HSqlDbQueue
