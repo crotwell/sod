@@ -39,7 +39,9 @@
                 <div id="content">
                     <xsl:apply-templates select="body/*"/>
                 </div>
-                <xsl:call-template name="footer"/>
+                <xsl:call-template name="footer">
+                    <xsl:with-param name="base" select="$base"/>
+                </xsl:call-template>
             </body>
         </html>
     </xsl:template>
@@ -128,10 +130,17 @@
         </div>
     </xsl:template>
     <xsl:template name="footer">
+        <xsl:param name="base" select="$base"/>
         <div id="footer">
             <p>SOD is made possible by the <a href="http://www.sc.edu">University of South Carolina's</a>
                 <a href="http://www.geol.sc.edu"> Department of Geological Sciences</a> and the <a
-                    href="http://www.iris.edu">IRIS Consortium</a>.</p>
+                    href="http://www.iris.edu">IRIS Consortium</a>.
+                   </p>
         </div>
-    </xsl:template>
+        <img class="right">
+    <xsl:attribute name="src">
+    <xsl:value-of select="concat($base, 'dhi_logo.gif')"/>
+    </xsl:attribute>
+       </img>
+</xsl:template>
 </xsl:stylesheet>

@@ -20,6 +20,10 @@ body  {
 	border-top:1px solid; border-bottom:1px solid
 } 
 
+#footer img  {
+    float:right; 
+} 
+
 #content  { 
 	margin:125px 20px 20px 220px; padding:5px
 } 
