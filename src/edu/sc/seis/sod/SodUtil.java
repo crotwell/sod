@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -155,7 +156,7 @@ public class SodUtil {
             Class extClass = Class.forName(classname);
             Class mustImplement = load(tagName.substring("external".length()),
                                        armNames);
-            Class[] implementedInterfaces = extClass.getClasses();
+            Class[] implementedInterfaces = getInterfaces(extClass);
             for(int i = 0; i < implementedInterfaces.length; i++) {
                 Class curInterface = implementedInterfaces[i];
                 if(curInterface.equals(mustImplement)) { return loadClass(extClass,
@@ -170,6 +171,21 @@ public class SodUtil {
             throw new ConfigurationException("Unable to find external class "
                     + classname + ".  Make sure it's on the classpath", e1);
         }
+    }
+
+    private static Class[] getInterfaces(Class c) {
+        List l = new ArrayList();
+        Class[] cInterfaces = c.getInterfaces();
+        for(int i = 0; i < cInterfaces.length; i++) {
+            l.add(cInterfaces[i]);
+        }
+        if(c.getSuperclass() != null) {
+            Class[] superInterfaces = getInterfaces(c.getSuperclass());
+            for(int i = 0; i < superInterfaces.length; i++) {
+                l.add(superInterfaces[i]);
+            }
+        }
+        return (Class[])l.toArray(new Class[l.size()]);
     }
 
     private static Object loadClass(Class subsetter, Element config)
