@@ -44,7 +44,7 @@ public class EventChannelPair{
      */
     public void update(Status status){
         this.status = status;
-        cookieJar.put("status", status.toString());
+        cookieJar.updateStatus();
         owner.setStatus(this);
 
     }

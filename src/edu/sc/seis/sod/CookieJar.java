@@ -44,12 +44,13 @@ import org.apache.velocity.tools.generic.RenderTool;
 public class CookieJar {
 
     public CookieJar (EventChannelPair ecp) throws SQLException {
+        this.ecp = ecp;
         if (jdbcCookie == null) {
             jdbcCookie = new JDBCEventChannelCookieJar();
         }
         memoryContext = getChannelContext(ecp.getEvent(), ecp.getChannel());
         memoryContext.put("sod_cookieJar", this); // needed for eval and recurse velocity tool
-        memoryContext.put("status", ecp.getStatus());
+        updateStatus();
         context = new JDBCVelocityContext(ecp, jdbcCookie, memoryContext);
         ((Context)memoryContext.get("sod_site_context")).put(ChannelIdUtil.toString(ecp.getChannel().get_id()), context);
     }
@@ -71,11 +72,17 @@ public class CookieJar {
         context.put(key, value);
     }
 
+    public void updateStatus() {
+        memoryContext.put("status", ecp.getStatus());
+    }
+
     Context context;
 
     /** this holds items that are not perisent and can be recreated from the
      * EventChannelPair. */
     VelocityContext memoryContext;
+
+    EventChannelPair ecp;
 
     static JDBCEventChannelCookieJar jdbcCookie = null;
 
