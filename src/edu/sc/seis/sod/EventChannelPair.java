@@ -17,10 +17,16 @@ import org.apache.log4j.Logger;
 public class EventChannelPair{
     public EventChannelPair(EventDbObject event, ChannelDbObject chan,
                             WaveformArm owner, int pairId){
+        this(event, chan, owner, pairId, null);
+    }
+
+    public EventChannelPair(EventDbObject event, ChannelDbObject chan,
+                            WaveformArm owner, int pairId, Status status){
         this.event = event;
         this.chan = chan;
         this.owner = owner;
         this.pairId = pairId;
+        this.status = status;
         this.cookieJar = new CookieJar(getEvent(), getChannel());
     }
 
@@ -36,15 +42,8 @@ public class EventChannelPair{
      * parent
      */
     public void update(Status status){
-        setStatus(status);
-        owner.setStatus(this);
-    }
-
-    /**
-     * sets the status on this event channel pair to be status
-     */
-    public void setStatus(Status status){
         this.status = status;
+        owner.setStatus(this);
     }
 
     public boolean equals(Object o){
