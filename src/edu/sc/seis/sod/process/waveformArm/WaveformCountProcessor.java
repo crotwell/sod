@@ -28,7 +28,7 @@ public class WaveformCountProcessor implements WaveformProcess {
         int num_waveforms = jdbcEventChannelStatus.getNumOfStatus(Status.get(Stage.PROCESSOR,
                                                                              Standing.SUCCESS));
         FileWriter fileWriter = new FileWriter("waveforms.txt");
-        fileWriter.write("\n Number of Waveforms processed = " + num_waveforms + "\n");
+        fileWriter.write("Number of Waveforms processed = " + num_waveforms);
         fileWriter.close();
         return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
