@@ -14,14 +14,14 @@ import edu.sc.seis.sod.validator.model.MultigenitorForm;
 
 public class VelocityModelHelper {
     public String getClass(Form f){
-        if(f == null){return "CRAP='7'"; }
         String classAttr = "class=\"";
         if(f.getMin() == 0){
             if(f.getMax() == 1){ classAttr += "zeroToOne"; }
             else{ classAttr += "zeroToMany"; }
         }else{
-            if(f.getMax() == 1){ classAttr += "one"; }
-            else{ classAttr += "oneToMany"; }
+            if(f.getMax() == 1){
+                if(f instanceof MultigenitorForm){ classAttr += "one"; }
+            }else{ classAttr += "oneToMany"; }
         }
         if(f instanceof MultigenitorForm){
             classAttr = appendMultigenitorClass((MultigenitorForm)f, classAttr);

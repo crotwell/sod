@@ -24,13 +24,12 @@ import org.apache.velocity.app.VelocityEngine;
 public class SchemaDocumenter {
     public static void main(String[] args) throws Exception{
 
-        StAXModelBuilder handler = new StAXModelBuilder("../../exampleSchema/library.rng");
-        //StAXModelBuilder handler = new StAXModelBuilder("../../relax/sod.rng");
+        //StAXModelBuilder handler = new StAXModelBuilder("../../exampleSchema/library.rng");
+        StAXModelBuilder handler = new StAXModelBuilder("../../relax/sod.rng");
         //handler.getRoot().accept(new FormPrinter(4));
         VelocityEngine ve = new VelocityEngine();
         ve.init();
         VelocityContext c = new VelocityContext();
-        System.out.println(handler.getRoot());
         c.put("root", handler.getRoot());
         c.put("walker", new ModelWalker());
         c.put("util", new SodUtil());
@@ -53,10 +52,8 @@ public class SchemaDocumenter {
         }else if(f instanceof NamedElement){
             if(!ModelWalker.isSelfReferential(f)){
                 NamedElement el = (NamedElement)f;
-                System.out.println("WRITING " + f);
                 c.put("curEl", f);
                 String xPath = el.getXPath();
-                System.out.println("XPATH IS " + xPath);
                 File xmlFile = new File("xml/" + xPath + ".xml");
                 xmlFile.getParentFile().mkdirs();
                 FileWriter fw = new FileWriter(xmlFile);
@@ -65,14 +62,13 @@ public class SchemaDocumenter {
 
                 String outputLoc = "../generatedSite/tagDocs/"+ xPath + ".html";
                 File htmlFile = new File(outputLoc);
-                System.out.println(htmlFile);
+                System.out.println("writing " + xPath);
                 htmlFile.getParentFile().mkdirs();
                 String relPath = SodUtil.getRelativePath(outputLoc,
                                                          "../generatedSite/",
                                                          "/");
                 relPath = relPath.substring(0, relPath.length() - "../generatedSite".length());
                 t.setParameter("base", relPath);
-                System.out.println("set base to " + relPath);
                 t.transform(new StreamSource(xmlFile), new StreamResult(htmlFile));
                 writeTree(c, ve, el.getChild(), t);
             }

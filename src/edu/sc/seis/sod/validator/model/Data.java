@@ -33,6 +33,8 @@ public class Data extends AbstractForm{
 
     public ModelDatatype getDatatype(){ return datatype; }
 
+    public String toString(){ return "Data of type " + getDatatype(); }
+
     public void accept(FormVisitor v) { v.visit(this);}
 
     private ModelDatatype datatype;

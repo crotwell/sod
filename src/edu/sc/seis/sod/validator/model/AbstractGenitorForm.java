@@ -21,7 +21,10 @@ public abstract class AbstractGenitorForm extends AbstractForm implements Genito
 
     public boolean isAncestorOf(Form f){
         if(getChild().equals(f)){ return true; }
-        else { return getChild().isAncestorOf(f); }
+        else if(!ModelWalker.isSelfReferential(this)) {
+            return getChild().isAncestorOf(f);
+        }
+        return false;
     }
 
     public Form getChild() { return child.getForm(); }

@@ -31,6 +31,10 @@ public class Attribute extends AbstractGenitorForm{
         v.leave(this);
     }
 
+    public String toString(){
+        return "@"+name;
+    }
+
     private String name;
 }
 

@@ -61,8 +61,10 @@ public abstract class AbstractMultigenitorForm extends AbstractForm implements M
 
     public boolean isAncestorOf(Form f){
         Form[] kids = getChildren();
-        for (int i = 0; i < kids.length; i++) {
-            if(kids[i].equals(f) || kids[i].isAncestorOf(f)){ return true; }
+        if(!ModelWalker.isSelfReferential(this)){
+            for (int i = 0; i < kids.length; i++) {
+                if(kids[i].equals(f) || kids[i].isAncestorOf(f)){ return true; }
+            }
         }
         return false;
     }

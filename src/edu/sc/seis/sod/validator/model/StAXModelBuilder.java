@@ -9,6 +9,9 @@ package edu.sc.seis.sod.validator.model;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.validator.model.datatype.AnyText;
+import edu.sc.seis.sod.validator.model.datatype.DoubleDatatype;
+import edu.sc.seis.sod.validator.model.datatype.FloatDatatype;
 import edu.sc.seis.sod.validator.model.datatype.Token;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,6 +85,9 @@ public class StAXModelBuilder implements XMLStreamConstants{
             case END_ELEMENT:
                 System.out.println("END " + reader.getLocalName());
                 break;
+            case COMMENT:
+                System.out.println("COMMENT " + reader.getText());
+                break;
             default:
                 System.out.println("DUNNO");
                 break;
@@ -106,16 +112,19 @@ public class StAXModelBuilder implements XMLStreamConstants{
             }
         }
         Definition def = new Definition(name, combo);
-        reader.nextTag();
+        nextTag();
         def.set(handleAll());
         return def;
     }
 
-    private void print(String msg, int indent){
-        for (int i = 0; i < indent; i++) {
-            System.out.print("  ");
+    private void nextTag() throws XMLStreamException {
+        if(reader.hasNext()){
+            int ev = reader.next();
+            while(reader.hasNext() && ev != START_ELEMENT && ev != END_ELEMENT){
+                ev = reader.next();
+            }
+
         }
-        System.out.println(msg);
     }
 
     private FormProvider handleAll() throws XMLStreamException{
@@ -225,19 +234,19 @@ public class StAXModelBuilder implements XMLStreamConstants{
      */
     private FormProvider handleElement() throws XMLStreamException{
         String name = reader.getAttributeValue(0);
-        reader.nextTag();
+        nextTag();
         NamedElement result = new NamedElement(1, 1, name);
         result.setChild(handleAll());
-        reader.nextTag();
+        nextTag();
         return result;
     }
 
     private Object handleAttr() throws XMLStreamException {
         String name = reader.getAttributeValue(0);
-        reader.nextTag();
+        nextTag();
         Attribute result = new Attribute(1, 1, name);
         result.setChild(handleAll());
-        reader.nextTag();
+        nextTag();
         return result;
     }
 
@@ -248,8 +257,9 @@ public class StAXModelBuilder implements XMLStreamConstants{
         else if(tag.equals("group")){ parent = new Group(1, 1); }
         else if(tag.equals("list")){ parent = new DataList(1, 1); }
         else{ parent = new Interleave(1, 1); }
-        reader.nextTag();
+        nextTag();
         FormProvider child = handleAll();
+        nextTag();
         if(child instanceof AbstractMultigenitorForm){
             //If the child is an AbstractMultigenitorForm, there were multiple
             //child FormProviders, so suck all of them out of the child and put
@@ -280,16 +290,16 @@ public class StAXModelBuilder implements XMLStreamConstants{
      */
     private Ref handleRef() throws XMLStreamException{
         String name = reader.getAttributeValue(0);
-        reader.nextTag();
-        reader.nextTag();
+        nextTag();
+        nextTag();
         return new Ref(definedGrammar, name);
     }
 
 
     private Ref handleExtRef() throws XMLStreamException{
         String refGramLoc = getAbsPath();
-        reader.nextTag();
-        reader.nextTag();
+        nextTag();
+        nextTag();
         return new Ref(getGrammar(refGramLoc));
     }
 
@@ -312,12 +322,12 @@ public class StAXModelBuilder implements XMLStreamConstants{
 
             }
         }
-        reader.nextTag();
+        nextTag();
         while(reader.getEventType() == START_ELEMENT &&
               reader.getLocalName().equals("param")){
             handleParam((Data)result);
         }
-        reader.nextTag();
+        nextTag();
         return result;
     }
 
@@ -335,7 +345,10 @@ public class StAXModelBuilder implements XMLStreamConstants{
     private ModelDatatype handleType(){
         if(reader.getAttributeCount() > 0){
             String type = reader.getAttributeValue(0);
-            //TODO handle various types
+            if(type.equals("float")){
+                return new FloatDatatype();
+            }else if(type.equals("string")){ return new AnyText(); }
+            else if(type.equals("double")){ return new DoubleDatatype(); }
             return new Token();
         }
         return null;

@@ -27,7 +27,7 @@ public class Value extends Data{
     }
 
     public String toString(){
-        return "Value of " + getValue() + " of type " + getDatatype();
+        return "Value: " + getValue();
     }
 
     public String getValue(){ return value; }

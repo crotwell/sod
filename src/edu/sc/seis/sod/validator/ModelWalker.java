@@ -51,7 +51,7 @@ public class ModelWalker {
         return null;
     }
 
-    private static boolean isTowards(Form parent, Form result){
+    public static boolean isTowards(Form parent, Form result){
         return parent.isAncestorOf(result) || parent.equals(result);
     }
 

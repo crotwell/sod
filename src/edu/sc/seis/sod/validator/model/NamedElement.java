@@ -6,6 +6,10 @@
 
 package edu.sc.seis.sod.validator.model;
 
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
+import edu.sc.seis.sod.Status;
+
 public class NamedElement extends AbstractGenitorForm{
     public NamedElement(int min, int max, String name){
         this(min, max, name, null);
@@ -17,9 +21,14 @@ public class NamedElement extends AbstractGenitorForm{
     }
 
     public String getXPath() {
-        if(getParent() != null){
-            return getParent().getXPath() + "/" + getName();
-        }else{ return getName(); }
+        try{
+            if(getParent() != null){
+                return getParent().getXPath() + "/" + getName();
+            }else{ return getName(); }
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public Attribute[] getAttributes(){
@@ -47,6 +56,15 @@ public class NamedElement extends AbstractGenitorForm{
         copyChildToNewParent(copy);
         copy.setAnnotation(getAnnotation());
         return copy;
+    }
+
+    public boolean equals(Object o){
+        if(o == this){ return true; }
+        if(o instanceof NamedElement){
+            NamedElement otherNamed = (NamedElement)o;
+            return otherNamed.getName().equals(getName()) && super.equals(o);
+        }
+        return false;
     }
 
     public String toString(){
