@@ -67,7 +67,7 @@ public class MotionVectorArm implements Subsetter {
         } // end of else
     }
 
-    public void processMotionVectorArm(EventChannelGroupPair ecp) {
+    public void processMotionVectorArm(EventVectorPair ecp) {
         StringTree passed;
         EventAccessOperations eventAccess = ecp.getEvent();
         ChannelGroup channel = ecp.getChannelGroup();
@@ -91,7 +91,7 @@ public class MotionVectorArm implements Subsetter {
         }
     }
 
-    public void processRequestGeneratorSubsetter(EventChannelGroupPair ecp) {
+    public void processRequestGeneratorSubsetter(EventVectorPair ecp) {
         RequestFilter[][] infilters;
         synchronized(requestGenerator) {
             try {
@@ -120,7 +120,7 @@ public class MotionVectorArm implements Subsetter {
         processRequestSubsetter(ecp, infilters);
     }
 
-    public void processRequestSubsetter(EventChannelGroupPair ecp,
+    public void processRequestSubsetter(EventVectorPair ecp,
                                         RequestFilter[][] infilters) {
         boolean passed;
         synchronized(request) {
@@ -214,7 +214,7 @@ public class MotionVectorArm implements Subsetter {
         }
     }
 
-    public void processAvailableDataSubsetter(EventChannelGroupPair ecp,
+    public void processAvailableDataSubsetter(EventVectorPair ecp,
                                               ProxySeismogramDC dataCenter,
                                               RequestFilter[][] infilters,
                                               RequestFilter[][] outfilters) {
@@ -340,7 +340,7 @@ public class MotionVectorArm implements Subsetter {
         }
     }
 
-    public void processSeismograms(EventChannelGroupPair ecp,
+    public void processSeismograms(EventVectorPair ecp,
                                    RequestFilter[][] infilters,
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
@@ -380,7 +380,7 @@ public class MotionVectorArm implements Subsetter {
         }
     }
 
-    private static void handle(EventChannelGroupPair ecp,
+    private static void handle(EventVectorPair ecp,
                                Stage stage,
                                Throwable t) {
         if(t instanceof org.omg.CORBA.SystemException) {

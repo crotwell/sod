@@ -292,7 +292,7 @@ public class WaveformArm implements Runnable {
         }
     }
 
-    public EventChannelGroupPair getEventChannelGroupPair(EventChannelPair ecp) {
+    public EventVectorPair getEventVectorPair(EventChannelPair ecp) {
         try {
             Channel[] chans;
             synchronized(evChanStatus) {
@@ -318,7 +318,7 @@ public class WaveformArm implements Runnable {
                     pairs[i] = evChanStatus.get(pairIds[i], this);
                 }
             }
-            return new EventChannelGroupPair(pairs);
+            return new EventVectorPair(pairs);
         } catch(SQLException e) {
             GlobalExceptionHandler.handle(e);
         } catch(NotFound e) {
@@ -348,7 +348,7 @@ public class WaveformArm implements Runnable {
                         return null;
                     }
                     try {
-                        EventChannelGroupPair ecgp = getEventChannelGroupPair(ecp);
+                        EventVectorPair ecgp = getEventVectorPair(ecp);
                         if(ecgp == null) { return null; }
                         int[] pairs;
                         synchronized(evChanStatus) {
@@ -403,7 +403,7 @@ public class WaveformArm implements Runnable {
                     synchronized(evChanStatus) {
                         ecp = evChanStatus.get(pairIds[i], this);
                     }
-                    EventChannelGroupPair ecgp = getEventChannelGroupPair(ecp);
+                    EventVectorPair ecgp = getEventVectorPair(ecp);
                     if(!usedPairGroups.contains(ecgp)) {
                         usedPairGroups.add(ecgp);
                         int[] pairGroup;
@@ -681,7 +681,7 @@ public class WaveformArm implements Runnable {
 
         public void run() {
             try {
-                EventChannelGroupPair ecp = extractEventChannelGroupPair();
+                EventVectorPair ecp = extractEventVectorPair();
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
                 StringTree accepted = new StringTreeLeaf(this, false);
@@ -712,7 +712,7 @@ public class WaveformArm implements Runnable {
             }
         }
 
-        private EventChannelGroupPair extractEventChannelGroupPair()
+        private EventVectorPair extractEventVectorPair()
                 throws Exception {
             try {
                 EventChannelPair[] pairs = new EventChannelPair[pairIds.length];
@@ -722,7 +722,7 @@ public class WaveformArm implements Runnable {
                                                     WaveformArm.this);
                     }
                 }
-                return new EventChannelGroupPair(pairs);
+                return new EventVectorPair(pairs);
             } catch(NotFound e) {
                 throw new RuntimeException("Not found getting the event and channel ids from the event channel status db for a just gotten pair id.  This shouldn't happen.",
                                            e);

@@ -111,7 +111,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
 		return ids;
     }
 	
-    public int[] getPairs(EventChannelGroupPair group) throws SQLException,
+    public int[] getPairs(EventVectorPair group) throws SQLException,
 		NotFound {
 		return getPairs(group.getEvent(), group.getChannelGroup());
     }
