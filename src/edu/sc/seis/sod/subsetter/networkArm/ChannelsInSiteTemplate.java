@@ -22,18 +22,18 @@ import org.w3c.dom.Element;
 
 
 public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
-    
+
     private Site site;
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
-    
+
     public ChannelsInSiteTemplate(Element el, String outputLocation, Site site) throws IOException{
         super(outputLocation);
         this.site = site;
         parse(el);
         write();
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -48,8 +48,8 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
         }
         return super.getTemplate(tag,el);
     }
-    
-    public void change(Channel channel, RunStatus status){
+
+    public void change(Channel channel, RunStatus status) throws IOException {
         logger.debug("change(channel, status): " + site.my_station.my_network.get_code() + "."
                     + site.my_station.my_network.get_code() + "." + site.my_station.get_code()
                     + "." + site.get_code() + "." + channel.get_code() + ", " + status.toString());
@@ -63,15 +63,15 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
             CommonAccess.handleException(e, "trouble writing file");
         }
     }
-    
+
     private class MySiteTemplate implements GenericTemplate{
-        
+
         public MySiteTemplate(Element el){ formatter = new SiteFormatter(el); }
-        
+
         public String getResult(){
             return formatter.getResult(site);
         }
-        
+
         SiteFormatter formatter;
     }
 }

@@ -9,33 +9,34 @@ package edu.sc.seis.sod.subsetter.waveFormArm;
 import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.File;
+import java.io.IOException;
 import junit.framework.TestCase;
 
 public class EventPageTest extends TestCase{
     public EventPageTest(String name){
         super(name);
     }
-    
+
     public void setUp(){
         testPage = new EventChannelPage("Test Title", new File("./test.html"),
                                  MockFissures.createEvent());
     }
-    
+
     public void testConstruction(){
         assertEquals(emptyPage, testPage.generatePage());
     }
-    
-    public void testAdd(){
+
+    public void testAdd() throws IOException{
         testPage.add(MockFissures.createChannel(), Status.COMPLETE_SUCCESS);
         assertEquals(oneChanPage, testPage.generatePage());
     }
-    
+
     private EventChannelPage testPage;
-    
+
     private String EVENT_OUTPUT = "CENTRAL ALASKA 01/01/1970 00:00:00 GMT Mag: 5.0 Depth: 0.00 km";
-    
+
     private String CHANNEL_STRING = "TESTCODE.19700101T00:00:00.000Z.TST.TSTS.BHZ.19700101T00:00:00.000Z";
-    
+
     private String emptyPage =
         "<html>\n" +
         "<header><title>Test Title</title></header>\n" +
@@ -43,7 +44,7 @@ public class EventPageTest extends TestCase{
         "<b>Channels for " + EVENT_OUTPUT + ":</b><br>\n" +
         "</body>\n" +
         "</html>";
-    
+
     private String oneChanPage =
         "<html>\n" +
         "<header><title>Test Title</title></header>\n" +

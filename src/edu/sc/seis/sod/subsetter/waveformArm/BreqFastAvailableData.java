@@ -42,7 +42,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
                           Channel channel,
                           RequestFilter[] request,
                           RequestFilter[] available,
-                          CookieJar cookies) throws IOException, ConfigurationException {
+                          CookieJar cookies) throws IOException, ConfigurationException, NoPreferredOrigin {
         writeToBFEmail(event, network, channel, request, cookies);
         // don't care if yes or no
         return true;

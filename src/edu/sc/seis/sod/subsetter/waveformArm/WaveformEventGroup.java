@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.database.Status;
-import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.eventArm.EventGroupTemplate;
 import edu.sc.seis.sod.subsetter.eventArm.EventTemplate;
 import java.io.IOException;
@@ -16,33 +14,41 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class WaveformEventGroup extends EventGroupTemplate implements WaveFormStatus{
     public WaveformEventGroup(){
         useDefaultConfig();
     }
-    
-    public WaveformEventGroup(Element el){
+
+    public WaveformEventGroup(Element el) {
         parse(el);
     }
-    
-    public Object getTemplate(String tag, Element el){
+
+    public Object getTemplate(String tag, Element el) {
         if(tag.equals("channelCount")) return new EventChannelStatus(el);
-        if(tag.equals("waveformEvents")) return new WaveformEventTemplateGenerator(el);
+        try {
+            // this is a weird template due to dependence on external an xml template
+            // maybe this should be changed later...
+            // TODO
+            if(tag.equals("waveformEvents")) return new WaveformEventTemplateGenerator(el);
+        } catch (Exception e) {
+            throw new RuntimeException("Problem getting template in WaveformEventGroup", e);
+        }
         return super.getTemplate(tag, el);
     }
-    
-    public void update(EventChannelPair ecp) {
+
+    public void update(EventChannelPair ecp) throws Exception {
         Iterator it = ecpListeners.iterator();
         while(it.hasNext())((WaveFormStatus)it.next()).update(ecp);
         super.change(ecp.getEvent(), null);
     }
-    
+
     public void useDefaultConfig(){
         templates.add(new EventChannelStatus(null));
         templates.add("\n");
     }
-    
+
     private class EventChannelStatus implements EventTemplate, WaveFormStatus{
         public EventChannelStatus(Element el){
             ecpListeners.add(this);
@@ -74,7 +80,7 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 }
             }else monitoredStatus.add(Status.COMPLETE_SUCCESS);
         }
-        
+
         public void update(EventChannelPair ecp) {
             if(monitoredStatus.contains(ecp.getStatus())){
                 Integer cur = new Integer(0);
@@ -85,18 +91,18 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveFormSt
                 evChans.put(ecp.getEvent(), cur);
             }
         }
-        
+
         public String getResult(EventAccessOperations ev) {
             if(evChans.containsKey(ev))
                 return ((Integer)evChans.get(ev)).toString();
             else
                 return "0";
         }
-        
+
         private List monitoredStatus =  new ArrayList();
-        
+
         private Map evChans = new HashMap();
     }
-    
+
     private List ecpListeners = new ArrayList();
 }

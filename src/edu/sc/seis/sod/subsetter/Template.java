@@ -16,20 +16,20 @@ public abstract class Template{
      * called
      */
     protected abstract Object textTemplate(final String text);
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
     protected abstract Object getTemplate(String tag, Element el);
-    
-    protected void parse(Element el){
+
+    protected void parse(Element el) {
         parse(el.getChildNodes());
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
     }
-    
+
     public static boolean v = false;
-    
-    private void parse(NodeList nl){
+
+    private void parse(NodeList nl) {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if(n.getNodeType() == Node.TEXT_NODE) addString(n.getNodeValue());
@@ -51,19 +51,19 @@ public abstract class Template{
             }
         }
     }
-    
+
     private void addTemplate(Object template){
         if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
         templates.add(template);
         builtUpText = "";
     }
-    
+
     private void addString(String text){ if(v) System.out.println("adding string " + text);
         builtUpText += text; }
-    
+
     private String builtUpText = "";
-    
-    private int addAttributes(Node n){
+
+    private int addAttributes(Node n) {
         addString(getAttrString(n));
         int numAttr = 0;
         for (int i = 0; i < n.getChildNodes().getLength() && childName(i, n).equals("attribute"); i++) {
@@ -75,11 +75,11 @@ public abstract class Template{
         }
         return numAttr;
     }
-    
+
     private static String childName(int i, Node n){
         return n.getChildNodes().item(i).getNodeName();
     }
-    
+
     private String getAttrString(Node n){
         String result = "";
         NamedNodeMap attr = n.getAttributes();
@@ -89,10 +89,10 @@ public abstract class Template{
         }
         return result;
     }
-    
+
     public void setUp(){}
-    
+
     protected List templates = new ArrayList();
-    
+
     private static Logger logger = Logger.getLogger(Template.class);
 }

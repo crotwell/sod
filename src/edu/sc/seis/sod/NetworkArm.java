@@ -391,35 +391,60 @@ public class NetworkArm {
     private void statusChanged(String newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((NetworkStatus)it.next()).setArmStatus(newStatus);
+            try {
+                ((NetworkStatus)it.next()).setArmStatus(newStatus);
+            } catch (Exception e) {
+                // caught for one, but should continue with rest after logging it
+                CommonAccess.handleException("Problem changing status in NetworkArm", e);
+            }
         }
     }
 
     private void change(Channel chan, RunStatus newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((NetworkStatus)it.next()).change(chan, newStatus);
+            try {
+                ((NetworkStatus)it.next()).change(chan, newStatus);
+            } catch (Exception e) {
+                // caught for one, but should continue with rest after logging it
+                CommonAccess.handleException("Problem changing channel status in NetworkArm", e);
+            }
         }
     }
 
     private void change(Station sta, RunStatus newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((NetworkStatus)it.next()).change(sta, newStatus);
+            try {
+                ((NetworkStatus)it.next()).change(sta, newStatus);
+            } catch (Exception e) {
+                // caught for one, but should continue with rest after logging it
+                CommonAccess.handleException("Problem changing station status in NetworkArm", e);
+            }
         }
     }
 
     private void change(NetworkAccess na, RunStatus newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((NetworkStatus)it.next()).change(na, newStatus);
+            try {
+                ((NetworkStatus)it.next()).change(na, newStatus);
+            } catch (Exception e) {
+                // caught for one, but should continue with rest after logging it
+                CommonAccess.handleException("Problem changing network status in NetworkArm", e);
+            }
         }
     }
 
     private void change(Site site, RunStatus newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
-            ((NetworkStatus)it.next()).change(site, newStatus);
+            try {
+                ((NetworkStatus)it.next()).change(site, newStatus);
+            } catch (Exception e) {
+                // caught for one, but should continue with rest after logging it
+                CommonAccess.handleException("Problem changing site status in NetworkArm", e);
+            }
         }
     }
 

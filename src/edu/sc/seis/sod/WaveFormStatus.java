@@ -7,6 +7,6 @@
 package edu.sc.seis.sod;
 
 public interface WaveFormStatus extends SodElement {
-    public void update(EventChannelPair ecp);
+    public void update(EventChannelPair ecp) throws Exception;
 }
 

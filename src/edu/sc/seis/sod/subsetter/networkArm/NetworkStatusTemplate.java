@@ -19,18 +19,18 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class NetworkStatusTemplate extends NetworkInfoTemplate{
-    
+
     private String status = "";
     private List networkListeners = new ArrayList();
     private Logger logger = Logger.getLogger(NetworkStatusTemplate.class);
-    
+
     public NetworkStatusTemplate(Element el, String outputLocation) throws IOException{
         super(outputLocation);
         parse(el);
         write();
     }
-    
-    public void change(NetworkAccess networkAccess, RunStatus status) {
+
+    public void change(NetworkAccess networkAccess, RunStatus status)  {
         logger.debug("change(Network, Status): " + networkAccess.get_attributes().name
                          + ", " + status.toString());
         Iterator it = networkListeners.iterator();
@@ -44,21 +44,17 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
             CommonAccess.handleException(e, "trouble writing file");
         }
     }
-    
-    public void setArmStatus(String status) {
+
+    public void setArmStatus(String status)  throws IOException {
         logger.debug("setArmStatus: " + status);
         this.status = status;
-        try {
-            write();
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble writing file");
-        }
+        write();
     }
-    
+
     private class StatusFormatter implements GenericTemplate{
         public String getResult(){ return status; }
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -73,6 +69,6 @@ public class NetworkStatusTemplate extends NetworkInfoTemplate{
         }
         return super.getTemplate(tag,el);
     }
-    
+
 }
 

@@ -22,52 +22,52 @@ public class PrintlineNetworkStatus {
 
     public void networkId(boolean success,
                           NetworkId networkId,
-                          CookieJar cookies) {
+                          CookieJar cookies) throws IOException {
         print(success, "networkId - "+NetworkIdUtil.toString(networkId));
     }
 
     public void networkAttr(boolean success,
                             NetworkAttr networkAttr,
-                            CookieJar cookies) {
+                            CookieJar cookies) throws IOException {
         print(success, "networkAttr - "+NetworkIdUtil.toString(networkAttr.get_id()));
     }
 
     public void stationId(boolean success,
                           StationId id,
-                          CookieJar cookies) {
+                          CookieJar cookies) throws IOException {
         print(success, "stationId - "+StationIdUtil.toString(id));
     }
 
     public void station(boolean success,
                         NetworkAccess network,
                         Station station,
-                        CookieJar cookies) {
+                        CookieJar cookies) throws IOException {
         print(success, "station - "+StationIdUtil.toString(station.get_id()));
     }
 
     public void siteId(boolean success,
                        SiteId id,
-                       CookieJar cookies) {
+                       CookieJar cookies) throws IOException {
         print(success, "siteId - "+SiteIdUtil.toString(id));
     }
 
     public void site(boolean success,
                      NetworkAccess network,
                      Site site,
-                     CookieJar cookies) {
+                     CookieJar cookies) throws IOException {
         print(success, "site - "+SiteIdUtil.toString(site.get_id()));
     }
 
     public void channelId(boolean success,
                           ChannelId id,
-                          CookieJar cookies) {
+                          CookieJar cookies) throws IOException {
         print(success, "channelId - "+ChannelIdUtil.toString(id));
     }
 
     public void channel(boolean success,
                         NetworkAccess network,
                         Channel channel,
-                        CookieJar cookies) {
+                        CookieJar cookies) throws IOException {
         print(success, "channel - "+ChannelIdUtil.toString(channel.get_id()));
     }
 

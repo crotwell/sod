@@ -15,29 +15,29 @@ import org.w3c.dom.Element;
 
 public class EventGroupTemplate extends Template implements GenericTemplate, EventStatus{
     protected EventGroupTemplate(){sorter = new EventSorter();}
-    
-    public EventGroupTemplate(Element config){
+
+    public EventGroupTemplate(Element config) {
         parse(config);
     }
-    
+
     public static EventGroupTemplate createDefaultTemplate(){
         EventGroupTemplate egt = new EventGroupTemplate();
         egt.useDefaultConfig();
         return egt;
     }
-    
-    public void parse(Element el){
+
+    public void parse(Element el) {
         if(el.hasChildNodes() == false) useDefaultConfig();
         else super.parse(el);
         if(sorter == null) sorter = new EventSorter();
     }
-    
+
     protected void useDefaultConfig(){
         templates.add(new EventFormatter());
         sorter = new EventSorter();
     }
-    
-    
+
+
     protected Object getTemplate(String tag, Element el) {
         if(el.getNodeName().equals("eventLabel")){
             return new EventFormatter(el);
@@ -47,13 +47,13 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
         }
         return null;
     }
-    
+
     public Object textTemplate(final String text){
         return new EventTemplate(){
             public String getResult(EventAccessOperations ev) { return text; }
         };
     }
-    
+
     public void change(EventAccessOperations event, RunStatus status) {
         if(eventToMonitors.containsKey(event)){
             ((MonitoredEvent)eventToMonitors.get(event)).status = status;
@@ -64,7 +64,7 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
             sorter.add(event);
         }
     }
-    
+
     public String getResult(){
         StringBuffer output = new StringBuffer();
         List sorted = sorter.getSortedEvents();
@@ -84,24 +84,24 @@ public class EventGroupTemplate extends Template implements GenericTemplate, Eve
         }
         return output.substring(0, output.length());//don't include last newline
     }
-    
+
     private class MonitoredEvent{
         public MonitoredEvent(EventAccessOperations event, RunStatus status){
             this.event = event;
             this.status = status;
         }
-        
+
         public EventAccessOperations event;
         public RunStatus status;
     }
-    
+
     public void setArmStatus(String status) {
         // NO IMPL
     }
-    
+
     private List events = new ArrayList();
-    
+
     private Map eventToMonitors = new HashMap();
-    
+
     private EventSorter sorter;
 }

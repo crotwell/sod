@@ -271,7 +271,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         synchronized(statusMonitors){
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()){
+                try {
                 ((WaveFormStatus)it.next()).update(ecp);
+                } catch (Exception e) {
+                    // oh well, log it and go to next status processor
+                    CommonAccess.handleException("Problem in setStatus", e);
+                }
             }
         }
         if(ecp.getStatus().getId() == Status.PROCESSING.getId()) return;

@@ -192,7 +192,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         }
     }
 
-    private void change(EventAccessOperations event, RunStatus status) {
+    private void change(EventAccessOperations event, RunStatus status) throws Exception {
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
@@ -201,7 +201,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         }
     }
 
-    private void setStatus(String status){
+    private void setStatus(String status) throws Exception {
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
@@ -229,7 +229,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
         return false;
     }
 
-    private void waitTillRefreshNeeded() {
+    private void waitTillRefreshNeeded() throws Exception {
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+
                              Start.REFRESH_INTERVAL+" seconds");

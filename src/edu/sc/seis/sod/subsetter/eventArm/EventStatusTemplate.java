@@ -11,20 +11,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 public class EventStatusTemplate extends FileWritingTemplate implements EventStatus{
-    public EventStatusTemplate(Element el)throws IOException{
+
+    public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException {
         super(el.getAttribute("outputLocation"));
         Element config = TemplateFileLoader.getTemplate(el);
         parse(config);
     }
-    
-    public void setArmStatus(String status) {
+
+    public void setArmStatus(String status) throws IOException {
         this.status = status;
         write();
     }
-    
+
     public Object getTemplate(String tag, Element el){
         if(tag.equals("events")){
             EventGroupTemplate egt = new EventGroupTemplate(el);
@@ -38,24 +41,24 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
         }else if(tag.equals("now")) return new NowTemplate();
         return null;
     }
-    
+
     private class MapImgSrc extends MapEventStatus implements GenericTemplate{
         public MapImgSrc(Element el){ super(el); }
-        
+
         public String getResult() { return fileLoc; }
     }
-    
-    public void change(EventAccessOperations event, RunStatus status) {
+
+    public void change(EventAccessOperations event, RunStatus status) throws Exception {
         Iterator it = internalStatusWatchers.iterator();
         while(it.hasNext()) ((EventStatus)it.next()).change(event, status);
         write();
     }
-    
+
     private class StatusFormatter implements GenericTemplate{
         public String getResult(){ return status; }
     }
-    
+
     private List internalStatusWatchers = new ArrayList();
-    
+
     private String status = "";
 }

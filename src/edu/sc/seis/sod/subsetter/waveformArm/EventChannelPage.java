@@ -15,6 +15,7 @@ import edu.sc.seis.sod.database.Status;
 import edu.sc.seis.sod.subsetter.PageSection;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -25,21 +26,21 @@ public class EventChannelPage extends SimpleHTMLPage{
         chanSec = new PageSection("Channels for " + eventOutput);
         sections.add(chanSec);
     }
-    
-    public void add(Channel c, Status string){
+
+    public void add(Channel c, Status string) throws IOException{
         add(c, string, false);
     }
-    
-    public void add(Channel c, Status string, boolean stampTime){
+
+    public void add(Channel c, Status string, boolean stampTime) throws IOException {
         String time = "";
         if(stampTime) time = df.format(ClockUtil.now())  + " ";
         chanSec.append(time + string + " " + ChannelIdUtil.toString(c.get_id()) + "<br>\n");
         write();
     }
-    
+
     public static final DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
-    
+
     PageSection chanSec;
-    
+
     private String eventFormat = CacheEvent.LOC + " " + CacheEvent.TIME + " Mag: " + CacheEvent.MAG + " Depth: " + CacheEvent.DEPTH + " " + CacheEvent.DEPTH_UNIT;
 }

@@ -19,11 +19,12 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
     private RunStatus status;
     private Logger logger = Logger.getLogger(NetworkInfoTemplate.class);
 
+
     public NetworkInfoTemplate(String outputLocation) throws IOException{
         super(outputLocation);
     }
 
-    public void changeStatus(RunStatus status){
+    public void changeStatus(RunStatus status) throws IOException {
         this.status = status;
         try {
             write();
@@ -31,7 +32,7 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
             CommonAccess.handleException(e, "trouble writing file");
         }
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -42,7 +43,7 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
         }
         return null;
     }
-    
+
     public void write() throws IOException{
         logger.debug("writing " + getOutputDirectory() + "/" + getFilename());
         super.write();

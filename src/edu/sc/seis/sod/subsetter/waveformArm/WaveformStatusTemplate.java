@@ -21,7 +21,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements WaveF
         super(el.getAttribute("outputLocation"));
         //TODO get parsing setup
     }
-    
+
     protected Object getTemplate(String tag, Element el) {
         if(tag.equals("events")){
             WaveformEventGroup ect = new WaveformEventGroup(el);
@@ -30,12 +30,12 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements WaveF
         }
         return null;
     }
-    
-    public void update(EventChannelPair ecp) {
+
+    public void update(EventChannelPair ecp) throws Exception{
         Iterator it = eventTemplates.iterator();
         while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
         write();
     }
-    
+
     private List eventTemplates = new ArrayList();
 }

@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SimpleHTMLPage{
-    public SimpleHTMLPage(String title, File location){
+    public SimpleHTMLPage(String title, File location) throws IOException{
         this(title, location, true);
     }
 
@@ -93,7 +93,7 @@ public class SimpleHTMLPage{
         }
     }
 
-    public String dotsToCommonBase(SimpleHTMLPage p){
+    public String dotsToCommonBase(SimpleHTMLPage p) throws IOException{
         return dotsToCommonBase(getCommonBaseDistance(p.getDirectory()));
     }
 

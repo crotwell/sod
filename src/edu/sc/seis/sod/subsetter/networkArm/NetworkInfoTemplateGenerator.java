@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class NetworkInfoTemplateGenerator implements NetworkStatus {
-    
+
     private String fileDir, netsOutputFileName, stasOutputFileName, sitesOutputFileName, chansOutputFileName;
     private NetworkFormatter netFormatter;
     private StationFormatter staFormatter;
@@ -37,7 +37,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
     private HashMap channelTemplates = new HashMap(); //channel templates by site
     private Logger logger = Logger.getLogger(NetworkInfoTemplateGenerator.class);
     private Element netConfig, staConfig, siteConfig, chanConfig;
-    
+
     public NetworkInfoTemplateGenerator(Element el) throws Exception{
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -87,39 +87,39 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                 "The configuration element must contain a fileDir, netsOutputFileName, netDir, stationsOutputFileName, stationDir, sitesOutputFileName,"
                     + " siteDir, channelsOutputFileName, netConfig, stationConfig, siteConfig, and chanConfig.");
         }
-        
+
         netTemplate = new NetworkStatusTemplate(netConfig, fileDir + '/' + netsOutputFileName);
     }
-    
+
     public void change(NetworkAccess net, RunStatus status){
         netTemplate.change(net, status);
         getStationsInNetworkTemplate(net);
     }
-    
-    public void change(Station station, RunStatus status){
+
+    public void change(Station station, RunStatus status) throws IOException {
         logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
         StationsInNetworkTemplate snt = getStationsInNetworkTemplate(station);
         snt.change(station, status);
         getSitesInStationTemplate(station);
     }
-    
-    public void change(Site site, RunStatus status) {
+
+    public void change(Site site, RunStatus status) throws IOException {
         logger.debug("change(site, status): " + SiteFormatter.formatSiteCode(site.get_code()) + ", " + status.toString());
         SitesInStationTemplate sst = getSitesInStationTemplate(site);
         sst.change(site, status);
         getChannelsInSiteTemplate(site);
     }
-    
-    public void change(Channel channel, RunStatus status) {
+
+    public void change(Channel channel, RunStatus status) throws IOException {
         logger.debug("change(channel, status): " + channel.get_code() + ", " + status.toString());
         ChannelsInSiteTemplate cst = getChannelsInSiteTemplate(channel);
         cst.change(channel, status);
     }
-    
+
     public NetworkStatusTemplate getNetworkStatusTemplate(){
         return netTemplate;
     }
-    
+
     public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net){
         if (!contains(net)){
             try {
@@ -138,11 +138,11 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
         return (StationsInNetworkTemplate)stationTemplates.get(net.get_attributes().name
                                                                    + net.get_attributes().get_id().begin_time.date_time);
     }
-    
+
     public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station){
         return getStationsInNetworkTemplate(getNetworkFromStation(station));
     }
-    
+
     public SitesInStationTemplate getSitesInStationTemplate(Station station){
         if (!contains(station)){
             try {
@@ -164,11 +164,11 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
         return (SitesInStationTemplate)siteTemplates.get(station.name
                                                              + station.get_id().begin_time.date_time);
     }
-    
+
     public SitesInStationTemplate getSitesInStationTemplate(Site site){
         return getSitesInStationTemplate(site.my_station);
     }
-    
+
     public ChannelsInSiteTemplate getChannelsInSiteTemplate(Site site){
         if (!contains(site)){
             try {
@@ -195,11 +195,11 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
                                                                 + SiteFormatter.formatSiteCode(site.get_code())
                                                                 + site.get_id().begin_time.date_time);
     }
-    
+
     public ChannelsInSiteTemplate getChannelsInSiteTemplate(Channel chan){
         return getChannelsInSiteTemplate(chan.my_site);
     }
-    
+
     public NetworkAccess getNetworkFromStation(Station station){
         NetworkAccess staNet = null;
         Iterator it = stationTemplates.keySet().iterator();
@@ -216,25 +216,28 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
         }
         return staNet;
     }
-    
+
     public boolean contains(NetworkAccess net){
         return stationTemplates.containsKey(net.get_attributes().name
                                                 + net.get_attributes().get_id().begin_time.date_time);
     }
-    
+
     public boolean contains(Station sta){
         return siteTemplates.containsKey(sta.name + sta.get_id().begin_time.date_time);
     }
-    
+
     public boolean contains(Site site){
         return channelTemplates.containsKey(site.my_station.my_network.get_code()
                                                 + site.my_station.get_code()
                                                 + SiteFormatter.formatSiteCode(site.get_code())
                                                 + site.get_id().begin_time.date_time);
     }
-    
-    public void setArmStatus(String status) { netTemplate.setArmStatus(status); }
-    
+
+    public void setArmStatus(String status)  throws IOException {
+        netTemplate.setArmStatus(status);
+    }
+
 }
+
 
 

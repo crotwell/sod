@@ -10,24 +10,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 public class WaveformEventTemplate extends FileWritingTemplate implements WaveFormStatus{
-    public WaveformEventTemplate(Element el, EventAccessOperations event) throws IOException{
+    public WaveformEventTemplate(Element el, EventAccessOperations event) throws Exception {
         this(TemplateFileLoader.getTemplate(el),
              el.getAttribute("outputLocation"),
              event);
     }
-    
-    public WaveformEventTemplate(Element el, String outputLocation, EventAccessOperations event){
+
+    public WaveformEventTemplate(Element el, String outputLocation, EventAccessOperations event) throws IOException {
         super(outputLocation);
         this.event = event;
         parse(el);
         if(Start.getWaveformArm() != null) Start.getWaveformArm().addStatusMonitor(this);
         write();
     }
-    
-    public void update(EventChannelPair ecp) {
+
+    public void update(EventChannelPair ecp) throws Exception {
         if(ecp.getEvent().equals(event)){
             Iterator it = waveformStatusListeners.iterator();
             while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
@@ -37,7 +39,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             write();
         }
     }
-    
+
     protected Object getTemplate(String tag, Element el) {
         if(tag.equals("channels")) {
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
@@ -57,20 +59,20 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
         if(tag.equals("now")) return new NowTemplate();
         return null;
     }
-    
+
     private class EventTemplate implements GenericTemplate{
         public EventTemplate(Element el){ formatter = new EventFormatter(el); }
-        
+
         public String getResult() { return formatter.getResult(event); }
-        
+
         private EventFormatter formatter;
     }
-    
+
     private EventAccessOperations event;
-    
+
     private static MapPool pool = new MapPool(2);
-    
+
     private List waveformStatusListeners = new ArrayList();
-    
+
     private List channelListeners = new ArrayList();
 }
