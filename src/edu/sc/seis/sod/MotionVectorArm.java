@@ -292,7 +292,7 @@ public class MotionVectorArm implements Subsetter{
                                 return;
                             }
                             logger.debug("after successful retrieve_seismograms");
-                            if (localSeismograms.length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, infilters[i][0].channel_id)) {
+                            if (localSeismograms[i].length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[i][0].channel_id, infilters[i][0].channel_id)) {
                                 // must be server error
                                 logger.warn("X Channel id in returned seismogram doesn not match channelid in request. req="
                                                 +ChannelIdUtil.toString(infilters[i][0].channel_id)
