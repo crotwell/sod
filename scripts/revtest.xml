@@ -45,10 +45,10 @@
                     <max>1000</max>
                 </unitRange>
             </originDepthRange>
-            <eventTimeRange>
+            <originTimeRange>
                 <startTime>20040501T00:00:00.001Z</startTime>
                 <endTime>20050131T23:59:59.999Z</endTime>
-            </eventTimeRange>
+            </originTimeRange>
             <magnitudeRange>
                 <min>3.0</min>
                 <max>10.0</max>
