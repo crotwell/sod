@@ -1,159 +1,135 @@
-<?xml version="1.0" ?>
-
-<sod:sod xmlns:sod="http://www.seis.sc.edu/xschema/sod/1.0"
-     xsi:schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0 http://www.seis.sc.edu/xschema/sod/1.0/sod.xsd"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
-
-  <properties>
-    <property>
-      <name>edu.sc.seis.sod.databasetype</name>
-      <value>edu.sc.seis.sod.database.HSqlDbManager</value>
-    </property>
-
-    <!-- number of days to get events per request to eventFinder -->
-    <property>
-      <name>edu.sc.seis.sod.daystoincrement</name>
-      <value>7</value>
-    </property>
-
-    <!-- don't go back and reask server for events that may have
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="file:/C:/cygwin/home/groves/sod/relax/sod.rng" type="xml"?>
+<sod>
+    <properties>
+        <property>
+            <name>edu.sc.seis.sod.databasetype</name>
+            <value>edu.sc.seis.sod.database.HSqlDbManager</value>
+        </property>
+        <!-- number of days to get events per request to eventFinder -->
+        <property>
+            <name>edu.sc.seis.sod.daystoincrement</name>
+            <value>7</value>
+        </property>
+        <!-- don't go back and reask server for events that may have
          appeared in server after this was first run. -->
-    <property>
-      <name>edu.sc.seis.sod.database.getNewEvents</name>
-      <value>false</value>
-    </property>
-  </properties>
-
-  <eventArm>
-    <eventFinder>
-      <name>IRIS_EventDC</name>
-      <dns>edu/iris/dmc</dns>
-      <boxArea>
-        <latitudeRange>
-            <min>-90</min>
-            <max>90</max>
-        </latitudeRange>
-        <longitudeRange>
-            <min>-180</min>
-            <max>180</max>
-        </longitudeRange>
-      </boxArea>
-      <originDepthRange>
-        <unitRange>
-            <unit>KILOMETER</unit>
-            <min>0</min>
-            <max>1000</max>
-        </unitRange>
-      </originDepthRange>
-      <eventTimeRange>
-        <timeRange>
-            <startTime>20030101T00:00:00.001Z</startTime>
-            <endTime>20030131T23:59:59.999Z</endTime>
-        </timeRange>
-      </eventTimeRange>
-      <magnitudeRange>
-        <magType>%</magType>
-        <min>6.0</min>
-        <max>10.0</max>
-      </magnitudeRange>
-      <catalog><value>WHDF</value></catalog>
-      <contributor>NEIC</contributor>
-    </eventFinder>
-
-    <printLineEventProcess/>
-  </eventArm>
-
-  <networkArm>
-    <networkFinder>
-        <description>Connect to the IRIS networkDC</description>
-        <name>IRIS_NetworkDC</name>
-        <dns>edu/iris/dmc</dns>
-        <refreshInterval>
-            <unit>MINUTE</unit>
-            <value>3000</value>
-        </refreshInterval>
-    </networkFinder>
-
-    <networkCode>II</networkCode>
-
-    <stationEffectiveTimeOverlap>
-      <effectiveTimeOverlap>
-        <min>20030101T00:00:00.001Z</min>
-        <max>20030131T23:59:59.999Z</max>
-      </effectiveTimeOverlap>
-    </stationEffectiveTimeOverlap>
-
-    <siteAND>
-      <siteOR>
-        <siteCode>  </siteCode>
-        <siteCode>00</siteCode>
-      </siteOR>
-      <siteEffectiveTimeOverlap>
-        <effectiveTimeOverlap>
-          <min>20030101T00:00:00.001Z</min>
-          <max>20030131T23:59:59.999Z</max>
-        </effectiveTimeOverlap>
-      </siteEffectiveTimeOverlap>
-    </siteAND>
-
-    <channelAND>
-      <bandCode>L</bandCode>
-      <channelNOT>
-        <!-- to prevent LOG channels -->
-        <gainCode>O</gainCode>
-      </channelNOT>
-      <channelEffectiveTimeOverlap>
-          <effectiveTimeOverlap>
-              <min>20030101T00:00:00.001Z</min>
-              <max>20030131T23:59:59.999Z</max>
-          </effectiveTimeOverlap>
-      </channelEffectiveTimeOverlap>
-    </channelAND>
-
-    <printlineChannelProcessor/>
-  </networkArm>
-
-  <waveFormArm>
-    <distanceRange>
-      <unit>DEGREE</unit>
-      <min>30</min>
-      <max>90</max>
-    </distanceRange>
-
-    <localSeismogramArm>
-
-    <fixedDataCenter>
-      <name>IRIS_PondDataCenter</name>
-      <dns>edu/iris/dmc</dns>
-    </fixedDataCenter>
-
-    <phaseRequest>
-      <model>prem</model>
-      <beginPhase>ttp</beginPhase>
-      <beginOffset>
-        <unit>SECOND</unit>
-        <value>-60</value>
-      </beginOffset>
-      <endPhase>tts</endPhase>
-      <endOffset>
-        <unit>SECOND</unit>
-        <value>360</value>
-      </endOffset>
-    </phaseRequest>
-
-
-    <someCoverage/>
-
-    <printlineSeismogramProcess/>
-
-    <sacFileProcessor>
-      <dataDirectory>POND_II</dataDirectory>
-      <eventDirLabel>
-        Event_
-        <originTime>yyyy_DDD_HH_mm_ss</originTime>
-      </eventDirLabel>
-    </sacFileProcessor>
-
-    </localSeismogramArm>
-   </waveFormArm>
-</sod:sod>
+        <property>
+            <name>edu.sc.seis.sod.database.getNewEvents</name>
+            <value>false</value>
+        </property>
+    </properties>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <boxArea>
+                <latitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-90</min>
+                    <max>90</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <unit>DEGREE</unit>
+                    <min>-180</min>
+                    <max>180</max>
+                </longitudeRange>
+            </boxArea>
+            <originDepthRange>
+                <unit>KILOMETER</unit>
+                <min>0</min>
+                <max>1000</max>
+            </originDepthRange>
+            <eventTimeRange>
+                <timeRange>
+                    <startTime>20030101T00:00:00.001Z</startTime>
+                    <endTime>20030131T23:59:59.999Z</endTime>
+                </timeRange>
+            </eventTimeRange>
+            <magnitudeRange>
+                <magType>%</magType>
+                <min>6.0</min>
+                <max>10.0</max>
+            </magnitudeRange>
+            <catalog>WHDF </catalog>
+            <contributor>NEIC</contributor>
+        </eventFinder>
+        <printLineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <description>Connect to the IRIS networkDC</description>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+            <refreshInterval>
+                <unit>MINUTE</unit>
+                <value>3000</value>
+            </refreshInterval>
+        </networkFinder>
+        <networkCode>II</networkCode>
+        <stationEffectiveTimeOverlap>
+            <effectiveTimeOverlap>
+                <min>20030101T00:00:00.001Z</min>
+                <max>20030131T23:59:59.999Z</max>
+            </effectiveTimeOverlap>
+        </stationEffectiveTimeOverlap>
+        <siteAND>
+            <siteOR>
+                <siteCode/>
+                <siteCode>00</siteCode>
+            </siteOR>
+            <siteEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                    <min>20030101T00:00:00.001Z</min>
+                    <max>20030131T23:59:59.999Z</max>
+                </effectiveTimeOverlap>
+            </siteEffectiveTimeOverlap>
+        </siteAND>
+        <channelAND>
+            <bandCode>L</bandCode>
+            <channelNOT>
+                <!-- to prevent LOG channels -->
+                <gainCode>O</gainCode>
+            </channelNOT>
+            <channelEffectiveTimeOverlap>
+                <effectiveTimeOverlap>
+                    <min>20030101T00:00:00.001Z</min>
+                    <max>20030131T23:59:59.999Z</max>
+                </effectiveTimeOverlap>
+            </channelEffectiveTimeOverlap>
+        </channelAND>
+        <printlineChannelProcessor/>
+    </networkArm>
+    <waveFormArm>
+            <distanceRange>
+                <unit>DEGREE</unit>
+                <min>30</min>
+                <max>90</max>
+            </distanceRange>
+        <localSeismogramArm>
+            <phaseRequest>
+                <model>prem</model>
+                <beginPhase>ttp</beginPhase>
+                <beginOffset>
+                    <unit>SECOND</unit>
+                    <value>-60</value>
+                </beginOffset>
+                <endPhase>tts</endPhase>
+                <endOffset>
+                    <unit>SECOND</unit>
+                    <value>360</value>
+                </endOffset>
+            </phaseRequest>
+            <fixedDataCenter>
+                <name>IRIS_PondDataCenter</name>
+                <dns>edu/iris/dmc</dns>
+            </fixedDataCenter>
+            <someCoverage/>
+            <printlineSeismogramProcess/>
+            <sacFileProcessor>
+                <dataDirectory>POND_II</dataDirectory>
+                <eventDirLabel> Event_ <originTime>yyyy_DDD_HH_mm_ss</originTime>
+                </eventDirLabel>
+            </sacFileProcessor>
+        </localSeismogramArm>
+    </waveFormArm>
+</sod>
