@@ -75,9 +75,7 @@
             </originPointBackAzimuth>
             <removeEventDuplicate/>
         </originAND>
-        <externalEventProcess>
-            <classname>edu.sc.seis.sod.process.eventArm.PrintLineEventProcess</classname>
-        </externalEventProcess>
+        <printlineEventProcess/>
         <eventStatusTemplate>
             <template>jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml</template>
         </eventStatusTemplate>

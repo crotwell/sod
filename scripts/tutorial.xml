@@ -55,18 +55,8 @@
             <catalog>PREF</catalog>
             <contributor>IRIS</contributor>
         </eventFinder>
-        <originAND>
-            <removeEventDuplicate/>
-            <externalOriginSubsetter>
-                <classname>edu.sc.seis.sod.subsetter.eventArm.OriginDepthRange</classname>
-                <unit>KILOMETER</unit>
-                <min>0</min>
-                <max>1000</max>
-            </externalOriginSubsetter>
-        </originAND>
-        <externalEventProcess>
-            <classname>edu.sc.seis.sod.process.eventArm.PrintLineEventProcess</classname>
-        </externalEventProcess>
+        <removeEventDuplicate/>
+        <printLineEventProcess/>
         <eventStatusTemplate>
             <template>jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml</template>
         </eventStatusTemplate>
@@ -106,9 +96,6 @@
                 <endTime>20030131T23:59:59.999Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
-        <externalNetworkProcess>
-            <classname>edu.sc.seis.sod.process.networkArm.PrintlineChannelProcessor</classname>
-        </externalNetworkProcess>
         <networkInfoTemplateGenerator>
             <netConfig>
                 <template>jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml</template>
