@@ -110,7 +110,7 @@
                       <min>0</min>
                       <max>360</max>
                    </originPointBackAzimuth>
-                <originAND>
+                </originAND>
 
                 <eventStatusTemplate>
 			<!--<fileDir>status</fileDir>-->
