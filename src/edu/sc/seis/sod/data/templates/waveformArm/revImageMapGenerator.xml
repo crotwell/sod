@@ -155,9 +155,6 @@ $!chanContext.sod_phaseStoN_ttp.when</td>
 <area shape="rectangle" coords="${flag_S_LB_X},${flag_S_UB_Y},${flag_S_UB_X},${flag_S_LB_Y}" href="javascript:flipImage('${count}','${sImage}','${originalImgLoc}')"/>
 #end
 </map>
-#if(!${flagDataS})
-<p>NO S FLAG</p>
-#end
 
 #set ( $count = $count + 1)
 #else
