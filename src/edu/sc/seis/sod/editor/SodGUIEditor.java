@@ -99,6 +99,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("azimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("backAzimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("refreshInterval", new RefreshIntervalEditor());
+        editors.put("responseWriter", new ResponseWriterEditor());
 
         SubelementEater se = new SubelementEater();
         editors.put("networkInfoTemplateGenerator", se);

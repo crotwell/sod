@@ -84,3 +84,9 @@ localSeismogramTemplateGenerator=Generate event station summary HTML
 waveformEventTemplateGenerator=Generate event summary HTML
 
 saveSeismogramToFile=Save waveforms
+responseWriter=Save Response to File
+type=Type
+directory=Directory
+filePattern=File Pattern
+resp=IRIS Resp File
+sac=SAC Pole Zero
