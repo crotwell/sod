@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
-    <start>
-        <ref name="status"/>
-    </start>
-    <define name="status">
-        <choice>
-            <element name="logFactor5EventStatus">
-                <empty/>
-            </element>
-            <ref name="simpleHTMLEventStatus"/>
-            <ref name="externalEventStatus"/>
-        </choice>
-    </define>
-    <define name="simpleHTMLEventStatus">
-        <element name="simpleHTMLEventStatus">
-            <element name="outputDirectory">
-                <data type="string"/>
-            </element>
-        </element>
-    </define>
-    <define name="externalEventStatus">
-        <element name="externalEventStatus">
-            <element name="classname">
-                <data type="string"/>
-            </element>
-            <zeroOrMore>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </zeroOrMore>
-        </element>
-    </define>
+        xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+        <start>
+                <ref name="status"/>
+        </start>
+        <define name="status">
+                <choice>
+                        <element name="logFactor5EventStatus">
+                                <empty/>
+                        </element>
+                        <ref name="simpleHTMLEventStatus"/>
+                        <ref name="externalEventStatus"/>
+                        <ref name="eventStatusTemplate"/>
+                </choice>
+        </define>
+        <define name="simpleHTMLEventStatus">
+                <element name="simpleHTMLEventStatus">
+                        <element name="outputDirectory">
+                                <data type="string"/>
+                        </element>
+                </element>
+        </define>
+        <define name="eventStatusTemplate">
+                <element name="eventStatusTemplate">
+                        <attribute name="link" ns="http://www.w3.org/1999/xlink/"/>
+                        <attribute name="outputLocation"/>
+                </element>
+        </define>
+        <define name="externalEventStatus">
+                <element name="externalEventStatus">
+                        <element name="classname">
+                                <data type="string"/>
+                        </element>
+                        <zeroOrMore>
+                                <externalRef href="../base/externalRef/anyXML.rng"/>
+                        </zeroOrMore>
+                </element>
+        </define>
 </grammar>
