@@ -29,13 +29,13 @@ import org.apache.log4j.*;
 public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     public WaveFormArmThread (EventAccessOperations eventAccess, 
 			      EventStationSubsetter eventStationSubsetter,
-			      FixedDataCenter fixedDataCenterSubsetter, 
+			      SeismogramDCLocator seismogramDCLocator, 
 			      LocalSeismogramArm localSeismogramArm,
 			      Channel[] successfulChannels, WaveFormArm parent, 
 			      SodExceptionListener sodExceptionListener){
 	this.eventAccess = eventAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
-	this.fixedDataCenterSubsetter = fixedDataCenterSubsetter;
+	this.seismogramDCLocator = seismogramDCLocator;
 	this.localSeismogramArm = localSeismogramArm;
 	this.networkArm = networkArm;
 	this.successfulChannels = successfulChannels;
@@ -61,11 +61,25 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
      */
     public void processWaveFormArm(EventAccessOperations eventAccess) throws Exception{
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
-	     if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
-		 DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
-		 localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter], dataCenter);
-		    }
-	  	}
+	    boolean bESS;
+	    synchronized(eventStationSubsetter) {
+		bESS = eventStationSubsetter.accept(eventAccess, 
+						 null, 
+						 successfulChannels[counter].my_site.my_station, 
+						 null);
+	    }
+	    if( bESS ) {
+		DataCenter dataCenter;
+		synchronized(seismogramDCLocator) {
+		    dataCenter = seismogramDCLocator.getSeismogramDC();
+		}
+		localSeismogramArm.processLocalSeismogramArm(eventAccess, 
+							     null, 
+							     successfulChannels[counter], 
+							     dataCenter);
+	    }
+	}
+	
 	parent.signalWaveFormArm();
     }
 
@@ -73,7 +87,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 
-    private FixedDataCenter fixedDataCenterSubsetter = null;
+    private SeismogramDCLocator seismogramDCLocator = null;
 
     private LocalSeismogramArm localSeismogramArm = null;
 

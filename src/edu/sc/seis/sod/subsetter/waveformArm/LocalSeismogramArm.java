@@ -72,7 +72,6 @@ public class LocalSeismogramArm implements Subsetter{
 		}
 		Object sodElement = SodUtil.load((Element)node,"edu.sc.seis.sod.subsetter.waveFormArm");
 		if(sodElement instanceof EventChannelSubsetter) eventChannelSubsetter = (EventChannelSubsetter)sodElement;
-		//else if(sodElement instanceof FixedDataCenter) fixedDataCenterSubsetter = (FixedDataCenter)sodElement;
 		else if(sodElement instanceof RequestGenerator) requestGeneratorSubsetter = (RequestGenerator)sodElement;
 	
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
@@ -83,9 +82,14 @@ public class LocalSeismogramArm implements Subsetter{
 
     }
 
-    public void processLocalSeismogramArm(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter
-    dataCenter) throws Exception{
-	processEventChannelSubsetter(eventAccess, networkAccess, channel, dataCenter);
+    public void processLocalSeismogramArm(EventAccessOperations eventAccess, 
+					  NetworkAccess networkAccess, 
+					  Channel channel, 
+					  DataCenter dataCenter) throws Exception{
+	processEventChannelSubsetter(eventAccess, 
+				     networkAccess, 
+				     channel, 
+				     dataCenter);
 	
     }
 
@@ -97,8 +101,14 @@ public class LocalSeismogramArm implements Subsetter{
     public void processEventChannelSubsetter(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel,
     DataCenter dataCenter) throws Exception{
 
-	if(eventChannelSubsetter.accept(eventAccess, networkAccess, channel, null)) {
-	    //processFixedDataCenter(eventAccess, networkAccess, channel);
+	boolean b;
+	synchronized (eventChannelSubsetter) {
+	    b = eventChannelSubsetter.accept(eventAccess, 
+					     networkAccess, 
+					     channel, 
+					     null);
+	}
+	if( b ) {
 	     processRequestGeneratorSubsetter(eventAccess, 
 					      networkAccess, 
 					      channel, 
@@ -106,15 +116,6 @@ public class LocalSeismogramArm implements Subsetter{
 	}
     }
 
-    /**
-     * Describe <code>processFixedDataCenter</code> method here.
-     *
-    
-    public void processFixedDataCenter(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel) throws Exception{
-	DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
-	processRequestGeneratorSubsetter(eventAccess, networkAccess, channel, dataCenter);
-	
-    }*/
 
     /**
      * Describe <code>processRequestGeneratorSubsetter</code> method here.
@@ -126,11 +127,15 @@ public class LocalSeismogramArm implements Subsetter{
 						 DataCenter dataCenter) 
 	throws Exception
     {
-	RequestFilter[] infilters 
-	    = requestGeneratorSubsetter.generateRequest(eventAccess, 
-							networkAccess, 
-							channel, 
-							null); 
+	RequestFilter[] infilters;
+	synchronized (requestGeneratorSubsetter) {
+	    infilters = 
+		requestGeneratorSubsetter.generateRequest(eventAccess, 
+							  networkAccess, 
+							  channel, 
+							  null);
+	}
+ 
 	logger.debug("BEFORE getting seismograms "+infilters.length);
 	for (int i=0; i<infilters.length; i++) {
 	    logger.debug("Getting seismograms "+ChannelIdUtil.toString(infilters[i].channel_id)+" from "+infilters[i].start_time.date_time+" to "+infilters[i].end_time.date_time);
@@ -138,7 +143,12 @@ public class LocalSeismogramArm implements Subsetter{
 
 	RequestFilter[] outfilters = dataCenter.available_data(infilters); 
 
-	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
+	processAvailableDataSubsetter(eventAccess, 
+				      networkAccess, 
+				      channel, 
+				      dataCenter, 
+				      infilters, 
+				      outfilters);
 
 // 	if (outfilters.length != 0) {
 // 	    processAvailableDataSubsetter(eventAccess, networkAccess, channel, dataCenter, infilters, outfilters);
@@ -161,12 +171,16 @@ public class LocalSeismogramArm implements Subsetter{
 					      RequestFilter[] outfilters)
 	throws Exception
     {
-	if(availableDataSubsetter.accept(eventAccess, 
-					 networkAccess, 
-					 channel, 
-					 infilters, 
-					 outfilters, 
-					 null)) {
+	boolean b;
+	synchronized (availableDataSubsetter) {
+	    b = availableDataSubsetter.accept(eventAccess, 
+					      networkAccess, 
+					      channel, 
+					      infilters, 
+					      outfilters, 
+					      null);
+	}
+	if( b ) {
 	    logger.debug("Using infilters, fix this when DMC fixes server");
 	    
 	    MicroSecondDate before = new MicroSecondDate();
@@ -188,40 +202,80 @@ public class LocalSeismogramArm implements Subsetter{
 		}
 	    } // end of for (int i=0; i<localSeismograms.length; i++)
 	    
-	    processLocalSeismogramSubsetter(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
+	    processLocalSeismogramSubsetter(eventAccess, 
+					    networkAccess, 
+					    channel, 
+					    infilters, 
+					    outfilters, 
+					    localSeismograms);
 	}
     }
     
-    public void processLocalSeismogramSubsetter
-	(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception{ 
-	
-	if(localSeismogramSubsetter.accept(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null)) {
+    public void processLocalSeismogramSubsetter	(EventAccessOperations eventAccess, 
+						 NetworkAccess networkAccess, 
+						 Channel channel, 
+						 RequestFilter[] infilters, 
+						 RequestFilter[] outfilters, 
+						 LocalSeismogram[] localSeismograms) throws Exception { 
+	boolean b;
+	synchronized (localSeismogramSubsetter) {
+	    b = localSeismogramSubsetter.accept(eventAccess, 
+						networkAccess, 
+						channel, 
+						infilters, 
+						outfilters, 
+						localSeismograms, 
+						null);
+	}
+	if( b ) {
 
-	    processSeismograms(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms);
+	    processSeismograms(eventAccess, 
+			       networkAccess, 
+			       channel, 
+			       infilters, 
+			       outfilters, 
+			       localSeismograms);
 
 	}
 	    
     }
     
-    public void processSeismograms	
-	(EventAccessOperations eventAccess, NetworkAccess networkAccess, Channel channel, RequestFilter[] infilters, RequestFilter[] outfilters, LocalSeismogram[] localSeismograms) throws Exception {
-
-	waveFormArmProcessSubsetter.process(eventAccess, networkAccess, channel, infilters, outfilters, localSeismograms, null);
-    logger.debug("finished with "+ChannelIdUtil.toStringNoDates(channel.get_id()));
+    public void processSeismograms(EventAccessOperations eventAccess, 
+				   NetworkAccess networkAccess, 
+				   Channel channel, 
+				   RequestFilter[] infilters, 
+				   RequestFilter[] outfilters, 
+				   LocalSeismogram[] localSeismograms) 
+	throws Exception 
+    {
+	synchronized (waveFormArmProcessSubsetter) {
+	waveFormArmProcessSubsetter.process(eventAccess, 
+					    networkAccess, 
+					    channel, 
+					    infilters, 
+					    outfilters, 
+					    localSeismograms, 
+					    null);
+	}
+	logger.debug("finished with "+
+		     ChannelIdUtil.toStringNoDates(channel.get_id()));
     }
 
 
-    private EventChannelSubsetter eventChannelSubsetter = new NullEventChannelSubsetter();
+    private EventChannelSubsetter eventChannelSubsetter = 
+	new NullEventChannelSubsetter();
     
-    private FixedDataCenter fixedDataCenterSubsetter = null;
+    private RequestGenerator requestGeneratorSubsetter = 
+	new NullRequestGenerator();
     
-    private RequestGenerator requestGeneratorSubsetter = new NullRequestGenerator();
-    
-    private AvailableDataSubsetter availableDataSubsetter = new NullAvailableDataSubsetter();
+    private AvailableDataSubsetter availableDataSubsetter = 
+	new NullAvailableDataSubsetter();
 
-    private LocalSeismogramSubsetter localSeismogramSubsetter = new NullLocalSeismogramSubsetter();
+    private LocalSeismogramSubsetter localSeismogramSubsetter = 
+	new NullLocalSeismogramSubsetter();
 
-    private LocalSeismogramProcess waveFormArmProcessSubsetter = new NullWaveformProcess();
+    private LocalSeismogramProcess waveFormArmProcessSubsetter = 
+	new NullWaveformProcess();
     
     static Category logger = 
 	Category.getInstance(LocalSeismogramArm.class.getName());
