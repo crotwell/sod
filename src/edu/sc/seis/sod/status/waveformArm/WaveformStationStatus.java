@@ -18,7 +18,7 @@ import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
-import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
+import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.waveformArm.StationWaveformContext;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 
 
 
-public class WaveformStationStatus extends AbstractVelocityStatus implements WaveformArmMonitor, NetworkArmMonitor {
+public class WaveformStationStatus extends AbstractVelocityStatus implements WaveformMonitor, NetworkMonitor {
 
     public WaveformStationStatus(String fileDir, String templateName) throws IOException, SQLException {
         super( fileDir, templateName);

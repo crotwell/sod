@@ -12,7 +12,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +23,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-public class WaveformStatusTemplate extends FileWritingTemplate implements WaveformArmMonitor{
+public class WaveformStatusTemplate extends FileWritingTemplate implements WaveformMonitor{
     public WaveformStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException, ConfigurationException{
         super(extractConstructorBaseDirArg(el), extractConstructorFilenameArg(el));
         Element config = TemplateFileLoader.getTemplate(SodUtil.getElement(el, "config"));
@@ -65,7 +65,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements Wavef
 
     public void update(EventChannelPair ecp) {
         Iterator it = eventTemplates.iterator();
-        while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
+        while(it.hasNext()) ((WaveformMonitor)it.next()).update(ecp);
         write();
     }
 

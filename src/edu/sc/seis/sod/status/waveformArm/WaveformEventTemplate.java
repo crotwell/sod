@@ -10,7 +10,7 @@ import edu.sc.seis.sod.Stage;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.w3c.dom.Element;
 
-public class WaveformEventTemplate extends Template implements WaveformArmMonitor{
+public class WaveformEventTemplate extends Template implements WaveformMonitor{
     public WaveformEventTemplate(Element el, String baseDir,
                                  EventFormatter dirNameCreator, String pageName) throws IOException, ConfigurationException {
         this.baseDir = baseDir;

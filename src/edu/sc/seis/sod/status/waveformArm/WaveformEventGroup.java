@@ -3,13 +3,13 @@ package edu.sc.seis.sod.status.waveformArm;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.status.eventArm.EventGroupTemplate;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.w3c.dom.Element;
 
-public class WaveformEventGroup extends EventGroupTemplate implements WaveformArmMonitor{
+public class WaveformEventGroup extends EventGroupTemplate implements WaveformMonitor{
     public WaveformEventGroup(){ useDefaultConfig(); }
 
     public WaveformEventGroup(Element el) throws ConfigurationException {
@@ -30,7 +30,7 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveformAr
 
     public void update(EventChannelPair ecp) {
         Iterator it = ecpListeners.iterator();
-        while(it.hasNext())((WaveformArmMonitor)it.next()).update(ecp);
+        while(it.hasNext())((WaveformMonitor)it.next()).update(ecp);
     }
 
     private List ecpListeners = new ArrayList();

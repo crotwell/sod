@@ -16,7 +16,7 @@ import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
-import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
+import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.status.networkArm.VelocityStationGetter;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 
 
-public class WaveformNetworkStatus extends AbstractVelocityStatus implements WaveformArmMonitor, NetworkArmMonitor {
+public class WaveformNetworkStatus extends AbstractVelocityStatus implements WaveformMonitor, NetworkMonitor {
     public WaveformNetworkStatus(Element config) throws SQLException, MalformedURLException, IOException {
         super(config);
         String networkListLoc = getNestedTextForElement("networkListTemplate",

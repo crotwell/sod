@@ -14,10 +14,10 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
 
-public class WaveformEventTemplateGenerator implements EventArmMonitor,
-        WaveformArmMonitor {
+public class WaveformEventTemplateGenerator implements EventMonitor,
+        WaveformMonitor {
 
     public WaveformEventTemplateGenerator(Element el) throws IOException,
             SAXException, ParserConfigurationException, ConfigurationException {
