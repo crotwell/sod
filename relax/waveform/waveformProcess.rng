@@ -47,6 +47,7 @@
             <ref name="noDataGaps"/>
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
+            <ref name="embeddedEventChannelProcessor"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -310,7 +311,7 @@
                                 <min>0</min>
                                 <max>180</max>
                             </distanceRange>
-                           <percentSeisHeight>10</percentSeisHeight>
+                            <percentSeisHeight>10</percentSeisHeight>
                             <recordSectionSize>
                                 <width>500</width>
                                 <height>500</height>
@@ -370,7 +371,7 @@
                 <ref name="percentSeisHeight"/>
             </optional>
             <optional>
-               <ref name="minimumSpacing"/>
+                <ref name="minimumSpacing"/>
             </optional>
             <optional>
                 <ref name="recordSectionSize"/>
@@ -403,22 +404,23 @@
         </element>
     </define>
     <define name="percentSeisHeight">
-    	<element name="percentSeisHeight">
-    		 <xsd:annotation>
-                        <description>Height of the seismogram as a percentage of recordsection height</description>
-              </xsd:annotation>
-              <data type="double"/>
+        <element name="percentSeisHeight">
+            <xsd:annotation>
+                <description>Height of the seismogram as a percentage of recordsection
+                height</description>
+            </xsd:annotation>
+            <data type="double"/>
         </element>
     </define>
     <define name="minimumSpacing">
-	   <element name="minimumSpacing">
-                    <xsd:annotation>
-                        <description>Minimum spacing in degrees between seismograms in the
-                            recordsection</description>
-                    </xsd:annotation>
-                    <data type="double"/>
-      </element>
-     </define>
+        <element name="minimumSpacing">
+            <xsd:annotation>
+                <description>Minimum spacing in degrees between seismograms in the
+                recordsection</description>
+            </xsd:annotation>
+            <data type="double"/>
+        </element>
+    </define>
     <define name="recordSectionGrouping">
         <element name="recordSectionGrouping">
             <xsd:annotation>
@@ -688,13 +690,19 @@
     <define name="integrate">
         <element name="integrate">
             <xsd:annotation>
-                <summary>Integrates the seismograms, changing velocity to displacement for 
-                    example.</summary>
-                <description>This processor integrates each seismogram, using a integration
-                    constant of zero. This can be used to change velocity to displacement.
-                </description>
+                <summary>Integrates the seismograms, changing velocity to displacement for example.</summary>
+                <description>This processor integrates each seismogram, using a integration constant
+                    of zero. This can be used to change velocity to displacement. </description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="embeddedEventChannelProcessor">
+        <element name="embeddedEventChannelProcessor">
+            <xsd:annotation>
+                <summary>Allows any event channel subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="eventChannel.rng"/>
         </element>
     </define>
 </grammar>
