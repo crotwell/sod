@@ -41,6 +41,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 		this.networkArm = networkArm;
 		addSodExceptionListener(sodExceptionListener);
 		this.sodExceptionListener = sodExceptionListener;
+
     }
 	
     /**
@@ -56,6 +57,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	    eventAccess = EventAccessHelper.narrow(Start.getEventQueue().pop());	
 	    Channel[] successfulChannels = networkArm.getSuccessfulChannels();
 	    System.out.println("The name of the event is "+eventAccess.get_attributes().name);
+
 	   
 	    if(eventAccess != null) {
 		if(createNewThread()) {
@@ -125,13 +127,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	notifyAll();
     }
 
-    public String stripColon(String str) {
-
-	String temp = str.replace(':','a');
-	return temp;
-    }
     
+
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
+
 
     private LocalSeismogramArm localSeismogramArm = null;
 
@@ -147,3 +146,4 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	Category.getInstance(WaveFormArm.class.getName());
     
 }
+ 

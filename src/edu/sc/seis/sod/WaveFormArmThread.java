@@ -31,7 +31,8 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
 			      EventStationSubsetter eventStationSubsetter,
 			      FixedDataCenter fixedDataCenterSubsetter, 
 			      LocalSeismogramArm localSeismogramArm,
-			      Channel[] successfulChannels, WaveFormArm parent, SodExceptionListener sodExceptionListener){
+			      Channel[] successfulChannels, WaveFormArm parent, 
+			      SodExceptionListener sodExceptionListener){
 	this.eventAccess = eventAccess;
 	this.eventStationSubsetter = eventStationSubsetter;
 	this.fixedDataCenterSubsetter = fixedDataCenterSubsetter;
@@ -59,20 +60,16 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
      * @exception Exception if an error occurs
      */
     public void processWaveFormArm(EventAccess eventAccess) throws Exception{
-
-
-	
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
-	    if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
+	     if(eventStationSubsetter.accept(eventAccess, null, successfulChannels[counter].my_site.my_station, null)) {
 		 DataCenter dataCenter = fixedDataCenterSubsetter.getSeismogramDC();
-		localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter], dataCenter);  
-	    }
-	}
+		 localSeismogramArm.processLocalSeismogramArm(eventAccess, null, successfulChannels[counter], dataCenter);
+		    }
+	  	}
 	parent.signalWaveFormArm();
-	
     }
 
-    private EventAccess eventAccess;
+     private EventAccess eventAccess;
     
     private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
 

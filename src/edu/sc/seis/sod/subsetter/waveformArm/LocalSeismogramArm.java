@@ -86,7 +86,6 @@ public class LocalSeismogramArm implements Subsetter{
 
     public void processLocalSeismogramArm(EventAccess eventAccess, NetworkAccess networkAccess, Channel channel, DataCenter
     dataCenter) throws Exception{
-	
 	processEventChannelSubsetter(eventAccess, networkAccess, channel, dataCenter);
 	
     }
@@ -159,6 +158,7 @@ public class LocalSeismogramArm implements Subsetter{
 	System.out.println(" ~~~~~~~~ GOT "+localSeismograms.length+" seismograms");
 	
     }
+
 
     private EventChannelSubsetter eventChannelSubsetter = new NullEventChannelSubsetter();
     

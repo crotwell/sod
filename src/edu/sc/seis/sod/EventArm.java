@@ -51,7 +51,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    e.printStackTrace();
 	    notifyListeners(this, e);
 	}
-	Start.getEventQueue().setSourceAlive(false);
+	if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
 	System.out.println("The number of events in the eventQueue are "
 			   +Start.getEventQueue().getLength());
 	
@@ -78,6 +78,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 		}
 		Object sodElement = SodUtil.load((Element)node, "edu.sc.seis.sod.subsetter.eventArm");
 		if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventFinder) eventFinderSubsetter = (edu.sc.seis.sod.subsetter.eventArm.EventFinder)sodElement;
+		else if(sodElement instanceof edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder) eventChannelFinder = (edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder)sodElement;
 		else if(sodElement instanceof EventAttrSubsetter) {
 		    eventAttrSubsetter = (EventAttrSubsetter) sodElement;
 		    
@@ -99,6 +100,15 @@ public class EventArm extends SodExceptionSource implements Runnable{
      */
     public void processEventArm() throws Exception{
 
+	if(eventChannelFinder != null) {
+
+	    Thread thread = new Thread(eventChannelFinder);
+	    thread.start();
+	} else {
+
+	    System.out.println("EventChannelFinder is NULL");
+	}
+	if(eventFinderSubsetter == null) return;
 	EventDC eventdc = eventFinderSubsetter.getEventDC();
 	finder = eventdc.a_finder();
 	String[] searchTypes = new String[0];
@@ -202,6 +212,8 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
 
     private edu.sc.seis.sod.subsetter.eventArm.EventFinder eventFinderSubsetter;
+
+    private edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder eventChannelFinder = null;
 
     private edu.sc.seis.sod.EventAttrSubsetter eventAttrSubsetter = new NullEventAttrSubsetter();
 
