@@ -24,6 +24,10 @@ public class Status{
         return (byte)((getStage().getVal()<<4)+getStanding().getVal());
     }
 
+    public static Status getFromByte(byte val) {
+        return Status.get(Stage.getFromInt(val>>4), Standing.getFromInt(val&0x0F));
+    }
+
     public static Status get(Stage stage, Standing standing){
         return ALL[stage.getVal()][standing.getVal()];
     }

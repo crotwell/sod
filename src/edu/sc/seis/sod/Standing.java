@@ -6,6 +6,8 @@
 
 package edu.sc.seis.sod;
 
+import java.lang.reflect.Field;
+
 public class Standing {
 
     private Standing(int val, String name) {
@@ -25,11 +27,13 @@ public class Standing {
         return ALL[val];
     }
 
-    public static Standing getForName(String name) {
-        for (int i = 0; i < ALL.length; i++) {
-            if (ALL[i].toString().equals(name)) {return ALL[i];}
+    public static Standing getForName(String name) throws NoSuchFieldException {
+        try {
+            Field f = Standing.class.getDeclaredField(name.toUpperCase());
+            return (Standing)f.get(null);
+        } catch (IllegalAccessException e) {
+            throw new NoSuchFieldException("No field with name="+name);
         }
-        throw new IllegalArgumentException("No Standing for name="+name);
     }
 
 
@@ -42,7 +46,7 @@ public class Standing {
     public static final Standing SUCCESS        = new Standing(6, "success");
 
     public static final Standing[] ALL = {
-            INIT,
+        INIT,
             IN_PROG,
             REJECT,
             RETRY,

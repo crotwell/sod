@@ -29,16 +29,19 @@ import java.util.List;
 
 public class JDBCEventStatus extends SodJDBC{
     public JDBCEventStatus() throws SQLException{
-        conn = ConnMgr.getConnection();
-        ea = new JDBCEventAccess(conn);
+        conn = ConnMgr.createConnection();
+        eventAccessTable = new JDBCEventAccess(conn);
         if(!DBUtil.tableExists("eventstatus", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventstatus.create"));
         }
         getStatus = conn.prepareStatement("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
-        putEvent = conn.prepareStatement("INSERT into eventstatus ( eventcondition, eventid ) " +
+        putEvent = conn.prepareStatement("INSERT into eventstatus (eventcondition, eventid) " +
                                              "VALUES (?, ?)");
         updateStatus = conn.prepareStatement("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
+        getNextStmt = conn.prepareStatement("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
+                                                Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                                           Standing.IN_PROG).getAsByte());
         getAllOfEventArmStatus = conn.prepareStatement(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
         getAllOrderByDate  = conn.prepareStatement("SELECT DISTINCT originid, origin_time, origineventid FROM origin ORDER BY origin_time DESC");
     }
@@ -63,7 +66,7 @@ public class JDBCEventStatus extends SodJDBC{
         List evs = new ArrayList();
         while(rs.next()){
             try {
-                evs.add(ea.getEvent(rs.getInt("eventid")));
+                evs.add(eventAccessTable.getEvent(rs.getInt("eventid")));
             } catch (NotFound e) {
                 throw new RuntimeException("this shouldn't happen, the id's in this table are foreign keys from the eventaccess table",
                                            e);
@@ -83,7 +86,7 @@ public class JDBCEventStatus extends SodJDBC{
         List evs = new ArrayList();
         while(rs.next()){
             try {
-                CacheEvent ev = ea.getEvent(rs.getInt(idLoc));
+                CacheEvent ev = eventAccessTable.getEvent(rs.getInt(idLoc));
                 Status stat = getStatus(rs.getInt(idLoc));
                 try {
                     evs.add(new StatefulEvent(ev, stat));
@@ -103,7 +106,7 @@ public class JDBCEventStatus extends SodJDBC{
         ResultSet rs = getAllOrderByDate.executeQuery();
         while(rs.next()){
             try {
-                events.add(ea.getEvent(rs.getInt("origineventid")));
+                events.add(eventAccessTable.getEvent(rs.getInt("origineventid")));
             } catch (NotFound e) {
                 //shouldn't happen, I just got this id
                 CommonAccess.handleException(e, "trouble getting event from id");
@@ -116,27 +119,29 @@ public class JDBCEventStatus extends SodJDBC{
     public Status getStatus(int dbId) throws SQLException, NotFound{
         getStatus.setInt(1, dbId);
         ResultSet rs = getStatus.executeQuery();
-        int val = rs.getInt("eventcondition");
-        if(rs.next())return Status.get(Stage.getFromInt(val>>4), Standing.getFromInt(val&0x0F));
+        if(rs.next()) {
+            byte val = rs.getByte("eventcondition");
+            return Status.getFromByte(val);
+        }
         throw new NotFound("There is no status for that id");
     }
 
     public CacheEvent getEvent(int dbId) throws NotFound, SQLException{
-        return ea.getEvent(dbId);
+        return eventAccessTable.getEvent(dbId);
     }
 
     public int setStatus(EventAccessOperations ev,  Status status)
         throws SQLException {
-        int id = ea.put(ev, null, null, null);
+        int id = eventAccessTable.put(ev, null, null, null);
         setStatus(id, status);
         return id;
     }
 
     public void setStatus(int eventId, Status status) throws SQLException{
         if(tableContains(eventId)){
-            insert(updateStatus, eventId, status.getAsByte());
+            insert(updateStatus, eventId, status);
         }else{
-            insert(putEvent, eventId, status.getAsByte());
+            insert(putEvent, eventId, status);
         }
     }
 
@@ -147,25 +152,23 @@ public class JDBCEventStatus extends SodJDBC{
         return true;
     }
 
-    public void insert(PreparedStatement stmt, int id, int eventArmStatus) throws SQLException{
-        stmt.setInt(1, eventArmStatus);
+    private void insert(PreparedStatement stmt, int id, Status eventArmStatus) throws SQLException{
+        stmt.setInt(1, eventArmStatus.getAsByte());
         stmt.setInt(2, id);
         stmt.executeUpdate();
     }
 
     public int getNext() throws SQLException{
-        Statement stmt = ConnMgr.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " +Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                                                                         Standing.IN_PROG).getAsByte());
+        ResultSet rs = getNextStmt.executeQuery();
         if(rs.next()) return rs.getInt("eventid");
         return -1;
     }
 
-    private JDBCEventAccess ea;
+    private JDBCEventAccess eventAccessTable;
 
     private PreparedStatement getStatus, putEvent, updateStatus,
         getAllOfEventArmStatus, getAllOfWaveformArmStatus,
-        getWaveformStatus, getAllOrderByDate;
+        getWaveformStatus, getAllOrderByDate, getNextStmt;
 
     private Connection conn;
 }

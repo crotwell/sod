@@ -193,10 +193,17 @@ public class WaveformArm implements Runnable {
     }
 
     private void waitForInitialEvent() throws SQLException {
-        while(Start.getEventArm().isAlive() && eventStatus.getNext() == -1){
+        int next;
+        synchronized(eventStatus) {
+            next = eventStatus.getNext();
+        }
+        while(Start.getEventArm().isAlive() && next == -1){
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {}
+            synchronized(eventStatus) {
+                next = eventStatus.getNext();
+            }
         }
     }
 
