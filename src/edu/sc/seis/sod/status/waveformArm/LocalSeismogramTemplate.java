@@ -115,7 +115,7 @@ public class LocalSeismogramTemplate extends Template{
     protected Object getTemplate(String tag, Element el)throws ConfigurationException {
         if(tag.equals("menu")){
             try {
-                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/1/2/test.html", baseDir);
+                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/1/2/3/test.html", baseDir);
             } catch (Exception e) {
                 GlobalExceptionHandler.handle("Problem getting template for Menu", e);
             }

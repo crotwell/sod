@@ -37,7 +37,7 @@ Events
 <td class="num">Rejected Channels</td>
 </tr>
 <events><eventLabel><tr>
-<td><a><attribute name="href"><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></td>
+<td><a><attribute name="href">events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td ><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>

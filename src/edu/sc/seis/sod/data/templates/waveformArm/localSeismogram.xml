@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
 <outputLocation>
-<eventDir><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></eventDir>
+<eventDir>events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></eventDir>
 <stationDir><networkCode/>.<stationCode/></stationDir>
 </outputLocation>
 <filename>seismograms.html</filename>
@@ -13,11 +13,11 @@
 #set ( $origin = $sod_event.get_preferred_origin() )
 <title><runName/> - Seismograms in ${station.name} for $FERegion.getRegionName(${sod_event.get_attributes().region})
 $velocity_date.format("MM/dd/yyyy HH:mm:ss z", $sod_event.get_preferred_origin().getTime())</title>
-<style media="all">@import "../../main.css";</style>
+<style media="all">@import "../../../main.css";</style>
 </head>
 <body>
 <div id="Header">
-<a href="../../event.html"> Events</a> >
+<a href="../../../event.html"> Events</a> >
 <a href="../event.html">
 $FERegion.getRegionName(${sod_event.get_attributes().region})
 $velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</a> >

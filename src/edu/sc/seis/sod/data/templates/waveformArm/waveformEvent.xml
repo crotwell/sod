@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
-<outputLocation><originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></outputLocation>
+<outputLocation>events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime></outputLocation>
 <filename>event.html</filename>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title><runName/> - <event><feRegionName/></event></title>
-<style media="all">@import "../main.css";</style>
-<script type="text/javascript" src="../sorttable.js"> </script>
-<script type="text/javascript" src="../tableRuler.js"> </script>
+<style media="all">@import "../../main.css";</style>
+<script type="text/javascript" src="../../sorttable.js"> </script>
+<script type="text/javascript" src="../../tableRuler.js"> </script>
 <script type="text/javascript">
 window.onload=function(){
         tableruler();
-        set_img_dir('../images/')
+        set_img_dir('../../images/')
 }
 </script>
 </head>
 <body>
 <div id="Header">
-<a href="../event.html"> Events</a> >
+<a href="../../event.html"> Events</a> >
 <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event>
 </div>
 <div id="Content">
@@ -100,7 +100,7 @@ Maps only update once every two minutes
 <div id="LeftColumn">
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
 <div id="Key">
-<img src="../images/individualEventMapKey.gif"/>
+<img src="../../images/individualEventMapKey.gif"/>
 </div>
 </div>
 <div id="footer">

@@ -129,7 +129,7 @@ public class WaveformEventTemplate extends Template implements WaveformArmMonito
         }else if(tag.equals("event")){  return new EventFormatter(el); }
         else if(tag.equals("menu")){
             try {
-                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/2/test.html", baseDir);
+                return new MenuTemplate(TemplateFileLoader.getTemplate(el), baseDir + "/1/2/test.html", baseDir);
             } catch (Exception e) {
                 GlobalExceptionHandler.handle("Problem getting template for Menu", e);
             }
