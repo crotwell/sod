@@ -3,9 +3,8 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
+import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
-import edu.sc.seis.fissuresUtil.cache.RetrySeismogramDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
@@ -33,7 +32,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
         dns = getDNSName();
         objectName = getSourceName();
-        dataCenter = new RetrySeismogramDC(new NSSeismogramDC(dns, objectName, fissuresNamingService), 2);
+        dataCenter = BulletproofVestFactory.vestSeismogramDC(dns, objectName, fissuresNamingService);
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
