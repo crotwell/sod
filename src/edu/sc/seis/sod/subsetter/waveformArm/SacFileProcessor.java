@@ -1,6 +1,8 @@
 
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.sc.seis.fissuresUtil.xml.*;
+
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
@@ -13,18 +15,14 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.sac.SacTimeSeries;
-import edu.sc.seis.fissuresUtil.xml.StdDataSetParamNames;
-import edu.sc.seis.fissuresUtil.xml.XMLDataSet;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.LocalSeismogramProcess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.NameGenerator;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Category;
@@ -96,7 +94,22 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
             File eventDirectory = getEventDirectory(eventDirName);
 
-            XMLDataSet dataset = getDataSet(eventDirectory, eventDirName, event);
+            DataSet dataset;
+            // assume that processing is in event order and never reopens
+            // bad but just temporary
+            if (lastDataSet != null && lastDataSet.getEvent().equals(event)) {
+                dataset = lastDataSet;
+            } else {
+                //temp
+                dataset = new MemoryDataSet(event.get_preferred_origin().origin_time.date_time,
+                                            event.get_attributes().region.number+":"+
+                                                event.get_preferred_origin().magnitudes[0].value,
+                                            System.getProperty("user.name"),
+                                            new AuditInfo[0]);
+                dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
+                lastDataSet = dataset;
+                //dataset = getDataSet(eventDirectory, eventDirName, event);
+            }
 
             SacTimeSeries sac;
             String seisFilename = "";
@@ -119,21 +132,21 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                                            channel,
                                            event.get_preferred_origin());
                 sac.write(seisFile);
-//                AuditInfo[] audit = new AuditInfo[1];
-//                audit[0] = new AuditInfo(System.getProperty("user.name"),
-//                                         "seismogram loaded via sod.");
-//                dataset.addSeismogramRef(lseis, seisFile.toURL(),
-//                                         seisFilename,
-//                                         new Property[0],
-//                                         lseis.parm_ids,
-//                                         audit);
+                URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisFile.toURL(),
+                                                                       SeismogramFileTypes.SAC,
+                                                                       dataset);
+                AuditInfo[] audit = new AuditInfo[1];
+                audit[0] = new AuditInfo(System.getProperty("user.name"),
+                                         "seismogram loaded via sod.");
+                dataset.addDataSetSeismogram(urlDSS,
+                                             audit);
             }
 
-            File outFile = new File(eventDirectory, eventDirName+".dsml");
-            OutputStream fos = new BufferedOutputStream(
-                new FileOutputStream(outFile));
-            dataset.write(fos);
-            fos.close();
+//            File outFile = new File(eventDirectory, eventDirName+".dsml");
+//            OutputStream fos = new BufferedOutputStream(
+//                new FileOutputStream(outFile));
+//            dataset.write(fos);
+//            fos.close();
 
 long mbyte = 1024*1024;
             Runtime runtime = Runtime.getRuntime();
@@ -161,7 +174,7 @@ long mbyte = 1024*1024;
         return eventDirectory;
     }
 
-    protected XMLDataSet getDataSet(File eventDirectory,
+    protected DataSet getDataSet(File eventDirectory,
                                     String eventDirName,
                                     EventAccessOperations event)
         throws MalformedURLException, ParserConfigurationException {
@@ -213,6 +226,8 @@ long mbyte = 1024*1024;
         return nameGenerator.getName(event);
 
     }
+
+    DataSet lastDataSet = null;
 
     int eventFileNum = 1;
 
