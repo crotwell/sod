@@ -12,7 +12,6 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
-import sun.security.krb5.internal.az;
 
 public class AzimuthUtils{
     public static boolean isAzimuthBetween(DistAz dz, double min, double max){
