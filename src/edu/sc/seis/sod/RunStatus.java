@@ -9,16 +9,17 @@ public class RunStatus{
         this.name = name;
         this.count = count;
     }
-    
+
     public static final RunStatus NEW = new RunStatus("New", 0);
     public static final RunStatus PASSED = new RunStatus("Passed", 1);
     public static final RunStatus FAILED = new RunStatus("Failed", 2);
     public static final RunStatus SYS_FAILURE = new RunStatus("System Failure", 3);
     public static final RunStatus GENERIC = new RunStatus("Info", 4);
     public static final RunStatus PROCESSING = new RunStatus("Processing", 5);
-    
+    public static final RunStatus UNKNOWN = new RunStatus("Unknown", 5);
+
     public static LogLevel[] LOG_LEVELS;
-    
+
     public static RunStatus getStatus(String statusName){
         if(statusName.equals(NEW.toString())) return NEW;
         else if(statusName.equals(PASSED.toString())) return PASSED;
@@ -28,9 +29,9 @@ public class RunStatus{
         else if(statusName.equals(PROCESSING.toString())) return PROCESSING;
         throw new IllegalArgumentException("No such status");
     }
-    
+
     public int getCount(){ return count; }
-    
+
     public static RunStatus translate(Status status) {
         if(status == Status.NEW || status == Status.RE_OPEN) return NEW;
         else if(status == Status.COMPLETE_SUCCESS ||
@@ -43,14 +44,18 @@ public class RunStatus{
         else if(status == Status.SOD_FAILURE) return SYS_FAILURE;
         else return GENERIC;
     }
-    
+
     public static RunStatus translate(EventChannelCondition cond){
         if(cond == EventChannelCondition.NEW) return NEW;
         else if(cond == EventChannelCondition.FAILURE ||
-                cond == EventChannelCondition.SUBSETTER_FAILED) return FAILED;
-        else return PASSED;
+                cond == EventChannelCondition.SUBSETTER_FAILED ||
+               cond == EventChannelCondition.NO_AVAILABLE_DATA ||
+               cond == EventChannelCondition.CORBA_FAILURE) return FAILED;
+        else if(cond == EventChannelCondition.SUBSETTER_PASSED ||
+                cond == EventChannelCondition.PROCESSING) return PASSED;
+        else return UNKNOWN;
     }
-    
+
     public static RunStatus getStatus(int count){
         switch(count){
             case 0: return NEW;
@@ -62,7 +67,7 @@ public class RunStatus{
         }
         throw new IllegalArgumentException("No status for " + count);
     }
-    
+
     public static LogLevel[] getLogLevels(){
         if(LOG_LEVELS == null){
             LogLevel[] levels = { NEW.getLogLevel(), PASSED.getLogLevel(),
@@ -71,13 +76,13 @@ public class RunStatus{
         }
         return LOG_LEVELS;
     }
-    
+
     public String toString(){ return name; }
-    
+
     private String name;
-    
+
     private int count;
-    
+
     //Run status uses this getLogLevel method so that the LogLevel isn't created
     //unless it's accessed.  Since a log level includes a color by default, it
     //requires a GraphicsConfiguration to create, and this allows sod to run in
@@ -86,8 +91,8 @@ public class RunStatus{
         if(level == null) level = new LogLevel(name, statusCount++);
         return level;
     }
-    
+
     private LogLevel level;
-    
+
     private static int statusCount = 0;
 }
