@@ -6,25 +6,31 @@
 
 package edu.sc.seis.sod.editor;
 
-import javax.swing.*;
-
-import java.awt.Insets;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.w3c.dom.Element;
 
 public abstract class TagChooser implements EditorPlugin {
-
     public TagChooser(String ssType, SodGUIEditor editor) {
         this.editor = editor;
         String subsetterType = ssType+"NOT";
-        ElementNode node = editor.getGrammar().getNode(subsetterType);
+        ElementNode node = (ElementNode)visitedMap.get(subsetterType);
         if (node == null) {
             throw new NullPointerException("Couldn't get ElementNode for "+subsetterType);
         }
@@ -82,17 +88,25 @@ public abstract class TagChooser implements EditorPlugin {
 
     private List subTypes = new LinkedList();
 
-    class ComboElementReset implements ListSelectionListener {
+    private static Map visitedMap;
+    static{
+        try {
+            ClassLoader cl = TagChooser.class.getClassLoader();
+            InputStream is = cl.getResourceAsStream(SchemaGrammar.NODE_JAR_LOC);
+            ObjectInputStream ois = new ObjectInputStream(is);
+            visitedMap = (Map)ois.readObject();
+        } catch (Exception e) {
+            GlobalExceptionHandler.handle(e);
+        }
+    }
 
+    class ComboElementReset implements ListSelectionListener {
         ComboElementReset(Element e) {
             current = e;
         }
-
         public void valueChanged(ListSelectionEvent e) {
             String tagName = (String)((JComboBox)e.getSource()).getSelectedItem();
-
         }
-
         Element current;
     }
 }
