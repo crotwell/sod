@@ -520,6 +520,24 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+
+    <xsd:complexType name="statusProcessType">
+        <xsd:complexContent>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="HTMLStatusProcessType">
+        <xsd:complexContent>
+            <xsd:extension base="statusProcessorType">
+                <xsd:sequence>
+                    <xsd:element name="filename" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
     
     <xsd:complexType name="breqfastLabelType" content="mixed" >
         <xsd:all>
@@ -635,6 +653,9 @@
         type="externalWaveformProcessType"
     substitutionGroup="waveFormProcess"/>
     
+    <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
+    <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
+
     <xsd:complexType name="localSeismogramArmType">
         <xsd:complexContent>
             <xsd:extension base="armType">
@@ -659,6 +680,7 @@
                     <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
                     <xsd:element ref="localSeismogramArm"/>
                     <xsd:element ref="waveFormProcess" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="statusProcess" minOccurs="0" maxOccures="unbounded"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
