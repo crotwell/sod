@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<template xmlns:xlink="http://www.w3.org/1999/xlink/">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<title><runName/></title>
+<style media="all">@import "main.css";</style>
+</head>
+<body>
+<div id="Header">
+<runName/> Status
+</div>
+<div id="Content">
+<h1><runName/> Information</h1>
+<h2>Started on: </h2><startTime/>
+<h2>Events to date:</h2>
+<img><attribute name="src"><eventMap xlink:href="status/eventMap.png"/></attribute></img>
+</div>
+<div id="Menu">
+<ul>
+<li><a href="index.html"><runName/></a></li>
+<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
+<li><a href="location.html">Events</a></li>
+<li><a href="networks.html">Networks</a></li>
+<li><a href="statusInfo.html">About</a></li>
+</ul>
+</div>
+<div id="footer">
+<h2>Page last generated:</h2><now/>
+</div>
+</body>
+</html>
+</template>
