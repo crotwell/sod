@@ -1,8 +1,10 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.IfEvent.*;
+import edu.sc.seis.sod.subsetter.eventArm.*;
 import java.util.*;
 
+import edu.iris.Fissures.Area;
 import edu.iris.Fissures.Quantity;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -13,9 +15,6 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.subsetter.eventArm.EventChannelFinder;
 import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
-import edu.sc.seis.sod.subsetter.eventArm.EventTimeRange;
-import edu.sc.seis.sod.subsetter.eventArm.NullEventAttrSubsetter;
-import edu.sc.seis.sod.subsetter.eventArm.NullOriginSubsetter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,15 +55,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
             //notify Exception listeners in case of an exception
             notifyListeners(this, e);
         }
-        logger.debug("Before setting the source Alive to be false");
         // if eventChannelFinder is false ... i.e., if no eventChannel is configured
         // then the eventArm can signal end of processing
         // by setting the sourceAlive attribute of the EventQueue to be false.
-        
         if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
-        logger.debug("After setting the source Alive to be false");
-        logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "
-                         +Start.getEventQueue().getLength());
+        logger.debug("Event arm finished");
     }
     
     /**
@@ -104,82 +99,93 @@ public class EventArm extends SodExceptionSource implements Runnable{
     private void getEvents() throws Exception{
         if(eventChannelFinder != null) {
             eventChannelFinder.setEventArm(this);
-            Thread thread = new Thread(eventChannelFinder);
-            thread.setName("EventChannelFinder");
+            Thread thread = new Thread(eventChannelFinder, "EventChannelFinder");
             thread.start();
         } else {
             logger.info("EventChannelFinder is not being used.");
         }
         if(eventFinderSubsetter == null) return;
         logger.info("Event Finder query is being used");
-        EventDC eventdc = eventFinderSubsetter.getEventDC();
-        edu.iris.Fissures.IfEvent.EventFinder finder = eventdc.a_finder();
-        String[] searchTypes;
-        EventSeqIterHolder eventSeqIterHolder = new EventSeqIterHolder();
-        Quantity minDepth;
-        Quantity maxDepth;
-        float minMagnitude;
-        float maxMagnitude;
-        if(eventFinderSubsetter.getDepthRange() != null) {
-            minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
-            maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
-        } else {
-            minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
-            maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
-        }
-        if(eventFinderSubsetter.getMagnitudeRange() == null) {
-            minMagnitude = -99.0f;
-            maxMagnitude = 99.0f;
-            searchTypes = new String[1];
-            searchTypes[0] = "%";
-        } else {
-            minMagnitude = eventFinderSubsetter.getMagnitudeRange().getMinMagnitude().value;
-            maxMagnitude = eventFinderSubsetter.getMagnitudeRange().getMaxMagnitude().value;
-            searchTypes = eventFinderSubsetter.getMagnitudeRange().getSearchTypes();
-        }
         logger.debug("getting events from "+eventFinderSubsetter.getEventTimeRange().getMSTR());
-        
-        String source = eventFinderSubsetter.getSourceName();
-        String dns =  eventFinderSubsetter.getDNSName();
-        EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
+        Querier querier = new Querier();
+        System.out.println("created querier");
         boolean done = false;
         while(!done){
-            MicroSecondDate queryStart = reqTimeRange.getStartMSD();
-            if(Start.getEventQueue().getTime(source, dns) != null) {//If the database has a start time
-                //use the database's start time
-                queryStart = new MicroSecondDate(Start.getEventQueue().getTime(source, dns));
-            }
-            MicroSecondDate queryEnd = incrementTime(queryStart);
-            MicroSecondDate requestEnd = reqTimeRange.getEndMSD();
-            if(requestEnd.before(queryEnd)){
-                queryEnd = requestEnd;
-            }
-            if(pastNow(queryEnd)){
-                queryEnd = ClockUtil.now();
-            }
-            if(!queryEnd.before(queryStart)){
-                EventAccess[] events =
-                    finder.query_events(eventFinderSubsetter.getArea(),
-                                        minDepth, maxDepth,
-                                        new TimeRange(queryStart.getFissuresTime(),
-                                                      queryEnd.getFissuresTime()),
-                                        searchTypes, minMagnitude, maxMagnitude,
-                                        eventFinderSubsetter.getCatalogs(),
-                                        eventFinderSubsetter.getContributors(),
-                                        10, eventSeqIterHolder);
-                logger.debug("Found "+events.length+" events between "+
-                                 queryStart + " and "+ queryEnd);
+            String source = eventFinderSubsetter.getSourceName();
+            String dns =  eventFinderSubsetter.getDNSName();
+            EventTimeRange reqTimeRange = eventFinderSubsetter.getEventTimeRange();
+            MicroSecondDate queryStart = getQueryStart(reqTimeRange, source, dns);
+            MicroSecondDate queryEnd = getQueryEnd(queryStart, reqTimeRange.getEndMSD());
+            if(queryEnd.after(queryStart)){
+                EventAccess[] events = querier.query(new TimeRange(queryStart.getFissuresTime(), queryEnd.getFissuresTime()));
+                logger.debug("Found "+events.length+" events between "+ queryStart + " and "+ queryEnd);
                 Start.getEventQueue().setTime(source, dns, queryEnd.getFissuresTime());
-                startEventSubsetter(makeCacheEvents(events));
+                startEventSubsetter(cacheEvents(events));
                 Start.getEventQueue().waitForProcessing();
-            }else if(!isDone(queryEnd, requestEnd)){
+            }
+            TimeInterval queryLength = queryEnd.subtract(queryStart);
+            if(queryLength.lessThan(getIncrement()) && passivateEventArm(reqTimeRange.getEndMSD())){
                 done = true;
             }
         }
         logger.debug("Finished processing the event arm.");
     }
     
-    private EventAccessOperations[] makeCacheEvents(EventAccessOperations[] uncached){
+    private MicroSecondDate getQueryStart(EventTimeRange reqTimeRange, String source, String dns) {
+        MicroSecondDate queryStart = reqTimeRange.getStartMSD();
+        if(Start.getEventQueue().getTime(source, dns) != null) {//If the database has a start time, use the database's start time
+            queryStart = new MicroSecondDate(Start.getEventQueue().getTime(source, dns));
+        }
+        return queryStart;
+    }
+    
+    private MicroSecondDate getQueryEnd(MicroSecondDate queryStart, MicroSecondDate reqEnd) {
+        MicroSecondDate queryEnd = queryStart.add(getIncrement());
+        if(reqEnd.before(queryEnd)){
+            queryEnd = reqEnd;
+        }
+        if(ClockUtil.now().before(queryEnd)){
+            queryEnd = ClockUtil.now();
+        }
+        return queryEnd;
+    }
+    
+    private class Querier{
+        public Querier() throws ConfigurationException{
+            if(eventFinderSubsetter.getDepthRange() != null) {
+                minDepth = eventFinderSubsetter.getDepthRange().getMinDepth();
+                maxDepth = eventFinderSubsetter.getDepthRange().getMaxDepth();
+            }
+            if(eventFinderSubsetter.getMagnitudeRange() != null) {
+                MagnitudeRange magRange = eventFinderSubsetter.getMagnitudeRange();
+                minMag = magRange.getMinMagnitude().value;
+                maxMag = magRange.getMaxMagnitude().value;
+                searchTypes = magRange.getSearchTypes();
+            }
+        }
+        
+        public EventAccess[] query(TimeRange tr) throws Exception{
+            edu.iris.Fissures.IfEvent.EventFinder finder = eventFinderSubsetter.getEventDC().a_finder();
+            return finder.query_events(area, minDepth, maxDepth, tr,
+                                       searchTypes, minMag, maxMag, catalogs,
+                                       contributors, sequenceMaximum, holder);
+        }
+        
+        //If the eventFinderSubsetter values for magnitude or depth are null,
+        //the default values below are used
+        private Quantity minDepth = new QuantityImpl(-90000.0, UnitImpl.KILOMETER);
+        private Quantity maxDepth = new QuantityImpl(90000.0, UnitImpl.KILOMETER);
+        private String[] searchTypes = { "%" };
+        private float minMag = -99.0f, maxMag = 99.0f;
+        
+        private Area area = eventFinderSubsetter.getArea();
+        private String[] catalogs = eventFinderSubsetter.getCatalogs();
+        private String[] contributors = eventFinderSubsetter.getContributors();
+        private int sequenceMaximum = 10;
+        private EventSeqIterHolder holder = new EventSeqIterHolder();
+    }
+    
+    private EventAccessOperations[] cacheEvents(EventAccessOperations[] uncached){
         EventAccessOperations[] cached = new EventAccessOperations[uncached.length];
         for(int counter = 0; counter < cached.length; counter++) {
             cached[counter] = new CacheEvent(uncached[counter]);
@@ -240,48 +246,14 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
     
     /**
-     * this increments the passed in time by the amount of time each event
-     * query is set to cover in the edu.sc.seis.sod.daystoincrement property
-     *
-     */
-    private MicroSecondDate incrementTime(MicroSecondDate startDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTime(startDate);
-        calendar.add(Calendar.DAY_OF_YEAR, getIncrement());
-        MicroSecondDate incrementedDate = new MicroSecondDate(calendar.getTime());
-        return incrementedDate;
-    }
-    
-    /**
      * checks to see if the eventArm is done processing for the time interval
      * specified in the configuration file.
      * If finished returns true else returns false.
      */
-    private boolean isDone(MicroSecondDate queryStart, MicroSecondDate reqEnd){
-        if(firstAfterSecond(queryStart, reqEnd) || pastNow(queryStart)){
+    private boolean isDone(MicroSecondDate queryEnd, MicroSecondDate reqEnd){
+        if(ClockUtil.now().before(queryEnd)){
             return passivateEventArm(reqEnd);
         }
-        return false;
-    }
-    
-    /**
-     * Method pastNow checks if time is later than now
-     *
-     * @return   true if time is later than or equal to now
-     *
-     */
-    private boolean pastNow(MicroSecondDate time){
-        return ClockUtil.now().before(time);
-    }
-    
-    /**
-     * Method past checks if firstTime is later than second time
-     *
-     * @return  true if second time is later than or equal to firstTime
-     */
-    private boolean firstAfterSecond(MicroSecondDate first, MicroSecondDate second){
-        if(second.before(first) || second.equals(first)) return true;
         return false;
     }
     
@@ -290,9 +262,9 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * and quitTime specified in the property file.
      */
     private boolean passivateEventArm(MicroSecondDate endDate) {
-        MicroSecondDate quitDate = endDate.add(new TimeInterval(Start.QUIT_TIME,
-                                                                UnitImpl.DAY));
-        if(!pastNow(quitDate))  return true;
+        TimeInterval eventArrivalLag = new TimeInterval(7, UnitImpl.DAY);
+        MicroSecondDate quitDate = endDate.add(eventArrivalLag);
+        if(quitDate.before(ClockUtil.now()))  return true;
         try {
             logger.debug("Sleep before looking for new events, will sleep for "+
                              Start.REFRESH_INTERVAL+" seconds");
@@ -309,16 +281,21 @@ public class EventArm extends SodExceptionSource implements Runnable{
      * property file.
      */
     
-    private int getIncrement() {
-        String value = props.getProperty("edu.sc.seis.sod.daystoincrement");
-        if(value == null) return 1;
-        try {
-            int val = Integer.parseInt(value);
-            return val;
-        } catch(NumberFormatException nfe) {
-            return 1;
+    private TimeInterval getIncrement() {
+        if(increment == null){
+            int val = 1;
+            String value = props.getProperty("edu.sc.seis.sod.daystoincrement");
+            if(value != null){
+                try {
+                    val = Integer.parseInt(value);
+                } catch(NumberFormatException nfe) {}
+            }
+            increment = new TimeInterval(val, UnitImpl.DAY);
         }
+        return increment;
     }
+    
+    private TimeInterval increment;
     
     private EventFinder eventFinderSubsetter;
     
