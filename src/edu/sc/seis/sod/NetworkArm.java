@@ -254,7 +254,6 @@ public class NetworkArm {
                 if(stationSubsetter.accept(networkDbObject.getNetworkAccess(), stations[subCounter], cookieJar)) {
                     int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
                     StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
-                    System.out.println("put " + stationDbObject + " into the database.  It has an id of " + dbid);
                     arrayList.add(stationDbObject);
                 }else{
                     change(stations[subCounter], RunStatus.FAILED);
