@@ -163,8 +163,9 @@
     <unitTestSourceDirectory>test/unit</unitTestSourceDirectory>
     <sourceDirectory>src</sourceDirectory>
     <unitTest>
-        <includes><include name="**/*Test.java" /></includes>
-        <excludes><exclude name="**/XMLConfigUtil.java"/></excludes>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
     </unitTest>
     <resources>
       <resource>
@@ -194,25 +195,6 @@
      <report>maven-jdepend-plugin</report>
      <report>maven-junit-report-plugin</report>
      <report>maven-jxr-plugin</report>    
-     <report>maven-license-plugin</report>
-<!--
-     <report>maven-linkcheck-plugin</report>
--->
-     <report>maven-pmd-plugin</report>
-     <report>maven-tasklist-plugin</report>
-  </reports>
-
-
-  <reports>
-     <report>maven-changelog-plugin</report>
-     <report>maven-changes-plugin</report>
-     <report>maven-checkstyle-plugin</report>
-     <report>maven-developer-activity-plugin</report>
-     <report>maven-file-activity-plugin</report>
-     <report>maven-javadoc-plugin</report>
-     <report>maven-jdepend-plugin</report>
-     <report>maven-junit-report-plugin</report>
-     <report>maven-jxr-plugin</report>
      <report>maven-license-plugin</report>
 <!--
      <report>maven-linkcheck-plugin</report>
