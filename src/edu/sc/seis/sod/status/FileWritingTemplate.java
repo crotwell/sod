@@ -88,16 +88,20 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
     }
 
     private class Writer extends PeriodicAction{
-        public void act(){
-            File loc = new File(getOutputLocation());
-            try {
-                File temp = File.createTempFile(loc.getName(), null);
-                BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
-                writer.write(getResult());
-                writer.close();
-                loc.delete();
-                temp.renameTo(loc);
-            } catch (IOException e) {}
+        public void act(){ write(getOutputLocation(), getResult()); }
+    }
+
+    public static void write(String outputLocation, String output){
+        File loc = new File(outputLocation);
+        try {
+            File temp = File.createTempFile(loc.getName(), null);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
+            writer.write(output);
+            writer.close();
+            loc.delete();
+            temp.renameTo(loc);
+        } catch (IOException e) {
+            GlobalExceptionHandler.handle(e);
         }
     }
 
