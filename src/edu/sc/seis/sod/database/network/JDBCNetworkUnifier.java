@@ -67,7 +67,7 @@ public class JDBCNetworkUnifier{
 
     public NetworkDbObject getNet(int netDbId, NetworkDCOperations ndc) throws NetworkNotFound, NotFound, SQLException{
         NetworkId id = netDb.get(netDbId).get_id();
-        NetworkAccess na = new SynchronizedDCNetworkAccess(new BulletproofNetworkAccess(ndc.a_finder().retrieve_by_id(id), ndc, id), ndc);
+        NetworkAccess na = new BulletproofNetworkAccess(ndc.a_finder().retrieve_by_id(id), ndc, id);
         return new NetworkDbObject(netDbId, na);
     }
 

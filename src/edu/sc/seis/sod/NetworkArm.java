@@ -191,8 +191,8 @@ public class NetworkArm {
         logger.debug("found " + allNets.length + " network access objects from the network DC finder");
         for(int i = 0; i < allNets.length; i++) {
             try {
-                allNets[i] = new SynchronizedDCNetworkAccess(new BulletproofNetworkAccess(allNets[i], netDC,
-                                                                                          allNets[i].get_attributes().get_id()), netDC);
+                NetworkId id = allNets[i].get_attributes().get_id();
+                allNets[i] = new BulletproofNetworkAccess(allNets[i], netDC, id);
                 if(attrSubsetter.accept(allNets[i].get_attributes())){
                     int dbid;
                     synchronized(netTable){
