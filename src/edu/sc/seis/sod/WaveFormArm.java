@@ -124,7 +124,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     }
 
   
-    private EventStationSubsetter eventStationSubsetter = null;//new NullEventStationSubsetter();
+    private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
 
     private LocalSeismogramArm localSeismogramArm = null;
 
