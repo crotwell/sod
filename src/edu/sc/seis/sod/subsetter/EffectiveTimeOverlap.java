@@ -1,13 +1,12 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.iris.Fissures.model.MicroSecondDate;
-import edu.iris.Fissures.model.TimeUtils;
-import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.Subsetter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeUtils;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.SodUtil;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
     public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
@@ -15,27 +14,10 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         end = new MicroSecondDate(range.end_time);
     }
 
-    public EffectiveTimeOverlap(Element config){
-        NodeList children = config.getChildNodes();
-        for(int  i = 0; i < children.getLength(); i ++) {
-            Node node = children.item(i);
-            if(node instanceof Element) {
-                String tagName = ((Element)node).getTagName();
-                Element el = (Element)node;
-                if(tagName.equals("startTime")) {
-                    start = new MicroSecondDate(getEffectiveTime(el));
-                } else if (tagName.equals("endTime")) {
-                    end = new MicroSecondDate(getEffectiveTime(el));
-                }
-            }
-        }
-    }
-
-    private edu.iris.Fissures.Time getEffectiveTime(Element el) {
-        if(el == null) return null;
-        String effectiveTime = SodUtil.getNestedText(el);
-        edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
-        return rtnTime;
+    public EffectiveTimeOverlap(Element config) throws ConfigurationException{
+        MicroSecondTimeRange timeRange = SodUtil.loadTimeRange(config);
+        start = timeRange.getBeginTime();
+        end = timeRange.getEndTime();
     }
 
     public boolean overlaps(edu.iris.Fissures.TimeRange otherRange) {

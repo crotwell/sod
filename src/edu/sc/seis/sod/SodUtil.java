@@ -18,15 +18,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.Time;
 import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
-import edu.iris.Fissures.model.ISOTime;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -84,6 +86,7 @@ public class SodUtil {
             } else if(tagName.equals("UnitRange")) {
                 return loadUnitRange(config);
             } else if(tagName.equals("TimeRange")) {
+                System.out.println("TIMERANGE!");
                 return loadTimeRange(config);
             } else if(tagName.equals("GlobalArea")) {
                 return new GlobalAreaImpl();
@@ -214,15 +217,49 @@ public class SodUtil {
             throws ConfigurationException {
         String unitName = null;
         NodeList children = config.getChildNodes();
-        Node node = children.item(0);
-        if(node instanceof Text) {
-            unitName = node.getNodeValue();
+        if(children.item(0) instanceof Text) {
+            unitName = children.item(0).getNodeValue();
         }
         try {
             return UnitImpl.getUnitFromString(unitName);
         } catch(NoSuchFieldException e) {
             throw new ConfigurationException("Can't find unit " + unitName, e);
         } // end of try-catch
+    }
+
+    public static Time loadTime(Element el)
+            throws ConfigurationException {
+        if(el == null) return null;
+        edu.iris.Fissures.Time rtnTime = null;
+        NodeList kids = el.getChildNodes();
+        for(int i = 0; i < kids.getLength(); i++) {
+            Node node = kids.item(i);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                Element element = (Element)node;
+                if(tagName.equals("earlier") || tagName.equals("later")) {
+                    rtnTime = loadRelativeTime(element);
+                } else if (tagName.equals("now")){
+                    rtnTime = ClockUtil.now().getFissuresTime();
+                }
+            }
+        }
+        if(rtnTime == null) {
+            String time = getNestedText(el);
+            rtnTime = new Time(time, 0);
+        }
+        return rtnTime;
+    }
+
+    private static Time loadRelativeTime(Element el)
+            throws ConfigurationException {
+        TimeInterval duration = loadTimeInterval(el);
+        MicroSecondDate now = ClockUtil.now();
+        if(el.getTagName().equals("earlier")) {
+            return now.subtract(duration).getFissuresTime();
+        } else {
+            return now.add(duration).getFissuresTime();
+        }
     }
 
     public static TimeInterval loadTimeInterval(Element config)
@@ -281,17 +318,15 @@ public class SodUtil {
         }
     }
 
-    public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config)
+    public static UnitRangeImpl loadUnitRange(Element config)
             throws ConfigurationException {
         Unit unit = null;
         double min = Double.MIN_VALUE;
         double max = Double.MAX_VALUE;
         NodeList children = config.getChildNodes();
-        Node node;
         for(int i = 0; i < children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Element) {
-                Element subElement = (Element)node;
+            if(children.item(i) instanceof Element) {
+                Element subElement = (Element)children.item(i);
                 String tagName = subElement.getTagName();
                 if(tagName.equals("unit")) {
                     unit = loadUnit(subElement);
@@ -300,45 +335,39 @@ public class SodUtil {
                 } else if(tagName.equals("max")) {
                     max = Double.parseDouble(getText(subElement));
                 }
-            } // end of if (node instanceof Element)
-        } // end of for (int i=0; i<children.getSize(); i++)
+            }
+        }
         UnitRangeImpl unitRange = new UnitRangeImpl(min, max, unit);
         return unitRange;
     }
 
-    public static edu.iris.Fissures.TimeRange loadTimeRange(Element config) {
+    public static MicroSecondTimeRange loadTimeRange(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
-        Node node;
-        edu.iris.Fissures.Time begin = null, end = null;
+        Time begin = null, end = null;
         for(int i = 0; i < children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Element) {
-                Element subElement = (Element)node;
+            if(children.item(i) instanceof Element) {
+                Element subElement = (Element)children.item(i);
                 String tagName = subElement.getTagName();
                 if(tagName.equals("startTime")) {
-                    ISOTime tmp = new ISOTime(getText(subElement));
-                    begin = tmp.getDate().getFissuresTime();
+                    begin = loadTime(subElement);
                 } else if(tagName.equals("endTime")) {
-                    ISOTime tmp = new ISOTime(getText(subElement));
-                    end = tmp.getDate().getFissuresTime();
+                    end = loadTime(subElement);
                 }
-            } // end of if (node instanceof Element)
-        } // end of for (int i=0; i<children.getSize(); i++)
-        return new TimeRange(begin, end);
+            }
+        }
+        return new MicroSecondTimeRange(begin, end);
     }
 
-    public static edu.iris.Fissures.model.BoxAreaImpl loadBoxArea(Element config)
+    public static BoxAreaImpl loadBoxArea(Element config)
             throws ConfigurationException {
         NodeList children = config.getChildNodes();
-        Node node;
         float minLatitude = 0;
         float maxLatitude = 0;
         float minLongitude = 0;
         float maxLongitude = 0;
         for(int i = 0; i < children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Element) {
-                Object obj = SodUtil.load((Element)node, "");
+            if(children.item(i) instanceof Element) {
+                Object obj = SodUtil.load((Element)children.item(i), "");
                 if(obj instanceof LatitudeRange) {
                     minLatitude = ((LatitudeRange)obj).getMinValue();
                     maxLatitude = ((LatitudeRange)obj).getMaxValue();

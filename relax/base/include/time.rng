@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns="http://relaxng.org/ns/structure/1.0"
-    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start combine="choice">
         <notAllowed/>
     </start>
     <define name="time">
-        <data type="string">
-            <xsd:annotation>
-                <xsd:documentation xml:lang="en">
-                    <summary>A single point in time</summary>
-                    <description>A single point in time. It can be specified in several 4 month
-                        based full formats such as yyyy-mm-ddThh:mm:ss.ddddZTD,
-                        yyyy-mm-ddThhmmss.ddddZTD, yyyymmddThh:mm:ss.ddddZTD, or
-                        yyyymmddThhmmss.ddddZTD. You can also use similar julian day formats such as
-                        yyyyjjjThh:mm:ss.ddddZTD and yyyyjjjThhmmss.ddddZTD. The time zone, ZTD, is
-                        either Z for zulu, ie UTC, or a offset from UTC in the form of +hh:mm or -hh:mm.</description>
-                    <example>20010101T00:00:00Z</example>
-                </xsd:documentation>
-            </xsd:annotation>
-        </data>
+        <choice>
+            <data type="string">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="en">
+                        <summary>A single point in time</summary>
+                        <description>A single point in time. It can be specified in several 4 month based full formats
+                            such as yyyy-mm-ddThh:mm:ss.ddddZTD, yyyy-mm-ddThhmmss.ddddZTD, yyyymmddThh:mm:ss.ddddZTD,
+                            or yyyymmddThhmmss.ddddZTD. You can also use similar julian day formats such as
+                            yyyyjjjThh:mm:ss.ddddZTD and yyyyjjjThhmmss.ddddZTD. The time zone, ZTD, is either Z for
+                            zulu, ie UTC, or a offset from UTC in the form of +hh:mm or -hh:mm.</description>
+                        <example>20010101T00:00:00Z</example>
+                    </xsd:documentation>
+                </xsd:annotation>
+            </data>
+            <element name="earlier">
+                <externalRef href="../externalRef/timeInterval.rng"/>
+            </element>
+            <element name="later">
+                <externalRef href="../externalRef/timeInterval.rng"/>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
 </grammar>

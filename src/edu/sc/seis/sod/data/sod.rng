@@ -1891,6 +1891,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -2121,6 +2168,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -2351,6 +2445,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -2581,6 +2722,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -2811,6 +2999,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -3041,6 +3276,53 @@
                     <element name="timeVariance">
                         <choice>
                             <data type="string"/>
+                            <element name="earlier">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="later">
+                                <element name="timeInterval">
+                                    <interleave>
+                                    <element name="unit">
+                                    <choice>
+                                    <value>HOUR</value>
+                                    <value>NANOSECOND</value>
+                                    <value>MICROSECOND</value>
+                                    <value>MILLISECOND</value>
+                                    <value>SECOND</value>
+                                    <value>MINUTE</value>
+                                    <value>DAY</value>
+                                    <value>WEEK</value>
+                                    <value>FORTNIGHT</value>
+                                    </choice>
+                                    </element>
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    </interleave>
+                                </element>
+                            </element>
+                            <element name="now">
+                                <empty/>
+                            </element>
                             <interleave>
                                 <choice>
                                     <element name="unit">
@@ -7553,11 +7835,107 @@
         </choice>
     </define>
     <define name="time15">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time8">
         <choice>
             <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
             <interleave>
                 <element name="unit">
                     <choice>
@@ -7579,7 +7957,56 @@
         </choice>
     </define>
     <define name="time9">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time18">
         <interleave>
@@ -7602,7 +8029,56 @@
         </interleave>
     </define>
     <define name="time19">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time23">
         <choice>
@@ -7621,11 +8097,107 @@
         </choice>
     </define>
     <define name="time16">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time22">
         <choice>
             <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
             <interleave>
                 <element name="unit">
                     <choice>
@@ -7647,7 +8219,56 @@
         </choice>
     </define>
     <define name="time7">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time24">
         <choice>
@@ -7666,23 +8287,315 @@
         </choice>
     </define>
     <define name="time12">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time11">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time17">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time25">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time10">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time5">
         <choice>
             <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
             <interleave>
                 <element name="unit">
                     <choice>
@@ -7704,16 +8617,212 @@
         </choice>
     </define>
     <define name="time26">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time21">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time20">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time6">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time">
         <choice>
@@ -7750,6 +8859,53 @@
     <define name="time14">
         <choice>
             <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
             <interleave>
                 <element name="unit">
                     <choice>
@@ -7803,7 +8959,56 @@
         </choice>
     </define>
     <define name="time13">
-        <data type="string"/>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="trueOrFalse">
         <choice>
