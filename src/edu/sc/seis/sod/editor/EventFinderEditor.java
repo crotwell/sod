@@ -40,30 +40,34 @@ public class EventFinderEditor extends ServerEditor implements EditorPlugin{
                     // skip as we deal with the server above
                     continue;
                 } else if(el.getTagName().equals("catalog")){
+                    System.out.println("add catalog to editor");
                     i++;
+                    Box horiz = Box.createHorizontalBox();
+                    horiz.add(Box.createHorizontalGlue());
+                    horiz.add(getOwner().getCompForElement(el));
+                    horiz.add(Box.createHorizontalStrut(40));
+                    horiz.setBorder(new TitledBorder("Source"));
+                    b.add(horiz);
                     while(i < children.getLength() && !(children.item(i) instanceof Element)){
                         i++;
                     }
-                    Element nextEl = (Element)children.item(i);
-                    if(nextEl.getTagName().equals("contributor")){
-                        i++;
-                        Box horiz = Box.createHorizontalBox();
-                        horiz.add(Box.createHorizontalGlue());
-                        horiz.add(getOwner().getCompForElement(el));
-                        horiz.add(Box.createHorizontalStrut(40));
-                        horiz.add(getOwner().getCompForElement(nextEl));
-                        horiz.add(Box.createHorizontalGlue());
-                        horiz.setBorder(new TitledBorder("Source"));
-                        b.add(horiz);
-                        continue;
-                    }else{ i--; }
+                    if(i < children.getLength()) {
+                        Element nextEl = (Element)children.item(i);
+                        if (nextEl.getTagName().equals("contributor")){
+                            i++;
+                            horiz.add(getOwner().getCompForElement(nextEl));
+                            horiz.add(Box.createHorizontalGlue());
+                            continue;
+                        }
+                    }
                 }else if(el.getTagName().equals("originDepthRange")){
                     JComponent unitRangeComp = getOwner().getCompForElement((Element)XPathAPI.selectSingleNode(el, "unitRange"));
                     unitRangeComp.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(el.getTagName())));
                     b.add(unitRangeComp);
                     continue;
+                } else {
+                    b.add(getOwner().getCompForElement((Element)n));
                 }
-                b.add(getOwner().getCompForElement((Element)n));
                 b.add(Box.createVerticalStrut(10));
             }
         }
