@@ -27,12 +27,14 @@ public class Ref implements FormProvider{
     }
 
     public Form getForm(){
-        Definition def = getDef();
-        Form refedForm = def.getForm();
-        Form derefedForm = refedForm.deref(parent, def);
-        derefedForm.setMin(getMin());
-        derefedForm.setMax(getMax());
-        if(ann != null){ derefedForm.setAnnotation(ann); }
+        if(derefedForm == null){
+            Definition def = getDef();
+            Form refedForm = def.getForm();
+            derefedForm = refedForm.deref(parent, def);
+            derefedForm.setMin(getMin());
+            derefedForm.setMax(getMax());
+            if(ann != null){ derefedForm.setAnnotation(ann); }
+        }
         return derefedForm;
     }
 
@@ -64,5 +66,6 @@ public class Ref implements FormProvider{
     private Grammar owner;
     private String name = "";
     private Form parent;
+    private Form derefedForm;
     private Annotation ann = new Annotation();
 }
