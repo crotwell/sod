@@ -26,18 +26,19 @@ public class BooleanEditor implements EditorPlugin{
 
     public JComponent getGUI(Element element) throws Exception {
         String name = element.getTagName();
-        String type = NOT;
-        if(name.indexOf("OR") != -1){
-            type = OR;
-        }else if(name.indexOf("AND") != -1){
-            type = AND;
-        }
-        if(type == NOT){
+        String type = getType(name);
+        if(type.equals(NOT) || type.equals(AND_WRAPPER) || type.equals(OR_WRAPPER)){
             Box b = Box.createHorizontalBox();
             //b.add(new JLabel(NOT + " "));
             Element child = (Element)XPathAPI.selectSingleNode(element, "*");
             b.add(editor.getCompForElement(child));
-            b.setBorder(new TitledBorder("Not"));
+            if (type.equals(NOT)) {
+                b.setBorder(new TitledBorder("Not"));
+            } else if (type.equals(AND_WRAPPER)) {
+                b.setBorder(new TitledBorder("All must match"));
+            } else if (type.equals(AND_WRAPPER)) {
+                b.setBorder(new TitledBorder("At least one must match"));
+            }
             return b;
         }else{
             Box b = Box.createVerticalBox();
@@ -63,12 +64,30 @@ public class BooleanEditor implements EditorPlugin{
         }
     }
 
+    String getType(String name) {
+        String type = "UNKNOWN";
+        if(name.endsWith(OR)){
+            type = OR;
+        }else if(name.endsWith(AND)){
+            type = AND;
+        }else if(name.endsWith(NOT)){
+            type = AND;
+        }else if(name.endsWith(XOR)){
+            type = XOR;
+        }else if(name.startsWith(AND)){
+            type = AND_WRAPPER;
+        }else if(name.startsWith(OR)){
+            type = OR_WRAPPER;
+        }
+        return type;
+    }
+
     private static Border AND_BORDER = new TitledBorder("All of these");
 
     private static Border OR_BORDER = new TitledBorder("Any of these");
 
     private Map inserters = new HashMap();
-    private static final String AND = "AND", OR = "OR", NOT ="Not";
+    private static final String AND = "AND", OR = "OR", NOT ="NOT", XOR = "XOR", AND_WRAPPER = "AND_WRAPPER", OR_WRAPPER= "OR_WRAPPER";
     private SodGUIEditor editor;
 }
 
