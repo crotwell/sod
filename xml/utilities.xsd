@@ -73,7 +73,7 @@
 			<xsd:extension base="processType">
 				<xsd:sequence>
 					<xsd:element name="class" type="xsd:string"/>
-					<xsd:element name="params" type="paramsType" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:any minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -95,19 +95,63 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="KILOMETER"/>
 			<xsd:enumeration value="METER"/>
-			<xsd:enumeration value="SECOND"/>
-			<xsd:enumeration value="AMPERE"/>
-			<xsd:enumeration value="DEGREE"/>
+			<xsd:enumeration value="CENTIMETER"/>	
 			<xsd:enumeration value="NANOMETER"/>
 			<xsd:enumeration value="MICROMETER"/>
+			<xsd:enumeration value="MICRON"/>
 			<xsd:enumeration value="MILLIMETER"/>
+			<xsd:enumeration value="PICOMETER"/>
+			<xsd:enumeration value="INCH"/>
+			<xsd:enumeration value="FOOT"/>	
+			<xsd:enumeration value="MILE"/>
+			<xsd:enumeration value="HERTZ"/>
 			<xsd:enumeration value="NANOSECOND"/>
 			<xsd:enumeration value="MICROSECOND"/>
 			<xsd:enumeration value="MILLISECOND"/>
+			<xsd:enumeration value="SECOND"/>
 			<xsd:enumeration value="MINUTE"/>
 			<xsd:enumeration value="HOUR"/>
 			<xsd:enumeration value="DAY"/>
 			<xsd:enumeration value="YEAR"/>
+			<xsd:enumeration value="AMPERE"/>
+			<xsd:enumeration value="COULOMB"/>
+			<xsd:enumeration value="VOLT"/>
+			<xsd:enumeration value="DEGREE"/>
+			<xsd:enumeration value="RADIAN"/>
+			<xsd:enumeration value="COUNT"/>
+			<xsd:enumeration value="RADIAN_PER_SECOND"/>
+			<xsd:enumeration value="SQUARE_METER"/>
+			<xsd:enumeration value="SQUARE_CENTIMETER"/>
+			<xsd:enumeration value="CUBIC_METER"/>
+			<xsd:enumeration value="CUBIC_CENTIMETER"/>
+			<xsd:enumeration value="LITER"/>
+			<xsd:enumeration value="GRAM"/>
+			<xsd:enumeration value="KILOGRAM"/>
+			<xsd:enumeration value="DENSITY"/>
+			<xsd:enumeration value="GRAM_PER_CUBIC_CENTIMETER"/>
+			<xsd:enumeration value="KILOGRAM_PER_CUBIC_METER"/>
+			<xsd:enumeration value="VELOCITY"/>
+			<xsd:enumeration value="METER_PER_SECOND"/>
+			<xsd:enumeration value="CENTIMETER_PER_SECOND"/>
+			<xsd:enumeration value="KILOMETER_PER_SECOND"/>
+			<xsd:enumeration value="MILLIMETER_PER_SECOND"/>
+			<xsd:enumeration value="MICROMETER_PER_SECOND"/>
+			<xsd:enumeration value="MICRON_PER_SECOND"/>
+			<xsd:enumeration value="NANOMETER_PER_SECOND"/>
+			<xsd:enumeration value="ACCELERATION"/>
+			<xsd:enumeration value="METER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="CENTIMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="KILOMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MILLIMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MICROMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="MICRON_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="NANOMETER_PER_SECOND_PER_SECOND"/>
+			<xsd:enumeration value="FORCE"/>
+			<xsd:enumeration value="NEWTON"/>
+			<xsd:enumeration value="JOULE"/>
+			<xsd:enumeration value="DYNE"/>
+			<xsd:enumeration value="ENERGY"/>
+					
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -118,6 +162,7 @@
 			<xsd:element name="value" type="xsd:integer"/>
 		</xsd:sequence>
 	</xsd:complexType>
+
 
 
 	<!-- UNIT RANGE TYPE -->
@@ -136,6 +181,13 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<!-- REFRESH INTERVAL TYPE -->
+	<xsd:complexType name="refreshIntervalType">
+		<xsd:complexContent>
+			<xsd:extension base="timeIntervalType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	<!-- LENGTH TYPE -->
 	<xsd:complexType name="lengthType">
 		<xsd:complexContent>
@@ -143,7 +195,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- DISTANCE TYPE -->
+	<!-- DISTANCE RANGE TYPE -->
 	<xsd:complexType name="distanceRangeType">
 		<xsd:sequence>
 			<xsd:element name="unit" type="unitType"/>
@@ -239,6 +291,17 @@
 
 	<!-- timeRangeType element -->
 	<xsd:element name="timeRange" type="timeRangeType"/>
+
+	<!-- REFRESH INTERVAL element -->
+	<xsd:element name="refreshInterval" type="refreshIntervalType"/>
+
+	<xsd:simpleType name="channelCodeUtilType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{1}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
 	
+
 		
 </xsd:schema>

@@ -159,7 +159,7 @@ in the instance document
 		<xsd:complexContent>	
 			<xsd:extension base="originType">
 				<xsd:sequence>
-					<xsd:element name="magType" type="magnitudetypeType"/>
+					<xsd:element name="magType" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
 					<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
 				</xsd:sequence>
@@ -167,8 +167,8 @@ in the instance document
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- DEPTH TYPE -->
-	<xsd:complexType name="depthRangeType">
+	<!-- ORIGIN DEPTH RANGE TYPE -->
+	<xsd:complexType name="originDepthRangeType">
 		<xsd:complexContent>
 			<xsd:extension base="originType">
 				<xsd:sequence>
@@ -201,6 +201,28 @@ in the instance document
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+	
+	<!-- CATALOG TYPE -->
+	<xsd:complexType name="catalogType">
+		<xsd:complexContent>
+			<xsd:extension base="originType">
+				<xsd:sequence>
+					<xsd:element name="value" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<!-- CONTRIBUTOR TYPE -->
+	<xsd:complexType name="contributorType">
+		<xsd:complexContent>
+			<xsd:extension base="originType">
+				<xsd:sequence>
+					<xsd:element name="value" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>	
 
 
 	<!-- ORIGIN AND TYPE -->
@@ -208,7 +230,7 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="originType">
 				<xsd:sequence>
-					<xsd:element ref="origin"/>
+					<xsd:element ref="origin" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -254,12 +276,12 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="eventSourceType">
 				<xsd:sequence>
-					<xsd:element ref="area"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="depthRange"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="eventTimeRange"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="area"  minOccurs="1" maxOccurs="1"/>
+					<xsd:element ref="originDepthRange"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="eventTimeRange"  minOccurs="1" maxOccurs="1"/>
 					<xsd:element ref="magnitudeRange"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="catalog" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="contributor" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="catalog" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -270,7 +292,7 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="eventSourceType">
 				<xsd:sequence>
-					<xsd:element name="eventname" type="xsd:string"/>
+					<xsd:element name="eventchannelname" type="xsd:string"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -289,6 +311,29 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="internalProcessType">
 				<xsd:sequence>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+	<!-- ORIGIN ARRAY AND -->
+	<xsd:complexType name="originArrayANDType">
+		<xsd:complexContent>
+			<xsd:extension base="originType">
+				<xsd:sequence>
+					<xsd:element ref="origin"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+		
+	<!-- ORIGIN ARRAY OR -->
+	<xsd:complexType name="originArrayORType">
+		<xsd:complexContent>
+			<xsd:extension base="originType">
+				<xsd:sequence>
+					<xsd:element ref="origin"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -322,8 +367,8 @@ in the instance document
 	<!-- element representing magnitude -->
 	<xsd:element name="magnitudeRange" type="magnitudeType" substitutionGroup="origin"/>
 
-	<!-- element representing depth -->
-         <xsd:element name="depthRange" type="depthRangeType" substitutionGroup="origin"/>	
+	<!-- element representing depth Range-->
+         <xsd:element name="originDepthRange" type="originDepthRangeType" substitutionGroup="origin"/>	
 
 	<!-- EVENT AREA TYPE -->
 	<xsd:complexType name="eventAreaType">
@@ -336,8 +381,21 @@ in the instance document
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	
 	<!-- element representing eventArea -->
 	<xsd:element name="eventArea" type="eventAreaType" substitutionGroup="origin"/>
+
+	<!-- elment representing CATALOG -->
+	<xsd:element name="catalog" type="catalogType" substitutionGroup="origin"/>
+	
+	<!-- element representing CONTRIBUTOR -->
+	<xsd:element name="contributor" type="contributorType" substitutionGroup="origin"/>
+
+	<!-- element representing ORIGIN ARRAY AND -->
+	<xsd:element name="originArrayAND" type="originArrayANDType" substitutionGroup="origin"/>
+	
+	<!-- element representing ORIGIN ARRAY OR -->
+	<xsd:element name="originArrayOR" type="originArrayORType" substitutionGroup="origin"/>
 
 	<!-- element representing originAND -->
 	<xsd:element name="originAND" type="originANDType" substitutionGroup="origin"/>

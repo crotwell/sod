@@ -128,6 +128,117 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<!-- EVENT STATION STATION TYPE -->
+	<xsd:complexType name="embeddedStationSubsetterType">
+		<xsd:complexContent>
+			<xsd:extension base="eventStationType">
+				<xsd:sequence>
+					<xsd:element ref="station"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EVENT STATION AZIMUTH RANGE TYPE -->
+	<xsd:complexType name="azimuthRangeType">
+		<xsd:complexContent>
+			<xsd:extension base="eventStationType">
+				<xsd:sequence>
+					<xsd:element name="min" type="xsd:float"/>
+					<xsd:element name="max" type="xsd:float"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+	<!-- EVENT STATION BACK AZIMUTH RANGE TYPE -->
+	<xsd:complexType name="backAzimuthRangeType">
+		<xsd:complexContent>
+			<xsd:extension base="eventStationType">
+				<xsd:sequence>
+					<xsd:element name="min" type="xsd:float"/>
+					<xsd:element name="max" type="xsd:float"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE TYPE -->
+	<xsd:complexType name="linearDistanceMagnitudeType">
+		<xsd:complexContent>
+			<xsd:extension base="eventStationType">
+				<xsd:sequence>
+					<xsd:element ref="magnitudeRange"/>
+					<xsd:element ref="distanceRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- PHASE TURN INTERACTION TYPE -->
+	<xsd:simpleType name="phaseTurnInteractionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="TOP SIDE REFLECTION"/>
+			<xsd:enumeration value="BOTTOM SIDE REFLECTION"/>
+			<xsd:enumeration value="TURN POINT"/>
+			<xsd:enumeration value="UPGOING S TO P CONVERSION"/>
+			<xsd:enumeration value="UPGOING P TO S CONVERSION"/>	
+			<xsd:enumeration value="DOWNGOING S TO P CONVERSION"/>
+			<xsd:enumeration value="DOWNGOING P TO S CONVERSION"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- EVENT STATION PHASE INTERACTION TYPE -->
+	<xsd:complexType name="phaseInteractionType">
+		<xsd:complexContent>
+			<xsd:extension base="eventStationType">
+				<xsd:sequence>
+					<xsd:element name="phaseName" type="xsd:string"/>
+					<xsd:element name="velocityModel" type="xsd:string"/>
+					<xsd:element name="interactionStyle" type="phaseTurnInteractionType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EVENT STATION PHASE AREA INTERACTION TYPE -->
+	<xsd:complexType name="phaseAreaInteractionType">
+		<xsd:complexContent>
+			<xsd:extension base="phaseInteractionType">
+				<xsd:sequence>
+					<xsd:element ref="area"/>
+					<xsd:element name="depthRange">
+						<xsd:complexType>
+							<xsd:sequence>	
+								<xsd:element name="unitRange" type="unitRangeType"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- EVENT STATION PHASE DISTANCE INTERACTION TYPE -->
+	<xsd:complexType name="phaseDistanceInteractionType">
+		<xsd:complexContent>
+			<xsd:extension base="phaseInteractionType">
+				<xsd:sequence>
+					<xsd:element ref="area"/>
+					<xsd:element name="depthRange">
+						<xsd:complexType>
+							<xsd:sequence>	
+								<xsd:element name="unitRange" type="unitRangeType"/>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element ref="distanceRange"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 
 	<!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
 
@@ -349,8 +460,15 @@
 	<xsd:element name="eventStation" type="eventStationType" abstract="true"/>
 	<xsd:element name="eventStationDistance" type="eventStationDistanceType" substitutionGroup="eventStation"/>
 	<xsd:element name="embeddedOriginSubsetter" type="embeddedOriginSubsetterType" substitutionGroup="eventStation"/>
+	<xsd:element name="embeddedStationSubsetter" type="embeddedStationSubsetterType" substitutionGroup="eventStation"/>
+	<xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
+	<xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
+	<xsd:element name="linearDistanceMagnitude" type="linearDistanceMagnitudeType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
+	<xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
+	<xsd:element name="phaseAreaInteraction" type="phaseAreaInteractionType" substitutionGroup="eventStation"/>
+	<xsd:element name="phaseDistanceInteraction" type="phaseDistanceInteractionType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationXOR" type="eventStationXORType" substitutionGroup="eventStation"/>
 	<xsd:element name="eventStationNOT" type="eventStationNOTType" substitutionGroup="eventStation"/>
 	
