@@ -2,17 +2,17 @@
 <pages>
         <page>
                 <source>content/index.xml</source>
-                <destination>index.html</destination>
+                <destination>generatedSite/index.html</destination>
                 <name>Home</name>
         </page>
         <page>
                 <source>content/download.xml</source>
-                <destination>download.html</destination>
+                <destination>generatedSite/download.html</destination>
                 <name>Download</name>
         </page>
         <page>
                 <source>../xdocs/walkthrough.xml</source>
-                <destination>walkthrough.html</destination>
+                <destination>generatedSite/walkthrough.html</destination>
                 <name>Walkthrough</name>
         </page>
 </pages>
