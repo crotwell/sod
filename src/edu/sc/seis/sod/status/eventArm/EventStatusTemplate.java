@@ -19,69 +19,59 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public class EventStatusTemplate extends FileWritingTemplate implements EventStatus{
-    
+
     public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException {
         super(extractConstructorArg(el));
         Element config = TemplateFileLoader.getTemplate(SodUtil.getElement(el, "eventConfig"));
         config.removeChild(SodUtil.getElement(config, "filename"));
         parse(config);
     }
-    
+
     private static String extractConstructorArg(Element el) throws IOException, SAXException, ParserConfigurationException, DOMException{
         String fileDir = SodUtil.getElement(el, "fileDir").getFirstChild().getNodeValue();
         Element eventConfigEl = SodUtil.getElement(el, "eventConfig");
         Element templateConfig = TemplateFileLoader.getTemplate(eventConfigEl);
         Element fileNameElement = SodUtil.getElement(templateConfig, "filename");
         String filename = fileNameElement.getFirstChild().getNodeValue();
-        
+
         return fileDir + '/' + filename;
     }
-    
+
     public void setArmStatus(String status) throws IOException {
         this.status = status;
         write();
     }
-    
+
     public Object getTemplate(String tag, Element el){
         if(tag.equals("events")){
-            EventGroupTemplate egt = new EventGroupTemplate(el);
-            internalStatusWatchers.add(egt);
-            return egt;
+            return  new EventGroupTemplate(el);
         }else if(tag.equals("status")) return new StatusFormatter();
         else if (tag.equals("mapEventStatus")){
-            MapEventStatus mapStatus = new MapImgSrc(el);
-            if (!mapStatus.isDuplicateForLocation()){
-                internalStatusWatchers.add(mapStatus);
-            }
-            return mapStatus;
+            return new MapImgSrc(el);
         }
         return super.getTemplate(tag, el);
     }
-    
 
-    
+
+
     private class MapImgSrc extends MapEventStatus implements GenericTemplate{
-        
+
         public MapImgSrc(Element el){
             super(el);
         }
-        
+
         public String getResult(){
             return SodUtil.getRelativePath(getOutputDirectory().toString() + '/' + getFilename(), fileLoc, "/");
         }
     }
-    
-    public void change(EventAccessOperations event, EventCondition status) throws Exception {
-        Iterator it = internalStatusWatchers.iterator();
-        while(it.hasNext()) ((EventStatus)it.next()).change(event, status);
+
+    public void change(EventAccessOperations event, EventCondition status) {
         write();
     }
-    
+
     private class StatusFormatter implements GenericTemplate{
         public String getResult(){ return status; }
     }
-    
-    private List internalStatusWatchers = new ArrayList();
-    
+
     private String status = "";
 }
