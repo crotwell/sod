@@ -62,9 +62,42 @@ public class WaveFormArm implements Runnable {
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;     
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	//processNetworkArm();	
+	processWaveFormArm();	
     }
 
+    public void processWaveFormArm() {
+
+	if(eventStationSubsetter.accept(null, null, null)) {
+	    processEventChannelSubsetter();
+	}
+	
+    }
+
+    public void processEventChannelSubsetter() {
+
+	if(eventChannelSubsetter.accept(null, null, null)) {
+	    processFixedDataCenter();
+	}
+    }
+
+    public void processFixedDataCenter() {
+
+	processPhaseRequestSubsetter();
+	
+    }
+
+    public void processPhaseRequestSubsetter() {
+
+	if(phaseRequestSubsetter.accept(null)) {
+	    processAvailableDataSubsetter();
+	}
+	
+    }
+    
+    public void processAvailableDataSubsetter() {
+
+	System.out.println("Successfully iterated through the WaveFormArm");
+    }
 
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
 
