@@ -274,8 +274,10 @@ public class EventArm implements Runnable{
                 process(event);
                 change(event, IN_PROG);
             }else{
-                change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                         Standing.REJECT));
+                Status status = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                         Standing.REJECT);
+                change(event, status);
+                failLogger.info(event+" "+status);
             }
             lastEvent = event;
         }
@@ -466,4 +468,8 @@ public class EventArm implements Runnable{
     private CacheEvent lastEvent;
 
     private static Logger logger = Logger.getLogger(EventArm.class);
+
+
+    private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.EventArm");
+
 }// EventArm
