@@ -5,21 +5,23 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Events</title>
-<style media="all">@import "../main.css";</style>
+<style media="all">@import "main.css";</style>
 </head>
 <body>
 <div id="Header">
 
-Events (sorted by location name)
+Events (sorted by region name)
 </div>
 <div id="Content">
 <h1>Events</h1>
 <h2>Status:</h2>
 <status/><br/>
-<h2>Successful events sorted by location:</h2>
+<h2>Map:</h2>
+<img><attribute name="src"><mapEventStatus xlink:href="status/eventMap.png"/></attribute></img>
+<h2>Successful events sorted by region:</h2>
 <table>
 <tr id="title">
-<td id="selected"><a href="location.html">Location</a></td>
+<td id="selected"><a href="location.html">Region</a></td>
 <td><a href="time.html">Time</a></td>
 <td><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
@@ -32,13 +34,11 @@ Events (sorted by location name)
 </tr>
 </eventLabel><sorting><location/></sorting></events>
 </table>
-<h2>Map:</h2>
-<img><attribute name="src"><mapEventStatus xlink:href="status/eventMap.png"/></attribute></img>
-<br/>
-Maps only update once every two minutes
 </div>
 <div id="Menu">
 <ul>
+<li><a href="index.html"><runName/></a></li>
+<li><a><attribute name="href"><configFileName/></attribute>Configuration</a></li>
 <li>
 <a href="location.html">Events</a>
 </li>

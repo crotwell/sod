@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Events</title>
-<style media="all">@import "../../main.css";</style>
+<style media="all">@import "../main.css";</style>
 </head>
 <body>
 <div id="Header">
@@ -15,31 +15,27 @@
 </div>
 <div id="Content">
 <h1>Channel information for this event</h1>
+<h2>Map:</h2>
+<img><attribute name="src"><map/></attribute></img><br/>
+Maps only update once every two minutes
 <h2>Channels:</h2>
 <table>
 <tr id="title">
 <td>Id</td>
-<td>Latitude</td>
-<td>Longitude</td>
-<td>Azimuth</td>
-<td>Dip</td>
+<td>Begin Time</td>
+<td>End Time</td>
 <td>Status</td>
 </tr>
 <channels><channel><tr>
 <td>
 <a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
 </td>
-<td><lat/></td>
-<td><lon/></td>
-<td><azimuth/></td>
-<td><dip/></td>
+<td><beginTime/></td>
+<td><endTime/></td>
 <td><status/></td>
 </tr>
 </channel></channels>
 </table>
-<h2>Map:</h2>
-<img><attribute name="src"><map/></attribute></img><br/>
-Maps only update once every two minutes
 </div>
 <div id="Menu">
 <ul>

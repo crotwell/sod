@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Stations</title>
-<style media="all">@import "../../../main.css";</style>
+<style media="all">@import "../../main.css";</style>
 </head>
 <body>
 <div id="Header">
@@ -25,10 +25,6 @@
 <tr id="title">
 <td>Id</td>
 <td>Name</td>
-<td>Begin Time</td>
-<td>End Time</td>
-<td>Latitude</td>
-<td>Longitude</td>
 <td>Status</td>
 </tr>
 <stations>
@@ -36,10 +32,6 @@
 <tr>
 <td><a><attribute name="href"><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime>/channels.html</attribute><networkCode/>.<stationCode/></a></td>
 <td><name/></td>
-<td><beginTime/></td>
-<td><endTime/></td>
-<td><lat/></td>
-<td><lon/></td>
 <td><status/></td>
 </tr>
 </station>
@@ -48,6 +40,12 @@
 </div>
 <div id="Menu">
 <ul>
+<li>
+<a href="../../index.html"><runName/></a>
+</li>
+<li>
+<a href="../../config.html">Configuration</a>
+</li>
 <li>
 <a href="../../location.html">Events</a>
 </li>

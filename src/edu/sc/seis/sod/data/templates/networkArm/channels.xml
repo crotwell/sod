@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Channels</title>
-<style media="all">@import "../../../../main.css";</style>
+<style media="all">@import "../../../main.css";</style>
 </head>
 <body>
 <div id="Header">
@@ -26,10 +26,6 @@
 <td>Id</td>
 <td>Begin Time</td>
 <td>End Time</td>
-<td>Latitude</td>
-<td>Longitude</td>
-<td>Azimuth</td>
-<td>Dip</td>
 <td>Status</td>
 </tr>
 <channels>
@@ -38,10 +34,6 @@
 <td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
 <td><beginTime/></td>
 <td><endTime/></td>
-<td><lat/></td>
-<td><lon/></td>
-<td><azimuth/></td>
-<td><dip/></td>
 <td><status/></td>
 </tr>
 </channel>
