@@ -43,7 +43,7 @@ public class Status{
     public static final byte EVENT_ATTR_SUBSETTER = 0, EVENT_ORIGIN_SUBSETTER = 1,
         NETWORK_SUBSETTER = 2, EVENT_STATION_SUBSETTER = 3,
         EVENT_CHANNEL_SUBSETTER = 4, REQUEST_SUBSETTER = 5,
-        AVAILABLE_DATA_SUBSETTER = 6, DATA_SUBSETTER = 7, PROCESSOR = 8;
+        AVAILABLE_DATA_SUBSETTER = 6, DATA_SUBSETTER = 7, PROCESSOR = 8, EVENT_CHANNEL_POPULATION = 9;
 
     private static final String[] STAGE_STRINGS = { "Event attribute subsetter",
             "Event origin subsetter", "Network subsetter", "Event station subsetter",
