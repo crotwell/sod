@@ -163,8 +163,8 @@ public class WaveFormArm implements Runnable {
                 }else if(sodElement instanceof WaveFormStatus){
                     addStatusMonitor((WaveFormStatus)sodElement);
                 }else {
-                    System.err.println("Unkown tag "+((Element)node).getTagName()+" found in config file");
-                    System.exit(1);
+                    System.err.println("Unknown tag "+((Element)node).getTagName()+" found in config file");
+					throw new IllegalArgumentException("The waveformArm does not know about tag " + ((Element)node).getTagName());
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
