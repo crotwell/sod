@@ -9,7 +9,7 @@
 	   <eventFinder>
 
 <!-- The EventDC will have a name that it is registered under in the naming service. -->
-		<name>ANHINGAEVENTDC</name>
+		<name>AHINGAEVENTDC</name>
 
 <!-- The EventDC will also be registered under a subdirectory according to its reversed DNS. -->
 		<dns>edu/sc/seis</dns>
@@ -17,7 +17,7 @@
 <!-- We will take events from anywhere -->
 		<globalArea/>
 
-<!-- Depths from 0 to 1000 kilometers are ok, that is pretty much everything -->
+<!-- Depths from 0 to 1000 kilometers are ok, -->
 		<originDepthRange>
 			<unitRange>
 				<unit>KILOMETER</unit>
@@ -126,7 +126,6 @@
 
 	<stationAND>
 		  <stationArea>
-                    <description>This is roughly South Carolina.</description>
 		    <boxArea>
 			<latitudeRange>
 				<min>32</min>
@@ -141,7 +140,7 @@
 		<stationeffectiveTimeOverlap>
 			<effectiveTimeOverlap>
 				<min>1999-01-01T00:00:00Z</min>
-				<max>2003-01-01T00:00:00Z</max>
+				<max>2002-01-01T00:00:00Z</max>
 			</effectiveTimeOverlap>
 		</stationeffectiveTimeOverlap>
 	</stationAND>
@@ -168,13 +167,44 @@
     </networkArm>
 
     <waveFormArm>
-<!-- If we wanted to subset based on event-station, it would go here. -->
+	<eventStationOR>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>30</min>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<description>describes magnitude</description>
+					<magType>mb</magType>
+					<min>5.5</min>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+		<eventStationAND>
+			<eventStationDistance>
+				<distanceRange>
+					<unit>DEGREE</unit>
+					<min>60</min>
+					<max>90</max>
+				</distanceRange>
+			</eventStationDistance>
+			<embeddedOriginSubsetter>
+				<magnitudeRange>
+					<magType>mb</magType>
+					<min>6.0</min>
+				</magnitudeRange>
+			</embeddedOriginSubsetter>
+		</eventStationAND>
+	</eventStationOR>
 
 	<fixedDataCenter>
 		<name>SCEPPSeismogramDC</name>
 		<dns>edu/sc/seis</dns>
 	</fixedDataCenter>
-
+	<localSeismogramArm>
 	<phaseRequest>
 		<beginPhase>firstP</beginPhase>
 		<beginOffset>
@@ -188,13 +218,12 @@
 		</endOffset>
 	</phaseRequest>
 
-<!-- Only accept data that has no gaps and fully covers the time range we asked for -->
 	<availableDataAND>
 		<nogaps/>
 		<fullCoverage/>
 	</availableDataAND>
 
-	<printlineWaveformProcessor/>
-
+	<printlineSeismogramProcess/>
+	</localSeismogramArm>
    </waveFormArm>
 </sod>
