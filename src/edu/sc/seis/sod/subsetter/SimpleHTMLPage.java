@@ -10,82 +10,153 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 public class SimpleHTMLPage{
-        public SimpleHTMLPage(String title, String fileName, File path){
-            this.title = title;
-            this.path = path;
-            this.fileName = fileName;
+    public SimpleHTMLPage(String title, String fileName, File path){
+        this.title = title;
+        this.path = path;
+        this.fileName = fileName;
+        allSimplePages.add(this);
+    }
+    
+    public void append(String sectionName, String text){
+        append(sectionName, text, -1);
+    }
+    
+    public void append(String name, String text, int pos){
+        Section sec = getSection(name);
+        if(sec == null){
+            if(pos < 0)
+                sections.add(sections.size(),new Section(name, text + "<br>\n"));
+            else
+                sections.add(pos, new Section(name, text + "<br>\n"));
+        }else{
+            sec.append(text + "<br>\n");
         }
-        
-        public void append(String section, String text){
-            if(sectionToContents.get(section) == null){
-                sectionToContents.put(section, text + "<br>\n");
-            }else{
-                String curContents = (String)sectionToContents.get(section);
-                sectionToContents.put(section, curContents + text + "<br>\n");
+    }
+    
+    public void clear(String section){
+        if(getSection(section) != null) getSection(section).clear();
+    }
+    
+    public Section getSection(String name){
+        Iterator it = sections.iterator();
+        while(it.hasNext()){
+            Section cur = (Section)it.next();
+            if(cur.getName().equals(name)){
+                return cur;
             }
         }
-        
-        public void clear(String section){
-            sectionToContents.remove(section);
+        return null;
+    }
+    
+    public String getTitle(){ return title; }
+    
+    public File write(){
+        File output = new File(path, fileName);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+            writer.write(constructPage());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+    
+    public String toString(){
+        return fileName;
+    }
+    
+    private String constructPage(){
+        String header = "<html>\n<header><title>" + title + "</title></header>\n";
+        StringBuffer body = new StringBuffer("<body>\n");
+        body.append(constructSections());
+        body.append("</body>\n</html>");
+        return header + body;
+    }
+    
+    private String constructSections(){
+        Iterator it = sections.iterator();
+        StringBuffer contents = new StringBuffer("");
+        while(it.hasNext()){
+            contents.append(((Section)it.next()).getSection());
+        }
+        contents.append(links.getSection());
+        return contents.toString();
+    }
+    
+    private class Section{
+        public Section(String name){
+            this(name, "");
         }
         
-        public void addLink(SimpleHTMLPage page){
-            append("Links", "<A HREF=" + page + ">" + page.getTitle() + "</A>");
+        public Section(String name, String text){
+            this.name = name;
+            append(text);
         }
         
-        public void addLinks(SimpleHTMLPage[] pages){
-            for (int i = 0; i < pages.length; i++) {
-                addLink(pages[i]);
+        public void clear(){ contents = new StringBuffer(""); }
+        
+        public void append(String newContents){
+            if(contents.toString().equals("")) contents = new StringBuffer(newContents);
+            else contents.append(newContents);
+        }
+        
+        public String getName(){ return name; }
+        
+        public String getContents(){ return contents.toString(); }
+        
+        public String getSection(){
+            return "<b>" + name +":</b><br>\n" + getContents();
+        }
+        
+        public boolean equals(Object other){
+            if(other instanceof Section){
+                if(((Section)other).getName().equals(name)){
+                    return true;
+                }
             }
+            return false;
         }
         
-        public String getTitle(){ return title; }
+        private String name;
         
-        public File write(){
-            File output = new File(path, fileName);
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(output));
-                writer.write(constructPage());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        private StringBuffer contents = new StringBuffer("");
+    }
+    
+    private class LinkSection extends Section{
+        public LinkSection(){
+            super("Links");
+        }
+        
+        public String getContents(){
+            StringBuffer contents = new StringBuffer("");
+            synchronized(allSimplePages){
+                Iterator it = allSimplePages.iterator();
+                while(it.hasNext()){
+                    SimpleHTMLPage page = (SimpleHTMLPage)it.next();
+                    if(page != SimpleHTMLPage.this){
+                        contents.append("<A HREF=" + page + ">" + page.getTitle() + "</A><br>\n");
+                    }
+                }
             }
-            return output;
+            return contents.toString();
         }
         
-        public String toString(){
-            return fileName;
-        }
-        
-        private String constructPage(){
-            String header = "<html>\n<header><title>" + title + "</title></header>\n";
-            String body = "<body>\n";
-            body += constructContents();
-            body += "</body>\n</html>";
-            return header + body;
-        }
-        
-        private String constructContents(){
-            String contents = "";
-            Iterator it = sectionToContents.keySet().iterator();
-            while(it.hasNext()){
-                String title = (String)it.next();
-                String body = (String)sectionToContents.get(title);
-                contents += "<b>" + title +":</b><br>\n";
-                contents += body;
-            }
-            return contents;
-        }
-        
-        private Map sectionToContents = new HashMap();
-        
-        private File path;
-        
-        private String fileName, title;
+    }
+    
+    private Section links = new LinkSection();
+    
+    private static List allSimplePages = Collections.synchronizedList(new ArrayList());
+    
+    private List sections = new ArrayList();
+    
+    private File path;
+    
+    private String fileName, title;
 }
-
