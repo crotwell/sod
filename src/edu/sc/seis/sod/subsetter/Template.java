@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -21,41 +22,55 @@ public abstract class Template{
      */
     protected abstract Object getTemplate(String tag, Element el);
     
-    protected void parse(Element el){ parse(el.getChildNodes()); }
+    protected void parse(Element el){
+        parse(el.getChildNodes());
+        if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
+    }
+    
+    public static boolean v = false;
     
     private void parse(NodeList nl){
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            if(n.getNodeType() == Node.TEXT_NODE)
-                templates.add(textTemplate(n.getNodeValue()));
+            if(n.getNodeType() == Node.TEXT_NODE) addString(n.getNodeValue());
             else{
                 String name = n.getNodeName();
                 if(name.equals("attribute")) continue;
                 Object template = getTemplate(name, (Element)n);
-                if(template != null) templates.add(template);
+                if(template != null) addTemplate(template);
                 else{
-                    templates.add(textTemplate("<" + name));
+                    addString("<" + name);
                     int numAttr = addAttributes(n);
-                    if(n.getChildNodes().getLength() - numAttr == 0){
-                        templates.add(textTemplate("/>"));
-                    }else{
-                        templates.add(textTemplate(">"));
+                    if(n.getChildNodes().getLength() - numAttr == 0) addString("/>");
+                    else{
+                        addString(">");
                         parse(n.getChildNodes());
-                        templates.add(textTemplate("</" + name + ">"));
+                        addString("</" + name + ">");
                     }
                 }
             }
         }
     }
     
+    private void addTemplate(Object template){
+        if(!builtUpText.equals("")) templates.add(textTemplate(builtUpText));
+        templates.add(template);
+        builtUpText = "";
+    }
+    
+    private void addString(String text){ if(v) System.out.println("adding string " + text);
+        builtUpText += text; }
+    
+    private String builtUpText = "";
+    
     private int addAttributes(Node n){
-        templates.add(textTemplate(getAttrString(n)));
+        addString(getAttrString(n));
         int numAttr = 0;
         for (int i = 0; i < n.getChildNodes().getLength() && childName(i, n).equals("attribute"); i++) {
             Element attr = (Element)n.getChildNodes().item(i);
-            templates.add(textTemplate(" " + attr.getAttribute("name") + "=\""));
+            addString(" " + attr.getAttribute("name") + "=\"");
             parse(attr.getChildNodes());
-            templates.add(textTemplate("\""));
+            addString("\"");
             numAttr++;
         }
         return numAttr;
