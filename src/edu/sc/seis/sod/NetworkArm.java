@@ -3,13 +3,11 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.sc.seis.sod.subsetter.networkArm.*;
 import java.util.*;
 
-import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
-import edu.sc.seis.fissuresUtil.cache.SynchronizedDCNetworkAccess;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -47,6 +45,16 @@ public class NetworkArm {
             //networkStatusTable = new JDBCNetworkStatus();
         }catch(SQLException e){}
         processConfig(config);
+    }
+
+    public NetworkAccess getNetwork(NetworkId network_id) {
+        for (int i = 0; i < netDbs.length; i++) {
+            if(NetworkIdUtil.areEqual(netDbs[i].getNetworkAccess().get_attributes().get_id(),
+                                      network_id)){
+                return netDbs[i].getNetworkAccess();
+            }
+        }
+        throw new IllegalArgumentException("No network for id: " + NetworkIdUtil.toString(network_id));
     }
 
     private void processConfig(Element config) throws ConfigurationException {
@@ -116,9 +124,6 @@ public class NetworkArm {
 
     public NetworkDCOperations getNetworkDC() {
         return finder.getNetworkDC();
-    }
-    public NetworkFinder getFinder() {
-        return finder.getNetworkDC().a_finder();
     }
 
     private boolean needsRefresh() {
