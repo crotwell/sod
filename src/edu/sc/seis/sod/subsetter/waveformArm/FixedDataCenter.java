@@ -10,6 +10,7 @@ import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.subsetter.AbstractSource;
 import edu.sc.seis.sod.subsetter.waveformArm.SeismogramDCLocator;
 import org.w3c.dom.Element;
+import edu.sc.seis.fissuresUtil.cache.RetryDataCenter;
 /**
  * FixedDataCenter.java
  *
@@ -30,7 +31,7 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
 
         dns = getDNSName();
         objectName = getSourceName();
-        dataCenter = new NSSeismogramDC(dns, objectName, fissuresNamingService);
+        dataCenter = new RetryDataCenter(new NSSeismogramDC(dns, objectName, fissuresNamingService), 2);
     }
 
     public ProxySeismogramDC getSeismogramDC(EventAccessOperations event,
