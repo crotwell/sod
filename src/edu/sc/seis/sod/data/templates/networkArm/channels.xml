@@ -20,6 +20,32 @@
 </div>
 <div id="Content">
 <h1>Channels in this station</h1>
+<h2>Station Information:</h2>
+<table>
+<station>
+<tr>
+<td><b>Name</b></td>
+<td><name/> (<networkCode/>.<stationCode/>)</td>
+</tr>
+<tr>
+<td><b>Latitude</b></td>
+<td><lat/></td>
+</tr>
+<tr>
+<td><b>Longitude</b></td>
+<td><lon/></td>
+</tr>
+
+<tr>
+<td><b>Begin Time</b></td>
+<td><beginTime/></td>
+</tr>
+<tr>
+<td><b>End Time</b></td>
+<td><endTime/></td>
+</tr>
+</station>
+</table>
 <h2>Channels:</h2>
 <table>
 <tr id="title">
