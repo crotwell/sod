@@ -16,7 +16,7 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 
 public interface LocalSeismogramProcessor {
 
-    public void process(Event event, 
+    public void process(EventAccessOperations event, 
 			Channel channel, 
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies);

@@ -3,7 +3,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
 /**
- * ChannelIdFilter.java
+ * ChannelIdSubsetter.java
  *
  *
  * Created: Thu Dec 13 17:15:04 2001
@@ -12,8 +12,8 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface ChannelIdFilter {
+public interface ChannelIdSubsetter {
 
     public boolean accept(ChannelId channelId, CookieJar cookies);
     
-}// ChannelIdFilter
+}// ChannelIdSubsetter

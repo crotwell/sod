@@ -3,7 +3,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
 /**
- * NetworkFilter.java
+ * NetworkSubsetter.java
  *
  *
  * Created: Thu Dec 13 17:13:46 2001
@@ -12,8 +12,8 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface NetworkFilter {
+public interface NetworkSubsetter {
 
-    public boolean accept(Network network, CookieJar cookies);
+    public boolean accept(NetworkAccessOperations network, CookieJar cookies);
     
-}// NetworkFilter
+}// NetworkSubsetter

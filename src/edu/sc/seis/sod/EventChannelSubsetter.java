@@ -5,7 +5,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
 /**
- * EventChannelFilter.java
+ * EventChannelSubsetter.java
  *
  *
  * Created: Thu Dec 13 17:19:47 2001
@@ -14,8 +14,8 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface EventChannelFilter {
+public interface EventChannelSubsetter {
 
-    public boolean accept(Event event, Channel channel, CookieJar cookies);
+    public boolean accept(EventAccessOperations event, Channel channel, CookieJar cookies);
     
-}// EventChannelFilter
+}// EventChannelSubsetter

@@ -4,7 +4,7 @@ import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 
 /**
- * StationIdFilter.java
+ * StationIdSubsetter.java
  *
  *
  * Created: Thu Dec 13 17:06:22 2001
@@ -13,8 +13,8 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface StationIdFilter {
+public interface StationIdSubsetter {
 
     public boolean accept(StationId id, CookieJar cookies);
     
-}// StationIdFilter
+}// StationIdSubsetter

@@ -3,8 +3,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 
 /**
- * EventFilter.java
- *
+ * EventAttrSubsetter.java
  *
  * Created: Thu Dec 13 17:03:44 2001
  *
@@ -12,9 +11,9 @@ import edu.iris.Fissures.event.*;
  * @version
  */
 
-public interface EventFilter {
+public interface EventAttrSubsetter {
 
-    public boolean accept(EventAccessOperations event, CookieJar cookies);
+    public boolean accept(EventAttr event, CookieJar cookies);
 
     
-}// EventFilter
+}// EventSubsetter

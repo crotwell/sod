@@ -8,7 +8,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 
 /**
- * EventSeqFilter.java
+ * EventAND.java
  *
  *
  * Created: Thu Dec 13 21:49:59 2001
@@ -17,18 +17,18 @@ import edu.iris.Fissures.event.*;
  * @version
  */
 
-public class EventSeqFilter implements EventFilter {
-    public EventSeqFilter (){
+public class EventAND implements EventSubsetter {
+    public EventAND (){
     }
 
-    public void add(EventFilter filter) {
-	filterList.add(filter);
+    public void add(EventSubsetter eventSubsetter) {
+	filterList.add(eventSubsetter);
     }
 
     public boolean accept(EventAccessOperations e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
-	    EventFilter filter = (EventFilter)it.next();
+	    EventSubsetter filter = (EventSubsetter)it.next();
 	    if ( ! filter.accept(e, cookies)) { //changed from event to e
 		return false;
 	    } // end of if (! filter.accept(event))
@@ -36,8 +36,6 @@ public class EventSeqFilter implements EventFilter {
 	return true;
     }
 
-  
-
     List filterList = new LinkedList();
 
-}// EventSeqFilter
+}// EventAND

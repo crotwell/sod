@@ -21,7 +21,7 @@ import edu.iris.Fissures.util.*;
 public interface LocalMotionVectorProcessor {
 
 
-    public void process(Event event, 
+    public void process(EventAccessOperations event, 
 			Channel channel, 
 			MotionVector[] vectors, 
 			CookieJar cookies);

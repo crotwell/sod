@@ -2,7 +2,7 @@ package edu.sc.seis.sod;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
 /**
- * ChannelFilter.java
+ * ChannelSubsetter.java
  *
  *
  * Created: Thu Dec 13 17:15:47 2001
@@ -11,8 +11,8 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface ChannelFilter {
+public interface ChannelSubsetter {
 
     public boolean accept(Channel channel, CookieJar cookies);
     
-}// ChannelFilter
+}// ChannelSubsetter

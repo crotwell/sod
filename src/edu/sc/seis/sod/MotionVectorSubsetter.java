@@ -16,7 +16,7 @@ import edu.iris.Fissures.event.*;
 
 public class MotionVectorFilter {
 
-    public boolean accept(Event event, 
+    public boolean accept(EventAccessOperations event, 
 			  Channel channel, 
 			  LocalMotionVector[] motionVectors,
 			  CookieJar cookies) {
