@@ -41,29 +41,50 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
-
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-tabs")) {
+                tabs = true;
+            }
+        }
     }
 
     public void start() {
-        JFrame frame = new JFrame("SOD Simple GUI");
+        JFrame frame = new JFrame(frameName);
         frame.getContentPane().setLayout(new BorderLayout());
-        JTabbedPane tabs = new JTabbedPane();
-        frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
         Document doc = start.getDocument();
-
-        // put each top level sod element in a panel
-        NodeList list = doc.getDocumentElement().getChildNodes();
-        JPanel panel;
-        for (int j = 0; j < list.getLength(); j++) {
-            if (list.item(j) instanceof Element) {
-                panel = new JPanel();
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.anchor = gbc.WEST;
-                gbc.fill = gbc.HORIZONTAL;
-                panel.setLayout(new GridBagLayout());
-                tabs.add(((Element)list.item(j)).getTagName(), panel);
-                addElementToPanel(panel, (Element)list.item(j), gbc);
+        if (tabs) {
+            JTabbedPane tabs = new JTabbedPane();
+            frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
+            // put each top level sod element in a panel
+            NodeList list = doc.getDocumentElement().getChildNodes();
+            JPanel panel;
+            for (int j = 0; j < list.getLength(); j++) {
+                if (list.item(j) instanceof Element) {
+                    panel = new JPanel();
+                    GridBagConstraints gbc = new GridBagConstraints();
+                    gbc.gridx=0;
+                    gbc.gridy=0;
+                    gbc.anchor = gbc.WEST;
+                    gbc.fill = gbc.HORIZONTAL;
+                    gbc.weightx = 1;
+                    gbc.weighty = 1;
+                    panel.setLayout(new GridBagLayout());
+                    tabs.add(((Element)list.item(j)).getTagName(), panel);
+                    addElementToPanel(panel, (Element)list.item(j), gbc);
+                }
             }
+        } else {
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx=0;
+            gbc.gridy=0;
+            gbc.anchor = gbc.WEST;
+            gbc.fill = gbc.HORIZONTAL;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            addElementToPanel(panel, doc.getDocumentElement(), gbc);
+            frame.getContentPane().add(new JScrollPane(panel), BorderLayout.CENTER);
         }
         frame.pack();
         frame.show();
@@ -80,9 +101,15 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
+        System.out.println("addElementToPanel "+element.getTagName()+" gridx="+gbc.gridx+" gridy="+gbc.gridy);
         JLabel label = new JLabel(element.getTagName());
         panel.add(label, gbc);
         gbc.gridx++;
+        addChildrenToPanel(panel, element, gbc);
+        gbc.gridx--;
+    }
+
+    void addChildrenToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
         NodeList list = element.getChildNodes();
         // simple case of only 1 child Text node
         if (list.getLength() == 1 && list.item(0) instanceof Text) {
@@ -100,9 +127,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             }
         }
         gbc.gridy++;
-        gbc.gridx--;
     }
-
 
     void addTextNodeToPanel(JPanel panel, Text text, GridBagConstraints gbc) {
         if (text.getNodeValue().trim().equals("")) {
@@ -110,7 +135,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         }
         JTextField textField = new JTextField();
         textField.setText(text.getNodeValue().trim());
-        TextListener textListen = new SimpleGUIEditor.TextListener(text);
+        TextListener textListen = new TextListener(text);
         textField.getDocument().addDocumentListener(textListen);
         panel.add(textField, gbc);
     }
@@ -125,63 +150,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
         System.out.println("Done editing.");
     }
 
+    String frameName = "Simple XML Editor GUI";
+
+    boolean tabs = false;
+
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
 
-    class TextListener implements DocumentListener {
-        Text text;
 
-        TextListener(Text text) {
-            this.text = text;
-        }
-        /**
-         * Gives notification that an attribute or set of attributes changed.
-         *
-         * @param e the document event
-         */
-        public void changedUpdate(DocumentEvent e) {
-            try {
-                text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
-            } catch (DOMException ex) {
-                logger.error(ex);
-            } catch (BadLocationException ex) {
-                logger.error(ex);
-            }
-        }
-
-        /**
-         * Gives notification that there was an insert into the document.  The
-         * range given by the DocumentEvent bounds the freshly inserted region.
-         *
-         * @param e the document event
-         */
-        public void insertUpdate(DocumentEvent e) {
-            try {
-                text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
-            } catch (DOMException ex) {
-                logger.error(ex);
-            } catch (BadLocationException ex) {
-                logger.error(ex);
-            }
-        }
-
-        /**
-         * Gives notification that a portion of the document has been
-         * removed.  The range is given in terms of what the view last
-         * saw (that is, before updating sticky positions).
-         *
-         * @param e the document event
-         */
-        public void removeUpdate(DocumentEvent e) {
-            try {
-                text.setData(e.getDocument().getText(0, e.getDocument().getLength()));
-            } catch (DOMException ex) {
-                logger.error(ex);
-            } catch (BadLocationException ex) {
-                logger.error(ex);
-            }
-        }
-
-
-    }
 }
 
