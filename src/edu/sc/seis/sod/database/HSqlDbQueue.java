@@ -206,6 +206,7 @@ public class HSqlDbQueue implements Queue {
      */
     public synchronized void setSourceAlive(boolean value) {
 	this.sourceAlive = value;
+	notifyAll();
     }
     
     /**
