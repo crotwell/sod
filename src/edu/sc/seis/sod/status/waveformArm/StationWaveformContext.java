@@ -67,7 +67,7 @@ public class StationWaveformContext  extends WaveformArmContext {
                 HashSet out = new HashSet();
                 if (Start.getWaveformArm().getMotionVectorArm() != null) {
                     for (int i = 0; i < ecps.length; i++) {
-                        out.add(Start.getWaveformArm().getEventChannelGroupPair(ecps[i]));
+                        out.add(Start.getWaveformArm().getEventVectorPair(ecps[i]));
                     }
                 } else {
                     for (int i = 0; i < ecps.length; i++) {
