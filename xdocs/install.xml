@@ -1,21 +1,29 @@
 <?xml version="1.0"?>
 <document>
-
-  <properties>
-    <author>Philip Crotwell</author>
-    <title>SOD Installation</title>
-  </properties>
-
-<body>
-
-<section name="Installing SOD">
-<p>
-SOD is currently distributed as a tar or zip file that contains sod itself, plus
-all the other jar files that it depends on. Also, a unix shell script and a windows
-bat file are provided to run it. See the <a href="walkthrough.html">walk through
-</a> document for a sample run of SOD.
-</p>
-
-</section>
-</body>
+        <properties>
+                <author>Philip Crotwell</author>
+                <title>SOD Installation</title>
+        </properties>
+        <body>
+                <section name="Installing SOD">
+                        <p> SOD is currently distributed in tar and zip formats. Both contain the
+                                same content, but we want to keep everyone happy. After <a
+                                href="download.html">downloading</a> the most recent version of the
+                                zip or the tar, whichever you please, unpack it with the tool of
+                                your choice. This will unpack something in a directory structure
+                                like the following:</p>
+                        <ul>
+                                <li>SOD <ul>
+                                                <li>bin</li>
+                                                <li>lib</li>
+                                                <li>docs</li>
+                                        </ul>
+                                </li>
+                        </ul>
+                        <p> At this point if all of these things came out of the distribution, SOD is officiallly installed. If you're not too worn out
+                                by the heavy lifting involved in unpacking SOD, now might be a good
+                                time to go on to the <a href="walkthrough.html">walkthrough</a> to
+                                see various neat things SOD can do. </p>
+                </section>
+        </body>
 </document>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+        <properties>
+                <title>Running SOD</title>
+        </properties>
+        <body>
+                <section name="Starting SOD">
+                        <section name="Windows">
+                                <p> SOD runs are currently started with a .bat file in Windows. To
+                                        execute it, open a command window and cd to the bin
+                                        directory in the place you unpacked sod. Execute the command
+                                        'sod.bat -f <em>config file name</em>'. This will start SOD
+                                        using the config file specified after the -f flag. The
+                                        command 'sod.bat -f ../docs/tutorial.xml' starts SOD with
+                                        the same tutorial config file used by the editor.</p>
+                        </section>
+                        <section name="Everybody Else">
+                                <p>If you're not on Windows, use the sod.sh script in the bin
+                                        directory. To run it, cd to SOD's bin directory and execute
+                                        'sod.sh -f <em>config file name</em>'. The -f option
+                                        specifies the config file SOD uses to set up its arms. The
+                                        command 'sod.sh -f ../docs/tutorial.xml' runs the same
+                                        tutorial that the editor opens by default.</p>
+                        </section>
+                        <section name="Running in a directory other than bin">
+                                <p>SOD's scripts use the variable SOD_HOME to locate SOD's lib
+                                        directory, and it's initially set to be one directory above
+                                        sod.sh. So, as long as you run the scripts from the bin
+                                        directory everything goes off smoothly. If you'd rather run
+                                        sod from another directory(so you can use the same config
+                                        file outputlocations, but not have a second run overwrite
+                                        the first), just set SOD_HOME in sod.sh to the directory
+                                        where SOD was unpacked. This will allow SOD to run from
+                                        anywhere and still find its lib directory.</p>
+                        </section>
+                </section>
+                <section name="Figuring out what SOD is doing using HTML status">
+                        <p>Both weed.xml and tutorial.xml in the SOD distribution generate HTML
+                                status pages, map images, and images of seismograms as they run.
+                                These can be used to monitor the work SOD is doing. The files are
+                                all put in the directory specified by the property Status Base
+                                Directory. In weed.xml and tutorial.xml this is the directory status
+                                relative to wherever the SOD run is started. So, if you start a SOD
+                                run on tutorial.xml as described in the first section of this
+                                document, a status directory will be created inside of the bin
+                                directory. This directory will contain loads of html files
+                                describing what SOD is doing. The best to visit first is index.html.
+                                It contains some basic information about the run (when it was
+                                started, how many waveforms have been processed, etc) and has links
+                                to all of the other pages SOD is generating. To find out more about
+                                what SOD is doing, follow those links and click on the <img
+                                src="helpmark.png"/> icons to see what the data near them indicates. </p>
+                </section>
+                <section name="Cleaning up after SOD">
+                        <img class="right" src="graytractor100.jpg"/>
+                        <section name="Generated files">
+                                <p>SOD runs generate a ton of files, and if those files still exist
+                                        for subsequent runs it can cause problems. For example the
+                                        save seismogram to file waveform arm processor will not
+                                        write over the files of a previous run. If it wants to write
+                                        to a file already exists, it'll just write that file but
+                                        with an incrementing number appended to the end. So if
+                                        similar SOD runs are executed in the same directory, they'll
+                                        probably end up writing out files to the same place with
+                                        bigger and bigger numbers appended to the end. These are
+                                        less than desirable results. As such, you should either
+                                        delete the data directories between subsequent runs, or run
+                                        SOD in different directories per run as described in the
+                                        section about running in a directory other than bin.
+                                        tutorial.xml and weed.xml both generate SAC files and save
+                                        them to the POND_II directory. So, if you run one of them,
+                                        tweak it, and then want to run it again in the same
+                                        directory, delete the POND_II directory before starting the run.</p>
+                        </section>
+                        <section name="SOD's Database">
+                                <p>SOD uses a database internally to store information about what
+                                        events and networks it's gotten, the pairings of events and
+                                        channels it has processed, and the results of various
+                                        processes. If SOD suddenly stops due to events outside of
+                                        its control (power outage, operating system reboot, 10.5 is
+                                        on and SOD doesn't want to miss it) it can use this database
+                                        to pick up where it left off and keep truckin'. However, if
+                                        you start SOD and its database is sitting there from a
+                                        previous completed run, it'll just think it died
+                                        unexpectedly and check its database to see what work
+                                        remains. If the config file gets the same events and
+                                        channels, SOD will declare all work finished and quit
+                                        immediately. To remedy this, there is a property called
+                                        Remove Database set in both weed.xml and tutorial.xml that
+                                        tells SOD to wipe its database before starting up. As long
+                                        as this is set, SOD starts with a clean slate. However, if
+                                        the unexpected has happend (nuclear holocaust, T-Rex attack,
+                                        sale on attractive green tractors) and SOD is interrupted,
+                                        unset this property so SOD will continue where it left off.
+                                        You can unset it by either changing TRUE inside the
+                                        removeDatabase tag to false, or unchecking the Remove
+                                        Database option in the editor and saving the file.</p>
+                        </section>
+                </section>
+        </body>
+</document>
