@@ -313,13 +313,24 @@ public class SodUtil {
     public static void copyStream(InputStream src, String dest) {
         File f = new File(dest);
         f.getParentFile().mkdirs();
+        OutputStream os = null;
         try {
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(f));
+            os = new BufferedOutputStream(new FileOutputStream(f));
             int curChar;
             while((curChar = src.read()) != -1)
                 os.write(curChar);
         } catch(IOException e) {
             GlobalExceptionHandler.handle("Troble copying a file", e);
+        } finally {
+            if(os != null) {
+                try {
+                    os.close();
+                } catch(IOException e1) {
+                    GlobalExceptionHandler.handle("Unable to close output stream for file "
+                                                          + f,
+                                                  e1);
+                }
+            }
         }
     }
 
