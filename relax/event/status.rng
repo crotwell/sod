@@ -23,7 +23,7 @@
         </define>
         <define name="eventStatusTemplate">
                 <element name="eventStatusTemplate">
-                        <attribute name="link" ns="http://www.w3.org/1999/xlink/"/>
+                        <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
                         <attribute name="outputLocation"/>
                 </element>
         </define>
