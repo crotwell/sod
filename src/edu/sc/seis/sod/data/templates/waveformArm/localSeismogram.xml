@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!--
 <template xmlns:xlink="http://www.w3.org/1999/xlink/">
 <outputLocation>
 <eventDir><originTime>yyyyMMddHHmmssSSS</originTime></eventDir>
@@ -7,20 +6,20 @@
 </outputLocation>
 <filename>seismograms.html</filename>
 <picName><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.png</picName>
--->
-<html>
+<html xmlns:xlink="http://www.w3.org/1999/xlink/">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <title>Seismograms in <station><name/></station> for <event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime> Mag <magnitude/></event></title>
 <style media="all">@import "../../main.css";</style>
 </head>
 <body>
-$A<br/>
-$B<br/>
+#set ( $station = $sod_channel.getSite().getStation() )
 <div id="Header">
 <a href="../../location.html"> Events</a>
-> <a href="../event.html"><event><feRegionName/> <originTime>MM/dd/yyyy HH:mm:ss</originTime></event></a>
-> <station><networkCode/>.<stationCode/>-<name/></station>
+<a href="../event.html">
+$FERegion.getRegionName(${sod_event.get_attributes().region})
+$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</a>
+${station.getNetworkAttr().get_code()}.${station.get_code()}-$station.getName()
 </div>
 <div id="Content">
 <h1>Seismograms for this Event</h1>
@@ -32,7 +31,7 @@ $B<br/>
 </tr>
 <tr>
 <td><b>Time</b></td>
-<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss Z", $sod_event.get_preferred_origin().getTime())</td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $sod_event.get_preferred_origin().getTime())</td>
 </tr>
 <tr>
 <td><b>Magnitude</b></td>
@@ -44,7 +43,7 @@ $fissures.formatMagnitude($m),
 </tr>
 <tr>
 <td><b>Depth</b></td>
-<td>$fissures.getDepth($origin.location)</td>
+<td>$fissures.formatQuantity($fissures.getDepth($origin.location))</td>
 </tr>
 <tr>
 <td><b>Latitude</b></td>
@@ -55,12 +54,10 @@ $fissures.formatMagnitude($m),
 <td>$fissures.getLongitude($origin.location)</td>
 </tr>
 </table>
-<station>
 <h2>Station Info</h2>
 <table>
 <tr>
 <td><b>Id</b></td>
-#set ( $station = $sod_channel.getSite().getStation() )
 <td>$station.get_code()</td>
 </tr>
 <tr>
@@ -77,21 +74,28 @@ $fissures.formatMagnitude($m),
 </tr>
 <tr>
 <td><b>Begin Time</b></td>
-<td><beginTime/></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeBegin($station.EffectiveTime))</td>
 </tr>
 <tr>
 <td><b>End Time</b></td>
-<td><endTime/></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss ZZZ", $fissures.getRangeEnd($station.EffectiveTime))</td>
 </tr>
 </table>
-</station>
 <h2>Seismograms</h2>
 <table>
 #foreach ($chanId in $allChanIds)
-#set ( $channel = $sod_cookieJar.get($chanId).get("sod_channel") )
+#set ( $chanContext = $sod_cookieJar.get($chanId) )
+#set ( $channel = $chanContext.get("sod_channel") )
 <tr>
-<td><b>$fissures.formatChannel($channel.get_id())</b></td>
-<td><img src="${fissures.formatChannel($channel.get_id())}.png"/></td>
+<td><b>$fissures.formatChannel($channel.get_id())</b><br/>
+$!chanContext.sod_phaseStoN_P.value</td>
+<td>
+#if ($chanContext.status.Standing.equals($chanContext.status.Standing.getForName("SUCCESS")) || $chanContext.status.Standing.equals($chanContext.status.Standing.getForName("IN_PROG")))
+<img src="${fissures.formatChannel($channel.get_id())}.png"/>
+#else
+$chanContext.status <br/>
+#end
+</td>
 </tr>
 #end
 </table>
@@ -103,4 +107,5 @@ $fissures.formatMagnitude($m),
 </body>
 </html>
 </template>
+
 

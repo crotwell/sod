@@ -52,6 +52,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     }
 
     public void update(Channel chan, CookieJar cookieJar) throws Exception{
+        this.cookieJar = cookieJar;
         //I intend to do something fancier very soon
         Iterator it = channelListeners.iterator();
         while (it.hasNext()){
@@ -75,7 +76,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
     public static String getVelocityResult(String template, CookieJar cookieJar) {
         try {
             StringWriter out = new StringWriter();
-            LocalSeismogramTemplateGenerator.getVelocity().evaluate(cookieJar.getContext(),
+            boolean status = LocalSeismogramTemplateGenerator.getVelocity().evaluate(cookieJar.getContext(),
                                                                     out,
                                                                     "localSeismogramTemplate",
                                                                     template);
