@@ -5,17 +5,17 @@
  */
 
 package edu.sc.seis.sod.editor;
+import java.io.*;
 import javax.swing.*;
 
+import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.BasicConfigurator;
@@ -26,12 +26,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 
 
 
 public class SimpleGUIEditor extends CommandLineEditor {
-    
+
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
         GlobalExceptionHandler.add(new GUIReporter());
@@ -46,7 +45,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             }
         }
     }
-    
+
     public void start() {
         frame = new JFrame(frameName);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -110,14 +109,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
-        System.out.println("addElementToPanel "+element.getTagName()+" gridx="+gbc.gridx+" gridy="+gbc.gridy);
         JLabel label = new JLabel(element.getTagName());
         panel.add(label, gbc);
         gbc.gridx++;
         addChildrenToPanel(panel, element, gbc);
         gbc.gridx--;
     }
-    
+
     void addChildrenToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
         NodeList list = element.getChildNodes();
         // simple case of only 1 child Text node
@@ -137,7 +135,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         }
         gbc.gridy++;
     }
-    
+
     void addTextNodeToPanel(JPanel panel, Text text, GridBagConstraints gbc) {
         if (text.getNodeValue().trim().equals("")) {
             return;
@@ -148,7 +146,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         textField.getDocument().addDocumentListener(textListen);
         panel.add(textField, gbc);
     }
-    
+
     /**
      *
      */
@@ -158,15 +156,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
         gui.start();
         System.out.println("Done editing.");
     }
-    
+
     String frameName = "Simple XML Editor GUI";
-    
+
     boolean tabs = false;
 
     JFrame frame;
 
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
-    
-    
+
+
 }
+
 
