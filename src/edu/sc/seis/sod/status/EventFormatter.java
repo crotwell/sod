@@ -99,6 +99,12 @@ public class EventFormatter extends Template implements EventTemplate{
                     return getMag(ev);
                 }
             };
+        } else if(tag.equals("allMagnitudes")) {
+            return new EventTemplate(){
+                public String getResult(EventAccessOperations ev) {
+                    return getMags(ev);
+                }
+            };
         } else if(tag.equals("originTime")) {
             return new Time(SodUtil.getText((el)));
         } else if(tag.equals("eventStatus")) {
@@ -213,6 +219,15 @@ public class EventFormatter extends Template implements EventTemplate{
 
     public String getFilizedName(EventAccessOperations event) {
         return FissuresFormatter.filize(getResult(event));
+    }
+
+    private String getMags(EventAccessOperations event){
+        Magnitude[] mags = getOrigin(event).magnitudes;
+        String result = new String();
+        for (int i = 0; i < mags.length; i++) {
+            result += MagnitudeUtil.toString(mags[0]) + " ";
+        }
+        return result;
     }
 
     private String getMag(EventAccessOperations event){
