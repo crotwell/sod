@@ -185,13 +185,11 @@
                             </element>
                         </optional>
                         <element name="eventTimeRange">
-                            <element name="timeRange">
-                                <element name="startTime">
-                                    <data type="string"/>
-                                </element>
-                                <element name="endTime">
-                                    <data type="string"/>
-                                </element>
+                            <element name="startTime">
+                                <data type="string"/>
+                            </element>
+                            <element name="endTime">
+                                <data type="string"/>
                             </element>
                         </element>
                         <optional>
@@ -1551,13 +1549,11 @@
                 </list>
             </element>
             <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -1763,13 +1759,11 @@
                 </list>
             </element>
             <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -1975,13 +1969,11 @@
                 </list>
             </element>
             <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -2187,13 +2179,11 @@
                 </list>
             </element>
             <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -2399,13 +2389,11 @@
                 </list>
             </element>
             <element name="originTimeRange">
-                <element name="timeRange">
-                    <element name="startTime">
-                        <data type="string"/>
-                    </element>
-                    <element name="endTime">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -2632,13 +2620,11 @@
                 </optional>
             </element>
             <element name="stationEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -2803,13 +2789,11 @@
                 </optional>
             </element>
             <element name="stationEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -2974,13 +2958,11 @@
                 </optional>
             </element>
             <element name="stationEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -3145,13 +3127,11 @@
                 </optional>
             </element>
             <element name="stationEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -3316,13 +3296,11 @@
                 </optional>
             </element>
             <element name="stationEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="stationArea">
@@ -3571,13 +3549,11 @@
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -3670,13 +3646,11 @@
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -3769,13 +3743,11 @@
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -3868,13 +3840,11 @@
                 </element>
             </element>
             <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="orientationRange">
@@ -5003,13 +4973,11 @@
                 </optional>
             </element>
             <element name="siteEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="siteArea">
@@ -5145,13 +5113,11 @@
                 <data type="string"/>
             </element>
             <element name="networkEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
+                <element name="startTime">
+                    <data type="string"/>
+                </element>
+                <element name="endTime">
+                    <data type="string"/>
                 </element>
             </element>
             <element name="networkAND">

@@ -40,13 +40,11 @@
                                                   </unitRange>
                                                 </originDepthRange>
                                                 <eventTimeRange>
-                                                  <timeRange>
                                                   <startTime>20020101T00:00:00.001Z</startTime>
                                                   <endTime>20020201T00:00:00.001Z</endTime>
-                                                  </timeRange>
                                                 </eventTimeRange>
                                                 <magnitudeRange>
-                                                  <magType>%</magType>
+                                                  <magType>M</magType>
                                                   <min>6.0</min>
                                                   <max>10.0</max>
                                                 </magnitudeRange>

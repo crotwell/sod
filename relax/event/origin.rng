@@ -93,10 +93,8 @@
                                 <description/>
                                 <example>
                                         <originTimeRange>
-                                                <timeRange>
-                                                  <startTime>20010101T00:00:00Z</startTime>
-                                                  <endTime>20011231T00:00:00Z</endTime>
-                                                </timeRange>
+                                              <startTime>20010101T00:00:00Z</startTime>
+                                              <endTime>20011231T00:00:00Z</endTime>
                                         </originTimeRange>
                                 </example>
                         </xsd:documentation>

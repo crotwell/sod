@@ -4,6 +4,7 @@
     <start>
         <ref name="site"/>
     </start>
+    <include href="../base/include/timeRange.rng"></include>
     <include href="../base/include/range.rng"/>
     <define name="site">
         <choice>
@@ -61,16 +62,14 @@
                     deactivated before a time range of interest. </description>
                 <example>
                     <siteEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                            <min>20020701T00:00:00.001Z</min>
-                            <max>20021030T00:00:00.001Z</max>
-                        </effectiveTimeOverlap>
+                            <startTime>20020701T00:00:00.001Z</startTime>
+                            <endTime>20021030T00:00:00.001Z</endTime>
                     </siteEffectiveTimeOverlap>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <element name="siteEffectiveTimeOverlap">
-            <externalRef href="../base/externalRef/effectiveTime.rng"/>
+            <ref name="timeRange"/>
         </element>
     </define>
     <define name="area">
@@ -116,8 +115,8 @@
                         </siteDepthRange>
                         <siteEffectiveTimeOverlap>
                             <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                             </effectiveTimeOverlap>
                         </siteEffectiveTimeOverlap>
                     </siteAND>
@@ -147,10 +146,8 @@
                             </unitRange>
                         </siteDepthRange>
                         <siteEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </siteEffectiveTimeOverlap>
                     </siteOR>
                 </example>
@@ -178,10 +175,8 @@
                             </unitRange>
                         </siteDepthRange>
                         <siteEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </siteEffectiveTimeOverlap>
                     </siteXOR>
                 </example>

@@ -5,13 +5,11 @@
         <notAllowed/>
     </start>
     <define name="timeRange">
-        <element name="timeRange">
-            <element name="startTime">
-                <data type="string"/>
-            </element>
-            <element name="endTime">
-                <data type="string"/>
-            </element>
+        <element name="startTime">
+            <data type="string"/>
+        </element>
+        <element name="endTime">
+            <data type="string"/>
         </element>
     </define>
 </grammar>

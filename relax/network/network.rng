@@ -4,6 +4,7 @@
     <start>
         <ref name="network"/>
     </start>
+    <include href="../base/include/timeRange.rng"></include>
     <define name="network">
         <choice>
             <ref name="code"/>
@@ -73,18 +74,14 @@
                 <description> Matches if the network overlaps the given time range. </description>
                 <example>
                     <networkEffectiveTimeOverlap>
-                        <description> Make sure the network was up during the time range we are
-                            interested in. </description>
-                        <effectiveTimeOverlap>
-                            <min>20020701T00:00:00.001Z</min>
-                            <max>20021030T00:00:00.001Z</max>
-                        </effectiveTimeOverlap>
+                            <startTime>20020701T00:00:00.001Z</startTime>
+                            <endTime>20021030T00:00:00.001Z</endTime>
                     </networkEffectiveTimeOverlap>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <element name="networkEffectiveTimeOverlap">
-            <externalRef href="../base/externalRef/effectiveTime.rng"/>
+            <ref name="timeRange"/>
         </element>
     </define>
     <define name="AND">
@@ -99,10 +96,8 @@
                             <value>Scripps Institution of Oceanography</value>
                         </networkOwner>
                         <networkEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </networkEffectiveTimeOverlap>
                     </networkAND>
                 </example>
@@ -127,10 +122,8 @@
                             <value>Scripps Institution of Oceanography</value>
                         </networkOwner>
                         <networkEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </networkEffectiveTimeOverlap>
                     </networkOR>
                 </example>
@@ -154,10 +147,8 @@
                             <value>Scripps Institution of Oceanography</value>
                         </networkOwner>
                         <networkEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </networkEffectiveTimeOverlap>
                     </networkXOR>
                 </example>

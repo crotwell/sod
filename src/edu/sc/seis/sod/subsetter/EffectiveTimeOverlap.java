@@ -14,42 +14,30 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
         start = new MicroSecondDate(range.start_time);
         end = new MicroSecondDate(range.end_time);
     }
-    
-    public EffectiveTimeOverlap (Element config){
-        Element childElement = null;
+
+    public EffectiveTimeOverlap(Element config){
         NodeList children = config.getChildNodes();
-        Node node;
-        for (int i=0; i<children.getLength(); i++) {
-            node = children.item(i);
-            if(node instanceof Element) {
-                String tagName = ((Element)node).getTagName();
-                if(tagName.equals("effectiveTimeOverlap") ){
-                    childElement =(Element)node;
-                }
-            }
-        }
-        children = childElement.getChildNodes();
         for(int  i = 0; i < children.getLength(); i ++) {
-            node = children.item(i);
+            Node node = children.item(i);
             if(node instanceof Element) {
                 String tagName = ((Element)node).getTagName();
                 Element el = (Element)node;
-                if(tagName.equals("min")) {
+                if(tagName.equals("startTime")) {
                     start = new MicroSecondDate(getEffectiveTime(el));
-                } else if (tagName.equals("max")) {
+                } else if (tagName.equals("endTime")) {
                     end = new MicroSecondDate(getEffectiveTime(el));
                 }
             }
         }
     }
-    
-    public static edu.iris.Fissures.Time getEffectiveTime(Element el) {
+
+    private edu.iris.Fissures.Time getEffectiveTime(Element el) {
         if(el == null) return null;
         String effectiveTime = SodUtil.getNestedText(el);
         edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
         return rtnTime;
     }
-    
+
     public boolean overlaps(edu.iris.Fissures.TimeRange otherRange) {
         MicroSecondDate otherStart = new MicroSecondDate(otherRange.start_time);
         MicroSecondDate otherEnd;
@@ -70,7 +58,8 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
             return true;
         }
     }
-    
+
     private MicroSecondDate start, end;
+
     private static Logger logger = Logger.getLogger(EffectiveTimeOverlap.class);
 }// EffectiveTimeOverlap

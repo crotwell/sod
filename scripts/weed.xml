@@ -43,13 +43,10 @@
                                 </unitRange>
                         </originDepthRange>
                         <eventTimeRange>
-                                <timeRange>
-                                        <startTime>20030101T00:00:00.001Z</startTime>
-                                        <endTime>20030131T23:59:59.999Z</endTime>
-                                </timeRange>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </eventTimeRange>
                         <magnitudeRange>
-                                <magType>%</magType>
                                 <min>6.0</min>
                                 <max>10.0</max>
                         </magnitudeRange>
@@ -105,10 +102,8 @@
                 </networkFinder>
                 <networkCode>II</networkCode>
                 <stationEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                                <min>20030101T00:00:00.001Z</min>
-                                <max>20030131T23:59:59.999Z</max>
-                        </effectiveTimeOverlap>
+                        <startTime>20030101T00:00:00.001Z</startTime>
+                        <endTime>20030131T23:59:59.999Z</endTime>
                 </stationEffectiveTimeOverlap>
                 <siteAND>
                         <siteOR>
@@ -116,10 +111,8 @@
                                 <siteCode>00</siteCode>
                         </siteOR>
                         <siteEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </siteEffectiveTimeOverlap>
                 </siteAND>
                 <channelAND>
@@ -129,10 +122,8 @@
                                 <gainCode>O</gainCode>
                         </channelNOT>
                         <channelEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
 

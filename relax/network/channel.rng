@@ -4,6 +4,7 @@
     <start>
         <ref name="channel"/>
     </start>
+    <include href="../base/include/timeRange.rng"></include>
     <include href="../base/include/quantity.rng"></include>
     <define name="channel">
         <choice>
@@ -86,10 +87,8 @@
                 <example>
                     <channelAND>
                         <channeleffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </channeleffectiveTimeOverlap>
                         <sampling>
                             <min>1</min>
@@ -119,10 +118,8 @@
                 <example>
                     <channelOR>
                         <channeleffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </channeleffectiveTimeOverlap>
                         <sampling>
                             <min>1</min>
@@ -151,10 +148,8 @@
                 <example>
                     <channelXOR>
                         <channeleffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </channeleffectiveTimeOverlap>
                         <sampling>
                             <min>1</min>
@@ -240,16 +235,14 @@
                     were deactivated before a time range of interest. </description>
                 <example>
                     <channelEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                            <min>20020701T00:00:00.001Z</min>
-                            <max>20021030T00:00:00.001Z</max>
-                        </effectiveTimeOverlap>
+                            <startTime>20020701T00:00:00.001Z</startTime>
+                            <endTime>20021030T00:00:00.001Z</endTime>
                     </channelEffectiveTimeOverlap>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <element name="channelEffectiveTimeOverlap">
-            <externalRef href="../base/externalRef/effectiveTime.rng"/>
+            <ref name="timeRange"/>
         </element>
     </define>
     <define name="orientationRange">

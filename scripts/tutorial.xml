@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
-		<runName>Tutorial Test Run</runName>
-		<statusBase>status</statusBase>
-		<eventQueryIncrement>
-			<value>1</value>
-			<unit>WEEK</unit>
-		</eventQueryIncrement>
-		<eventLag>
-			<value>1</value>
-			<unit>WEEK</unit>
-		</eventLag>
-		<eventRefreshInterval>
-			<value>6</value>
-			<unit>MINUTE</unit>
-		</eventRefreshInterval>	
-        	<waveformWorkerThreads>1</waveformWorkerThreads>
-		<maxRetryDelay>
-			<value>16</value>
-			<unit>DAY</unit>
-		</maxRetryDelay>
+        <runName>Tutorial Test Run</runName>
+        <statusBase>status</statusBase>
+        <eventQueryIncrement>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventQueryIncrement>
+        <eventLag>
+            <value>1</value>
+            <unit>WEEK</unit>
+        </eventLag>
+        <eventRefreshInterval>
+            <value>6</value>
+            <unit>MINUTE</unit>
+        </eventRefreshInterval>
+            <waveformWorkerThreads>1</waveformWorkerThreads>
+        <maxRetryDelay>
+            <value>16</value>
+            <unit>DAY</unit>
+        </maxRetryDelay>
+             <removeDatabase/>
         </properties>
         <eventArm>
                 <eventFinder>
@@ -45,13 +46,10 @@
                                 </unitRange>
                         </originDepthRange>
                         <eventTimeRange>
-                                <timeRange>
-                                        <startTime>20030101T00:00:00.001Z</startTime>
-                                        <endTime>20030131T23:59:59.999Z</endTime>
-                                </timeRange>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </eventTimeRange>
                         <magnitudeRange>
-                                <magType>%</magType>
                                 <min>6.0</min>
                                 <max>10.0</max>
                         </magnitudeRange>
@@ -82,10 +80,8 @@
                 </networkFinder>
                 <networkCode>II</networkCode>
                 <stationEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                                <min>20030101T00:00:00.001Z</min>
-                                <max>20030131T23:59:59.999Z</max>
-                        </effectiveTimeOverlap>
+                        <startTime>20030101T00:00:00.001Z</startTime>
+                        <endTime>20030131T23:59:59.999Z</endTime>
                 </stationEffectiveTimeOverlap>
                 <siteAND>
                         <siteOR>
@@ -93,10 +89,8 @@
                                 <siteCode>00</siteCode>
                         </siteOR>
                         <siteEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                                <startTime>20030101T00:00:00.001Z</startTime>
+                                <endTime>20030131T23:59:59.999Z</endTime>
                         </siteEffectiveTimeOverlap>
                 </siteAND>
                 <channelAND>
@@ -106,10 +100,8 @@
                                 <gainCode>O</gainCode>
                         </channelNOT>
                         <channelEffectiveTimeOverlap>
-                                <effectiveTimeOverlap>
-                                        <min>20030101T00:00:00.001Z</min>
-                                        <max>20030131T23:59:59.999Z</max>
-                                </effectiveTimeOverlap>
+                               <startTime>20030101T00:00:00.001Z</startTime>
+                               <endTime>20030131T23:59:59.999Z</endTime>
                         </channelEffectiveTimeOverlap>
                 </channelAND>
                 <networkInfoTemplateGenerator>
@@ -152,12 +144,10 @@
                                 </eventDirLabel>
                         </saveSeismogramToFile>
                         <localSeismogramTemplateGenerator>
-                                <!--<fileDir>status</fileDir>-->
                                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
                         </localSeismogramTemplateGenerator>
                 </localSeismogramArm>
                 <waveformEventTemplateGenerator>
-                        <!--<fileDir>status</fileDir>-->
                         <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
                 </waveformEventTemplateGenerator>
         </waveformArm>

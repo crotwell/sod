@@ -4,6 +4,7 @@
     <start>
         <ref name="station"/>
     </start>
+    <include href="../base/include/timeRange.rng"></include>
     <include href="../base/include/range.rng"/>
     <define name="station">
         <choice>
@@ -94,16 +95,14 @@
                     were deactivated before a time range of interest. </description>
                 <example>
                     <stationEffectiveTimeOverlap>
-                        <effectiveTimeOverlap>
-                            <min>20020701T00:00:00.001Z</min>
-                            <max>20021030T00:00:00.001Z</max>
-                        </effectiveTimeOverlap>
+                            <startTime>20020701T00:00:00.001Z</startTime>
+                            <endTime>20021030T00:00:00.001Z</endTime>
                     </stationEffectiveTimeOverlap>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
         <element name="stationEffectiveTimeOverlap">
-            <externalRef href="../base/externalRef/effectiveTime.rng"/>
+            <ref name="timeRange"/>
         </element>
     </define>
     <define name="area">
@@ -141,10 +140,8 @@
                 <example>
                     <stationAND>
                         <stationEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </stationEffectiveTimeOverlap>
                         <stationArea>
                             <boxArea>
@@ -178,10 +175,8 @@
                 <example>
                     <stationOR>
                         <stationEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </stationEffectiveTimeOverlap>
                         <stationArea>
                             <boxArea>
@@ -214,10 +209,8 @@
                 <example>
                     <stationXOR>
                         <stationEffectiveTimeOverlap>
-                            <effectiveTimeOverlap>
-                                <min>20020701T00:00:00.001Z</min>
-                                <max>20021030T00:00:00.001Z</max>
-                            </effectiveTimeOverlap>
+                                <startTime>20020701T00:00:00.001Z</startTime>
+                                <endTime>20021030T00:00:00.001Z</endTime>
                         </stationEffectiveTimeOverlap>
                         <stationArea>
                             <boxArea>
