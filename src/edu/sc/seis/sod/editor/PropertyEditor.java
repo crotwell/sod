@@ -5,19 +5,19 @@
  */
 
 package edu.sc.seis.sod.editor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.Box;
 import javax.swing.JComponent;
-import org.w3c.dom.*;
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
-import org.apache.xpath.XPathAPI;
+import javax.swing.JPanel;
 import javax.xml.transform.TransformerException;
-import java.util.Properties;
-import java.io.IOException;
-import java.awt.event.*;
+import org.apache.xpath.XPathAPI;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 public class PropertyEditor implements EditorPlugin {
-
     public JComponent getGUI(Element element) throws TransformerException {
         JPanel panel = new JPanel(new GridBagLayout());
         int gridy = 0;
@@ -74,21 +74,15 @@ public class PropertyEditor implements EditorPlugin {
     private JComponent makeTwiddler(Element el) throws TransformerException{
         for (int i = 0; i < timeQuantityEls.length; i++) {
             if(timeQuantityEls[i].equals(el.getTagName())){
-                return makeTimeIntervalTwiddler(el);
+                return EditorUtil.makeTimeIntervalTwiddler(el);
             }
         }
         Text t = (Text)XPathAPI.selectSingleNode(el, "text()");
-        return EditorUtil.getTextField(t);
-    }
-
-    private JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
-        Box b = Box.createHorizontalBox();
-        Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
-        b.add(EditorUtil.createNumberSpinner(t, 1, 50, 1));
-        Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
-        b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
-        b.add(Box.createHorizontalGlue());
-        return b;
+        if(el.getTagName().equals("waveformWorkerThreads")){
+            return EditorUtil.createNumberSpinner(t, 1, 5, 1);
+        }else{
+            return EditorUtil.getTextField(t);
+        }
     }
 
     private String[] timeQuantityEls = { "eventLag", "eventQueryIncrement",
