@@ -94,10 +94,11 @@ public class CookieJar {
             // channel into the site context for use by other channels in the
             // site
             chanContext.put("sod_site_context", siteContext);
-            siteContext.put(chanIdStr, chanContext);
+            siteContext.put(chanIdStr+"_memory", chanContext);
+            //siteContext.put(chanIdStr, chanContext);
             ((Collection)siteContext.get("allChanIds")).add(chanIdStr);
         }
-        return (VelocityContext)siteContext.get(chanIdStr);
+        return (VelocityContext)siteContext.get(chanIdStr+"_memory");
 
     }
 
