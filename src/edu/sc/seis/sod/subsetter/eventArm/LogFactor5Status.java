@@ -18,7 +18,7 @@ public class LogFactor5Status implements EventStatus{
     public LogFactor5Status(Element config){}
     
     public void setArmStatus(String status) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", RunStatus.EVENT_ARM,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", RunStatus.GENERIC_STATUS,
                                                            status);
     }
     

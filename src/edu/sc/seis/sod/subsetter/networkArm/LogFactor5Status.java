@@ -44,7 +44,7 @@ public class LogFactor5Status implements NetworkStatus{
     }
     
     public void setArmStatus(String status) {
-        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm", RunStatus.NETWORK_ARM,
+        CommonAccess.getCommonAccess().getLF5Adapter().log("Network Arm", RunStatus.GENERIC_STATUS,
                                                            status);
     }
 }

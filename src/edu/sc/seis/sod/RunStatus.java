@@ -19,13 +19,9 @@ public class RunStatus extends LogLevel{
     
     public static final RunStatus FAILED = new RunStatus("Failed");
     
-    public static final RunStatus NETWORK_ARM = new RunStatus("Network Arm");
+    public static final RunStatus GENERIC_STATUS = new RunStatus("Info");
     
-    public static final RunStatus EVENT_ARM = new RunStatus("Event Arm");
-    
-    public static final RunStatus WAVEFORM_ARM = new RunStatus("Waveform Arm");
-    
-    public static final RunStatus[] DEFAULT_STATUS = { NEW, PASSED, FAILED, NETWORK_ARM, EVENT_ARM, WAVEFORM_ARM };
+    public static final RunStatus[] DEFAULT_STATUS = { NEW, PASSED, FAILED, GENERIC_STATUS};
     
     private static int statusCount = 0;
 }
