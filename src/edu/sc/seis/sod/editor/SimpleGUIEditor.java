@@ -49,7 +49,6 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     public void start() {
         frame = new JFrame(frameName);
-
         JMenuBar menubar = new JMenuBar();
         frame.setJMenuBar(menubar);
         JMenu fileMenu = new JMenu("File");
@@ -57,7 +56,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JMenuItem save = new JMenuItem("Save");
         save.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        File configFile = new File(configFilename);
+                        File configFile = new File(getConfigFilename());
                         try {
                             save(configFile);
                         } catch (IOException ex) {
@@ -84,6 +83,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         }
                     }
                 });
+        JMenuItem loadTutorial = new JMenuItem("Load Tutorial Config");
+        loadTutorial.addActionListener(new FileLoader("tutorial.xml"));
+        fileMenu.add(loadTutorial);
+        JMenuItem loadWeed = new JMenuItem("Load WEED Config");
+        loadWeed.addActionListener(new FileLoader("weed.xml"));
+        fileMenu.add(loadWeed);
         JMenuItem quit = new JMenuItem("Quit");
         fileMenu.add(quit);
         quit.addActionListener(new ActionListener() {
@@ -91,38 +96,61 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         System.exit(0);
                     }
                 });
-
         frame.getContentPane().setLayout(new BorderLayout());
-        Document doc = getDocument();
-        if (tabs) {
-            frame.getContentPane().add(getTabPane(), BorderLayout.CENTER);
-            // put each top level sod element in a panel
-            NodeList list = doc.getDocumentElement().getChildNodes();
-            for (int j = 0; j < list.getLength(); j++) {
-                if (list.item(j) instanceof Element) {
-                    Box box = Box.createVerticalBox();
-                    NodeList sublist = ((Element)list.item(j)).getChildNodes();
-                    JComponent[] subComponents = getCompsForNodeList(sublist);
-                    for (int i = 0; i < subComponents.length; i++) {
-                        box.add(subComponents[i]);
-                        box.add(Box.createVerticalStrut(10));
-                    }
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new BorderLayout());
-                    panel.add(box, BorderLayout.NORTH);
-                    String tabName = getDisplayName(((Element)list.item(j)).getTagName());
-                    tabPane.add(EditorUtil.capFirstLetter(tabName),
-                                new JScrollPane(panel,
-                                                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-                }
+        if(getDocument() != null){ loadGUI(); }
+    }
+
+    private class FileLoader implements ActionListener{
+        public FileLoader(String filename){
+            this.filename = filename;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            try {
+                setConfigFile(filename);
+                loadGUI();
+            } catch (Exception ex) {
+                GlobalExceptionHandler.handle(ex);
             }
-        } else {
-            JComponent comp = getCompForElement(doc.getDocumentElement());
-            Box box = Box.createVerticalBox();
-            box.add(comp);
-            box.add(Box.createGlue());
-            frame.getContentPane().add(new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        }
+        private String filename;
+    }
+
+    public void loadGUI(){
+        Document doc = getDocument();
+        if(doc != null){
+            frame.getContentPane().removeAll();
+            if (tabs) {
+                JTabbedPane tabPane = new JTabbedPane();
+                frame.getContentPane().add(tabPane, BorderLayout.CENTER);
+                // put each top level sod element in a panel
+                NodeList list = doc.getDocumentElement().getChildNodes();
+                for (int j = 0; j < list.getLength(); j++) {
+                    if (list.item(j) instanceof Element) {
+                        Box box = Box.createVerticalBox();
+                        NodeList sublist = ((Element)list.item(j)).getChildNodes();
+                        JComponent[] subComponents = getCompsForNodeList(sublist);
+                        for (int i = 0; i < subComponents.length; i++) {
+                            box.add(subComponents[i]);
+                            box.add(Box.createVerticalStrut(10));
+                        }
+                        JPanel panel = new JPanel();
+                        panel.setLayout(new BorderLayout());
+                        panel.add(box, BorderLayout.NORTH);
+                        String tabName = getDisplayName(((Element)list.item(j)).getTagName());
+                        tabPane.add(EditorUtil.capFirstLetter(tabName),
+                                    new JScrollPane(panel,
+                                                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+                    }
+                }
+            } else {
+                JComponent comp = getCompForElement(doc.getDocumentElement());
+                Box box = Box.createVerticalBox();
+                box.add(comp);
+                box.add(Box.createGlue());
+                frame.getContentPane().add(new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+            }
         }
         frame.pack();
         frame.show();
@@ -244,21 +272,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
         return box;
     }
 
-    public JFrame getFrame() {
-        return frame;
-    }
-
-    public JTabbedPane getTabPane() {
-        return tabPane;
-    }
+    public void setTabbed(boolean tabbed){ this.tabs = tabbed; }
 
     public static String getDisplayName(String tagName) {
         return props.getProperty(tagName, tagName);
     }
 
-    /**
-     *
-     */
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         SimpleGUIEditor gui = new SimpleGUIEditor(args);
@@ -266,20 +285,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
         System.out.println("Done editing.");
     }
 
-    String frameName = "Simple XML Editor GUI";
-
-    boolean tabs = false;
-
-    JFrame frame;
-
-    JTabbedPane tabPane = new JTabbedPane();
-
+    protected String frameName = "Simple XML Editor GUI";
+    private boolean tabs = false;
+    private JFrame frame;
     static Properties props = new Properties();
-
     private static String NAME_PROPS = "edu/sc/seis/sod/editor/names.prop";
-
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
-
     static {
         try {
             props.load(SimpleGUIEditor.class.getClassLoader().getResourceAsStream(NAME_PROPS ));

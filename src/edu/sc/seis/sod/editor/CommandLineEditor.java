@@ -47,19 +47,15 @@ public class CommandLineEditor {
 
     void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, TransformerException {
         boolean help = false;
-
         for (int i = 0; i < args.length; i++) {
             if (i < args.length-1 && args[i].equals("-f")) {
-                configFilename = args[i+1];
-                initConfigFile();
+                setConfigFile(args[i+1]);
             } else if (args[i].equals("-help")) {
                 help = true;
             }
         }
-
         if (help) {
             printOptions(new DataOutputStream(System.out));
-        } else {
         }
     }
 
@@ -138,8 +134,8 @@ public class CommandLineEditor {
         }
     }
 
-    void initConfigFile() throws FileNotFoundException, ParserConfigurationException, IOException, SAXException {
-        File configFile = new File(configFilename);
+    private void initConfigFile() throws FileNotFoundException, ParserConfigurationException, IOException, SAXException {
+        File configFile = new File(getConfigFilename());
         if (configFile.exists()) {
             InputStream in = new BufferedInputStream(new FileInputStream(configFile));
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -181,13 +177,15 @@ public class CommandLineEditor {
         }
     }
 
-    public Document getDocument() {
-        return document;
+    public String getConfigFilename(){ return configFilename; }
+
+    public void setConfigFile(String filename) throws ParserConfigurationException, IOException, SAXException{
+        this.configFilename = filename;
+        initConfigFile();
     }
 
-    /**
-     *
-     */
+    public Document getDocument() { return document; }
+
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
         CommandLineEditor cle = new CommandLineEditor(args);
@@ -195,11 +193,11 @@ public class CommandLineEditor {
         System.out.println("Done editing.");
     }
 
-    String[] args;
+    private String[] args;
 
-    String configFilename;
+    private String configFilename;
 
-    Properties props;
+    private Properties props;
 
     private Document document;
 
