@@ -27,9 +27,18 @@
     </define>
         <define name="networkStatusTemplate">
                 <element name="networkInfoTemplateGenerator">
-                    <zeroOrMore>
-                    <externalRef href="../base/externalRef/anyXML.rng"/>
-                    </zeroOrMore>
+						<element name="fileDir">
+								<data type="string"/>
+						</element>
+						<element name="netConfig">
+								<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+						</element>
+						<element name="stationConfig">
+								<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+						</element>
+						<element name="channelConfig">
+								<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+						</element>
                 </element>
         </define>
 </grammar>
