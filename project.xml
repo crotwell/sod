@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <pomVersion>3</pomVersion>
+  <name>sod</name>
+  <id>sod</id>
+  <organization>
+    <name>Seismology at the University of South Carolina</name>
+    <url>http://www.seis.sc.edu</url>
+    <logo>http://www.seis.sc.edu/images/header.gif</logo>
+  </organization>
+  <currentVersion>1.0</currentVersion>
+  <inceptionYear>2002</inceptionYear>
+
+  <package>edu.sc.seis.sod</package>
+  <shortDescription>Automated seismic data selection, download, processing and saving, a Standing Order for Data.</shortDescription>
+  <gumpRepositoryId>sod</gumpRepositoryId>
+  <description> 
+SOD automates the most tedious data selection, downloading and routine processing tasks, shortening the time between idea and science.
+</description>
+  
+  <url>http://www.seis.sc.edu/software/${pom.id}</url>
+  <siteAddress>www.seis.sc.edu</siteAddress>
+  <siteDirectory>/seis/raid1/Apache/htdocs/software/mavenTEST/${pom.id}</siteDirectory>
+  <distributionDirectory>/seis/raid1/Apache/htdocs/software/dist/${pom.id}</distributionDirectory>
+  <mailingList>
+    <name>fissures-dev</name>
+    <subscribe>majordomo@iris.washington.edu</subscribe>
+    <unsubscribe>majordomo@iris.washington.edu</unsubscribe>
+  </mailingList>
+
+  <repository>
+    <connection>scm:cvs:local:anonymous@cvs.seis.sc.edu:/opt/local/Internal/CvsR
+oot:${pom.id}</connection>
+        <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/${pom.id}</url>
+    </repository>
+
+
+  <developers>
+    <developer>
+      <name>Philip Crotwell</name>
+      <id>crotwell</id>
+      <email>crotwell@seis.sc.edu</email>
+      <organization>University of South Carolina</organization>
+      <roles>
+      <role>Module Maintainer</role>
+      <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Srinivasa Telukutla</name>
+      <id>telukutl</id>
+      <email>telukutl@seis.sc.edu</email>
+      <organization>University of South Carolina</organization>
+      <roles>
+      <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Charlie Groves</name>
+      <id>groves</id>
+      <email>groves@seis.sc.edu</email>
+      <organization>University of South Carolina</organization>
+      <roles>
+      <role>Java Developer</role>
+      </roles>
+    </developer>
+    </developers>
+
+  <dependencies>
+<!-- hopefully temporary Java3D support -->
+    <dependency>
+      <id>j3dcore</id>
+      <version>1.0</version>
+      <jar>j3dcore.jar</jar>
+    </dependency>
+<!-- hopefully temporary Java3D support -->
+    <dependency>
+      <id>j3dutils</id>
+      <version>1.0</version>
+      <jar>j3dutils.jar</jar>
+    </dependency>
+<!-- hopefully temporary Java3D support -->
+    <dependency>
+      <id>vecmath</id>
+      <version>1.0</version>
+      <jar>vecmath.jar</jar>
+    </dependency>
+
+    <dependency>
+      <id>JacORB</id>
+      <version>1.4.1</version>
+      <url>www.jacorb.org</url>
+    </dependency>
+    <dependency>
+      <id>fissuresUtil</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>FissuresImpl</id>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <id>FissuresIDL</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>SeedCodec</id>
+      <version>1.0BetaNov26</version>
+    </dependency>
+    <dependency>
+      <id>TauP</id>
+      <version>1.1.4</version>
+    </dependency>
+    <dependency>
+      <id>junit</id>
+      <version>3.8</version>
+      <type>test</type>
+      <url>http://junit.org/</url>
+    </dependency>
+    <dependency>
+      <id>hsqldb</id>
+      <version>1.7.1</version>
+    </dependency>
+    <dependency>
+      <id>xerces</id>
+      <version>2.0.2</version>
+    </dependency>
+    <dependency>
+      <id>xml-apis</id>
+      <version>2.0.2</version>
+    </dependency>
+    <dependency>
+      <id>xalan</id>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <id>log4j</id>
+      <version>1.2.6</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
+    <unitTestSourceDirectory>test</unitTestSourceDirectory>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
+
+</project>
+
