@@ -5,12 +5,13 @@
     
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
-            Schema for the EventArm of SOD
+            Schema for the SOD
         </xsd:documentation>
     </xsd:annotation>
     
     
     <!-- Include the external schemas necessary for this schema -->
+    <xsd:include schemaLocation="./utilities.xsd"/>
     <xsd:include schemaLocation="./EventArm.xsd"/>
     <xsd:include schemaLocation="./NetworkArm.xsd"/>
     <xsd:include schemaLocation="./WaveFormArm.xsd"/>
