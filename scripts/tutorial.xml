@@ -92,43 +92,19 @@
                                 <min>6.0</min>
                                 <max>10.0</max>
                         </magnitudeRange>
-                        <catalog>WHDF</catalog>
-                        <contributor>NEIC</contributor>
+                        <catalog>PREF</catalog>
+                        <contributor>IRIS</contributor>
                 </eventFinder>
-                <originAND>
-                   <originPointDistance>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
-                      <unit>DEGREE</unit>
-                      <min>30</min>
-                      <max>100</max>
-                   </originPointDistance>
-                   <originPointAzimuth>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
-                      <unit>DEGREE</unit>
-                      <min>0</min>
-                      <max>360</max>
-                   </originPointAzimuth>
-                   <originPointBackAzimuth>
-                      <latitude>35</latitude>
-                      <longitude>-82</longitude>
-                      <unit>DEGREE</unit>
-                      <min>0</min>
-                      <max>360</max>
-                   </originPointBackAzimuth>
-                </originAND>
+
+                <printLineEventProcessor/>
 
                 <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
             <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
         </eventStatusTemplate>
                 <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
         </eventStatusTemplate>
                 <eventStatusTemplate>
-            <!--<fileDir>status</fileDir>-->
                         <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
         </eventStatusTemplate>
         </eventArm>
@@ -175,7 +151,6 @@
                         </channelEffectiveTimeOverlap>
                 </channelAND>
                 <networkInfoTemplateGenerator>
-                    <!--<fileDir>status</fileDir>-->
                     <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
                     <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
