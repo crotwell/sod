@@ -131,13 +131,13 @@
         </element>
     </define>
 	<define name="PASS">
-        <element name="passChannelGroupRequestSubsetter">
+        <element name="passChannelGroupRequest">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Always returns true. </summary>
                     <description> Simple subsetter that always returns true, useful for testing. </description>
                     <example>
-                        <passChannelGroupRequestSubsetter/>
+                        <passChannelGroupRequest/>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
