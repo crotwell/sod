@@ -18,6 +18,7 @@ import edu.sc.seis.sod.Status;
 import java.sql.SQLException;
 import junit.framework.TestCase;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class JDBCEventChannelStatusTest extends TestCase{
     public JDBCEventChannelStatusTest(String name){ super(name); }
