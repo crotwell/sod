@@ -318,7 +318,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     public void setTabbed(boolean tabbed){ this.tabs = tabbed; }
 
     public static String getDisplayName(String tagName) {
-        return props.getProperty(tagName, tagName);
+        return nameProps.getProperty(tagName, tagName);
     }
 
     public static void main(String[] args) throws Exception {
@@ -333,12 +333,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
     protected String frameName = "Simple XML Editor GUI";
     private boolean tabs = false;
     private JFrame frame;
-    static Properties props = new Properties();
+    static Properties nameProps = new Properties();
     private static String NAME_PROPS = "edu/sc/seis/sod/editor/names.prop";
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
     static {
         try {
-            props.load(SimpleGUIEditor.class.getClassLoader().getResourceAsStream(NAME_PROPS ));
+            nameProps.load(SimpleGUIEditor.class.getClassLoader().getResourceAsStream(NAME_PROPS ));
         }catch(IOException e) {
             GlobalExceptionHandler.handle("Error in loading names Prop file",e);
         }
