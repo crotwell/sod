@@ -13,45 +13,45 @@ import edu.iris.Fissures.*;
 /**
  * specifies the NetworkEffectiveTimeOverlap
  * <pre>
- *	&lt;networkeffectiveTimeOverlap&gt;
+ *	&lt;networkEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *	&lt;/networkEffectiveTimeOverlap&gt;
  *
  *                    (or)
- *      &lt;networkeffectiveTimeOverlap&gt;
+ *      &lt;networkEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *	&lt;/networkEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;networkeffectiveTimeOverlap&gt;
+ *	&lt;networkEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *	&lt;/networkEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;networkeffectiveTimeOverlap&gt;
+ *	&lt;networkEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/networkeffectiveTimeOverlap&gt;
+ *	&lt;/networkEffectiveTimeOverlap&gt;
  * </pre>
  */
 
-public class NetworkeffectiveTimeOverlap extends
+public class NetworkEffectiveTimeOverlap extends
 EffectiveTimeOverlap implements NetworkAttrSubsetter {
     /**
-     * Creates a new <code>NetworkeffectiveTimeOverlap</code> instance.
+     * Creates a new <code>NetworkEffectiveTimeOverlap</code> instance.
      *
      * @param config an <code>Element</code> value
      */
-    public NetworkeffectiveTimeOverlap (Element config){
+    public NetworkEffectiveTimeOverlap (Element config){
 	super(config);
     }
 
@@ -68,6 +68,6 @@ EffectiveTimeOverlap implements NetworkAttrSubsetter {
     }
 
     static Category logger = 
-        Category.getInstance(NetworkeffectiveTimeOverlap.class.getName());
+        Category.getInstance(NetworkEffectiveTimeOverlap.class.getName());
 
-}// NetworkeffectiveTimeOverlap
+}// NetworkEffectiveTimeOverlap

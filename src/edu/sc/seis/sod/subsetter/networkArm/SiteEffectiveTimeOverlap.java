@@ -14,46 +14,46 @@ import edu.iris.Fissures.*;
 /**
  * specifies the ChannelEffectiveTimeOverlap
  * <pre>
- *	&lt;siteeffectiveTimeOverlap&gt;
+ *	&lt;siteEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteeffectiveTimeOverlap&gt;
+ *	&lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
- *      &lt;siteeffectiveTimeOverlap&gt;
+ *      &lt;siteEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteeffectiveTimeOverlap&gt;
+ *	&lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;siteeffectiveTimeOverlap&gt;
+ *	&lt;siteEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteeffectiveTimeOverlap&gt;
+ *	&lt;/siteEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;siteeffectiveTimeOverlap&gt;
+ *	&lt;siteEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/siteeffectiveTimeOverlap&gt;
+ *	&lt;/siteEffectiveTimeOverlap&gt;
  * </pre>
  */
 
 
-public class SiteeffectiveTimeOverlap extends
+public class SiteEffectiveTimeOverlap extends
 EffectiveTimeOverlap implements SiteSubsetter {
     /**
-     * Creates a new <code>SiteeffectiveTimeOverlap</code> instance.
+     * Creates a new <code>SiteEffectiveTimeOverlap</code> instance.
      *
      * @param config an <code>Element</code> value
      */
-    public SiteeffectiveTimeOverlap (Element config){
+    public SiteEffectiveTimeOverlap (Element config){
 	super(config);
 
     }
@@ -72,6 +72,6 @@ EffectiveTimeOverlap implements SiteSubsetter {
     }
 
     static Category logger = 
-        Category.getInstance(SiteeffectiveTimeOverlap.class.getName());
+        Category.getInstance(SiteEffectiveTimeOverlap.class.getName());
 
-}// SiteeffectiveTimeOverlap
+}// SiteEffectiveTimeOverlap

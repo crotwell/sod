@@ -14,47 +14,47 @@ import edu.iris.Fissures.*;
 /**
  * specifies the StationEffectiveTimeOverlap
  * <pre>
- *	&lt;stationeffectiveTimeOverlap&gt;
+ *	&lt;stationEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/stationeffectiveTimeOverlap&gt;
+ *	&lt;/stationEffectiveTimeOverlap&gt;
  *
  *                    (or)
- *      &lt;stationeffectiveTimeOverlap&gt;
+ *      &lt;stationEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/stationeffectiveTimeOverlap&gt;
+ *	&lt;/stationEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;stationeffectiveTimeOverlap&gt;
+ *	&lt;stationEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/stationeffectiveTimeOverlap&gt;
+ *	&lt;/stationEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;stationeffectiveTimeOverlap&gt;
+ *	&lt;stationEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/stationeffectiveTimeOverlap&gt;
+ *	&lt;/stationEffectiveTimeOverlap&gt;
  * </pre>
  */
 
 
 
-public class StationeffectiveTimeOverlap extends
+public class StationEffectiveTimeOverlap extends
 EffectiveTimeOverlap implements StationSubsetter {
     /**
-     * Creates a new <code>StationeffectiveTimeOverlap</code> instance.
+     * Creates a new <code>StationEffectiveTimeOverlap</code> instance.
      *
      * @param config an <code>Element</code> value
      */
-    public StationeffectiveTimeOverlap (Element config){
+    public StationEffectiveTimeOverlap (Element config){
 	super(config);
 
     }
@@ -72,6 +72,6 @@ EffectiveTimeOverlap implements StationSubsetter {
     }
 
     static Category logger = 
-        Category.getInstance(StationeffectiveTimeOverlap.class.getName());
+        Category.getInstance(StationEffectiveTimeOverlap.class.getName());
 
-}// StationeffectiveTimeOverlap
+}// StationEffectiveTimeOverlap

@@ -14,47 +14,47 @@ import edu.iris.Fissures.*;
 /**
  * specifies the ChannelEffectiveTimeOverlap
  * <pre>
- *	&lt;channeleffectiveTimeOverlap&gt;
+ *	&lt;channelEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/channeleffectiveTimeOverlap&gt;
+ *	&lt;/channelEffectiveTimeOverlap&gt;
  *
  *                    (or)
- *      &lt;channeleffectiveTimeOverlap&gt;
+ *      &lt;channelEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;max&gt;2003-01-01T00:00:00Z&lt;/max&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/channeleffectiveTimeOverlap&gt;
+ *	&lt;/channelEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;channeleffectiveTimeOverlap&gt;
+ *	&lt;channelEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *			&lt;min&gt;1999-01-01T00:00:00Z&lt;/min&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/channeleffectiveTimeOverlap&gt;
+ *	&lt;/channelEffectiveTimeOverlap&gt;
  *
  *                    (or)
  *
- *	&lt;channeleffectiveTimeOverlap&gt;
+ *	&lt;channelEffectiveTimeOverlap&gt;
  *		&lt;effectiveTimeOverlap&gt;
  *		&lt;/effectiveTimeOverlap&gt;
- *	&lt;/channeleffectiveTimeOverlap&gt;
+ *	&lt;/channelEffectiveTimeOverlap&gt;
  * </pre>
  */
 
 
 
-public class ChanneleffectiveTimeOverlap extends
+public class ChannelEffectiveTimeOverlap extends
 EffectiveTimeOverlap implements ChannelSubsetter {
     /**
-     * Creates a new <code>ChanneleffectiveTimeOverlap</code> instance.
+     * Creates a new <code>ChannelEffectiveTimeOverlap</code> instance.
      *
      * @param config an <code>Element</code> value
      */
-    public ChanneleffectiveTimeOverlap (Element config){
+    public ChannelEffectiveTimeOverlap (Element config){
 	super(config);
 
     }
@@ -72,6 +72,6 @@ EffectiveTimeOverlap implements ChannelSubsetter {
     }
 
     static Category logger = 
-        Category.getInstance(ChanneleffectiveTimeOverlap.class.getName());
+        Category.getInstance(ChannelEffectiveTimeOverlap.class.getName());
 
-}// ChanneleffectiveTimeOverlap
+}// ChannelEffectiveTimeOverlap
