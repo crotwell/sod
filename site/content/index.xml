@@ -34,6 +34,14 @@
                 </section>
                 <section name="News">
                         <table id="entry">
+                                <th>24 May 2004</th>
+                                <tr>
+                                        <td>
+                                                <p>We've released a second beta of SOD 2.0.  You can get it <a href="download.html">here.</a>  Tune in next week for another exciting beta release!</p>
+                                        </td>
+                                </tr>
+                        </table>
+                        <table id="entry">
                                 <th>13 May 2004</th>
                                 <tr>
                                         <td>
