@@ -80,4 +80,6 @@ public interface WaveformDatabase {
     public void deleteChannelInfo(int waveformeventid, int channelid);
 
     public int[] getIds();
+
+    public void clean();
 }// WaveformDatabase

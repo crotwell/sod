@@ -147,6 +147,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 							 " waveformchanneldb "+
 							 " WHERE status = ? OR "+
 							 " status = ? ");
+
+		deleteStmt = "DELETE FROM ";
 		    
 
 	} catch(SQLException sqle) {
@@ -255,8 +257,17 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 			   int numchannels,
 			   MicroSecondDate date) {
 	try {
+	   //  if(siteid == 5){  System.out.println("siteid is 5");
+// 	    // System.exit(0);
+// 	    }
+	    
 	    if(isSiteInfoInserted(waveformeventid,
 				  siteid)) return 0;
+	  //   if(siteid == 5){  System.out.println("siteid is 5 after ischeck");
+// 	    System.exit(0);
+// 	    }
+	    
+					       
 	    insert(putSiteInfoStmt,
 		   1,
 		   waveformeventid, 
@@ -607,6 +618,23 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 	}
 	return rtnValues;
     }
+
+    public void delete(String tableName) {
+	try {
+	    connection.createStatement().execute(deleteStmt+tableName);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    public void clean() {
+	delete("waveformdb");
+	delete("waveformnetworkdb");
+	delete("waveformstationdb");
+	delete("waveformsitedb");
+	delete("waveformchanneldb");
+    }
+
     protected Connection connection;
 
     private PreparedStatement getStmt;
@@ -668,6 +696,8 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
     private PreparedStatement isChannelInfoIns;
 
      private PreparedStatement getIdsStmt; 
+
+    private String deleteStmt;
 
     static Category logger = 
         Category.getInstance(AbstractWaveformDatabase.class.getName());

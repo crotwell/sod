@@ -39,6 +39,14 @@ public class HSqlDbQueue implements Queue {
 		eventDatabase =  DatabaseManager.getDatabaseManager(props, "postgres").getEventDatabase();
 	}
 
+	if(Start.REMOVE_DATABASE == true) {
+	    eventDatabase.clean();
+	}
+	
+	if(Start.GET_NEW_EVENTS == true) {
+	    eventDatabase.deleteTimeConfig();
+	}
+
     }
 
     public void updateEventDatabase() {

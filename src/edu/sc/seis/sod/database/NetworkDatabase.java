@@ -74,6 +74,6 @@ public interface  NetworkDatabase {
     
     public void incrementTime(String serverName, String serverDNS, int numDays);
 
-   
+    public void clean();
     
 }// NetworkDatabase

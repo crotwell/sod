@@ -137,6 +137,8 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 	    channelIdsStmt = connection.prepareStatement(" SELECT channelid FROM "+
 							    " channeldatabase "+
 							    " WHERE siteid = ? ");
+
+	    deleteStmt = " DELETE FROM ";
 	    
 	} catch(Exception e) {
 	    e.printStackTrace();
@@ -653,6 +655,22 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
 					  numDays);
     }
 
+    public void delete(String tableName) {
+	try {
+	    connection.createStatement().execute(deleteStmt+tableName);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    public void clean() {
+	delete("networkdatabase");
+	delete("stationdatabase");
+	delete("sitedatabase");
+	delete("channeldatabase");
+    }
+    
+
     protected Connection connection;
 
     private PreparedStatement netGetStmt;
@@ -690,6 +708,9 @@ public abstract  class AbstractNetworkDatabase implements NetworkDatabase{
     private PreparedStatement stationIdsStmt;
 
     private PreparedStatement siteIdsStmt;
+
+    private String deleteStmt;
+
     static Category logger = 
         Category.getInstance(AbstractNetworkDatabase.class.getName());
 }// AbstractNetworkDatabase

@@ -36,9 +36,14 @@ public class WaveformDbQueue implements WaveformQueue{
 
     }
 
+   
     public synchronized int pop() {
 	
 	int dbid = waveformDatabase.getFirst();
+	if(getWaveformChannelId(dbid) == 27 && getWaveformEventId(dbid) == 11) {
+	    System.out.println("got channel id 27 and eventid 11");
+	    // System.exit(0);
+	}
 	
 	while(dbid == -1 && sourceAlive == true ) {
 	    try {
@@ -51,24 +56,25 @@ public class WaveformDbQueue implements WaveformQueue{
 	return dbid;
     }
 
-    public int getWaveformId(int waveformeventid, int waveformnetworkid) {
+
+    public synchronized int getWaveformId(int waveformeventid, int waveformnetworkid) {
 	return waveformDatabase.getChannelDbId(waveformeventid,
 					       waveformnetworkid);
     }
 
-    public void setStatus(int dbid, Status newStatus) {
+    public synchronized void setStatus(int dbid, Status newStatus) {
 	waveformDatabase.updateStatus(dbid, newStatus);
     }
 
-    public void setStatus(int dbid, Status newStatus, String reason) {
+    public synchronized void setStatus(int dbid, Status newStatus, String reason) {
 	waveformDatabase.updateStatus(dbid, newStatus, reason);
     }
 
-    public int getWaveformEventId(int dbid) {
+    public synchronized int getWaveformEventId(int dbid) {
 	return waveformDatabase.getWaveformEventId(dbid);
     }
     
-    public int getWaveformChannelId(int dbid) {
+    public synchronized int getWaveformChannelId(int dbid) {
 	return waveformDatabase.getWaveformChannelId(dbid);
     }
 
@@ -105,12 +111,12 @@ public class WaveformDbQueue implements WaveformQueue{
 	waveformDatabase.delete(waveformEventid);
     }
 
-    public int putInfo(int waveformeventid, int numNetworks) {
+    public synchronized int putInfo(int waveformeventid, int numNetworks) {
 	return waveformDatabase.putInfo(waveformeventid, 
 					numNetworks);
     }
 
-    public int putNetworkInfo(int waveformeventid,
+    public synchronized int putNetworkInfo(int waveformeventid,
 			      int networkid,
 			      int numStations,
 			      MicroSecondDate date) {
@@ -120,7 +126,8 @@ public class WaveformDbQueue implements WaveformQueue{
 				       date);
     }
 	
-    public int putStationInfo(int waveformeventid,
+
+    public synchronized int putStationInfo(int waveformeventid,
 			      int stationid,
 			      int numSites,
 			      MicroSecondDate date) {
@@ -131,7 +138,7 @@ public class WaveformDbQueue implements WaveformQueue{
 					date);
     }
 
-    public int putSiteInfo(int waveformeventid,
+    public synchronized int putSiteInfo(int waveformeventid,
 			   int siteid,
 			   int numChannels,
 			   MicroSecondDate date) {
@@ -141,7 +148,7 @@ public class WaveformDbQueue implements WaveformQueue{
 				     date);
     }
 
-    public int putChannelInfo(int waveformeventid,
+    public synchronized int putChannelInfo(int waveformeventid,
 			      int channelid,
 			      MicroSecondDate date) {
 	return waveformDatabase.putChannelInfo(waveformeventid,
@@ -149,35 +156,35 @@ public class WaveformDbQueue implements WaveformQueue{
 					date);
     }
 
-    public void decrementNetworkCount(int waveformeventid) {
+    public synchronized void decrementNetworkCount(int waveformeventid) {
 	waveformDatabase.decrementNetworkCount(waveformeventid);
     }
 
-    public void decrementStationCount(int waveformeventid, int networkid) {
+    public synchronized void decrementStationCount(int waveformeventid, int networkid) {
 	waveformDatabase.decrementStationCount(waveformeventid, networkid);
     }
 
-    public void decrementSiteCount(int waveformeventid, int stationid) {
+    public synchronized void decrementSiteCount(int waveformeventid, int stationid) {
 	waveformDatabase.decrementSiteCount(waveformeventid, stationid);
     }
 
-    public void decrementChannelCount(int waveformeventid, int siteid) {
+    public synchronized void decrementChannelCount(int waveformeventid, int siteid) {
 	waveformDatabase.decrementChannelCount(waveformeventid, siteid);
     }
 
-    public int getNetworkCount(int waveformeventid) {
+    public synchronized int getNetworkCount(int waveformeventid) {
 	return waveformDatabase.getNetworkCount(waveformeventid);
     }
 
-    public int getStationCount(int waveformeventid, int networkid) {
+    public synchronized int getStationCount(int waveformeventid, int networkid) {
 	return waveformDatabase.getStationCount(waveformeventid, networkid);
     }
 
-    public int getSiteCount(int waveformeventid, int stationid) {
+    public synchronized int getSiteCount(int waveformeventid, int stationid) {
 	return waveformDatabase.getSiteCount(waveformeventid, stationid);
     }
 
-    public int getChannelCount(int waveformeventid, int siteid) {
+    public synchronized int getChannelCount(int waveformeventid, int siteid) {
 	return waveformDatabase.getChannelCount(waveformeventid, siteid);
     }
 
@@ -201,7 +208,7 @@ public class WaveformDbQueue implements WaveformQueue{
 	waveformDatabase.deleteChannelInfo(waveformeventid, channelid);
     }
 
-    public int[] getIds() {
+    public synchronized int[] getIds() {
 	return waveformDatabase.getIds();
     }
 

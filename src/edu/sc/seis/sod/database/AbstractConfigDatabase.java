@@ -43,8 +43,10 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 	    getTimeStmt = connection.prepareStatement(" SELECT time from "+tableName+
 						      " WHERE serverName = ? AND "+
 						      " serverDNS = ? ");
+
+	    deleteStmt = " DELETE FROM ";
 	} catch(Exception e) {
-	    e.printStackTrace();
+	  
 	}
 	
 
@@ -188,6 +190,23 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
 				    
     }
 
+    public void delete(String tableName) {
+	try {
+	    connection.createStatement().execute(deleteStmt+tableName);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    public void clean() {
+	delete(this.tableName);
+    }
+    
+    public String getTableName() {
+	return this.tableName;
+    }
+
+
     protected  Connection connection;
 
     protected String tableName;
@@ -201,6 +220,9 @@ public abstract class AbstractConfigDatabase implements ConfigDatabase{
     private PreparedStatement updateTimeStmt;
 
     private PreparedStatement getTimeStmt;
+    
+    private String deleteStmt;
+    
    
 }// AbstractConfigDatabase
 

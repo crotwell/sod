@@ -65,4 +65,7 @@ public interface EventDatabase {
 
     public void incrementTime(String serverName, String serverDNS, int numDays);
 
+    public void clean();
+    
+    public void deleteTimeConfig();
 }// EventDatabase

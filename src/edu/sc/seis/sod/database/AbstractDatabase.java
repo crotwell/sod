@@ -80,6 +80,8 @@ public abstract class AbstractDatabase implements EventDatabase{
 	    iorUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET eventAccess = ? WHERE eventid = ?");
 	    
 	    statusUpdateStmt = connection.prepareStatement("UPDATE eventconfig SET status = ? WHERE status = ?");
+
+	    deleteAllStmt = "DELETE FROM ";
 	    
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
@@ -400,6 +402,24 @@ public abstract class AbstractDatabase implements EventDatabase{
 					  serverDNS,
 					  numDays);
     }
+
+    public void delete(String tableName) {
+	try {
+	    connection.createStatement().execute(deleteAllStmt+tableName);
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
+	}
+    }
+
+    public void clean() {
+	delete(getTableName());
+	deleteTimeConfig();
+    }
+
+    
+    public void deleteTimeConfig() {
+	getConfigDatabase().clean();
+    }
     
     protected Connection connection;
 
@@ -424,5 +444,7 @@ public abstract class AbstractDatabase implements EventDatabase{
     private PreparedStatement getStmt;
     
     private PreparedStatement iorUpdateStmt;
+
+    private String deleteAllStmt;
 
 }// AbstractDatabase

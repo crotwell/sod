@@ -8,8 +8,6 @@ import java.util.*;
 import java.sql.*;
 
 
-
-
 /**
  * ConfigDatabase.java
  *
@@ -28,7 +26,7 @@ public interface ConfigDatabase {
     
     // public void setServerDNS(String serverDNS);
 
-//     public void setServerName(String serverName);
+    //     public void setServerName(String serverName);
 
     public edu.iris.Fissures.Time getTime(String serverName, 
 					  String serverDNS);
@@ -36,6 +34,10 @@ public interface ConfigDatabase {
     public void incrementTime(String serverName,
 			      String serverDNS, 
 			      int days);
+
+    public void clean();
+
+    public String getTableName();
    
     // public String getServerDNS();
 

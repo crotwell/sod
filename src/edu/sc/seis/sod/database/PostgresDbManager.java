@@ -52,16 +52,42 @@ public class PostgresDbManager extends AbstractDatabaseManager{
     public Connection getConnection() {
 	try {
 	    if(connection == null) {
-		String driverName = new String("org.postgresql.Driver");
-		Class.forName(driverName).newInstance();
+		isDatabaseExists();
 		connection = DriverManager.getConnection("jdbc:postgresql:"+getDatabaseName(), 
-							 getUserName(), 
-							 "");
-	    } 
+							 getUserName(), "");
+	    }
 	    return connection;
 	} catch(Exception sqle) {
 	    sqle.printStackTrace();
 	    return null;
+	}
+    }
+
+    public boolean isDatabaseExists() {
+	
+	String driverName = new String("org.postgresql.Driver");
+	try {
+	    Driver driver = (Driver)Class.forName(driverName).newInstance();
+	    Properties props = new Properties();
+	    props.setProperty("user",getUserName());
+	    props.setProperty("password", "");
+	    driver.connect("jdbc:postgresql:"+getDatabaseName(), props);
+	    return true;
+	} catch(Exception sqle){
+	    createDatabase();
+	    return false;
+	}
+    }
+
+    private void createDatabase() {
+	try {
+	    connection = DriverManager.getConnection("jdbc:postgresql:template1",
+						     getUserName(),
+						     "");
+	    Statement stmt = connection.createStatement();
+	    stmt.executeUpdate("create database "+getDatabaseName());
+	} catch(SQLException sqle) {
+	    sqle.printStackTrace();
 	}
 	
     }
