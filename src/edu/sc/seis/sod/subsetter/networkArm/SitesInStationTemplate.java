@@ -21,18 +21,18 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class SitesInStationTemplate extends NetworkInfoTemplate{
-
+    
     private Station station;
     private List siteListeners = new ArrayList();
     private Logger logger = Logger.getLogger(SitesInStationTemplate.class);
-
+    
     public SitesInStationTemplate(Element el, String outputLocation, Station sta) throws IOException{
         super(outputLocation);
         station = sta;
         parse(el);
         write();
     }
-
+    
     protected Object getTemplate(String tag, Element el){
         if (tag.equals("sites")){
             SiteGroupTemplate sgt = new SiteGroupTemplate(el);
@@ -44,7 +44,7 @@ public class SitesInStationTemplate extends NetworkInfoTemplate{
         }
         return super.getTemplate(tag,el);
     }
-
+    
     public void change(Site site, RunStatus status) throws IOException {
         logger.debug("change(site, status): "  + station.my_network.get_code() + '.' + station.get_code()
                          + '.' + site.get_code() + ", " + status.toString());
@@ -52,20 +52,16 @@ public class SitesInStationTemplate extends NetworkInfoTemplate{
         while (it.hasNext()){
             ((SiteGroupTemplate)it.next()).change(site, status);
         }
-        try {
-            write();
-        } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble writing file");
-        }
+        write();
     }
-
+    
     private class MyStationTemplate implements GenericTemplate{
         public MyStationTemplate(Element el){ formatter = new StationFormatter(el); }
-
+        
         public String getResult(){
             return formatter.getResult(station);
         }
-
+        
         StationFormatter formatter;
     }
 }

@@ -91,7 +91,7 @@ public class NetworkInfoTemplateGenerator implements NetworkStatus {
         netTemplate = new NetworkStatusTemplate(netConfig, fileDir + '/' + netsOutputFileName);
     }
 
-    public void change(NetworkAccess net, RunStatus status){
+    public void change(NetworkAccess net, RunStatus status) throws IOException{
         netTemplate.change(net, status);
         getStationsInNetworkTemplate(net);
     }

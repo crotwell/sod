@@ -29,7 +29,7 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
         try {
             write();
         } catch (IOException e) {
-            CommonAccess.handleException(e, "trouble writing file");
+            CommonAccess.handleException(e, "trouble writing file " + getFilename());
         }
     }
 
@@ -45,7 +45,7 @@ public abstract class NetworkInfoTemplate extends FileWritingTemplate{
     }
 
     public void write() throws IOException{
-        logger.debug("writing " + getOutputDirectory() + "/" + getFilename());
+        logger.debug("queueing " + getOutputDirectory() + "/" + getFilename());
         super.write();
     }
 
