@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveFormStatus;
@@ -10,10 +11,8 @@ import edu.sc.seis.sod.subsetter.GenericTemplate;
 import edu.sc.seis.sod.subsetter.TemplateFileLoader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import org.w3c.dom.Element;
 
 public class WaveformEventTemplate extends FileWritingTemplate implements WaveFormStatus{
@@ -41,8 +40,6 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
         }
     }
     
-    private static int i = 0;
-    
     protected Object getTemplate(String tag, Element el) {
         if(tag.equals("channels")) {
             ChannelGroupTemplate cgt = new ChannelGroupTemplate(el);
@@ -50,7 +47,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             return cgt;
         }
         if(tag.equals("map")){
-            final MapWaveFormStatus map = new MapWaveFormStatus(getOutputDirectory() + "/map.png");
+            MapWaveFormStatus map = new MapWaveFormStatus(getOutputDirectory() + "/map.png");
             map.add(event);
             waveformStatusListeners.add(map);
             map.write();
