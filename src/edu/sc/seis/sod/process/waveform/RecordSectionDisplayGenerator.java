@@ -95,31 +95,33 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private void outputRecordSections(EventAccessOperations event,
                                       DataSetSeismogram[] dataSeis)
             throws IOException {
-        sort(dataSeis);
-        RecordSectionDisplay recordSectionDisplay = new RecordSectionDisplay();
-        if(dataSeis.length <= 6) {
-            writeImage(dss, event);
-            return;
-        } else {
-            DataSetSeismogram[] tempDSS = new DataSetSeismogram[6];
-            int maxIndex = 0;
-            int length = dataSeis.length;
-            int count = length / 6;
-            for(int i = 0; i < count; i++) {
-                int seisCount = 0;
-                while(seisCount < 6) {
-                    tempDSS[seisCount] = dataSeis[i + count];
-                    maxIndex = i + count;
-                    seisCount++;
+        if(dataSeis.length > 0) {
+            sort(dataSeis);
+            RecordSectionDisplay recordSectionDisplay = new RecordSectionDisplay();
+            if(dataSeis.length <= 6) {
+                writeImage(dss, event);
+                return;
+            } else {
+                DataSetSeismogram[] tempDSS = new DataSetSeismogram[6];
+                int maxIndex = 0;
+                int length = dataSeis.length;
+                int count = length / 6;
+                for(int i = 0; i < count; i++) {
+                    int seisCount = 0;
+                    while(seisCount < 6) {
+                        tempDSS[seisCount] = dataSeis[i + count];
+                        maxIndex = i + count;
+                        seisCount++;
+                    }
+                    writeImage(tempDSS, event);
                 }
-                writeImage(tempDSS, event);
-            }
-            if((length % 6) != 0) {
-                tempDSS = new DataSetSeismogram[length - maxIndex - 1];
-                for(int j = 0; j < length - maxIndex - 1; j++) {
-                    tempDSS[j] = dataSeis[maxIndex + j];
+                if((length % 6) != 0) {
+                    tempDSS = new DataSetSeismogram[length - maxIndex - 1];
+                    for(int j = 0; j < length - maxIndex - 1; j++) {
+                        tempDSS[j] = dataSeis[maxIndex + j];
+                    }
+                    writeImage(tempDSS, event);
                 }
-                writeImage(tempDSS, event);
             }
         }
     }
@@ -130,7 +132,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         RecordSectionDisplay rsDisplay = new RecordSectionDisplay();
         rsDisplay.add(dataSeis);
         try {
-            File outPNG = new File(parentDir, fileBase+fileNameCounter+fileExtension);
+            File outPNG = new File(parentDir, fileBase + fileNameCounter
+                    + fileExtension);
             rsDisplay.outputToPNG(outPNG, new Dimension(500, 500));
             fileNameCounter++;
         } catch(IOException e) {
@@ -149,9 +152,9 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private int counter;
 
-    public static int fileNameCounter=1;
-    
+    public static int fileNameCounter = 1;
+
     private final static String fileBase = "recordSection";
-    
+
     private final static String fileExtension = ".png";
 }
