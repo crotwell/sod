@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.channel;
+package edu.sc.seis.sod.subsetter.eventChannel;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -7,7 +7,6 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
