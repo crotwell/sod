@@ -19,9 +19,7 @@ public class JDBCEventRecordSection extends SodJDBC {
 
     public JDBCEventRecordSection(String tableName, String recChannelTableName,
             Connection conn) throws SQLException {
-        String createStmt = "CREATE TABLE "
-                + tableName
-                + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
+        String createStmt =  getCreateStatement(tableName);
         String insertStmt = "INSERT INTO " + tableName
                 + "(recSecId, eventid, imageName) VALUES (?, ?, ?)";
         String getRecSecIdStmt = "SELECT recSecId FROM " + tableName
@@ -35,6 +33,10 @@ public class JDBCEventRecordSection extends SodJDBC {
                 + "eventid=? AND channelid=? ";
         String imageNameExistsStmt = "SELECT count(imageName) FROM "
                 + tableName + " WHERE eventid=? AND imageName=?";
+        if(!DBUtil.tableExists(recChannelTableName,conn)){
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(JDBCEventRecordSection.getCreateStatement(recChannelTableName));
+        }
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -47,6 +49,12 @@ public class JDBCEventRecordSection extends SodJDBC {
         seq = new JDBCSequence(conn, "RecordSectionSeq");
     }
 
+    public static String getCreateStatement(String tableName){
+        String createStmt = "CREATE TABLE "
+            + tableName
+            + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
+        return createStmt;
+    }
     public int insert(int eventid, String imageName) throws SQLException {
         int recSecId = seq.next();
         insert.setInt(1, recSecId);
