@@ -34,6 +34,7 @@ import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
+import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.PhaseAlignedTimeConfig;
 import edu.sc.seis.fissuresUtil.display.registrar.TimeConfig;
@@ -81,6 +82,8 @@ public class SeismogramImageProcess implements WaveformProcess {
                     phaseFlagNames[j] = SodUtil.nodeValueOfXPath((Element)flagEls.item(j),
                                                                  "text()");
                 }
+            } else if(n.getNodeName().equals("displayConfig")) {
+                sdc = new SeismogramDisplayConfiguration((Element)n);
             }
         }
         locator = new SeismogramImageOutputLocator(el);
@@ -219,7 +222,8 @@ public class SeismogramImageProcess implements WaveformProcess {
                                   boolean relTime,
                                   CookieJar cookieJar) throws Exception {
         logger.debug("process() called");
-        BasicSeismogramDisplay bsd = new BasicSeismogramDisplay(getTimeConfig(relTime));
+        SeismogramDisplay bsd = sdc.createDisplay();
+        bsd.setTimeConfig(getTimeConfig(relTime));
         MemoryDataSetSeismogram memDSS = createSeis(seismograms,
                                                     original,
                                                     phaseWindow,
@@ -245,7 +249,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
         private final CookieJar cookieJar;
 
-        private final BasicSeismogramDisplay bsd;
+        private final SeismogramDisplay bsd;
 
         private final String fileType;
 
@@ -253,7 +257,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
         private final SodFlag[] flags;
 
-        private ImageWriter(CookieJar cookieJar, BasicSeismogramDisplay bsd,
+        private ImageWriter(CookieJar cookieJar, SeismogramDisplay bsd,
                 String fileType, String picFileName, SodFlag[] flags) {
             this.cookieJar = cookieJar;
             this.bsd = bsd;
@@ -266,7 +270,7 @@ public class SeismogramImageProcess implements WaveformProcess {
             logger.debug("writing " + picFileName);
             try {
                 if(fileType.equals(PDF)) {
-                    bsd.outputToPDF(new File(picFileName));
+                    ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName));
                 } else {
                     bsd.outputToPNG(new File(picFileName), dims);
                 }
@@ -303,6 +307,8 @@ public class SeismogramImageProcess implements WaveformProcess {
     private static Set pairsInserted = Collections.synchronizedSet(new HashSet());
 
     private boolean putDataInCookieJar = false;
+
+    private SeismogramDisplayConfiguration sdc = new SeismogramDisplayConfiguration();
 
     protected SeismogramImageOutputLocator locator;
 
