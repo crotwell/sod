@@ -304,8 +304,9 @@ public class NetworkArm implements Runnable {
      * @return stations for the given network object that pass this arm's
      *         station subsetter
      */
-    public synchronized StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
+    public StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
         if(networkDbObject.stationDbObjects != null) { return networkDbObject.stationDbObjects; }
+        synchronized(this) {
         statusChanged("Getting stations for "
                 + networkDbObject.getNetworkAccess().get_attributes().name);
         ArrayList arrayList = new ArrayList();
@@ -342,6 +343,7 @@ public class NetworkArm implements Runnable {
         networkDbObject.stationDbObjects = rtnValues;
         statusChanged("Waiting for a request");
         return rtnValues;
+        }
     }
 
     /**
@@ -358,9 +360,10 @@ public class NetworkArm implements Runnable {
      * @return a SiteDbObject[] containing all the sites from the station that
      *         pass this network arm's site subsetter
      */
-    public synchronized SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
+    public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject,
                                              StationDbObject stationDbObject) {
         if(stationDbObject.siteDbObjects != null) { return stationDbObject.siteDbObjects; }
+        synchronized(this) {
         statusChanged("Getting sites for "
                 + stationDbObject.getStation().get_id().station_code);
         ArrayList successes = new ArrayList();
@@ -408,6 +411,7 @@ public class NetworkArm implements Runnable {
         logger.debug("GOT " + rtnValues.length + " SITES");
         statusChanged("Waiting for a request");
         return rtnValues;
+        }
     }
 
     private boolean containsSite(SiteDbObject siteDbObject, ArrayList arrayList) {
@@ -422,9 +426,10 @@ public class NetworkArm implements Runnable {
      * Obtains the Channels corresponding to the siteDbObject, processes them
      * using the ChannelSubsetter and returns an array of those that pass
      */
-    public synchronized ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
+    public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject,
                                                    SiteDbObject siteDbObject) {
         if(siteDbObject.channelDbObjects != null) { return siteDbObject.channelDbObjects; }
+        synchronized(this) {
         statusChanged("Getting channels for " + siteDbObject);
         List successes = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
@@ -471,6 +476,7 @@ public class NetworkArm implements Runnable {
         logger.debug("got " + values.length + " channels");
         statusChanged("Waiting for a request");
         return values;
+        }
     }
 
     //This is a HACK. Since we're already storing the channels whole hog, it
