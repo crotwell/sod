@@ -2055,14 +2055,4 @@
     
     <xsd:element name="networkArm" type="networkArmType"/>
     
-    <!--
-    <xsd:complexType name="sodTypeone">
-    <xsd:sequence>
-    <xsd:element ref="networkArm"/>
-    </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:element name="sodone" type="sodTypeone"/>
-    -->
-    
 </xsd:schema>
