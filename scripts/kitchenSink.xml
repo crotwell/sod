@@ -98,6 +98,21 @@
                 <passOrigin/>
             </originOR>
             <originOR>
+            <pointLinearDistanceMagnitude>
+                    <latitude>35</latitude>
+                    <longitude>-85</longitude>
+                    <unit>DEGREE</unit>
+                    <min>30</min>
+                    <max>90</max>
+                    <magnitudeRange>
+                        <magType>mb</magType>
+                        <magType>M</magType>
+                        <min>5.5</min>
+                    </magnitudeRange>
+                </pointLinearDistanceMagnitude>
+                <passOrigin/>
+                </originOR>
+                <originOR>
                 <originPointDistance>
                         <latitude>35</latitude>
                         <longitude>-85</longitude>
@@ -697,22 +712,6 @@
                 </availableDataNOT>
              <passAvailableData/>
             </availableDataOR>
-            <availableDataOR>
-                <breqFastAvailableData>
-                    <dataDirectory>request</dataDirectory>
-                    <name>Jagadeesh Danala</name>
-                    <inst>USC</inst>
-                    <mail>abc</mail>
-                    <email>danala@seis.sc.edu</email>
-                    <phone>8037778986</phone>
-                    <fax>9999999</fax>
-                    <media>mail</media>
-                    <altmedia1>mail</altmedia1>
-                    <altmedia2>mail</altmedia2>
-                    <quality>excellent</quality>
-                 </breqFastAvailableData>
-                <passAvailableData/>
-            </availableDataOR>
      </availableDataAND>
      <forkProcess>
         <alwaysSuccess>
@@ -870,4 +869,5 @@
         </waveformStationStatus>
     </waveformArm>
  </sod>
+
 
