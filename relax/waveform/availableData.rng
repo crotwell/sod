@@ -16,7 +16,6 @@
                         <ref name="availableDataOR"/>
                         <ref name="availableDataXOR"/>
                         <ref name="availableDataNOT"/>
-                        <ref name="breqFastAvailableData"/>
                         <ref name="PASS"/>
                 </choice>
         </define>
@@ -111,48 +110,6 @@
         <define name="someCoverage">
                 <element name="someCoverage">
                         <empty/>
-                </element>
-        </define>
-        <define name="breqFastAvailableData">
-                <element name="breqFastAvailableData">
-                        <element name="dataDirectory">
-                                <data type="string"/>
-                        </element>
-                        <optional>
-                                <element name="label">
-                                        <ref name="eventLabel"/>
-                                </element>
-                        </optional>
-                        <element name="name">
-                                <data type="string"/>
-                        </element>
-                        <element name="inst">
-                                <data type="string"/>
-                        </element>
-                        <element name="mail">
-                                <data type="string"/>
-                        </element>
-                        <element name="email">
-                                <data type="string"/>
-                        </element>
-                        <element name="phone">
-                                <data type="string"/>
-                        </element>
-                        <element name="fax">
-                                <data type="string"/>
-                        </element>
-                        <element name="media">
-                                <data type="string"/>
-                        </element>
-                        <element name="altmedia1">
-                                <data type="string"/>
-                        </element>
-                        <element name="altmedia2">
-                                <data type="string"/>
-                        </element>
-                        <element name="quality">
-                                <data type="string"/>
-                        </element>
                 </element>
         </define>
         <define name="postEventWait">

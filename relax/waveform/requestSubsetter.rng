@@ -123,12 +123,6 @@
                 a &lt;requestSubsetterNOT&gt; so that the return value is false.
                 This will allow SOD to proceed to the next piece of work and avoid
                 the wasted time in going to the server to get data.
-
-                Lastly, there is also an breqFastAvailableData that is similar
-                in functionality to this processor, but happens after the server
-                is queried for available data. Functionally, they are equivalent,
-                but the available data version takes longer due to the call on the
-                server.
                 </description>
                 <example>
                      <breqFastRequestSubsetter>
