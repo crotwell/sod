@@ -15,4 +15,8 @@ public class NetworkCode implements NetworkSubsetter {
     }
 
     private String desiredCode;
+
+    public String getCode() {
+        return desiredCode;
+    }
 }
