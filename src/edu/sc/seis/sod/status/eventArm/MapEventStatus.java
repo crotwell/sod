@@ -6,18 +6,18 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.database.event.ConditionEvent;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.MapPool;
 import edu.sc.seis.sod.status.PeriodicAction;
-import edu.sc.seis.sod.status.eventArm.EventStatus;
+import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-public class MapEventStatus extends PeriodicAction implements SodElement, EventStatus{
+public class MapEventStatus extends PeriodicAction implements SodElement, EventArmMonitor{
     protected String fileLoc;
 
     public MapEventStatus(Element element){
@@ -51,7 +51,7 @@ public class MapEventStatus extends PeriodicAction implements SodElement, EventS
         OpenMap map = pool.getMap();
         try {
             try {
-                ConditionEvent[] evs = events.getAll();
+                StatefulEvent[] evs = events.getAll();
                 EventLayer el = map.getEventLayer();
                 for (int i = 0; i < evs.length; i++) {
                     el.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{evs[i]}));

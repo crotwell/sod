@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.status.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.database.event.ConditionEvent;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.Template;
@@ -59,9 +59,9 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
     public String getResult(){
         StringBuffer output = new StringBuffer();
         try {
-            ConditionEvent[] events = sorter.getSortedEvents();
+            StatefulEvent[] events = sorter.getSortedEvents();
             for (int i = 0; i < events.length; i++) {
-                ConditionEvent curEv = events[i];
+                StatefulEvent curEv = events[i];
                 Iterator e = templates.iterator();
                 while(e.hasNext()){
                     Object cur = e.next();

@@ -2,6 +2,7 @@ package edu.sc.seis.sod.status.eventArm;
 
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.database.event.EventCondition;
@@ -16,7 +17,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-public class EventStatusTemplate extends FileWritingTemplate implements EventStatus{
+public class EventStatusTemplate extends FileWritingTemplate implements EventArmMonitor{
 
     public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException {
         super(extractConstructorBaseDirArg(el), extractConstructorFilenameArg(el));
@@ -34,20 +35,20 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
 
         return filename;
     }
-	
-	private static String extractConstructorBaseDirArg(Element el){
-		String fileDir = null;
-		try{
-			fileDir = SodUtil.getElement(el, "fileDir").getFirstChild().getNodeValue();
-		}
-		catch(NullPointerException e){
-			Logger.getLogger(EventStatusTemplate.class).debug("fileDir element is null! using default");
-		}
-		if (fileDir == null){
-			fileDir = Start.getProperties().getProperty("sod.start.statusBaseDirectory", "status");
-		}
-		return fileDir;
-	}
+
+    private static String extractConstructorBaseDirArg(Element el){
+        String fileDir = null;
+        try{
+            fileDir = SodUtil.getElement(el, "fileDir").getFirstChild().getNodeValue();
+        }
+        catch(NullPointerException e){
+            Logger.getLogger(EventStatusTemplate.class).debug("fileDir element is null! using default");
+        }
+        if (fileDir == null){
+            fileDir = Start.getProperties().getProperty("sod.start.statusBaseDirectory", "status");
+        }
+        return fileDir;
+    }
 
     public void setArmStatus(String status) throws IOException {
         this.status = status;
@@ -85,6 +86,6 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
         public String getResult(){ return status; }
     }
 
-	private Logger logger = Logger.getLogger(EventStatusTemplate.class);
+    private Logger logger = Logger.getLogger(EventStatusTemplate.class);
     private String status = "";
 }
