@@ -54,6 +54,45 @@ waveform.
 </chapter>
 
 <chapter>
+<title>Structure</title>
+<para>
+The Structure of a sod configuration file is shown below.
+</para>
+<programlisting>
+&lt;sod&gt;
+    &lt;eventArm&gt;
+        &lt;eventFinder&gt; or &lt;eventChannelFinder&gt;
+        &lt;any eventAttr subsetter&gt;
+        &lt;origin&gt;
+        &lt;eventProcess&gt;
+    &lt;/eventArm&gt;
+    &lt;networkArm&gt;
+        &lt;networkFinder&gt;
+        &lt;networkID&gt;
+        &lt;networkAttr&gt;
+        &lt;stationID&gt;
+        &lt;station&gt;
+        &lt;siteID&gt;
+        &lt;site&gt;
+        &lt;channelID&gt;
+        &lt;channel&gt;
+        &lt;networkProcess&gt;
+    &lt;/networkArm&gt;
+    &lt;waveFormArm&gt;
+        &lt;eventStation&gt;
+        &lt;dataCenter&gt;
+        &lt;localSeismogramArm&gt;
+            &lt;eventChannel&gt;
+            &lt;requestGenerator&gt;
+            &lt;availableData&gt;
+            &lt;waveForm&gt;
+            &lt;localSeismogramProcess&gt;
+        &lt;/localSeismogramArm&gt;
+    &lt;/waveFromArm&gt;
+</programlisting>
+</chapter>
+
+<chapter>
 <title>Common Elements</title>
 <para>
 There are many elements that are used within more than one place within a
@@ -87,6 +126,7 @@ and serverDNS are required in order to uniquely identify a server.
 </para>
 </sect1>
 </chapter>
+
 <chapter>
 <title>Event Arm</title>
 <para>
@@ -124,10 +164,15 @@ currently defined within the FISSURES framework, and a corresponding element
 for each can be specified here. The simplest is the &lt;globalArea&gt; element,
 which accepts any location. The &lt;boxArea&gt; tag allows any event that is
 located within a latitude-longitude box. It contains
+</para>
+</sect3>
+</sect2>
+</sect1>
+
 <sect1>
 <title>Event Attributes</title>
 <para>
-
+test
 </para>
 </sect1>
 </chapter>
