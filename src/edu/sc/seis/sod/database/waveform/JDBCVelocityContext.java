@@ -49,7 +49,7 @@ public class JDBCVelocityContext extends AbstractContext {
                 throw new IllegalArgumentException("value must be a String or a Double or a Serializable: "+value.getClass().getName());
             }
         } catch (SQLException e) {
-            GlobalExceptionHandler.handle("Problem putting value for name="+name, e);
+            GlobalExceptionHandler.handle("Problem putting value for name="+name + " pairid="+pairId, e);
         }
         return null;
     }
