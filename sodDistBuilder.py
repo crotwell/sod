@@ -1,3 +1,5 @@
+#! /usr/bin/python -O
+
 import sodBuilder
 import sys, os, time, zipfile, tarfile
 sys.path.append("../devTools/maven")
@@ -27,7 +29,7 @@ def buildExternal(proj, name=None):
     buildDist(proj, scripts, name, extras, [tar, zip])
 
 def buildDist(proj, scripts, name=None, extras=[], archives=[]):
-    #sodBuilder.build(proj)
+    sodBuilder.build(proj)
     if not os.path.exists('scripts/logs'): os.mkdir('scripts/logs')
     scriptsWithTarloc = [(script, 'bin/'+script) for script in scripts]
     if name is None: name = buildName(proj)
