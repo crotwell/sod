@@ -29,6 +29,8 @@ def buildExternal(proj, name):
     os.chdir('..')
     extras = [('scripts/tutorial.xml', 'examples/tutorial.xml'),
               ('scripts/weed.xml', 'examples/weed.xml'),
+              ('scripts/legacyExecute.xml', 'examples/legacyExecute.xml'),
+              ('scripts/realtime.xml', 'examples/realtime.xml'),
               ('site/generatedSite', 'docs')]
     zip = zipfile.ZipFile(name + ".zip", 'w')
     tar = tarfile.open(name + '.tar', 'w')
