@@ -29,7 +29,7 @@ public class HSqlConfigDatabase extends AbstractConfigDatabase{
 	try {
 	    Statement stmt = connection.createStatement();
 	    try {
-		stmt.executeUpdate("CREATE TABLE "+tableName+
+		stmt.executeUpdate("CREATE CACHED  TABLE "+tableName+
 				   "( serverName VARCHAR, "+
 				   " serverDNS VARCHAR, "+
 				   " time timestamp)");

@@ -23,7 +23,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 	try {
 
 	    Statement stmt = connection.createStatement();
-	    stmt.executeUpdate(" CREATE TABLE networkdatabase "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE networkdatabase "+
 			       " (networkid int IDENTITY PRIMARY KEY, "+
 			       " serverName VARCHAR, "+
 			       " serverDNS VARCHAR, "+
@@ -33,7 +33,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " nqtime timestamp, "+
 			       " status int, "+
 			       " networkAccessIOR VARCHAR)");
-	    stmt.executeUpdate("CREATE TABLE stationdatabase "+
+	    stmt.executeUpdate("CREATE CACHED TABLE stationdatabase "+
 			       " (stationid int IDENTITY PRIMARY KEY, "+
 			       " networkid int, "+
 			       " station_code VARCHAR, "+
@@ -41,7 +41,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " stleapseconds int, "+
 			       " stqtime timestamp, "+
 			       " status int)");
-	    stmt.executeUpdate("CREATE TABLE sitedatabase "+
+	    stmt.executeUpdate("CREATE CACHED TABLE sitedatabase "+
 			       " (siteid int IDENTITY PRIMARY KEY, "+
 			       " stationid int, "+
 			       " site_code VARCHAR, "+
@@ -49,7 +49,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " sleapseconds int, "+
 			       " sqtime timestamp, "+
 			       " status int)");
-	    stmt.executeUpdate("CREATE TABLE channeldatabase "+
+	    stmt.executeUpdate("CREATE CACHED TABLE channeldatabase "+
 			       " (channelid int IDENTITY PRIMARY KEY, "+
 			       " siteid int, "+
 			       " channel_code VARCHAR, "+

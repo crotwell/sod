@@ -35,7 +35,7 @@ public class HSqlDatabase extends AbstractDatabase{
 	try {
 	    Statement statement = connection.createStatement();
 	    try {
-		statement.executeUpdate("CREATE TABLE eventconfig "+
+		statement.executeUpdate("CREATE CACHED TABLE eventconfig "+
 					"(eventid int IDENTITY PRIMARY KEY, "+
 					" serverName VARCHAR, "+
 					" serverDNS VARCHAR, "+

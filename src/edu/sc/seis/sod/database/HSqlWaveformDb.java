@@ -22,30 +22,30 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
     public void create() {
 	try {
 	    Statement stmt = connection.createStatement();
-	    stmt.executeUpdate(" CREATE TABLE waveformdb "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE waveformdb "+
 			       " ( waveformeventid int, "+
 			       " numnetworks int, "+
 			       " CONSTRAINT nfkey FOREIGN KEY(waveformeventid) REFERENCES eventconfig(eventid)) ");
 	    
-	    stmt.executeUpdate(" CREATE TABLE waveformnetworkdb "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE waveformnetworkdb "+
 			       " ( waveformeventid int, "+
 			       " waveformnetworkid int, "+
 			       " numstations int, "+
 			       " qtime timestamp) ");
-	    stmt.executeUpdate(" CREATE TABLE waveformstationdb "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE waveformstationdb "+
 			       " ( waveformeventid int, "+
 			       " waveformstationid int, "+
 			       " waveformnetworkid int, "+
 			       " numsites int, "+
 			       " qtime timestamp) ");
 
-	    stmt.executeUpdate(" CREATE TABLE waveformsitedb "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE waveformsitedb "+
 			       " ( waveformeventid int, "+
 			       " waveformsiteid int, "+
 			       " waveformstationid int, "+
 			       " numchannels int, "+
 			       " qtime timestamp) ");
-	    stmt.executeUpdate(" CREATE TABLE waveformchanneldb "+
+	    stmt.executeUpdate(" CREATE CACHED TABLE waveformchanneldb "+
 			       " ( waveformid  int IDENTITY PRIMARY KEY,"+
 			       " waveformeventid int, "+
 			       " waveformchannelid int, "+
