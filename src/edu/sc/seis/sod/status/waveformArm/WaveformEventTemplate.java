@@ -4,16 +4,13 @@ import edu.sc.seis.sod.status.*;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 public class WaveformEventTemplate extends FileWritingTemplate implements WaveFormStatus{
     public WaveformEventTemplate(Element el, EventAccessOperations event) throws Exception {
@@ -36,8 +33,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             Iterator it = waveformStatusListeners.iterator();
             while(it.hasNext()) ((WaveFormStatus)it.next()).update(ecp);
             it = channelListeners.iterator();
-            while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(),
-                                                                         RunStatus.translate(ecp.getStatus()));
+            while(it.hasNext()) ((ChannelGroupTemplate)it.next()).change(ecp.getChannel(), ecp.getStatus());
             write();
         }
     }
