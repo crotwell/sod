@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.EventChannelPair;
@@ -26,6 +27,11 @@ import org.w3c.dom.Element;
 
 public class WaveformStationStatus extends AbstractVelocityStatus implements WaveformArmMonitor, NetworkArmMonitor {
 
+    public WaveformStationStatus(String fileDir, String templateName) throws IOException, SQLException {
+        super( fileDir, templateName);
+        if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
+    }
+
     public WaveformStationStatus(Element config) throws IOException, SQLException {
         super(config);
         if(Start.getNetworkArm() != null) Start.getNetworkArm().add(this);
@@ -41,9 +47,11 @@ public class WaveformStationStatus extends AbstractVelocityStatus implements Wav
     public void change(Station station, Status s) {
         try {
             int stationDbid = Start.getNetworkArm().getStationDbId(station);
-            VelocityContext context = new VelocityContext(new StationWaveformContext(stationDbid));
+            VelocityContext context = new VelocityContext(new StationWaveformContext(networkArmContext, stationDbid));
             context.put("station", station);
-            scheduleOutput(StationIdUtil.toStringNoDates(station.get_id())+".html",
+            context.put("networkid", station.get_id().network_id);
+            context.put("network", station.my_network);
+            scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(station.get_id().network_id)+"/"+StationIdUtil.toStringNoDates(station.get_id())+".html",
                            context);
         } catch (SQLException e) {
             GlobalExceptionHandler.handle(e);

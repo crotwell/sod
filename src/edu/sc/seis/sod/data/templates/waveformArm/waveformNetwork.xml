@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<html>
+<header><title>$network.getNetworkAccess().get_attributes().get_code() in the waveform arm</title></header>
+<body>
+<h2>$network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())</h2>
+<br/>
+<table>
+#foreach ( $sta in $network.retrieve_stations() )
+<tr>
+<td>$sta.get_code()</td>
+<td><a href="$network.getNetworkAccess().get_attributes().get_code()/$sta.get_code().html">$fissures.stationName($sta)</a></td>
+</tr>
+#end
+</table>
+</body>
+</html></template>

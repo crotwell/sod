@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <html>
-<header><title>$fissures.formatNetwork($station.get_id().network_id) Stations in the waveform arm</title></header>
+<header><title>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</title></header>
 <body>
+<h2>Events for $fissures.formatNetwork($station.get_id()) $fissures.formatStation($station.get_id())</h2>
+<br/>
 <table>
 <tr>
 <td><b>Time</b></td>

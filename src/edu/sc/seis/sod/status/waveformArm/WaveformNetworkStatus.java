@@ -9,30 +9,17 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.CookieJar;
+import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.process.waveformArm.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.AbstractVelocityStatus;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.OutputScheduler;
-import edu.sc.seis.sod.status.TemplateFileLoader;
-import edu.sc.seis.sod.status.networkArm.NetworkArmContext;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
 
@@ -58,7 +45,14 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
     }
 
     public void change(NetworkAccess networkAccess, Status s) {
+        // update the index list
         scheduleOutput("waveformNetworks.html", networkArmContext);
+
+        VelocityContext context = new VelocityContext(networkArmContext);
+        context.put("network", networkAccess);
+        scheduleOutput("waveformStations/"+NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id())+".html",
+                       context);
+
     }
 
     public void change(Site site, Status s) {
