@@ -12,39 +12,36 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 
-
 /**
- * @author crotwell
- * Created on Mar 18, 2005
+ * @author crotwell Created on Mar 18, 2005
  */
 public class EmbeddedEventChannelProcessor implements WaveformProcess {
-    
 
-    public EmbeddedEventChannelProcessor(Element config) throws ConfigurationException {
+    public EmbeddedEventChannelProcessor(Element config)
+            throws ConfigurationException {
         NodeList childNodes = config.getChildNodes();
         Node node;
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             node = childNodes.item(counter);
             if(node instanceof Element) {
                 eventChannelSubsetter = (EventChannelSubsetter)SodUtil.load((Element)node,
-                                                                  "waveform");
-                break;
+                                                                            "eventChannel");
             }
         }
-        if (eventChannelSubsetter == null) {
-            throw new ConfigurationException("unable to find EventChannelSubsetter in configuration");
-        }
     }
-    
+
     public WaveformResult process(EventAccessOperations event,
                                   Channel channel,
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
-        WaveformResult result = new WaveformResult(seismograms, eventChannelSubsetter.accept(event, channel, cookieJar));
+        WaveformResult result = new WaveformResult(seismograms,
+                                                   eventChannelSubsetter.accept(event,
+                                                                                channel,
+                                                                                cookieJar));
         return result;
     }
-    
+
     EventChannelSubsetter eventChannelSubsetter;
 }
