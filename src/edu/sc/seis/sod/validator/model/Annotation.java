@@ -22,7 +22,7 @@ public class Annotation{
     public String getSummary(){ return summary; }
 
     public String getExample(){
-        System.out.println("getting example");
+        //System.out.println("getting example");
         return getExample(DEFAULT_HTMLIZE);
     }
 
@@ -31,7 +31,7 @@ public class Annotation{
     }
 
     public String getExample(boolean htmlize){
-        System.out.println("getExample(" + htmlize + ")");
+        //System.out.println("getExample(" + htmlize + ")");
         if (example.equals("") || example == null){
             ExampleBuilder eb = new ExampleBuilder(htmlize);
             //System.out.println("created new ExampleBuilder");
@@ -50,6 +50,18 @@ public class Annotation{
         }
         //System.out.println("blah");
         return example;
+    }
+
+    public boolean hasExample(){
+        return !(example.equals("") || example == null);
+    }
+
+    public void setInclude(boolean include){
+        this.include = include;
+    }
+
+    public boolean getInclude(){
+        return include;
     }
 
     public static String getHTMLizedString(String bracketedXML){
@@ -73,6 +85,7 @@ public class Annotation{
     private String summary, desc;
     private String example = "";
     private FormProvider formProvider;
+    private boolean include = false;
 
     public static boolean DEFAULT_HTMLIZE = true;
 }
