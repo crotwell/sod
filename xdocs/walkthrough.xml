@@ -3,40 +3,57 @@
 
   <properties>
     <author>Philip Crotwell</author>
-    <title>SOD Walkthrough</title>
+    <title>Strategy File via Editor</title>
   </properties>
 
 <body>
 
-<section name="Take a walk on the SOD">
+<section name="SOD Strategy File via the Editor">
 <p>
 We shall assume that you have successfully downloaded and extracted SOD from
 its tar or zip file. If not please have a look at the
-<a href="install.html">installation</a> document. This document covers SOD from
+<a href="install.html">installation</a> document. There are two steps to using SOD,
+creating the strategy file and running SOD on the strategy file. This document covers
+creating a SOD strategy file from
 the point of view of the GUI editor. If you would like a lower level, XML based
-view of how SOD works, please see the 
-<a href="tutorial.html">XML-based tutorial</a> document.
+view of how SOD works, please see the
+<a href="tutorial.html">Strategy File via XML</a> document.
 </p>
 <p>
 Change into the SOD directory, where you should see various files and subdirectories.
-Start up the GUI editor, by running <code>./bin/editor.sh</code> or <code>bin\editor.bat</code>.
-The editor should start with the tutorial configuration preloaded. This is
+Start up the GUI editor, by running <br/>
+<code>sodeditor.sh</code><br/>
+ or <br/>
+<code>sodeditor.bat</code><br/>
+The SOD editor should start with the tutorial strategy file preloaded. This is
 contained within the editor, so there is no need to worry about messing anything
-up as it can be reset by choosing Open Tutorial from the File menu. You will
-see several tabs which cover the various sections of a SOD run. We will cover each
+up as it can be reset by choosing <tt>Open Tutorial</tt> from the <tt>File</tt> menu. You will
+see several tabs which cover the various sections, or arms, of a SOD run. We will cover each
 in turn.
 </p>
 <section name="Properties">
 <p>
-The Properties tab configures various run encompassing settings.  The various items in this tab configure big pieces of SOD functionality such as where to write status files and how often to check for events.  Basically, anything that doesn't fit in a specific arm gets stuck here.  These items do make more sense in the context of specific run settings, so we'll refer back to the Properties tab as we get to configuration items that relate to these settings.
+The Properties tab configures various run encompassing settings.  The various items in this tab
+configure big pieces of SOD functionality such as where to write status files and how often to
+check for events.  Basically, anything that doesn't fit in a specific arm gets stuck here.  These
+items do make more sense in the context of specific run strategy, so we'll refer back to the
+Properties tab as we come to items that relate to these settings.
 </p>
 </section>
 <section name="Event">
 <p>
-The Event tab contains the settings for the Event Arm.  These settings indicate who SOD should ask for events, which ones are of interest to this run, and what, if anything, to do with them.  The first part of the Event Arm's configuration defines the query to send to an event server.  The tutorial configuration file uses the IRIS Event server to get events.  It restricts the events returned by the query to be of magnitude greater than 6 during January of 2003 but allows them to come from anywhere in the world.  One subtle point is that a single real earthquake will
+The Event tab contains the settings for the Event Arm.  These settings indicate which server
+SOD should ask for events, which ones are of interest to this run, and what, if anything,
+to do with them.  The first part of the Event Arm's configuration defines the query to send
+to an event server.  The tutorial configuration file uses the IRIS Event server to get events.
+It restricts the events returned by the query to be of magnitude greater than 6 during
+January of 2003 but allows them to come from anywhere in the world.
+</p>
+<p>
+One subtle point is that a single real earthquake will
 be in multiple catalogs within the DMC's database. Because there is currently
 no way to automatically group these related origins into a single event based on
-the information to which the DMC has access , these origins each appear in separate events.
+the information to which the DMC has access, these origins each appear in separate events.
 So, it is usually wise to pick a particular catalog to avoid duplicate
 processing of events. The default here is the PREF catalog from the DMC. PREF is not a true
 catalog, but rather something that the DMC Event server understands as the "best"
@@ -44,17 +61,36 @@ catalog depending on the time of the request. The weeklies, or WHDF, catalog fro
 NEIC is another common one for historical data and if you
 are doing a SOD run and want near real time data, then you probably want to
 use FINGER catalog as that has a short delay from earthquake occurring to the
-location being included in the catalog.  However since this tutorial run is historical, PREF is a good choice.These values can be changed and SOD has many more settings , but this is a nice minimal set of parameters.   This covers what SOD will ask for in its event queries, and who it will ask, but there's a property setting in this run that affects the event query.  In the Properties tab the setting 'Event Query Increment' is set to 1 week.  This tells SOD how much of your event query to ask for in a single query to the event server.  A good general rule here is to make this value just large enough to ensure that at least one event will come back from every query.  For this run, we're getting earthquakes of magnitude 6 or higher throughout the world, and about 200 of those happen every year, so 1 week is a decent value for the event query increment for this run.
+location being included in the catalog.  However since this tutorial run is historical,
+PREF is a good choice.
+</p>
+<p>
+These values can be changed and SOD has many more settings , but
+this is a nice minimal set of parameters.   This covers what SOD will ask for in its
+event queries, and who it will ask, but there's a property setting in this run that
+affects the event query.  In the Properties tab the setting <em>Event Query Increment</em>
+is set to 1 week.  This tells SOD how much of your event query to ask for in a single
+query to the event server.  A good general rule here is to make this value just large
+enough to ensure that at least one event will be found for every query, but not
+so large that hundreds will be found.  For this run,
+we're getting earthquakes of magnitude 6 or higher throughout the world, and about 200
+of those happen every year, so 1 week is a decent value for the event query increment for this run.
 </p>
 <p>
 After the query to the remote event server, we have our events locally and
-could add some additional subsetting based on the origin that can't be done with simple query based subsetting, but for the tutorial we will
+could add some additional subsetting based on the origin that can't be done
+with simple query based subsetting. But for the tutorial we will
 assume all of these events are fine. Just to make running
 sod a little more interesting, we will include an event processor. This one just
 prints out every event's information on arrival.
 </p>
 <p>
-The tutorial's Event Arm also contains three Event Status generators.  Each of these generates a HTML page in the Status Directory set in the properties tab with all of the events SOD has gotten and their status in the run sorted by the criteria listed in the pull down box.  So after you've started a run, you can go to the directory set in the properties tab (status by default) and look at event.html, depth.html and magnitude.html in your web browser to see what the event arm is doing.
+The tutorial's Event Arm also contains an Event Status generator. This
+generates HTML pages in the <em>Status Directory</em> set in the properties tab with all of
+the events SOD has gotten and their status in the run.
+So after you've started a run, you can go to the directory
+set in the properties tab (status by default) and look at event.html
+in your web browser to see what the event arm is doing.
 </p>
 <p>
 Feel free to modify any of these values to customize your search. Be aware that
@@ -71,7 +107,7 @@ pick stations in order to ask for data. This query is sent to the IRIS Network
 server. We will get all stations in the II network, sites (which loosely correspond
 to seed loc ids) that are either space-space or 00 and channels that are long
 period. The construction is that the band code must be L and the gain code
-cannot be O. This accepts both LH? and LL? channels, but rejects LOG channels.
+cannot be O. This accepts both <tt>LH?</tt> and <tt>LL?</tt> channels, but rejects <tt>LOG</tt> channels.
 Of course there are other, probably better ways, of accomplishing this same
 thing, but this is a good way of introducing the logical subsetters. Notice that
 there are three channel subsetters joined with a logical AND, and one of these
@@ -95,7 +131,10 @@ eliminate as much as possible as early as possible.
 
 <section name="Waveform">
 <p>
-The Waveform tab contains the settings for the waveform arm.  This arm finishes up the work started by the event and network arms.  It pairs up all the channels from the network arm with all of the events from the event arm and runs various subsetters over them to eliminate unwanted items.
+The Waveform tab contains the settings for the waveform arm.  This arm finishes up
+the work started by the event and network arms.  It pairs up all the channels
+from the network arm with all of the events from the event arm and runs various
+subsetters over them to eliminate unwanted items.
 The first subsetter is a distance range subsetter. Only events that
 are at least 30, but less than 90, degrees away from the station are processed.
 This is an example of a type of subsetting that cannot be performed within the
@@ -108,11 +147,12 @@ which the server will be asked. The travel time calculations are based on the
 <a href="http://www.seis.sc.edu/software/TauP">TauP Toolkit</a>, and so
 any choice of phase and model that is compatible with TauP is allowed. It is
 important to be careful of phases that might not exist at all distances, like
-P and S. An alternative is to use ttp and tts which are TauP aliases for
-p, P, Pn, Pdiff, PKiKP, PKIKP and s, S, Sn, Sdiff, SKIKS respectively. In any case
+<tt>P</tt> and <tt>S</tt>. An alternative is to use <tt>ttp</tt> and <tt>tts</tt>
+ which are TauP aliases for
+<tt>p, P, Pn, Pdiff, PKiKP, PKIKP</tt> and <tt>s, S, Sn, Sdiff, SKIKS</tt> respectively. In any case
 the first arriving phase of that name is used. The offsets are added to the
 phase times to get the request time window. Note that this means that the
-begun offset should usually be negative in order to include the phase. The server
+begin offset should usually be negative in order to include the phase. The server
 in many cases will actually return a slightly wider time window than the actual
 request in order to avoid splitting data chunks.
 </p>
@@ -157,11 +197,15 @@ used, and images of the retrieved seismograms.
 
 <section name="Run SOD">
 <p>
-Although there is a GUI for editing the configuration files, SOD itself is not
+Although there is a GUI for editing the strategy files, SOD itself is not
 a GUI application. This is done intentionally as SOD will likely be a long running
 background processes, and so command line execution is the preferred way. So, to
-start a SOD run, you need to save the XML configuration file to disk. Then start
-it up with <code>sod.sh -f mysod.xml</code>. Once SOD is started, open the
+start a SOD run, you need to save the XML strategy file to disk. Then start
+it up with <br/>
+<code>sod.sh -f mysod.xml</code><br/>
+ or <br/>
+<code>sod.bat -f mysod.xml</code><br/>
+Once SOD is started, open the
 <code>index.html</code> file within the <code>status</code> directory. You will
 see a map of the events that have been found as well as some statistics about
 the run. The Networks link show which networks, stations and channels were
@@ -175,20 +219,20 @@ successful.
 <p>
 You should also look at the Errors page, as any problems that occur will be
 reported there. Also, the Wily link takes you to the Wily DHI status monitor.
-Wily will show it if one of the servers is down. The Configuration link shows the
-original configuration file. This is mostly useful if the status pages from a SOD
+Wily will show it if one of the servers is down. The Strategy link shows the
+original strategy file. These are mostly useful if the status pages from a SOD
 run are on a web server.
 </p>
 </section>
 
 <section name="WEED">
 <p>
-Now that you have seen the tutorial template, feel free to visit the weed template,
+Now that you have seen the tutorial strategy, feel free to visit the weed strategy,
 also located in the File menu.
 It attempts to make SOD behave similarly to the old IRIS WEED program. There are
 some areas where making the functionality exactly like WEED would have been harder
-on the user, and so it was not designed to merely be similar. In addition to the
-functionality in the Tutorial template, the WEED template also supports distance,
+on the user, and so it was designed to merely be similar, not identical. In addition to the
+functionality in the Tutorial strategy, the WEED strategy also supports distance,
 azimuth and back azimuth from a fixed point for events, response output to file,
 more logical operations, and distance, azimuth, back azimuth and mid point for
 event station pairs.

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <pages>
         <baseDirectory>generatedSite/</baseDirectory>
-		<menu name="Tutorials">
+        <menu name="Tutorials">
         <page>
                 <source>content/index.xml</source>
                 <destination>index.html</destination>
                 <name>Home</name>
+        </page>
+        <page>
+                <source>../xdocs/quickstart.xml</source>
+                <destination>quickstart.html</destination>
+                <name>Quick Start</name>
         </page>
         <page>
                 <source>content/download.xml</source>
@@ -18,19 +23,19 @@
                 <name>Install</name>
         </page>
         <page>
-                <source>../xdocs/running.xml</source>
-                <destination>running.html</destination>
-                <name>Run</name>
-        </page>
-        <page>
                 <source>../xdocs/walkthrough.xml</source>
                 <destination>walkthrough.html</destination>
-                <name>Walkthrough</name>
+                <name>Strategy File via Editor</name>
         </page>
         <page>
                 <source>../xdocs/tutorial.xml</source>
                 <destination>tutorial.html</destination>
-                <name>XML-based Tutorial</name>
+                <name>Strategy File via XML</name>
+        </page>
+        <page>
+                <source>../xdocs/running.xml</source>
+                <destination>running.html</destination>
+                <name>Run</name>
         </page>
         <page>
                 <source>../xdocs/realtime.xml</source>
@@ -42,138 +47,144 @@
                 <destination>legacy.html</destination>
                 <name>Legacy Code Considerations</name>
         </page>
-		<page>
-				<source>include/ES_JulAug_2004_preprint.pdf</source>
-				<destination>ES_JulAug_2004_preprint.pdf</destination>
-				<name>SOD Paper(PDF)</name>
-		</page>
+        <page>
+                <source>schemaDocumenter/tagDocs</source>
+                <destination>tagDocs/sod.html</destination>
+                <name>Tag Docs</name>
+        </page>
+        <page>
+                <source>include/ES_JulAug_2004_preprint.pdf</source>
+                <destination>ES_JulAug_2004_preprint.pdf</destination>
+                <name>SOD Paper(PDF)</name>
+        </page>
         <page>
                 <source>../xdocs/sodcam.xml</source>
                 <destination>sodcam.html</destination>
                 <name>SOD-cam</name>
         </page>
         <page>
-				<source>content/tagDocHelp.xml</source>
-				<destination>tagDocHelp.html</destination>
+                <source>content/tagDocHelp.xml</source>
+                <destination>tagDocHelp.html</destination>
                 <name>Strategy File Reference</name>
         </page>
-		</menu>
-		<menu name ="Reference">
+        </menu>
+        <menu name ="Reference">
         <page>
                 <source>content/index.xml</source>
                 <destination>index.html</destination>
                 <name>Home</name>
         </page>
-			
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/sod/start.html</destination>
-				<name>sod</name>
-		</page>
-		<submenu>	
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/properties/start.html</destination>
-				<name>properties</name>
-		</page>
-			
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/arm/start.html</destination>
-				<name>eventArm</name>
-		</page>
-		<submenu>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/source/eventFinder.html</destination>
-				<name>Finder</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/origin/origin.html</destination>
-				<name>Origin</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/process/eventProcess.html</destination>
-				<name>Process</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/status/status.html</destination>
-				<name>Status</name>
-		</page>
+
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/sod/start.html</destination>
+                <name>sod</name>
+        </page>
+        <submenu>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/properties/start.html</destination>
+                <name>properties</name>
+        </page>
+
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/arm/start.html</destination>
+                <name>eventArm</name>
+        </page>
+        <submenu>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/source/eventFinder.html</destination>
+                <name>Finder</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/origin/origin.html</destination>
+                <name>Origin</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/process/eventProcess.html</destination>
+                <name>Process</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/status/status.html</destination>
+                <name>Status</name>
+        </page>
 </submenu>
-			
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/arm/start.html</destination>
-				<name>networkArm</name>
-		</page>
-		<submenu>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/source/finder.html</destination>
-				<name>Finder</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/network/network.html</destination>
-				<name>Network</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/station/station.html</destination>
-				<name>Station</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/site/site.html</destination>
-				<name>Site</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/channel/channel.html</destination>
-				<name>Channel</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/process/process.html</destination>
-				<name>Process</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/network/status/networkStatusTemplate.html</destination>
-				<name>Status</name>
-		</page>
+
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/arm/start.html</destination>
+                <name>networkArm</name>
+        </page>
+        <submenu>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/source/finder.html</destination>
+                <name>Finder</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/network/network.html</destination>
+                <name>Network</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/station/station.html</destination>
+                <name>Station</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/site/site.html</destination>
+                <name>Site</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/channel/channel.html</destination>
+                <name>Channel</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/process/process.html</destination>
+                <name>Process</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/network/status/networkStatusTemplate.html</destination>
+                <name>Status</name>
+        </page>
 </submenu>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/waveform/arm/start.html</destination>
-				<name>waveformArm</name>
-		</page>
-		<submenu>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/waveform/eventStation/eventStation.html</destination>
-				<name>Event Station</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/waveform/localSeismogram/start.html</destination>
-				<name>Local Seismogram</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/waveform/motionVector/start.html</destination>
-				<name>Motion Vector</name>
-		</page>
-		<page>
-				<source>SchemaDoc</source>
-				<destination>tagDocs/event/status/status.html</destination>
-				<name>Status</name>
-		</page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/waveform/arm/start.html</destination>
+                <name>waveformArm</name>
+        </page>
+        <submenu>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/waveform/eventStation/eventStation.html</destination>
+                <name>Event Station</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/waveform/localSeismogram/start.html</destination>
+                <name>Local Seismogram</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/waveform/motionVector/start.html</destination>
+                <name>Motion Vector</name>
+        </page>
+        <page>
+                <source>SchemaDoc</source>
+                <destination>tagDocs/event/status/status.html</destination>
+                <name>Status</name>
+        </page>
 </submenu>
-		</submenu>	
-		</menu>
+        </submenu>
+        </menu>
 </pages>
+

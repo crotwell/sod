@@ -5,31 +5,41 @@
         </properties>
         <body>
                 <section name="About SOD">
-                        <p class="about">SOD (Standing Order for Data) automates tedious data
+                        <p class="about">
+                        <b>sod</b> <i>n.</i><br/>
+<ol>
+<li>A section of grass-covered surface soil held together by matted roots; turf.</li>
+<li> The ground, especially when covered with grass.</li>
+<li>The science and art of using all the forces of
+                        a nation to execute approved plans for retrieveing seismic data
+                        as effectively as possible during peace or war.</li>
+</ol>
+<i>[Middle English, from Middle Low German, or Middle Dutch<tt> sode</tt>.]</i>
+</p><br/><br/>
+
+                        <p class="about">
+                        SOD (Standing Order for Data) automates tedious data
                                 selection, downloading and routine processing tasks in seismology,
                                 shortening the time between idea and science. </p>
-                        <p class="about">Users first configure SOD with various subsetters that
-                                narrow down the torrent of seismic data available. For example,
-                                SOD's event arm allows the user to specify where events occur, how
-                                large they are, who reported them, and then to build event more
-                                complex and precise expressions using logical AND, OR, and NOT
-                                combinations of any of the smaller pieces. This same subsetting
-                                process is done for seismic networks in the network arm. The
-                                combination of the events that have passed through the event arm and
-                                the channels that have been selected by the network arm are then run
-                                through the waveform arm. This arm allows the user to specify more
-                                subsetting that only makes sense with an event-channel pairing like
-                                how far the earthquake is away from a station, the back azimuth, and
-                                even the amount of data that various servers have for the pairing.
-                                Naturally, each of these pieces can be combined in logical
-                                operations like the event and network arms. After all of this
-                                subsetting has whittled the data down to the interesting stuff, the
-                                waveform processors perform various transformations on the data in
-                                sequence. So several processors can be stacked up to filter the
-                                data, remove the mean, and any other conceivable action. </p>
-                        <p class="about">Please read the <a href="walkthrough.html">walkthrough</a>
+                        <p class="about">
+                        There are two parts to using SOD. The first
+                        is the creation of a strategy file. The strategy file contains
+                        the the definition of the types of data that are of interest. This
+                        file is written in <a href="http://www.w3c.org/XML">XML</a>,
+                        and can be editied with any text editor. Because editing XML
+                        by hand is prone to error, there is also a
+                        GUI editor that included with SOD for creating these files.</p>
+                        <p>
+                        The second part is actually running SOD with the strategy file. SOD is
+                        meant to be a long running background program, and so is run
+                        from the command line and does not
+                        have a GUI.
+                        </p>
+                        <p class="about">
+                        Please read the <a href="walkthrough.html">walkthrough</a>
                                 document for an simple tutorial using SOD to get SAC data from the
-                                IRIS DMC. Also, to see the status pages for a live SOD run at USC, please see our <a href="sodcam.html">Live SOD-cam.</a></p>
+                                IRIS DMC. Also, to see the status pages for a live SOD run at USC,
+                                please see our <a href="sodcam.html">Live SOD-cam.</a></p>
                         <p class="about">Send any comments, good or bad, to
                         <script type="text/javascript">
                         //<![CDATA[
@@ -65,22 +75,22 @@
                 </section>
                 <section name="News">
                 <table id="entry">
-				<th>9 July 2004</th>
-				<tr>
-						<td>
-								<p>We're releasing another beta along the road to Sod 2.0 today.  It's available <a href="download.html">here</a>.  This one adds a new processor and a new subsetter in additional to the usual bug fixes.</p>
-						</td>
-				</tr>
-		</table>
+                <th>9 July 2004</th>
+                <tr>
+                        <td>
+                                <p>We're releasing another beta along the road to Sod 2.0 today.  It's available <a href="download.html">here</a>.  This one adds a new processor and a new subsetter in additional to the usual bug fixes.</p>
+                        </td>
+                </tr>
+        </table>
                 <table id="entry">
-				<th>15 June 2004</th>
-				<tr>
-						<td>
-								<p>SOD 2.0 Beta 6 has been released.  It fixes some minor bugs in the scripts on Solaris and editor behaviour.  As always, it's available <a href="download.html">here.</a></p>
-						</td>
-				</tr>
-		</table>
-		<table id="entry">
+                <th>15 June 2004</th>
+                <tr>
+                        <td>
+                                <p>SOD 2.0 Beta 6 has been released.  It fixes some minor bugs in the scripts on Solaris and editor behaviour.  As always, it's available <a href="download.html">here.</a></p>
+                        </td>
+                </tr>
+        </table>
+        <table id="entry">
                         <th>10 June 2004</th>
                         <tr>
                                 <td>
