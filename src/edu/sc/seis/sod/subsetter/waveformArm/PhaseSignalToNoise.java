@@ -86,7 +86,7 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
 
         if (seismograms.length == 0 ) { return false; }
         LongShortTrigger trigger = phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
-        if (trigger.getValue() > ratio) {
+        if (trigger != null && trigger.getValue() > ratio) {
             cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
             return true;
         }
