@@ -18,7 +18,9 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 public interface AvailableDataSubsetter extends Subsetter {
 
     public boolean accept(EventAccessOperations event,
-              Channel channel, RequestFilter[] original,
-              RequestFilter[] available, CookieJar cookieJar) throws Exception;
+                          Channel channel,
+                          RequestFilter[] original,
+                          RequestFilter[] available,
+                          CookieJar cookieJar) throws Exception;
 
 }// AvailableDataSubsetter

@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.waveformArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.subsetter.waveformArm.AvailableDataSubsetter;
 import org.w3c.dom.Element;
@@ -13,7 +14,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NullAvailableDataSubsetter implements AvailableDataSubsetter {
+public class NullAvailableDataSubsetter implements AvailableDataSubsetter, ChannelGroupAvailableDataSubsetter {
     public NullAvailableDataSubsetter() {}
 
     public NullAvailableDataSubsetter(Element config) {}
@@ -22,4 +23,24 @@ public class NullAvailableDataSubsetter implements AvailableDataSubsetter {
                           RequestFilter[] original,RequestFilter[] available, CookieJar cookieJar) {
         return true;
     }
+
+
+    public boolean accept(EventAccessOperations event,
+                          ChannelGroup channel,
+                          RequestFilter[] original,
+                          RequestFilter[] available,
+                          CookieJar cookieJar) throws Exception {
+        return true;
+    }
+
+    public boolean accept(EventAccessOperations event,
+                          ChannelGroup channelGroup,
+                          RequestFilter[][] original,
+                          RequestFilter[][] available,
+                          CookieJar cookieJar) throws Exception {
+        return true;
+    }
+
+
+
 }// NullAvailableDataSubsetter

@@ -12,6 +12,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ChannelGroup {
 
@@ -23,8 +24,10 @@ public class ChannelGroup {
         return channels;
     }
 
-
-    public static ChannelGroup[] group(Channel[] channels) {
+    /** Attempts to group channels in to groups that are components of
+     * motion. Channels that cannot be matched are put into the failures
+     * List. */
+    public static ChannelGroup[] group(Channel[] channels, List failures) {
         // this is a placeholder implementation until we implement the
         // full grouping xml config file idea
 
@@ -49,13 +52,14 @@ public class ChannelGroup {
             LinkedList chans = (LinkedList)bandGain.get(it.next());
             if (chans.size() == 3) {
                 out.add(new ChannelGroup((Channel[])chans.toArray(new Channel[3])));
+            } else {
+                failures.addAll(chans);
             }
         }
         return (ChannelGroup[])out.toArray(new ChannelGroup[0]);
     }
 
     private Channel[] channels;
-
 
 }
 
