@@ -1,129 +1,76 @@
 package edu.sc.seis.sod.subsetter;
 
-import edu.sc.seis.sod.*;
-import java.util.*;
-import org.w3c.dom.*;
-import org.apache.log4j.*;
-import edu.iris.Fissures.*;
-import edu.iris.Fissures.model.*;
-
-/**
- * EffectiveTimeOverlap.java
- *
- *
- * Created: Tue Mar 19 13:27:02 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
- */
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeUtils;
+import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Subsetter;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{
-
     public EffectiveTimeOverlap(edu.iris.Fissures.TimeRange range) {
-        minDate =
-            new MicroSecondDate(range.start_time);
-        maxDate =
-            new MicroSecondDate(range.end_time);
-
+        start = new MicroSecondDate(range.start_time);
+        end = new MicroSecondDate(range.end_time);
     }
-
-    /**
-     * Creates a new <code>EffectiveTimeOverlap</code> instance.
-     *
-     * @param config an <code>Element</code> value
-     */
+    
     public EffectiveTimeOverlap (Element config){
-    Element childElement = null;
-    NodeList children = config.getChildNodes();
-    Node node;
-    for (int i=0; i<children.getLength(); i++) {
-        node = children.item(i);
-        if(node instanceof Element) {
-        String tagName = ((Element)node).getTagName();
-        if(tagName.equals("effectiveTimeOverlap") ){
-            childElement =(Element)node;
+        Element childElement = null;
+        NodeList children = config.getChildNodes();
+        Node node;
+        for (int i=0; i<children.getLength(); i++) {
+            node = children.item(i);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                if(tagName.equals("effectiveTimeOverlap") ){
+                    childElement =(Element)node;
+                }
+            }
         }
-        }
-
-    }
-    children = childElement.getChildNodes();
-    for(int  i = 0; i < children.getLength(); i ++) {
-        node = children.item(i);
-        if(node instanceof Element) {
-            String tagName = ((Element)node).getTagName();
-            if(tagName.equals("min")) {
-                minElement = (Element)node;
-                minDate =
-                new MicroSecondDate(getMinEffectiveTime());
-            } else if (tagName.equals("max")) {
-                maxElement = (Element)node;
-                maxDate =
-                new MicroSecondDate(getMaxEffectiveTime());
+        children = childElement.getChildNodes();
+        for(int  i = 0; i < children.getLength(); i ++) {
+            node = children.item(i);
+            if(node instanceof Element) {
+                String tagName = ((Element)node).getTagName();
+                Element el = (Element)node;
+                if(tagName.equals("min")) {
+                    start = new MicroSecondDate(getEffectiveTime(el));
+                } else if (tagName.equals("max")) {
+                    end = new MicroSecondDate(getEffectiveTime(el));
+                }
             }
         }
     }
-
+    
+    public static edu.iris.Fissures.Time getEffectiveTime(Element el) {
+        if(el == null) return null;
+        String effectiveTime = SodUtil.getNestedText(el);
+        edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
+        return rtnTime;
     }
-
-    /**
-     * Describe <code>getMinEffectiveTime</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.Time</code> value
-     */
-    public edu.iris.Fissures.Time getMinEffectiveTime() {
-    if(minElement == null) return null;
-    String effectiveTime = SodUtil.getNestedText(minElement);
-    edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime,0);
-    return rtnTime;
+    
+    public boolean overlaps(edu.iris.Fissures.TimeRange otherRange) {
+        MicroSecondDate otherStart = new MicroSecondDate(otherRange.start_time);
+        MicroSecondDate otherEnd;
+        if (otherRange.end_time.date_time.equals(edu.iris.Fissures.TIME_UNKNOWN.value)) {
+            otherEnd = new MicroSecondDate(TimeUtils.future);
+        } else {
+            otherEnd = new MicroSecondDate(otherRange.end_time);
+        } // end of else
+        if (end == null && start == null) {
+            return true;
+        } else if (end == null && start.before(otherEnd)) {
+            return true;
+        } else if (start == null && end.after(otherStart)) {
+            return true;
+        } else if(otherStart.after(end) || otherEnd.before(start) ) {
+            return false;
+        } else {
+            return true;
+        }
     }
-
-    /**
-     * Describe <code>getMaxEffectiveTime</code> method here.
-     *
-     * @return an <code>edu.iris.Fissures.Time</code> value
-     */
-    public edu.iris.Fissures.Time getMaxEffectiveTime() {
-    if(maxElement == null) return null;
-    String effectiveTime = SodUtil.getNestedText(maxElement);
-    edu.iris.Fissures.Time rtnTime = new edu.iris.Fissures.Time(effectiveTime, 0);
-    return rtnTime;
-
-    }
-
-    public boolean overlaps(edu.iris.Fissures.TimeRange range) {
-    MicroSecondDate rangeStartDate =
-        new MicroSecondDate(range.start_time);
-    MicroSecondDate rangeEndDate;
-
-    if (range.end_time.date_time.equals(edu.iris.Fissures.TIME_UNKNOWN.value)) {
-        rangeEndDate = new MicroSecondDate(TimeUtils.future);
-    } else {
-        rangeEndDate =
-        new MicroSecondDate(range.end_time);
-    } // end of else
-
-    if (maxDate == null && minDate == null) {
-        return true;
-    } else if (maxDate == null && minDate.before(rangeEndDate)) {
-        return true;
-    } else if (minDate == null && maxDate.after(rangeStartDate)) {
-        return true;
-    } else if(rangeStartDate.after(maxDate)
-          || rangeEndDate.before(minDate) ) {
-        return false;
-    } else {
-        //logger.debug(range.start_time.date_time+" "+range.end_time.date_time+" overlaps "+ minDate+" "+maxDate);
-        return true;
-    }
-    }
-
-    Element minElement = null;
-    MicroSecondDate minDate = null;
-
-    Element maxElement = null;
-    MicroSecondDate maxDate = null;
-
-    static Category logger =
-        Category.getInstance(EffectiveTimeOverlap.class.getName());
-
+    
+    private MicroSecondDate start, end;
+    private static Logger logger = Logger.getLogger(EffectiveTimeOverlap.class);
 }// EffectiveTimeOverlap
