@@ -7,7 +7,7 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
@@ -20,19 +20,22 @@ public class SimpleHTMLEventStatus implements EventStatus{
     public SimpleHTMLEventStatus(Element config) throws ConfigurationException{
         File htmlDir = SodUtil.makeOutputDirectory(config);
         page = new SimpleHTMLPage("Event Arm Status", "eventArm.html", htmlDir);
+        page.append("Status", "Starting up",0);
+        page.append("Successes", "",1);
+        page.append("Failures", "",2);
     }
     
     public void setArmStatus(String status) {
         page.clear("Status");
-        page.append("Status", status);
+        page.append("Status", status, 0);
         page.write();
     }
     
     public void change(EventAccessOperations event, RunStatus status) {
         if(status == RunStatus.FAILED){
-            page.append("Failures", DisplayUtils.getEventInfo(event));
+            page.append("Failures", CacheEvent.getEventInfo(event), 2);
         }else if(status == RunStatus.PASSED){
-            page.append("Successes", DisplayUtils.getEventInfo(event));
+            page.append("Successes", CacheEvent.getEventInfo(event), 1);
         }
         page.write();
     }
