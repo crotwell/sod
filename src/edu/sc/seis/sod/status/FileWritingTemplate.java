@@ -7,14 +7,15 @@ import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.eventArm.LastEventTemplate;
 import edu.sc.seis.sod.status.waveformArm.NumSuccessfulECPTemplate;
 import edu.sc.seis.sod.status.waveformArm.SacDataWrittenTemplate;
+import edu.sc.seis.sod.status.waveformArm.WPHTemplate;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import java.sql.SQLException;
 
 public class FileWritingTemplate extends Template implements GenericTemplate {
     protected FileWritingTemplate(String baseDir, String loc) throws IOException  {
@@ -73,6 +74,12 @@ public class FileWritingTemplate extends Template implements GenericTemplate {
         }else if(tag.equals("numSuccessfulECP")){
             try {
                 return new NumSuccessfulECPTemplate();
+            } catch (SQLException e) {
+                GlobalExceptionHandler.handle(e);
+            }
+        }else if(tag.equals("waveformsPerHour")){
+            try {
+                return new WPHTemplate();
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle(e);
             }
