@@ -55,9 +55,26 @@ public class NetworkArmContext  extends AbstractContext {
             } catch (Exception e) {
                 throw new RuntimeException("can't get for key="+key, e);
             }
-        } else {
-            return null;
+        } else if (key.length() == 2 &&  ! (key.startsWith("X") || key.startsWith("Y") || key.startsWith("Z"))) {
+            // try as a network code
+            try{
+                NetworkDbObject[] netdbs = jdbcNetwork.getAllNets(Start.getNetworkArm().getNetworkDC());
+                ArrayList out = new ArrayList(netdbs.length);
+                for (int i = 0; i < netdbs.length; i++) {
+                    if (netdbs[i].getNetworkAccess().get_attributes().get_code().equals(key)) {
+                        return netdbs[i];
+                    }
+                }
+            } catch (NotFound e) {
+                return null;
+            } catch (SQLException e) {
+                throw new RuntimeException("can't get for key="+key, e);
+            } catch (NetworkNotFound e) {
+                return null;
+            }
         }
+        //else
+        return null;
     }
 
     public boolean internalContainsKey(Object key) {
