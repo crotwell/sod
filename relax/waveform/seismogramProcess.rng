@@ -17,6 +17,7 @@
             <ref name="taper"/>
             <ref name="externalSeismogramProcess"/>
             <ref name="localSeismogramStatus"/>
+            <ref name="filter"/>
         </choice>
     </define>
     <define name="phaseCut">
@@ -46,6 +47,42 @@
             <ref name="phaseRequest"/>
         </element>
     </define>
+    <define name="filter">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                <summary>Filter</summary>
+                <description>Applies a butterworth filter to the seismograms. </description>
+                <example>
+                <filter>
+                   <lowFreqCorner><value>50</value><unit>SECOND</unit></lowFreqCorner>
+                   <highFreqCorner><value>5</value><unit>HERTZ</unit></highFreqCorner>
+                   <numPoles>2</numPoles>
+                   <filterType>NONCAUSAL</filterType>
+                </filter>
+                </example>
+            </xsd:documentation>
+        </xsd:annotation>
+        <element name="filter">
+            <element name="lowFreqCorner">
+               <element name="value">
+                   <data type="float"/>
+               </element>
+               <ref name="unit"/>
+            </element>
+            <element name="highFreqCorner">
+               <element name="value">
+                   <data type="float"/>
+               </element>
+               <ref name="unit"/>
+            </element>
+            <element name="numPoles">
+                <data type="int"/>
+            </element>
+            <element name="filterType">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
     <define name="rMean">
         <element name="rMean">
             <empty/>
@@ -68,9 +105,9 @@
     </define>
     <define name="saveSeismogramToFile">
         <element name="saveSeismogramToFile">
-        	<element name="fileType">
-        		<data type="string"/>
-        	</element>
+            <element name="fileType">
+                <data type="string"/>
+            </element>
             <element name="dataDirectory">
                 <data type="string"/>
             </element>
@@ -95,15 +132,15 @@
         </element>
     </define>
     <define name="localSeismogramStatus">
-    	<element name="localSeismogramTemplateGenerator">
-    		<optional>
-    			<element name="fileDir">
-    				<data type="string"/>
-    			</element>
-    		</optional>
-    		<element name="seismogramConfig">
-    			<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
-    		</element>
-    	</element>
+        <element name="localSeismogramTemplateGenerator">
+            <optional>
+                <element name="fileDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="seismogramConfig">
+                <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+            </element>
+        </element>
     </define>
 </grammar>

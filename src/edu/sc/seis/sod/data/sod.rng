@@ -504,6 +504,26 @@
                                     </attribute>
                                 </element>
                             </element>
+                            <element name="filter">
+                                <element name="lowFreqCorner">
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    <ref name="unit"/>
+                                </element>
+                                <element name="highFreqCorner">
+                                    <element name="value">
+                                    <data type="float"/>
+                                    </element>
+                                    <ref name="unit"/>
+                                </element>
+                                <element name="numPoles">
+                                    <data type="int"/>
+                                </element>
+                                <element name="filterType">
+                                    <data type="string"/>
+                                </element>
+                            </element>
                         </choice>
                     </zeroOrMore>
                 </element>
@@ -923,6 +943,70 @@
                 <ref name="site"/>
             </element>
         </choice>
+    </define>
+    <define name="unit">
+        <element name="unit">
+            <choice>
+                <value>KILOMETER</value>
+                <value>METER</value>
+                <value>CENTIMETER</value>
+                <value>NANOMETER</value>
+                <value>MICROMETER</value>
+                <value>MICRON</value>
+                <value>MILLIMETER</value>
+                <value>PICOMETER</value>
+                <value>INCH</value>
+                <value>FOOT</value>
+                <value>MILE</value>
+                <value>HERTZ</value>
+                <value>NANOSECOND</value>
+                <value>MICROSECOND</value>
+                <value>MILLISECOND</value>
+                <value>SECOND</value>
+                <value>MINUTE</value>
+                <value>HOUR</value>
+                <value>DAY</value>
+                <value>YEAR</value>
+                <value>AMPERE</value>
+                <value>COULOMB</value>
+                <value>VOLT</value>
+                <value>DEGREE</value>
+                <value>RADIAN</value>
+                <value>COUNT</value>
+                <value>RADIAN_PER_SECOND</value>
+                <value>SQUARE_METER</value>
+                <value>SQUARE_CENTIMETER</value>
+                <value>CUBIC_METER</value>
+                <value>CUBIC_CENTIMETER</value>
+                <value>LITER</value>
+                <value>GRAM</value>
+                <value>KILOGRAM</value>
+                <value>DENSITY</value>
+                <value>GRAM_PER_CUBIC_CENTIMETER</value>
+                <value>KILOGRAM_PER_CUBIC_METER</value>
+                <value>VELOCITY</value>
+                <value>METER_PER_SECOND</value>
+                <value>CENTIMETER_PER_SECOND</value>
+                <value>KILOMETER_PER_SECOND</value>
+                <value>MILLIMETER_PER_SECOND</value>
+                <value>MICROMETER_PER_SECOND</value>
+                <value>MICRON_PER_SECOND</value>
+                <value>NANOMETER_PER_SECOND</value>
+                <value>ACCELERATION</value>
+                <value>METER_PER_SECOND_PER_SECOND</value>
+                <value>CENTIMETER_PER_SECOND_PER_SECOND</value>
+                <value>KILOMETER_PER_SECOND_PER_SECOND</value>
+                <value>MILLIMETER_PER_SECOND_PER_SECOND</value>
+                <value>MICROMETER_PER_SECOND_PER_SECOND</value>
+                <value>MICRON_PER_SECOND_PER_SECOND</value>
+                <value>NANOMETER_PER_SECOND_PER_SECOND</value>
+                <value>FORCE</value>
+                <value>NEWTON</value>
+                <value>JOULE</value>
+                <value>DYNE</value>
+                <value>ENERGY</value>
+            </choice>
+        </element>
     </define>
     <define name="network">
         <choice>
@@ -2430,102 +2514,6 @@
             <data type="integer"/>
         </element>
     </define>
-    <define name="channel">
-        <choice>
-            <element name="bandCode">
-                <ref name="channelCodeUtil"/>
-            </element>
-            <element name="gainCode">
-                <ref name="channelCodeUtil"/>
-            </element>
-            <element name="orientationCode">
-                <ref name="channelCodeUtil"/>
-            </element>
-            <element name="sampling">
-                <optional>
-                    <element name="min">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="max">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <element name="interval">
-                    <element name="unit">
-                        <choice>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>HOUR</value>
-                            <value>DAY</value>
-                            <value>YEAR</value>
-                        </choice>
-                    </element>
-                    <element name="value">
-                        <data type="integer"/>
-                    </element>
-                </element>
-            </element>
-            <element name="channelEffectiveTimeOverlap">
-                <element name="effectiveTimeOverlap">
-                    <element name="min">
-                        <data type="string"/>
-                    </element>
-                    <element name="max">
-                        <data type="string"/>
-                    </element>
-                </element>
-            </element>
-            <element name="orientationRange">
-                <element name="azimuth">
-                    <data type="float"/>
-                </element>
-                <element name="dip">
-                    <data type="float"/>
-                </element>
-                <element name="maxOffset">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationAzimuthRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="orientationDipRange">
-                <element name="min">
-                    <data type="float"/>
-                </element>
-                <element name="max">
-                    <data type="float"/>
-                </element>
-            </element>
-            <element name="channelAND">
-                <oneOrMore>
-                    <ref name="channel"/>
-                </oneOrMore>
-            </element>
-            <element name="channelOR">
-                <oneOrMore>
-                    <ref name="channel"/>
-                </oneOrMore>
-            </element>
-            <element name="channelXOR">
-                <ref name="channel"/>
-                <ref name="channel"/>
-            </element>
-            <element name="channelNOT">
-                <ref name="channel"/>
-            </element>
-        </choice>
-    </define>
     <define name="channel2">
         <choice>
             <element name="bandCode">
@@ -2619,6 +2607,102 @@
             </element>
             <element name="channelNOT">
                 <ref name="channel2"/>
+            </element>
+        </choice>
+    </define>
+    <define name="channel">
+        <choice>
+            <element name="bandCode">
+                <ref name="channelCodeUtil"/>
+            </element>
+            <element name="gainCode">
+                <ref name="channelCodeUtil"/>
+            </element>
+            <element name="orientationCode">
+                <ref name="channelCodeUtil"/>
+            </element>
+            <element name="sampling">
+                <optional>
+                    <element name="min">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="max">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <element name="interval">
+                    <element name="unit">
+                        <choice>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>HOUR</value>
+                            <value>DAY</value>
+                            <value>YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="value">
+                        <data type="integer"/>
+                    </element>
+                </element>
+            </element>
+            <element name="channelEffectiveTimeOverlap">
+                <element name="effectiveTimeOverlap">
+                    <element name="min">
+                        <data type="string"/>
+                    </element>
+                    <element name="max">
+                        <data type="string"/>
+                    </element>
+                </element>
+            </element>
+            <element name="orientationRange">
+                <element name="azimuth">
+                    <data type="float"/>
+                </element>
+                <element name="dip">
+                    <data type="float"/>
+                </element>
+                <element name="maxOffset">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationAzimuthRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="orientationDipRange">
+                <element name="min">
+                    <data type="float"/>
+                </element>
+                <element name="max">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="channelAND">
+                <oneOrMore>
+                    <ref name="channel"/>
+                </oneOrMore>
+            </element>
+            <element name="channelOR">
+                <oneOrMore>
+                    <ref name="channel"/>
+                </oneOrMore>
+            </element>
+            <element name="channelXOR">
+                <ref name="channel"/>
+                <ref name="channel"/>
+            </element>
+            <element name="channelNOT">
+                <ref name="channel"/>
             </element>
         </choice>
     </define>
