@@ -13,6 +13,7 @@ import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.event.StatefulEvent;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,10 +26,10 @@ public class EventSorter{
     public EventSorter(Element config){
         try {
             evStatus = new JDBCEventStatus();
+            setSorting(config);
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("Trouble creating JDBCEventStatus for sorting events", e);
         }
-        setSorting(config);
     }
 
     private String makeExtraClause(List statii){
@@ -44,7 +45,7 @@ public class EventSorter{
         return extraClause;
     }
 
-    public void setSorting(Element config){
+    public void setSorting(Element config) throws SQLException{
         if(config != null  && config.getChildNodes().getLength() != 0){
             Element sortType = (Element)config.getFirstChild();
             String extraClause = "";
@@ -66,18 +67,19 @@ public class EventSorter{
                 }
                 extraClause = makeExtraClause(statii);
             }
+            String query = null;
             if(sortType.getNodeName().equals("time")){
-                query = "SELECT DISTINCT origin_event_id, time_stamp, eventcondition FROM origin, time, eventstatus " +
+                query = "SELECT DISTINCT eventid, time_stamp, eventcondition FROM origin, time, eventstatus " +
                     "WHERE origin_time_id = time_id" + extraClause +
                     " ORDER BY time_stamp";
             }else if(sortType.getNodeName().equals("magnitude")){
-                query = "SELECT DISTINCT origin_event_id, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
+                query = "SELECT DISTINCT eventid, magnitudevalue, eventcondition FROM origin, magnitude, eventstatus " +
                     "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
                     "magnitudevalue IN (SELECT MAX(magnitudevalue) FROM magnitude WHERE origin_id = originid) " +
                     extraClause +
                     " ORDER BY  magnitudevalue";
             }else if(sortType.getNodeName().equals("depth")){
-                query = "SELECT DISTINCT origin_event_id, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
+                query = "SELECT DISTINCT eventid, quantity_value, eventcondition  FROM origin, quantity, eventstatus " +
                     "WHERE origin_id IN (SELECT origin_id FROM eventaccess) and " +
                     "quantity_value IN (SELECT quantity_value FROM quantity WHERE quantity_id IN (SELECT loc_depth_id FROM location WHERE origin_location_id = loc_id)) " +
                     extraClause +
@@ -85,18 +87,19 @@ public class EventSorter{
             }
             if(query != null){
                 String ordering = sortType.getAttribute("order");
-                if(ordering.equals("descending")) query += " DESC";
-                else query += " ASC";
+                if(ordering.equals("descending")){ query += " DESC"; }
+                else{ query += " ASC"; }
+                prep = evStatus.prepare(query);
             }
         }
     }
 
     public synchronized StatefulEvent[] getSortedEvents() throws SQLException{
-        if(query == null){ return evStatus.getAll(); }
-        return evStatus.get(query, "origin_event_id");
+        if(prep == null){ return evStatus.getAll(); }
+        return evStatus.get(prep);
     }
 
-    private String query;
+    private PreparedStatement prep;
 
     private JDBCEventStatus evStatus;
 }
