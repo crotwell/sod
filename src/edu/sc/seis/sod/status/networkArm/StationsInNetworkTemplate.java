@@ -7,8 +7,7 @@
 package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationGroupTemplate;
@@ -50,7 +49,7 @@ public class StationsInNetworkTemplate extends NetworkInfoTemplate{
         return super.getTemplate(tag, el);
     }
 
-    public void change(Station station, RunStatus status) throws IOException {
+    public void change(Station station, Status status) {
         logger.debug("change(station, status): " + station.get_code() + ", " + status.toString());
         Iterator it = stationListeners.iterator();
         while (it.hasNext()){

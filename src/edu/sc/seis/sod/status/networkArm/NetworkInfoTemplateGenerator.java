@@ -4,7 +4,7 @@
  * @author Created by Philip Oliver-Paull
  */
 
-package edu.sc.seis.sod.subsetter.networkArm;
+package edu.sc.seis.sod.status.networkArm;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
@@ -14,16 +14,13 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.NetworkFormatter;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.networkArm.ChannelsInStationTemplate;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
-import edu.sc.seis.sod.status.networkArm.StationsInNetworkTemplate;
-import edu.sc.seis.sod.status.networkArm.ChannelsInStationTemplate;
-import edu.sc.seis.sod.status.networkArm.NetworkStatus;
 import edu.sc.seis.sod.status.networkArm.StationsInNetworkTemplate;
 import java.io.IOException;
 import java.util.HashMap;

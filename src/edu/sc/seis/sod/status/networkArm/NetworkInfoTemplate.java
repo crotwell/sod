@@ -4,7 +4,7 @@
  * @author Created by Philip Oliver-Paull
  */
 
-package edu.sc.seis.sod.subsetter.networkArm;
+package edu.sc.seis.sod.status.networkArm;
 
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import java.io.IOException;

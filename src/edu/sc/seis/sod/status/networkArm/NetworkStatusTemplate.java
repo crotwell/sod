@@ -4,7 +4,7 @@
  * @author Created by Omnicore CodeGuide
  */
 
-package edu.sc.seis.sod.subsetter.networkArm;
+package edu.sc.seis.sod.status.networkArm;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.Status;

@@ -5,14 +5,13 @@
  */
 
 package edu.sc.seis.sod.status.networkArm;
-import edu.sc.seis.sod.subsetter.networkArm.*;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Site;
-import edu.sc.seis.sod.CommonAccess;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.ChannelGroupTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.SiteFormatter;
+import edu.sc.seis.sod.subsetter.networkArm.NetworkInfoTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,18 +22,18 @@ import org.w3c.dom.Element;
 
 
 public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
-    
+
     private Site site;
     private List channelListeners = new ArrayList();
     private Logger logger = Logger.getLogger(ChannelsInSiteTemplate.class);
-    
+
     public ChannelsInSiteTemplate(Element el, String baseDir, String outputLocation, Site site) throws IOException{
         super(baseDir, outputLocation);
         this.site = site;
         parse(el);
         write();
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -49,8 +48,8 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
         }
         return super.getTemplate(tag,el);
     }
-    
-    public void change(Channel channel, RunStatus status) throws IOException {
+
+    public void change(Channel channel, Status status){
         logger.debug("change(channel, status): " + site.my_station.my_network.get_code() + "."
                          + site.my_station.my_network.get_code() + "." + site.my_station.get_code()
                          + "." + site.get_code() + "." + channel.get_code() + ", " + status.toString());
@@ -60,16 +59,17 @@ public class ChannelsInSiteTemplate extends NetworkInfoTemplate{
         }
         write();
     }
-    
+
     private class MySiteTemplate implements GenericTemplate{
-        
+
         public MySiteTemplate(Element el){ formatter = new SiteFormatter(el); }
-        
+
         public String getResult(){
             return formatter.getResult(site);
         }
-        
+
         SiteFormatter formatter;
     }
 }
+
 
