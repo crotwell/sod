@@ -1,4 +1,4 @@
-eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition smallint, \
+eventstatus.create=CREATE TABLE eventstatus( eventid int, eventcondition int, \
                                              PRIMARY KEY( eventid ))
 querytimes.create=CREATE TABLE querytimes (query_time timestamp, \
                                            server varchar, \
