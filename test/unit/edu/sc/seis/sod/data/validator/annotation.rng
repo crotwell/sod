@@ -4,46 +4,43 @@
     xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
     xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>Need to make sure this summary is available</summary>
-                <description>Need to make sure this description is available</description>
-            </xsd:documentation>
-        </xsd:annotation>
         <element name="baseElement">
+            <xsd:annotation><summary>baseElement</summary></xsd:annotation>
             <optional>
                 <element name="optionalEl">
+                    <xsd:annotation><summary>optionalEl</summary></xsd:annotation>
                     <empty/>
                 </element>
             </optional>
             <oneOrMore>
                 <element name="oneOrMore">
+                    <xsd:annotation><summary>oneOrMore</summary></xsd:annotation>
                     <empty/>
                 </element>
             </oneOrMore>
             <zeroOrMore>
                 <element name="zeroOrMore">
+                    <xsd:annotation><summary>zeroOrMore</summary></xsd:annotation>
                     <empty/>
                 </element>
             </zeroOrMore>
             <optional>
-                <oneOrMore>
+                <choice>
+                    <xsd:annotation><summary>choice</summary></xsd:annotation>
                     <element name="thisOne">
                         <empty/>
                     </element>
                     <element name="thenThisOne">
-                        <empty/>
+						<empty/>
                     </element>
-                </oneOrMore>
-                <zeroOrMore>
-                    <element name="thisOne">
-                        <empty/>
-                    </element>
-                    <element name="thenThisOne">
-                        <empty/>
-                    </element>
-                </zeroOrMore>
+                </choice>
             </optional>
+            <data type="string">
+                <xsd:annotation>
+                <summary>Test text</summary>
+                <include/>
+                </xsd:annotation>
+            </data>
         </element>
     </start>
 </grammar>
