@@ -8,14 +8,14 @@
   <body>
     <menu name="Essentials">
       <item name="Front Page"            href="/index.html"/>
-      <item name="News &amp; Status"     href="/news.html"/>
+      <item name="News and Status"     href="/news.html"/>
       <item name="XML Tag Docs"          href="/sodDocs/index.html"/>
       <item name="Bugs and Problems"          href="/bugs.html"/>
     </menu>
 
     <menu name="Download">
-        <item name="Binaries"              href="/../software/mavenRepository/sod/jars"/>
-        <item name="Source Code"           href="/../software/mavenRepository/sod/distributions"/>
+        <item name="Binaries"              href="/../mavenRepository/sod/jars"/>
+        <item name="Source Code"           href="/../mavenRepository/sod/distributions"/>
     </menu>
 
     <menu name="Related Projects">
@@ -23,11 +23,11 @@
         <item name="Core IDL"               href="/../fissuresIDL"/>
         <item name="Fissures Impl"          href="/../fissuresImpl"/>
         <item name="Fissures Util"          href="/../fissuresUtil"/>
-        <item name="SEED"                   href="/seed.html"/>
+        <item name="SEED"                   href="/../Fissures/seed.html"/>
         <item name="SOD"          href="/../sod"/>
         <item name="GEE"          href="/../gee"/>
-        <item name="JEvalResp"          item="http://www.isti.com/JEvalResp/"/>
-        <item name="VASE"          item="http://www.iris.washington.edu/DHI/clients.html"/>
+        <item name="JEvalResp"          href="http://www.isti.com/JEvalResp/"/>
+        <item name="VASE"          href="http://www.iris.washington.edu/DHI/clients.html"/>
     </menu>
 
   </body>
