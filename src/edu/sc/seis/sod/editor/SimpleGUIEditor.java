@@ -88,27 +88,38 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         System.exit(0);
                     }
                 });
-	
+
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = getDocument();
         if (tabs) {
-			try {
-				props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream( "names.prop" ));
-			}catch(IOException e)
-			{
-				GlobalExceptionHandler.handle("Error in loading names Prop file",e);
-			}
+            try {
+                props.load((SimpleGUIEditor.class).getClassLoader().getResourceAsStream(NAME_PROPS ));
+            }catch(IOException e)
+            {
+                GlobalExceptionHandler.handle("Error in loading names Prop file",e);
+            }
             JTabbedPane tabs = new JTabbedPane();
             frame.getContentPane().add(new JScrollPane(tabs), BorderLayout.CENTER);
             // put each top level sod element in a panel
             NodeList list = doc.getDocumentElement().getChildNodes();
-            JPanel panel;
             for (int j = 0; j < list.getLength(); j++) {
                 if (list.item(j) instanceof Element) {
                     Box box = Box.createVerticalBox();
-                    box.add(getCompForElement((Element)list.item(j)));
+                    NodeList sublist = ((Element)list.item(j)).getChildNodes();
+                    for (int i = 0; i < sublist.getLength(); i++) {
+                        if (sublist.item(i) instanceof Element) {
+                            box.add(getCompForElement((Element)sublist.item(i)));
+                            box.add(Box.createRigidArea(new Dimension(3, 3)));
+                        }
+                    }
                     box.add(Box.createGlue());
-                    tabs.add(props.getProperty(((Element)list.item(j)).getTagName()), box);
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new BorderLayout());
+                    panel.add(box, BorderLayout.NORTH);
+                    String tabName = props.getProperty(((Element)list.item(j)).getTagName(),
+                                                      ((Element)list.item(j)).getTagName());
+                    tabs.add(EditorUtil.capFirstLetter(tabName),
+                                                       panel);
                 }
             }
         } else {
@@ -243,13 +254,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
     boolean tabs = false;
 
     JFrame frame;
-	
-	Properties props = new Properties();
-    
-	private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
+
+    Properties props = new Properties();
+
+    private static String NAME_PROPS = "edu/sc/seis/sod/editor/names.prop";
+
+    private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
 
 
 }
+
 
 
 
