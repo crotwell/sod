@@ -19,6 +19,7 @@ XMLAPI=$MAVEN/repository/xml-apis/jars/xml-apis-1.0.b2.jar
 JAICORE=$MAVEN/repository/jars/jai_core.jar
 JAICODEC=$MAVEN/repository/jars/jai_codec.jar
 HSQLDB=$MAVEN/repository/hsqldb/jars/hsqldb-1.7.1.jar
+JCAL=$MAVEN/repository/jcalendar/jars/jcalendar-0.6usc1.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
@@ -29,5 +30,5 @@ SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 #java -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.editor.SimpleGUIEditor $*
 
 # sod gui editor
-java -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${CLASSPATH} edu.sc.seis.sod.editor.SodGUIEditor $*
+java -cp ${SEEDCODEC}:${SOD}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${JCAL}:${CLASSPATH} edu.sc.seis.sod.editor.SodGUIEditor $*
 
