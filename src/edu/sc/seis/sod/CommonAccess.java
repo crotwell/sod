@@ -52,58 +52,13 @@ public class CommonAccess {
 
     }
 
-    /**
-     * Describe <code>init</code> method here.
-     *
-     * @param args a <code>String[]</code> value
-     * @exception ConfigurationException if an error occurs
-     */
-    protected void init(String[] args) throws ConfigurationException {
-	this.args = args;
-
-	props = System.getProperties();
-
-	// get some defaults
-	String propFilename=
-	    "sod.prop";
-	String defaultsFilename=
-	    "edu/sc/seis/sod/"+propFilename;
-	    
-	if((CommonAccess.class).getClassLoader() != null)
-	    try {
-		props.load((CommonAccess.class).getClassLoader().getResourceAsStream( defaultsFilename ));
-	    } catch (Exception e) {
-		//logger.warn
-		System.err.println("Could not load defaults. "+e);
-	    }
-	for (int i=0; i<args.length-1; i++) {
-	    if (args[i].equals("-props")) {
-		// override with values in local directory, 
-		// but still load defaults with original name
-		propFilename = args[i+1];
-		try {
-		    FileInputStream in = new FileInputStream(propFilename);
-		    props.load(in);	
-		    in.close();
-		} catch (FileNotFoundException f) {
-		    //logger.warn
-		    System.err.println(" file missing "+f+" using defaults");
-		} catch (IOException f) {
-		    //logger.warn
-		    System.err.println(f.toString()+" using defaults");
-		}
-	    }
-	}
-
-
-    }
-
+  
     
     /**
      * Describe <code>initORB</code> method here.
      *
      */
-    protected void initORB() {
+    protected void initORB(String[] args, java.util.Properties props) {
 	if (orb == null) {
 	    // return orb;
 	
@@ -127,14 +82,13 @@ public class CommonAccess {
      */
     public org.omg.CORBA_2_3.ORB getORB() throws ConfigurationException  {
 	if (orb == null) {
-	    initORB();
+	    initORB(null, null);
 	} // end of if (orb == null)
 	return orb;
     }
 
     private String[] args;
 
-    private java.util.Properties props;
     
     private static CommonAccess commonAccess = new CommonAccess();
 
