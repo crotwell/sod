@@ -6,8 +6,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class RangeSubsetter {
-    
-    public RangeSubsetter(Element config) {
+
+    public RangeSubsetter(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength() ; i++) {
            Node node = children.item(i);
@@ -17,6 +17,9 @@ public class RangeSubsetter {
                 else if(tagName.equals("max")) maxElement = ((Element)node);
             }
         }
+        if (getMinValue() > getMaxValue()) {
+            throw new ConfigurationException("min > max: min="+getMinValue()+"  max="+getMaxValue());
+        }
     }
 
     public float getMinValue() {
@@ -24,15 +27,15 @@ public class RangeSubsetter {
         String rtnValue = SodUtil.getNestedText(minElement);
         return  Float.parseFloat(rtnValue);
     }
-    
+
     public float getMaxValue() {
         if(maxElement == null) return Float.MAX_VALUE;
         String rtnValue = SodUtil.getNestedText(maxElement);
         return Float.parseFloat(rtnValue);
-        
+
     }
-    
+
     private Element minElement = null;
-    
+
     private Element maxElement = null;
 }
