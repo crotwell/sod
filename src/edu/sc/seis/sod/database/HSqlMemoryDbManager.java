@@ -18,10 +18,6 @@ public class HSqlMemoryDbManager extends HSqlDbManager{
     public HSqlMemoryDbManager (Properties props){
         super(props);
     }
-    
-    public String getDatabaseName() {
-        return "mytest";
-    }
 
     public WaveformDatabase getWaveformDatabase() {
         if(waveformDatabase == null) {
@@ -29,5 +25,5 @@ public class HSqlMemoryDbManager extends HSqlDbManager{
         }
         return waveformDatabase;
     }
-    
+
 }// HSQLMemoryDbManager
