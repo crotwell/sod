@@ -7,12 +7,14 @@
 package edu.sc.seis.sod.status.waveFormArm;
 
 
-import edu.sc.seis.sod.status.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.sod.RunStatus;
+import edu.sc.seis.sod.status.ChannelGroupTemplate;
+import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FileWritingTemplate;
+import edu.sc.seis.sod.status.GenericTemplate;
+import edu.sc.seis.sod.status.StationFormatter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,13 +22,13 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 public class LocalSeismogramTemplate extends FileWritingTemplate {
-    
+
     private EventAccessOperations event;
     private Station station;
-    
+
     //I have every intention of getting rid of this as soon as possible
     private List channelListeners = new ArrayList();
-    
+
     public LocalSeismogramTemplate(Element el, String baseDir, String outputLocation, EventAccessOperations event, Station sta)
         throws IOException{
         super(baseDir, outputLocation);
@@ -35,16 +37,16 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         parse(el);
         write();
     }
-    
+
     public void update(Channel chan) throws Exception{
         //I intend to do something fancier very soon
         Iterator it = channelListeners.iterator();
         while (it.hasNext()){
-            ((ChannelGroupTemplate)it.next()).change(chan, RunStatus.GENERIC);
+            ((ChannelGroupTemplate)it.next()).change(chan, null);
         }
         write();
     }
-    
+
     /**if this class has an template for this tag, it creates it using the
      * passed in element and returns it.  Otherwise it returns null.
      */
@@ -63,7 +65,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         }
         return super.getTemplate(tag,el);
     }
-    
+
     private class EventTemplate implements GenericTemplate{
         public EventTemplate(Element el){ formatter = new EventFormatter(el); }
 
@@ -71,7 +73,7 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
 
         private EventFormatter formatter;
     }
-    
+
     private class MyStationTemplate implements GenericTemplate{
         public MyStationTemplate(Element el){ formatter = new StationFormatter(el); }
 
@@ -80,4 +82,5 @@ public class LocalSeismogramTemplate extends FileWritingTemplate {
         private StationFormatter formatter;
     }
 }
+
 
