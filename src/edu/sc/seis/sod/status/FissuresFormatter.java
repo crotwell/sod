@@ -77,12 +77,12 @@ public class FissuresFormatter {
         return new QuantityImpl(d.delta, UnitImpl.DEGREE);
     }
 
-    public static QuantityImpl getAz(Location from, Location to) {
+    public static QuantityImpl getAzimuth(Location from, Location to) {
         DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
         return new QuantityImpl(d.az, UnitImpl.DEGREE);
     }
 
-    public static QuantityImpl getBaz(Location from, Location to) {
+    public static QuantityImpl getBackAzimuth(Location from, Location to) {
         DistAz d = new DistAz(from.latitude, from.longitude, to.latitude, to.longitude);
         return new QuantityImpl(d.baz, UnitImpl.DEGREE);
     }
