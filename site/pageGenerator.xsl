@@ -84,7 +84,7 @@
     </xsl:template>
     <xsl:template name="header">
         <div id="header">
-            <a href="http:/seis.sc.edu/SOD">
+            <a href="http://seis.sc.edu/SOD">
                 <img class="left">
                     <xsl:attribute name="src">
                         <xsl:value-of select="concat($base, 'images/full-sodlogo-y100.gif')"/>
