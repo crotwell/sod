@@ -54,6 +54,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements WaveFo
             };
         }
         if(tag.equals("event")){  return new EventTemplate(el); }
+        if(tag.equals("now")) return new NowTemplate();
         return null;
     }
     

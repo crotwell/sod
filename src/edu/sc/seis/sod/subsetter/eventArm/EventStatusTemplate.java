@@ -5,6 +5,7 @@ import edu.sc.seis.sod.EventStatus;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.subsetter.FileWritingTemplate;
 import edu.sc.seis.sod.subsetter.GenericTemplate;
+import edu.sc.seis.sod.subsetter.NowTemplate;
 import edu.sc.seis.sod.subsetter.TemplateFileLoader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventSta
             MapEventStatus mapStatus = new MapImgSrc(el);
             internalStatusWatchers.add(mapStatus);
             return mapStatus;
-        }
+        }else if(tag.equals("now")) return new NowTemplate();
         return null;
     }
     
