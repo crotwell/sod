@@ -430,7 +430,9 @@ in the instance document
 		<xsd:complexContent>
 			<xsd:extension base="armType">
 				<xsd:sequence>
-					<xsd:element ref="eventSource"/>
+					<xsd:element ref="eventSource"
+					minOccurs="1"
+					maxOccurs="unbounded"/>
 					<xsd:element ref="eventAttr" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="origin" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="eventProcess" minOccurs="0" maxOccurs="unbounded"/>
