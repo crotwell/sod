@@ -1031,6 +1031,22 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="logFactor5EventStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStatusType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="simpleHTMLEventStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="eventStatusType">
+              <xsd:sequence>
+                <xsd:element name="outputDirectory" minOccurs="0" maxOccurs="1"/>
+              </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="externalEventStatusType">
         <xsd:complexContent>
             <xsd:extension base="eventStatusType">
@@ -1119,8 +1135,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="eventProcess" type="eventProcessType" abstract="true"/>
     <xsd:element name="printLineEventProcess" type="printLineEventProcessType" substitutionGroup="eventProcess"/>
     <xsd:element name="externalEventProcess" type="externalEventProcessType" substitutionGroup="eventProcess"/>
-
     <xsd:element name="eventStatus" type="eventStatusType" abstract="true"/>
+    <xsd:element name="logFactor5EventStatus" type="logFactor5EventStatusType" substitutionGroup="eventStatus"/>
+    <xsd:element name="simpleHTMLEventStatus" type="simpleHTMLEventStatusType" substitutionGroup="eventStatus"/>
     <xsd:element name="externalEventStatus" type="externalEventStatusType" substitutionGroup="eventStatus"/>
 
     <xsd:complexType name="eventArmType">
@@ -2543,6 +2560,23 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="logFactor5NetworkStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="networkStatusType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+
+    <xsd:complexType name="simpleHTMLNetworkStatusType">
+        <xsd:complexContent>
+            <xsd:extension base="networkStatusType">
+            <xsd:sequence>
+                <xsd:element name="outputDirectory" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
     <xsd:complexType name="externalNetworkStatusType">
         <xsd:complexContent>
             <xsd:extension base="networkStatusType">
@@ -2632,8 +2666,9 @@ xmlns:target="http://www.seis.sc.edu/xschema/sod/1.0"
     <xsd:element name="printlineChannelProcessor" type="printLineChannelProcessorType"  substitutionGroup="networkProcess"/>
     <xsd:element name="externalNetworkProcess" type="externalNetworkProcessType" substitutionGroup="networkProcess"/>
     <xsd:element name="networkStatus" type="networkStatusType" abstract="true"/>
+    <xsd:element name="simpleHTMLNetworkStatus" type="simpleHTMLNetworkStatusType" substitutionGroup="networkStatus"/>
+    <xsd:element name="logFactor5NetworkStatus" type="logFactor5NetworkStatusType" substitutionGroup="networkStatus"/>
     <xsd:element name="externalNetworkStatus" type="externalNetworkStatusType" substitutionGroup="networkStatus"/>
-
 
     <xsd:complexType name="networkArmType">
         <xsd:complexContent>
