@@ -179,8 +179,8 @@ public class Start{
     public void start() throws Exception {
         startTime = ClockUtil.now();
         UpdateChecker check = new UpdateChecker(false);
-        checkDBVersion();
         handleStartupRunProperties();
+        checkDBVersion();
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
         startArms(docElement.getChildNodes());
