@@ -22,19 +22,22 @@ import org.w3c.dom.*;
 
 public class NullLocalSeismogramSubsetter implements LocalSeismogramSubsetter{
     public NullLocalSeismogramSubsetter (){
-	
-    }
-    
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available,
-			  LocalSeismogram[] seismograms, 
-			  CookieJar cookies) throws Exception {
-	
-	return true;
 
     }
-        
+
+    public NullLocalSeismogramSubsetter(Element config) {
+    }
+
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available,
+              LocalSeismogram[] seismograms,
+              CookieJar cookies) throws Exception {
+
+    return true;
+
+    }
+
 }// LocalSeismogram

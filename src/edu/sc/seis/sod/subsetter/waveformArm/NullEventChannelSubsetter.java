@@ -16,9 +16,12 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NullEventChannelSubsetter 
-    
-    implements EventChannelSubsetter {
+public class NullEventChannelSubsetter implements EventChannelSubsetter {
+
+    public NullEventChannelSubsetter() {
+    }
+    public NullEventChannelSubsetter(Element config) {
+    }
     /**
      * Describe <code>accept</code> method here.
      *
@@ -29,7 +32,7 @@ public class NullEventChannelSubsetter
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Channel channel,  CookieJar cookies) {
-	return true;
+    return true;
     }
 
 }// NullEventChannelSubsetter

@@ -17,10 +17,13 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NullRequestGenerator 
-    
-    implements RequestGenerator {
-    
+public class NullRequestGenerator implements RequestGenerator {
+    public NullRequestGenerator() {
+    }
+
+    public NullRequestGenerator(Element config) {
+    }
+
     /**
      * Describe <code>generateRequest</code> method here.
      *
@@ -30,13 +33,13 @@ public class NullRequestGenerator
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>RequestFilter[]</code> value
      */
-    public RequestFilter[] generateRequest(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  CookieJar cookies){
-	
-	return new RequestFilter[0];
+    public RequestFilter[] generateRequest(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              CookieJar cookies){
+
+    return new RequestFilter[0];
 
     }
-    
+
 }// NullRequestGenerator

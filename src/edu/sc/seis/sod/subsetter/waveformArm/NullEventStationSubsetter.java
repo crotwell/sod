@@ -16,10 +16,12 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NullEventStationSubsetter 
-    
-    implements EventStationSubsetter {
-   
+public class NullEventStationSubsetter implements EventStationSubsetter {
+
+    public NullEventStationSubsetter() {
+    }
+    public NullEventStationSubsetter(Element config) {
+    }
     /**
      * Describe <code>accept</code> method here.
      *
@@ -30,7 +32,7 @@ public class NullEventStationSubsetter
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Station station,  CookieJar cookies) {
-	return true;
+    return true;
     }
 
 }// NullEventStationSubsetter

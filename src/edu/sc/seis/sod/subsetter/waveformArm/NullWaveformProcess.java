@@ -13,7 +13,7 @@ import org.w3c.dom.*;
 import java.io.*;
 
 /**
- * sample xml 
+ * sample xml
  * &lt;printlineWaveformProcessor/&gt;
  */
 
@@ -23,6 +23,9 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
      *
      */
     public NullWaveformProcess (){
+    }
+
+    public NullWaveformProcess (Element config){
     }
 
     /**
@@ -36,15 +39,15 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public LocalSeismogram[] process(EventAccessOperations event, 
-			NetworkAccess network, 
-			Channel channel, 
-			RequestFilter[] original, 
-			RequestFilter[] available,
-			LocalSeismogram[] seismograms, 
-			CookieJar cookies) {
-	return seismograms;
+    public LocalSeismogram[] process(EventAccessOperations event,
+            NetworkAccess network,
+            Channel channel,
+            RequestFilter[] original,
+            RequestFilter[] available,
+            LocalSeismogram[] seismograms,
+            CookieJar cookies) {
+    return seismograms;
     }
-   
+
 
 }// NullWaveformProcess

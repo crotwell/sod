@@ -17,11 +17,14 @@ import edu.iris.Fissures.*;
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
-public class NullAvailableDataSubsetter 
-    
-    implements AvailableDataSubsetter {
-    
-  
+public class NullAvailableDataSubsetter implements AvailableDataSubsetter {
+
+    public NullAvailableDataSubsetter() {
+    }
+
+    public NullAvailableDataSubsetter(Element config) {
+    }
+
     /**
      * Describe <code>accept</code> method here.
      *
@@ -33,14 +36,14 @@ public class NullAvailableDataSubsetter
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations event, 
-			  NetworkAccess network, 
-			  Channel channel, 
-			  RequestFilter[] original, 
-			  RequestFilter[] available, 
-			  CookieJar cookies) {
+    public boolean accept(EventAccessOperations event,
+              NetworkAccess network,
+              Channel channel,
+              RequestFilter[] original,
+              RequestFilter[] available,
+              CookieJar cookies) {
 
-	return true;
+    return true;
     }
 
 }// NullAvailableDataSubsetter
