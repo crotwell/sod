@@ -185,7 +185,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     
     private Element config = null;
 
-    private FixedDataCenter seismogramDCLocator= null;
+    private SeismogramDCLocator seismogramDCLocator= null;
 
     private SodExceptionListener sodExceptionListener;
 
