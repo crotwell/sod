@@ -72,6 +72,14 @@ public class EventChannelGroupPair {
         return code;
     }
 
+    public String toString() {
+        String s = "ECGroup: ";
+        for (int i = 0; i < pairs.length; i++) {
+            s += pairs[i].toString()+" , ";
+        }
+        return s;
+    }
+
     ChannelGroup channels;
 
     EventChannelPair[] pairs;
