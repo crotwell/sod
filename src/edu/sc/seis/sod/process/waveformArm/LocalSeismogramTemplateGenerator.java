@@ -148,8 +148,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         String eventStationString = eventFormatter.getResult(event)
             + stationFormatter.getResult(chan.my_site.my_station);
         if ( ! templates.containsKey(eventStationString)) {
-            String outputLocation = eventFormatter.getResult(event) + '/'
-                + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
+            String outputLocation = getOutputLocation(event, chan);
             LocalSeismogramTemplate template =
                 new LocalSeismogramTemplate(waveformSeismogramConfig, fileDir, outputLocation,
                                             event, chan.my_site.my_station, cookieJar);
@@ -158,6 +157,15 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
         LocalSeismogramTemplate template = (LocalSeismogramTemplate)templates.get(eventStationString);
         template.update(chan, cookieJar);
         return template;
+    }
+
+    public String getOutputLocation(EventAccessOperations event, Channel chan) {
+        return eventFormatter.getResult(event) + '/'
+                + stationFormatter.getResult(chan.my_site.my_station) + '/' + fileName;
+    }
+
+    public SeismogramImageProcess getSeismogramImageProcess() {
+        return seismoImageProcess;
     }
 
 }
