@@ -110,10 +110,12 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("gainCode", netCodeEdit);
         editors.put("orientationCode", netCodeEdit);
         editors.put("boxArea", new BoxAreaEditor(this));
+
         EffectiveTimeEditor effTime = new EffectiveTimeEditor();
         editors.put("stationEffectiveTimeOverlap", effTime);
         editors.put("siteEffectiveTimeOverlap", effTime);
         editors.put("channelEffectiveTimeOverlap", effTime);
+
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new UnitRangeEditor(ANGLE_UNITS, 0, 180, 5, true));
         editors.put("phaseRequest", new PhaseRequestEditor());
@@ -134,8 +136,13 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("longitudeRange", new UnitRangeEditor(ANGLE_UNITS, -180, 180, 5, false));
         editors.put("azimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
         editors.put("backAzimuthRange", new UnitRangeEditor(ANGLE_UNITS, 0, 360, 5, true));
-        editors.put("networkInfoTemplateGenerator", new NetworkInfoTemplateGeneratorEditor());
 
+        SubelementEater se = new SubelementEater();
+        editors.put("networkInfoTemplateGenerator", se);
+        editors.put("waveformEventTemplateGenerator", se);
+        editors.put("localSeismogramTemplateGenerator", se);
+
+        editors.put("fixedDataCenter", new FixedDataCenterEditor(this));
 
         BooleanEditor bool = new BooleanEditor(this);
         String[] switchTypes = { "origin", "network", "station", "site", "channel", "eventStation", "eventChannel", "availableData", "seismogramSubsetter"};
