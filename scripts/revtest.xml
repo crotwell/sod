@@ -56,6 +56,7 @@
             <catalog>FINGER</catalog>
             <contributor>NEIC</contributor>
         </eventFinder>
+		<removeEventDuplicate/>
         <eventStatusTemplate>
             <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
         </eventStatusTemplate>
@@ -198,7 +199,8 @@
 
         </eventStationOR>
 
-        <localSeismogramArm>
+        <motionVectorArm>
+            <requestGeneratorWrapper>
             <phaseRequest>
                 <model>prem</model>
                 <beginPhase>ttp</beginPhase>
@@ -212,12 +214,16 @@
                     <value>60</value>
                 </endOffset>
             </phaseRequest>
+            </requestGeneratorWrapper>
             <fixedDataCenter>
                 <name>IRIS_BudDataCenter</name>
                 <dns>edu/iris/dmc</dns>
             </fixedDataCenter>
+            <ORAvailableDataWrapper>
             <someCoverage/>
+            </ORAvailableDataWrapper>
 
+            <ORLocalSeismogramWrapper>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
                 <phaseName>ttp</phaseName>
@@ -239,6 +245,31 @@
                 </longOffsetEnd>
                 <ratio>2</ratio>
             </phaseSignalToNoise>
+            </ORLocalSeismogramWrapper>
+
+            <alwaysSuccess>
+            <phaseSignalToNoise>
+                <modelName>prem</modelName>
+                <phaseName>ttp</phaseName>
+                <shortOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </shortOffsetBegin>
+                <shortOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>5</value>
+                </shortOffsetEnd>
+                <longOffsetBegin>
+                    <unit>SECOND</unit>
+                    <value>-105</value>
+                </longOffsetBegin>
+                <longOffsetEnd>
+                    <unit>SECOND</unit>
+                    <value>-5</value>
+                </longOffsetEnd>
+                <ratio>0</ratio>
+            </phaseSignalToNoise>
+            </alwaysSuccess>
 
             <saveSeismogramToFile>
                 <fileType>sac</fileType>
@@ -251,10 +282,16 @@
                 <fileDir>status</fileDir>
                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
             </localSeismogramTemplateGenerator>
-
-        </localSeismogramArm>
+        </motionVectorArm>
         <waveformEventTemplateGenerator>
             <waveformConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml"/>
         </waveformEventTemplateGenerator>
+        <waveformNetworkStatus>
+          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
+          <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
+        </waveformNetworkStatus>
+        <waveformStationStatus>
+          <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
+        </waveformStationStatus>
     </waveformArm>
 </sod>
