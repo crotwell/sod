@@ -49,7 +49,7 @@ public class HSqlWaveformDb extends AbstractWaveformDatabase{
 			       " ( waveformid  int IDENTITY PRIMARY KEY,"+
 			       " waveformeventid int, "+
 			       " waveformchannelid int, "+
-			       " wavefromsiteid int, "+
+			       " waveformsiteid int, "+
 			       " qtime timestamp , "+
 			       " status int, "+
 			       " numretrys int, "+
