@@ -133,7 +133,7 @@ $!chanContext.sod_phaseStoN_ttp.when</td>
 #set ($pImage = ${fissures.filize($pLoc, $extension)})
 #set ($sImage = ${fissures.filize($sLoc, $extension)})
 <a>
-<img name="${count}" id="${count}" src="${originalImgLoc}" USEMAP="#map${count}" />
+<img name="${count}" id="${count}" src="original_${originalImgLoc}" USEMAP="#map${count}" />
 </a>
 <map name="map${count}">
 #set ($flag_P_LB_X = (${flagData_P.getFlagLoc()} - ${clickableWidth}) )
