@@ -379,6 +379,9 @@ public class MotionVectorArm implements Subsetter{
                                                result.getSeismograms(),
                                                ecp.getCookieJar());
                 }
+                if ( ! result.isSuccess()) {
+                    logger.info("Processor reject at: "+processor.toString());
+                }
             } catch (Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
                 return;
