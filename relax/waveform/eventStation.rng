@@ -17,6 +17,7 @@
                         <ref name="OR"/>
                         <ref name="XOR"/>
                         <ref name="NOT"/>
+                        <ref name="midPoint"/>
                         <ref name="phaseExists"/>
                         <ref name="phaseInteraction"/>
                 </choice>
@@ -264,6 +265,32 @@
                         <element name="phaseName">
                                 <data type="string"/>
                         </element>
+                </element>
+        </define>
+        <define name="midPoint">
+                <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                                <summary> Accepts a event-station pair if the midPoint is within the area. </summary>
+                                <description> Accepts a event-station pair if the midPoint is within the given area.
+                                Areas can be any valid area, including BoxArea, PointDistanceArea and GlobalArea.</description>
+                                <example>
+                                        <midPoint>
+                                                <boxArea>
+                                                  <latitudeRange>
+                                                  <min>20</min>
+                                                  <max>40</max>
+                                                  </latitudeRange>
+                                                  <longitudeRange>
+                                                  <min>-75</min>
+                                                  <max>-85</max>
+                                                  </longitudeRange>
+                                                </boxArea>
+                                        </midPoint>
+                                </example>
+                        </xsd:documentation>
+                </xsd:annotation>
+                <element name="midPoint">
+                        <externalRef href="../base/externalRef/area.rng"/>
                 </element>
         </define>
         <define name="phaseTurnInteraction">
