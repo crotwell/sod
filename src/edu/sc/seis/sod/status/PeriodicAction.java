@@ -19,7 +19,7 @@ public abstract class PeriodicAction{
 
     public void actIfPeriodElapsed(){
         synchronized(schedulingLock) {
-            if(!ClockUtil.now().subtract(lastAct).lessThan(TWO_MINUTES)){
+            if(!ClockUtil.now().subtract(lastAct).lessThan(ACTION_INTERVAL)){
                 actNow();
             }else if(!scheduled){
                 t.schedule(new ScheduledActor(), 120000);
@@ -46,8 +46,8 @@ public abstract class PeriodicAction{
 
     private boolean scheduled = false;
     protected boolean v = false;
-    private static final TimeInterval TWO_MINUTES = new TimeInterval(2, UnitImpl.MINUTE);
-    private MicroSecondDate lastAct = ClockUtil.now().subtract(TWO_MINUTES);
+    private static final TimeInterval ACTION_INTERVAL = new TimeInterval(1, UnitImpl.MINUTE);
+    private MicroSecondDate lastAct = ClockUtil.now().subtract(ACTION_INTERVAL);
     private Object schedulingLock = new Object();
     private static Timer t = new Timer();
 }
