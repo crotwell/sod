@@ -287,7 +287,6 @@
                 </eventDirLabel>
             </saveSeismogramToFile>
             <localSeismogramTemplateGenerator>
-                <fileDir>status</fileDir>
                 <seismogramConfig xlink:href="jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml"/>
             </localSeismogramTemplateGenerator>
 
