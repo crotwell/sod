@@ -9,5 +9,5 @@ public class EventLogicalSubsetter extends LogicalSubsetter{
         super(config);
     }
     
-    public String getArmName() { return "eventArm"; }
+    public String getArmName() { return "origin"; }
 }// EventLogicalSubsetter
