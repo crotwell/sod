@@ -190,7 +190,8 @@ public class Start implements SodExceptionListener {
 	    checkRestartOptions();
 	    eventQueue = new HSqlDbQueue(props);
 	    waveformQueue = new WaveformDbQueue(props);
-
+	    waveformQueue.clean();
+	    eventQueue.clean();
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -305,8 +306,11 @@ public class Start implements SodExceptionListener {
 	//get the quitTime
 	//get refresh Time.
 	//first check if the database alread exists.
-	if(isRemoveDatabase()) Start.REMOVE_DATABASE = true;
-	if(isRefreshInterval()) Start.GET_NEW_EVENTS = true;
+	Start.REMOVE_DATABASE = isRemoveDatabase();
+	Start.REFRESH_INTERVAL = getRefreshInterval();
+	Start.RE_OPEN_EVENTS = isReOpenEvents();
+	Start.GET_NEW_EVENTS = isGetNewEvents();
+	Start.QUIT_TIME = getQuitTime();
     }
 
     private static boolean isRemoveDatabase() {
@@ -318,19 +322,59 @@ public class Start implements SodExceptionListener {
 	return false;
     }
     
-    private static boolean isRefreshInterval() {
+    private static int getRefreshInterval() {
 	String str = props.getProperty("edu.sc.seis.sod.database.eventRefreshInterval");
 	if(str != null) {
-	    if(str.equalsIgnoreCase("true")) {return true;}
+		try {
+			return Integer.parseInt(str);
+		} catch(NumberFormatException nfe) {
+			//nfe.printStackTrace();
+			return 30;
+		}
 	}
- 
+	return 30; 
+    }
+
+   private static int getQuitTime() {
+	String str = props.getProperty("edu.sc.seis.sod.database.quitTime");
+	if(str != null) {
+		try {
+			return Integer.parseInt(str);
+		} catch(NumberFormatException nfe) {
+			return 30;
+		}
+	}
+	return 30;
+   }
+
+    private static boolean isReOpenEvents() {
+	String str = props.getProperty("edu.sc.seis.sod.database.reopenEvents");
+	if(str != null) {
+		if(str.equalsIgnoreCase("true")) {return true; }
+	}
 	return false;
     }
+
+    private static boolean isGetNewEvents() {
+	String str = props.getProperty("edu.sc.seis.sod.database.getNetEvents");
+	if(str != null) {
+		if(str.equalsIgnoreCase("true")) { return true;}
+	}
+	return false;
+    }
+
 
 
     public static boolean REMOVE_DATABASE = false;
 
     public static boolean GET_NEW_EVENTS = false;
+
+    public static boolean RE_OPEN_EVENTS = false;
+
+    public static int REFRESH_INTERVAL = 30;
+
+//later quitetime must be changed relatively
+    public static int QUIT_TIME = 30; //quit time in terms of number of days;
 
     private static java.net.URL schemaURL;
  
