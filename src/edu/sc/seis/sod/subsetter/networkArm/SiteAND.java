@@ -28,7 +28,7 @@ public class SiteAND
 	super(config);
     }
 
-    public boolean accept(Site e,  CookieJar cookies) {
+    public boolean accept(NetworkAccessOperations network, Site e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    SiteSubsetter filter = (SiteSubsetter)it.next();

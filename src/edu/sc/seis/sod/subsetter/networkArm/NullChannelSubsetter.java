@@ -18,7 +18,7 @@ import edu.iris.Fissures.network.*;
 
 public class  NullChannelSubsetter implements ChannelSubsetter{
 
-    public boolean accept(Channel channel, CookieJar cookies) {
+    public boolean accept(NetworkAccessOperations network, Channel channel, CookieJar cookies) {
 
 	return true;
 

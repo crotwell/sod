@@ -53,7 +53,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
 
 	}
 
-	public boolean accept(Channel channel, CookieJar cookies) {
+	public boolean accept(NetworkAccessOperations network,Channel channel, CookieJar cookies) {
 
 		System.out.println("The min Value is "+getMinValue());
 		System.out.println("The max Value is "+getMaxValue());

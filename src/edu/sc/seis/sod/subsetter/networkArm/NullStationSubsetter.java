@@ -18,7 +18,7 @@ import edu.iris.Fissures.network.*;
 
 public class  NullStationSubsetter implements StationSubsetter{
 
-    public boolean accept(Station station, CookieJar cookies) {
+    public boolean accept(NetworkAccessOperations network, Station station, CookieJar cookies) {
 
 	return true;
 

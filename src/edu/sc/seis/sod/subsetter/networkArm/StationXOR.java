@@ -45,7 +45,7 @@ public class StationXOR
 	super(config);
     }
 
-    public boolean accept(Station e,  CookieJar cookies) {
+    public boolean accept(NetworkAccessOperations network, Station e,  CookieJar cookies) {
 	Iterator it = filterList.iterator();
 	if (it.hasNext()) {
 	    StationSubsetter filter = (StationSubsetter)it.next();
