@@ -20,12 +20,14 @@ Networks
 <tr id="title">
 <td>Code</td>
 <td>Name</td>
+<td>Start Time</td>
 <td>Status</td>
 </tr>
 <networks>
 <tr><network>
 <td><networkCode/></td>
 <td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
+<td><beginTime>yyyy</beginTime></td>
 <td><attribute name="id"><standing/></attribute><status/></td>
 </network></tr>
 </networks>
