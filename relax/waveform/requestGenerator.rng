@@ -62,7 +62,7 @@
             </xsd:annotation>
             <oneOrMore>
                 <element name="choice">
-                    <externalRef href="../eventChannel.rng"/>
+                    <externalRef href="eventChannel.rng"/>
                     <ref name="requestGenerator"/>
                 </element>
             </oneOrMore>
