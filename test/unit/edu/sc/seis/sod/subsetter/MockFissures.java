@@ -6,14 +6,13 @@
 
 package edu.sc.seis.sod.subsetter;
 
+import edu.iris.Fissures.IfNetwork.*;
+
 import edu.iris.Fissures.FlinnEngdahlType;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.ChannelId;
-import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.Quantity;
@@ -24,6 +23,8 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelImpl;
+import edu.iris.Fissures.network.NetworkAttrImpl;
+import edu.iris.Fissures.network.StationImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -104,6 +105,22 @@ public class MockFissures{
         return new EventAttrImpl("Fall of the Berlin Wall Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), 543));
     }
     
+    public static Station createStation(){
+        return new StationImpl(createStationId(), "Test Station", loc, "Joe", "this is a test", "still, a test", createNetworkAttr());
+    }
+    
+    public static StationId createStationId(){
+        return new StationId(createNetworkID(), "STTN", time.getFissuresTime());
+    }
+    
+    public static NetworkAttr createNetworkAttr(){
+        return new NetworkAttrImpl(createNetworkID(), "A network", "yes, a network", "Joe also");
+    }
+    
+    public static NetworkAccess createNetworkAccess(){
+        return new MockNetworkAccess(createNetworkAttr());
+    }
+    
     public static MicroSecondDate getFallOfBerlinWall(){
         //the berlin wall fell on the 13th of June, 1990
         if(wallFall == null){
@@ -134,4 +151,5 @@ public class MockFissures{
     private static Location loc = new Location(0, 0, zeroK, zeroK, null);
     
     private static Location berlin = new Location(52.31f, 13.24f, tenK, tenK, null);
+    
 }
