@@ -184,5 +184,47 @@
             <destination>tagDocHelp.html</destination>
             <name>Strategy File Reference</name>
         </page>
+        <page>
+            <source>schemaDocs/datatypes/Text.xml</source>
+            <destination>tagDocs/datatypes/Text.html</destination>
+            <name>Text</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/datatypes/DoubleDatatype.xml</source>
+            <destination>tagDocs/datatypes/DoubleDatatype.html</destination>
+            <name>Double</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/datatypes/AnyText.xml</source>
+            <destination>tagDocs/datatypes/AnyText.html</destination>
+            <name>Text</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/datatypes/FloatDatatype.xml</source>
+            <destination>tagDocs/datatypes/FloatDatatype.html</destination>
+            <name>Float</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/datatypes/IntegerDatatype.xml</source>
+            <destination>tagDocs/datatypes/IntegerDatatype.html</destination>
+            <name>Integer</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
+        <page>
+            <source>schemaDocs/datatypes/NonnegativeIntegerDatatype.xml</source>
+            <destination>tagDocs/datatypes/NonnegativeIntegerDatatype.html</destination>
+            <name>Nonnegative Integer</name>
+            <base>../../</base>
+            <menu>Reference</menu>
+        </page>
     </menu>
 </pages>

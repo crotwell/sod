@@ -7,16 +7,30 @@
     <xsl:param name="page"/>
     <xsl:template match="/">
         <xsl:param name="currentPage" select="$page"/>
+        <xsl:param name="base" select="$base"/>
+        <xsl:param name="menu" select="$menu"/>
         <xsl:apply-templates select="*">
             <xsl:with-param name="currentPage" select="$currentPage"/>
+            <xsl:with-param name="base" select="$base"/>
+            <xsl:with-param name="menu" select="$menu"/>
         </xsl:apply-templates>
     </xsl:template>
     <xsl:template match="/document">
-        <xsl:param name="currentPage"/>
+        <xsl:param name="currentPage" select="$page"/>
+        <xsl:param name="base" select="$base"/>
+        <xsl:param name="menu" select="$menu"/>
         <html>
-            <xsl:call-template name="head"/>
+            <xsl:call-template name="head">
+                <xsl:with-param name="currentPage" select="$currentPage"/>
+                <xsl:with-param name="base" select="$base"/>
+                <xsl:with-param name="menu" select="$menu"/>
+            </xsl:call-template>
             <body>
-                <xsl:call-template name="header"/>
+                <xsl:call-template name="header">
+                    <xsl:with-param name="currentPage" select="$currentPage"/>
+                    <xsl:with-param name="base" select="$base"/>
+                    <xsl:with-param name="menu" select="$menu"/>
+                </xsl:call-template>
                 <xsl:call-template name="menu">
                     <xsl:with-param name="currentPage" select="$currentPage"/>
                     <xsl:with-param name="base" select="$base"/>
@@ -67,6 +81,7 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     <xsl:template name="head">
+        <xsl:param name="base" select="$base"/>
         <head>
             <title>
                 <xsl:value-of select="properties/title/text()"/>
@@ -83,6 +98,7 @@
         </head>
     </xsl:template>
     <xsl:template name="header">
+        <xsl:param name="base" select="$base"/>
         <div id="header">
             <a href="http://seis.sc.edu/SOD">
                 <img class="left">
