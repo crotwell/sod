@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 
 
 
@@ -33,6 +34,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
+        GlobalExceptionHandler.add(new GUIReporter());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -46,7 +48,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
     
     public void start() {
-        JFrame frame = new JFrame(frameName);
+        frame = new JFrame(frameName);
         frame.getContentPane().setLayout(new BorderLayout());
         Document doc = start.getDocument();
         if (tabs) {
@@ -87,16 +89,26 @@ public class SimpleGUIEditor extends CommandLineEditor {
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
-                        BufferedWriter buf =
-                            new BufferedWriter(new OutputStreamWriter(System.out));
-                        Writer xmlWriter = new Writer();
-                        xmlWriter.setOutput(buf);
-                        xmlWriter.write(start.getDocument());
+                        save(System.out);
                         System.exit(0);
                     }
                 });
     }
-    
+
+    protected void save(File file) throws FileNotFoundException, IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        save(fos);
+        fos.close();
+    }
+
+    protected void save(OutputStream out) {
+        BufferedWriter buf =
+            new BufferedWriter(new OutputStreamWriter(out));
+        Writer xmlWriter = new Writer();
+        xmlWriter.setOutput(buf);
+        xmlWriter.write(start.getDocument());
+    }
+
     void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
         System.out.println("addElementToPanel "+element.getTagName()+" gridx="+gbc.gridx+" gridy="+gbc.gridy);
         JLabel label = new JLabel(element.getTagName());
@@ -150,7 +162,9 @@ public class SimpleGUIEditor extends CommandLineEditor {
     String frameName = "Simple XML Editor GUI";
     
     boolean tabs = false;
-    
+
+    JFrame frame;
+
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
     
     
