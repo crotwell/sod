@@ -92,17 +92,8 @@ public class Start implements SodExceptionListener {
 		    waveFormArmThread.start();
 		   
 
-		} else if(subElement.getTagName().equals("properties")) {
-		      //load the properties fromt the configurationfile.
-		    SodUtil.loadProperties(subElement, props);
-		    setProperties(props);
-		    checkRestartOptions();
-		    eventQueue = new HSqlDbQueue(props);
-		    waveformQueue = new WaveformDbQueue(props);
-		    waveformQueue.clean();
-		    eventQueue.clean();
-		} else {
-		logger.debug("process "+subElement.getTagName());
+		}  else {
+		    logger.debug("process "+subElement.getTagName());
 		    
 		}
 	    }
@@ -155,6 +146,7 @@ public class Start implements SodExceptionListener {
             String defaultsFilename=
                 "edu/sc/seis/sod/"+propFilename;
 	    boolean commandlineProps = false;
+	    String confFilename = null;
 
             for (int i=0; i<args.length-1; i++) {
                 if (args[i].equals("-props")) {
@@ -162,14 +154,13 @@ public class Start implements SodExceptionListener {
                     // but still load defaults with original name
                     propFilename = args[i+1];
 		    commandlineProps = true;
-                }
+                } if(args[i].equals("-conf") || args[i].equals("-f")) {
+		    confFilename = args[i+1];
+		}
             }
 
 
-	    //configure commonAccess
-	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
-	    commonAccess.init(args);
-	    commonAccess.initORB();
+	
 	    // eventQueue = new HSqlDbQueue(commonAccess.getORB());
 
 	    boolean defaultPropLoadOK = false;
@@ -179,7 +170,7 @@ public class Start implements SodExceptionListener {
             try {
                 props.load((Start.class).getClassLoader().getResourceAsStream(defaultsFilename ));
 		defaultPropLoadOK = true;
-            } catch (IOException e) {
+	    } catch (IOException e) {
 		defaultPropLoadOK = false;
 		preloggingException = e;
             }
@@ -195,13 +186,7 @@ public class Start implements SodExceptionListener {
 	    } // end of if (commandlineProps)
 
 	    setProperties(props);
-	    /* Start.props = props;
-	
-	    checkRestartOptions();
-	    eventQueue = new HSqlDbQueue(props);
-	    waveformQueue = new WaveformDbQueue(props);
-	    waveformQueue.clean();
-	    eventQueue.clean();*/
+
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -214,54 +199,75 @@ public class Start implements SodExceptionListener {
 	    } // end of else
             logger.info("Logging configured");
 	
-	    String filename 
-		= props.getProperty("edu.sc.seis.sod.configuration");
+	    //done with the properties loading... now load the configuration file.
+	    //String filename 
+	    //= props.getProperty("edu.sc.seis.sod.configuration");
 	   
-	    if (filename == null) {
+	    if (confFilename == null) {
 		logger.fatal("No configuration file given, quiting....");
 		return;
 	    } // end of if (filename == null)
 	    
 	    InputStream in;
-	    if (filename.startsWith("http:") || filename.startsWith("ftp:")) {
-		java.net.URL url = new java.net.URL(filename);
+	    if (confFilename.startsWith("http:") || confFilename.startsWith("ftp:")) {
+		java.net.URL url = new java.net.URL(confFilename);
 		java.net.URLConnection conn = url.openConnection();
 		in = new BufferedInputStream(conn.getInputStream());
 	    } else {
-		in = new BufferedInputStream(new FileInputStream(filename));
+		in = new BufferedInputStream(new FileInputStream(confFilename));
 	    } // end of else
 
 	    if (in == null) {
-		logger.fatal("Unable to load configuration file "+filename+", quiting...");
+		logger.fatal("Unable to load configuration file "+confFilename+", quiting...");
 		return;
 	    } // end of if (in == null)
 	    
-
+	    
+	   
 	    String schemaFilename = "edu/sc/seis/sod/data/";
 	    schemaURL = 
 		(Start.class).getClassLoader().getResource(schemaFilename);
 	    logger.debug(schemaFilename+"->"+schemaURL.toString());
 	    
 
-	    //n = new BufferedInputStream(new FileInputStream("/home/telukutl/sod/xml/network.xml"));
+	    
 	    Start start = new Start(in);
             logger.info("Start init()");
 	    start.init();
-            logger.info("Start start()");
-	   
+	    
+	    //now override the properties with the properties specified 
+	    // in the configuration file.
+	    Element docElement = document.getDocumentElement();
+	    Element propertiesElement = SodUtil.getElement(docElement, "properties");
+	    if(propertiesElement != null) {
+		//load the properties fromt the configurationfile.
+		SodUtil.loadProperties(propertiesElement, props);
+		setProperties(props);
+	    } else {
+		logger.debug("No properties specified in the configuration file");
+	    }
+	    
+	    //here the orb must be initialized ..
+	    //configure commonAccess
+	    CommonAccess commonAccess = CommonAccess.getCommonAccess();
+	    commonAccess.initORB(args, props);
+		    
+	    checkRestartOptions();
+		
+	    //configure the eventQueue and waveformQueue.
+	    eventQueue = new HSqlDbQueue(props);
+	    waveformQueue = new WaveformDbQueue(props);
+	    waveformQueue.clean();
+	    eventQueue.clean();
+	    
+	    logger.info("Start start()");
 	    start.startA();
 	    eventArmThread.join();
 	    waveFormArmThread.join();
 	   
 	    getEventQueue().closeDatabase();
-	   
-	    //Start starta = new Start(null);
-	    //starta.getThreadGroup().list();
-	  
-	    //Thread.sleep(10000);
-	    // starta.getThreadGroup().list();
-	  
-	    System.exit(0);
+	    logger.debug("Did not track the Thread bug Yet. so using System.exit()");
+	    System.exit(1);
 	} catch(Exception e) {
 	    e.printStackTrace();
 	    if (e instanceof WrappedException) {
@@ -306,7 +312,7 @@ public class Start implements SodExceptionListener {
     public void sodExceptionHandler(SodException sodException) {
 	logger.fatal("Caught Exception in start becoz of the Listener", 
 		     sodException.getException());
-	System.exit(0);
+	
 	
     }
 
@@ -391,7 +397,7 @@ public class Start implements SodExceptionListener {
 
     InputStream configFile;
 
-    Document document;
+    static Document document;
 
     EventArm eventArm;
 
