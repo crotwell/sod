@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.sc.seis.fissuresUtil.exceptionHandlerGUI.*;
+import edu.sc.seis.fissuresUtil.cache.*;
 import org.apache.log4j.*;
 import java.io.*;
 import java.util.*;
@@ -52,10 +53,11 @@ public class Start {
 		    eventArm = new EventArm(subElement);
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
+		    System.out.println("****** START OF NETWOTK ARM *********");
 		    networkArm = new NetworkArm(subElement);
-		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
+		    // waveFormArm = new WaveFormArm(subElement);
 		    
 		} else {
 		logger.debug("process "+subElement.getTagName());
@@ -63,6 +65,12 @@ public class Start {
 		}
 	    }
 	}
+    }
+
+    public static EventQueue getEventQueue() {
+
+	return eventQueue;
+
     }
     
     public static void main (String[] args) {
@@ -175,8 +183,12 @@ public class Start {
     Document document;
 
     EventArm eventArm;
+
+    private static EventQueue eventQueue = new EventQueue();
     
     NetworkArm networkArm;
+
+    private WaveFormArm waveFormArm;
 
     static Category logger = 
         Category.getInstance(Start.class.getName());

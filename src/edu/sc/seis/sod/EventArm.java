@@ -21,12 +21,25 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class EventArm {
+public class EventArm implements Runnable{
     public EventArm (Element config) throws ConfigurationException {
 	if ( ! config.getTagName().equals("eventArm")) {
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
-	processConfig(config);
+	this.config = config;
+	//processConfig(config);
+	Thread t = new Thread(this);
+	t.start();	
+    }
+
+    public void run() {
+	try {
+		processConfig(config);
+	} catch(ConfigurationException cee) {
+
+		System.out.println("Caught configuration Exception ");
+
+	}
     }
 
     protected void processConfig(Element config) 
@@ -48,7 +61,12 @@ public class EventArm {
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
 	processEventArm();
-		
+	System.out.println("The number of events in the eventQueue are "
+	+Start.getEventQueue().getLength());
+	Start.getEventQueue().pop();
+	Start.getEventQueue().pop();
+	Start.getEventQueue().pop();
+	System.out.println("event QueueLength is "+Start.getEventQueue().getLength());
     }
 
     public void processEventArm() {
@@ -105,6 +123,7 @@ public class EventArm {
 
     public void handleEventArmProcess(EventAccess eventAccess, Origin origin) {
 	//System.out.println("passed THE TEST ************************************************************");
+	Start.getEventQueue().push(eventAccess);
 	eventArmProcess.process(eventAccess, origin, null);
 
     }
@@ -118,6 +137,8 @@ public class EventArm {
     private EventArmProcess eventArmProcess;
 
     private edu.iris.Fissures.IfEvent.EventFinder finder = null;
+
+    private Element config = null;
 
     static Category logger = 
         Category.getInstance(EventArm.class.getName());
