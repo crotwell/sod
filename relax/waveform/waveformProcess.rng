@@ -302,37 +302,10 @@
                         <displayOption>BEST</displayOption>
                         <fileNameBase>recordSection</fileNameBase>
                         <numSeisPerRecordSection>10</numSeisPerRecordSection>
-                        <recordSectionGrouping>
-                            <magnitudeRange>
-                                <min>5</min>
-                                <max>10</max>
-                            </magnitudeRange>
-                            <distanceRange>
+                        <distanceRange>
                                 <min>0</min>
                                 <max>180</max>
-                            </distanceRange>
-                            <percentSeisHeight>10</percentSeisHeight>
-                            <recordSectionSize>
-                                <width>500</width>
-                                <height>500</height>
-                            </recordSectionSize>
-                        </recordSectionGrouping>
-                        <recordSectionGrouping>
-                            <magnitudeRange>
-                                <min>4</min>
-                                <max>10</max>
-                            </magnitudeRange>
-                            <distanceRange>
-                                <min>10</min>
-                                <max>150</max>
-                            </distanceRange>
-                            <percentSeisHeight>10</percentSeisHeight>
-                            <minimumSpacing>15</minimumSpacing>
-                            <recordSectionSize>
-                                <width>400</width>
-                                <height>400</height>
-                            </recordSectionSize>
-                        </recordSectionGrouping>
+                        </distanceRange>
                         <percentSeisHeight>10</percentSeisHeight>
                         <minimumSpacing>10</minimumSpacing>
                         <recordSectionSize>
@@ -351,9 +324,11 @@
                     <value>ALL</value>
                 </choice>
             </element>
-            <element name="fileNameBase">
-                <data type="string"/>
-            </element>
+            <optional>
+                <element name="fileNameBase">
+                    <data type="string"/>
+                </element>
+            </optional>
             <optional>
                 <element name="numSeisPerRecordSection">
                     <xsd:annotation>
@@ -364,15 +339,28 @@
                     <data type="integer"/>
                 </element>
             </optional>
-            <zeroOrMore>
-                <ref name="recordSectionGrouping"/>
-            </zeroOrMore>
             <optional>
-                <ref name="percentSeisHeight"/>
+             <element name="distanceRange">
+                <ref name="degreeRange"/>
+            </element>
             </optional>
-            <optional>
-                <ref name="minimumSpacing"/>
+             <optional>
+                  <element name="percentSeisHeight">
+    		             <xsd:annotation>
+                            <description>Height of the seismogram as a percentage of recordsection height</description>
+                         </xsd:annotation>
+                         <data type="double"/>
+                  </element>
             </optional>
+             <optional>
+            <element name="minimumSpacing">
+                    <xsd:annotation>
+                        <description>Minimum spacing in degrees between seismograms in the
+                            recordsection</description>
+                    </xsd:annotation>
+                    <data type="double"/>
+             </element>
+          </optional>
             <optional>
                 <ref name="recordSectionSize"/>
             </optional>
@@ -401,66 +389,6 @@
             <element name="height">
                 <data type="integer"/>
             </element>
-        </element>
-    </define>
-    <define name="percentSeisHeight">
-        <element name="percentSeisHeight">
-            <xsd:annotation>
-                <description>Height of the seismogram as a percentage of recordsection
-                height</description>
-            </xsd:annotation>
-            <data type="double"/>
-        </element>
-    </define>
-    <define name="minimumSpacing">
-        <element name="minimumSpacing">
-            <xsd:annotation>
-                <description>Minimum spacing in degrees between seismograms in the
-                recordsection</description>
-            </xsd:annotation>
-            <data type="double"/>
-        </element>
-    </define>
-    <define name="recordSectionGrouping">
-        <element name="recordSectionGrouping">
-            <xsd:annotation>
-                <summary>specifies details of how the recordsection should look</summary>
-                <description>The magnitude of the event is used to specify the distance range of the
-                    recordsection and also the spacing between the seismograms in the
-                    recordsection.The size of the recordsection and the height of individual
-                    seismograms within the recordsection can also be specified</description>
-                <example>
-                    <recordSectionGrouping>
-                        <magnitudeRange>
-                            <min>5</min>
-                            <max>10</max>
-                        </magnitudeRange>
-                        <distanceRange>
-                            <min>0</min>
-                            <max>180</max>
-                        </distanceRange>
-                        <minimumSpacing>10</minimumSpacing>
-                        <percentSeisHeight>10</percentSeisHeight>
-                        <recordSectionSize>
-                            <width>500</width>
-                            <height>500</height>
-                        </recordSectionSize>
-                    </recordSectionGrouping>
-                </example>
-            </xsd:annotation>
-            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
-            <element name="distanceRange">
-                <ref name="degreeRange"/>
-            </element>
-            <optional>
-                <ref name="percentSeisHeight"/>
-            </optional>
-            <optional>
-                <ref name="minimumSpacing"/>
-            </optional>
-            <optional>
-                <ref name="recordSectionSize"/>
-            </optional>
         </element>
     </define>
     <define name="externalWaveformProcess">
