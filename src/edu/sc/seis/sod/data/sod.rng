@@ -652,6 +652,11 @@
             <element name="eventChannelNOT">
                 <ref name="eventChannel"/>
             </element>
+            <element name="passEventChannel">
+                <zeroOrMore>
+                    <ref name="eventChannel"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="eventChannel2">
@@ -679,6 +684,11 @@
             <element name="eventChannelNOT">
                 <ref name="eventChannel2"/>
             </element>
+            <element name="passEventChannel">
+                <zeroOrMore>
+                    <ref name="eventChannel2"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="eventChannel3">
@@ -705,6 +715,11 @@
             </element>
             <element name="eventChannelNOT">
                 <ref name="eventChannel3"/>
+            </element>
+            <element name="passEventChannel">
+                <zeroOrMore>
+                    <ref name="eventChannel3"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -1290,6 +1305,11 @@
                     <data type="string"/>
                 </element>
             </element>
+            <element name="passRequest">
+                <zeroOrMore>
+                    <ref name="requestSubsetter"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="requestSubsetter3">
@@ -1391,6 +1411,11 @@
                     <data type="string"/>
                 </element>
             </element>
+            <element name="passRequest">
+                <zeroOrMore>
+                    <ref name="requestSubsetter3"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="requestSubsetter2">
@@ -1491,6 +1516,11 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="passRequest">
+                <zeroOrMore>
+                    <ref name="requestSubsetter2"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -1655,6 +1685,11 @@
             <element name="siteNOT">
                 <ref name="site"/>
             </element>
+            <element name="passSite">
+                <zeroOrMore>
+                    <ref name="site"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="network">
@@ -1692,6 +1727,11 @@
             </element>
             <element name="networkNOT">
                 <ref name="network"/>
+            </element>
+            <element name="passNetwork">
+                <zeroOrMore>
+                    <ref name="network"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -1820,6 +1860,11 @@
                     <data type="string"/>
                 </element>
             </element>
+            <element name="passAvailableData">
+                <zeroOrMore>
+                    <ref name="availableData"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="availableData2">
@@ -1947,6 +1992,11 @@
                     <data type="string"/>
                 </element>
             </element>
+            <element name="passAvailableData">
+                <zeroOrMore>
+                    <ref name="availableData2"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="availableData3">
@@ -2073,6 +2123,11 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="passAvailableData">
+                <zeroOrMore>
+                    <ref name="availableData3"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -2622,6 +2677,11 @@
                     </choice>
                 </zeroOrMore>
             </element>
+            <element name="passEventStation">
+                <zeroOrMore>
+                    <ref name="eventStation"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="eventStation4">
@@ -2821,6 +2881,11 @@
                             <ref name="phaseInteractionBase4"/>
                         </element>
                     </choice>
+                </zeroOrMore>
+            </element>
+            <element name="passEventStation">
+                <zeroOrMore>
+                    <ref name="eventStation4"/>
                 </zeroOrMore>
             </element>
         </choice>
@@ -3024,6 +3089,11 @@
                     </choice>
                 </zeroOrMore>
             </element>
+            <element name="passEventStation">
+                <zeroOrMore>
+                    <ref name="eventStation3"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="eventStation2">
@@ -3223,6 +3293,11 @@
                             <ref name="phaseInteractionBase2"/>
                         </element>
                     </choice>
+                </zeroOrMore>
+            </element>
+            <element name="passEventStation">
+                <zeroOrMore>
+                    <ref name="eventStation2"/>
                 </zeroOrMore>
             </element>
         </choice>
@@ -4740,6 +4815,11 @@
             <element name="stationNOT">
                 <ref name="station3"/>
             </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station3"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="station5">
@@ -4909,6 +4989,11 @@
             </element>
             <element name="stationNOT">
                 <ref name="station5"/>
+            </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station5"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -5080,6 +5165,11 @@
             <element name="stationNOT">
                 <ref name="station2"/>
             </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station2"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="station4">
@@ -5250,6 +5340,11 @@
             <element name="stationNOT">
                 <ref name="station4"/>
             </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station4"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="station">
@@ -5419,6 +5514,11 @@
             </element>
             <element name="stationNOT">
                 <ref name="station"/>
+            </element>
+            <element name="passStation">
+                <zeroOrMore>
+                    <ref name="station"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -5712,6 +5812,11 @@
             <element name="channelNOT">
                 <ref name="channel3"/>
             </element>
+            <element name="passChannel">
+                <zeroOrMore>
+                    <ref name="channel3"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="channel2">
@@ -5813,6 +5918,11 @@
             </element>
             <element name="channelNOT">
                 <ref name="channel2"/>
+            </element>
+            <element name="passChannel">
+                <zeroOrMore>
+                    <ref name="channel2"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
@@ -5916,6 +6026,11 @@
             <element name="channelNOT">
                 <ref name="channel4"/>
             </element>
+            <element name="passChannel">
+                <zeroOrMore>
+                    <ref name="channel4"/>
+                </zeroOrMore>
+            </element>
         </choice>
     </define>
     <define name="channel">
@@ -6017,6 +6132,11 @@
             </element>
             <element name="channelNOT">
                 <ref name="channel"/>
+            </element>
+            <element name="passChannel">
+                <zeroOrMore>
+                    <ref name="channel"/>
+                </zeroOrMore>
             </element>
         </choice>
     </define>
