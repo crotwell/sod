@@ -34,8 +34,8 @@ Maps only update once every two minutes
 <td>
 <a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/></a>
 </td>
-<td><beginTime/></td>
-<td><endTime/></td>
+<td><beginTime>MM/dd/yyyy HH:mm:ss</beginTime></td>
+<td><endTime>MM/dd/yyyy HH:mm:ss</endTime></td>
 <td><attribute name="id"><status/></attribute><status/></td>
 </tr>
 </station>
@@ -47,8 +47,8 @@ Maps only update once every two minutes
 </statusFilter>
 <station><tr>
 <td><networkCode/>.<stationCode/></td>
-<td><beginTime/></td>
-<td><endTime/></td>
+<td><beginTime>MM/dd/yyyy HH:mm:ss</beginTime></td>
+<td><endTime>MM/dd/yyyy HH:mm:ss</endTime></td>
 <td><attribute name="id"><status/></attribute><status/></td>
 </tr>
 </station>
