@@ -47,6 +47,7 @@ public class WaveformArm implements Runnable {
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
         MAX_RETRY_DELAY =  Start.getRunProps().getMaxRetryDelay();
+        SERVER_RETRY_DELAY = Start.getRunProps().getServerRetryDelay();
     }
 
     public boolean isFinished() { return finished;}
@@ -61,7 +62,16 @@ public class WaveformArm implements Runnable {
                 } catch (InterruptedException e) {}
                 retryIfNeededAndAvailable();
             } while(Start.getEventArm().isAlive());
-            logger.info("Waveform arm done.");
+            logger.info("Main waveform arm done.  Retrying failures.");
+            MicroSecondDate runFinishTime = ClockUtil.now();
+            MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
+            while((serverFailDelayEnd.after(ClockUtil.now()) &&
+                       serverFailuresRemain()) || availableDataFailuresRemain()){
+                retryIfNeededAndAvailable();
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {}
+            }
             while(pool.isEmployed()){
                 try {
                     Thread.sleep(10000);
@@ -71,6 +81,18 @@ public class WaveformArm implements Runnable {
             GlobalExceptionHandler.handle("Problem running waveform arm", e);
         }
         finished = true;
+    }
+
+    private boolean availableDataFailuresRemain() throws SQLException {
+        synchronized(eventRetryTable){
+            return eventRetryTable.availableDataRetriesRemain();
+        }
+    }
+
+    private boolean serverFailuresRemain() throws SQLException {
+        synchronized(eventRetryTable){
+            return eventRetryTable.serverFailureRetriesRemain();
+        }
     }
 
     public LocalSeismogramArm getLocalSeismogramArm() {
@@ -351,22 +373,10 @@ public class WaveformArm implements Runnable {
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
                 Status stat = ecp.getStatus();
-                if(stat.getStanding() == Standing.CORBA_FAILURE ||
-                       (stat.getStage() == Stage.AVAILABLE_DATA_SUBSETTER &&
-                            stat.getStanding() == Standing.REJECT)){
-                    try {
-                        MicroSecondDate oTime =
-                            new MicroSecondDate(ecp.getEvent().get_preferred_origin().origin_time);
-                        if (oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
-                            synchronized (eventRetryTable) {
-                                eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
-                            }
-                        }
-                    } catch (NoPreferredOrigin e) {
-                        // probably never happens???
-                        GlobalExceptionHandler.handle("Trouble getting the preferred origin on an event channel pair to check for retry-ability",
-                                                      e);
-                    }
+                if(stat.getStanding() == Standing.CORBA_FAILURE){
+                    handleCorbaFailure(ecp);
+                }else if(stat.getStanding() == Standing.RETRY){
+                    handleAvailableDataFailure(ecp);
                 }
             } catch (SQLException e) {
                 GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
@@ -383,6 +393,27 @@ public class WaveformArm implements Runnable {
                     GlobalExceptionHandler.handle("Problem in setStatus", e);
                 }
             }
+        }
+    }
+
+    private void handleCorbaFailure(EventChannelPair ecp) throws SQLException{
+        synchronized (eventRetryTable) {
+            eventRetryTable.addRetry(ecp.getPairId(),
+                                     ecp.getStatus());
+        }
+    }
+
+    private void handleAvailableDataFailure(EventChannelPair ecp) throws SQLException {
+        MicroSecondDate oTime =
+            new MicroSecondDate(ecp.getEvent().getOrigin().origin_time);
+        if (oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
+            synchronized (eventRetryTable) {
+                eventRetryTable.addRetry(ecp.getPairId(),
+                                         ecp.getStatus());
+            }
+        }else{
+            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
+                                  Standing.REJECT));
         }
     }
 
@@ -409,18 +440,16 @@ public class WaveformArm implements Runnable {
         }
     }
 
-    private interface WaveformWorkUnit extends Runnable{
-    }
+    private interface WaveformWorkUnit extends Runnable{}
 
     private class LocalSeismogramWaveformWorkUnit implements WaveformWorkUnit {
-
         public LocalSeismogramWaveformWorkUnit(int pairId){
             this.pairId = pairId;
         }
 
         public void run(){
             try{
-                EventChannelPair ecp = extractEventChannelPair();
+                ecp = extractEventChannelPair();
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
                 boolean accepted = false;
@@ -461,7 +490,8 @@ public class WaveformArm implements Runnable {
             }
         }
 
-        private int pairId;
+        protected EventChannelPair ecp;
+        protected int pairId;
     }
 
 
@@ -576,6 +606,9 @@ public class WaveformArm implements Runnable {
 
     /** Maxmimun time back from now that it is worth retrying. */
     private TimeInterval MAX_RETRY_DELAY;
+
+    //Amount of time after the run has ended that we retry Server based failures
+    private TimeInterval SERVER_RETRY_DELAY ;
 
     private static Logger logger = Logger.getLogger(WaveformArm.class);
 
