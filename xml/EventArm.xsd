@@ -162,8 +162,8 @@ in the instance document
 			<xsd:extension base="originType">
 				<xsd:sequence>
 					<xsd:element name="type" type="magnitudetypeType"/>
-					<xsd:element name="min" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
-					<xsd:element name="max" type="xsd:integer"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="min" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -427,13 +427,5 @@ in the instance document
 
 	<!-- element representing EVENTARM -->    
 	<xsd:element name="eventArm" type="eventArmType"/>
-<!--
-	<xsd:complexType name="sodType">
-		<xsd:sequence>
-			<xsd:element ref="eventArm"/>
-		</xsd:sequence>
-	</xsd:complexType>
 
-	<xsd:element name="sod" type="sodType"/>
--->
 </xsd:schema>
