@@ -58,13 +58,7 @@
                 </eventFinder>
                 <printLineEventProcess/>
                 <eventStatusTemplate>
-            <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
-        </eventStatusTemplate>
-                <eventStatusTemplate>
-                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
-        </eventStatusTemplate>
-                <eventStatusTemplate>
-                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
+                        <eventConfig xlink:href="jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml"/>
         </eventStatusTemplate>
         </eventArm>
         <networkArm>
