@@ -5,6 +5,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 import edu.iris.Fissures.*;
+import edu.iris.Fissures.model.*;
 
 /**
  * EffectiveTimeOverlap.java
@@ -18,13 +19,6 @@ import edu.iris.Fissures.*;
 
 public abstract class EffectiveTimeOverlap implements Subsetter{ 
 
-    /**
-     * Creates a new <code>EffectiveTimeOverlap</code> instance.
-     *
-     */
-    public EffectiveTimeOverlap() {
-
-    }
     /**
      * Creates a new <code>EffectiveTimeOverlap</code> instance.
      *
@@ -50,10 +44,18 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 		node = children.item(i); 
 		if(node instanceof Element) {
 			String tagName = ((Element)node).getTagName();
-			if(tagName.equals("min")) minElement = (Element)node;
-			else if(tagName.equals("max")) maxElement = (Element)node;
+			if(tagName.equals("min")) {
+			    minElement = (Element)node;
+			    minDate = 
+				new MicroSecondDate(getMinEffectiveTime());
+			} else if (tagName.equals("max")) {
+			    maxElement = (Element)node;
+			    maxDate = 
+				new MicroSecondDate(getMaxEffectiveTime());
+			}
 		}
 	}
+	
     }
 
     /**
@@ -81,9 +83,31 @@ public abstract class EffectiveTimeOverlap implements Subsetter{
 
     }
 
+    public boolean overlaps(edu.iris.Fissures.TimeRange range) {
+	MicroSecondDate rangeStartDate = 
+	    new MicroSecondDate(range.start_time);
+	MicroSecondDate rangeEndDate = 
+	    new MicroSecondDate(range.end_time);
+
+	if (maxDate == null && minDate == null) {
+	    return true;
+	} else if (maxDate == null && minDate.before(rangeEndDate)) {
+	    return true;
+	} else if (minDate == null && maxDate.after(rangeStartDate)) {
+	    return true;
+	} else if(rangeStartDate.after(maxDate) 
+		  || rangeEndDate.before(minDate) ) {
+	    return false;
+	} else {
+	    return true;
+	}
+    }
+
     Element minElement = null;
+    MicroSecondDate minDate = null;
 
     Element maxElement = null;
+    MicroSecondDate maxDate = null;
 
     static Category logger = 
         Category.getInstance(EffectiveTimeOverlap.class.getName());
