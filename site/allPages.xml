@@ -1,193 +1,188 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <pages>
-        <baseDirectory>generatedSite/</baseDirectory>
-        <menu name="Tutorials">
+    <baseDirectory>generatedSite/</baseDirectory>
+    <menu name="Tutorials">
         <page>
-                <source>content/index.xml</source>
-                <destination>index.html</destination>
-                <name>Home</name>
+            <source>../xdocs/index.xml</source>
+            <destination>index.html</destination>
+            <name>Home</name>
         </page>
         <page>
-                <source>../xdocs/quickstart.xml</source>
-                <destination>quickstart.html</destination>
-                <name>Quick Start</name>
+            <source>../xdocs/quickstart.xml</source>
+            <destination>quickstart.html</destination>
+            <name>Quick Start</name>
         </page>
         <page>
-                <source>content/download.xml</source>
-                <destination>download.html</destination>
-                <name>Download</name>
+            <source>../xdocs/download.xml</source>
+            <destination>download.html</destination>
+            <name>Download</name>
         </page>
         <page>
-                <source>../xdocs/install.xml</source>
-                <destination>install.html</destination>
-                <name>Install</name>
+            <source>../xdocs/install.xml</source>
+            <destination>install.html</destination>
+            <name>Install</name>
         </page>
         <page>
-                <source>../xdocs/walkthrough.xml</source>
-                <destination>walkthrough.html</destination>
-                <name>Strategy File via Editor</name>
+            <source>../xdocs/walkthrough.xml</source>
+            <destination>walkthrough.html</destination>
+            <name>Strategy File via Editor</name>
         </page>
         <page>
-                <source>../xdocs/tutorial.xml</source>
-                <destination>tutorial.html</destination>
-                <name>Strategy File via XML</name>
+            <source>../xdocs/tutorial.xml</source>
+            <destination>tutorial.html</destination>
+            <name>Strategy File via XML</name>
         </page>
         <page>
-                <source>../xdocs/running.xml</source>
-                <destination>running.html</destination>
-                <name>Run</name>
+            <source>../xdocs/running.xml</source>
+            <destination>running.html</destination>
+            <name>Run</name>
         </page>
         <page>
-                <source>../xdocs/realtime.xml</source>
-                <destination>realtime.html</destination>
-                <name>Realtime Run Considerations</name>
+            <source>../xdocs/realtime.xml</source>
+            <destination>realtime.html</destination>
+            <name>Realtime Run Considerations</name>
         </page>
         <page>
-                <source>../xdocs/legacy.xml</source>
-                <destination>legacy.html</destination>
-                <name>Legacy Code Considerations</name>
+            <source>../xdocs/legacy.xml</source>
+            <destination>legacy.html</destination>
+            <name>Legacy Code Considerations</name>
         </page>
         <page>
-                <source>include/ES_JulAug_2004_preprint.pdf</source>
-                <destination>ES_JulAug_2004_preprint.pdf</destination>
-                <name>SOD Paper(PDF)</name>
+            <source>include/ES_JulAug_2004_preprint.pdf</source>
+            <destination>ES_JulAug_2004_preprint.pdf</destination>
+            <name>SOD Paper(PDF)</name>
         </page>
         <page>
-                <source>../xdocs/sodcam.xml</source>
-                <destination>sodcam.html</destination>
-                <name>SOD-cam</name>
+            <source>../xdocs/sodcam.xml</source>
+            <destination>sodcam.html</destination>
+            <name>SOD-cam</name>
         </page>
         <page>
-                <source>None</source>
-                <destination>tagDocs/sod/start.html</destination>
-                <name>Strategy File Reference</name>
+            <source>None</source>
+            <destination>tagDocs/sod/start.html</destination>
+            <name>Strategy File Reference</name>
         </page>
-        </menu>
-        <menu name ="Reference">
+    </menu>
+    <menu name="Reference">
         <page>
-                <source>content/index.xml</source>
-                <destination>index.html</destination>
-                <name>Home</name>
+            <source>../xdocs/index.xml</source>
+            <destination>index.html</destination>
+            <name>Home</name>
         </page>
-
         <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/sod/start.html</destination>
-                <name>sod</name>
+            <source>SchemaDoc</source>
+            <destination>tagDocs/sod/start.html</destination>
+            <name>sod</name>
         </page>
         <submenu>
-        <page>
+            <page>
                 <source>SchemaDoc</source>
                 <destination>tagDocs/properties/start.html</destination>
                 <name>properties</name>
-        </page>
-
-        <page>
+            </page>
+            <page>
                 <source>SchemaDoc</source>
                 <destination>tagDocs/event/arm/start.html</destination>
                 <name>eventArm</name>
-        </page>
-        <submenu>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/event/source/eventFinder.html</destination>
-                <name>Finder</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/event/origin/origin.html</destination>
-                <name>Origin</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/event/process/eventProcess.html</destination>
-                <name>Process</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/event/status/status.html</destination>
-                <name>Status</name>
-        </page>
-</submenu>
-
-        <page>
+            </page>
+            <submenu>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/event/source/eventFinder.html</destination>
+                    <name>Finder</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/event/origin/origin.html</destination>
+                    <name>Origin</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/event/process/eventProcess.html</destination>
+                    <name>Process</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/event/status/status.html</destination>
+                    <name>Status</name>
+                </page>
+            </submenu>
+            <page>
                 <source>SchemaDoc</source>
                 <destination>tagDocs/network/arm/start.html</destination>
                 <name>networkArm</name>
-        </page>
-        <submenu>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/source/finder.html</destination>
-                <name>Finder</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/network/network.html</destination>
-                <name>Network</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/station/station.html</destination>
-                <name>Station</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/site/site.html</destination>
-                <name>Site</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/channel/channel.html</destination>
-                <name>Channel</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/process/process.html</destination>
-                <name>Process</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/network/status/networkStatusTemplate.html</destination>
-                <name>Status</name>
-        </page>
-</submenu>
-        <page>
+            </page>
+            <submenu>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/source/finder.html</destination>
+                    <name>Finder</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/network/network.html</destination>
+                    <name>Network</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/station/station.html</destination>
+                    <name>Station</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/site/site.html</destination>
+                    <name>Site</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/channel/channel.html</destination>
+                    <name>Channel</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/process/process.html</destination>
+                    <name>Process</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/network/status/networkStatusTemplate.html</destination>
+                    <name>Status</name>
+                </page>
+            </submenu>
+            <page>
                 <source>SchemaDoc</source>
                 <destination>tagDocs/waveform/arm/start.html</destination>
                 <name>waveformArm</name>
-        </page>
-        <submenu>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/waveform/eventStation/eventStation.html</destination>
-                <name>Event Station</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/waveform/localSeismogram/start.html</destination>
-                <name>Local Seismogram</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/waveform/motionVector/start.html</destination>
-                <name>Motion Vector</name>
-        </page>
-        <page>
-                <source>SchemaDoc</source>
-                <destination>tagDocs/event/status/status.html</destination>
-                <name>Status</name>
-        </page>
-</submenu>
+            </page>
+            <submenu>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/waveform/eventStation/eventStation.html</destination>
+                    <name>Event Station</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/waveform/localSeismogram/start.html</destination>
+                    <name>Local Seismogram</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/waveform/motionVector/start.html</destination>
+                    <name>Motion Vector</name>
+                </page>
+                <page>
+                    <source>SchemaDoc</source>
+                    <destination>tagDocs/event/status/status.html</destination>
+                    <name>Status</name>
+                </page>
+            </submenu>
         </submenu>
-        </menu>
-		<menu name="Don't Show">
-
+    </menu>
+    <menu name="Don't Show">
         <page>
-                <source>content/tagDocHelp.xml</source>
-                <destination>tagDocHelp.html</destination>
-                <name>Strategy File Reference</name>
+            <source>../xdocs/tagDocHelp.xml</source>
+            <destination>tagDocHelp.html</destination>
+            <name>Strategy File Reference</name>
         </page>
-</menu>
+    </menu>
 </pages>
-
