@@ -236,9 +236,7 @@ public class LocalSeismogramArm implements Subsetter {
                         logger.debug("before retrieve_seismograms");
                         NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
                         if(nsDC.getServerDNS().equals("edu/iris/dmc")
-                           && nsDC.getServerName()
-                           .equals("IRIS_ArchiveDataCenter")) {
-                            synchronized(this) {
+                           && nsDC.getServerName().equals("IRIS_ArchiveDataCenter")) {
                                 //Archive doesn't support retrieve_seismograms
                                 //so try using the queue set of retrieve calls
                                 try {
@@ -258,7 +256,6 @@ public class LocalSeismogramArm implements Subsetter {
                                     handle(ecp, Stage.DATA_RETRIEVAL, ex);
                                     return;
                                 }
-                            }
                         } else {
                             try {
                                 localSeismograms = dataCenter.retrieve_seismograms(infilters);
