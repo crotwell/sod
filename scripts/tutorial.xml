@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
         <properties>
+		<property>
+        		<name>sod.start.ReopenEvents</name>
+		        <value>true</value>
+		</property>
                 <property>
                         <name>edu.sc.seis.sod.databasetype</name>
                         <value>edu.sc.seis.sod.database.HSqlDbManager</value>
                 </property>
-                <!-- number of days to get events per request to eventFinder -->
+		<!-- amount of time per request to eventFinder -->
+		<property>
+		        <name>sod.event.QueryIncrement.value</name>
+		        <value>1</value>
+		</property>
+		<property>
+		        <name>sod.event.QueryIncrement.unit</name>
+		        <value>week</value>
+		</property>
+                <!-- number of seconds to wait for events to arrive past the
+                     current time. Sod continues this long after the end time-->
                 <property>
-                        <name>edu.sc.seis.sod.daystoincrement</name>
-                        <value>7</value>
+                        <name>sod.event.Lag.unit</name>
+                        <value>week</value>
                 </property>
-                <!-- don't go back and reask server for events that may have
-         appeared in server after this was first run. -->
-                <property>
-                        <name>edu.sc.seis.sod.database.getNewEvents</name>
-                        <value>false</value>
-                </property>
+		<property>
+		        <name>sod.event.Lag.value</name>
+		        <value>1</value>
+		</property>
+		<!--  time to wait between queries for events   -->
+		<property>
+		        <name>sod.event.RefreshInterval.value</name>
+		        <value>6</value>
+		</property>
+		<property>
+		        <name>sod.event.RefreshInterval.unit</name>
+		        <value>MINUTE</value>
+		</property>
         </properties>
         <eventArm>
                 <eventFinder>
