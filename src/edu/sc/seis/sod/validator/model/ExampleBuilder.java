@@ -29,7 +29,13 @@ public class ExampleBuilder {
     }
 
     public void write(Form f){
-        if (f.getMin() == 0) return;
+        write(f, true);
+    }
+
+    public void write(Form f, boolean ignoreMin){
+        if (f.getMin() == 0 && !ignoreMin) {
+            return;
+        }
         //this attribute stuff is wrong.  Don't worry right now
         if (f instanceof Attribute){
             Attribute attr = (Attribute)f;
@@ -38,7 +44,7 @@ public class ExampleBuilder {
                 buf.append(' ' + attr.getName() + "=\"");
                 Form kid = attr.getChild();
                 if (kid != null){
-                    write(kid);
+                    write(kid, false);
                 }
                 buf.append('\"');
             }
@@ -50,7 +56,7 @@ public class ExampleBuilder {
             Form[] children = c.getChildren();
             for (int i = 0; i < children.length; i++) {
                 if (!ModelWalker.requiresSelfReferentiality(children[i])){
-                    write(children[i]);
+                    write(children[i], false);
                     break;
                 }
             }
@@ -64,7 +70,7 @@ public class ExampleBuilder {
             MultigenitorForm m = (MultigenitorForm)f;
             Form[] kids = m.getChildren();
             for (int i = 0; i < kids.length; i++) {
-                write(kids[i]);
+                write(kids[i], false);
             }
         } else if (f instanceof NamedElement) {
             NamedElement ne = (NamedElement)f;
@@ -72,13 +78,13 @@ public class ExampleBuilder {
             if (ne.getAttributes() != null){
                 Attribute[] attrs = ne.getAttributes();
                 for (int i = 0; i < attrs.length; i++) {
-                    write(attrs[i]);
+                    write(attrs[i], false);
                 }
             }
             buf.append(closeBracket);
             Form kid = ne.getChild();
             if (kid != null){
-                write(kid);
+                write(kid, false);
             }
             buf.append(openBracket + '/' + ne.getName() + closeBracket + '\n');
         } else if (f instanceof Text) {
