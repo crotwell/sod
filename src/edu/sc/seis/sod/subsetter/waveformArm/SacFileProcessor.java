@@ -14,8 +14,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
-import edu.sc.seis.fissuresUtil.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.LocalSeismogramProcess;
@@ -25,9 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Category;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -66,6 +67,23 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
         } // end of if (dataDirectory.exits())
 
+        AuditInfo[] audit = new AuditInfo[1];
+        audit[0] = new AuditInfo(System.getProperty("user.name"),
+                                 "seismogram loaded via sod.");
+        DataSet masterDataSet = new MemoryDataSet("master_genid"+Math.random(),
+                                          "Master",
+                                          System.getProperty("user.name"),
+                                          audit);
+
+        try {
+            masterDataSetElement = dsToXML.createDocument(masterDataSet, dataDirectory);
+            masterDSFile = new File(dataDirectory, dsToXML.createFileName(masterDataSet));
+            dsToXML.writeToFile(masterDataSetElement, masterDSFile);
+        } catch (IOException e) {
+            throw new ConfigurationException("Problem trying to create top level dataset", e);
+        } catch (ParserConfigurationException e) {
+            throw new ConfigurationException("Problem trying to create top level dataset", e);
+        }
     }
 
     /**
@@ -95,9 +113,28 @@ public class SacFileProcessor implements LocalSeismogramProcess {
                         " at "+event.get_preferred_origin().origin_time.date_time);
         DataSet dataset = getDataSet(event);
         saveInDataSet(dataset, event, channel, seismograms);
-        saveDataSet(dataset);
+        File outFile = saveDataSet(dataset);
 
+        boolean found = false;
+        Iterator it = masterDSNames.iterator();
+        while (it.hasNext()) {
+            if (dataset.getName().equals(it.next())) {
+                found = true;
+            }
+        }
+        if ( ! found) {
+            masterDSNames.add(dataset.getName());
+            updateMasterDataSet(outFile.toURI().toURL(), dataset.getName());
+        }
         return seismograms;
+    }
+
+    protected void updateMasterDataSet(URL childDataset, String childName)
+        throws IOException, ParserConfigurationException, ConfigurationException {
+        Document doc = masterDataSetElement.getOwnerDocument();
+        Element child = doc.createElement("datasetRef");
+        dsToXML.insertRef(child, childDataset, childName);
+        dsToXML.writeToFile(masterDataSetElement, masterDSFile);
     }
 
     protected URLDataSetSeismogram saveInDataSet(DataSet dataset,
@@ -131,22 +168,27 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         return urlDSS;
     }
 
-    protected void saveDataSet(DataSet ds)
-        throws IOException, ParserConfigurationException, MalformedURLException, ConfigurationException {
+    protected File saveDataSet(DataSet ds)
+        throws IOException, ParserConfigurationException, ConfigurationException {
 
         //            File outFile = new File(eventDirectory, eventDirName+".dsml");
         //            OutputStream fos = new BufferedOutputStream(
         //                new FileOutputStream(outFile));
         //            dataset.write(fos);
         //            fos.close();
-        DataSetToXML dsToXML = new DataSetToXML();
-        File outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()));
+        File outFile;
+        if (ds.getEvent() != null) {
+            outFile = dsToXML.save(ds, getEventDirectory(ds.getEvent()));
+        } else {
+            outFile = dsToXML.save(ds, dataDirectory);
+        }
         logger.debug("DSML saved to "+outFile.getName());
         long mbyte = 1024*1024;
         Runtime runtime = Runtime.getRuntime();
         String s = "Memory usage: "+runtime.freeMemory()/mbyte+" "+
             runtime.totalMemory()/mbyte+"/"+runtime.maxMemory()/mbyte+" Mb";
         System.out.println(s);
+        return outFile;
     }
 
     protected File getEventDirectory(EventAccessOperations event)
@@ -241,7 +283,15 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
     }
 
+    DataSetToXML dsToXML = new DataSetToXML();
+
     DataSet lastDataSet = null;
+
+    Element masterDataSetElement;
+
+    File masterDSFile;
+
+    LinkedList masterDSNames = new LinkedList();
 
     int eventFileNum = 1;
 
