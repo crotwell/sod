@@ -3,12 +3,15 @@ package edu.sc.seis.sod.status.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.GenericTemplate;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
@@ -16,7 +19,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-public class EventStatusTemplate extends FileWritingTemplate implements EventArmMonitor{
+public class EventStatusTemplate extends FileWritingTemplate implements EventArmMonitor, WaveformArmMonitor{
 
     public EventStatusTemplate(Element el)throws IOException, SAXException, ParserConfigurationException, ConfigurationException   {
         super(extractConstructorBaseDirArg(el), extractConstructorFilenameArg(el));
@@ -31,7 +34,6 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
         Element templateConfig = TemplateFileLoader.getTemplate(eventConfigEl);
         Element fileNameElement = SodUtil.getElement(templateConfig, "filename");
         String filename = fileNameElement.getFirstChild().getNodeValue();
-
         return filename;
     }
 
@@ -78,7 +80,15 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
         }
     }
 
+    public void update(EventChannelPair ecp) {
+        write();
+    }
+
     public void change(EventAccessOperations event, Status status) {
+        if(!addedToWaveformArm){
+            Start.getWaveformArm().addStatusMonitor(this);
+            addedToWaveformArm = true;
+        }
         write();
     }
 
@@ -86,7 +96,7 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
         public String getResult(){ return armStatus; }
     }
 
-
+    private boolean addedToWaveformArm = false;
     private Logger logger = Logger.getLogger(EventStatusTemplate.class);
     private String armStatus = "";
 }
