@@ -1,332 +1,307 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-	<start>
-		<ref name="origin"/>
-	</start>
-	<include href="../base/include/timeRange.rng"/>
-	<include href="../base/include/range.rng"/>
-	<include href="../base/include/quantity.rng"/>
-	<define name="origin">
-		<choice>
-			<ref name="removeEventDuplicate"/>
-			<ref name="name"/>
-			<ref name="geographicalRegion"/>
-			<ref name="seismicRegion"/>
-			<ref name="originTimeRange"/>
-			<externalRef href="../base/externalRef/magnitudeRange.rng"/>
-			<ref name="depthRange"/>
-			<ref name="originPointDistance"/>
-			<ref name="originPointAzimuth"/>
-			<ref name="originPointBackAzimuth"/>
-			<ref name="pointLinearDistanceMagnitude"/>
-			<ref name="eventArea"/>
-			<externalRef href="catalog.rng"/>
-			<externalRef href="contributor.rng"/>
-			<ref name="arrayAND"/>
-			<ref name="arrayOR"/>
-			<ref name="AND"/>
-			<ref name="OR"/>
-			<ref name="XOR"/>
-			<ref name="NOT"/>
-			<ref name="PASS"/>
-		</choice>
-	</define>
-	<define name="name">
-		<element name="eventAttrName">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches the event name. </summary>
-					<description> Evaluates to true if the name of the event matches the string. </description>
-					<example>
-						<eventAttrName>FIJI ISLANDS REGION</eventAttrName>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<data type="string"/>
-		</element>
-	</define>
-	<define name="geographicalRegion">
-		<element name="geographicalRegion">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches the geographic Flinn-Engdahl region number. </summary>
-					<description> Evaluates to true if the numerical value of the geographic region of
+    <start>
+        <ref name="origin"/>
+    </start>
+    <include href="../base/include/timeRange.rng"/>
+    <include href="../base/include/range.rng"/>
+    <include href="../base/include/quantity.rng"/>
+    <define name="origin">
+        <choice>
+            <ref name="removeEventDuplicate"/>
+            <ref name="name"/>
+            <ref name="geographicalRegion"/>
+            <ref name="seismicRegion"/>
+            <externalRef href="../base/externalRef/originTimeRange.rng"/>
+            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            <externalRef href="../base/externalRef/originDepthRange.rng"/>
+            <ref name="originPointDistance"/>
+            <ref name="originPointAzimuth"/>
+            <ref name="originPointBackAzimuth"/>
+            <ref name="pointLinearDistanceMagnitude"/>
+            <ref name="eventArea"/>
+            <externalRef href="catalog.rng"/>
+            <externalRef href="contributor.rng"/>
+            <ref name="arrayAND"/>
+            <ref name="arrayOR"/>
+            <ref name="AND"/>
+            <ref name="OR"/>
+            <ref name="XOR"/>
+            <ref name="NOT"/>
+            <ref name="PASS"/>
+        </choice>
+    </define>
+    <define name="name">
+        <element name="eventAttrName">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the event name. </summary>
+                    <description> Evaluates to true if the name of the event matches the string. </description>
+                    <example>
+                        <eventAttrName>FIJI ISLANDS REGION</eventAttrName>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="geographicalRegion">
+        <element name="geographicalRegion">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the geographic Flinn-Engdahl region number. </summary>
+                    <description> Evaluates to true if the numerical value of the geographic region of
                     the event matches one of the values in the list. </description>
-					<example>
-						<geographicRegion>12</geographicRegion>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<list>
-				<oneOrMore>
-					<data type="nonNegativeInteger"/>
-				</oneOrMore>
-			</list>
-		</element>
-	</define>
-	<define name="seismicRegion">
-		<element name="seismicRegion">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matches the seismic Flinn-Engdahl region number. </summary>
-					<description> Evaluates to true if the numerical value of the seismic region of the
+                    <example>
+                        <geographicRegion>12</geographicRegion>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
+    <define name="seismicRegion">
+        <element name="seismicRegion">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Matches the seismic Flinn-Engdahl region number. </summary>
+                    <description> Evaluates to true if the numerical value of the seismic region of the
                     event matches one of the values in the list. </description>
-					<example>
-						<seismicRegion>12</seismicRegion>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<list>
-				<oneOrMore>
-					<data type="nonNegativeInteger"/>
-				</oneOrMore>
-			</list>
-		</element>
-	</define>
-	<define name="originTimeRange">
-		<element name="originTimeRange">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Matchs events who's preferred origin's origin time occurs
-                                        within the given time range. </summary>
-					<description/>
-					<example>
-						<originTimeRange>
-							<startTime>20010101T00:00:00Z</startTime>
-							<endTime>20011231T00:00:00Z</endTime>
-						</originTimeRange>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="timeRange"/>
-		</element>
-	</define>
-	<define name="depthRange">
-		<element name="originDepthRange">
-			<element name="unitRange">
-				<ref name="range"/>
-			</element>
-		</element>
-	</define>
-	<define name="eventArea">
-		<element name="eventArea">
-			<externalRef href="../base/externalRef/area.rng"/>
-		</element>
-	</define>
-	<define name="arrayAND">
-		<element name="originArrayAND">
-			<ref name="origin"/>
-		</element>
-	</define>
-	<define name="arrayOR">
-		<element name="originArrayOR">
-			<ref name="origin"/>
-		</element>
-	</define>
-	<define name="AND">
-		<element name="originAND">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical AND between Origin subsetters. </summary>
-					<description> The output is the logical AND of the outputs of all
+                    <example>
+                        <seismicRegion>12</seismicRegion>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <list>
+                <oneOrMore>
+                    <data type="nonNegativeInteger"/>
+                </oneOrMore>
+            </list>
+        </element>
+    </define>
+    <define name="eventArea">
+        <element name="eventArea">
+            <externalRef href="../base/externalRef/area.rng"/>
+        </element>
+    </define>
+    <define name="arrayAND">
+        <element name="originArrayAND">
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="arrayOR">
+        <element name="originArrayOR">
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="AND">
+        <element name="originAND">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical AND between Origin subsetters. </summary>
+                    <description> The output is the logical AND of the outputs of all
                                         included Origin subsetters. The subsetters after the first
                                         false outputed are not evaluated. </description>
-					<example>
-						<originAND>
-							<catalog>
-								<value>FINGER</value>
-							</catalog>
-							<contributor>
-								<value>NEIC</value>
-							</contributor>
-						</originAND>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="origin"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="OR">
-		<element name="originOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical OR between Origin subsetters. </summary>
-					<description> The output is the logical OR of the outputs of all
+                    <example>
+                        <originAND>
+                            <catalog>
+                                <value>FINGER</value>
+                            </catalog>
+                            <contributor>
+                                <value>NEIC</value>
+                            </contributor>
+                        </originAND>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="origin"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="OR">
+        <element name="originOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical OR between Origin subsetters. </summary>
+                    <description> The output is the logical OR of the outputs of all
                                         included Origin subsetters. The subsetters after the first
                                         true outputed are not evaluated. </description>
-					<example>
-						<originOR>
-							<catalog>
-								<value>FINGER</value>
-							</catalog>
-							<contributor>
-								<value>NEIC</value>
-							</contributor>
-						</originOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<oneOrMore>
-				<ref name="origin"/>
-			</oneOrMore>
-		</element>
-	</define>
-	<define name="XOR">
-		<element name="originXOR">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical XOR between Origin subsetters. </summary>
-					<description> The output is the logical XOR of the outputs of all
+                    <example>
+                        <originOR>
+                            <catalog>
+                                <value>FINGER</value>
+                            </catalog>
+                            <contributor>
+                                <value>NEIC</value>
+                            </contributor>
+                        </originOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <oneOrMore>
+                <ref name="origin"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="XOR">
+        <element name="originXOR">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical XOR between Origin subsetters. </summary>
+                    <description> The output is the logical XOR of the outputs of all
                                         included Origin subsetters. </description>
-					<example>
-						<originXOR>
-							<catalog>
-								<value>FINGER</value>
-							</catalog>
-							<contributor>
-								<value>NEIC</value>
-							</contributor>
-						</originXOR>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="origin"/>
-			<ref name="origin"/>
-		</element>
-	</define>
-	<define name="NOT">
-		<element name="originNOT">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Logical NOT of an Origin subsetter. </summary>
-					<description> The output is the logical XOR of the outputs of all
+                    <example>
+                        <originXOR>
+                            <catalog>
+                                <value>FINGER</value>
+                            </catalog>
+                            <contributor>
+                                <value>NEIC</value>
+                            </contributor>
+                        </originXOR>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="origin"/>
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="NOT">
+        <element name="originNOT">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Logical NOT of an Origin subsetter. </summary>
+                    <description> The output is the logical XOR of the outputs of all
                                         included Origin subsetters. </description>
-					<example>
-						<originNOT>
-							<catalog>
-								<value>FINGER</value>
-							</catalog>
-						</originNOT>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="origin"/>
-		</element>
-	</define>
-	<define name="latLonUnitRange">
-		<element name="latitude">
-			<data type="double"/>
-		</element>
-		<element name="longitude">
-			<data type="double"/>
-		</element>
-		<ref name="range"/>
-	</define>
-	<define name="originPointDistance">
-		<element name="originPointDistance">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Distance range from a fixed point. </summary>
-					<description> True if the origin is within the
+                    <example>
+                        <originNOT>
+                            <catalog>
+                                <value>FINGER</value>
+                            </catalog>
+                        </originNOT>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="origin"/>
+        </element>
+    </define>
+    <define name="latLonUnitRange">
+        <element name="latitude">
+            <data type="double"/>
+        </element>
+        <element name="longitude">
+            <data type="double"/>
+        </element>
+        <ref name="range"/>
+    </define>
+    <define name="originPointDistance">
+        <element name="originPointDistance">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Distance range from a fixed point. </summary>
+                    <description> True if the origin is within the
                                 given distance range of the given lat and lon. </description>
-					<example>
-						<originPointDistance>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-						</originPointDistance>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="latLonUnitRange"/>
-		</element>
-	</define>
-	<define name="pointLinearDistanceMagnitude">
-		<element name="pointLinearDistanceMagnitude">
-			<ref name="latLonUnitRange"/>
-			<externalRef href="../base/externalRef/magnitudeRange.rng"/>
-		</element>
-	</define>
-	<define name="originPointAzimuth">
-		<element name="originPointAzimuth">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Azimuth range from a fixed point. </summary>
-					<description> True if the origin is within the
+                    <example>
+                        <originPointDistance>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>90</max>
+                        </originPointDistance>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="pointLinearDistanceMagnitude">
+        <element name="pointLinearDistanceMagnitude">
+            <ref name="latLonUnitRange"/>
+            <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="originPointAzimuth">
+        <element name="originPointAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Azimuth range from a fixed point. </summary>
+                    <description> True if the origin is within the
                                 given azimuth range of the given lat and lon. </description>
-					<example>
-						<originPointAzimuth>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-						</originPointAzimuth>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="latLonUnitRange"/>
-		</element>
-	</define>
-	<define name="originPointBackAzimuth">
-		<element name="originPointBackAzimuth">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Back azimuth range from a fixed point. </summary>
-					<description> True if the origin is within the
+                    <example>
+                        <originPointAzimuth>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>90</max>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
+                        </originPointAzimuth>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="originPointBackAzimuth">
+        <element name="originPointBackAzimuth">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Back azimuth range from a fixed point. </summary>
+                    <description> True if the origin is within the
                                 given back azimuth range of the given lat and lon. </description>
-					<example>
-						<originPointBackAzimuth>
-							<unit>DEGREE</unit>
-							<min>30</min>
-							<max>90</max>
-							<latitude>35</latitude>
-							<longitude>-85</longitude>
-						</originPointBackAzimuth>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<ref name="latLonUnitRange"/>
-		</element>
-	</define>
-	<define name="removeEventDuplicate">
-		<element name="removeEventDuplicate">
-			<optional>
-				<element name="timeVariance">
-					<ref name="time"/>
-				</element>
-			</optional>
-			<optional>
-				<element name="depthVariance">
-					<ref name="length"/>
-				</element>
-			</optional>
-			<optional>
-				<element name="distanceVariance">
-					<ref name="length"/>
-				</element>
-			</optional>
-		</element>
-	</define>
-	<define name="PASS">
-		<element name="passOrigin">
-			<xsd:annotation>
-				<xsd:documentation xml:lang="en">
-					<summary> Always returns true. </summary>
-					<description> Simple subsetter that always returns true, useful for testing. </description>
-					<example>
-						<passOrigin/>
-					</example>
-				</xsd:documentation>
-			</xsd:annotation>
-			<zeroOrMore>
-				<ref name="origin"/>
-			</zeroOrMore>
-		</element>
-	</define>
+                    <example>
+                        <originPointBackAzimuth>
+                            <unit>DEGREE</unit>
+                            <min>30</min>
+                            <max>90</max>
+                            <latitude>35</latitude>
+                            <longitude>-85</longitude>
+                        </originPointBackAzimuth>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="latLonUnitRange"/>
+        </element>
+    </define>
+    <define name="removeEventDuplicate">
+        <element name="removeEventDuplicate">
+            <optional>
+                <element name="timeVariance">
+                    <ref name="time"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="depthVariance">
+                    <ref name="length"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="distanceVariance">
+                    <ref name="length"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="PASS">
+        <element name="passOrigin">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Always returns true. </summary>
+                    <description> Simple subsetter that always returns true, useful for testing. </description>
+                    <example>
+                        <passOrigin/>
+                    </example>
+                </xsd:documentation>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="origin"/>
+            </zeroOrMore>
+        </element>
+    </define>
 </grammar>
 
