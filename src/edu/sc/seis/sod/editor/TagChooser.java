@@ -29,12 +29,19 @@ public class TagChooser implements EditorPlugin {
         }
     }
 
-    public JComponent getGUI(Element element) throws TransformerException {
+    public JComponent getGUI(Element element) throws Exception {
         Box b = Box.createVerticalBox();
         JComboBox combo = new JComboBox(subTypes);
 
         b.add(combo);
-        b.add(editor.getCompForElement(element));
+        EditorPlugin plugin = editor.getCustomEditor(element.getTagName()+"_tagChooser");
+        JComponent comp;
+        if (plugin != null) {
+            comp = plugin.getGUI(element);
+        } else {
+            comp = editor.getDefaultCompForElement(element);
+        }
+        b.add(comp);
         return b;
     }
 

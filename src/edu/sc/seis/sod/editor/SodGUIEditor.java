@@ -88,6 +88,12 @@ public class SodGUIEditor extends SimpleGUIEditor {
         }
     }
 
+    /** gets a custom added editor for the tagName, null if there isn't one*/
+    public EditorPlugin getCustomEditor(String tagName) {
+        return (EditorPlugin)editors.get(tagName);
+    }
+
+
     protected void initEditors() {
         editors.put("property", new PropertyEditor());
         //editors.put("networkArm", new NetworkArmEditor(this));
@@ -113,6 +119,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
         Vector vector = originTC.getSubTypes();
         for (int i = 0; i < vector.size(); i++) {
             String tagName = (String)vector.get(i);
+            if (editors.containsKey(tagName)) {
+                // save original with _tagChooser appended
+                editors.put(tagName+"_TagChooser", editors.get(tagName));
+            }
             editors.put(tagName, originTC);
         }
 
