@@ -15,6 +15,7 @@ public class UpdateChecker  {
 
     public UpdateChecker() {
         UpdateCheckerJob job = new UpdateCheckerJob("SOD",
+                                                    "1.0",
                                                     updateURL,
                                                     GUI_BASED,
                                                     showNoUpdate);
