@@ -92,7 +92,7 @@ public class NetworkArm {
 
         } else if(sodElement instanceof NetworkArmProcess) {
             networkArmProcesses.add(sodElement);
-        }else if(sodElement instanceof NetworkStatus) {
+        }else if(sodElement instanceof NetworkArmMonitor) {
             statusMonitors.add(sodElement);
         }
     }
@@ -202,7 +202,10 @@ public class NetworkArm {
                                                               finder.getDNSName(),
                                                               allNets[i]);
                         networkDBs.add(new NetworkDbObject(dbid, allNets[i]));
-                    }else change(allNets[i], RunStatus.FAILED);
+                        change(allNets[i], Status.get(Status.NETWORK_SUBSETTER,
+                                                      Status.SUCCESS));
+                    }else change(allNets[i], Status.get(Status.NETWORK_SUBSETTER,
+                                                        Status.REJECT));
                 } // end of if (allNets[counter] != null)
             } catch(Throwable th) {
                 GlobalExceptionHandler.handle("Got an exception while trying getSuccessfulNetworks for the "+i+"th networkAccess", th);
@@ -218,9 +221,6 @@ public class NetworkArm {
         logger.debug("got " + netDbs.length + " networkDBobjects");
         networksBeenChecked = true;
         statusChanged("Waiting for a request");
-        for (int i = 0; i < netDbs.length; i++) {
-            change(netDbs[i].getNetworkAccess(), RunStatus.PASSED);
-        }
         return netDbs;
     }
 
@@ -249,8 +249,11 @@ public class NetworkArm {
                     int dbid = networkDatabase.putStation(networkDbObject, stations[subCounter]);
                     StationDbObject stationDbObject = new StationDbObject(dbid, stations[subCounter]);
                     arrayList.add(stationDbObject);
+                    change(stations[subCounter], Status.get(Status.NETWORK_SUBSETTER,
+                                                            Status.SUCCESS));
                 }else{
-                    change(stations[subCounter], RunStatus.FAILED);
+                    change(stations[subCounter], Status.get(Status.NETWORK_SUBSETTER,
+                                                            Status.REJECT));
                 }
             }
 
@@ -261,9 +264,6 @@ public class NetworkArm {
         rtnValues = (StationDbObject[]) arrayList.toArray(rtnValues);
         networkDbObject.stationDbObjects = rtnValues;
         statusChanged("Waiting for a request");
-        for (int i = 0; i < rtnValues.length; i++) {
-            change(rtnValues[i].getStation(), RunStatus.PASSED);
-        }
         return rtnValues;
     }
 
@@ -298,12 +298,16 @@ public class NetworkArm {
                                                                  channels[i].my_site);
                     if(!containsSite(siteDbObject, successes)) {
                         successes.add(siteDbObject);
+                        change(channels[i].my_site, Status.get(Status.NETWORK_SUBSETTER,
+                                                               Status.SUCCESS));
                     }
                 }else if(!failures.contains(channels[i].my_site)){
-                    change(channels[i].my_site, RunStatus.FAILED);
+                    change(channels[i].my_site, Status.get(Status.NETWORK_SUBSETTER,
+                                                           Status.REJECT));
                     failures.add(channels[i].my_site);
                     // fail all channels in a failed site, just for status pages
-                    change(channels[i], RunStatus.FAILED);
+                    change(channels[i], Status.get(Status.NETWORK_SUBSETTER,
+                                                   Status.REJECT));
                 }
             }
         } catch(Exception e) {
@@ -314,11 +318,7 @@ public class NetworkArm {
         stationDbObject.siteDbObjects = rtnValues;
         logger.debug(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
         statusChanged("Waiting for a request");
-        for (int i = 0; i < rtnValues.length; i++) {
-            change(rtnValues[i].getSite(), RunStatus.PASSED);
-        }
         return rtnValues;
-
     }
 
     private boolean containsSite(SiteDbObject siteDbObject, ArrayList arrayList) {
@@ -347,27 +347,30 @@ public class NetworkArm {
         List successes = new ArrayList();
         NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
         CookieJar cookieJar = (CookieJar)cookieJarCache.get(networkAccess);
-
         Site site = siteDbObject.getSite();
         try {
             Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
-
             for(int subCounter = 0; subCounter < channels.length; subCounter++) {
                 if(!isSameSite(site, channels[subCounter].my_site)){
                     continue;
                 }
-                change(channels[subCounter], RunStatus.NEW);
+                change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
+                                                        Status.IN_PROG));
                 if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
                     int dbid = networkDatabase.putChannel(siteDbObject,
                                                           channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                           channels[subCounter]);
                     successes.add(channelDbObject);
+                    change(channels[subCounter], Status.get(Status.PROCESSOR,
+                                                            Status.IN_PROG));
                     processNetworkArm(networkAccess, channels[subCounter], cookieJar);
-                    change(channels[subCounter], RunStatus.PASSED);
-                }else change(channels[subCounter], RunStatus.FAILED);
+                    change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
+                                                            Status.SUCCESS));
+                }else change(channels[subCounter], Status.get(Status.NETWORK_SUBSETTER,
+                                                              Status.REJECT));
             }
-        } catch(Exception e) {
+        } catch(Throwable e) {
             CommonAccess.handleException(e, "Problem in method getSuccessfulChannels");
         }
         ChannelDbObject[] values = new ChannelDbObject[successes.size()];
@@ -375,9 +378,6 @@ public class NetworkArm {
         siteDbObject.channelDbObjects = values;
         logger.debug("got "+values.length+" channels");
         statusChanged("Waiting for a request");
-        for (int i = 0; i < values.length; i++) {
-            change(values[i].getChannel(), RunStatus.PASSED);
-        }
         return values;
     }
 
@@ -385,7 +385,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkStatus)it.next()).setArmStatus(newStatus);
+                ((NetworkArmMonitor)it.next()).setArmStatus(newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
                 CommonAccess.handleException("Problem changing status in NetworkArm", e);
@@ -393,23 +393,23 @@ public class NetworkArm {
         }
     }
 
-    private void change(Channel chan, RunStatus newStatus) {
+    private void change(Channel chan, Status newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkStatus)it.next()).change(chan, newStatus);
-            } catch (Exception e) {
+                ((NetworkArmMonitor)it.next()).change(chan, newStatus);
+            } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 CommonAccess.handleException("Problem changing channel status in NetworkArm", e);
             }
         }
     }
 
-    private void change(Station sta, RunStatus newStatus) {
+    private void change(Station sta, Status newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkStatus)it.next()).change(sta, newStatus);
+                ((NetworkArmMonitor)it.next()).change(sta, newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
                 CommonAccess.handleException("Problem changing station status in NetworkArm", e);
@@ -417,24 +417,24 @@ public class NetworkArm {
         }
     }
 
-    private void change(NetworkAccess na, RunStatus newStatus) {
+    private void change(NetworkAccess na, Status newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkStatus)it.next()).change(na, newStatus);
-            } catch (Exception e) {
+                ((NetworkArmMonitor)it.next()).change(na, newStatus);
+            } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 CommonAccess.handleException("Problem changing network status in NetworkArm", e);
             }
         }
     }
 
-    private void change(Site site, RunStatus newStatus) {
+    private void change(Site site, Status newStatus) {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkStatus)it.next()).change(site, newStatus);
-            } catch (Exception e) {
+                ((NetworkArmMonitor)it.next()).change(site, newStatus);
+            } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 CommonAccess.handleException("Problem changing site status in NetworkArm", e);
             }
