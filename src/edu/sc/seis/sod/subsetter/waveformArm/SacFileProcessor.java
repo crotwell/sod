@@ -1,3 +1,4 @@
+
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
@@ -109,12 +110,12 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
 		// add event since dataset is new
 		Document doc = dataset.getElement().getOwnerDocument();
-		Element eventElement = doc.createElement("event");
-		XMLEvent.insert(eventElement, event);
+
+//		XMLParameter.insert(dataset.getElement(),"event_info", event);
 		AuditInfo[] audit = new AuditInfo[1];
 		audit[0] = new AuditInfo(System.getProperty("user.name"),
 					 "event loaded via sod.");
-		dataset.addParameter( "event", eventElement, audit);
+		dataset.addParameter( "event", event, audit);
 	    } // end of else
 
 	    SacTimeSeries sac;
@@ -139,7 +140,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 		AuditInfo[] audit = new AuditInfo[1];
 		audit[0] = new AuditInfo(System.getProperty("user.name"),
 					 "seismogram loaded via sod.");
-		dataset.addSeismogramRef(seisFile.toURL(), 
+		dataset.addSeismogramRef(lseis, seisFile.toURL(), 
 					 seisFilename, 
 					 new Property[0], 
 					 lseis.parm_ids,
@@ -159,6 +160,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 	} catch(Exception e) {
 	    
 	    System.out.println("Exception caught while writing to file in PrintLineWaveformProcess");
+		e.printStackTrace();
 	}
 	
     }
