@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class JDBCEventChannelStatus extends SodJDBC{
     public JDBCEventChannelStatus() throws SQLException{
-        Connection conn = ConnMgr.createConnection();
+        conn = ConnMgr.createConnection();
         if(!DBUtil.tableExists("eventchannelstatus", conn)){
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(ConnMgr.getSQL("eventchannelstatus.create"));
@@ -49,7 +49,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         getPair = conn.prepareStatement("SELECT * FROM eventchannelstatus WHERE pairid = ?");
         getForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ?");
         getEventForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus WHERE status = ? AND eventid = ?");
-        getStationEventForStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE status = ? AND eventid = ? AND eventchannelstatus.channelid = channel.chan_id AND channel.site_id = site.site_id AND site.sta_id = ?");
+        stationsForEventOfStatus = conn.prepareStatement("SELECT COUNT(*) FROM eventchannelstatus, channel, site WHERE status = ? AND eventid = ? AND eventchannelstatus.channelid = channel.chan_id AND channel.site_id = site.site_id AND site.sta_id = ?");
         stationsOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() + " FROM channel, site, eventchannelstatus, station " +
                                                      "WHERE eventid = ? AND " +
                                                      "status = ? AND " +
@@ -62,6 +62,10 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                                         "channelid = chan_id AND " +
                                                         "channel.site_id = site.site_id AND " +
                                                         "site.sta_id = station.sta_id");
+    }
+
+    public PreparedStatement prepareStatement(String stmt) throws SQLException {
+        return conn.prepareStatement(stmt);
     }
 
     public Station[] getNotOfStatus(Status status, EventAccessOperations ev) throws SQLException {
@@ -137,12 +141,11 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return rs.getInt(1);
     }
 
-    public int getNum(EventAccessOperations ev, Status status, int stationDbId) throws NotFound, SQLException {
+    public int getNum(PreparedStatement stmt, EventAccessOperations ev, int stationDbId) throws NotFound, SQLException {
         int evId = eventTable.getDBId(ev);
-        getStationEventForStatus.setInt(1, status.getAsShort());
-        getStationEventForStatus.setInt(2, evId);
-        getStationEventForStatus.setInt(3, stationDbId);
-        ResultSet rs = getStationEventForStatus.executeQuery();
+        stmt.setInt(1, evId);
+        stmt.setInt(2, stationDbId);
+        ResultSet rs = stationsForEventOfStatus.executeQuery();
         rs.next();
         return rs.getInt(1);
     }
@@ -216,11 +219,12 @@ public class JDBCEventChannelStatus extends SodJDBC{
     }
 
     private PreparedStatement insert, setStatus, getPairId, getAll, getForEvent,
-        getPair, getForStatus, getEventForStatus, getStationEventForStatus,
+        getPair, getForStatus, getEventForStatus, stationsForEventOfStatus,
         stationsNotOfStatus, stationsOfStatus;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
     private JDBCChannel chanTable;
+    private Connection conn;
 }
 
