@@ -8,6 +8,7 @@ package edu.sc.seis.sod.process.waveformArm;
 
 import edu.sc.seis.sod.status.*;
 
+import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -19,12 +20,16 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.TauP.TauP_Time;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.drawable.Flag;
+import edu.sc.seis.fissuresUtil.display.registrar.PhaseAlignedTimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.xml.DataSet;
+import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -95,6 +100,11 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
 
     private void initTaup() throws TauModelException{
         tauP = new TauPUtil(modelName);
+        if (tauptime == null) {
+            tauptime = new TauP_Time("iasp91");
+            tauptime.clearPhaseNames();
+            tauptime.appendPhaseName("P");
+        }
     }
 
     /**
@@ -136,9 +146,28 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                                          final String fileType,
                                          String[] phases
                                         ) throws Exception {
+        return process(event, channel, original, seismograms, fileType, phases, relativeTime);
+    }
+
+
+    /** allows specifying a fileType, png or pdf, and a list of phases.*/
+    public LocalSeismogramResult process(EventAccessOperations event,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         LocalSeismogramImpl[] seismograms,
+                                         final String fileType,
+                                         String[] phases,
+                                         boolean relTime
+                                        ) throws Exception {
         logger.debug("process() called");
 
-        final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
+        // only needed if relTime
+        PhaseAlignedTimeConfig phaseTime = null;
+        if (relTime) {
+            phaseTime = new PhaseAlignedTimeConfig();
+            phaseTime.setTauP(tauptime);
+        }
+        final BasicSeismogramDisplay bsd = relTime ? new BasicSeismogramDisplay(phaseTime) : new BasicSeismogramDisplay();
 
         MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0], "");
         memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
@@ -146,8 +175,11 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         for (int i = 0; i < seismograms.length; i++) {
             memDSS.add(seismograms[i]);
         }
+        DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "+memDSS.getName(), "temp", new AuditInfo[0]);
+        dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
+        dataset.addParameter(dataset.EVENT, event, new AuditInfo[0]);
         bsd.add(new MemoryDataSetSeismogram[]{memDSS});
-        logger.debug("amp range for "+ChannelIdUtil.toStringNoDates(channel.get_id())+" "+bsd.getAmpConfig().getAmp()+"  minmax="+memDSS.getCache()[0].getMinValue()+", "+memDSS.getCache()[0].getMaxValue());
+        logger.debug("NOAMP amp range for "+ChannelIdUtil.toStringNoDates(channel.get_id())+" "+bsd.getAmpConfig().getAmp()+" "+bsd.getAmpConfig().getAmp(memDSS)+"  minmax="+memDSS.getCache()[0].getMinValue()+", "+memDSS.getCache()[0].getMaxValue());
 
         Origin origin = CacheEvent.extractOrigin(event);
         MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
@@ -169,7 +201,9 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                         logger.debug("writing " + picFileName);
                         try {
                             if (fileType.equals(PDF)) {
+                                logger.debug("NOAMP before pdf"+picFileName);
                                 bsd.outputToPDF(new File(picFileName));
+                                logger.debug("NOAMP after pdf"+picFileName);
                             } else {
                                 bsd.outputToPNG(new File(picFileName), dimension);
                             }
@@ -183,12 +217,15 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
         return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
+    private static TauP_Time tauptime = null;
     private static Dimension dimension = new Dimension(500, 200);
     private static String[] phases = {"P", "S"};
     private String modelName = "iasp91";
     private String prefix = "";
     private String fileType = PNG;
+    private boolean relativeTime = false;
     public static final String PDF = "pdf";
     public static final String PNG = "png";
 }
+
 
