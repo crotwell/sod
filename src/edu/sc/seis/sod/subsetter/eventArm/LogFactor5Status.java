@@ -18,17 +18,17 @@ public class LogFactor5Status implements EventStatus{
     
     public void fail(EventAccessOperations event, String reason) {
         CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", LogLevel.WARN,
-                                                           DisplayUtils.getEventInfo(event) + " failed because " + reason);
+                                                           "Failed: " + DisplayUtils.getEventInfo(event) + " because " + reason);
     }
     
     public void begin(EventAccessOperations event) {
         CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", LogLevel.INFO,
-                                                           DisplayUtils.getEventInfo(event) + " began");
+                                                           "Began: " + DisplayUtils.getEventInfo(event));
     }
     
     public void pass(EventAccessOperations event) {
         CommonAccess.getCommonAccess().getLF5Adapter().log("Event Arm", LogLevel.INFO,
-                                                           DisplayUtils.getEventInfo(event) + " passed");
+                                                           "Passed: " + DisplayUtils.getEventInfo(event));
     }
 }
 
