@@ -7,8 +7,8 @@
 package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
@@ -21,8 +21,8 @@ public class EventFormatterTest extends TestCase{
     }
     
     public void setUp(){
-        epochInAlaska = MockFissures.createEvent();
-        fallOfWall = MockFissures.createFallEvent();
+        epochInAlaska = MockEventAccessOperations.createEvent();
+        fallOfWall = MockEventAccessOperations.createFallEvent();
     }
     
     public void testRegionName(){
@@ -106,7 +106,7 @@ public class EventFormatterTest extends TestCase{
             EventFormatter gen = new EventFormatter(XMLConfigUtil.parse(cmplxAttr));
             
             assertEquals("<a href=\"19700101000000000/event.html\">CENTRAL ALASKA</a>\n",
-                         gen.getResult(MockFissures.createEvent()));
+                         gen.getResult(MockEventAccessOperations.createEvent()));
         }catch(Exception e){}
     }
     

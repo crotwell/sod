@@ -7,8 +7,8 @@
 package edu.sc.seis.sod.subsetter.eventArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.sod.RunStatus;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import junit.framework.TestCase;
 
 public class EventGroupTemplateTest extends TestCase{
@@ -16,8 +16,8 @@ public class EventGroupTemplateTest extends TestCase{
     
     public void setUp(){
         egt = EventGroupTemplate.createDefaultTemplate();
-        epochEvent = MockFissures.createEvent();
-        berlinEvent = MockFissures.createFallEvent();
+        epochEvent = MockEventAccessOperations.createEvent();
+        berlinEvent = MockEventAccessOperations.createFallEvent();
     }
     
     public void testEmpty(){
@@ -25,7 +25,7 @@ public class EventGroupTemplateTest extends TestCase{
     }
     
     public void testAdd(){
-        egt.change(MockFissures.createEvent(), RunStatus.NEW);
+        egt.change(MockEventAccessOperations.createEvent(), RunStatus.NEW);
         assertEquals(epochResult, egt.getResult());
     }
     

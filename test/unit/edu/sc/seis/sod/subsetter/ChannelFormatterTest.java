@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter;
 
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import java.text.SimpleDateFormat;
 import junit.framework.TestCase;
 
@@ -12,7 +12,7 @@ public class ChannelFormatterTest extends TestCase{
     public ChannelFormatterTest(String name){ super(name); }
     
     public void setUp(){
-        chan = MockFissures.createChannel();
+        chan = MockChannel.createChannel();
     }
     
     public void testStationCode(){

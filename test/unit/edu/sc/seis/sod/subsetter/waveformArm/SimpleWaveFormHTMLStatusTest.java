@@ -6,9 +6,9 @@
 
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
 import junit.framework.TestCase;
 
@@ -29,12 +29,12 @@ public class SimpleWaveFormHTMLStatusTest extends TestCase{
 
     public void testFormatEvent(){
         assertEquals(EVENT_OUTPUT,
-                     testPage.formatEvent(MockFissures.createEvent()));
+                     testPage.formatEvent(MockEventAccessOperations.createEvent()));
     }
 
     public void testFilizeEvent(){
         assertEquals(EVENT_FILE_LOC,
-                     testPage.fileizeEvent(MockFissures.createEvent()));
+                     testPage.fileizeEvent(MockEventAccessOperations.createEvent()));
     }
 
     private SimpleHTMLWaveformStatus testPage;

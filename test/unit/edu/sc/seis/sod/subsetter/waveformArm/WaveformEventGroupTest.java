@@ -1,22 +1,23 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
+import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
+import edu.sc.seis.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.InvalidDatabaseStateException;
 import edu.sc.seis.sod.XMLConfigUtil;
 import edu.sc.seis.sod.database.Status;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import edu.sc.seis.sod.subsetter.waveFormArm.WaveformEventGroup;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 public class WaveformEventGroupTest extends TestCase{
     public WaveformEventGroupTest(String name){ super(name); }
 
     public void setUp(){
         ect = new WaveformEventGroup();
-        simpleECP = MockECP.getECP(MockFissures.createEvent());
+        simpleECP = MockECP.getECP(MockEventAccessOperations.createEvent());
         successify(simpleECP);
     }
 
@@ -55,17 +56,17 @@ public class WaveformEventGroupTest extends TestCase{
         try{
             ect = new WaveformEventGroup(XMLConfigUtil.parse("<events><channelCount><COMPLETE_REJECT/><COMPLETE_SUCCESS/></channelCount>\n</events>"));
         } catch (SAXException e) {} catch (ParserConfigurationException e) {} catch (IOException e) {}
-        ect.update(rejectify(MockECP.getECP(MockFissures.createChannel())));
+        ect.update(rejectify(MockECP.getECP(MockChannel.createChannel())));
         ect.update(simpleECP);
         assertEquals("2\n", ect.getResult());
     }
 
     private EventChannelPair generateSecondChannelECP() {
-        return successify(MockECP.getECP(MockFissures.createOtherChan()));
+        return successify(MockECP.getECP(MockChannel.createOtherChan()));
     }
 
     private EventChannelPair generateDiffEventECP(){
-        return successify(MockECP.getECP(MockFissures.createFallEvent()));
+        return successify(MockECP.getECP(MockEventAccessOperations.createFallEvent()));
     }
 
     private EventChannelPair successify(EventChannelPair ecp){

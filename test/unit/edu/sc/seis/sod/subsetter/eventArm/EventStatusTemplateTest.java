@@ -6,9 +6,9 @@
 
 package edu.sc.seis.sod.subsetter.eventArm;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.sc.seis.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.sod.RunStatus;
 import edu.sc.seis.sod.XMLConfigUtil;
-import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
 import junit.framework.TestCase;
 
@@ -53,8 +53,8 @@ public class EventStatusTemplateTest extends TestCase{
         assertEquals(updatedEvent, temp.getResult());
     }
 
-    private EventAccessOperations epochEvent = MockFissures.createEvent();
-    private EventAccessOperations fallEvent = MockFissures.createFallEvent();
+    private EventAccessOperations epochEvent = MockEventAccessOperations.createEvent();
+    private EventAccessOperations fallEvent = MockEventAccessOperations.createFallEvent();
     private EventStatusTemplate temp;
 
     private String intro =
