@@ -1,24 +1,18 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.sc.seis.sod.SodUtil;
-import org.w3c.dom.Element;
 
-/**
- * specifies the networkCode.
- * <pre>
- * &lt;networkCode&gt;&lt;value&gt;SP&lt;/value&gt;&lt;/networkCode&gt;
- * </pre>
- */
 public class NetworkCode implements NetworkSubsetter {
 
-    public NetworkCode(Element config) { this.config = config; }
-
-    public boolean accept(NetworkAttr attr) throws Exception {
-        if(attr.get_code().equals(SodUtil.getNestedText(config))) return true;
-        else return false;
-
+    public NetworkCode(Element config) {
+        this.desiredCode = SodUtil.getText(config);
     }
 
-    private Element config = null;
+    public boolean accept(NetworkAttr attr) throws Exception {
+        return attr.get_code().equals(desiredCode);
+    }
+
+    private String desiredCode;
 }
