@@ -5,49 +5,46 @@
  */
 
 package edu.sc.seis.sod.editor;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import edu.sc.seis.sod.Start;
-import javax.xml.transform.TransformerException;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import org.w3c.dom.DOMException;
-import org.xml.sax.SAXException;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+
+import edu.sc.seis.fissuresUtil.xml.Writer;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import javax.swing.JLabel;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import javax.swing.JTextField;
 import java.awt.GridBagLayout;
-import javax.swing.JScrollPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
-import edu.sc.seis.fissuresUtil.xml.Writer;
-import javax.swing.JTabbedPane;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 
 
 public class SimpleGUIEditor extends CommandLineEditor {
-
+    
     public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
         super(args);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            //Oh well, go with the default look and feel
+        }
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-tabs")) {
                 tabs = true;
             }
         }
     }
-
+    
     public void start() {
         JFrame frame = new JFrame(frameName);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -99,7 +96,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
                     }
                 });
     }
-
+    
     void addElementToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
         System.out.println("addElementToPanel "+element.getTagName()+" gridx="+gbc.gridx+" gridy="+gbc.gridy);
         JLabel label = new JLabel(element.getTagName());
@@ -108,7 +105,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         addChildrenToPanel(panel, element, gbc);
         gbc.gridx--;
     }
-
+    
     void addChildrenToPanel(JPanel panel, Element element, GridBagConstraints gbc) {
         NodeList list = element.getChildNodes();
         // simple case of only 1 child Text node
@@ -128,7 +125,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         }
         gbc.gridy++;
     }
-
+    
     void addTextNodeToPanel(JPanel panel, Text text, GridBagConstraints gbc) {
         if (text.getNodeValue().trim().equals("")) {
             return;
@@ -139,7 +136,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
         textField.getDocument().addDocumentListener(textListen);
         panel.add(textField, gbc);
     }
-
+    
     /**
      *
      */
@@ -149,13 +146,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
         gui.start();
         System.out.println("Done editing.");
     }
-
+    
     String frameName = "Simple XML Editor GUI";
-
+    
     boolean tabs = false;
-
+    
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
-
-
+    
+    
 }
 
