@@ -184,52 +184,56 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
         double spacing = range / (numSeisPerRecSec - 1);
         ArrayList dssList = new ArrayList();
         if(dataSeis.length > 0) {
-            DataSetSeismogram lastFrontSeis = dataSeis[0];
-            DataSetSeismogram lastSeis = dataSeis[dataSeis.length - 1];
-            DataSetSeismogram lastBackSeis = lastSeis;
-            double curFrontDistance = DisplayUtils.calculateDistance(lastFrontSeis)
-                    .get_value();
-            double lastSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
-                    .get_value();
-            DataSetSeismogram curSeis = null;
-            double firstSeisDistance = curFrontDistance;
-            double curBackDistance = lastSeisDist;
-            dssList.add(lastFrontSeis);
-            while(curFrontDistance <= range / 2) {
-                curSeis = getBestSeis(dataSeis,
-                                      lastFrontSeis,
-                                      curFrontDistance,
-                                      spacing);
-                if(curSeis != null) {
-                    dssList.add(curSeis);
-                    curFrontDistance = DisplayUtils.calculateDistance(curSeis)
-                            .get_value();
-                    lastFrontSeis = curSeis;
+            if(dataSeis.length == 1) {
+                dssList.add(dataSeis[0]);
+            } else {
+                DataSetSeismogram lastFrontSeis = dataSeis[0];
+                DataSetSeismogram lastSeis = dataSeis[dataSeis.length - 1];
+                DataSetSeismogram lastBackSeis = lastSeis;
+                double curFrontDistance = DisplayUtils.calculateDistance(lastFrontSeis)
+                        .get_value();
+                double lastSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
+                        .get_value();
+                DataSetSeismogram curSeis = null;
+                double firstSeisDistance = curFrontDistance;
+                double curBackDistance = lastSeisDist;
+                dssList.add(lastFrontSeis);
+                while(curFrontDistance <= range / 2) {
+                    curSeis = getBestSeis(dataSeis,
+                                          lastFrontSeis,
+                                          curFrontDistance,
+                                          spacing);
+                    if(curSeis != null) {
+                        dssList.add(curSeis);
+                        curFrontDistance = DisplayUtils.calculateDistance(curSeis)
+                                .get_value();
+                        lastFrontSeis = curSeis;
+                    }
+                    curFrontDistance += spacing;
                 }
-                curFrontDistance += spacing;
-            }
-            while(curBackDistance > range / 2) {
-                curSeis = getBestSeis(dataSeis,
-                                      lastBackSeis,
-                                      curBackDistance,
-                                      spacing);
-                if(curSeis != null) {
-                    dssList.add(curSeis);
-                    curBackDistance = DisplayUtils.calculateDistance(curSeis)
-                            .get_value();
-                    lastBackSeis = curSeis;
+                while(curBackDistance > range / 2) {
+                    curSeis = getBestSeis(dataSeis,
+                                          lastBackSeis,
+                                          curBackDistance,
+                                          spacing);
+                    if(curSeis != null) {
+                        dssList.add(curSeis);
+                        curBackDistance = DisplayUtils.calculateDistance(curSeis)
+                                .get_value();
+                        lastBackSeis = curSeis;
+                    }
+                    curBackDistance -= spacing;
                 }
-                curBackDistance -= spacing;
-            }
-            double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
-                    .get_value();
-            double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
-                    .get_value();
-            if(Math.abs(lastFrontSeisDist - lastBackSeisDist) < minSpacing) {
-                dssList.remove(dssList.size() - 1);
-            }
-            if(Math.abs(firstSeisDistance - lastSeisDist) >= minSpacing) {
-                dssList.add(lastSeis);
+                double lastFrontSeisDist = DisplayUtils.calculateDistance(lastFrontSeis)
+                        .get_value();
+                double lastBackSeisDist = DisplayUtils.calculateDistance(lastBackSeis)
+                        .get_value();
+                if(Math.abs(lastFrontSeisDist - lastBackSeisDist) < minSpacing) {
+                    dssList.remove(dssList.size() - 1);
+                }
+                if(Math.abs(firstSeisDistance - lastSeisDist) >= minSpacing) {
+                    dssList.add(lastSeis);
+                }
             }
             DataSetSeismogram[] tempDSS = new DataSetSeismogram[dssList.size()];
             tempDSS = (DataSetSeismogram[])dssList.toArray(tempDSS);
