@@ -205,8 +205,10 @@ public class FissuresFormatter {
 
     public static String filize(String fileName) {
         fileName = fileName.trim();
+        fileName = fileName.replaceAll("\r?\n *", "");
+        fileName = fileName.replaceAll(" *\r?\n", "");
         fileName = fileName.replaceAll("[ :]", "_");
-        fileName = fileName.replaceAll("[\t\n\f\r]", "");
+        fileName = fileName.replaceAll("[\t\f]", "");
         return fileName.trim();
     }
 
