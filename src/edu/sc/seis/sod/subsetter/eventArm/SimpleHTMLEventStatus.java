@@ -19,7 +19,8 @@ import org.w3c.dom.Element;
 public class SimpleHTMLEventStatus implements EventStatus{
     public SimpleHTMLEventStatus(Element config) throws ConfigurationException{
         File htmlDir = SodUtil.makeOutputDirectory(config);
-        page = new SimpleHTMLPage("Event Arm Status", "eventArm.html", htmlDir);
+        page = new SimpleHTMLPage("Event Arm Status",
+                                  new File(htmlDir, "eventArm.html"));
         page.append("Status", "Starting up",0);
         page.append("Successes", "",1);
         page.append("Failures", "",2);

@@ -25,11 +25,16 @@ import org.w3c.dom.Element;
 public class SimpleHTMLNetworkStatus implements NetworkStatus{
     public SimpleHTMLNetworkStatus(Element config) throws ConfigurationException{
         File htmlDir = SodUtil.makeOutputDirectory(config);
-        pages[0] = statusPage = new SimpleHTMLPage("Network Arm Status", "status.html", htmlDir);
-        pages[1] = sitePage = new SimpleHTMLPage("Sites", "sites.html", htmlDir);
-        pages[2] = networkPage = new SimpleHTMLPage("Networks", "networks.html", htmlDir);
-        pages[3] = stationPage = new SimpleHTMLPage("Stations", "stations.html", htmlDir);
-        pages[4] = channelPage = new SimpleHTMLPage("Channels", "channel.html", htmlDir);
+        pages[0] = statusPage = new SimpleHTMLPage("Network Arm Status",
+                                                   new File(htmlDir, "status.html"));
+        pages[1] = sitePage = new SimpleHTMLPage("Sites",
+                                                 new File(htmlDir, "sites.html"));
+        pages[2] = networkPage = new SimpleHTMLPage("Networks",
+                                                    new File(htmlDir, "networks.html"));
+        pages[3] = stationPage = new SimpleHTMLPage("Stations",
+                                                    new File(htmlDir, "stations.html"));
+        pages[4] = channelPage = new SimpleHTMLPage("Channels",
+                                                    new File(htmlDir, "channel.html"));
         for (int i = 1; i < pages.length; i++) {//all but the status page
             pages[i].append("Successes", "");
             pages[i].append("Failures", "");
