@@ -23,8 +23,6 @@ p {
     margin:0px 0px 16px 0px;
     padding:0px;
     }
-#Content>p {margin:0px;}
-#Content>p+p {text-indent:30px;}
 
 a {
     color:#09c;
