@@ -74,10 +74,6 @@ public class PhaseInteraction implements EventStationSubsetter {
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations event,  NetworkAccess network,Station station, CookieJar cookies) throws Exception{
-	/*System.out.println("The phaseName is "+phaseName);
-	  System.out.println("The modelName is "+modelName);
-	  System.out.println("The interactionStyle is "+interactionStyle);
-	*/
 	if(interactionStyle.equals("PATH")) return acceptPathInteraction(event, network, station, cookies);
 	else return acceptPierceInteraction(event, network, station, cookies);
 
@@ -103,14 +99,10 @@ public class PhaseInteraction implements EventStationSubsetter {
 							origin.my_location.longitude,
 							station.my_location.latitude,
 							station.my_location.longitude);
-	//	System.out.println("The depth of the origin is "+originDepth);
-	//	System.out.println("The eventStation Distance is "+eventStationDistance);
 	tauPPath.calculate(eventStationDistance); 
 	Arrival[] arrivals = tauPPath.getArrivals();
 	Arrival[] requiredArrivals = getRequiredArrival(arrivals);
 	if(requiredArrivals.length == 0) return false;
-	//TimeDist[] timeDist = requiredArrival.getPath();
-	//System.out.println("The Distance in degrees is "+requiredArrival.getDistDeg()+"actual = "+timeDist[timeDist.length-1].dist*180/Math.PI);
 	
 	if(phaseInteractionType instanceof Relative) {
 	    return handleRelativePathInteraction(requiredArrivals, eventStationDistance);
@@ -141,17 +133,10 @@ public class PhaseInteraction implements EventStationSubsetter {
 						  origin.my_location.longitude,
 						  station.my_location.latitude,
 						  station.my_location.longitude);
-	//	System.out.println("The depth of the origin is "+originDepth);
-	//	System.out.println("The eventStation Distance is "+eventStationDistance);
 	tauPPierce.calculate(eventStationDistance); 
 	Arrival[] arrivals = tauPPierce.getArrivals();
 	Arrival[] requiredArrivals = getRequiredArrival(arrivals);
 	if(requiredArrivals.length != 0) {
-	    //	    System.out.println("Got the Required Arrival");
-	    //TimeDist[] timeDist = requiredArrival.getPierce();
-	    //TimeDist requiredTimeDist = getRequiredTimeDist(timeDist);
-	    //if(requiredTimeDist == null) return false;
-	    //	    System.out.println("Got the Required Time Dist ");
 	    if(phaseInteractionType instanceof Relative) {
 		return handlePierceRelativePhaseInteraction(requiredArrivals, eventStationDistance);
 	    } else {
@@ -175,7 +160,6 @@ public class PhaseInteraction implements EventStationSubsetter {
 	    QuantityImpl timeDistDistance = new QuantityImpl(timeDist.dist*180/Math.PI, UnitImpl.DEGREE);
 	    QuantityImpl minDistance;
 	    QuantityImpl maxDistance;
-	    //	System.out.println("Must check depthRange and Distance Range Now");
 	    if(((Relative)phaseInteractionType).getDepthRange() != null) {
 	    
 		minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
@@ -218,11 +202,9 @@ public class PhaseInteraction implements EventStationSubsetter {
     }
     public boolean checkForRelativePathInteraction(TimeDist[] timeDistArray, int start, int end, double eventStationDistance, double totalDistance) throws Exception {
 	
-	System.out.println("The length of the path array is "+timeDistArray.length);
 	//for(int i = 0; i < timeDistArray.length; i++) {
 	    int counter = 0;
 	    if(end < start) return false;
-	    System.out.println("Performing pathInteraction subsetting "+start+"  "+end);
 	    int mid = (start+end)/2;
 	    TimeDist timeDist = timeDistArray[mid];
 	    QuantityImpl minDistance = null;
@@ -234,7 +216,6 @@ public class PhaseInteraction implements EventStationSubsetter {
 		QuantityImpl minDepth;
 		QuantityImpl maxDepth;
 		
-		//	System.out.println("Must check depthRange and Distance Range Now");
 		if(((Relative)phaseInteractionType).getDepthRange() != null) {
 		    
 		    minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
@@ -338,7 +319,7 @@ public class PhaseInteraction implements EventStationSubsetter {
 	    next = timeDist[counter+1].depth;
 	    if(interactionStyle.equals("TOPSIDE REFLECTION")) {
 		
-		//System.out.println("dist = "+distance+" depth = "+depth+" past = "+past+" current = "+current+" next = "+next);
+		//("dist = "+distance+" depth = "+depth+" past = "+past+" current = "+current+" next = "+next);
 	    }
 	    if(interactionStyle.equals("TOPSIDE REFLECTION") && past < current && current > next) {
 		return timeDist[counter];
