@@ -162,8 +162,12 @@
       <url>http://junit.org/</url>
     </dependency>
     <dependency>
+      <id>mckoi</id>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
       <id>hsqldb</id>
-      <version>1.7.1</version>
+      <version>20040212</version>
       <url>http://hsqldb.sourceforge.net</url>
     </dependency>
     <dependency>
