@@ -8,6 +8,7 @@
     </start>
     <include href="../base/include/eventLabel.rng"/>
     <include href="../base/include/quantity.rng"/>
+    <include href="../base/include/seismogramDisplay.rng"/>
     <define name="waveformVectorProcess">
         <choice>
             <xsd:annotation>
@@ -45,7 +46,8 @@
                 <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
                 <description>Each of the components of the waveformVector are processed
                     independently by the waveformProcess and the results are ANDed together. This
-                    operation short circuits, so no waveforms after the first failure are processed.</description>
+                    operation short circuits, so no waveforms after the first failure are
+                processed.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
@@ -58,7 +60,8 @@
                 <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
                 <description>Each of the components of the waveformVector are processed
                     independently by the waveformProcess and the results are ORed together. This
-                    operation short circuits, so no waveforms after the first success are processed.</description>
+                    operation short circuits, so no waveforms after the first success are
+                processed.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
@@ -71,7 +74,8 @@
                 <summary>Executes an external program</summary>
                 <description>The legacyVectorExecute processor is capable of running existing
                     command line programs. It does this by passing the filenames of the seismograms
-                    saved by a earlier SaveSeismogramToFile processor to a program started with Runtime.exec().</description>
+                    saved by a earlier SaveSeismogramToFile processor to a program started with
+                    Runtime.exec().</description>
                 <example>
                     <legacyVectorExecute>
                         <command>echo</command>
@@ -235,6 +239,26 @@
     <define name="vectorImageProcess">
         <element name="vectorImageProcess">
             <ref name="seismogramImageBase"/>
+            <optional>
+                <element name="displayTemplate">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="verticalDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="northDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="eastDisplayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
