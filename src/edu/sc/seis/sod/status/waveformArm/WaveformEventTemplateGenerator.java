@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
 
 public class WaveformEventTemplateGenerator implements EventArmMonitor, WaveformArmMonitor {
     public WaveformEventTemplateGenerator(Element el) throws IOException, SAXException, ParserConfigurationException, ConfigurationException {
-        if(Start.getEventArm() != null) Start.getEventArm().add(this);
         NodeList nl = el.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
@@ -51,6 +50,7 @@ public class WaveformEventTemplateGenerator implements EventArmMonitor, Waveform
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformConfig");
         }
         template = new WaveformEventTemplate(config, fileDir, formatter, filename);
+        if(Start.getEventArm() != null) Start.getEventArm().add(this);
     }
 
     public void change(EventAccessOperations event, Status status) {
