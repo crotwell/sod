@@ -1,13 +1,9 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.fissuresUtil.namingService.*;
-import edu.iris.Fissures.model.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosNaming.*;
-
-import java.io.*;
-import org.apache.log4j.*;
+import edu.iris.Fissures.model.AllVTFactory;
+import edu.sc.seis.fissuresUtil.namingService.FissuresNamingServiceImpl;
+import org.apache.log4j.Category;
+import org.apache.log4j.lf5.util.LogMonitorAdapter;
 
 
 /**
@@ -82,9 +78,12 @@ public class CommonAccess {
     
     private String[] args;
     
+    public LogMonitorAdapter getLF5Adapter(){ return adapter; }
     
     private static CommonAccess commonAccess = new CommonAccess();
     
+    
+    private LogMonitorAdapter adapter = LogMonitorAdapter.newInstance(LogMonitorAdapter.LOG4J_LOG_LEVELS);
     private org.omg.CORBA_2_3.ORB orb = null;
     
     FissuresNamingServiceImpl fissuresNamingService;
