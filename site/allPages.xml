@@ -172,7 +172,7 @@
                 </page>
                 <page>
                     <source>SchemaDoc</source>
-                    <destination>tagDocs/event/status/status.html</destination>
+                    <destination>tagDocs/waveform/status/waveformStatus.html</destination>
                     <name>Status</name>
                 </page>
             </submenu>
