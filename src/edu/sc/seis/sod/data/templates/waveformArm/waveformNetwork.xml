@@ -45,6 +45,8 @@ $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($n
 <div id="footer">
 <h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
 </div>
+<div id="LeftColumn">
 $menu
+</div>
 </body>
 </html>

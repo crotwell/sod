@@ -110,7 +110,9 @@ window.onload=function(){
 </sites>
 </table>
 </div>
+<div id="LeftColumn">
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
+</div>
 <div id="footer">
 <h2>Page last generated:</h2><now/>
 </div>

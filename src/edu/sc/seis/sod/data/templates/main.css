@@ -90,13 +90,7 @@ body>#Header {height:14px;}
   position:relative;
 }
 
-#Menu {
-    font-size:11px;
-    font-weight:600;
-    position:absolute;
-    top:120px;
-    left:20px;
-    width:172px;
+#Key {
     padding:10px;
     background-color:#eee;
     border:1px dashed #999;
@@ -106,6 +100,30 @@ body>#Header {height:14px;}
     voice-family:inherit;
     width:150px;
 }
+
+/* Again, "be nice to Opera 5". */
+body>#Key {width:150px;}
+
+#LeftColumn{
+    position:absolute;
+    top:120px;
+    left:20px;
+    width:172px;
+}
+
+#Menu {
+    font-size:11px;
+    padding:10px;
+    font-weight:600;
+    background-color:#eee;
+    border:1px dashed #999;
+    line-height:17px;
+/* Again, the ugly brilliant hack. */
+    voice-family: "\"}\"";
+    voice-family:inherit;
+    width:150px;
+}
+
 /* Again, "be nice to Opera 5". */
 body>#Menu {width:150px;}
 

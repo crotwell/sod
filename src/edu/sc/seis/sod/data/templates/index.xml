@@ -23,7 +23,9 @@
 <div><b>Events to date:</b></div>
 <img><attribute name="src"><eventMap xlink:href="eventMap.png"/></attribute></img>
 </div>
+<div id="LeftColumn">
 <menu xlink:href="jar:edu/sc/seis/sod/data/templates/menu.xml"/>
+</div>
 <div id="footer">
 <h2>Page last generated:</h2><now/>
 </div>

@@ -87,7 +87,9 @@ $fissures.formatMagnitude($m),
 <div id="footer">
 <h2>Page last generated:</h2>$fissures.formatDate($fissures.now())<br/>
 </div>
+<div id="LeftColumn">
 $menu
+</div>
 </body>
 </html>
 
