@@ -24,5 +24,5 @@ JING=$MAVEN/repository/jing/jars/jing-20030619.jar
 SOD=$MAVEN/repository/sod/jars/sod-1.0Beta.jar
 
 
-java   -Xmx428m -cp ${SEEDCODEC}:${SOD}:${OPENMAP}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${JING}:${CLASSPATH} edu.sc.seis.sod.Start $*
+java   -Xmx428m -cp ${SEEDCODEC}:${SOD}:${OPENMAP}:${FISSURESIDL}:${FISSURESIMPL}:${FISSURESUTIL}:${XERCES}:${XMLAPI}:${XALAN}:${TAUP}:${LOG4J}:${HSQLDB}:${JING}:${CLASSPATH} edu.sc.seis.sod.Start -props pdo.prop $*
 

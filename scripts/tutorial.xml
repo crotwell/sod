@@ -111,9 +111,9 @@
                     <netsOutputFileName>networks.html</netsOutputFileName>
                     <netDir><networkCode/>-<firstWord/></netDir>
                     <stationsOutputFileName>stations.html</stationsOutputFileName>
-                    <stationDir><stationCode/>-<beginTime>yyyyMMddHHmmss</beginTime></stationDir>
+                    <stationDir><stationCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime></stationDir>
                     <sitesOutputFileName>sites.html</sitesOutputFileName>
-                    <siteDir><siteCode/>-<beginTime>yyyyMMddHHmmss</beginTime></siteDir>
+                    <siteDir><siteCode/>-<beginTime>yyyyMMdd</beginTime>-<endTime>yyyyMMdd</endTime></siteDir>
                     <channelsOutputFileName>channels.html</channelsOutputFileName>
                     <netConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml"/>
                     <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
