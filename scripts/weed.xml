@@ -180,8 +180,8 @@
             <eventStationAND>
                 <distanceRange>
                     <unit>DEGREE</unit>
-                    <min>30</min>
-                    <max>90</max>
+                    <min>0</min>
+                    <max>180</max>
                 </distanceRange>
                 <azimuthRange>
                     <unit>DEGREE</unit>
