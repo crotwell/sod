@@ -430,7 +430,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
     private SodExceptionListener sodExceptionListener;
 
-    private WaveformStatusProcess waveformStatusProcess = null;
+    private WaveformStatusProcess waveformStatusProcess = new NullWaveformStatusProcess();
 
     HashMap channelDbObjectMap = new HashMap();
 
