@@ -95,11 +95,7 @@ public class EventFormatter extends Template implements EventTemplate{
                 }
             };
         } else if(tag.equals("magnitude")) {
-            return new EventTemplate(){
-                public String getResult(EventAccessOperations ev) {
-                    return getMag(ev);
-                }
-            };
+            return new MagnitudeTemplate();
         } else if(tag.equals("allMagnitudes")) {
             return new EventTemplate(){
                 public String getResult(EventAccessOperations ev) {
@@ -167,6 +163,12 @@ public class EventFormatter extends Template implements EventTemplate{
 
     private  DecimalFormat defaultDecimalFormat = new DecimalFormat("#.#");
 
+    private class MagnitudeTemplate implements EventTemplate {
+        public String getResult(EventAccessOperations ev) {
+            return getMag(ev);
+        }
+    };
+    
     private class RegionName implements EventTemplate{
         public String getResult(EventAccessOperations ev){
             return getRegionName(ev);
@@ -203,7 +205,10 @@ public class EventFormatter extends Template implements EventTemplate{
     }
 
     public void useDefaultConfig() {
+        templates.add(new MagnitudeTemplate());
+        templates.add(textTemplate("_"));
         templates.add(new RegionName());
+        templates.add(textTemplate("_"));
         templates.add(new Time());
     }
 
