@@ -101,7 +101,7 @@
     </xsd:complexType>
     
     <!-- ABSTRACT TYPE WAVE FORM-->
-    <xsd:complexType name="waveFormType" abstract="true">
+    <xsd:complexType name="seismogramProcessType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
@@ -863,107 +863,41 @@
     </xsd:complexType>
     
     
-    <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****WAVEFORM***** -->
-    
-    <!-- WAVE FORM AND TYPE -->
-    <xsd:complexType name="waveFormANDType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">
-                <summary>
-                    Logical AND between Waveform subsetters.
-                </summary>
-                <description>
-                    The output is the logical AND of the outputs of all 
-                    included subsetters. The subsetters after the
-                    first false outputed are not evaluated. 
-                </description>
-                <example>
-                    <eventStationAND>
-                        <eventStationDistance>
-                           <distanceRange>
-                              <unit>DEGREE</unit>
-                              <min>40</min>
-                           </distanceRange>
-                        </eventStationDistance>
-                        <backAzimuthRange>
-                           <min>30</min>
-                           <max>45</max>
-                        </backAzimuthRange>
-                    </eventStationAND>
-                </example>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexContent>
-            <xsd:extension base="waveFormType">
-                <xsd:sequence>
-                    <xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <!-- WAVE FORM OR TYPE -->	
-    <xsd:complexType name="waveFormORType">
-        <xsd:complexContent>
-            <xsd:extension base="waveFormType">
-                <xsd:sequence>
-                    <xsd:element ref="waveForm" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <!-- WAVE FORM XOR TYPE -->
-    <xsd:complexType name="waveFormXORType">
-        <xsd:complexContent>
-            <xsd:extension base="waveFormType">
-                <xsd:sequence>
-                    <xsd:element ref="waveForm" minOccurs="2" maxOccurs="2"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-    
-    <!-- WAVE FORM NOT TYPE -->
-    <xsd:complexType name="waveFormNOTType">
-        <xsd:complexContent>
-            <xsd:extension base="waveFormType">
-                <xsd:sequence>
-                    <xsd:element ref="waveForm" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+    <!-- TYPE DECLARATIONS FOR THE SeismogramProcess -->
     
     <!--LOCAL SEISMOGRAM TYPE-->
-    <xsd:complexType name="localSeismogramType">
+    <xsd:complexType name="seismogramProcessType">
         <xsd:complexContent>
-            <xsd:extension base="waveFormType">
+            <xsd:extension base="subsetterType">
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
     
     <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
     
-    <xsd:complexType name="externalWaveformProcessType">
+    <xsd:complexType name="externalSeismogramProcessType">
         <xsd:complexContent>
-            <xsd:extension base="externalProcessType">
+            <xsd:extension base="seismogramProcessType">
+               <xsd:sequence>
+                    <xsd:element name="classname" type="xsd:string"/>
+                    <xsd:any processContents="lax"  minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
     
-    <xsd:complexType name="printLineWaveformProcessorType">
+    <xsd:complexType name="printLineSeismogramProcessorType">
         <xsd:complexContent>
-            <xsd:extension base="internalProcessType">
+            <xsd:extension base="seismogramProcessType">
                 <xsd:sequence>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
     
-    <xsd:complexType name="localSeismogramProcessType"> 
+    <xsd:complexType name="sacSeismogramProcessType"> 
         <xsd:complexContent>
-            <xsd:extension base="printLineWaveformProcessorType">
+            <xsd:extension base="seismogramProcessorType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
                 </xsd:sequence>
@@ -1016,7 +950,7 @@
 
     <xsd:complexType name="breqfastAvailableDataType"> 
         <xsd:complexContent>
-            <xsd:extension base="printLineWaveformProcessorType">
+            <xsd:extension base="availableDataType">
                 <xsd:sequence>
                     <xsd:element name="dataDirectory" type="xsd:string"/>
                     <xsd:element name="label" type="breqfastLabelType" minOccurs="0" />
@@ -1085,26 +1019,16 @@
     <xsd:element name="availableDataOR" type="availableDataORType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataXOR" type="availableDataXORType" substitutionGroup="availableData"/>
     <xsd:element name="availableDataNOT" type="availableDataNOTType" substitutionGroup="availableData"/>
+    <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="availableData"/>
     
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
-    <xsd:element name="waveForm" type="waveFormType" abstract="true"/>
-    <xsd:element name="waveFormAND" type="waveFormANDType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
-    <xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
-    <xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
+    <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
     
     <!-- element representing the process -->waw
-    <xsd:element name="waveFormProcess" type="processType" abstract="true"/>
-    <xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
-    <xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="printlineSeismogramProcess" type="printLineSeismogramProcessorType" substitutionGroup="seismogramProcess"/>
+    <xsd:element name="sacFileProcessor" type="sacSeismogramProcessType" substitutionGroup="seismogramProcess"/>
     
-    <xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
-    <xsd:element name="externalSeismogramProcess"
-        type="externalWaveformProcessType"
-    substitutionGroup="waveFormProcess"/>
+    <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
     <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
