@@ -11,6 +11,7 @@ import edu.sc.seis.sod.validator.model.*;
  * @author Charlie Groves
  */
 public class HTMLOutlineTourist implements Tourist {
+
     public HTMLOutlineTourist(String curLoc) {
         this.curLoc = curLoc;
     }
@@ -28,15 +29,14 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Choice choice) {
         genericVisit(choice);
-        result.append("<i>" + getDefLink(choice) + getChoiceLink()
-                + getCardinality(choice) + "</i>\n");
-        appendIfChildren = "<div id=\"choice\">\n";
+        result.append("<i>" + getDefLink(choice) + getCardinality(choice));
+        appendIfChildren = getChoiceLink() + "</i>\n<div id=\"choice\">\n";
     }
 
     public void leave(Choice choice) {
-        appendIfChildren = "</div><i>end " + getDefLink(choice) + getChoiceLink()
-                + "</i>\n<div/>";
-        appendIfNoChildren = "<div/>";
+        appendIfChildren = "</div><i>end " + getDefLink(choice)
+                + getCardinality(choice) + getChoiceLink() + "</i>\n<div/>";
+        appendIfNoChildren = "</i><div/>\n";
         genericLeave(choice);
     }
 
@@ -46,22 +46,29 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Data d) {
         genericVisit(d);
-        result.append(d.getDatatype());
+        if(d.isFromDef()) {
+            result.append(getDefLink(d));
+        } else {
+            result.append(d.getDatatype());
+        }
     }
 
     public void visit(Empty e) {}
 
     public void visit(Group g) {
         genericVisit(g);
-        result.append("<i>" + getDefLink(g) + getGroupLink()
-                + getCardinality(g) + "</i>\n");
+        String cardinality = getCardinality(g);
+        if(!cardinality.equals("")) {
+            result.append("<i>" + getDefLink(g) + getGroupLink()
+                    + getCardinality(g) + "</i>\n");
+        }
         appendIfChildren = "<div id=\"group\">\n";
     }
 
     public void leave(Group g) {
-        appendIfNoChildren = "<div/>";
-        appendIfChildren = "</div><i>end " + getDefLink(g) + getGroupLink()
-                + "</i>\n";
+        appendIfNoChildren = "<i>" + getDefLink(g) + getCardinality(g)
+                + "</i><div/>\n";
+        appendIfChildren = "</div>\n";
         genericLeave(g);
     }
 
@@ -71,41 +78,41 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void visit(Interleave i) {
         genericVisit(i);
-        result.append("<i>" + getDefLink(i) + getInterLink()
-                + getCardinality(i) + "</i>\n");
-        appendIfChildren = "<div id=\"inter\">\n";
+        result.append("<i>" + getDefLink(i) + getCardinality(i));
+        appendIfChildren = getInterLink() + "</i>\n<div id=\"inter\">\n";
     }
 
     public void leave(Interleave i) {
-        appendIfNoChildren = "<div/>";
-        appendIfChildren = "</div><i>end " + getDefLink(i) + getInterLink()
-                + "</i>\n";
+        appendIfNoChildren = "</i><div/>\n";
+        appendIfChildren = "</div><i>end " + getDefLink(i) + getCardinality(i)
+                + getInterLink() + "</i>\n";
         genericLeave(i);
-
     }
 
     private String getInterLink() {
-        return "<a href=\"" + getTagDocHelpHREF() + "#interleave\">interleave</a> ";
+        return "<a href=\"" + getTagDocHelpHREF()
+                + "#interleave\">interleave</a> ";
     }
 
     public void visit(NamedElement ne) {
         genericVisit(ne);
         String name = "&lt;" + ne.getName() + "&gt;";
-        if (ne.getDef() != null) {
+        if(ne.getDef() != null) {
             name = getDefLink(ne, name);
         }
         result.append(name);
-        if (!isData(ne.getChild())) {
-           appendIfChildren = " " + getCardinality(ne) + "<div>\n";
+        if(!isData(ne.getChild())) {
+            appendIfChildren = " " + getCardinality(ne) + "<div>\n";
         }
     }
 
     public void leave(NamedElement ne) {
         appendIfNoChildren = " " + getCardinality(ne) + "<div/>";
-        if (!isData(ne.getChild())) {
-           appendIfChildren =  "</div>\n&lt;/" + ne.getName() + "&gt;<div/>\n";
+        if(!isData(ne.getChild())) {
+            appendIfChildren = "</div>\n&lt;/" + ne.getName() + "&gt;<div/>\n";
         } else {
-            appendIfChildren = "&lt;/" + ne.getName() + "&gt; " + getCardinality(ne) + "<div/>\n";
+            appendIfChildren = "&lt;/" + ne.getName() + "&gt; "
+                    + getCardinality(ne) + "<div/>\n";
         }
         genericLeave(ne);
     }
@@ -132,8 +139,8 @@ public class HTMLOutlineTourist implements Tourist {
 
     private String getTagDocHelpHREF() {
         String baseString = "../";
-        for (int i = 0; i < curLoc.length(); i++) {
-            if (curLoc.charAt(i) == '/') {
+        for(int i = 0; i < curLoc.length(); i++) {
+            if(curLoc.charAt(i) == '/') {
                 baseString += "../";
             }
         }
@@ -142,7 +149,7 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     private String getDefLink(Form f) {
-        if (f.getDef() != null) { return getDefLink(f, f.getDef().getName()); }
+        if(f.getDef() != null) { return getDefLink(f, f.getDef().getName()); }
         return "";
     }
 
@@ -154,44 +161,42 @@ public class HTMLOutlineTourist implements Tourist {
 
     private String getCardinality(Form f) {
         String baseString = getTagDocHelpHREF();
-        if (f.getMin() == 0) {
-            if (f.getMax() == 1) {
-                return "<i><a href=\"" + baseString
-                        + "#optional\">optional</a></i>";
-            } else {
-                return "<i><a href=\"" + baseString
-                        + "#Any number of times\">Any number of times</a></i>";
-            }
+        if(f.getMin() == 0) {
+            if(f.getMax() == 1) { return "<i><a href=\"" + baseString
+                    + "#optional\">optional</a></i>"; }
+            return "<i><a href=\"" + baseString
+                    + "#Any number of times\">Any number of times</a></i>";
+        } else if(f.getMax() > 1) {
+            return "<i><a href=\"" + baseString
+                    + "#At least once\">At least once</a></i>";
         } else {
-            if (f.getMax() > 1) {
-                return "<i><a href=\"" + baseString
-                        + "#At least once\">At least once</a></i>";
-            } else {
-                return "";
-            }
+            return "";
         }
     }
-    
+
     private void genericVisit(Form f) {
         result.append(appendIfChildren);
         appendIfChildren = "";
         appendIfNoChildren = "";
         lastForm = f;
     }
-    
+
     private void genericLeave(Form f) {
-        if(f.equals(lastForm)) { result.append(appendIfNoChildren); }
-        else { result.append(appendIfChildren); }
+        if(f.equals(lastForm)) {
+            result.append(appendIfNoChildren);
+        } else {
+            result.append(appendIfChildren);
+        }
         appendIfNoChildren = "";
         appendIfChildren = "";
     }
-    
+
     private Form lastForm;
-    
+
     private String appendIfChildren = "";
 
     private String appendIfNoChildren = "";
-    
+
     private String curLoc;
 
     private StringBuffer result = new StringBuffer();
