@@ -248,6 +248,10 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
         return outFile;
     }
 
+    protected File getParentDirectory() {
+        return dataDirectory;
+    }
+
     protected File getEventDirectory(EventAccessOperations event)
         throws ConfigurationException {
         String eventDirName = getLabel(event);
