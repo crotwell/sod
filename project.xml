@@ -273,7 +273,11 @@
             <artifactId>namespace</artifactId>
             <version>1.0</version>
         </dependency>
-        
+        <dependency>
+            <groupId>mapData</groupId>
+            <artifactId>etopo10</artifactId>
+            <jar>etopo10.jar</jar>            
+        </dependency>      
     </dependencies>
     <build>
         <nagEmailAddress>jaster@seis.sc.edu</nagEmailAddress>

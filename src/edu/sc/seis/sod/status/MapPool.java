@@ -11,7 +11,8 @@ public class MapPool{
         maps = new OpenMap[mapCount];
         free = new boolean[mapCount];
         for (int i = 0; i < maps.length; i++) {
-            maps[i] = new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse");
+            maps[i] = 
+            	new OpenMap("edu/sc/seis/fissuresUtil/data/maps/dcwpo-browse", "edu/sc/seis/mapData");
             maps[i].setEventLayer(new EventLayer(maps[i].getMapBean(), colorizer));
             maps[i].setStationLayer(new StationLayer());
             free[i] = true;
