@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.iris.Fissures.network.StationIdUtil;
 
 /**
  * Handles the subsetting of the Channels.
@@ -216,7 +218,8 @@ public class NetworkArm {
             }
 
         } catch(Exception e) {
-            CommonAccess.handleException(e, "Problem in method getSuccessfulStations");
+            CommonAccess.handleException(e, "Problem in method getSuccessfulStations for net "+
+                                        NetworkIdUtil.toString(networkDbObject.getNetworkAccess().get_attributes().get_id()));
         }
         StationDbObject[] rtnValues = new StationDbObject[arrayList.size()];
         rtnValues = (StationDbObject[]) arrayList.toArray(rtnValues);
@@ -327,7 +330,7 @@ public class NetworkArm {
                                                               Standing.REJECT));
             }
         } catch(Throwable e) {
-            CommonAccess.handleException(e, "Problem in method getSuccessfulChannels");
+            CommonAccess.handleException(e, "Problem in method getSuccessfulChannels for "+StationIdUtil.toString(site.my_station.get_id()));
         }
         ChannelDbObject[] values = new ChannelDbObject[successes.size()];
         values = (ChannelDbObject[]) successes.toArray(values);
