@@ -18,7 +18,7 @@ public class SodUtil {
 	
     }
     
-    public static SodElement load(Element config) 
+    public static Object load(Element config) 
 	throws ConfigurationException {
 	
 	try {
@@ -30,7 +30,18 @@ public class SodUtil {
 	    String firstLetter = tagName.substring(0,1);
 	    firstLetter = firstLetter.toUpperCase();
 	    tagName = firstLetter+tagName.substring(1);
+
+	    // first check for things that are not SodElements
+	    if (tagName.equals("Unit")) {
+		 
+	    } else if (tagName.equals("UnitRange")) {
+	    } else if (tagName.equals("TimeRange")) {
+	    } else if (tagName.equals("GlobalArea")) {
+	    } else if (tagName.equals("BoxArea")) {
+	    } else if (tagName.equals("PointArea")) {
 	    
+	    }
+	   
 	    Class subsetterSubclass = 
 		Class.forName("edu.sc.seis.sod.subsetter."+
 			      tagName);
