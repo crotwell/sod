@@ -39,11 +39,9 @@
             </longitudeRange>
         </boxArea>
         <originDepthRange>
-            <unitRange>
                 <unit>KILOMETER</unit>
                 <min>0</min>
                 <max>1000</max>
-            </unitRange>
         </originDepthRange>
         <originTimeRange>
             <startTime>20030101T00:00:00.001Z</startTime>
@@ -89,11 +87,9 @@
             </originOR>
             <originOR>
                 <originDepthRange>
-                    <unitRange>
                         <unit>KILOMETER</unit>
                         <min>0</min>
                         <max>1000</max>
-                    </unitRange>
                 </originDepthRange>
                 <passOrigin/>
             </originOR>
@@ -206,7 +202,6 @@
     </eventArm>
     <networkArm>
         <networkFinder>
-           <description>Connect to the IRIS networkDC</description>
            <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
             <refreshInterval>

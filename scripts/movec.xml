@@ -59,11 +59,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                <unitRange>
                     <unit>KILOMETER</unit>
                     <min>0</min>
                     <max>1000</max>
-                </unitRange>
             </originDepthRange>
             <eventTimeRange>
                 <timeRange>

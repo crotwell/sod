@@ -36,11 +36,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                <unitRange>
                     <unit>KILOMETER</unit>
                     <min>0</min>
                     <max>1000</max>
-                </unitRange>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20030101T00:00:00.001Z</startTime>

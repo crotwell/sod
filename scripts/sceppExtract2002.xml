@@ -39,11 +39,9 @@
                 </longitudeRange>
             </boxArea>
             <originDepthRange>
-                <unitRange>
                     <unit>KILOMETER</unit>
                     <min>0</min>
                     <max>1000</max>
-                </unitRange>
             </originDepthRange>
             <originTimeRange>
                 <startTime>20020101T00:00:00.001Z</startTime>
@@ -64,11 +62,9 @@
                         <max>10.0</max>
                     </magnitudeRange>
                     <originDepthRange>
-                        <unitRange>
                             <unit>KILOMETER</unit>
                             <min>200</min>
                             <max>1000</max>
-                        </unitRange>
                     </originDepthRange>
             </originAND>
 
@@ -78,11 +74,9 @@
                         <max>10.0</max>
                     </magnitudeRange>
                     <originDepthRange>
-                        <unitRange>
                             <unit>KILOMETER</unit>
                             <min>100</min>
                             <max>200</max>
-                        </unitRange>
                     </originDepthRange>
             </originAND>
 
