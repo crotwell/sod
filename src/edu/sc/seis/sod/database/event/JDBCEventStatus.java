@@ -153,7 +153,7 @@ public class JDBCEventStatus extends SodJDBC{
     public int getNext() throws SQLException{
         Statement stmt = ConnMgr.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM eventstatus WHERE eventcondition = " +Status.get(Status.EVENT_CHANNEL_POPULATION,
-                                                                                                         Status.IN_PROG));
+                                                                                                         Status.IN_PROG).getAsByte());
         if(rs.next()) return rs.getInt("eventid");
         return -1;
     }
