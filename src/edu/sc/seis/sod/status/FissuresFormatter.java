@@ -62,7 +62,7 @@ public class FissuresFormatter {
         return NetworkIdUtil.toStringNoDates(id);
     }
     public static String formatNetworkYear(NetworkId id) {
-        return NetworkIdUtil.toStringNoDates(id)+yearDateFormat.format(new MicroSecondDate(id.begin_time));
+        return id.network_code+yearDateFormat.format(new MicroSecondDate(id.begin_time));
     }
 
     public static String networkName(NetworkAccess net) {
@@ -75,9 +75,6 @@ public class FissuresFormatter {
 
     public static String stationName(Station station) {
         return station.name;
-    }
-    public static String networkCodeYear(NetworkAccess net) {
-        return net.get_attributes().get_code()+net.get_attributes().get_id().begin_time.date_time.substring(0, 4);
     }
 
     public static QuantityImpl getDepth(Origin origin) {
