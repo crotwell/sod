@@ -14,6 +14,7 @@ import edu.sc.seis.sod.status.FissuresFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.IteratorTool;
@@ -144,6 +145,7 @@ public class CookieJar {
      * event. Should be called once there is no longer any chance of
      * further processing for an event. */
     public static void cleanEvent(EventAccessOperations event) {
+        logger.debug("Cleaning event "+event);
         eventOrder.remove(event);
         eventContexts.remove(event);
     }
@@ -166,6 +168,9 @@ public class CookieJar {
         commonContext.put("velocity_render", new RenderTool());
 
     }
+
+    private static final Logger logger = Logger.getLogger(CookieJar.class);
+
 
 }// CookieJar
 
