@@ -502,7 +502,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
     
     String id = "";
 
-    private boolean preserveRequest;
+    private boolean preserveRequest = false;
     
     public static final String COOKIE_PREFIX = "SeisFile_";
 
