@@ -114,6 +114,15 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar
                                         ) throws Exception {
+        return process(event, channel, original, seismograms, fileType);
+    }
+
+    public LocalSeismogramResult process(EventAccessOperations event,
+                                         Channel channel,
+                                         RequestFilter[] original,
+                                         LocalSeismogramImpl[] seismograms,
+                                         final String fileType
+                                        ) throws Exception {
         logger.debug("process() called");
 
         final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
