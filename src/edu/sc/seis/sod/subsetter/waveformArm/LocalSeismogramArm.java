@@ -528,7 +528,7 @@ public class LocalSeismogramArm implements Subsetter{
     private LinkedList localSeisProcessList = 
 	new LinkedList();
 
-    private SeismogramDCLocator seismogramDCLocator= null;
+    private SeismogramDCLocator seismogramDCLocator= new NullSeismogramDCLocator();
 
    
     
