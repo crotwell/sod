@@ -4,43 +4,59 @@
         <include href="base/include/quantity.rng"/>
         <start>
                 <element name="properties">
-                        <oneOrMore>
-                                <choice>
+                            <optional>
                                         <element name="runName">
                                                 <text/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="statusBase">
                                                 <text/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name=" eventQueryIncrement">
                                                 <ref name="time"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name=" eventRefreshInterval">
                                                 <ref name="time"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="eventLag">
                                                 <ref name="time"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="maxRetryDelay">
                                                 <ref name="time"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="waveformWorkerThreads">
                                                 <text/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="reopenEvents">
                                                 <ref name="trueOrFalse"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="removeDatabase">
                                                 <ref name="trueOrFalse"/>
                                         </element>
+                            </optional>
+                            <optional>
                                         <element name="eventChannelPairProcessing">
                                                 <choice>
                                                         <value>atLeastOnce</value>
                                                         <value>atMostOnce</value>
                                                 </choice>
                                         </element>
-                                </choice>
-                        </oneOrMore>
+                            </optional>
                 </element>
         </start>
         <define name="trueOrFalse">
