@@ -73,17 +73,13 @@ public class MapWaveformStatus implements Runnable{
                 EQDataEvent eqEvent = new EQDataEvent(new ProxyEventAccessOperations[]{events[i]});
                 el.eventDataChanged(eqEvent);
                 EQSelectionEvent selEvent = new EQSelectionEvent(this, new ProxyEventAccessOperations[]{events[i]});
-                //el.eqSelectionChanged(selEvent);
                 Origin orig = EventUtil.extractOrigin(events[i]);
-                //map.getMapBean().center(new CenterEvent(this, orig.my_location.latitude, orig.my_location.longitude));
+                map.getMapBean().center(new CenterEvent(this, 0.0f, orig.my_location.longitude));
                 dl.eqSelectionChanged(selEvent);
                 final String fileLoc = fileLocs[i];
                 SwingUtilities.invokeAndWait(new Runnable(){
                             public void run(){
                                 try{
-                                    //System.out.println("before Thread.sleep");
-                                    //Thread.sleep(5000);
-                                    //System.out.println("after Thread.sleep");
                                     map.writeMapToPNG(fileLoc);
                                 } catch (Throwable e) {
                                     GlobalExceptionHandler.handle("problem writing map", e);
