@@ -10,27 +10,17 @@ import org.omg.CORBA.*;
 
 
 /**
- * This is an implementation of the Queue DataStructure. 
- * This  class is thread safe.  
+ * This is an implementation of the Queue DataStructure.
+ * This  class is thread safe.
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
  */
 public interface Queue {
-
-
-   
-    /**
-     * inserts the obj at the end of the queue.
-     * 
-     * @param obj a <code>java.lang.Object</code> value to be inserted into the queue.
-     */
-    public void push(java.lang.Object obj);
-
-    public void push(String serverName, 
-		     String serverDNS, 
-		     edu.iris.Fissures.IfEvent.EventAccess obj,
-		     edu.iris.Fissures.IfEvent.Origin originObj);
+    public void push(String serverName,
+             String serverDNS,
+             edu.iris.Fissures.IfEvent.EventAccess obj,
+             edu.iris.Fissures.IfEvent.Origin originObj);
 
     /**
      * pops the first element of the queue.
@@ -52,7 +42,7 @@ public interface Queue {
     public int getLength();
     /**
      * sets if the source i.e., the thread which pushes objects into the queue
-     * is alive 
+     * is alive
      *
      * @param value a <code>boolean</code> value
      */
@@ -76,15 +66,15 @@ public interface Queue {
     public int getEventId(EventAccessOperations eventAccess);
    
     public void setTime(String serverName,
-			String serverDNS,
-			edu.iris.Fissures.Time time);
+            String serverDNS,
+            edu.iris.Fissures.Time time);
 
     public edu.iris.Fissures.Time getTime(String serverName,
-					  String serverDNS);
+                      String serverDNS);
 
     public void incrementTime(String serverName,
-			      String serverDNS,
-			      int numDays);
+                  String serverDNS,
+                  int numDays);
 
     public void updateEventDatabase();
    
