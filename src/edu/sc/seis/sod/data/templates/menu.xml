@@ -3,7 +3,12 @@
 <div id="Menu">
 <ul>
 <li><a><attribute name="href"><relativePath>index.html</relativePath></attribute><runName/></a></li>
-<li><a><attribute name="href"><relativePath><configFileName/></relativePath></attribute>Configuration</a></li>
+<li>Configuration
+    <ul>
+    <li><a><attribute name="href"><relativePath><htmlConfigFileLoc/></relativePath></attribute>HTML</a></li>
+    <li><a><attribute name="href"><relativePath><configFileLoc/></relativePath></attribute>XML</a></li>
+    </ul>
+</li>
 <li><a><attribute name="href"><relativePath>event.html</relativePath></attribute>Events</a></li>
 <li><a><attribute name="href"><relativePath>networks.html</relativePath></attribute>Networks</a></li>
 <li><a><attribute name="href"><relativePath>waveformStations/waveformNetworks.html</relativePath></attribute>Waveforms by Station</a></li>
