@@ -31,11 +31,11 @@
         #set($rent=$walker.getInstance($root, $item))
         #if($helper.isMultigen($rent))
             #if($helper.isChoice($rent))
-                <p>#makeLink($rent) contains a choice between this and all of the following</p>
+                <p>In #makeLink($rent) there is a choice between all of the following</p>
                 #set($kids=$rent.children)
                 #printSibs($item $kids)
             #elseif($helper.isInterleave($rent))
-                <p>In an unordered group in #makeLink(${rent}) with all of the following</p>
+                <p>In #makeLink(${rent}) in an unordered group with all of the following</p>
                 #set($kids=$rent.children)
                 #printSibs($item $kids)
             #elseif($helper.isGroup($rent))
@@ -61,16 +61,6 @@
     #end
 #end
 
-#macro(contained)
-    #if($helper.isMultigen($instance))
-        <p>CONTAINS MULTIGEN CHILDE</p>
-    #elseif($helper.isGen($instance))
-        <p>CONTAINS GEN CHILDE</p>
-    #else
-        <p>CONTAINS SOME OTHER CHILDE</p>
-    #end
-#end
-
 
 <document>
     <properties>
@@ -89,16 +79,19 @@
 		#end
 	</section>
     <section name="Example">
-        $ann.example
+		<pre>$ann.example</pre>
     </section>
-        <section name="Items containing this">
+        <section name="This consists of">
+			<div id="contained">
+				<p>
+			$contained
+				</p>
+			</div>
+        </section>
+        <section name="Places this can be found">
             #containment()
         </section>
-        <section name="Items inside this">
-            #contained()
-        </section>
-        
-		#if($curEl.attributes)
+       #if($curEl.attributes)
 			<section name="Attributes">
 				#foreach($attr in $curEl.attributes)
 					<section name="$attr.name">
