@@ -2,15 +2,21 @@ package edu.sc.seis.sod.status;
 
 
 
-import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.Status;
-import edu.sc.seis.sod.status.Template;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.Status;
 
 public class ChannelFormatter extends Template implements ChannelTemplate{
+    public ChannelFormatter(){
+        templates = new ArrayList();
+        templates.add(getTemplate("id", null));
+    }
+    
     public ChannelFormatter(Element el) throws ConfigurationException {
         this(el, null);
     }
@@ -142,6 +148,12 @@ public class ChannelFormatter extends Template implements ChannelTemplate{
                 public String getResult(Channel chan) {
                     Status status = (Status)cgt.channelMap.get(chan);
                     return status.getStanding().toString();
+                }
+            };
+        }else if(tag.equals("id")){
+            return new ChannelTemplate(){
+                public String getResult(Channel chan) {
+                    return ChannelIdUtil.toString(chan.get_id());
                 }
             };
         }

@@ -8,14 +8,24 @@ package edu.sc.seis.sod.status;
 
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.Status;
-import java.util.Iterator;
-import org.w3c.dom.Element;
 
 public class StationFormatter extends Template implements StationTemplate{
     StationGroupTemplate sgt;
+    
+    public StationFormatter(){
+        templates = new ArrayList();
+        templates.add(getTemplate("networkCode", null));
+        templates.add(textTemplate("."));
+        templates.add(getTemplate("stationCode", null));
+        templates.add(textTemplate("."));
+        templates.add(getTemplate("beginTimeUnformatted", null));
+    }
 
     public StationFormatter(Element el) throws ConfigurationException {
         this(el, null);
