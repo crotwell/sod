@@ -1,10 +1,19 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsltc="http://xml.apache.org/xalan/xsltc"
+  xmlns:redirect="http://xml.apache.org/xalan/redirect" >
 
   <xsl:output method="html"/>
 
   <xsl:template match="/">
+     <xsltc:output file="blob.xml">
+       <xsl:text>This ends up in the file 'blob.xml'</xsl:text>
+     </xsltc:output>
+     <redirect:write file="blob.xml" append="true">
+       <xsl:text>This is appended to the file 'blob.xml'</xsl:text>
+     </redirect:write>
+
     <html>
       <head>
         <title>Sod Tag Documentation</title>
@@ -60,6 +69,7 @@ Structure of a SOD configuration file.
          <xsl:apply-templates select="xsd:schema" />
       </body>
     </html>
+    <xsl:apply-templates select="xsd:schema" mode="index.html" />
   </xsl:template>
 
   <xsl:template match="xsd:schema" >
@@ -77,7 +87,7 @@ Structure of a SOD configuration file.
       <p>Found an include aaa <xsl:value-of select="@schemaLocation" /></p>
       <xsl:apply-templates select="document(@schemaLocation)/xsd:schema/xsd:complexType|document(@schemaLocation)/xsd:schema/xsd:element" />
     </xsl:for-each>
-    <xsl:apply-templates select="xsd:complexType|xsd:element" />
+    <xsl:apply-templates select="xsd:complexType" />
   </xsl:template>
 
 
@@ -243,6 +253,42 @@ Structure of a SOD configuration file.
   <xsl:template match="text()" mode="make-literal" >
     <xsl:value-of select="."/>
     
+  </xsl:template>
+
+  <xsl:template match="*" mode="index.html" >
+    <xsltc:output file="index.html">
+    <html>
+<head>
+<title>SOD Tag Documentation</title>
+</head>
+<frameset cols="20%,80%">
+<frameset rows="30%,70%">
+  <frame src="overview-frame.html" name="packageListFrame" />
+  <xsl:apply-templates select="." mode="allclasses-frame" />
+  <frame src="allclasses-frame.html" name="packageFrame" />
+</frameset>
+<frame src="overview-summary.html" name="classFrame" />
+</frameset>
+<noframes>
+
+<h2>Frame Alert</h2>
+
+<p>
+  This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.</p>
+  <br/>
+Link to<a HREF="overview-summary.html">Non-frame version.</a>
+</noframes>
+</html>
+</xsltc:output>
+  </xsl:template>
+
+  <xsl:template match="*" mode="allclasses-frame">
+    <xsltc:output file="allclasses-frame.html">
+      <xsl:for-each select="//xsd:complexType">
+        <xsl:sort select="@name" />
+        <xsl:value-of select="@name"/><br/>
+      </xsl:for-each>
+    </xsltc:output>
   </xsl:template>
 
 </xsl:stylesheet>
