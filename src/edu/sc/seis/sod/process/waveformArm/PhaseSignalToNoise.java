@@ -7,29 +7,25 @@
 package edu.sc.seis.sod.process.waveformArm;
 
 
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
-import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
+import edu.sc.seis.fissuresUtil.bag.PhaseNonExistent;
 import edu.sc.seis.fissuresUtil.bag.SimplePhaseStoN;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
-import edu.iris.Fissures.FissuresException;
-import edu.sc.seis.fissuresUtil.bag.PhaseNonExistent;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
  * trigger exists within +- the time interval for the given phase name. Uses the
@@ -89,14 +85,14 @@ public class PhaseSignalToNoise  implements LocalSeismogramProcess {
                                          LocalSeismogramImpl[] seismograms,
                                          CookieJar cookieJar) throws Exception {
         if (seismograms.length == 0 ) {
-            return new LocalSeismogramResult(false, seismograms);
+            return new LocalSeismogramResult(false, seismograms, new StringTreeLeaf(this, false));
         }
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null && trigger.getValue() > ratio) {
             cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
-            return new LocalSeismogramResult(true, seismograms);
+            return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         }
-        return new LocalSeismogramResult(false, seismograms);
+        return new LocalSeismogramResult(false, seismograms, new StringTreeLeaf(this, false));
     }
 
     /** This method exists to make the trigger available to other subsetters

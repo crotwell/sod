@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
 /**
@@ -39,7 +40,7 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
                                          RequestFilter[] original,
                                          RequestFilter[] available,
                                          LocalSeismogramImpl[] seismograms, CookieJar cookieJar) {
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
 

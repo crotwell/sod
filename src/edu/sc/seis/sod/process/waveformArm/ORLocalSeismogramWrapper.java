@@ -5,8 +5,6 @@
  */
 
 package edu.sc.seis.sod.process.waveformArm;
-import edu.sc.seis.sod.subsetter.waveformArm.*;
-
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -14,6 +12,7 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -51,6 +50,7 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
                                                      CookieJar cookieJar) throws Exception {
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = false;
+        StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for (int i = 0; i < channelGroup.getChannels().length; i++) {
             LocalSeismogramResult result = subsetter.process(event,
                                                              channelGroup.getChannels()[i],

@@ -5,6 +5,8 @@
  */
 
 package edu.sc.seis.sod.process.waveformArm;
+import edu.sc.seis.sod.status.*;
+
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -13,11 +15,6 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
-import edu.sc.seis.sod.status.ChannelFormatter;
-import edu.sc.seis.sod.status.EventFormatter;
-import edu.sc.seis.sod.status.FileWritingTemplate;
-import edu.sc.seis.sod.status.StationFormatter;
-import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.status.waveformArm.LocalSeismogramTemplate;
 import java.io.File;
 import java.util.HashMap;
@@ -139,7 +136,7 @@ public class LocalSeismogramTemplateGenerator implements LocalSeismogramProcess{
             logger.debug("There was no fileName in config. I am not generating html pages.");
         }
 
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     public File getOutputFile(EventAccessOperations event, Channel chan) {

@@ -7,6 +7,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.waveformArm.PhaseRequest;
 import java.util.LinkedList;
 import org.apache.log4j.Category;
@@ -19,7 +20,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: PhaseCut.java 8870 2004-05-24 14:57:23Z crotwell $
+ * @version $Id: PhaseCut.java 8894 2004-05-25 00:51:30Z crotwell $
  */
 
 public class PhaseCut implements LocalSeismogramProcess {
@@ -66,9 +67,9 @@ public class PhaseCut implements LocalSeismogramProcess {
             }
         } // end of for (int i=0; i<seismograms.length; i++)
         if (list.size() != 0) {
-            return new LocalSeismogramResult(true, (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]));
+            return new LocalSeismogramResult(true, (LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]), new StringTreeLeaf(this, true));
         } else {
-            return new LocalSeismogramResult(false, seismograms);
+            return new LocalSeismogramResult(false, seismograms, new StringTreeLeaf(this, false));
         }
     }
 

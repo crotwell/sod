@@ -152,7 +152,7 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
                 });
 
 
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     private static Dimension dimension = new Dimension(500, 200);

@@ -12,6 +12,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -37,7 +38,7 @@ public class SeismogramNOT extends ForkProcess {
             result = processor.process(event, channel, original,
                                        available, copySeismograms(seismograms), cookieJar);
         }
-        return new LocalSeismogramResult( ! result.isSuccess(), result.getSeismograms());
+        return new LocalSeismogramResult( ! result.isSuccess(), result.getSeismograms(), new StringTreeBranch(this, ! result.isSuccess(), result.getReason()));
     }
 }
 

@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
 /**
@@ -14,7 +15,7 @@ import org.w3c.dom.Element;
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 8857 2004-05-21 20:02:00Z crotwell $
+ * @version $Id: RMean.java 8894 2004-05-25 00:51:30Z crotwell $
  */
 
 public class RMean implements LocalSeismogramProcess {
@@ -35,7 +36,7 @@ public class RMean implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = rmean.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new LocalSeismogramResult(true, out);
+        return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
     }
 
     edu.sc.seis.fissuresUtil.bag.RMean rmean;

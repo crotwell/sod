@@ -12,6 +12,8 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -35,17 +37,19 @@ public class SeismogramXOR extends ForkProcess {
         processorB = (LocalSeismogramProcess)it.next();
         synchronized (processorA) {
             resultA = processorA.process(event, channel, original,
-                                       available, copySeismograms(seismograms), cookieJar);
+                                         available, copySeismograms(seismograms), cookieJar);
         }
         synchronized (processorB) {
             resultB = processorB.process(event, channel, original,
-                                       available, copySeismograms(seismograms), cookieJar);
+                                         available, copySeismograms(seismograms), cookieJar);
         }
-        if ( resultA.isSuccess() != resultB.isSuccess()) {
-            return new LocalSeismogramResult( true, seismograms);
-        } else {
-            return new LocalSeismogramResult(false, seismograms);
-        }
+        boolean xorResult = resultA.isSuccess() != resultB.isSuccess();
+            return new LocalSeismogramResult( xorResult,
+                                             seismograms,
+                                             new StringTreeBranch(this,
+                                                                  xorResult,
+                                                                  new StringTree[] { resultA.getReason(), resultB.getReason() }));
+
     }
 }
 

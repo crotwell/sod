@@ -12,7 +12,11 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.Iterator;
+import java.util.LinkedList;
 import org.w3c.dom.Element;
 
 public class SeismogramAND extends ForkProcess {
@@ -30,20 +34,25 @@ public class SeismogramAND extends ForkProcess {
                                         ) throws Exception {
 
         LocalSeismogramProcess processor;
+        LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms);
+        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
                 result = processor.process(event, channel, original,
                                            available, copySeismograms(seismograms), cookieJar);
             }
+            reasons.addLast(result.getReason());
         } // end of while (it.hasNext())
-        if (result.isSuccess()) {
-            return new LocalSeismogramResult(result.isSuccess(), seismograms);
-        } else {
-            return new LocalSeismogramResult(false, seismograms);
+        if (reasons.size() < localSeisProcessList.size()) {
+            reasons.addLast(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
         }
+        return new LocalSeismogramResult(result.isSuccess(),
+                                         seismograms,
+                                         new StringTreeBranch(this,
+                                                              result.isSuccess(),
+                                                                  (StringTree[])reasons.toArray(new StringTree[0])));
     }
 
 

@@ -9,6 +9,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                              regions.getRegionName(event.get_attributes().region)+
                              " at "+event.get_preferred_origin().origin_time.date_time);
         } // end of else
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     ParseRegions regions;

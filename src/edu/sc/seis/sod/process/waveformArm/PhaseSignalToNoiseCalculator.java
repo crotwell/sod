@@ -17,6 +17,7 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.process.waveformArm.PhaseSignalToNoise;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 
@@ -42,7 +43,7 @@ public class PhaseSignalToNoiseCalculator  implements LocalSeismogramProcess, Ch
                                          CookieJar cookieJar) throws Exception {
         // this has the side effect of putting the trigger in the cookiejar
         LocalSeismogramResult result = phaseSToN.process(event, channel, original, available, seismograms, cookieJar);
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     public ChannelGroupLocalSeismogramResult process(EventAccessOperations event,

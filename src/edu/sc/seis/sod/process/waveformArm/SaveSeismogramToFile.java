@@ -19,6 +19,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -137,7 +138,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                         " for event in "+
                         regions.getRegionName(event.get_attributes().region)+
                         " at "+event.get_preferred_origin().origin_time.date_time);
-        if (seismograms.length == 0) { return new LocalSeismogramResult(true, seismograms); }
+        if (seismograms.length == 0) { return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true)); }
         synchronized(masterDataSetElement) {
             saveInDataSet(event, channel, seismograms, fileType);
 
@@ -153,7 +154,7 @@ public class SaveSeismogramToFile implements LocalSeismogramProcess {
                 updateMasterDataSet(lastDataSetFile, lastDataSet.getName());
             }
         }
-        return new LocalSeismogramResult(true, seismograms);
+        return new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
     }
 
     protected void updateMasterDataSet(File childDataset, String childName)

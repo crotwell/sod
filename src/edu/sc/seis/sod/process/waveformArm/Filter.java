@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -69,7 +70,7 @@ public class Filter implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = filter.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new LocalSeismogramResult(true, out);
+        return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
     }
 
     Element config;

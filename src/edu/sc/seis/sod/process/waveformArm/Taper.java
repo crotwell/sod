@@ -12,6 +12,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
 public class Taper implements LocalSeismogramProcess {
@@ -35,7 +36,7 @@ public class Taper implements LocalSeismogramProcess {
         for (int i=0; i<seismograms.length; i++) {
             out[i] = taper.apply(seismograms[i]);
         } // end of for (int i=0; i<seismograms.length; i++)
-        return new LocalSeismogramResult(true, out);
+        return new LocalSeismogramResult(true, out, new StringTreeLeaf(this, true));
     }
 
     edu.sc.seis.fissuresUtil.bag.Taper taper;

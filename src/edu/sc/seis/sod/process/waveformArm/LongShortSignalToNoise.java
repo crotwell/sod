@@ -18,6 +18,7 @@ import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -54,7 +55,8 @@ public class LongShortSignalToNoise implements LocalSeismogramProcess {
                           LocalSeismogramImpl[] seismograms,
                           CookieJar cookieJar) throws Exception {
         LongShortTrigger[] triggers = calcTriggers(seismograms);
-        return new LocalSeismogramResult(triggers.length != 0, seismograms);
+        boolean hasTriggers = triggers.length != 0;
+        return new LocalSeismogramResult(hasTriggers, seismograms, new StringTreeLeaf(this, hasTriggers));
     }
 
     public LongShortTrigger[] calcTriggers(LocalSeismogramImpl[] seismograms) throws FissuresException {

@@ -12,6 +12,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.apache.log4j.Logger;
@@ -72,7 +73,7 @@ public class ForkProcess implements LocalSeismogramProcess {
         // pass originals to the contained processors
         LocalSeismogramProcess processor;
         Iterator it = localSeisProcessList.iterator();
-        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms);
+        LocalSeismogramResult result = new LocalSeismogramResult(true, seismograms, new StringTreeLeaf(this, true));
         while (it.hasNext() && result.isSuccess()) {
             processor = (LocalSeismogramProcess)it.next();
             synchronized (processor) {
@@ -80,7 +81,7 @@ public class ForkProcess implements LocalSeismogramProcess {
                                                 available, result.getSeismograms(), cookieJar);
             }
         } // end of while (it.hasNext())
-        return new LocalSeismogramResult(result.isSuccess(), out);
+        return new LocalSeismogramResult(result.isSuccess(), out, new StringTreeLeaf(this, result.isSuccess()));
     }
 
     public static LocalSeismogramImpl[] copySeismograms(LocalSeismogramImpl[] seismograms) {
