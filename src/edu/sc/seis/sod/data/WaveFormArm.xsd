@@ -1329,6 +1329,28 @@
     <xsd:element name="seismogram" type="seismogramType" abstract="true"/>
     
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
+<<<<<<< WaveFormArm.xsd
+    <xsd:element name="waveForm" type="waveFormType" abstract="true"/>
+    <xsd:element name="waveFormAND" type="waveFormANDType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormOR" type="waveFormORType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormXOR" type="waveFormXORType" substitutionGroup="waveForm"/>
+    <xsd:element name="waveFormNOT" type="waveFormNOTType" substitutionGroup="waveForm"/>
+    <xsd:element name="localSeismograms" type="localSeismogramType" substitutionGroup="waveForm"/>
+    
+    <!-- element representing the process -->
+    <xsd:element name="waveFormProcess" type="processType" abstract="true"/>
+    <xsd:element name="waveFormStatusProcess"
+    type="processType">
+    <xsd:element name="printlineWaveformProcessor" type="printLineWaveformProcessorType"  substitutionGroup="waveFormProcess"/>
+    <xsd:element name="printlineSeismogramProcess" type="printLineWaveformProcessorType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="sacFileProcessor" type="localSeismogramProcessType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="breqFastAvailableData" type="breqfastAvailableDataType" substitutionGroup="waveFormProcess"/>
+    
+    <xsd:element name="externalWaveformProcess" type="externalWaveformProcessType" substitutionGroup="waveFormProcess"/>
+    <xsd:element name="externalSeismogramProcess"
+        type="externalWaveformProcessType"
+    substitutionGroup="waveFormProcess"/>
+=======
     <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
     
     <!-- element representing the process -->
@@ -1339,6 +1361,7 @@
     <xsd:element name="rMean" type="rMeanType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="rTrend" type="rTrendType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
+>>>>>>> 1.16
     
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
     <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
@@ -1349,7 +1372,7 @@
                 <xsd:sequence>
                     <xsd:element ref="eventChannel"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="requestGenerator"  minOccurs="1" maxOccurs="1"/>
-                    <!--xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/-->
+                    <xsd:element ref="dataCenter"  minOccurs="1" maxOccurs="1"/>
                     <xsd:element ref="availableData"  minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="seismogram" minOccurs="0" maxOccurs="1"/>
                     <xsd:element ref="seismogramProcess" minOccurs="0" maxOccurs="unbounded"/>
