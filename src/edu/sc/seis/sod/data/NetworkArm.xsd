@@ -484,7 +484,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--NETWORKATTR OR TYPE-->
     <xsd:complexType name="networkAttrORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -520,7 +519,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--NETWORKATTR XOR TYPE-->
     <xsd:complexType name="networkAttrXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -555,7 +553,6 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--NETWORKATTR NOT TYPE-->
     <xsd:complexType name="networkAttrNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -584,23 +581,33 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <!--STATIONID AND TYPE-->
+    <xsd:complexType name="stationCodeType">
+        <xsd:complexContent>
+            <xsd:extension base="stationIDType">
+                <xsd:sequence>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+
     <xsd:complexType name="stationIDANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical AND between EventAttr subsetters.
+                    Logical AND between StationId subsetters.
                 </summary>
                 <description>
                     The output is the logical AND of the outputs of all 
-                    included EventAttr subsetters. The subsetters after the
+                    included subsetters. The subsetters after the
                     first false outputed are not evaluated. 
                 </description>
                 <example>
-                    <eventAttrAND>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrAND>
+                   <stationIDAND>
+                      <stationCode><value>ANMO</value></stationCode>
+                      <stationCode><value>ANMO</value></stationCode>
+                   </stationIDAND>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -618,18 +625,18 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical OR between EventAttr subsetters.
+                    Logical OR between stationId subsetters.
                 </summary>
                 <description>
                     The output is the logical OR of the outputs of all 
-                    included EventAttr subsetters. If the first subsetters returns
+                    included subsetters. If the first subsetters returns
                     true then the second is not evaluated. 
                 </description>
                 <example>
-                    <eventAttrOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrOR>
+                   <stationIDOR>
+                      <stationCode><value>ANMO</value></stationCode>
+                      <stationCode><value>SNZO</value></stationCode>
+                   </stationIDOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -647,17 +654,17 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical XOR between EventAttr subsetters.
+                    Logical XOR between stationId subsetters.
                 </summary>
                 <description>
                     The output is the logical XOR of the outputs of all 
-                    included EventAttr subsetters.
+                    included subsetters.
                 </description>
                 <example>
-                    <eventAttrXOR>
-                        <eventAttrName>Fred</eventAttrName>
-                        <geographicRegion>47</geographicRegion>
-                    </eventAttrXOR>
+                   <stationIDXOR>
+                      <stationCode><value>ANMO</value></stationCode>
+                      <stationCode><value>SNZO</value></stationCode>
+                   </stationIDXOR>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -675,16 +682,16 @@
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
                 <summary>
-                    Logical NOT of an EventAttr subsetter.
+                    Logical NOT of an stationId subsetter.
                 </summary>
                 <description>
                     The output is the logical NOT of the output of the 
-                    included EventAttr subsetter.
+                    included subsetter.
                 </description>
                 <example>
-                    <eventAttrNOT>
-                        <geographicRegion><value>47</value></geographicRegion>
-                    </eventAttrNOT>
+                   <stationIDNOT>
+                      <stationCode><value>ANMO</value></stationCode>
+                   </stationIDNOT>
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -700,6 +707,22 @@
     
     <!-- STATION NAME TYPE -->
     <xsd:complexType name="stationNameType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches the name of a station.
+            </summary>
+            <description>
+                Matches the name of a station. This is a simple string
+                comparison, and so care must be taken for this to be useful.
+            </description>
+            <example>
+               <stationName>
+                 <value>South Karori, New Zealand</value>
+               </stationName>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -711,6 +734,22 @@
     
     <!-- STATION OPERATOR TYPE -->
     <xsd:complexType name="stationOperatorType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches the operator of a station.
+            </summary>
+            <description>
+                Matches the operator of a station. This is a simple string
+                comparison, and so care must be taken for this to be useful.
+            </description>
+            <example>
+               <stationOperator>
+                 <value>Joe Seismologist</value>
+               </stationOperator>
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -722,6 +761,19 @@
     
     <!-- STATION DEPTH RANGE TYPE -->
     <xsd:complexType name="stationDepthRangeType">
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+            <summary>
+                Matches stations at a range of depths below the surface.
+            </summary>
+            <description>
+                Matches stations at a range of depths below the surface.
+            </description>
+            <example>
+               
+            </example>
+	</xsd:documentation>
+      </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="stationType">
                 <xsd:sequence>
@@ -1548,6 +1600,7 @@
     
     <!-- ELEMENT DECLARATIONS FOR STATION ID TYPE -->
     <xsd:element name="stationID" type="stationIDType" abstract="true"/>
+    <xsd:element name="stationCode" type="stationCodeType" substitutionGroup="stationID"/>
     <xsd:element name="stationIDAND" type="stationIDANDType" substitutionGroup="stationID"/>
     <xsd:element name="stationIDOR" type="stationIDORType" substitutionGroup="stationID"/>
     <xsd:element name="stationIDXOR" type="stationIDXORType" substitutionGroup="stationID"/>
