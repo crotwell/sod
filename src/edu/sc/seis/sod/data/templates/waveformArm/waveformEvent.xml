@@ -26,7 +26,9 @@
 <td>Status</td>
 </tr>
 <channels><channel><tr>
-<td><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></td>
+<td>
+<a><attribute name="href"><networkCode/>.<stationCode/>/seismograms.html</attribute><networkCode/>.<stationCode/>.<siteCode/>.<channelCode/></a>
+</td>
 <td><lat/></td>
 <td><lon/></td>
 <td><azimuth/></td>
@@ -36,8 +38,9 @@
 </channel></channels>
 </table>
 <h2>Map:</h2>
-<img><attribute name="src"><map/></attribute></img>
-Maps only update once every two minutes</div>
+<img><attribute name="src"><map/></attribute></img><br/>
+Maps only update once every two minutes
+</div>
 <div id="Menu">
 <ul>
 <li>
