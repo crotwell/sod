@@ -18,6 +18,7 @@ import org.w3c.dom.*;
 public abstract class LogicalSubsetter implements Subsetter {
     public LogicalSubsetter (Element config) throws ConfigurationException {
 	processConfig(config);
+	System.out.println(" &&&&&&&&&&&The size of filter list after processing in logicalSubsetter is "+filterList.size());
     }
     
     protected void processConfig(Element config) throws ConfigurationException{
@@ -32,6 +33,7 @@ public abstract class LogicalSubsetter implements Subsetter {
 		Element subElement = (Element)node;
 		Object obj = SodUtil.load(subElement, getPackageName());
 		if (obj instanceof Subsetter) {
+		    System.out.println("adding the $$$ to the filterList");
 		    filterList.add((Subsetter)obj);
 		} // end of if (sodElement instanceof EventAttrSubsetter)
 		
@@ -40,6 +42,7 @@ public abstract class LogicalSubsetter implements Subsetter {
 	} // end of for (int i=0; i<children.getSize(); i++)
 	
     }
+
 
     public abstract String getPackageName();
 

@@ -12,7 +12,7 @@ import edu.iris.Fissures.network.*;
  * @version
  */
 
-public interface NetworkIdSubsetter {
+public interface NetworkIdSubsetter extends Subsetter{
 
     public boolean accept(NetworkId networkId, CookieJar cookies);
     

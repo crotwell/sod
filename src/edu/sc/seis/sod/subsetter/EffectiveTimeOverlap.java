@@ -16,7 +16,7 @@ import edu.iris.Fissures.*;
  * @version
  */
 
-public abstract class EffectiveTimeOverlap { 
+public abstract class EffectiveTimeOverlap implements Subsetter{ 
 
     public EffectiveTimeOverlap() {
 
