@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    <include href="latLon.rng"/>
+    <include href="range.rng"/>
+    <start combine="choice">
+        <notAllowed/>
+    </start>
+    <define name="area">
+        <choice>
+            <ref name="boxArea"/>
+            <ref name="globalArea"/>
+        </choice>
+    </define>
+    <define name="globalArea">
+        <element name="globalArea">
+            <xsd:annotation>
+                <summary>Accepts events that occur anywhere in the world </summary>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="boxArea">
+        <element name="boxArea">
+            <xsd:annotation>
+                <summary>Accepts events that occur within a lat lon box </summary>
+                <description>Accepts events that occur within the latitutde
+                    longitude range defined here</description>
+            </xsd:annotation>
+            <externalRef href="../externalRef/latitudeRange.rng"/>
+            <externalRef href="../externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+</grammar>
