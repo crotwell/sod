@@ -7,8 +7,8 @@
         <section name="The 'This Consists Of' Section of the Tactic Reference">
             <p>When SOD starts up, your strategy file is checked to make sure it will work. Only certain items are
                 allowed in certain places, so you have to be careful when creating or editing a strategy file.</p>
-            <p>The 'This Consists Of' section of the Tactic Reference describes what should go where. We explain what the
-                pieces are in terms of XML. If you don't know anything about XML, we recommend that you read our <a
+            <p>The 'This Consists Of' section of the Tactic Reference describes what should go where. We explain what
+                the pieces are in terms of XML. If you don't know anything about XML, we recommend that you read our <a
                 href="../xmlIntro.html">introduction</a> before reading this page any further.</p>
         </section>
         <section name="A Basic Example">
@@ -65,35 +65,151 @@
                     &lt;max&gt;90&lt;/max&gt; &lt;/originPointDistance&gt;</pre>
             </section>
         </section>
-        <section name="Any number of times">
-            <p> This indicates that whatever item is next to this can appear any number of times, from 0 to infinity. So
-                if a choice has this next to it, you can use as many of the items in the choice as you want, as many
-                times as you want. If it's next to a regular item that item can be left out of the strategy file
-                completely, or you can use 16 of them in a row</p>
+        <section name="A Slightly More Complicated Example">
+            <p>This is the 'This Consists Of' section of the <a href="event/source/eventFinder.html">Event Finder</a> tactic.</p>
+            <div id="contained">
+                <p> &lt;<a href="eventFinder.html"
+                    title="Retrieve events from an EventFinder">eventFinder</a>&gt; <div>
+                        <div id="group"> &lt;<a href="event/source/name.html"
+                            title="Name of an event server">name</a>&gt; <div/> &lt;<a
+                                href="event/source/dns.html" title="DNS location of an event server">dns</a>&gt; <div/>
+                            <i>
+                                <a class="choice" href="abstractStructure.html#choice">choice</a>
+                            </i>
+                            <div id="choice"> &lt;<a href="base/include/area/globalArea.html"
+                                title="Accepts events that occur anywhere in the world ">globalArea</a>&gt; <div/>
+                                    &lt;<a href="base/include/area/boxArea.html"
+                                title="Accepts events that occur within a lat lon box ">boxArea</a>&gt; <div/>
+                            </div>end <i>
+                                <a class="choice" href="abstractStructure.html#choice">choice</a>
+                            </i>
+                            <div/> &lt;<a href="base/externalRef/originDepthRange/start.html"
+                            title="Matches events with depth within a defined range">originDepthRange</a>&gt; <i>
+                                <a href="abstractStructure.html#optional">optional</a>
+                            </i>
+                            <div/> &lt;<a href="base/externalRef/originTimeRange/start.html"
+                            title="Matches events whose time occurs within the given range">originTimeRange</a>&gt;
+                            <div/> &lt;<a href="base/externalRef/magnitudeRange/start.html"
+                            title=" Accepts a range of magnitudes">magnitudeRange</a>&gt; <i>
+                                <a href="abstractStructure.html#optional">optional</a>
+                            </i>
+                            <div/> &lt;<a href="event/catalog/start.html"
+                            title="Matches events with a given catalog">catalog</a>&gt; <i>
+                                <a href="abstractStructure.html#Any number of times">Any number of times</a>
+                            </i>
+                            <div/> &lt;<a href="event/contributor/start.html"
+                            title="Matches events with a given contributor">contributor</a>&gt; <i>
+                                <a href="abstractStructure.html#Any number of times">Any number of times</a>
+                            </i>
+                            <div/>
+                        </div>
+                    </div>&lt;/<a href="eventFinder.html"
+                    title="Retrieve events from an EventFinder">eventFinder</a>&gt; </p>
+            </div>
+            <section name="Labels">
+                <p>Compared to the last example, this one is a bit larger. It also has labels beside or surrounding
+                    certain tags to tell tell whats allowed and how many times. In particular, this example introduces
+                    the concepts of 'choice', 'optional', and 'Any number of times'. Both examples so far have used a 'group'.</p>
+            </section>
+            <section name="group">
+                <p>A group is denoted by a solid vertical line. The concept of a group is simple, and we already
+                    followed it without naming it in the previous example. Tags in a group must appear in the order they
+                    are specified in the 'This consists of' section. This means that inside the eventFinder the name
+                    always comes first, then dns and so on down the line of the group.</p>
+            </section>
+            <section name="choice">
+                <p>Choices are denoted by a dashed vertical line. Within a choice, you can use one of the items it
+                    contains. For this particular example, you have the choice between globalArea and boxArea. Also, if
+                    you follow the name and dns links, you will see that they also have choices for the values you may enter.</p>
+            </section>
+            <section name="optional">
+                <p>Any tag or choice that is labeled as 'optional' can be included either once or not at all. For this
+                    example, you don't have to have an originDepthRange or a magnitudeRange if you don't need to use
+                    one. Since they are both in the group we talked about earlier, they must be included in the right
+                    order if they are included. If they are left out, you just skip to the next item in the group.</p>
+            </section>
+            <section name="Any number of times">
+                <p>Anything labeled as 'Any number of times' is optional, but can be included more than once. In this
+                    example, you can have one catalog tag, 20 catalog tags, absolutely no catalog tags, or however many
+                    catalog tags you wish.</p>
+            </section>
         </section>
-        <section name="At Least Once">
-            <p> This indicates the item this is associated with can appear as many times as you want, as long as it
-                appears once.</p>
-        </section>
-        <section name="choice">
-            <p> A choice says the you can use one of the items inside of it. The items inside of a choice are the ones
-                closest to the dashed lined coming out of the choice. If the choice is followed by 'optional' that means
-                you can use one of the items inside of it, but you can also leave these out. If choice is followed by
-                'at least once' you must select one item out of the choice, but you can also select six items out of the
-                choice, or you can select the same item 12 times. Any combination works. If the choice is followed by
-                "any number of times" it works like it has optional and at least once on it. You can ignore the choice
-                entirely, or you can use the items in it over and over again.</p>
-        </section>
-        <section name="group">
-            <p> This indicates the items inside the group(the ones next to the black vertical line) must appear together
-                and in the order given. The group can be 'optional' meaning you can take or leave the whole block. It
-                can be 'at least one' meaning you have to have at least one of it, and you can have as many more copies
-                after the first that you like. 'any number of times' following it is like having both 'optional' and 'at
-                least once'. You can leave it out, or you can have it six times, or you can use it once.</p>
-        </section>
-        <section name="optional">
-            <p> If an item has 'optional' showing up after it, you can include it in your SOD strategy file or you can
-                leave it out entirely.</p>
+        <section name="A Couple Other Important Examples">
+            <p>This is the 'This consists of' section of the <a
+                href="properties/eventRefreshInterval.html">eventRefreshInterval</a> tactic...</p>
+            <div id="contained">
+                <p> &lt;<a href="properties/eventRefreshInterval.html"
+                    title="Time between queries to the event server">eventRefreshInterval</a>&gt; <div>
+                        <a href="base/include/quantity/time.html" title="A length of time">time</a>
+                        <i>
+                            <a href="abstractStructure.html#interleave">interleave</a>
+                        </i>
+                        <div id="inter"> &lt;<a href="base/include/units/timeUnit.html"
+                            title="A unit of time">unit</a>&gt; <div/>&lt;value&gt;<b>
+                                <a href="datatypes/FloatDatatype.html">float</a>
+                            </b>&lt;/value&gt; <div/>
+                        </div>end <a href="base/include/quantity/time.html" title="A length of time">time</a>
+                        <i>
+                            <a href="abstractStructure.html#interleave">interleave</a>
+                        </i>
+                    </div> &lt;/<a href="properties/eventRefreshInterval.html" title="Time between queries to the event server">eventRefreshInterval</a>&gt;<div/>
+                </p>
+            </div>
+            <p>...and this is the 'This consists of' section of the <a
+                href="waveform/requestSubsetter/requestOR.html">requestOR</a> tactic.</p>
+            <div id="contained">
+                <p> &lt;<a href="waveform/requestSubsetter/requestOR.html"
+                    title="Matches at least one enclosed request">requestOR</a>&gt; <div>
+                        <a href="waveform/requestSubsetter/request.html" title="Tactics that work based on the generated request">request</a>
+                        <i>
+                            <a href="abstractStructure.html#At least once">At least once</a>
+                        </i>
+                        <i>
+                            <a class="choice" href="abstractStructure.html#choice">choice</a>
+                        </i>
+                        <div id="choice"> &lt;<a href="waveform/requestSubsetter/requestAND.html"
+                            title="Matches all enclosed requests">requestAND</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/requestOR.html"
+                            title="Matches at least one enclosed request">requestOR</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/requestNOT.html"
+                            title="Matches the negated output of the enclosed request">requestNOT</a>&gt;
+                                <div/>&lt;<a href="waveform/requestSubsetter/requestPrint.html"
+                            title="Prints the Request and returns true">requestPrint</a>/&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/breqFastRequest.html"
+                            title="Creates a breqfast request and saves it to a file and returns true">breqFastRequest</a>&gt;
+                                <div/>&lt;<a href="waveform/requestSubsetter/PASS.html"
+                            title=" Always returns true. ">passRequest</a>&gt; <div/>&lt;<a
+                                href="waveform/requestSubsetter/external.html"
+                            title="Use a request subsetter external to SOD">externalRequest</a>&gt; <div/>
+                        </div>end <a href="waveform/requestSubsetter/request.html" title="Tactics that work based on the generated request">request</a>
+                        <i>
+                            <a href="abstractStructure.html#At least once">At least once</a>
+                        </i>
+                        <i>
+                            <a class="choice" href="abstractStructure.html#choice">choice</a>
+                        </i>
+                        <div/>
+                    </div> &lt;/<a href="waveform/requestSubsetter/requestOR.html" title="Matches at least one enclosed request">requestOR</a>&gt;<div/>
+                </p>
+            </div>
+            <section name="Just a few more labels you need to know...">
+                <p>These last two examples illustrate a couple of other important concepts you need to know before you
+                    start looking up tactics. These concepts are 'interleave' and 'At least once'.</p>
+            </section>
+            <section name="interleave">
+                <p>An interleave is denoted by a dotted vertical line. It is similar to a choice, but its contents can
+                    be in any order. This is to say that, for the eventRefreshInterval example above, it doesn't matter
+                    whether or not the unit tag comes first. Both of the following xml snippets are acceptable.</p>
+                <pre> &lt;eventRefreshInterval&gt; &lt;unit&gt;MINUTE&lt;/unit&gt;
+                    &lt;value&gt;30&lt;/value&gt; &lt;/eventRefreshInterval&gt;</pre>
+                <pre> &lt;eventRefreshInterval&gt; &lt;value&gt;30&lt;/value&gt;
+                    &lt;unit&gt;MINUTE&lt;/unit&gt; &lt;/eventRefreshInterval&gt; </pre>
+            </section>
+            <section name="At least once">
+                <p>Anything labeled 'At least once' is required, but can be included one or more times. In the requestOR
+                    example, requestOR must have at least one request. It cannot be empty, but it can have one, two,
+                    twenty, or an infinite amount of requests.</p>
+            </section>
         </section>
     </body>
 </document>
