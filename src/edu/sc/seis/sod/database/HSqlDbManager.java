@@ -69,7 +69,9 @@ public class HSqlDbManager extends AbstractDatabaseManager{
 
     private void setLogSize() {
 	try {
-	    Statement stmt = getConnection().createStatement();
+	     Connection connection = getConnection();
+	     if(connection == null) return;
+	     Statement stmt = connection.createStatement();
 	    stmt.executeUpdate("SET LOGSIZE 10");
 	} catch(SQLException sqle) {
 	    //error cannot set the logsize.
