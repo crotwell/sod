@@ -58,6 +58,20 @@
                 <simpleHTMLEventStatus>
                         <outputDirectory>tutorialRun1/</outputDirectory>
                 </simpleHTMLEventStatus>
+
+                <mapEventStatus xlink:link="tutorialStatus/eventMap.png"/>
+                <eventStatusTemplate
+                       outputLocation="tutorialStatus/time.html"
+                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/timeSorted.xml"/>
+               <eventStatusTemplate
+                       outputLocation="tutorialStatus/depth.html"
+                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/depthSorted.xml"/>
+               <eventStatusTemplate
+                       outputLocation="tutorialStatus/location.html"
+                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/locSorted.xml"/>
+               <eventStatusTemplate
+                       outputLocation="tutorialStatus/mag.html"
+                       xlink:link="jar:edu/sc/seis/sod/data/templates/eventArm/magSorted.xml"/>
         </eventArm>
         <networkArm>
                 <networkFinder>
