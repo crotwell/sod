@@ -9,13 +9,14 @@
     <define name="seismogramProcess">
         <choice>
             <ref name="printlineSeismogramProcess"/>
-            <ref name="sacFileProcessor"/>
+            <ref name="saveSeismogramToFile"/>
             <ref name="responseGainProcessor"/>
             <ref name="phaseCut"/>
             <ref name="rMean"/>
             <ref name="rTrend"/>
             <ref name="taper"/>
             <ref name="externalSeismogramProcess"/>
+            <ref name="localSeismogramStatus"/>
         </choice>
     </define>
     <define name="phaseCut">
@@ -65,8 +66,11 @@
             <empty/>
         </element>
     </define>
-    <define name="sacFileProcessor">
-        <element name="sacFileProcessor">
+    <define name="saveSeismogramToFile">
+        <element name="saveSeismogramToFile">
+        	<element name="fileType">
+        		<data type="string"/>
+        	</element>
             <element name="dataDirectory">
                 <data type="string"/>
             </element>
@@ -89,5 +93,15 @@
         <element name="printlineSeismogramProcess">
             <empty/>
         </element>
+    </define>
+    <define name="localSeismogramStatus">
+    	<element name="localSeismogramTemplateGenerator">
+    		<element name="fileDir">
+    			<data type="string"/>
+    		</element>
+    		<element name="seismogramConfig">
+    			<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
+    		</element>
+    	</element>
     </define>
 </grammar>
