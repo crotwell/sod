@@ -7,6 +7,7 @@
 package edu.sc.seis.sod.database.waveform;
 
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.CookieJarResult;
 import edu.sc.seis.sod.EventChannelPair;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -23,7 +24,10 @@ public class JDBCVelocityContext extends AbstractContext {
 
     public Object internalGet(String name) {
         try {
-            return jdbcCookieJar.get(pairId, name);
+            CookieJarResult cookie = jdbcCookieJar.get(pairId, name);
+            if (cookie.getValueString() != null) {return cookie.getValueString();}
+            if (cookie.getValueObject() != null) {return cookie.getValueObject();}
+            return new Double(cookie.getValueDouble());
         } catch (SQLException e) {
             GlobalExceptionHandler.handle("Problem getting value for name="+name, e);
             return null;
