@@ -47,7 +47,6 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
     private EventFormatter eventFormatter;
     private StationFormatter stationFormatter;
     private ChannelFormatter chanFormatter;
-    private Timer t = new Timer();
     private TauPUtil tauP;
 
     public SeismogramImageProcess(String fileDir, EventFormatter eventDirFormatter,
