@@ -213,25 +213,20 @@ public class SodUtil {
         float maxLatitude = 0 ;
         float minLongitude = 0 ;
         float maxLongitude = 0;
-        logger.debug("Creating box area");
         for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
             if(node instanceof Element) {
                 Object obj = SodUtil.load((Element)node, "edu.sc.seis.sod");
                 if(obj instanceof LatitudeRange) {
-                    logger.debug("Found Latitude range");
                     minLatitude = ((LatitudeRange)obj).getMinValue();
                     maxLatitude = ((LatitudeRange)obj).getMaxValue();
                 } else if(obj instanceof LongitudeRange) {
-                    logger.debug("Found longitude range");
                     minLongitude = ((LongitudeRange)obj).getMinValue();
                     maxLongitude = ((LongitudeRange)obj).getMaxValue();
                 }
-                logger.debug("FOUND OTHER!!!!");
             }
             
         }
-        logger.debug("creating box area with lat range " + minLatitude + ", " + maxLatitude + " lon range " + minLongitude + ", " + maxLongitude);
         return new BoxAreaImpl(minLatitude, maxLatitude, minLongitude, maxLongitude);
     }
     
