@@ -153,7 +153,7 @@ public class EventArm implements Runnable{
         logger.debug("Finished processing the event arm.");
     }
 
-    public String getLastEvent() { return lastEvent.toString(); }
+    public EventAccessOperations getLastEvent() { return lastEvent; }
 
     private void resetQueryTimeForLag(String server, String dns, MicroSecondDate queryStart) {
         try {
