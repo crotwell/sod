@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
@@ -59,13 +60,15 @@ public class ORWaveformProcessWrapper implements WaveformVectorProcess {
         boolean b = false;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; b == false && i < channelGroup.getChannels().length; i++) {
+            Channel chan = channelGroup.getChannels()[i];
+            CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
+                    .getCookieJar();
             WaveformResult result = subsetter.process(event,
-                                                      channelGroup.getChannels()[i],
+                                                      chan,
                                                       original[i],
                                                       available[i],
                                                       ForkProcess.copySeismograms(seismograms[i]),
-                                                      channelGroup.getEventChannelPair(channelGroup.getChannels()[i])
-                                                              .getCookieJar());
+                                                      chansCookies);
             out[i] = result.getSeismograms();
             b |= result.isSuccess();
             reason[i] = result.getReason();

@@ -6,6 +6,7 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
@@ -56,12 +57,15 @@ public class ANDWaveformProcessWrapper implements WaveformVectorProcess {
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramImpl[] copies = ForkProcess.copySeismograms(seismograms[i]);
+            Channel chan = channelGroup.getChannels()[i];
+            CookieJar chansCookies = channelGroup.getEventChannelPair(chan)
+                    .getCookieJar();
             WaveformResult result = process.process(event,
-                                                    channelGroup.getChannels()[i],
+                                                    chan,
                                                     original[i],
                                                     available[i],
                                                     copies,
-                                                    channelGroup.getEventChannelPair(channelGroup.getChannels()[i]).getCookieJar());
+                                                    chansCookies);
             out[i] = result.getSeismograms();
             reason[i] = result.getReason();
             b &= result.isSuccess();
