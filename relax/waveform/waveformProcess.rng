@@ -24,6 +24,7 @@
             </xsd:annotation>
             <ref name="printlineSeismogramProcess"/>
             <ref name="saveSeismogramToFile"/>
+            <ref name="recordSectionDisplayGenerator"/>
             <ref name="responseGain"/>
             <ref name="phaseCut"/>
             <ref name="rMean"/>
@@ -277,6 +278,19 @@
                 <ref name="eventLabel"/>
             </element>
         </element>
+    </define>
+    <define name="recordSectionDisplayGenerator">
+         <element name="recordSectionDisplayGenerator">
+            <xsd:annotation>
+                <summary>Generates the recordsection display for each event</summary>
+                <description>Reads the dsml file created by the saveSeismogramToFile processor
+                and generates the recordsection image file</description>
+                <example>
+                    <recordSectionDisplayGenerator/>
+                </example>
+            </xsd:annotation>
+            <empty/>
+         </element>
     </define>
     <define name="externalWaveformProcess">
         <element name="externalWaveformProcess">
