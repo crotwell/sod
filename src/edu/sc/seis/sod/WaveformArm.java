@@ -457,7 +457,6 @@ public class WaveformArm implements Runnable {
     }
 
     public synchronized void setStatus(EventChannelPair ecp){
-        logger.debug("Updating status on " + ecp);
         synchronized(evChanStatus){
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
@@ -688,7 +687,7 @@ public class WaveformArm implements Runnable {
     private JDBCEventChannelStatus evChanStatus;
     private JDBCEventChannelRetry eventRetryTable;
 
-	private ChannelGrouper channelGrouper = new ChannelGrouper();
+    private ChannelGrouper channelGrouper = new ChannelGrouper();
     private List usedPairGroups = new ArrayList();
 
     private double retryPercentage = .02;//2 percent of the pool will be
