@@ -43,7 +43,14 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
 
     public void setArmStatus(String status) throws Exception {}
 
-    public void change(Station station, Status s) {}
+    public void change(Station station, Status s) {
+        VelocityContext context = new VelocityContext(networkArmContext);
+        NetworkAccess networkAccess = Start.getNetworkArm().getNetwork(station.my_network.get_id());
+        context.put("network", networkAccess);
+        context.put("stations", new VelocityStationGetter(networkAccess));
+        String id = NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id());
+        scheduleOutput("waveformStations/"+ id +".html", context);
+    }
 
     public void change(Channel channel, Status s) {}
 
@@ -53,11 +60,6 @@ public class WaveformNetworkStatus extends AbstractVelocityStatus implements Wav
             scheduleOutput("waveformStations/waveformNetworks.html",
                            networkArmContext,
                            networkListTemplate);
-            VelocityContext context = new VelocityContext(networkArmContext);
-            context.put("network", networkAccess);
-            context.put("stations", new VelocityStationGetter(networkAccess));
-            String id = NetworkIdUtil.toStringNoDates(networkAccess.get_attributes().get_id());
-            scheduleOutput("waveformStations/"+ id +".html", context);
         }
     }
 
