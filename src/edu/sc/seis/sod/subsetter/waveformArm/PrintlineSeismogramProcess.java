@@ -43,7 +43,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public void process(EventAccessOperations event, 
+    public LocalSeismogram[] process(EventAccessOperations event, 
 			NetworkAccess network, 
 			Channel channel, 
 			RequestFilter[] original, 
@@ -55,7 +55,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
                 FileWriter fwriter = new FileWriter("_"+event.get_preferred_origin().origin_time.date_time, true);
                 BufferedWriter bwriter = new BufferedWriter(fwriter);
                 String debugStr = "Got "+seismograms.length+" seismograms for "+
-                    ChannelIdUtil.toStringNoDates(channel.get_id())+
+                    ChannelIdUtil.toString(channel.get_id())+
                     " for event in "+
                     " at "+event.get_preferred_origin().origin_time.date_time;
                 bwriter.write(debugStr, 0, debugStr.length());
@@ -78,7 +78,7 @@ public class PrintlineSeismogramProcess implements LocalSeismogramProcess {
             } // end of try-catch
         } // end of else
         
-	
+	return seismograms;
     }
    
     ParseRegions regions;

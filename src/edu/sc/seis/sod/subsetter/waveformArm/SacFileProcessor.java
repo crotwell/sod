@@ -62,7 +62,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public void process(EventAccessOperations event, 
+    public LocalSeismogram[] process(EventAccessOperations event, 
 			NetworkAccess network, 
 			Channel channel, 
 			RequestFilter[] original, 
@@ -164,7 +164,7 @@ logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", ex);
 		e.printStackTrace();
 logger.error("EXCEPTION CAUGHT WHILE trying to save dataset", e);
 	}
-	
+	return seismograms;
     }
    
     ParseRegions regions;

@@ -15,7 +15,7 @@ import edu.sc.seis.sod.*;
  * Created: Fri Apr 12 16:25:02 2002
  *
  * @author Philip Crotwell
- * @version $Id: ExternalSeismogramProcess.java 1649 2002-05-17 18:25:12Z telukutl $
+ * @version $Id: ExternalSeismogramProcess.java 2880 2002-11-06 20:26:35Z crotwell $
  */
 
 public class ExternalSeismogramProcess 
@@ -27,14 +27,20 @@ public class ExternalSeismogramProcess
 	
     }
 
-    public void process(EventAccessOperations event,
-                        NetworkAccess network,
-                        Channel channel,
-                        RequestFilter[] original,
-                        RequestFilter[] available,
-                        LocalSeismogram[] seismograms,
-                        CookieJar cookies) throws Exception{
-	externalProcess.process(event, network, channel, original, available, seismograms, cookies);
+    public LocalSeismogram[] process(EventAccessOperations event,
+				     NetworkAccess network,
+				     Channel channel,
+				     RequestFilter[] original,
+				     RequestFilter[] available,
+				     LocalSeismogram[] seismograms,
+				     CookieJar cookies) throws Exception{
+	return externalProcess.process(event, 
+				       network, 
+				       channel, 
+				       original, 
+				       available, 
+				       seismograms, 
+				       cookies);
     }
 
     LocalSeismogramProcess externalProcess;

@@ -14,6 +14,7 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 
 import org.w3c.dom.*;
 import org.apache.log4j.*;
+import java.util.*;
 
 /**
  * sample xml
@@ -77,8 +78,9 @@ public class LocalSeismogramArm implements Subsetter{
 	
 		else if(sodElement instanceof AvailableDataSubsetter) availableDataSubsetter = (AvailableDataSubsetter)sodElement;
 		else if(sodElement instanceof LocalSeismogramSubsetter) localSeismogramSubsetter = (LocalSeismogramSubsetter)sodElement;
-		else if(sodElement instanceof LocalSeismogramProcess) waveFormArmProcessSubsetter = (LocalSeismogramProcess)sodElement;
-		else {
+		else if(sodElement instanceof LocalSeismogramProcess) {
+		    localSeisProcessList.add(sodElement);
+		} else {
 		    logger.warn("Unknown tag in LocalSeismogramArm config. "
 				+sodElement);
 		} // end of else
@@ -368,15 +370,22 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
 				   channelDbObject,
 				   Status.PROCESSING,
 				   "before waveformArm Processing");
-	synchronized (waveFormArmProcessSubsetter) {
-	waveFormArmProcessSubsetter.process(eventAccess, 
-					    networkAccess, 
-					    channel, 
-					    infilters, 
-					    outfilters, 
-					    localSeismograms, 
-					    null);
-	}
+	LocalSeismogramProcess processor;
+	Iterator it = localSeisProcessList.iterator();
+	while (it.hasNext()) {
+	    processor = (LocalSeismogramProcess)it.next();
+	
+	    synchronized (processor) {
+		localSeismograms =
+		    processor.process(eventAccess, 
+				      networkAccess, 
+				      channel, 
+				      infilters, 
+				      outfilters, 
+				      localSeismograms, 
+				      null);
+	    }
+	} // end of while (it.hasNext())
 	logger.debug("finished with "+
 		     ChannelIdUtil.toStringNoDates(channel.get_id()));
 	waveformArm.setFinalStatus(eventDbObject,
@@ -398,8 +407,8 @@ System.out.println("The lenght of the outfilters is---------- "+outfilters.lengt
     private LocalSeismogramSubsetter localSeismogramSubsetter = 
 	new NullLocalSeismogramSubsetter();
 
-    private LocalSeismogramProcess waveFormArmProcessSubsetter = 
-	new NullWaveformProcess();
+    private LinkedList localSeisProcessList = 
+	new LinkedList();
 
    
     

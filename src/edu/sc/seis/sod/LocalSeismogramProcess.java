@@ -17,7 +17,7 @@ import edu.iris.Fissures.IfSeismogramDC.*;
 public interface LocalSeismogramProcess extends WaveFormArmProcess {
 
     /**
-     * Describe <code>process</code> method here.
+     * Processes localSeismograms, possibly modifying them.
      *
      * @param event an <code>EventAccessOperations</code> value
      * @param network a <code>NetworkAccess</code> value
@@ -28,12 +28,12 @@ public interface LocalSeismogramProcess extends WaveFormArmProcess {
      * @param cookies a <code>CookieJar</code> value
      * @exception Exception if an error occurs
      */
-    public void process(EventAccessOperations event, 
-			NetworkAccess network, 
-			Channel channel, 
-			RequestFilter[] original, 
-			RequestFilter[] available,
-			LocalSeismogram[] seismograms, 
-			CookieJar cookies) throws Exception;
+    public LocalSeismogram[] process(EventAccessOperations event, 
+				     NetworkAccess network, 
+				     Channel channel, 
+				     RequestFilter[] original, 
+				     RequestFilter[] available,
+				     LocalSeismogram[] seismograms, 
+				     CookieJar cookies) throws Exception;
     
 }// LocalSeismogramProcessor

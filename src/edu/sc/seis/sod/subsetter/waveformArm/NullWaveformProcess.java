@@ -36,14 +36,14 @@ public class NullWaveformProcess implements LocalSeismogramProcess {
      * @param seismograms a <code>LocalSeismogram[]</code> value
      * @param cookies a <code>CookieJar</code> value
      */
-    public void process(EventAccessOperations event, 
+    public LocalSeismogram[] process(EventAccessOperations event, 
 			NetworkAccess network, 
 			Channel channel, 
 			RequestFilter[] original, 
 			RequestFilter[] available,
 			LocalSeismogram[] seismograms, 
 			CookieJar cookies) {
-	
+	return seismograms;
     }
    
 
