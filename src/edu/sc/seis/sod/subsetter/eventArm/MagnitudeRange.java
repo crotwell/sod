@@ -52,7 +52,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
      *
      * @param config an <code>Element</code> value
      */
-    public MagnitudeRange (Element config) throws ConfigurationException{
+    public MagnitudeRange (Element config) throws ConfigurationException {
     super(config);
     this.config = config;
     // processConfig(config);

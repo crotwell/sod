@@ -17,7 +17,7 @@ public class LongitudeRange extends RangeSubsetter implements SodElement{
      *
      * @param config an <code>Element</code> value
      */
-    public LongitudeRange(Element config) {
+    public LongitudeRange(Element config)  throws ConfigurationException {
 
         super(config);
     }

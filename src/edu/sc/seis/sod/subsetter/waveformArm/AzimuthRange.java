@@ -24,7 +24,7 @@ import org.w3c.dom.*;
  * &lt;/azimuthRange&gt;
  *</pre>
  */
-     
+
 
 
 
@@ -34,10 +34,10 @@ public class AzimuthRange extends RangeSubsetter implements EventStationSubsette
      *
      * @param config an <code>Element</code> value
      */
-    public AzimuthRange (Element config){
-    super(config);
+    public AzimuthRange (Element config) throws ConfigurationException {
+        super(config);
     }
-    
+
     /**
      * Describe <code>accept</code> method here.
      *
@@ -48,19 +48,19 @@ public class AzimuthRange extends RangeSubsetter implements EventStationSubsette
      * @return a <code>boolean</code> value
      */
     public boolean accept(EventAccessOperations eventAccess,  NetworkAccess network,Station station, CookieJar cookies) throws Exception {
-    float minValue = getMinValue();
-    float maxValue = getMaxValue();
-    if(minValue > 180) minValue = minValue - 360;
-    if(maxValue > 180) maxValue = maxValue - 360;
-    Origin origin = eventAccess.get_preferred_origin();
-    double azimuth = SphericalCoords.azimuth(origin.my_location.latitude,
-                        origin.my_location.longitude,
-                        station.my_location.latitude,
-                        station.my_location.longitude);
-    
-    if(azimuth >= minValue && azimuth <= maxValue) {
-        return true;
-    } else return false;
+        float minValue = getMinValue();
+        float maxValue = getMaxValue();
+        if(minValue > 180) minValue = minValue - 360;
+        if(maxValue > 180) maxValue = maxValue - 360;
+        Origin origin = eventAccess.get_preferred_origin();
+        double azimuth = SphericalCoords.azimuth(origin.my_location.latitude,
+                                                 origin.my_location.longitude,
+                                                 station.my_location.latitude,
+                                                 station.my_location.longitude);
+
+        if(azimuth >= minValue && azimuth <= maxValue) {
+            return true;
+        } else return false;
     }
 
 

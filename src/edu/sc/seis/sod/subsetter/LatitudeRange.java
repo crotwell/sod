@@ -16,8 +16,7 @@ public class LatitudeRange extends RangeSubsetter implements SodElement{
      *
      * @param config an <code>Element</code> value
      */
-    public LatitudeRange(Element config) {
-
+    public LatitudeRange(Element config)  throws ConfigurationException {
         super(config);
     }
 }
