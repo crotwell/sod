@@ -13,8 +13,8 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.process.eventArm.EventArmProcess;
-import edu.sc.seis.sod.status.eventArm.EventArmMonitor;
+import edu.sc.seis.sod.process.eventArm.EventProcess;
+import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.subsetter.eventArm.EventFinder;
 import edu.sc.seis.sod.subsetter.eventArm.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.eventArm.PassOrigin;
@@ -70,7 +70,7 @@ public class EventArm implements Runnable{
         alive = false;
     }
 
-    public void add(EventArmMonitor monitor){ statusMonitors.add(monitor); }
+    public void add(EventMonitor monitor){ statusMonitors.add(monitor); }
 
     private void processConfig(Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
@@ -84,10 +84,10 @@ public class EventArm implements Runnable{
                     finder = (EventFinder)sodElement;
                 } else if(sodElement instanceof OriginSubsetter) {
                     originSubsetter = (OriginSubsetter)sodElement;
-                } else if(sodElement instanceof EventArmProcess) {
+                } else if(sodElement instanceof EventProcess) {
                     processors.add(sodElement);
-                }else if(sodElement instanceof EventArmMonitor) {
-                    add((EventArmMonitor)sodElement);
+                }else if(sodElement instanceof EventMonitor) {
+                    add((EventMonitor)sodElement);
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
@@ -291,7 +291,7 @@ public class EventArm implements Runnable{
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
-                ((EventArmMonitor)it.next()).change(event, status);
+                ((EventMonitor)it.next()).change(event, status);
             }
         }
     }
@@ -300,7 +300,7 @@ public class EventArm implements Runnable{
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
             while(it.hasNext()){
-                ((EventArmMonitor)it.next()).setArmStatus(status);
+                ((EventMonitor)it.next()).setArmStatus(status);
             }
         }
     }
@@ -309,7 +309,7 @@ public class EventArm implements Runnable{
     private void process(EventAccessOperations eventAccess) throws Exception {
         Iterator it = processors.iterator();
         while(it.hasNext()){
-            ((EventArmProcess)it.next()).process(eventAccess);
+            ((EventProcess)it.next()).process(eventAccess);
         }
     }
 

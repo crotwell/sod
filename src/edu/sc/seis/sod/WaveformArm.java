@@ -29,7 +29,7 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import edu.sc.seis.sod.status.waveformArm.WaveformArmMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.waveformArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveformArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveformArm.PassEventStation;
@@ -114,8 +114,8 @@ public class WaveformArm implements Runnable {
         return eventStationSubsetter;
     }
 
-    public WaveformArmMonitor[] getWaveformArmMonitors() {
-        return (WaveformArmMonitor[])statusMonitors.toArray(new WaveformArmMonitor[0]);
+    public WaveformMonitor[] getWaveformArmMonitors() {
+        return (WaveformMonitor[])statusMonitors.toArray(new WaveformMonitor[0]);
     }
 
     //fills the eventchannel db with all available events and starts
@@ -441,8 +441,8 @@ public class WaveformArm implements Runnable {
                 Object sodElement = SodUtil.load(el, "waveformArm");
                 if(sodElement instanceof EventStationSubsetter) {
                     eventStationSubsetter = (EventStationSubsetter)sodElement;
-                } else if(sodElement instanceof WaveformArmMonitor) {
-                    addStatusMonitor((WaveformArmMonitor)sodElement);
+                } else if(sodElement instanceof WaveformMonitor) {
+                    addStatusMonitor((WaveformMonitor)sodElement);
                 } else {
                     if(localSeismogramArm != null) {
                         localSeismogramArm.handle(sodElement);
@@ -454,7 +454,7 @@ public class WaveformArm implements Runnable {
         } // end of for (int i=0; i<children.getSize(); i++)
     }
 
-    public void addStatusMonitor(WaveformArmMonitor monitor) {
+    public void addStatusMonitor(WaveformMonitor monitor) {
         statusMonitors.add(monitor);
     }
 
@@ -477,7 +477,7 @@ public class WaveformArm implements Runnable {
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()) {
                 try {
-                    ((WaveformArmMonitor)it.next()).update(ecp);
+                    ((WaveformMonitor)it.next()).update(ecp);
                 } catch(Exception e) {
                     // oh well, log it and go to next status processor
                     GlobalExceptionHandler.handle("Problem in setStatus", e);

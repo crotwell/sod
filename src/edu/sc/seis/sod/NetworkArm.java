@@ -21,8 +21,8 @@ import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.database.network.JDBCNewChannels;
-import edu.sc.seis.sod.process.networkArm.NetworkArmProcess;
-import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
+import edu.sc.seis.sod.process.networkArm.NetworkProcess;
+import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -106,14 +106,14 @@ public class NetworkArm {
                 throw new ConfigurationException("More than one ChannelSubsetter is in the configuration file: "+sodElement);
             } // end of else
 
-        } else if(sodElement instanceof NetworkArmProcess) {
+        } else if(sodElement instanceof NetworkProcess) {
             networkArmProcesses.add(sodElement);
-        }else if(sodElement instanceof NetworkArmMonitor) {
+        }else if(sodElement instanceof NetworkMonitor) {
             statusMonitors.add(sodElement);
         }
     }
 
-    public void add(NetworkArmMonitor monitor) {
+    public void add(NetworkMonitor monitor) {
         statusMonitors.add(monitor);
     }
 
@@ -121,7 +121,7 @@ public class NetworkArm {
         throws Exception{
         Iterator it = networkArmProcesses.iterator();
         while(it.hasNext()){
-            ((NetworkArmProcess)it.next()).process(networkAccess, channel);
+            ((NetworkProcess)it.next()).process(networkAccess, channel);
         }
     }
 
@@ -424,7 +424,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkArmMonitor)it.next()).setArmStatus(newStatus);
+                ((NetworkMonitor)it.next()).setArmStatus(newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
                 GlobalExceptionHandler.handle("Problem changing status in NetworkArm", e);
@@ -436,7 +436,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkArmMonitor)it.next()).change(chan, newStatus);
+                ((NetworkMonitor)it.next()).change(chan, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 GlobalExceptionHandler.handle("Problem changing channel status in NetworkArm", e);
@@ -448,7 +448,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkArmMonitor)it.next()).change(sta, newStatus);
+                ((NetworkMonitor)it.next()).change(sta, newStatus);
             } catch (Exception e) {
                 // caught for one, but should continue with rest after logging it
                 GlobalExceptionHandler.handle("Problem changing station status in NetworkArm", e);
@@ -466,7 +466,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkArmMonitor)it.next()).change(na, newStatus);
+                ((NetworkMonitor)it.next()).change(na, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 GlobalExceptionHandler.handle("Problem changing network status in NetworkArm", e);
@@ -478,7 +478,7 @@ public class NetworkArm {
         Iterator it = statusMonitors.iterator();
         while(it.hasNext()){
             try {
-                ((NetworkArmMonitor)it.next()).change(site, newStatus);
+                ((NetworkMonitor)it.next()).change(site, newStatus);
             } catch (Throwable e) {
                 // caught for one, but should continue with rest after logging it
                 GlobalExceptionHandler.handle("Problem changing site status in NetworkArm", e);
