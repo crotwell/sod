@@ -1,6 +1,7 @@
 package edu.sc.seis.sod;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.sc.seis.sod.subsetter.networkArm.*;
+import java.util.*;
 
 import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -18,11 +19,6 @@ import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.process.networkArm.NetworkArmProcess;
 import edu.sc.seis.sod.status.networkArm.NetworkArmMonitor;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -318,6 +314,7 @@ public class NetworkArm {
                                                         Standing.IN_PROG));
                 if(channelSubsetter.accept(channels[subCounter])) {
                     int dbid = netTable.put(channels[subCounter]);
+                    channelMap.put(new Integer(dbid), channels[subCounter]);
                     ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                           channels[subCounter]);
                     successes.add(channelDbObject);
@@ -339,6 +336,16 @@ public class NetworkArm {
         statusChanged("Waiting for a request");
         return values;
     }
+
+    //This is a HACK.  Since we're already storing the channels whole hog, it
+    //isn't much of a stretch to cache them by dbid, and this allows
+    //JDBCEventChannelStatus to quickly pull them out instead of going to the
+    //Net database
+    public Channel getChannel(int chanId) {
+        return (Channel)channelMap.get(new Integer(chanId));
+    }
+
+    private Map channelMap = Collections.synchronizedMap(new HashMap());
 
     private void statusChanged(String newStatus) {
         Iterator it = statusMonitors.iterator();
