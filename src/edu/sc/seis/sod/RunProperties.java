@@ -29,17 +29,17 @@ public class RunProperties{
 
         Element eventQueryChild = SodUtil.getElement(el, "eventQueryIncrement");
         if(eventQueryChild != null){
-            eventQueryIncrement = SodUtil.loadTimeInterval(el);
+            eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
         }
 
         Element eventLagChild = SodUtil.getElement(el, "eventLag");
         if(eventLagChild != null){
-            eventLag = SodUtil.loadTimeInterval(el);
+            eventLag = SodUtil.loadTimeInterval(eventLagChild);
         }
 
         Element eventRefreshChild = SodUtil.getElement(el, "eventRefreshInterval");
         if(eventRefreshChild != null){
-            eventRefresh = SodUtil.loadTimeInterval(el);
+            eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
         }
 
         Element maxRetryChild = SodUtil.getElement(el, "maxRetryDelay");
