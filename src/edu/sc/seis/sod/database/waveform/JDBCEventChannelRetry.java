@@ -8,6 +8,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCEventChannelRetry extends SodJDBC{
@@ -21,8 +22,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
         updateFailure = conn.prepareStatement("UPDATE eventchannelretry SET status = ?, numfailure = numfailure + 1, retry_time = ? WHERE pairid = ?");
         selectPair = conn.prepareStatement("SELECT numfailure FROM eventchannelretry WHERE pairid = ?");
         selectNext = conn.prepareStatement("SELECT pairid, retry_time FROM eventchannelretry " +
-                                               "WHERE status = " + EventChannelCondition.CORBA_FAILURE.getNumber() +
-                                               " OR status = " + EventChannelCondition.NO_AVAILABLE_DATA.getNumber() +
+                                               "WHERE status != -1 "+
                                                " ORDER BY retry_time DESC");
         clearAll = conn.prepareStatement("DELETE FROM eventchannelretry");
         updateStatus = conn.prepareStatement("UPDATE eventchannelretry SET status = ? WHERE pairid = ?");
@@ -49,7 +49,7 @@ public class JDBCEventChannelRetry extends SodJDBC{
         ResultSet rs = selectNext.executeQuery();
         while(rs.next()){
             if(rs.getTimestamp("retry_time").after(ClockUtil.now())) continue;
-            updateStatus.setInt(1, EventChannelCondition.RETRY.getNumber());
+            updateStatus.setInt(1, -1);
             updateStatus.setInt(2, rs.getInt("pairid"));
             updateStatus.executeUpdate();
             return rs.getInt("pairid");
@@ -57,11 +57,9 @@ public class JDBCEventChannelRetry extends SodJDBC{
         return -1;
     }
 
-    public void failed(int pairId, EventChannelCondition failureType) throws SQLException{
-        if(!tableContains(pairId)){
-            insert(pairId);
-        }
-        updateFailure.setInt(1, failureType.getNumber());
+    public void failed(int pairId, Status failureType) throws SQLException{
+        if(!tableContains(pairId))insert(pairId);
+        updateFailure.setInt(1, failureType.getAsByte());
         updateFailure.setTimestamp(2, getTimestamp(pairId));
         updateFailure.setInt(3, pairId);
         updateFailure.executeUpdate();

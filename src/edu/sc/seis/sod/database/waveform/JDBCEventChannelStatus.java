@@ -10,6 +10,7 @@ import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCSequence;
 import edu.sc.seis.fissuresUtil.database.NotFound;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.SodJDBC;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,19 +30,18 @@ public class JDBCEventChannelStatus extends SodJDBC{
                                            "VALUES (? , ?, ?)");
         getPairId = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE eventid = ? and channelid = ?");
         setStatus = conn.prepareStatement("UPDATE eventchannelstatus SET status = ? where pairid = ?");
-        pop = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE status = " + EventChannelCondition.NEW.getNumber());
+        pop = conn.prepareStatement("SELECT pairid FROM eventchannelstatus WHERE status = " + Status.get(Status.SPECIAL, Status.NEW).getAsByte());
         getEventAndChanId = conn.prepareStatement("SELECT eventid, channelid FROM eventchannelstatus WHERE pairid = ?");
-        
     }
-    
+
     public int getEventId(int pairId) throws NotFound, SQLException{
         return getEventAndChanIds(pairId)[0];
     }
-    
+
     public int getChanId(int pairId) throws NotFound, SQLException{
         return getEventAndChanIds(pairId)[1];
     }
-    
+
     /**
      * @return   an int[] with the event id in the 0th position and the chan id
      *  in the 1st position
@@ -57,13 +57,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         }
         throw new NotFound("No such pair id " + pairId + " in the event channel pair db");
     }
-    
-    public int put(int eventId, int chanId, EventChannelCondition stat) throws SQLException{
+
+    public int put(int eventId, int chanId, Status stat) throws SQLException{
         int pairId = insert(eventId, chanId);
         setStatus(pairId, stat);
         return pairId;
     }
-    
+
     public int insert(int eventId, int chanId) throws SQLException{
         try {
             return getPairId(eventId, chanId);
@@ -76,7 +76,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
             return pairId;
         }
     }
-    
+
     private int getPairId(int eventId, int chanId) throws NotFound, SQLException{
         getPairId.setInt(1, eventId);
         getPairId.setInt(2, chanId);
@@ -84,16 +84,16 @@ public class JDBCEventChannelStatus extends SodJDBC{
         if(rs.next())return rs.getInt("pairid");
         throw new NotFound("No event and channel pair");
     }
-    
-    public void setStatus(int pairId, EventChannelCondition status) throws SQLException{
-        setStatus.setInt(1, status.getNumber());
+
+    public void setStatus(int pairId, Status status) throws SQLException{
+        setStatus.setInt(1, status.getAsByte());
         setStatus.setInt(2, pairId);
         setStatus.executeUpdate();
     }
-    
+
     private PreparedStatement insert, setStatus, getPairId, pop,
         getEventAndChanId;
-    
+
     private JDBCSequence seq;
 }
 
