@@ -60,6 +60,4 @@ public class OriginOffsetRequest implements RequestGenerator {
     }
 
     private Interval beginOffset, endOffset;
-
-    private String beginPhase;
 } // OriginOffsetRequest
