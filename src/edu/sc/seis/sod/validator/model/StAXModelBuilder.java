@@ -469,7 +469,11 @@ public class StAXModelBuilder implements XMLStreamConstants {
     private String getAbsPath() {
         String href = reader.getAttributeValue(0);
         String curLoc = definedGrammar.getLoc();
-        return SodUtil.getAbsolutePath(curLoc, href);
+        try {
+            return SodUtil.getAbsolutePath(curLoc, href);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Form getRoot() {
