@@ -19,10 +19,11 @@ public class DatabaseManager {
     }
     
     public static AbstractDatabaseManager getDatabaseManager(Properties props, String type) {
+	String className = null;
 	try {
 	if(databaseManager != null) return databaseManager;
 	//use reflection to get the appropriate Database Manager.
-	String className = getDatabaseType(props);
+	className = getDatabaseType(props);
 	Class[] constructorArgTypes = new Class[1];
 	constructorArgTypes[0] = Properties.class;
 	Class externalClass = Class.forName(className);
@@ -36,7 +37,9 @@ public class DatabaseManager {
 	return databaseManager;
 	} catch(Exception e) {
 		e.printStackTrace();
-		return null;	
+		System.out.println("Unable to load  "+className);
+		System.exit(0);
+		return null;
 	}
     }
 
