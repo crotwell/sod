@@ -26,19 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCEventChannelStatus extends SodJDBC{
-
     public JDBCEventChannelStatus() throws SQLException{
         this(ConnMgr.createConnection());
     }
 
-    /**
-     * Constructor
-     *
-     * @param    conn                a  Connection
-     *
-     * @exception   SQLException
-     *
-     */
     public JDBCEventChannelStatus(Connection conn) throws SQLException{
         this.conn = conn;
         if(!DBUtil.tableExists("eventchannelstatus", conn)){
@@ -61,12 +52,13 @@ public class JDBCEventChannelStatus extends SodJDBC{
         String chanJoin = "channelid = chan_id AND " +
             "channel.site_id = site.site_id AND " +
             "site.sta_id = station.sta_id";
+        String stationsBase = "SELECT DISTINCT " + JDBCStation.getNeededForStation() +
+                                             " FROM channel, site, eventchannelstatus, station ";
+        stations = conn.prepareStatement(stationsBase + "WHERE " + chanJoin + " AND eventid = ?");
         String stationsOfStatusWhere = "WHERE "+chanJoin+" AND " +
             "eventid = ? AND " +
             "status = ?";
-        stationsOfStatus = conn.prepareStatement("SELECT DISTINCT " + JDBCStation.getNeededForStation() +
-                                                     " FROM channel, site, eventchannelstatus, station " +
-                                                     stationsOfStatusWhere);
+        stationsOfStatus = conn.prepareStatement(stationsBase + stationsOfStatusWhere);
         stationsNotOfStatus = conn.prepareStatement("SELECT " + JDBCStation.getNeededForStation() + " FROM station " +
                                                         "WHERE sta_id NOT IN ("+
                                                         "SELECT DISTINCT sta_id FROM channel, site, eventchannelstatus " +
@@ -139,6 +131,19 @@ public class JDBCEventChannelStatus extends SodJDBC{
         return executeGetStationsOfStatus(stationsOfStatus,
                                           status.getAsShort(),
                                           ev);
+    }
+
+    public Station[] getStations(EventAccessOperations ev) throws SQLException {
+        int evDbId;
+        try {
+            evDbId = eventTable.getDBId(ev);
+        } catch (NotFound e) {
+            GlobalExceptionHandler.handle("Extracting a dbid for an event returned not found when the event is known to be in the db!  Zoinks!",
+                                          e);
+            return new Station[]{};
+        }
+        stations.setInt(1, evDbId);
+        return chanTable.getSiteTable().getStationTable().extractAll(stations.executeQuery());
     }
 
     private Station[] executeGetStationsOfStatus(PreparedStatement stmt,
@@ -359,7 +364,7 @@ public class JDBCEventChannelStatus extends SodJDBC{
         stationsNotOfStatus, stationsOfStatus,
         channelsForPair,
         dbIdForEventAndChan,
-        ofStation, ofStationStatus;
+        ofStation, ofStationStatus, stations;
 
     private JDBCSequence seq;
     private JDBCEventAccess eventTable;
