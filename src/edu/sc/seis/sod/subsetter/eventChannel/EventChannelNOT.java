@@ -30,7 +30,7 @@ public final class EventChannelNOT extends EventChannelLogicalSubsetter
         if(it.hasNext()) {
             EventChannelSubsetter filter = (EventChannelSubsetter)it.next();
             StringTree result = filter.accept(o, channel, cookieJar);
-            return new StringTreeBranch(this, result.isSuccess(), result);
+            return new StringTreeBranch(this, ! result.isSuccess(), result);
         }
         return new StringTreeLeaf(this, true, "empty NOT");
     }
