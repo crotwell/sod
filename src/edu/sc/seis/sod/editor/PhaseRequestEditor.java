@@ -23,18 +23,22 @@ import org.w3c.dom.Text;
 public class PhaseRequestEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws TransformerException {
+        Box vertBox = Box.createVerticalBox();
+
         Box modelBox = Box.createHorizontalBox();
-        Element modelElement = (Element)XPathAPI.selectSingleNode(element, "model");
-        modelBox.add(EditorUtil.getLabel(SimpleGUIEditor.getDisplayName(modelElement.getTagName())));
-        modelBox.add(EditorUtil.getComboBox(modelElement, MODEL_NAMES));
-        modelBox.add(Box.createHorizontalGlue());
+        String modelTagName = "model";
+        Element modelElement = (Element)XPathAPI.selectSingleNode(element, modelTagName);
+        if (modelElement != null) {
+            modelBox.add(EditorUtil.getLabel(SimpleGUIEditor.getDisplayName(modelTagName)));
+            modelBox.add(EditorUtil.getComboBox(modelElement, MODEL_NAMES));
+            modelBox.add(Box.createHorizontalGlue());
+            vertBox.add(modelBox);
+        }
 
         Box phaseBox = Box.createHorizontalBox();
         phaseBox.add(makePhaseEditor(element));
         phaseBox.add(Box.createHorizontalGlue());
 
-        Box vertBox = Box.createVerticalBox();
-        vertBox.add(modelBox);
         vertBox.add(phaseBox);
 
         vertBox.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getTagName())));
