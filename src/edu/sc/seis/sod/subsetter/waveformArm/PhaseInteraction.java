@@ -186,6 +186,8 @@ public class PhaseInteraction implements EventStationSubsetter {
 	System.out.println("The length of the path array is "+timeDistArray.length);
 	//for(int i = 0; i < timeDistArray.length; i++) {
 	    int counter = 0;
+	    if(end < start) return false;
+	    System.out.println("Performing pathInteraction subsetting "+start+"  "+end);
 	    int mid = (start+end)/2;
 	    TimeDist timeDist = timeDistArray[mid];
 	    QuantityImpl minDistance = null;
