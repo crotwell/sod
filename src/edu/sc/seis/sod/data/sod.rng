@@ -13,16 +13,16 @@
                                 <text/>
                             </element>
                             <element name="eventQueryIncrement">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                             <element name="eventRefreshInterval">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                             <element name="eventLag">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                             <element name="maxRetryDelay">
-                                <ref name="time5"/>
+                                <ref name="time6"/>
                             </element>
                             <element name="waveformWorkerThreads">
                                 <text/>
@@ -421,13 +421,13 @@
                                 <data type="string"/>
                             </element>
                             <element name="beginOffset">
-                                <ref name="time6"/>
+                                <ref name="time7"/>
                             </element>
                             <element name="endPhase">
                                 <data type="string"/>
                             </element>
                             <element name="endOffset">
-                                <ref name="time6"/>
+                                <ref name="time7"/>
                             </element>
                         </element>
                         <optional>
@@ -478,13 +478,13 @@
                                     <data type="string"/>
                                 </element>
                                 <element name="beginOffset">
-                                    <ref name="time4"/>
+                                    <ref name="time5"/>
                                 </element>
                                 <element name="endPhase">
                                     <data type="string"/>
                                 </element>
                                 <element name="endOffset">
-                                    <ref name="time4"/>
+                                    <ref name="time5"/>
                                 </element>
                             </element>
                         </element>
@@ -4528,13 +4528,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time8"/>
+                    <ref name="time9"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time8"/>
+                    <ref name="time9"/>
                 </element>
             </element>
             <element name="rMean">
@@ -4597,6 +4597,31 @@
                 <zeroOrMore>
                     <ref name="seismogramProcess2"/>
                 </zeroOrMore>
+            </element>
+            <element name="phaseSignalToNoiseCalculator">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time9"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time9"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time9"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time9"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
             </element>
         </choice>
     </define>
@@ -4671,13 +4696,13 @@
                     <data type="string"/>
                 </element>
                 <element name="beginOffset">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
                 <element name="endPhase">
                     <data type="string"/>
                 </element>
                 <element name="endOffset">
-                    <ref name="time"/>
+                    <ref name="time2"/>
                 </element>
             </element>
             <element name="rMean">
@@ -4740,6 +4765,31 @@
                 <zeroOrMore>
                     <ref name="seismogramProcess"/>
                 </zeroOrMore>
+            </element>
+            <element name="phaseSignalToNoiseCalculator">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time2"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time2"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time2"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time2"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
             </element>
         </choice>
     </define>
@@ -5266,6 +5316,31 @@
                     </choice>
                 </oneOrMore>
             </element>
+            <element name="phaseSignalToNoiseCalculator">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="range8">
@@ -5632,17 +5707,17 @@
             <element name="longShortSignalToNoise">
                 <optional>
                     <element name="longTime">
-                        <ref name="time7"/>
+                        <ref name="time8"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="shortTime">
-                        <ref name="time7"/>
+                        <ref name="time8"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="delayTime">
-                        <ref name="time7"/>
+                        <ref name="time8"/>
                     </element>
                 </optional>
                 <optional>
@@ -5661,16 +5736,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time7"/>
+                    <ref name="time8"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5700,17 +5775,17 @@
             <element name="longShortSignalToNoise">
                 <optional>
                     <element name="longTime">
-                        <ref name="time2"/>
+                        <ref name="time3"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="shortTime">
-                        <ref name="time2"/>
+                        <ref name="time3"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="delayTime">
-                        <ref name="time2"/>
+                        <ref name="time3"/>
                     </element>
                 </optional>
                 <optional>
@@ -5729,16 +5804,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time2"/>
+                    <ref name="time3"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5768,17 +5843,17 @@
             <element name="longShortSignalToNoise">
                 <optional>
                     <element name="longTime">
-                        <ref name="time3"/>
+                        <ref name="time4"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="shortTime">
-                        <ref name="time3"/>
+                        <ref name="time4"/>
                     </element>
                 </optional>
                 <optional>
                     <element name="delayTime">
-                        <ref name="time3"/>
+                        <ref name="time4"/>
                     </element>
                 </optional>
                 <optional>
@@ -5797,16 +5872,16 @@
                     <data type="string"/>
                 </element>
                 <element name="shortOffsetBegin">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="shortOffsetEnd">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="longOffsetBegin">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="longOffsetEnd">
-                    <ref name="time3"/>
+                    <ref name="time4"/>
                 </element>
                 <element name="ratio">
                     <data type="float"/>
@@ -5872,6 +5947,26 @@
         </interleave>
     </define>
     <define name="time8">
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>HOUR</value>
+                    <value>DAY</value>
+                    <value>WEEK</value>
+                    <value>YEAR</value>
+                </choice>
+            </element>
+            <element name="value">
+                <data type="float"/>
+            </element>
+        </interleave>
+    </define>
+    <define name="time9">
         <interleave>
             <element name="unit">
                 <choice>

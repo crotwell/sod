@@ -26,6 +26,9 @@ import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
+import edu.iris.Fissures.FissuresException;
+import edu.sc.seis.fissuresUtil.bag.PhaseNonExistent;
 
 /** Calculates triggers, via LongShortSignalToNoise, and checks to see if a
  * trigger exists within +- the time interval for the given phase name. Uses the
@@ -85,12 +88,25 @@ public class PhaseSignalToNoise  implements LocalSeismogramSubsetter {
                           CookieJar cookieJar) throws Exception {
 
         if (seismograms.length == 0 ) { return false; }
-        LongShortTrigger trigger = phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
+        LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null && trigger.getValue() > ratio) {
             cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
             return true;
         }
         return false;
+    }
+
+    /** This method exists to make the trigger available to other subsetters
+     * or processors so they don't have to call accept, which adds it to the
+     * cookieJar. */
+    public LongShortTrigger calcTrigger(EventAccessOperations event,
+                                        Channel channel,
+                                        LocalSeismogramImpl[] seismograms) throws NoPreferredOrigin, FissuresException, PhaseNonExistent, TauModelException {
+        return phaseStoN.process(channel.my_site.my_location, event.get_preferred_origin(), seismograms[0]);
+    }
+
+    public String getPhaseName() {
+        return phaseName;
     }
 
     protected SimplePhaseStoN phaseStoN;

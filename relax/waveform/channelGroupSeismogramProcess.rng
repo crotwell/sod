@@ -5,11 +5,13 @@
         <ref name="channelGroupSeismogramProcess"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
+    <include href="../base/include/quantity.rng"/>
     <define name="channelGroupSeismogramProcess">
         <choice>
             <externalRef href="seismogramProcess.rng"/>
             <ref name="channelGroupForkProcess" />
             <ref name="externalChannelGroupSeismogramProcess" />
+            <ref name="phaseSignalToNoiseCalculator" />
         </choice>
     </define>
     <define name="channelGroupForkProcess">
@@ -27,6 +29,37 @@
             <zeroOrMore>
                 <externalRef href="../base/externalRef/anyXML.rng"/>
             </zeroOrMore>
+        </element>
+    </define>
+    <define name="phaseSignalToNoiseCalculator">
+    <!-- this is the same as phaseSignalToNoise in seismogramSubbsetter and
+         should probalby be a ref of some sort instead of this lame cut-paste
+         See also simialer in channelGroupSeismogramProcess
+     -->
+        <element name="phaseSignalToNoiseCalculator">
+            <optional>
+                <element name="modelName">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <element name="phaseName">
+                <data type="string"/>
+            </element>
+            <element name="shortOffsetBegin">
+                <ref name="time"/>
+            </element>
+            <element name="shortOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="longOffsetBegin">
+                <ref name="time"/>
+            </element>
+            <element name="longOffsetEnd">
+                <ref name="time"/>
+            </element>
+            <element name="ratio">
+                <data type="float"/>
+            </element>
         </element>
     </define>
 </grammar>
