@@ -122,18 +122,30 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JMenuItem loadTutorial = new JMenuItem("Open Tutorial");
         loadTutorial.addActionListener(tutorialLoader);
         fileMenu.add(loadTutorial);
+
         JMenuItem loadWeed = new JMenuItem("Open WEED");
         loadWeed.addActionListener(new FileLoader(configFileBase + "weed.xml"));
         fileMenu.add(loadWeed);
+
         JMenuItem loadBreqfast = new JMenuItem("Open BREQFast");
-        loadWeed.addActionListener(new FileLoader(configFileBase + "breqfast.xml"));
+        loadBreqfast.addActionListener(new FileLoader(configFileBase + "breqfast.xml"));
         fileMenu.add(loadBreqfast);
         JMenuItem loadMovec = new JMenuItem("Open Motion Vector");
-        loadWeed.addActionListener(new FileLoader(configFileBase + "motionvector.xml"));
+        loadMovec.addActionListener(new FileLoader(configFileBase + "motionvector.xml"));
         fileMenu.add(loadMovec);
+
         JMenuItem loadLegEx = new JMenuItem("Open Legacy Execute");
-        loadWeed.addActionListener(new FileLoader(configFileBase + "legacyExecute.xml")); 
+        loadLegEx.addActionListener(new FileLoader(configFileBase + "legacyExecute.xml"));
         fileMenu.add(loadLegEx);
+
+        JMenuItem load3CLegEx = new JMenuItem("Open 3C Legacy Execute");
+        load3CLegEx.addActionListener(new FileLoader(configFileBase + "legacyExecuteMoVec.xml"));
+        fileMenu.add(load3CLegEx);
+
+        JMenuItem loadRealTime = new JMenuItem("Open Real Time");
+        loadRealTime.addActionListener(new FileLoader(configFileBase + "realtime.xml"));
+        fileMenu.add(loadRealTime);
+
         fileMenu.addSeparator();
         JMenuItem quit = new JMenuItem("Quit");
         fileMenu.add(quit);
@@ -155,7 +167,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
             try {
                 setConfigFile(filename);
                 loadGUI();
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 GlobalExceptionHandler.handle(ex);
             }
         }
