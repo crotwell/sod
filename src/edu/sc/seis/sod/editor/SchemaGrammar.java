@@ -19,10 +19,10 @@ import com.sun.msv.reader.util.GrammarLoader;
 import com.sun.msv.reader.util.IgnoreController;
 
 public class SchemaGrammar {
-    public SchemaGrammar() throws Exception {
+    public SchemaGrammar(String[] args) throws Exception {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         saxParserFactory.setNamespaceAware(true);
-        InputSource inputSource = new InputSource("sod.rng");
+        InputSource inputSource = new InputSource(args[0] + "/relax/sod.rng");
         grammar = GrammarLoader.loadSchema(inputSource, new OutMsvController(), saxParserFactory);
         if (grammar == null) {
             throw new Exception("Couldn't load the schema");
@@ -127,8 +127,8 @@ public class SchemaGrammar {
     }
 
     public static void main(String[] args) throws Exception{
-        new SchemaGrammar();
-        FileOutputStream fos = new FileOutputStream("../src/"+NODE_JAR_LOC);
+        new SchemaGrammar(args);
+        FileOutputStream fos = new FileOutputStream(args[0] + "/src/"+NODE_JAR_LOC);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(visitedMap);
         oos.close();
