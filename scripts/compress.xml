@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<sod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='./sod.xsd'>
+
+<!-- The event arm decides which events are interesting. This is based purely on the event itself, not the relationship to a particular station, etc. -->
+     <eventArm>
+
+<!-- The event finder is one way of finding out about events. It is for events that have already been stored in a database somewhere, and so could be considered historical in some sense. The event channel is the other method, and it listens for new events. -->
+	   <eventFinder>
+
+<!-- The EventDC will have a name that it is registered under in the naming service. -->
+		<name>ANHINGAEVENTDC</name>
+
+<!-- The EventDC will also be registered under a subdirectory according to its reversed DNS. -->
+		<dns>edu/sc/seis</dns>
+
+<!-- We will take events from anywhere -->
+		<globalArea/>
+
+<!-- Depths from 0 to 1000 kilometers are ok, -->
+		<originDepthRange>
+			<unitRange>
+				<unit>KILOMETER</unit>
+				<min>0</min>
+				<max>1000</max>
+			</unitRange>
+		</originDepthRange>
+
+<!-- Only take events from 1999 and 2003 -->
+		<eventTimeRange>
+		<timeRange>
+			<startTime>2002-04-01T00:00:00Z</startTime>
+			<endTime>2002-04-20T00:00:00Z</endTime>
+		</timeRange>
+		</eventTimeRange>
+
+
+<!-- Only events that have a origin from the FINGER catalog. -->
+		<catalog><value>FINGER</value></catalog>
+<contributor>NEIC</contributor>
+	   </eventFinder>
+
+
+<!-- Print out a line for each successful event -->
+	<printLineEventProcess/>
+   
+   </eventArm>
+
+   <networkArm>
+	<networkFinder>
+		<description>Connect to the SCEPP networkDC</description>
+		<name>IRIS_NetworkDC</name>
+		<dns>edu/fakeiris/dmc</dns>
+		<refreshInterval>
+			<unit>MINUTE</unit>
+			<value>300</value>
+		</refreshInterval>
+	</networkFinder>
+	<networkIDOR>
+		<networkCode><value>II</value></networkCode>
+	</networkIDOR>
+
+	<networkeffectiveTimeOverlap>
+		<description>Make sure the network was up during the time range we are interested in. Somewhat redundant since we are only getting one network.</description>
+		<effectiveTimeOverlap>
+			<min>1999-01-01T00:00:00Z</min>
+			<max>2003-01-01T00:00:00Z</max>
+		</effectiveTimeOverlap>
+	</networkeffectiveTimeOverlap>
+
+	<stationAND>
+		  <stationArea>
+		    <boxArea>
+			<latitudeRange>
+				<min>0</min>
+				<max>36</max>
+			</latitudeRange>
+			<longitudeRange>
+				<min>-84</min>
+				<max>78</max>
+			</longitudeRange>
+		    </boxArea>
+		   </stationArea>
+		<stationeffectiveTimeOverlap>
+			<effectiveTimeOverlap>
+				<min>1999-01-01T00:00:00Z</min>
+				<max>2002-01-01T00:00:00Z</max>
+			</effectiveTimeOverlap>
+		</stationeffectiveTimeOverlap>
+	</stationAND>
+
+	<siteCode><value>00</value></siteCode>
+
+<!-- Accept any channel with B or L band code -->
+	<channelIDOR>
+		<bandCode><value>B</value></bandCode>
+		<bandCode><value>L</value></bandCode>
+	</channelIDOR>
+
+	<sampling>
+		<min>1</min>
+		<max>40</max>
+		<interval>
+			<unit>SECOND</unit>
+			<value>1</value>
+		</interval>
+	</sampling>
+
+	<printlineChannelProcessor/>
+	
+    </networkArm>
+
+    <waveFormArm>
+	<fixedDataCenter>
+		<name>IRIS_BudDataCenter</name>
+		<dns>edu/iris/dmc</dns>
+	</fixedDataCenter>
+	<localSeismogramArm>
+	<phaseRequest>
+		<beginPhase>ttp</beginPhase>
+		<beginOffset>
+			<unit>SECOND</unit>
+			<value>-720</value>
+		</beginOffset>
+		<endPhase>ttp</endPhase>
+		<endOffset>
+			<unit>SECOND</unit>
+			<value>-120</value>
+		</endOffset>
+	</phaseRequest>
+
+	<availableDataAND>
+		<nogaps/>
+		<fullCoverage/>
+	</availableDataAND>
+
+	<printlineSeismogramProcess/>
+	<sacFileProcessor>
+		<dataDirectory>CompressTestEvents</dataDirectory>
+	</sacFileProcessor>
+
+	</localSeismogramArm>
+   </waveFormArm>
+</sod>
