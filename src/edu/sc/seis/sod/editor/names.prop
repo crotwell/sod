@@ -93,5 +93,7 @@ resp=IRIS Resp File
 polezero=SAC Pole Zero
 
 eventChannelPairProcessing=Event-Channel Pairs Processed
+waveformNetworkStatus=Generate network-centric waveform summary HTML
+waveformStationStatus=Generate station-centric waveform summary HTML
 
 
