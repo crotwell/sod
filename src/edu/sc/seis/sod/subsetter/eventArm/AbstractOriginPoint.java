@@ -21,7 +21,8 @@ public class AbstractOriginPoint extends DistanceRangeSubsetter {
         longitude = Double.parseDouble(XMLUtil.getText((Element)nodeList.item(0)));
     }
 
-    double latitude = 0.0;
-    double longitude = 0.0;
+    protected double latitude = 0.0;
+
+    protected double longitude = 0.0;
 }
 
