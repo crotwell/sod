@@ -3,7 +3,7 @@
 
   <properties>
     <author>Philip Crotwell</author>
-    <title>SOD Installation</title>
+    <title>SOD Walkthrough</title>
   </properties>
 
 <body>
@@ -12,10 +12,12 @@
 <p>
 We shall assume that you have successfully downloaded and extracted SOD from
 its tar or zip file. If not please have a look at the
-<a href="install.html">installation</a> document.
+<a href="install.html">installation</a> document. This document cover SOD from
+the point of view of the GUI editor. If you would like a lower level, XML based
+view of how SOD works, please see the ***TODO*** tutorial document.
 </p>
 <p>
-Slide into the SOD directory, where you should see various files and subdirectories.
+Change into the SOD directory, where you should see various files and subdirectories.
 Start up the GUI editor, by running <code>./bin/editor.sh</code> or <code>bin\editor.bat</code>.
 The editor should start with the tutorial configuration preloaded. This is
 contained within the editor, so there is no need to worry about messing anything
@@ -68,14 +70,16 @@ cannot be O. This accepts both LH? and LL? channels, but rejects LOG channels.
 Of course there are other, probably better ways, of accomplishing this same
 thing, but this is a good way of introducing the logical subsetters. Notice that
 there are three channel subsetters joined with a logical AND, and one of these
-is a logical NOT that contains another subsetter. SOD allows, and in fact depends
-on the ability to build up complex queries from simple building blocks glued
-together with logical operators.
+is a logical NOT that contains another subsetter. SOD makes heavy use of the
+ability to build up complex queries from simple building blocks glued
+together with logical operators. SOD trys to provide lots of small operations,
+insted of big, monoliths in order to give the user the flexibility to use it
+in new and interesting ways.
 </p>
 <p>
 You will also notice that there are quite a few effective time subsetters. These
 are not strictly required, and the SOD run would likely generate the same exact
-result if they were not there, but adding them allow SOD to be more efficient.
+result if they were not there, but adding them allows SOD to be more efficient.
 By rejecting stations and channels that were not in existence at the time of
 the earthquake, SOD is able to avoid a significant number of calls on the remote
 server. For example, if you eliminate a station, SOD need not retrieve the
@@ -86,6 +90,66 @@ eliminate as much as possible as early as possible.
 
 <section name="Waveform">
 <p>
+The Waveform tab shows what event-channel pairs are accepted, and what data
+to ask for. The first item is a distance range subsetter. Only events that
+are at least 30, but less than 90, degrees away from the station are processed.
+This is an example of a type of subsetting that cannot be performed within the
+event or network tabs and it involves a combination of both the event and
+station information.
+</p>
+<p>
+The next item is the ***TODO***
+</p>
+<p>
+The Phase Request selects the time range, relative to particular phases, for
+which the server will be asked. The travel time calculations are based on the
+<a href="http://www.seis.sc.edu/software/TauP">TauP Toolkit</a>, and so
+any choice of phase and model that is compatible with TauP is allowed. It is
+inportant to be careful of phases that might not exist at all distances, like
+P and S. An alternative is to use ttp and tts which are TauP aliases for
+p, P, Pn, Pdiff, PKiKP, PKIKP and s, S, Sn, Sdiff, SKIKS respectivly. In any case
+the first arriving phase of that name is used. The offsets are added to the
+phase times to get the request time window. Note that this means that the
+begun offset should usually be negative in order to include the phase. The server
+in many cases will actually return a slightly wider time window than the actual
+request in order to avoid spliting data chunks.
+</p>
+<p>
+Once the request is ready, SOD needs to choose the server. In this case we will
+send it to the IRIS POND. Users need to know the charateristics of the servers
+that they use. For example, the POND only has data for events of magnitude 5.5
+or larger and the BUD only has data for the last three months.
+</p>
+<p>
+Next is the Some Coverage subsetter. It acts on the servers response to a query
+for available data, simply requiring that there be some. This is a pretty common
+subsetter to use as it keeps SOD from asking for data that doesn't exist, as well
+as logging the fact that the data wasn't available. This aids in SOD's ability
+to go back later and rety requests if the data was not yet available, perhaps due
+to a delay in transmitting the data from the station.
+</p>
+<p>
+At this point SOD will request and retrieve the actual data. The last items
+will print a
+line saying how many seismograms were received for each request, and then save
+the data in SAC format in a directory. Due to gaps in the original recording,
+it is possible to get more than one seismogram from a single request, but
+usually for small time window this does not happen.
+</p>
+<p>
+The SacFileProcessor allows you to customize the directory naming structure.
+First, the dataDirectory element gives the parent directory into which sod
+will build the actual event directories. Sod will create this directory if it
+does not exist. Next, the eventDirLabel creates the name of each event's
+subdirectory. We will name the directories with Event_ followed by the time
+of the event as year_Jday_hour_minute_second. Documentation on the time
+format can be found
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html">here</a>.
+</p>
+<p>
+The last items in the waveform tab are the status processors. They generate
+html pages that show how SOD is progressing, what events and stations were
+used, and images of the retrieved seismograms.
 </p>
 </section>
 
