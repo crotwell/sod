@@ -47,7 +47,6 @@ public class RunStatus{
     public static RunStatus translate(EventChannelCondition cond){
         if(cond == EventChannelCondition.NEW) return NEW;
         else if(cond == EventChannelCondition.FAILURE ||
-                cond == EventChannelCondition.PROCESSOR_FAILED ||
                 cond == EventChannelCondition.SUBSETTER_FAILED) return FAILED;
         else return PASSED;
     }
