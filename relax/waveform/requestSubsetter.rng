@@ -127,9 +127,9 @@
                         whole reason to generate breqfast requests is that it is the only way to get
                         the data, and so there is not much point in proceeding down the waveform
                         arm. So you will generally want to wrap the breqFastRequest in a
-                        &lt;requestNOT&gt; so that the return value is false. This
-                        will allow SOD to proceed to the next piece of work and avoid the wasted
-                        time in going to the server to get data. </description>
+                        requestNOT so that the return value is false. This will
+                        allow SOD to proceed to the next piece of work and avoid the wasted time in
+                        going to the server to get data. </description>
                     <example>
                         <breqFastRequest>
                             <dataDirectory>RUSH_breqfast</dataDirectory>
