@@ -1,40 +1,41 @@
 package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
+import edu.sc.seis.fissuresUtil.bag.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.seismogramDC.*;
+import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.IfEvent.*;
-import edu.sc.seis.fissuresUtil.bag.*;
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 /**
- * Applys the overall gain from the response to the seismogram, converting
- * the units from counts to something physical, like m/s. This in NOT a
- * deconvolution, merely a constant multiplier.
+ * Cuts seismograms relative to phases.
  *
  *
  * Created: Wed Nov  6 17:58:10 2002
  *
- * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: ResponseGainProcessor.java 2923 2002-11-18 14:23:00Z crotwell $
+ * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell</a>
+ * @version $Id: PhaseCut.java 2923 2002-11-18 14:23:00Z crotwell $
  */
 
-public class ResponseGainProcessor implements LocalSeismogramProcess {
+public class PhaseCut implements LocalSeismogramProcess {
 
     /**
-     * Creates a new <code>ResponseGain</code> instance.
+     * Creates a new <code>PhaseCut</code> instance.
      *
      * @param config an <code>Element</code> that contains the configuration
      * for this Processor
      */
-    public ResponseGainProcessor (Element config) {
+    public PhaseCut (Element config) throws ConfigurationException {
 	this.config = config;
+	// use existing PhaseRequest class to calculate phase times
+	phaseRequest = new PhaseRequest(config);
     }
 
     /**
-     * Describe <code>process</code> method here.
+     * Cuts the seismograms based on phase arrivals.
      *
      * @param event an <code>EventAccessOperations</code> value
      * @param network a <code>NetworkAccess</code> value
@@ -52,14 +53,20 @@ public class ResponseGainProcessor implements LocalSeismogramProcess {
 				     RequestFilter[] available,
 				     LocalSeismogram[] seismograms, 
 				     CookieJar cookies) throws Exception {
-	ResponseGain responseGain = new ResponseGain(network);
-	LocalSeismogramImpl[] out = new LocalSeismogramImpl[seismograms.length];
+	LocalSeismogramImpl[] out = 
+	    new LocalSeismogramImpl[seismograms.length];
+	RequestFilter[] cutRequest = 
+	    phaseRequest.generateRequest(event, network, channel, cookies);
+	Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time), 
+			  new MicroSecondDate(cutRequest[0].end_time));
 	for (int i=0; i<seismograms.length; i++) {
-	    out[i] = responseGain.apply((LocalSeismogramImpl)seismograms[i]);
+	    out[i] = cut.apply((LocalSeismogramImpl)seismograms[i]);
 	} // end of for (int i=0; i<seismograms.length; i++)
 	return out;
     }
 
     Element config;
 
-}// ResponseGainProcessor
+    PhaseRequest phaseRequest;
+
+}// PhaseCut

@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveform;
+package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
@@ -9,15 +9,13 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 /**
- * Applys the overall gain from the response to the seismogram, converting
- * the units from counts to something physical, like m/s. This in NOT a
- * deconvolution, merely a constant multiplier.
+ * Removes the mean from the seismograms.
  *
  *
  * Created: Wed Nov  6 17:58:10 2002
  *
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell</a>
- * @version $Id: RMean.java 2921 2002-11-17 15:22:40Z crotwell $
+ * @version $Id: RMean.java 2923 2002-11-18 14:23:00Z crotwell $
  */
 
 public class RMean implements LocalSeismogramProcess {
@@ -63,4 +61,4 @@ public class RMean implements LocalSeismogramProcess {
 
     edu.sc.seis.fissuresUtil.bag.RMean rmean;
 
-}// ResponseGainProcessor
+}// RMean

@@ -1,4 +1,4 @@
-package edu.sc.seis.sod.subsetter.waveform;
+package edu.sc.seis.sod.subsetter.waveFormArm;
 
 import edu.sc.seis.sod.*;
 import java.util.*;
