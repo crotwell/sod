@@ -45,7 +45,6 @@ public class MapWaveFormStatus implements WaveFormStatus {
         this.pool = pool;
         write();
     }
-    
     private class MapWriter extends TimerTask{
         public void run() {
             synchronized(channelMap){
@@ -120,7 +119,7 @@ public class MapWaveFormStatus implements WaveFormStatus {
     }
     
     public boolean add(EventAccessOperations ev){
-        if (!events.contains(ev)) return false;
+        if (events.contains(ev)) return false;
         events.add(ev);
         return true;
     }
@@ -128,6 +127,11 @@ public class MapWaveFormStatus implements WaveFormStatus {
     public boolean contains(Channel chan){ return channelMap.containsKey(chan);}
     
     public Status getStatus(Channel chan){ return (Status)channelMap.get(chan);}
+    
+    
+    public boolean contains(EventAccessOperations ev) {
+        return events.contains(ev);
+    }
     
     private static Logger logger = Logger.getLogger(MapWaveFormStatus.class);
 }
