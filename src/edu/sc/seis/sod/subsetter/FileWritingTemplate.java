@@ -30,6 +30,7 @@ public abstract class FileWritingTemplate extends Template implements GenericTem
             BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
             writer.write(getResult());
             writer.close();
+            loc.delete();
             temp.renameTo(loc);
         } catch (IOException e) {
             e.printStackTrace();
