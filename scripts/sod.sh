@@ -13,8 +13,8 @@ JACORB_LOGKIT=$JACORB_LIB/logkit-1.2.jar
 
 
 SEEDCODEC=$MAVEN/repository/SeedCodec/jars/SeedCodec-1.0Beta2.jar
-FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.6beta.jar
-FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.4beta.jar
+FISSURESUTIL=$MAVEN/repository/fissuresUtil/jars/fissuresUtil-1.0.7beta.jar
+FISSURESIMPL=$MAVEN/repository/fissuresImpl/jars/fissuresImpl-1.1.4.jar
 FISSURESIDL=$MAVEN/repository/fissuresIDL/jars/fissuresIDL-1.0.jar
 LOG4J=$MAVEN/repository/log4j/jars/log4j-1.2.8.jar
 TAUP=$MAVEN/repository/TauP/jars/TauP-1.1.4.jar
