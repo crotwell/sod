@@ -231,10 +231,12 @@ public class Start implements SodExceptionListener {
 
             boolean b = Validator.validate(confFilename);
             if (b) {
-                System.err.println("The configuration file did not validate against the xschema for sod.");
-                logger.fatal("The configuration file did not validate against the xschema for sod.");
+                System.err.println("The configuration file "+confFilename+" did not validate against the xschema for sod.");
+                logger.fatal("The configuration file "+confFilename+" did not validate against the xschema for sod.");
                 System.err.println("Please see the log file for more information.");
                 return;
+            } else {
+                System.out.println("Configuration file "+confFilename+" is valid.");
             }
 
             if (confFilename.startsWith("http:") || confFilename.startsWith("ftp:")) {
