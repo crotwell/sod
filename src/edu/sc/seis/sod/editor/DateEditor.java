@@ -45,7 +45,6 @@ public class DateEditor implements EditorPlugin {
             JCalendarComboBox cal = (JCalendarComboBox)e.getSource();
             MicroSecondDate mdate = new MicroSecondDate(cal.getCalendar().getTime());
             text.setNodeValue(mdate.getFissuresTime().date_time);
-            System.out.println("Date changeEvent "+mdate.getFissuresTime().date_time);
         }
     }
 }
