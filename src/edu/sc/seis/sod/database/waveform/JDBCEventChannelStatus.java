@@ -350,14 +350,10 @@ public class JDBCEventChannelStatus extends SodJDBC {
 		String query = "SELECT pairid FROM eventchannelstatus WHERE ";
 		for(int i = 0; i < stages.length; i++) {
 			for(int j = 0; j < standings.length; j++) {
-				if(stages[i] != Stage.DATA_SUBSETTER
-				   || standings[j] != Standing.SUCCESS) {
-					Status curStatus = Status.get(stages[i], standings[j]);
-					if(!curStatus.equals(processorSuccess)) {
+                Status curStatus = Status.get(stages[i], standings[j]);
+				if(!curStatus.equals(processorSuccess)){
 						query += " status = " + curStatus.getAsShort();
 						query += " OR";
-						
-					}
 				}
 			}
 		}
@@ -371,14 +367,12 @@ public class JDBCEventChannelStatus extends SodJDBC {
 				int pairId = rs.getInt(1);
 				
 				if(processingRule.equals(RunProperties.AT_LEAST_ONCE)) {
-					setStatus(pairId, Status.get(Stage.EVENT_STATION_SUBSETTER,
-												 Standing.INIT));
 					pairs.add(new Integer(pairId));
 				} else {
 					try {
 						Status curStatus = get(pairId,null).getStatus();
 						Stage currentStage = curStatus.getStage();
-						if(curStatus != eventStationInit) {
+						if(!curStatus.equals(eventStationInit)) {
 							setStatus(pairId, Status.get(currentStage,
 														 Standing.SYSTEM_FAILURE));
 						}else {
