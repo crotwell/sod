@@ -71,7 +71,7 @@ public class LocalSeismogramTemplateGenerator implements WaveformProcess {
             throw new IllegalArgumentException("The configuration element must contain a fileDir and a template");
         }
         if(fileName != null) {
-            template = new LocalSeismogramTemplate(el,
+            template = new LocalSeismogramTemplate(waveformSeismogramConfig,
                                                    fileDir + "/");
         }
     }
