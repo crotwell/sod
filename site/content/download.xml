@@ -6,21 +6,33 @@
         <body>
                 <section name="Download SOD">
                         <p>
-                                <b>Current Release:</b> Sod 2.0 Beta 3 <a class="download" href="beta3/sod-beta3.tar">Download</a>
+                                <b>Current Release:</b> Sod 2.0 Beta 4 <a class="download" href="beta4/sod-beta4.tar">Download</a>
                                 
                         </p>
-                        <p>Released 31 May 2004</p>
-                        <p>Changes in 2.0 Beta 3:</p>
+                        <p>Released 09 June 2004</p>
+                        <p>Changes in 2.0 Beta 4:</p>
                         <ul>
-                                <li>Vastly improved DSML file output.  10 times less memory and twice as fast!</li>
-                                <li>New postEventWait event subsetter.  Check out <a href="realtime.html">these realtime considerations</a> to see how it works.</li>
-                                <li>SOD will no longer retry event channel pairs until the end of time</li>
-                                <li>SOD will warn you if you're running a new version of SOD on an old database, and if you've changed config files between runs on a single database</li>
-                                <li>new removeEventDuplicate subsetter that will keep SOD from processing duplicate event entries.</li>
-                                <li>-demo flag starts SOD on tutorial.xml</li>
+						<li>SOD now uses the at most once/at least once property to determine if it should reopen or permanently close event channel pairs that were being processed when a run died.
+						</li>
+						<li>Seismograms displayed after running through the response gain processor are now correctly labelled and scaled</li>
+						<li>This release marks the introduction of the motion vector channel grouper.  Instead of just grouping channels on their orientation codes, SOD can use a series of rules to determine which channels go together in the motion vector arm</li>
                         </ul>
                 </section>
                 <section name="Previous Releases">
+				<p>Sod 2.0 Beta 3 <a class="download" href="beta3/sod-beta3.tar">Download</a>
+				
+		</p>
+		<p>Released 31 May 2004</p>
+		<p>Changes in 2.0 Beta 3:</p>
+		<ul>
+				<li>Vastly improved DSML file output.  10 times less memory and twice as fast!</li>
+				<li>New postEventWait event subsetter.  Check out <a href="realtime.html">these realtime considerations</a> to see how it works.</li>
+				<li>SOD will no longer retry event channel pairs until the end of time</li>
+				<li>SOD will warn you if you're running a new version of SOD on an old database, and if you've changed config files between runs on a single database</li>
+				<li>new removeEventDuplicate subsetter that will keep SOD from processing duplicate event entries.</li>
+				<li>-demo flag starts SOD on tutorial.xml</li>
+		</ul>
+
                         <p>
                                 Sod 2.0 Beta 2 <a class="download" href="beta2/sod-beta2.tar">Download</a>
                          </p>
