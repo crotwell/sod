@@ -7,11 +7,20 @@
 package edu.sc.seis.sod.process.waveformArm;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.TauP.Arrival;
+import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.fissuresUtil.bag.TauPUtil;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.display.drawable.Flag;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
@@ -22,115 +31,132 @@ import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FileWritingTemplate;
 import edu.sc.seis.sod.status.StationFormatter;
 import edu.sc.seis.sod.status.TemplateFileLoader;
+import java.awt.Dimension;
+import java.io.File;
 import java.util.Timer;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import java.awt.Dimension;
-import java.io.File;
 
 public class SeismogramImageProcess implements LocalSeismogramProcess {
-
+	
     private Logger logger = Logger.getLogger(SeismogramImageProcess.class);
     private String fileDir;
     private EventFormatter eventFormatter;
     private StationFormatter stationFormatter;
     private ChannelFormatter chanFormatter;
     private Timer t = new Timer();
-
+	private TauPUtil tauP;
+	
     public SeismogramImageProcess(String fileDir, EventFormatter eventDirFormatter,
-                                  StationFormatter stationDirFormatter,
-                                  ChannelFormatter imageNameFormatter){
-        this.fileDir = fileDir;
-        eventFormatter = eventDirFormatter;
-        stationFormatter = stationDirFormatter;
-        chanFormatter = imageNameFormatter;
+								  StationFormatter stationDirFormatter,
+								  ChannelFormatter imageNameFormatter) throws Exception{
+		this.fileDir = fileDir;
+		eventFormatter = eventDirFormatter;
+		stationFormatter = stationDirFormatter;
+		chanFormatter = imageNameFormatter;
+		initTaup();
     }
-
+	
     public SeismogramImageProcess(Element el) throws Exception{
-        NodeList nl = el.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node n = nl.item(i);
-            if (n.getNodeName().equals("fileDir")){
-                fileDir = n.getFirstChild().getNodeValue();
-            }
-            else if (n.getNodeName().equals("seismogramConfig")){
-                Element seismogramImageConfig = TemplateFileLoader.getTemplate((Element)n);
-
-                Node tmpEl = SodUtil.getElement(seismogramImageConfig, "outputLocation");
-                Node tmpEl2 = SodUtil.getElement((Element)tmpEl, "eventDir");
-                eventFormatter = new EventFormatter((Element)tmpEl2);
-                tmpEl2 = SodUtil.getElement((Element)tmpEl, "stationDir");
-                stationFormatter = new StationFormatter((Element)tmpEl2);
-                seismogramImageConfig.removeChild(tmpEl);
-
-                tmpEl = SodUtil.getElement(seismogramImageConfig, "picName");
-                chanFormatter = new ChannelFormatter((Element)tmpEl);
-                seismogramImageConfig.removeChild(tmpEl);
-            }
-        }
-        if (fileDir == null){
-            fileDir = FileWritingTemplate.getBaseDirectoryName();
-        }
-        if (fileDir == null || eventFormatter == null || stationFormatter == null || chanFormatter == null){
-            throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
-        }
+		NodeList nl = el.getChildNodes();
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node n = nl.item(i);
+			if (n.getNodeName().equals("fileDir")){
+				fileDir = n.getFirstChild().getNodeValue();
+			}
+			else if (n.getNodeName().equals("seismogramConfig")){
+				Element seismogramImageConfig = TemplateFileLoader.getTemplate((Element)n);
+				
+				Node tmpEl = SodUtil.getElement(seismogramImageConfig, "outputLocation");
+				Node tmpEl2 = SodUtil.getElement((Element)tmpEl, "eventDir");
+				eventFormatter = new EventFormatter((Element)tmpEl2);
+				tmpEl2 = SodUtil.getElement((Element)tmpEl, "stationDir");
+				stationFormatter = new StationFormatter((Element)tmpEl2);
+				seismogramImageConfig.removeChild(tmpEl);
+				
+				tmpEl = SodUtil.getElement(seismogramImageConfig, "picName");
+				chanFormatter = new ChannelFormatter((Element)tmpEl);
+				seismogramImageConfig.removeChild(tmpEl);
+			}
+		}
+		if (fileDir == null){
+			fileDir = FileWritingTemplate.getBaseDirectoryName();
+		}
+		if (fileDir == null || eventFormatter == null || stationFormatter == null || chanFormatter == null){
+			throw new IllegalArgumentException("The configuration element must contain a fileDir and a waveformSeismogramConfig");
+		}
+		initTaup();
     }
-
+	
+	private void initTaup() throws TauModelException{
+			tauP = new TauPUtil("iasp91");
+	}
+	
     /**
-     * Processes localSeismograms, possibly modifying them.
-     *
-     * @param event an <code>EventAccessOperations</code> value
-     * @param network a <code>NetworkAccess</code> value
-     * @param channel a <code>Channel</code> value
-     * @param original a <code>RequestFilter[]</code> value
-     * @param available a <code>RequestFilter[]</code> value
-     * @param seismograms a <code>LocalSeismogram[]</code> value
-     * @param cookies a <code>CookieJar</code> value
-     * @exception Exception if an error occurs
-     */
+	 * Processes localSeismograms, possibly modifying them.
+	 *
+	 * @param event an <code>EventAccessOperations</code> value
+	 * @param network a <code>NetworkAccess</code> value
+	 * @param channel a <code>Channel</code> value
+	 * @param original a <code>RequestFilter[]</code> value
+	 * @param available a <code>RequestFilter[]</code> value
+	 * @param seismograms a <code>LocalSeismogram[]</code> value
+	 * @param cookies a <code>CookieJar</code> value
+	 * @exception Exception if an error occurs
+	 */
     public LocalSeismogramImpl[] process(EventAccessOperations event,
-                                         Channel channel,
-                                         RequestFilter[] original,
-                                         RequestFilter[] available,
-                                         LocalSeismogramImpl[] seismograms, CookieJar cookieJar
-                                        ) throws Exception {
-        logger.debug("process() called");
-
-        final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
-        bsd.PRINTING = true;
-
-        MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0], "");
-        memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
-        memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
-        for (int i = 0; i < seismograms.length; i++) {
-            memDSS.add(seismograms[i]);
-        }
-        bsd.add(new MemoryDataSetSeismogram[]{memDSS});
-        final String picFileName = fileDir + '/'
-            + eventFormatter.getResult(event) + '/'
-            + stationFormatter.getResult(channel.my_site.my_station) + '/'
-            + chanFormatter.getResult(channel);
-
-        SwingUtilities.invokeAndWait(new Runnable(){
-                    public void run(){
-                        logger.debug("writing " + picFileName);
-                        try {
-                            bsd.outputToPNG(new File(picFileName), dimension);
-                        } catch (Throwable e) {
-                            GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
-                        }
-                    }
-                });
-
-
-        return seismograms;
+										 Channel channel,
+										 RequestFilter[] original,
+										 RequestFilter[] available,
+										 LocalSeismogramImpl[] seismograms, CookieJar cookieJar
+										) throws Exception {
+		logger.debug("process() called");
+		
+		final BasicSeismogramDisplay bsd = new BasicSeismogramDisplay();
+		bsd.PRINTING = true;
+		
+		MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0], "");
+		memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
+		memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
+		for (int i = 0; i < seismograms.length; i++) {
+			memDSS.add(seismograms[i]);
+		}
+		bsd.add(new MemoryDataSetSeismogram[]{memDSS});
+		
+		Origin origin = CacheEvent.extractOrigin(event);
+		MicroSecondDate originTime = new MicroSecondDate(origin.origin_time);
+		Arrival[] arrivals =
+			tauP.calcTravelTimes(channel.my_site.my_station, origin, phases);
+		for (int i = 0; i < arrivals.length; i++) {
+			MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(), UnitImpl.SECOND));
+			bsd.add(new Flag(flagTime, arrivals[i].getName()));
+		}
+		
+		final String picFileName = fileDir + '/'
+			+ eventFormatter.getResult(event) + '/'
+			+ stationFormatter.getResult(channel.my_site.my_station) + '/'
+			+ chanFormatter.getResult(channel);
+		
+		SwingUtilities.invokeAndWait(new Runnable(){
+					public void run(){
+						logger.debug("writing " + picFileName);
+						try {
+							bsd.outputToPNG(new File(picFileName), dimension);
+						} catch (Throwable e) {
+							GlobalExceptionHandler.handle("unable to save map to "+ picFileName, e);
+						}
+					}
+				});
+		
+		
+		return seismograms;
     }
-
+	
     private static Dimension dimension = new Dimension(500, 200);
-
+	private static String[] phases = {"P", "S"};
 }
 
 
