@@ -94,6 +94,9 @@ public class PropertyEditor implements EditorPlugin {
                 return checkBox;
             }
         }
+        if(el.getTagName().equals("eventChannelPairProcessing")){
+            return EditorUtil.getComboBox(el, ecpProcOpts);
+        }
         if(el.getTagName().equals("waveformWorkerThreads")){
             return EditorUtil.createNumberSpinner(t, 1, 5, 1);
         }else{
@@ -105,6 +108,8 @@ public class PropertyEditor implements EditorPlugin {
             "eventRefreshInterval", "maxRetryDelay" };
 
     private String[] checkBoxEls = { "removeDatabase", "reopenEvents" };
+
+    private String[] ecpProcOpts = { "atLeastOnce", "atMostOnce" };
 }
 
 
