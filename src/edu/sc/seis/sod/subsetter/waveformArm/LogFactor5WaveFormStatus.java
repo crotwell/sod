@@ -17,7 +17,7 @@ public class LogFactor5WaveFormStatus implements WaveFormStatus{
     
     public void update(EventChannelPair ecp) {
         CommonAccess.getCommonAccess().getLF5Adapter().log("WaveForm Arm",
-                                                           RunStatus.translate(ecp.getStatus()),
+                                                           RunStatus.translate(ecp.getStatus()).getLogLevel(),
                                                            ecp.getInfo());
     }
 }
