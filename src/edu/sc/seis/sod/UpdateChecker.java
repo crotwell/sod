@@ -18,13 +18,13 @@ public class UpdateChecker  {
                                                     "1.0",
                                                     updateURL,
                                                     gui,
-                                                    showNoUpdate);
+                                                    forceCheck);
         JobTracker.getTracker().add(job);
         WorkerThreadPool.getDefaultPool().invokeLater(job);
     }
 
     public static final String updateURL = "http://www.seis.sc.edu/SOD/UpdateChecker.xml";
 
-    public static final boolean showNoUpdate = true;
+    public static boolean forceCheck = false;
 }
 
