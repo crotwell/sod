@@ -42,6 +42,9 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
             SodUtil.copyFile(sortLoc, dirName+"/sorttable.js");
             SodUtil.copyFile(rulLoc, dirName +"/tableRuler.js");
             SodUtil.copyFile(helpMark, dirName + "/images/helpmark.png");
+            SodUtil.copyFile(up, dirName + "/images/up.gif");
+            SodUtil.copyFile(down, dirName + "/images/down.gif");
+            SodUtil.copyFile(none, dirName + "/images/none.gif");
             String configFileLoc = Start.getConfigFileName();
             String configFileName = new File(configFileLoc).getName();
             /* To avoid problems during rendering of XML by some of the browsers like Mac Safari*/
@@ -98,6 +101,9 @@ public class IndexTemplate extends FileWritingTemplate implements WaveformArmMon
     private static String sortLoc = "jar:edu/sc/seis/sod/data/templates/sorttable.js";
     private static String rulLoc = "jar:edu/sc/seis/sod/data/templates/tableRuler.js";
     private static String helpMark = "jar:edu/sc/seis/sod/data/templates/defaults/helpmark.png";
+    private static String up = "jar:edu/sc/seis/sod/data/templates/defaults/up.gif";
+    private static String down = "jar:edu/sc/seis/sod/data/templates/defaults/down.gif";
+    private static String none = "jar:edu/sc/seis/sod/data/templates/defaults/none.gif";
     private static String eventPageHelp = "jar:edu/sc/seis/sod/data/templates/defaults/eventPageHelp.xml";
     private static String xslWrapperFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatimwrapper.xsl";
     private static String supportXslFileLoc = "jar:edu/sc/seis/sod/data/xmlverbatim.xsl";
