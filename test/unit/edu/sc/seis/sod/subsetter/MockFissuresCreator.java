@@ -97,7 +97,7 @@ public class MockFissuresCreator{
             cal.set(Calendar.YEAR, 1990);
             cal.set(Calendar.MONTH, Calendar.JUNE);
             cal.set(Calendar.DATE, 13);
-            cal.set(Calendar.HOUR, 0);
+            cal.set(Calendar.HOUR_OF_DAY, 12);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
