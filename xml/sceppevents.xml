@@ -36,15 +36,15 @@
 
 <!-- Take a minimum of magnitude 3.5 -->
 		<magnitudeRange>
-			<type>mb</type>
+			<magType>mb</magType>
 			<min>3.5</min>
 		</magnitudeRange>
 
 <!-- Only events that have a origin from the bigquake catalog. -->
-		<catalog>BIGQUAKE</catalog>
+		<catalog><value>BIGQUAKE</value></catalog>
 
 <!-- Only take events that have an origin that came from the NEIC. This is redundant as bigquakes comes from the NEIC. -->
-		<contributor>NEIC</contributor>
+		<contributor><value>NEIC</value></contributor>
 	   </eventFinder>
 
 
@@ -52,7 +52,7 @@
                <originAND>
 		<description>take any global 6.5 or better EQ</description>
 		<magnitudeRange>
-			<type>mb</type>
+			<magType>mb</magType>
 			<min>6.5</min>
 		</magnitudeRange>
 		<eventArea>
@@ -75,7 +75,7 @@
 	           </boxArea>
 		</eventArea>
 		<magnitudeRange>
-			<type>mb</type>
+			<magType>mb</magType>
 			<min>4.5</min>
 		</magnitudeRange>
                </originAND>
@@ -95,7 +95,7 @@
 	           </boxArea>
 		</eventArea>
 		<magnitudeRange>
-			<type>mb</type>
+			<magType>mb</magType>
 			<min>3.5</min>
 		</magnitudeRange>
                </originAND>
@@ -178,7 +178,7 @@
 			<embeddedOriginSubsetter>
 				<magnitudeRange>
 					<description>describes magnitude</description>
-					<type>mb</type>
+					<magType>mb</magType>
 					<min>5.5</min>
 				</magnitudeRange>
 			</embeddedOriginSubsetter>
@@ -193,7 +193,7 @@
 			</eventStationDistance>
 			<embeddedOriginSubsetter>
 				<magnitudeRange>
-					<type>mb</type>
+					<magType>mb</magType>
 					<min>6.0</min>
 				</magnitudeRange>
 			</embeddedOriginSubsetter>
@@ -201,7 +201,7 @@
 	</eventStationOR>
 
 	<fixedDataCenter>
-		<name>SCEPPdatacenter</name>
+		<name>SCEPPSeismogramDC</name>
 		<dns>edu/sc/seis</dns>
 	</fixedDataCenter>
 
