@@ -39,19 +39,13 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
             if(map != null){
                 map.add(ecp.getEvent(), getOutputDirectory() + "/map.png");
             }
-            Iterator it = channelListeners.iterator();
-            while(it.hasNext()){
-                ((StationGroupTemplate)it.next()).change(ecp.getChannel().my_site.my_station, ecp.getStatus());
-            }
             write();
         }
     }
 
     protected Object getTemplate(String tag, Element el) throws ConfigurationException {
         if(tag.equals("stations")) {
-            StationGroupTemplate cgt = new StationGroupTemplate(el);
-            channelListeners.add(cgt);
-            return cgt;
+            return new EventStationGroupTemplate(el, event);
         }else if(tag.equals("map")){
             try {
                 synchronized(getClass()){
@@ -89,6 +83,4 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
     private static MapPool pool = new MapPool(2, new DefaultEventColorizer());
 
     private static MapWaveformStatus map;
-
-    private List channelListeners = new ArrayList();
 }
