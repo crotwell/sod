@@ -51,7 +51,7 @@ public class ANDLocalSeismogramWrapper implements ChannelGroupLocalSeismogramPro
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = true;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
-        for (int i = 0; i < channelGroup.getChannels().length; i++) {
+        for (int i = 0; b && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramResult result = process.process(event,
                                                              channelGroup.getChannels()[i],
                                                              original[i],

@@ -52,7 +52,7 @@ public class ORLocalSeismogramWrapper implements ChannelGroupLocalSeismogramProc
         LocalSeismogramImpl[][] out = new LocalSeismogramImpl[seismograms.length][];
         boolean b = false;
         StringTree[] reason = new StringTree[channelGroup.getChannels().length];
-        for (int i = 0; i < channelGroup.getChannels().length; i++) {
+        for (int i = 0; b == false && i < channelGroup.getChannels().length; i++) {
             LocalSeismogramResult result = subsetter.process(event,
                                                              channelGroup.getChannels()[i],
                                                              original[i],
