@@ -124,7 +124,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("distanceRange", new DistanceRangeEditor());
         editors.put("phaseRequest", new PhaseRequestEditor());
         editors.put("sacFileProcessor", new SacFileEditor(this));
-        editors.put("originPointDistance", new OriginPointDistanceEditor(this));
+        editors.put("originPointDistance", new OriginPointDistanceEditor());
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
         editors.put("eventFinder", new EventFinderEditor(this));
         editors.put("catalog", new CatalogEditor());
