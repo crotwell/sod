@@ -20,30 +20,30 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class HSqlConfigDatabase extends AbstractConfigDatabase{
+public class HSqlConfigDatabase extends ConfigDatabase{
     public HSqlConfigDatabase (Connection connection, String tableName){
-	super(connection, tableName);
+        super(connection, tableName);
     }
     
     public  void create() {
-	try {
-	    Statement stmt = connection.createStatement();
-	    try {
-		stmt.executeUpdate("CREATE CACHED  TABLE "+tableName+
-				   "( serverName VARCHAR, "+
-				   " serverDNS VARCHAR, "+
-				   " time timestamp)");
-	    } catch(SQLException sqle) {
-		//("Table timeconfig  is already created");
-	    }
-	} catch(Exception e) {
-	    logger.debug("table "+tableName+" is already created");
-	}
-	
-	
+        try {
+            Statement stmt = connection.createStatement();
+            try {
+                stmt.executeUpdate("CREATE CACHED  TABLE "+tableName+
+                                       "( serverName VARCHAR, "+
+                                       " serverDNS VARCHAR, "+
+                                       " time timestamp)");
+            } catch(SQLException sqle) {
+                //("Table timeconfig  is already created");
+            }
+        } catch(Exception e) {
+            logger.debug("table "+tableName+" is already created");
+        }
+        
+        
     }
-
-    static Category logger = 
+    
+    static Category logger =
         Category.getInstance(HSqlConfigDatabase.class.getName());
- 
+    
 }// HSqlConfigDatabase

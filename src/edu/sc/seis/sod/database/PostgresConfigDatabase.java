@@ -20,7 +20,7 @@ import org.apache.log4j.*;
  * @version
  */
 
-public class PostgresConfigDatabase extends AbstractConfigDatabase{
+public class PostgresConfigDatabase extends ConfigDatabase{
     public PostgresConfigDatabase (Connection connection, String tableName){
 	super(connection, tableName);
     }
