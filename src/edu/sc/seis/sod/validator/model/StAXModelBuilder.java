@@ -158,15 +158,17 @@ public class StAXModelBuilder implements XMLStreamConstants {
             } else if(isData(tag)) {
                 kids.add(handleData());
             } else {
-                System.out.println("SHIT!!  Unknown tag!" + tag + " "
-                        + definedGrammar);
+                System.out.println("Unknown tag!" + tag + " " + definedGrammar);
                 System.exit(0);
-                break;
             }
         }
-        if(kids.size() == 0) { return null; }//Hopefully an attribute called
+        if(kids.size() == 0) {
+            return null;
+        }//Hopefully an attribute called
         // handleAll
-        if(kids.size() == 1) { return (FormProvider)kids.get(0); }
+        if(kids.size() == 1) {
+            return (FormProvider)kids.get(0);
+        }
         Group g = new Group(1, 1);
         Iterator it = kids.iterator();
         while(it.hasNext()) {
@@ -434,7 +436,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new DoubleDatatype();
             } else if(type.equals("integer")) {
                 return new IntegerDatatype();
-            } else if(type.equals("nonNegativeInteger")) { return new NonnegativeIntegerDatatype(); }
+            } else if(type.equals("nonNegativeInteger")) {
+                return new NonnegativeIntegerDatatype();
+            }
             return new Token();
         }
         return null;
