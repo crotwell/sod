@@ -58,19 +58,19 @@ public class NameGenerator {
                 } // end of for (int i=0; i<chars.length; i++)
                 text = sb.toString();
                 text = text.replace(' ','_');
-                //		logger.debug("Breq text node:"+text);
+                //      logger.debug("Breq text node:"+text);
                 name += text;
             } else if(node instanceof Element ) {
                 name += separator;
                 separator = separatorValue;
                 if(((Element)node).getTagName().equals("feRegionName")) {
-                    String regionName = 
+                    String regionName =
                         regions.getRegionName(event.get_attributes().region);
                     regionName = regionName.replace(' ', '_');
                     regionName = regionName.replace(',', '_');
                     name += regionName;
                 } else if(((Element)node).getTagName().equals("feRegionNumber")) {
-                    int regionNum = 
+                    int regionNum =
                         event.get_attributes().region.number;
                     name += regionNum;
                 } else if(((Element)node).getTagName().equals("depth")) {
@@ -108,10 +108,10 @@ public class NameGenerator {
                         if (formatStr.length() == 0) {
                             formatStr = "yyyyMMdd'T'HHmmss.SSS";
                         } // end of if (formatStr.length == 0)
-			
+            
                         SimpleDateFormat labelFormat = new SimpleDateFormat(formatStr);
                         labelFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                        MicroSecondDate msd = 
+                        MicroSecondDate msd =
                             new MicroSecondDate(event.get_preferred_origin().origin_time);
                         name +=
                             labelFormat.format(msd);
@@ -130,12 +130,20 @@ public class NameGenerator {
         logger.debug("Breqfast label: "+name);
         return name;
     }
+    
+    public static String filize(String fileName){
+        fileName = fileName.replace(' ', '_');
+        fileName = fileName.replace(',', '_');
+        fileName = fileName.replace('/', '_');
+        fileName = fileName.replace(':', '_');
+        return fileName;
+    }
 
     Element config;
 
-	ParseRegions regions;
+    ParseRegions regions;
 
-    static Category logger = 
+    static Category logger =
         Category.getInstance(NameGenerator.class.getName());
     
 
