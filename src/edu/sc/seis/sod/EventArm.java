@@ -226,8 +226,7 @@ public class EventArm implements Runnable {
             if(queryTimes.getQuery(source, dns) != null) {//If the database has
                 // a end time, use the
                 // database's end time
-                queryStart = new MicroSecondDate(queryTimes.getQuery(source,
-                                                                     dns));
+                queryStart = queryTimes.getQuery(source, dns);
             }
         } catch(SQLException e) {
             throw new RuntimeException("Trouble with the SQL for getting event server query times!");
