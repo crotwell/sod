@@ -55,11 +55,9 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                        SodExceptionListener sodExceptionListener,
                        int threadPoolSize) 
         throws Exception {
-        logger.debug("IN the constructor of WAVEFORMARM THREAD");
         if ( ! config.getTagName().equals("waveFormArm")) {
             throw new IllegalArgumentException("Configuration element must be a waveFormArm tag");
         }
-        //logger.debug("In waveForm Arm");
         processConfig(config);
 	
         this.config = config;
@@ -73,7 +71,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         //	Connection connection = Start.getWaveformQueue().getConnection(
         //	synchronized(connection) {
         int[] ids = Start.getWaveformQueue().getIds();
-        logger.debug(" %%%%%%%%%%%%%%%%%%%%%%%%%%%The count of channelids to restore is "+ids.length);
+
         for(int counter = 0; counter < ids.length; counter++) {
             int eventid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
             int channelid = Start.getWaveformQueue().getWaveformChannelId(ids[counter]);
@@ -102,7 +100,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             int i = 0;
             //get the first event from the eventQueue.
             eventid = Start.getEventQueue().pop();
-            logger.debug("The queue is size "+Start.getEventQueue().getLength());
+            logger.debug("The number of events in the queue is "+Start.getEventQueue().getLength());
             // if(Start.getEventQueue().getLength() < 4) notifyAll();
             //loop while thereis potential for new events.
             while(eventid != -1) {
@@ -186,7 +184,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                             //get successful channels.
                             ChannelDbObject[] successfulChannels = 
                                 networkArm.getSuccessfulChannels(networks[netcounter], sites[sitecounter]);
-                            logger.debug("The length of the channels is "+successfulChannels.length);
+
                             Start.getWaveformQueue().putSiteInfo(eventid,
                                                                  sites[sitecounter].getDbId(),
                                                                  stations[stationcounter].getDbId(),
@@ -235,7 +233,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                 eventid = 
                     Start.getEventQueue().pop();
             }
-            logger.debug("CALLING THE FINISHED METHOD OF THE POOL");
 	  	 
             //signals the waveformQueue the end of 
             //processing of all the events.
@@ -362,7 +359,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
                 Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
                 count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);
                 if(count == -1) { 
-                    logger.debug("The channel count after decr is -1 "); 
                     throw new InvalidDatabaseStateException("Channel Count is -1");
                 }
 
@@ -391,7 +387,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
         int unfinishedCount = Start.getWaveformQueue().unfinishedSiteCount(eventid, stationdbid);
 
         if(count == -1) { 
-            logger.debug("COuntis -1");
             throw new InvalidDatabaseStateException("site Count is -1");
         }
         write("site count before is "+count+" the siteid is "+sitedbid
@@ -401,7 +396,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
             count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
             if(count == -1) {
-                logger.debug("The site count after is -1 "); 
                 throw new InvalidDatabaseStateException("site Count is -1");
             }
         }
@@ -427,7 +421,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
               " eventid is "+eventid);
 
         if(count == -1) {
-            logger.debug("The COunt is -1 ");
             throw new InvalidDatabaseStateException("station Count is -1");	    
         }
 
@@ -436,7 +429,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
             count = Start.getWaveformQueue().getStationCount(eventid, networkdbid);
             if(count == -1) {
-                logger.debug("The stationcount afrter is -1 ");
                 throw new InvalidDatabaseStateException("station Count is -1");
             }
         }
@@ -460,7 +452,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
               " eventid is "+eventid);
 
         if(count == -1) {
-            logger.debug("The count is -1 ");
             throw new InvalidDatabaseStateException("Network Count is -1");
         }
 
@@ -469,7 +460,6 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
             count = Start.getWaveformQueue().getNetworkCount(eventid);
             if(count == -1) {
-                logger.debug("The net count after is -1"); 
                 throw new InvalidDatabaseStateException("Network Count is -1");
             }
 
@@ -569,16 +559,12 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 
         public void run() {
             Runnable work = pool.getWork();
-            logger.debug("In the run method of the worker before the while loop");
+
             while ( ! finished && work != null) {
-                logger.debug("Starting the Worker Thread");
                 work.run();
-                logger.debug("THe active count of thread is ");
                 ///getThreadGroup().list();
-                logger.debug("GO AND GET NEW WORK");
                 work = pool.getWork();
 		
-                logger.debug("AFTER GETTING WOEK");
             } // end of while ( ! finished)
             //getThreadGroup().list();
             logger.debug("EXITING THE RUN METHOD OF WORKER");
@@ -740,13 +726,10 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
             // wait until there is no more work waiting for a thread
             while (work != null) {
                 try {
-                    logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Waiting in the finished method of pool");
-                    logger.debug("Before Wait in finished of Thread Pool");
                     wait();
-                    logger.debug("After Wait in finished of Thread Pool");
                 } catch (InterruptedException e) { }
             }
-            logger.debug("Need not wait in the finished method of the pool");
+
             finished = true;
             Iterator it = pool.iterator();
             while (it.hasNext()) {
