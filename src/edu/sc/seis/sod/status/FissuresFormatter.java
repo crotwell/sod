@@ -92,12 +92,20 @@ public class FissuresFormatter {
         return QuantityImpl.createQuantityImpl(loc.elevation);
     }
 
+    public static float getLatitude(Station station) {
+        return getLatitude(station.my_location);
+    }
+
     public static float getLatitude(Origin origin) {
         return getLatitude(origin.my_location);
     }
 
     public static float getLatitude(Location loc) {
         return loc.latitude;
+    }
+
+    public static float getLongitude(Station station) {
+        return getLongitude(station.my_location);
     }
 
     public static float getLongitude(Origin origin) {
