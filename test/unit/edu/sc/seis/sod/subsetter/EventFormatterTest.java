@@ -10,8 +10,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.sc.seis.sod.XMLConfigUtil;
 import edu.sc.seis.sod.subsetter.MockFissures;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.TestCase;
 import org.w3c.dom.Element;
@@ -100,6 +98,16 @@ public class EventFormatterTest extends TestCase{
             EventFormatter gen = new EventFormatter(XMLConfigUtil.parse(complicatedMarkup));
             assertEquals(complicatedResults, gen.getResult(fallOfWall));
         } catch (IOException e) {} catch (ParserConfigurationException e) {} catch (SAXException e) {}
+    }
+    
+    public void testComplexAttributes(){
+        String cmplxAttr = "<eventLabel><a><attribute name=\"href\"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a>\n</eventLabel>";
+        try{
+            EventFormatter gen = new EventFormatter(XMLConfigUtil.parse(cmplxAttr));
+            
+            assertEquals("<a href=\"19700101000000000/event.html\">CENTRAL ALASKA</a>\n",
+                         gen.getResult(MockFissures.createEvent()));
+        }catch(Exception e){}
     }
     
     private static Element createElement(String innards){
