@@ -372,7 +372,7 @@ public class LocalSeismogramArm implements Subsetter {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
-            failLogger.info(ecp+" "+result);
+            failLogger.info(ecp+" "+result.getReason());
         }
     }
 
