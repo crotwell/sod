@@ -3,10 +3,12 @@ package edu.sc.seis.sod.status;
 
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Magnitude;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.iris.Fissures.event.MagnitudeUtil;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -16,6 +18,7 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.StatefulEvent;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.status.eventArm.EventTemplate;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,8 +27,6 @@ import java.util.List;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import java.sql.SQLException;
-import edu.sc.seis.fissuresUtil.database.NotFound;
 
 public class EventFormatter extends Template implements EventTemplate{
 
@@ -78,7 +79,7 @@ public class EventFormatter extends Template implements EventTemplate{
         } else if(tag.equals("depth")) {
             return new EventTemplate(){
                 public String getResult(EventAccessOperations ev){
-                    return format(getOrigin(ev).my_location.depth.value);
+                    return UnitDisplayUtil.formatQuantityImpl(getOrigin(ev).my_location.depth);
                 }
             };
         } else if(tag.equals("latitude")) {
@@ -224,14 +225,12 @@ public class EventFormatter extends Template implements EventTemplate{
 
     private String getMag(EventAccessOperations event){
         Magnitude[] mags = getOrigin(event).magnitudes;
-        if (mags.length > 0)  return format(mags[0].value);
+        if (mags.length > 0){return MagnitudeUtil.toString(mags[0]); }
         throw new IllegalArgumentException("No magnitudes on event");
     }
 
     private static Origin getOrigin(EventAccessOperations event){
-        Origin o = event.get_origins()[0];
-        try{ o = event.get_preferred_origin(); }catch(NoPreferredOrigin e){}
-        return o;
+        return CacheEvent.extractOrigin(event);
     }
 
     public static String getRegionName(EventAccessOperations event){
