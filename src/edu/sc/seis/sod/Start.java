@@ -76,7 +76,7 @@ public class Start{
             GlobalExceptionHandler.handle("Trouble creating xml document", e);
         }
         try {
-			Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
+            Validator validator = new Validator(Validator.SOD_SCHEMA_LOC);
             if(!validator.validate(createInputSource(cl, confFilename))){
                 logger.info("Invalid config file!");
                 allHopeAbandon("Invalid config file! ");
@@ -134,6 +134,9 @@ public class Start{
             logger.debug("No properties specified in the configuration file");
         }
 
+        //Must happen after the run props have been loaded
+        IndexTemplate.setConfigFileLoc();
+
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
@@ -183,7 +186,7 @@ public class Start{
         handleStartupRunProperties();
         checkDBVersion();
         ClassLoader cl = getClass().getClassLoader();
-        checkConfig(createInputSource(cl, configFileName));
+        checkConfig(createInputSource(cl, getConfigFileName()));
         IndexTemplate indexTemplate = new IndexTemplate();
         Element docElement = document.getDocumentElement();
         startArms(docElement.getChildNodes());
