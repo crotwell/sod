@@ -27,7 +27,7 @@ public class LocalSeismogramTemplateTest extends TestCase {
         BasicConfigurator.configure();
         EventDbObject edb = new EventDbObject(7, MockEventAccessOperations.createEvent());
         ChannelDbObject cdb = new ChannelDbObject(3, MockChannel.createChannel());
-        EventChannelPair ecp = new EventChannelPair(edb, cdb, null, 11, Status.get(Stage.DATA_SUBSETTER, Standing.SUCCESS));
+        EventChannelPair ecp = new EventChannelPair(edb, cdb, null, 11, Status.get(Stage.DATA_RETRIEVAL, Standing.SUCCESS));
 
         CookieJar cookieJar = new CookieJar(ecp);
         BufferedReader in = new BufferedReader( new InputStreamReader(LocalSeismogramTemplate.class.getClassLoader().getResourceAsStream("edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml")));
