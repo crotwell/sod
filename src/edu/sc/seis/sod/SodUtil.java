@@ -1,13 +1,20 @@
 package edu.sc.seis.sod;
 
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
-import org.w3c.dom.*;
-import java.lang.reflect.*;
-import edu.iris.Fissures.*;
-import edu.iris.Fissures.model.*;
+import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.Unit;
+import edu.iris.Fissures.model.BoxAreaImpl;
+import edu.iris.Fissures.model.GlobalAreaImpl;
+import edu.iris.Fissures.model.ISOTime;
+import edu.iris.Fissures.model.UnitRangeImpl;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
-
-import org.apache.log4j.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * SubsetterUtil.java
@@ -65,6 +72,30 @@ public class SodUtil {
                                                  config.getTagName(), e);
         } // end of try-catch
         
+    }
+    
+    public static File makeOutputDirectory(Element config) throws ConfigurationException{
+        if(config == null){
+            System.out.println("CONFIG IS NULL");
+        }
+        String outputDirName = "html";
+        Element outputElement = SodUtil.getElement(config, "outputDirectory");
+        if(outputElement != null){
+            if(SodUtil.getText(outputElement) != null){
+                outputDirName = SodUtil.getText(outputElement);
+            }
+        }
+        File htmlDir = new File(outputDirName);
+        if(outputDirName != null){
+            htmlDir = new File(outputDirName);
+        }
+        if(!htmlDir.exists()){
+            htmlDir.mkdirs();
+        }
+        if(!htmlDir.isDirectory()){
+            throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory");
+        }
+        return htmlDir;
     }
     
     public static synchronized Object load(Element config, String packageName)
