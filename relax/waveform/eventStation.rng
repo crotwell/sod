@@ -72,11 +72,9 @@
                     <example>
                         <embeddedStationSubsetter>
                             <stationDepthRange>
-                                <unitRange>
-                                    <unit>METER</unit>
-                                    <min>100</min>
-                                    <max>200</max>
-                                </unitRange>
+                                <unit>METER</unit>
+                                <min>100</min>
+                                <max>200</max>
                             </stationDepthRange>
                         </embeddedStationSubsetter>
                     </example>
@@ -164,6 +162,7 @@
                                 <min>40</min>
                             </distanceRange>
                             <backAzimuthRange>
+                                <unit>DEGREE</unit>
                                 <min>30</min>
                                 <max>45</max>
                             </backAzimuthRange>
@@ -190,6 +189,7 @@
                                 <min>40</min>
                             </distanceRange>
                             <backAzimuthRange>
+                                <unit>DEGREE</unit>
                                 <min>30</min>
                                 <max>45</max>
                             </backAzimuthRange>
@@ -216,6 +216,7 @@
                                 <min>40</min>
                             </distanceRange>
                             <backAzimuthRange>
+                                <unit>DEGREE</unit>
                                 <min>30</min>
                                 <max>45</max>
                             </backAzimuthRange>
@@ -282,10 +283,12 @@
                         <midPoint>
                             <boxArea>
                                 <latitudeRange>
+                                    <unit>DEGREE</unit>
                                     <min>20</min>
                                     <max>40</max>
                                 </latitudeRange>
                                 <longitudeRange>
+                                    <unit>DEGREE</unit>
                                     <min>-75</min>
                                     <max>-85</max>
                                 </longitudeRange>
