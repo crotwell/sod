@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project>
   <pomVersion>3</pomVersion>
   <name>sod</name>
@@ -11,14 +10,13 @@
   </organization>
   <currentVersion>1.0Beta</currentVersion>
   <inceptionYear>2002</inceptionYear>
-
   <package>edu.sc.seis.sod</package>
-  <shortDescription>Automated seismic data selection, download, processing and saving, a Standing Order for Data.</shortDescription>
+  <shortDescription>Automated seismic data selection, download,
+    processing and saving, a Standing Order for Data.</shortDescription>
   <gumpRepositoryId>sod</gumpRepositoryId>
-  <description> 
-SOD automates the most tedious data selection, downloading and routine processing tasks, shortening the time between idea and science.
-</description>
-  
+  <description> SOD automates the most tedious data selection,
+    downloading and routine processing tasks, shortening the time
+    between idea and science.</description>
   <url>http://www.seis.sc.edu/software/${pom.artifactId}</url>
   <siteAddress>www.seis.sc.edu</siteAddress>
   <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.artifactId}</siteDirectory>
@@ -29,14 +27,11 @@ SOD automates the most tedious data selection, downloading and routine processin
     <subscribe>majordomo@iris.washington.edu</subscribe>
     <unsubscribe>majordomo@iris.washington.edu</unsubscribe>
   </mailingList>
-
   <repository>
-    <connection>scm:cvs:local:anonymous@cvs.seis.sc.edu:/opt/local/Internal/CvsR
-oot:${pom.artifactId}</connection>
-        <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/${pom.artifactId}</url>
-    </repository>
 
-
+    <connection>scm:cvs:local:anonymous@cvs.seis.sc.edu:/opt/local/Internal/CvsR oot:${pom.artifactId}</connection>
+    <url>http://www.seis.sc.edu/cgi-bin/viewcvs.cgi/${pom.artifactId}</url>
+  </repository>
   <developers>
     <developer>
       <name>Philip Crotwell</name>
@@ -44,8 +39,8 @@ oot:${pom.artifactId}</connection>
       <email>crotwell@seis.sc.edu</email>
       <organization>University of South Carolina</organization>
       <roles>
-      <role>Module Maintainer</role>
-      <role>Java Developer</role>
+        <role>Module Maintainer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
@@ -54,7 +49,7 @@ oot:${pom.artifactId}</connection>
       <email>telukutl@seis.sc.edu</email>
       <organization>University of South Carolina</organization>
       <roles>
-      <role>Java Developer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
     <developer>
@@ -63,11 +58,10 @@ oot:${pom.artifactId}</connection>
       <email>groves@seis.sc.edu</email>
       <organization>University of South Carolina</organization>
       <roles>
-      <role>Java Developer</role>
+        <role>Java Developer</role>
       </roles>
     </developer>
-    </developers>
-
+  </developers>
   <dependencies>
     <dependency>
       <groupId>openorb</groupId>
@@ -79,7 +73,7 @@ oot:${pom.artifactId}</connection>
       <artifactId>openorb_notify</artifactId>
       <version>1.3.0</version>
     </dependency>
-<!--
+    <!--
     <dependency>
       <groupId>OB</groupId>
       <artifactId>OB</artifactId>
@@ -108,7 +102,6 @@ oot:${pom.artifactId}</connection>
       </properties>
     </dependency>
 -->
-
     <dependency>
       <id>fissuresUtil</id>
       <version>1.0Beta</version>
@@ -147,7 +140,7 @@ oot:${pom.artifactId}</connection>
     </dependency>
     <dependency>
       <id>xerces</id>
-      <version>2.0.2</version>
+      <version>2.3.0</version>
       <url>http://xml.apache.org/xerces2-j/index.html</url>
     </dependency>
     <dependency>
@@ -166,29 +159,45 @@ oot:${pom.artifactId}</connection>
       <url>http://jakarta.apache.org/log4j/docs/index.html</url>
     </dependency>
   </dependencies>
-
   <build>
     <nagEmailAddress>crotwell@seis.sc.edu</nagEmailAddress>
     <unitTestSourceDirectory>test</unitTestSourceDirectory>
     <sourceDirectory>src</sourceDirectory>
     <resources>
-       <resource>
-          <directory>src/edu/sc/seis/sod</directory>
-          <targetPath>edu/sc/seis/sod</targetPath>
-          <includes>
-             <include>sod.prop</include>
-          </includes>
-       </resource>
-       <resource>
-          <directory>src/edu/sc/seis/sod/data</directory>
-          <targetPath>edu/sc/seis/sod/data</targetPath>
-          <includes>
-             <include>*.xsd</include>
-          </includes>
-       </resource>
+      <resource>
+        <directory>src/edu/sc/seis/sod</directory>
+        <targetPath>edu/sc/seis/sod</targetPath>
+        <includes>
+          <include>sod.prop</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/edu/sc/seis/sod/data</directory>
+        <targetPath>edu/sc/seis/sod/data</targetPath>
+        <includes>
+          <include>*.xsd</include>
+        </includes>
+      </resource>
     </resources>
-
   </build>
 
-</project>
+  <reports>
+     <report>maven-changelog-plugin</report>
+     <report>maven-changes-plugin</report>
+     <report>maven-checkstyle-plugin</report>
+     <report>maven-developer-activity-plugin</report>
+     <report>maven-file-activity-plugin</report>
+     <report>maven-javadoc-plugin</report>
+     <report>maven-jdepend-plugin</report>
+     <report>maven-junit-report-plugin</report>
+     <report>maven-jxr-plugin</report>    
+     <report>maven-license-plugin</report>
+<!--
+     <report>maven-linkcheck-plugin</report>
+-->
+     <report>maven-pmd-plugin</report>
+     <report>maven-tasklist-plugin</report>
+  </reports>
 
+
+</project>
