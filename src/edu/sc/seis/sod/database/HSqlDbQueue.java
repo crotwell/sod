@@ -22,7 +22,7 @@ import org.omg.CORBA.*;
 
 public class HSqlDbQueue implements Queue {
     public HSqlDbQueue (){
-	eventDatabase = new HSqlDatabase();
+	eventDatabase = new PostgresDatabase();
 	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	delete(Status.COMPLETE_SUCCESS);
     }
