@@ -31,8 +31,8 @@ public class Ref implements FormProvider{
             Definition def = getDef();
             Form refedForm = def.getForm();
             derefedForm = refedForm.deref(parent, def);
-            derefedForm.setMin(getMin());
-            derefedForm.setMax(getMax());
+            if(getMin() == 0) { derefedForm.setMin(getMin()); }
+            if(getMax() > 1) { derefedForm.setMax(getMax()); }
             derefedForm.setAnnotation(ann);
         }
         return derefedForm;
