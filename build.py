@@ -114,7 +114,7 @@ def buildJars(sodProj, clean=False):
 def buildInternalDist(proj, name):
     buildJars(proj)
     if name == buildName(proj): name = "internal" + name
-    scripts = buildAll(proj)
+    scripts = buildAllScripts(proj)
     configs = []
     for item in os.listdir('scripts'):
         if item.endswith('.xml'): configs.append(item)
