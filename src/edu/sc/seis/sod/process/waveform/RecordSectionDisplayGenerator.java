@@ -164,7 +164,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             SQLException {
         int recSecId = -1;
         int eventId = eventAccess.getDBId(event);
-        String base = Start.getRunProps().getStatusBaseDir();
+        String base = Start.getRunProps().getStatusBaseDir() + "/earthquakes";
         String dir = saveSeisToFile.getLabel(event);
         new File(base + "/" + dir).mkdirs();
         String fullName = dir + "/" + fileName;
