@@ -16,7 +16,6 @@
                     check for new channels. </description>
                     <example>
                         <networkFinder>
-                            <description>Connect to the IRIS networkDC</description>
                             <name>IRIS_NetworkDC</name>
                             <dns>edu/iris/dmc</dns>
                             <refreshInterval>

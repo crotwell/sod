@@ -5,11 +5,6 @@
         <notAllowed/>
     </start>
     <define name="source">
-        <optional>
-            <element name="description">
-                <data type="string"/>
-            </element>
-        </optional>
         <element name="name">
             <data type="string"/>
         </element>
