@@ -9,6 +9,7 @@ import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.MagType;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 import java.util.ArrayList;
+import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -49,7 +50,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
     }
 
     protected void parseSearchTypes() throws ConfigurationException{
-        ArrayList arrayList = new ArrayList();
+        List types = new ArrayList();
         NodeList childNodes = config.getChildNodes();
         for(int counter  = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
@@ -57,12 +58,11 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{
                 String tagName = ((Element)node).getTagName();
                 if(tagName.equals("magType")){
                     MagType magType = (MagType)SodUtil.load((Element)node, "");
-                    arrayList.add(magType.getType());
+                    types.add(magType.getType());
                 }
             }
         }
-        String[] searchTypes = new String[arrayList.size()];
-        searchTypes = (String[])arrayList.toArray(searchTypes);
+        searchTypes = (String[])types.toArray(new String[types.size()]);
     }
 
     private String[] searchTypes;
