@@ -5,6 +5,9 @@ import org.w3c.dom.*;
 import java.lang.reflect.*;
 import edu.iris.Fissures.*;
 import edu.iris.Fissures.model.*;
+import java.util.Properties;
+
+import org.apache.log4j.*;
 
 /**
  * SubsetterUtil.java
@@ -98,7 +101,7 @@ public class SodUtil {
 	    Class subsetterSubclass = 
 		Class.forName(packageName+"."+
 			      tagName);
-	    //System.out.println("IN sod UTIL "+packageName+"."+tagName);	
+	    //logger.debug("IN sod UTIL "+packageName+"."+tagName);	
 	   
 	    Constructor constructor = 
 		subsetterSubclass.getConstructor(constructorArgTypes);
@@ -249,7 +252,7 @@ public class SodUtil {
 			if(node instanceof Element ) {
 
 				if(((Element)node).getTagName().equals(elementName)) {
-				    //System.out.println("in sodUtil getElement, the element name is "+((Element)node).getTagName());
+				    //logger.debug("in sodUtil getElement, the element name is "+((Element)node).getTagName());
 				    return ((Element)node);
 				}
 			}
@@ -275,28 +278,47 @@ public class SodUtil {
 
 	/** returns the nested text in the tag **/
 	public static String getNestedText(Element config) {
-		//System.out.println("The element name in sod util is "+config.getTagName());
+		//logger.debug("The element name in sod util is "+config.getTagName());
 		String rtnValue = null;
 		NodeList children = config.getChildNodes();
 		Node node;
 
-		//System.out.println("The length of the children is "+children.getLength());
+		//logger.debug("The length of the children is "+children.getLength());
 		for(int i = 0; i < children.getLength(); i++) {
 			
 			node = children.item(i);
 			if (node instanceof Text){
-				//System.out.println("In sodUtil textnode value is  "+node.getNodeValue());
+				//logger.debug("In sodUtil textnode value is  "+node.getNodeValue());
 				rtnValue =  node.getNodeValue();
 				//break;
 			}
 			else if(node instanceof Element) { 
-				//System.out.println("in sod util tag name is "+((Element)node).getTagName());
+				//logger.debug("in sod util tag name is "+((Element)node).getTagName());
 				rtnValue = getNestedText((Element)node);
 				break;
 			}
 		}		
 		return rtnValue;
 	}
+
+    public static void loadProperties(Element config, Properties props) {
+	NodeList children = config.getChildNodes();
+	Node node;
+	for(int i = 0; i < children.getLength(); i++) {
+	    node = children.item(i);
+	    if(node instanceof Element) {
+		if(((Element)node).getTagName().equals("property")) {
+		    Element elem = (Element)node;
+		    String propName = SodUtil.getNestedText(SodUtil.getElement(elem, "name"));
+		    String propValue = SodUtil.getNestedText(SodUtil.getElement(elem, "value"));
+		    props.setProperty(propName, propValue);
+	       
+		}
+	    }
+	}
+
+    }
+
 	
     static org.apache.log4j.Category logger = 
         org.apache.log4j.Category.getInstance(SodUtil.class.getName());

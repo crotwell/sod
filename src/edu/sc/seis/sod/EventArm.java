@@ -16,7 +16,8 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 /**
- * EventArm.java
+ * This class handles the subsetting of the Events based on the subsetters specified 
+ * in the configuration file (xml file).  
  *
  *
  * Created: Thu Mar 14 14:09:52 2002
@@ -43,7 +44,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
 
     /**
-     * Describe <code>run</code> method here.
+     * The run method of the eventArm.
      *
      */
     public void run() {
@@ -53,12 +54,17 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	} catch(Exception e) {
 	    
 	    logger.error("Exception caught while processing the EventArm", e);
+	    //notify Exception listeners in case of an exception
 	    notifyListeners(this, e);
 	}
-	System.out.println("Before setting the source Alive to be false");
+	logger.debug("Before setting the source Alive to be false");
 	//	getThreadGroup().list();
+	// if eventChannelFinder is false ... i.e., if no eventChannel is configured
+	// then the eventArm can signal end of processing  
+	// by setting the sourceAlive attribute of the EventQueue to be false.
+	
 	if(eventChannelFinder == null) Start.getEventQueue().setSourceAlive(false);
-	System.out.println("After setting the source Alive to be false");
+	logger.debug("After setting the source Alive to be false");
 	//getThreadGroup().list();
 	logger.debug("IN EVENT ARM **** The number of events in the eventQueue are "	
 			   +Start.getEventQueue().getLength());
@@ -66,7 +72,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
 
     /**
-     * Describe <code>processConfig</code> method here.
+     * This method processes the eventArm subsetters 
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
@@ -177,12 +183,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    logger.debug("contributor = "+contributors[counter]);
 	}
 	
-	System.out.println("At the start of the process eventArm");
+	logger.debug("At the start of the process eventArm");
 	//getThreadGroup().list();
 
 	edu.iris.Fissures.Time startTime = Start.getEventQueue().getTime(eventFinderSubsetter.getSourceName(),
 									 eventFinderSubsetter.getDNSName());
-	System.out.println("At the start of the process eventArm after instantiaing eventConfigDb");
+	logger.debug("At the start of the process eventArm after instantiaing eventConfigDb");
 	//getThreadGroup().list();
 
 // 	if(startTime == null) {
@@ -264,16 +270,16 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	    
 	}// end of while loop where checking for isFinished.
 	//	Start.getEventQueue().setSourceAlive(false);
-	System.out.println("At the end of the Process Event Arm");
+	logger.debug("At the end of the Process Event Arm");
 	//getThreadGroup().list();
 	//eventConfigDb.close();
-	System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$exiting as evetnArm is finished");
+	logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$exiting as evetnArm is finished");
 	//System.exit(0);
 
     }
 
     /**
-     * Describe <code>handleEventAttrSubsetter</code> method here.
+     * handles the EventAttrSubsetter.
      *
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @param eventAttr an <code>EventAttr</code> value
@@ -289,7 +295,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
 
     /**
-     * Describe <code>handleOriginSubsetter</code> method here.
+     * handles the OriginSubsetter
      *
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value
@@ -306,7 +312,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
     }
 
     /**
-     * Describe <code>handleEventArmProcess</code> method here.
+     * handles the eventArmProcess.
      *
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @param origin an <code>Origin</code> value
@@ -321,6 +327,12 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	eventArmProcess.process(eventAccess, null);
 
     }
+
+    /***
+     * returns an endTime based on the increment value specified inthe property file.
+     * 
+     */
+    
 
     private edu.iris.Fissures.Time calculateEndTime(edu.iris.Fissures.Time startTime,
 						    edu.iris.Fissures.Time givenEndTime) {
@@ -339,6 +351,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 
     }
 
+    /**
+     * checks to see if the eventArm is done processing for the time interval 
+     * specified in the configuration file.
+     * If finished returns true else returns false.
+     */
 
     private boolean isFinished(edu.iris.Fissures.Time endTime,
 			       edu.iris.Fissures.Time givenEndTime) {
@@ -350,6 +367,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	}
 	else return false;
     }
+    
+    /***
+     * passivates the eventArm (makes it to sleep) based on the refreshInterval
+     * and quitTime specified in the property file.
+     */
 
     private boolean passivateEventArm(edu.iris.Fissures.Time endTime) {
 	//if(turn == 1) System.exit(0);
@@ -360,7 +382,7 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	MicroSecondDate currentDate = new MicroSecondDate();
 	if(quitDate.before(currentDate))  return true;
 	try {
-		System.out.println("NOW the eventArm goes to sleep &&&&&&&&&&&&&&&&&&&&&&&&&&&&");	
+		logger.debug("NOW the eventArm goes to sleep &&&&&&&&&&&&&&&&&&&&&&&&&&&&");	
 		if(turn != 0)
 		Thread.sleep(Start.REFRESH_INTERVAL * 1000);	
 	} catch(InterruptedException ie) {
@@ -370,6 +392,11 @@ public class EventArm extends SodExceptionSource implements Runnable{
 	turn++;
 	return false;
     }
+
+    /**
+     * returns the increment value. This value is specified as a property in the 
+     * property file.
+     */
 
     private int getIncrementValue() {
 	String value = props.getProperty("edu.sc.seis.sod.daystoincrement");

@@ -60,7 +60,7 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     }
 
      /**
-     * Describe <code>processWaveFormArm</code> method here.
+      * starts the processing of the WaveformArm.
      *
      * @param eventAccess an <code>EventAccessOperations</code> value
      * @exception Exception if an error occurs
@@ -68,13 +68,13 @@ public class WaveFormArmThread extends SodExceptionSource implements Runnable{
     public void processWaveFormArm(EventDbObject eventDbObject) throws Throwable{
 
 	EventAccessOperations eventAccess = eventDbObject.getEventAccess();
-	if (successfulChannels[0]  == null) System.out.println("Chan is NULL");
-	else System.out.println("channel is NOT NULL");
+	if (successfulChannels[0]  == null) logger.debug("Chan is NULL");
+	else logger.debug("channel is NOT NULL");
 	for(int counter = 0; counter < successfulChannels.length; counter++) {
 	    if(eventDbObject.getDbId() == 11 && successfulChannels[counter].getDbId() == 27) {
-		System.out.println("got the needed one IN PROCESS WAVEFORM ARM");
-		System.out.println("The eventid is "+eventDbObject.getDbId());
-		System.out.println("The channelid is "+successfulChannels[counter].getDbId());
+		logger.debug("got the needed one IN PROCESS WAVEFORM ARM");
+		logger.debug("The eventid is "+eventDbObject.getDbId());
+		logger.debug("The channelid is "+successfulChannels[counter].getDbId());
 		//	System.exit(0);
 	}
 	parent.setFinalStatus(eventDbObject,

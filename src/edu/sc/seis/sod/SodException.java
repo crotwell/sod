@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import org.apache.log4j.*;
+
 /**
  * SodException.java
  *
@@ -27,5 +29,8 @@ public class SodException {
 
     private java.lang.Object object;
     private Exception exception;
+
+    static Category logger = 
+        Category.getInstance(SodException.class.getName());
     
 }// SodException

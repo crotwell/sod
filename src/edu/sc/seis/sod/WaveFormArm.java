@@ -23,7 +23,7 @@ import org.w3c.dom.*;
 import org.apache.log4j.*;
 
 /**
- * Describe class <code>WaveFormArm</code> here.
+ * 
  *
  * @author <a href="mailto:">Srinivasa Telukutla</a>
  * @version 1.0
@@ -73,7 +73,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	//	Connection connection = Start.getWaveformQueue().getConnection(
 	//	synchronized(connection) {
 	int[] ids = Start.getWaveformQueue().getIds();
-	System.out.println(" %%%%%%%%%%%%%%%%%%%%%%%%%%%The count of channelids to restore is "+ids.length);
+	logger.debug(" %%%%%%%%%%%%%%%%%%%%%%%%%%%The count of channelids to restore is "+ids.length);
 	for(int counter = 0; counter < ids.length; counter++) {
 	    int eventid = Start.getWaveformQueue().getWaveformEventId(ids[counter]);
 	    int channelid = Start.getWaveformQueue().getWaveformChannelId(ids[counter]);
@@ -85,7 +85,7 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
     }
 	
     /**
-     * Describe <code>run</code> method here.
+     * run method of the waveformArm.
      *
      */
     public void run() {
@@ -97,20 +97,25 @@ public class WaveFormArm extends SodExceptionSource implements Runnable {
 	//ThreadPool pool = new ThreadPool(5);
 	//getThreadGroup().list();
 		try {
-System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************");
+		    
 
 	    int i = 0;
+	    //get the first event from the eventQueue.
 	    eventid = Start.getEventQueue().pop();
 	    logger.debug("The queue is size "+Start.getEventQueue().getLength());
 	    // if(Start.getEventQueue().getLength() < 4) notifyAll();
+	    //loop while thereis potential for new events.
 	    while(eventid != -1) {
+		
+		
 		eventAccess = Start.getEventQueue().getEventAccess(eventid);
 		waveformStatusProcess.begin(eventAccess);
 		
 		Connection connection = Start.getWaveformQueue().getConnection();
 		    // if reopen begin the transaction.
 		// Start.getWaveformQueue().beginTransaction();
-		    
+		
+		//get succesful Networks.
 		NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
 	
 		Start.getWaveformQueue().putInfo(eventid, 0);//networks.length);
@@ -119,8 +124,11 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 		}
 		for(int netcounter = 0; netcounter < networks.length; netcounter++) {
 		    waveformStatusProcess.begin(eventAccess, networks[netcounter].getNetworkAccess());
+
+		    //getSuccessful Stations
 		    StationDbObject[] stations = networkArm.getSuccessfulStations(networks[netcounter]);
 		    
+		    //insert the neworkInfo into the waveformNetworkdb.
 		    Start.getWaveformQueue().putNetworkInfo(eventid,
 							    networks[netcounter].getDbId(),
 							    0,///stations.length,
@@ -129,10 +137,13 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 			updateNetworkCount(eventid, networks[netcounter].getDbId(), eventAccess);
 		    }
 		    for(int stationcounter = 0; stationcounter < stations.length; stationcounter++) {
+			
 			waveformStatusProcess.begin(eventAccess, stations[stationcounter].getStation());
+			//get Successful Sites.
 			SiteDbObject[] sites = networkArm.getSuccessfulSites(networks[netcounter], 
 									     stations[stationcounter]);
 			
+			//insert the stationInfo into the waveformStationDb.
 			Start.getWaveformQueue().putStationInfo(eventid,
 								stations[stationcounter].getDbId(),
 								networks[netcounter].getDbId(),
@@ -143,15 +154,19 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 			}
 			for(int sitecounter = 0; sitecounter < sites.length; sitecounter++) {
 			    waveformStatusProcess.begin(eventAccess, sites[sitecounter].getSite());
+
+			    //get successful channels.
 			    ChannelDbObject[] successfulChannels = 
 				networkArm.getSuccessfulChannels(networks[netcounter], sites[sitecounter]);
-			    System.out.println("The length of the channels is "+successfulChannels.length);
+			    
+			    logger.debug("The length of the channels is "+successfulChannels.length);
+			    //insert the siteInfo  into the waveformSiteDb.
 			    Start.getWaveformQueue().putSiteInfo(eventid,
 								 sites[sitecounter].getDbId(),
 								 stations[stationcounter].getDbId(),
 								 0,//successfulChannels.length,
 								 new MicroSecondDate());
-			    System.out.println("After inserting the site INFO");
+			    logger.debug("After inserting the site INFO");
 			   
 			    if(successfulChannels.length == 0) {
 				updateSiteCount(eventid, sites[sitecounter].getDbId(), eventAccess);
@@ -167,11 +182,17 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 				//increment the networkCount if necessary.
 				synchronized(connection) {
 	
+				    //cache the channelInformation.
 				    channelDbObjectMap.put( (new Integer(successfulChannels[counter].getDbId())).toString(),
 							    successfulChannels[counter]);
+
+				    //push the channel to the waveformQueue.
 				    Start.getWaveformQueue().push(eventid, 
 								  sites[sitecounter].getDbId(),
 								  successfulChannels[counter].getDbId());
+				    
+				    //update Rerefence counts of channels, stations,
+				    //sites and networks.
 				    updateReferences(eventid, successfulChannels[counter].getDbId());
 				} //end of synchronization block
 				// pool.doWork(work)
@@ -179,16 +200,27 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 			}//end of for sitecounter
 		    }//end of for stationcounter
 		}//end of for netcounter
+		
+		//set the status of the event to be AWAITING_FINAL_STATUS implying that
+		//that all the network information for this particular event is inserted 
+		//in the waveformDatabase.
 		 Start.getEventQueue().setFinalStatus((EventAccess)((CacheEvent)eventAccess).getEventAccess(), 
 						      Status.AWAITING_FINAL_STATUS);
 		 //	Start.getWaveformQueue().endTransaction();
+		 //get the next event.
 		 eventid = 
 		    Start.getEventQueue().pop();
 	    }
 	    logger.debug("CALLING THE FINISHED METHOD OF THE POOL");
 	  	 
+	    //signals the waveformQueue the end of 
+	    //processing of all the events.
 	    Start.getWaveformQueue().setSourceAlive(false);
 	    pool.join();
+
+	    //make the state of the database consistent.
+	    //this statement is required to make
+	    //the state of the waveform database consistent.
 	    restoreDb();
 	 
 	  	}  catch(Exception e) {
@@ -201,7 +233,7 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
     }
 
     /**
-     * Describe <code>processConfig</code> method here.
+     * processes the configuration file checking for waveformArmSubsetter types.
      *
      * @param config an <code>Element</code> value
      * @exception ConfigurationException if an error occurs
@@ -237,10 +269,19 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 // 	return networkArm.getNetworkId(channel);
 //     }
 
+    
+    /**
+     * returns databaseid corresponding to the eventAccess.
+     */
     public synchronized int getEventId(EventAccess eventAccess) {
 	return Start.getEventQueue().getEventId(eventAccess);
     }
 
+
+    /**
+     * sets the finalStatus of the event. For infomation about the status see
+     * the class Status in the package edu.sc.seis.sod.database. 
+     */
 
     public synchronized void setFinalStatus(EventDbObject eventDbObject,
 					    ChannelDbObject channelDbObject,
@@ -271,6 +312,8 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 	    e.printStackTrace();
 	}
     }
+
+    
     
     private synchronized void updateChannelCount(int eventid, int channelid, EventAccessOperations eventAccess) {
 	Connection connection = Start.getWaveformQueue().getConnection();
@@ -280,14 +323,14 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 	
 	int count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);  
 	int unfinishedCount = Start.getWaveformQueue().unfinishedChannelCount(eventid, sitedbid);
-	System.out.println("Channel count before is "+count+" the channelid is "+channelid+
+	logger.debug("Channel count before is "+count+" the channelid is "+channelid+
 	"eventid is  "+eventid);
 
-	if(count == -1) { System.out.println("The coutn is -1 "); System.exit(0); }
+	if(count == -1) { logger.debug("The coutn is -1 "); System.exit(0); }
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementChannelCount(eventid, sitedbid);
 	      count = Start.getWaveformQueue().getChannelCount(eventid, sitedbid);
-	  if(count == -1) { System.out.println("The channel count after decr is -1 "); System.exit(0);}
+	  if(count == -1) { logger.debug("The channel count after decr is -1 "); System.exit(0);}
 	}
 	write("Channel count afer is "+Start.getWaveformQueue().getChannelCount(eventid, sitedbid)+
 	"channelid is "+channelid+" eventid is "+eventid);
@@ -309,13 +352,13 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 	int stationdbid = networkArm.getStationDbId(sitedbid);
 	int count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
 	int unfinishedCount = Start.getWaveformQueue().unfinishedSiteCount(eventid, stationdbid);
-	if(count == -1) { System.out.println("COuntis -1"); System.exit(0);}
+	if(count == -1) { logger.debug("COuntis -1"); System.exit(0);}
 	write("site count before is "+count+" the siteid is "+sitedbid
 	+" eventid is "+eventid);
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementSiteCount(eventid, stationdbid);
 	count = Start.getWaveformQueue().getSiteCount(eventid, stationdbid);
-	if(count == -1) {System.out.println("The site count after is -1 "); System.exit(0);}
+	if(count == -1) {logger.debug("The site count after is -1 "); System.exit(0);}
 	}
 	write("site count after is "+Start.getWaveformQueue().getSiteCount(eventid, stationdbid)+
 		"the siteid is "+sitedbid+" eventid is "+eventid);
@@ -335,11 +378,11 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 	int unfinishedCount = Start.getWaveformQueue().unfinishedStationCount(eventid, networkdbid);
 	write("the station count before is "+count+" the stationid is "+stationdbid+
 	" eventid is "+eventid);
-	if(count == -1) {System.out.println("The COunt is -1 "); System.exit(0);}
+	if(count == -1) {logger.debug("The COunt is -1 "); System.exit(0);}
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementStationCount(eventid, networkdbid);
 	count = Start.getWaveformQueue().getStationCount(eventid, networkdbid);
-	if(count == -1) {System.out.println("The stationcount afrter is -1 ");System.exit(0); }
+	if(count == -1) {logger.debug("The stationcount afrter is -1 ");System.exit(0); }
 	}
 	write("the station count after is "+Start.getWaveformQueue().getStationCount(eventid, networkdbid)+
 		" the stationid is "+stationdbid+" evetnid is "+eventid);
@@ -357,11 +400,11 @@ System.out.println("IN WAVE FORM ARM BEFORE POPPING ****************************
 	int unfinishedCount = Start.getWaveformQueue().unfinishedNetworkCount(eventid);
 	write("the network count before is "+count+" the networkid is "+networkdbid+
 	" eventid is "+eventid);
-	if(count == -1) {System.out.println("The count is -1 "); System.exit(0);}
+	if(count == -1) {logger.debug("The count is -1 "); System.exit(0);}
 	if(count > 0 && count > unfinishedCount) {
 		Start.getWaveformQueue().decrementNetworkCount(eventid);
 count = Start.getWaveformQueue().getNetworkCount(eventid);
-if(count == -1) {System.out.println("The net count after is -1"); System.exit(0);}
+if(count == -1) {logger.debug("The net count after is -1"); System.exit(0);}
 	}
 	write("the network count after is "+Start.getWaveformQueue().getNetworkCount(eventid)+
 		" the networkid is "+networkdbid+" evetnid is "+eventid);	
@@ -430,6 +473,13 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 // 	}
     }
 
+
+    /***
+     * This class represents the ThreadWorker which will be continuously gets
+     * new work from the ThreadPool, finishes the work and again looks for new work
+     *  until it is signaled to stop looking for new work.
+     */
+
     class ThreadWorker extends Thread {
 
 	ThreadWorker(ThreadPool pool) {
@@ -439,9 +489,13 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 	boolean finished = false;
 	ThreadPool pool;
 
+	/**
+	 * used to signal the end of new work.
+	 */
+	
 	public void finish() {
 	    finished = true;
-	System.out.println("SETTING THE FINISHED TO TRUE FOR "+getName());
+	logger.debug("SETTING THE FINISHED TO TRUE FOR "+getName());
 	}
 
 	public void run() {
@@ -464,6 +518,13 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
     }
 
     
+    /**
+     * This class maintains a pool of workerThreads. When the WorkerThreads ask
+     * for new work it gets the next Object from the waveformQueue, constructs a
+     * Runnable and gives it to the worker thread. This class also signals the worker
+     * when there is no more new work. 
+     *
+     */
 
     class ThreadPool {
 
@@ -487,9 +548,9 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 		try {
 		      logger.debug("waiting in doWork method The queue is size "+Start.getEventQueue().getLength());
 
-		      System.out.println("Before Wait in do Work of ThreadPool");
+		      logger.debug("Before Wait in do Work of ThreadPool");
 		      wait();
-		      System.out.println("After Wait in do work of ThreadPool");
+		      logger.debug("After Wait in do work of ThreadPool");
 		} catch (InterruptedException e) { }
 	    }
 	    work = workUnit;
@@ -522,7 +583,7 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 		eventDbObject = new EventDbObject(eventid, eventAccess);
 		//ChannelDbObject channelDbObject = null;
 		if(	((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString())) != null) {
-		    System.out.println("******** Channnel already in the hasmamp");
+		    logger.debug("******** Channnel already in the hasmamp");
 		    channelDbObject = ((ChannelDbObject)channelDbObjectMap.get((new Integer(channelid)).toString()));
 		    Start.getWaveformQueue().setStatus(Start.getWaveformQueue().getWaveformId(eventid, channelid),
 							   Status.PROCESSING, "got channeldbobject from map");
@@ -537,9 +598,9 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 	    setFinalStatus(eventDbObject, channelDbObject,
 	    Status.PROCESSING, "still didnot even form the waveformThread Runnable");
 	    if(eventid == 11 && channelid == 27) {
-		System.out.println("got the needed one");
-		System.out.println("The eventid is "+eventDbObject.getDbId());
-		System.out.println("The channelid is "+channelDbObject.getDbId());
+		logger.debug("got the needed one");
+		logger.debug("The eventid is "+eventDbObject.getDbId());
+		logger.debug("The channelid is "+channelDbObject.getDbId());
 		//	System.exit(0);
 	    }
 	    //networkArm.getChannel(networkid);
@@ -578,9 +639,9 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 	    // 	    while (work == null && ! finished) {
 	    // 		try {
 	    // 		    logger.debug("Waiting in the getWork METHOD");
-	    // 		    System.out.println("Before Wait in getWork of ThreadPool");
+	    // 		    logger.debug("Before Wait in getWork of ThreadPool");
 	    // 		    wait();
-	    // 		    System.out.println("After Wait in getWork of ThreadPool");
+	    // 		    logger.debug("After Wait in getWork of ThreadPool");
 	    // 		} catch (InterruptedException e) { }
 	    // 	    }
 	    // 	    if (finished) {
@@ -601,11 +662,11 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 	    while(it.hasNext()) {
 		try {
 		    ThreadWorker worker = ((ThreadWorker)it.next());
-		    System.out.println("****** JOINING THE thread "+worker.getName());
+		    logger.debug("****** JOINING THE thread "+worker.getName());
 		    worker.join();
 		} catch(Exception e) {}
 	    }
-	    System.out.println("RETURNING FROM THE JOIN METHOD OF THE POOL ");
+	    logger.debug("RETURNING FROM THE JOIN METHOD OF THE POOL ");
 	}
 
 	public synchronized void finished() {
@@ -613,9 +674,9 @@ if(count == -1) {System.out.println("The net count after is -1"); System.exit(0)
 	    while (work != null) {
 		try {
 		    logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Waiting in the finished method of pool");
-		    System.out.println("Before Wait in finished of Thread Pool");
+		    logger.debug("Before Wait in finished of Thread Pool");
 		    wait();
-		    System.out.println("After Wait in finished of Thread Pool");
+		    logger.debug("After Wait in finished of Thread Pool");
 		} catch (InterruptedException e) { }
 	    }
 	    logger.debug("Need not wait in the finished method of the pool");

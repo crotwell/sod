@@ -16,7 +16,7 @@ import edu.iris.Fissures.model.*;
 import java.util.*;
 
 /**
- * NetworkArm.java
+ * Handles the subsetting of the Channels.
  *
  *
  * Created: Wed Mar 20 13:30:06 2002
@@ -120,7 +120,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleNetworkAttrSubsetter</code> method here.
+     * handles the networkAttrSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param networkAttr a <code>NetworkAttr</code> value
@@ -129,7 +129,7 @@ public class NetworkArm {
     public void handleNetworkAttrSubsetter(NetworkAccess networkAccess, NetworkAttr networkAttr) throws Exception{
 
 	try {
-	    //System.out.println("The stationIdSubsetter is not null");
+	    //logger.debug("The stationIdSubsetter is not null");
 	    if(networkAttrSubsetter.accept(networkAttr, null)) { 
 		Station[] stations = networkAccess.retrieve_stations();
 		for(int subCounter = 0; subCounter < stations.length; subCounter++) {
@@ -146,7 +146,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleStationIdSubsetter</code> method here.
+     * handles the stationIdSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param station a <code>Station</code> value
@@ -168,7 +168,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleStationSubsetter</code> method here.
+     * handles the stationSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param station a <code>Station</code> value
@@ -197,7 +197,7 @@ public class NetworkArm {
     }
 				       
     /**
-     * Describe <code>handleSiteIdSubsetter</code> method here.
+     * handles the siteIdSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param channel a <code>Channel</code> value
@@ -213,7 +213,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleSiteSubsetter</code> method here.
+     * handles the siteSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param channel a <code>Channel</code> value
@@ -229,7 +229,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleChannelIdSubsetter</code> method here.
+     * handles the channelIdSubsetter
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param channel a <code>Channel</code> value
@@ -246,7 +246,7 @@ public class NetworkArm {
     }
     
     /**
-     * Describe <code>handleChannelSubsetter</code> method here.
+     * handles the channelSubsetter.
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param channel a <code>Channel</code> value
@@ -262,7 +262,7 @@ public class NetworkArm {
     }
 
     /**
-     * Describe <code>handleNetworkArmProcess</code> method here.
+     * handles the networkArmProcess.
      *
      * @param networkAccess a <code>NetworkAccess</code> value
      * @param channel a <code>Channel</code> value
@@ -273,26 +273,64 @@ public class NetworkArm {
 
     }
 
+    
+    /**
+     * returns the Channel corresponding to the databaseid dbid.
+     *
+     * @param dbid an <code>int</code> value
+     * @return a <code>Channel</code> value
+     */
     public synchronized  Channel getChannel(int dbid) {
 	return networkDatabase.getChannel(dbid);
     }
 
+    /**
+     * returns the ObjectReference of the NetworkAcces corresponding to the databaseid dbid.
+     *
+     * @param dbid an <code>int</code> value
+     * @return a <code>NetworkAccess</code> value
+     */
     public synchronized NetworkAccess getNetworkAccess(int dbid) {
 	return networkDatabase.getNetworkAccess(dbid);
     }
 
+    /**
+     * returns the sitedatabaseid corresponding to the channelid.
+     *
+     * @param channelid an <code>int</code> value
+     * @return an <code>int</code> value
+     */
     public synchronized int getSiteDbId(int channelid) {
 	return networkDatabase.getSiteDbId(channelid);
     }
 
+    /**
+     * returns the stationdatabaseid corresponding to the siteid
+     *
+     * @param siteid an <code>int</code> value
+     * @return an <code>int</code> value
+     */
     public synchronized int getStationDbId(int siteid) {
 	return networkDatabase.getStationDbId(siteid);	
     }
 
+    /**
+     * returns the networkid corresponding to the stationid.
+     *
+     * @param stationid an <code>int</code> value
+     * @return an <code>int</code> value
+     */
     public synchronized int getNetworkDbId(int stationid) {
 	return networkDatabase.getNetworkDbId(stationid);
     }
 
+    /**
+     * checks if the refreshInterval specified inthe property file is still valid at the currentTime.
+     * If the (currenttime  - lasttimeofnetworkquery) is greater than refreshInteval it retuns true.
+     * else returns false.
+     *
+     * @return a <code>boolean</code> value
+     */
     public boolean isRefreshIntervalValid() {
 	RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
 	edu.iris.Fissures.Time databaseTime = networkDatabase.getTime(networkFinderSubsetter.getSourceName(),
@@ -320,6 +358,16 @@ public class NetworkArm {
     }
 
 
+    /**
+     * returns an array of SuccessfulNetworks. 
+     * if the refreshInterval is valid it gets the networks from the database(may be embedded or external).
+     * if not it gets the networks again from the networkserver. After obtaining the Networks if processes them 
+     * using the networkIdSubsetter and networkAttrSubsetter and returns the succesful networks as an array of
+     * NetworkDbObjects.
+     *
+     * @return a <code>NetworkDbObject[]</code> value
+     * @exception Exception if an error occurs
+     */
     public NetworkDbObject[] getSuccessfulNetworks() throws Exception {
 	if(isRefreshIntervalValid()) {
 	    //get from the database.
@@ -376,9 +424,17 @@ public class NetworkArm {
 	return networkDbObjects;
     }
 
+    /**
+     * Obtains the Stations corresponding to the given networkDbObject, processes them
+     * using stationIdSubsetter and stationSubsetters, returns the successful stations as
+     * an array of StationDbObjects.
+     *
+     * @param networkDbObject a <code>NetworkDbObject</code> value
+     * @return a <code>StationDbObject[]</code> value
+     */
     public StationDbObject[] getSuccessfulStations(NetworkDbObject networkDbObject) {
 	if(networkDbObject.stationDbObjects != null) {
-	    System.out.println("returning from the cache");
+	    logger.debug("returning from the cache");
 	    return networkDbObject.stationDbObjects;
 	} 
 	ArrayList arrayList = new ArrayList();
@@ -404,9 +460,17 @@ public class NetworkArm {
 	return rtnValues;
     }
 
+    /**
+     * Obtains the Channels corresponding to the stationDbObject, retrievesthe station from each channel
+     * and processes the channels using SiteIdSubsetter and SiteSubsetter  and returns an array of
+     * successful SiteDbObjects.
+     * @param networkDbObject a <code>NetworkDbObject</code> value
+     * @param stationDbObject a <code>StationDbObject</code> value
+     * @return a <code>SiteDbObject[]</code> value
+     */
     public SiteDbObject[] getSuccessfulSites(NetworkDbObject networkDbObject, StationDbObject stationDbObject) {
 	if(stationDbObject.siteDbObjects != null) {
-	    System.out.println("returning from the cache");
+	    logger.debug("returning from the cache");
 	    return stationDbObject.siteDbObjects;
 	}
 	ArrayList arrayList = new ArrayList();
@@ -442,7 +506,7 @@ public class NetworkArm {
 	SiteDbObject[] rtnValues = new SiteDbObject[arrayList.size()];
 	rtnValues = (SiteDbObject[]) arrayList.toArray(rtnValues);
 	stationDbObject.siteDbObjects = rtnValues;
-	System.out.println(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
+	logger.debug(" THE LENFGHT OF THE SITES IS ***************** "+rtnValues.length);
 	return rtnValues;
 
     }
@@ -457,9 +521,17 @@ public class NetworkArm {
     
 
 
+    /**
+     * Obtains the Channels corresponding to the siteDbObject, processes them using the 
+     * channelIdSubsetter and ChannelSubsetter and returns an array of succesful ChannelDbObjects.
+     *
+     * @param networkDbObject a <code>NetworkDbObject</code> value
+     * @param siteDbObject a <code>SiteDbObject</code> value
+     * @return a <code>ChannelDbObject[]</code> value
+     */
     public ChannelDbObject[] getSuccessfulChannels(NetworkDbObject networkDbObject, SiteDbObject siteDbObject) {
 	if(siteDbObject.channelDbObjects != null) {
-	    System.out.println("returning from the cache");
+	    logger.debug("returning from the cache");
 	    return siteDbObject.channelDbObjects;
 	}
 	ArrayList arrayList = new ArrayList();
@@ -487,7 +559,7 @@ public class NetworkArm {
 	ChannelDbObject[] values = new ChannelDbObject[arrayList.size()];
 	values = (ChannelDbObject[]) arrayList.toArray(values);
 	siteDbObject.channelDbObjects = values;
-	System.out.println("******* The elenght of the successful channels is "+values.length);
+	logger.debug("******* The elenght of the successful channels is "+values.length);
 	//	if(siteDbObject.getDbId() == 5) System.exit(0);
 	return values;
     }

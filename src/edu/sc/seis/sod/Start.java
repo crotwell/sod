@@ -66,13 +66,13 @@ public class Start implements SodExceptionListener {
 		if (subElement.getTagName().equals("description")) {
 		    logger.info(subElement.getTagName());
 		} else if (subElement.getTagName().equals("eventArm")) {
-		    System.out.println("Starting the EVent Arm");
+		    
 		    logger.info(subElement.getTagName());
 		    eventArm = new EventArm(subElement, this, this.props);
 		    eventArmThread = new Thread(eventArm);
 		    eventArmThread.setName("eventArm Thread");
 		     eventArmThread.start();
-			    System.out.println("******************* EVENT ARM THREAD JOINED SO CAN EXIT");
+
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
 		    networkArm = new NetworkArm(subElement);
@@ -90,7 +90,17 @@ public class Start implements SodExceptionListener {
 		    waveFormArmThread.setName("waveFormArm Thread");
 		    // Thread.sleep(100000);
 		    waveFormArmThread.start();
-		    //   System.out.println("EXITRING AS THE WAEFORM ARM THREAD RETURNED");
+		   
+
+		} else if(subElement.getTagName().equals("properties")) {
+		      //load the properties fromt the configurationfile.
+		    SodUtil.loadProperties(subElement, props);
+		    setProperties(props);
+		    checkRestartOptions();
+		    eventQueue = new HSqlDbQueue(props);
+		    waveformQueue = new WaveformDbQueue(props);
+		    waveformQueue.clean();
+		    eventQueue.clean();
 		} else {
 		logger.debug("process "+subElement.getTagName());
 		    
@@ -117,7 +127,7 @@ public class Start implements SodExceptionListener {
 
     public static void setProperties(Properties props) {
 	
-	props = props;
+	Start.props = props;
 
     }
 
@@ -184,14 +194,14 @@ public class Start implements SodExceptionListener {
 		}
 	    } // end of if (commandlineProps)
 
-	    
-	    Start.props = props;
 	    setProperties(props);
+	    /* Start.props = props;
+	
 	    checkRestartOptions();
 	    eventQueue = new HSqlDbQueue(props);
 	    waveformQueue = new WaveformDbQueue(props);
 	    waveformQueue.clean();
-	    eventQueue.clean();
+	    eventQueue.clean();*/
 	    if (defaultPropLoadOK) {
 		// configure logging from properties...
 		PropertyConfigurator.configure(props);
@@ -206,7 +216,7 @@ public class Start implements SodExceptionListener {
 	
 	    String filename 
 		= props.getProperty("edu.sc.seis.sod.configuration");
-	 System.out.println("The file name is "+filename);
+	   
 	    if (filename == null) {
 		logger.fatal("No configuration file given, quiting....");
 		return;
@@ -244,14 +254,13 @@ public class Start implements SodExceptionListener {
 	    waveFormArmThread.join();
 	   
 	    getEventQueue().closeDatabase();
-	    System.out.println("After closing the database of eventQueue");
+	   
 	    //Start starta = new Start(null);
 	    //starta.getThreadGroup().list();
-	    //System.out.println("ACTIVE COUNT AFTER EVERYTHING IS CLOSED "+Thread.activeCount());
+	  
 	    //Thread.sleep(10000);
 	    // starta.getThreadGroup().list();
-	    System.out.println("ACTIVE COUNT AFTER sleep EVERYTHING IS CLOSED "+Thread.activeCount());
-	    System.out.println("Did not track the thread bug yet. so using System.exit(0)");
+	  
 	    System.exit(0);
 	} catch(Exception e) {
 	    e.printStackTrace();
@@ -286,7 +295,7 @@ public class Start implements SodExceptionListener {
 	/*(if(errorHandler.isValid()) return document;
 	else {
 	    logger.fatal("The xml Configuration file contains errors.");
-	    System.out.println("The xml Configuration file contains errors.");
+	   
 	    System.exit(0);
 	    return null;
 	}*/

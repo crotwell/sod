@@ -1,6 +1,9 @@
 package edu.sc.seis.sod;
 
 import java.util.*;
+
+import org.apache.log4j.*;
+
 /**
  * SodExceptionSource.java
  *
@@ -11,21 +14,36 @@ import java.util.*;
  * @version
  */
 
+
 public class SodExceptionSource {
     public SodExceptionSource (){
 	
     }
+
+    /**
+     * adds a sodExceptionListener.
+     *
+     */
+    
 
     public void addSodExceptionListener(SodExceptionListener sodExceptionListener) {
 
 	vector.add(sodExceptionListener);
     }
 
+    /**
+     * removes the sodExceptionListener.
+     */
+
     public void removeSodExceptionListener(SodExceptionListener sodExceptionListener) {
 
 	vector.remove(sodExceptionListener);
 	
     }
+
+    /**
+     * notifys the Listeners about the occurence of a sodException.
+     */
 
     public void notifyListeners(java.lang.Object object, Exception e) {
 
@@ -35,6 +53,10 @@ public class SodExceptionSource {
 	}
     }
     
+    //vector to hold the sodExceptionListeners.
     private Vector vector = new Vector();
+
+    static Category logger = 
+	Category.getInstance(SodExceptionSource.class.getName());
     
 }// SodExceptionSource

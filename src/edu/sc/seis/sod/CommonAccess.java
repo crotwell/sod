@@ -7,6 +7,7 @@ import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 
 import java.io.*;
+import org.apache.log4j.*;
 
 
 /**
@@ -139,6 +140,8 @@ public class CommonAccess {
 
     private org.omg.CORBA_2_3.ORB orb = null;
 
+    static Category logger = 
+        Category.getInstance(CommonAccess.class.getName());
 
 
     
