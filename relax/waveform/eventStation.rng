@@ -19,7 +19,9 @@
                         <ref name="NOT"/>
                         <ref name="midPoint"/>
                         <ref name="phaseExists"/>
+                        <!--
                         <ref name="phaseInteraction"/>
+                        -->
                         <ref name="PASS"/>
                 </choice>
         </define>
@@ -258,11 +260,11 @@
                         </xsd:documentation>
                 </xsd:annotation>
                 <element name="phaseExists">
-                        <zeroOrMore>
+                        <optional>
                                 <element name="modelName">
                                         <data type="string"/>
                                 </element>
-                        </zeroOrMore>
+                        </optional>
                         <element name="phaseName">
                                 <data type="string"/>
                         </element>
@@ -294,6 +296,10 @@
                         <externalRef href="../base/externalRef/area.rng"/>
                 </element>
         </define>
+        <!--
+        Temprarily remove phaseInteraction from the processors as it is both
+        complicated and broken at present. It needs both recoding and a good
+        test suite
         <define name="phaseTurnInteraction">
                 <choice>
                         <value>TOPSIDE REFLECTION</value>
@@ -308,21 +314,26 @@
         </define>
         <define name="phaseInteraction">
                 <element name="phaseInteraction">
-                        <ref name="phaseExists"/>
+                        <optional>
+                                <element name="modelName">
+                                        <data type="string"/>
+                                </element>
+                        </optional>
+                        <element name="phaseName">
+                                <data type="string"/>
+                        </element>
                         <element name="interactionStyle">
                                 <ref name="phaseTurnInteraction"/>
                         </element>
-                        <zeroOrMore>
+                        <optional>
                                 <element name="interactionNumber">
                                         <data type="positiveInteger"/>
                                 </element>
-                        </zeroOrMore>
-                        <zeroOrMore>
-                                <choice>
-                                        <ref name="phaseInteractionRelative"/>
-                                        <ref name="phaseInteractionAbsolute"/>
-                                </choice>
-                        </zeroOrMore>
+                        </optional>
+                        <choice>
+                                <ref name="phaseInteractionRelative"/>
+                                <ref name="phaseInteractionAbsolute"/>
+                        </choice>
                 </element>
         </define>
         <define name="phaseInteractionRelative">
@@ -356,6 +367,7 @@
                         </element>
                 </zeroOrMore>
         </define>
+        -->
         <define name="PASS">
                 <xsd:annotation>
                         <xsd:documentation xml:lang="en">
