@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramProcess;
 import edu.sc.seis.sod.process.waveformArm.LocalSeismogramResult;
@@ -247,18 +248,17 @@ public class LocalSeismogramArm implements Subsetter{
                 while(retries < MAX_RETRY) {
                     try {
                         logger.debug("before retrieve_seismograms");
-                        try {
-                            localSeismograms = dataCenter.retrieve_seismograms(infilters);
-                        } catch (FissuresException e) {
-                            //maybe the exception is because the server doesn't
-                            //support retrieve_seismograms so try using the
-                            //queue set of retrieve calls
+                        NSSeismogramDC nsDC = (NSSeismogramDC)dataCenter.getWrappedDC(NSSeismogramDC.class);
+                        if(nsDC.getServerDNS().equals("edu/iris/dmc") &&
+                           nsDC.getServerName().equals("IRIS_ArchiveDataCenter")){
+                            //The Archive doesn't support retrieve_seismograms
+                            //so try using the queue set of retrieve calls
                             try {
                                 String id = dataCenter.queue_seismograms(infilters);
                                 String status = dataCenter.request_status(id);
                                 while(status.equals(RETRIEVING_DATA)){
                                     try {
-                                        Thread.sleep(10 * 1000);
+                                        Thread.sleep(60 * 1000);
                                     } catch (InterruptedException ex) {}
                                     status = dataCenter.request_status(id);
                                 }
@@ -266,11 +266,15 @@ public class LocalSeismogramArm implements Subsetter{
                                     localSeismograms = dataCenter.retrieve_queue(id);
                                 }
                             } catch (FissuresException ex) {
-                                //oh well, queue methods threw fissures ex too.
-                                //Just pass it off to the ex handler.
-                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                handle(ecp, Stage.DATA_SUBSETTER, ex);
                                 return;
                             }
+                        }else{
+                            try {
+                                localSeismograms = dataCenter.retrieve_seismograms(infilters);
+                            } catch (FissuresException e) {
+                                handle(ecp, Stage.DATA_SUBSETTER, e);
+                                return;}
                         }
                         logger.debug("after successful retrieve_seismograms");
                         if (localSeismograms.length > 0 && ! ChannelIdUtil.areEqual(localSeismograms[0].channel_id, infilters[0].channel_id)) {
@@ -329,7 +333,7 @@ public class LocalSeismogramArm implements Subsetter{
             LocalSeismogramImpl[] tempLocalSeismograms =
                 (LocalSeismogramImpl[])tempForCast.toArray(new LocalSeismogramImpl[0]);
             processSeismograms(ecp, infilters, outfilters,
-                                            tempLocalSeismograms);
+                               tempLocalSeismograms);
         } else {
             logger.info("FAIL available data");
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
