@@ -113,7 +113,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("legacyExecute", new LegacyExecuteEditor());
         editors.put("legacyVectorExecute", new LegacyExecuteEditor());
 
-        editors.put("breqFastRequestSubsetter", new BreqFastRequestSubsetterEditor());
+        editors.put("breqFastRequest", new BreqFastRequestSubsetterEditor());
 
         editors.put("phaseSignalToNoise", new PhaseSignalToNoiseEditor());
 
@@ -128,7 +128,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
 
 
-        String[] wrapperTypes = { "AvailableDataWrapper", "RequestSubsetterWrapper", "WaveformProcessWrapper", "EventChannelWrapper" };
+        String[] wrapperTypes = { "AvailableDataWrapper", "RequestWrapper", "WaveformProcessWrapper", "EventChannelWrapper" };
         String[] wrapperLogicals = { "AND", "OR" };
         for (int i = 0; i < wrapperTypes.length; i++) {
             for (int j = 0; j < wrapperLogicals.length; j++) {
