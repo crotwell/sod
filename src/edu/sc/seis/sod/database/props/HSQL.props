@@ -1,3 +1,5 @@
+#If you change this location, change the files deleted by removeDatabase in
+#Start.handleStartupProperties()
 URL=jdbc:hsqldb:SodDb/SodDb
 
 EventChannelSeq.nextVal=CALL NEXT VALUE FOR EventChannelSeq
