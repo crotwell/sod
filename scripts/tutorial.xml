@@ -155,9 +155,6 @@
                     <stationConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml"/>
                     <channelConfig xlink:href="jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml"/>
                 </networkInfoTemplateGenerator>
-                <responseWriter>
-                    <responseFile>responses/<networkCode/>.<stationCode/>.<siteCode/>.<channelCode/>.resp</responseFile>
-                 </responseWriter>
         </networkArm>
         <waveformArm>
                 <distanceRange>
