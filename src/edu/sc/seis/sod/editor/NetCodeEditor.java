@@ -39,32 +39,32 @@ public class NetCodeEditor implements EditorPlugin {
     }
 
     public JComponent getNetworkCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, allNets);
+        return EditorUtil.getLabeledComboBox(element, allNets);
     }
 
 
     public JComponent getStationCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, new String[0]);
+        return EditorUtil.getLabeledComboBox(element, new String[0]);
     }
 
     public JComponent getSiteCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, allSites);
+        return EditorUtil.getLabeledComboBox(element, allSites);
     }
 
     public JComponent getChannelCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, new String[0]);
+        return EditorUtil.getLabeledComboBox(element, new String[0]);
     }
 
     public JComponent getBandCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, bands);
+        return EditorUtil.getLabeledComboBox(element, bands);
     }
 
     public JComponent getGainCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, gains);
+        return EditorUtil.getLabeledComboBox(element, gains);
     }
 
     public JComponent getOrientationCodeGUI(Element element) throws TransformerException {
-        return EditorUtil.getComboBox(element, orientations);
+        return EditorUtil.getLabeledComboBox(element, orientations);
     }
 
     protected String[] allNets = { "II", "IU", "US", "SP" };
