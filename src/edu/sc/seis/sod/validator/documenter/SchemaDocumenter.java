@@ -54,7 +54,7 @@ public class SchemaDocumenter {
         Iterator it = defs.iterator();
         while(it.hasNext()){
             Definition cur = (Definition)it.next();
-            //if(makePath(cur).startsWith("sod")){
+            //if(makePath(cur).startsWith("base/include/timeRange/t")){
                 render(c, ve, cur, transformer);
             //}
         }
@@ -93,7 +93,7 @@ public class SchemaDocumenter {
 
     public static Definition getNearestDef(Form f){
         if(f.isFromDef()){ return f.getDef(); }
-        else return getNearestDef(f.getParent());
+        return getNearestDef(f.getParent());
     }
 
     public static String makePath(Form f){ return makePath(getNearestDef(f)); }
