@@ -269,7 +269,8 @@
 	<targetPath>edu/sc/seis/sod/editor</targetPath>
 	<includes>
 	  <include>names.prop</include>
-          <include>*.png</include>
+	<include>*.gif</include>
+	<include>*.png</include>
 	</includes>
       </resource>
       <resource>
