@@ -98,8 +98,8 @@ public class SeismogramImageOutputLocator {
                 + prefix + chanFormatter.getResult(channel) + "." + fileType);
     }
 
-    private String fileDir = FileWritingTemplate.getBaseDirectoryName(),
-            prefix = "", configuredFileType = SeismogramImageProcess.PNG;
+    private String fileDir = "", prefix = "",
+            configuredFileType = SeismogramImageProcess.PNG;
 
     private EventFormatter eventFormatter;
 
