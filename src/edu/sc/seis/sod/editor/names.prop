@@ -44,4 +44,5 @@ edu/iris/dmc/IRIS_NetworkDC=IRIS
 edu/sc/seis/SCEPPNetworkDC=SCEPP
 edu/berkeley/geo/quake/NCEDC_NetworkDC=Berkeley
 networkFinder=Query to network server
+midPoint=Event to Station MidPoint
 
