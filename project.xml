@@ -108,7 +108,7 @@
     </dependency>
     <dependency>
       <id>fissuresImpl</id>
-      <version>1.1</version>
+      <version>1.1.1beta</version>
       <url>http://www.seis.sc.edu/software/fissuresImpl</url>
     </dependency>
     <dependency>
@@ -144,7 +144,7 @@
     </dependency>
     <dependency>
       <id>xml-apis</id>
-      <version>1.0.b2</version>
+      <version>2.0.2</version>
       <url>http://xml.apache.org/xalan-j/index.html</url>
     </dependency>
     <dependency>
