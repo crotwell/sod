@@ -7,22 +7,23 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class FullCoverage implements AvailableDataSubsetter, SodElement {
 
     public FullCoverage(Element config) {}
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
                           CookieJar cookieJar) {
         // simple impl, probably need more robust
-        if(original.length == available.length) { return true; } // end of if
-                                                                 // (original.length
-                                                                 // ==
-                                                                 // available.length)
-        return false;
+        if(original.length == available.length) { 
+            return new StringTreeLeaf(this, true);
+        } 
+        return new StringTreeLeaf(this, false, "filter lengths are not the same "+original.length+" "+available.length);
     }
 
     static Category logger = Category.getInstance(FullCoverage.class.getName());

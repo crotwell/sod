@@ -95,7 +95,7 @@ public class LocalSeismogramArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                   Standing.REJECT));
-            failLogger.info(ecp);
+            failLogger.info(ecp+": "+passed.toString());
         }
     }
 
@@ -204,7 +204,7 @@ public class LocalSeismogramArm implements Subsetter {
                                               ProxySeismogramDC dataCenter,
                                               RequestFilter[] infilters,
                                               RequestFilter[] outfilters) {
-        boolean passed;
+        StringTree passed;
         synchronized(availData) {
             try {
                 passed = availData.accept(ecp.getEvent(),
@@ -217,7 +217,7 @@ public class LocalSeismogramArm implements Subsetter {
                 return;
             }
         }
-        if(passed) {
+        if(passed.isSuccess()) {
             ecp.update(Status.get(Stage.DATA_SUBSETTER, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 logger.debug("Getting seismograms "
@@ -339,7 +339,7 @@ public class LocalSeismogramArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.RETRY));
-            failLogger.info(ecp);
+            failLogger.info(ecp+": "+passed.toString());
         }
     }
 

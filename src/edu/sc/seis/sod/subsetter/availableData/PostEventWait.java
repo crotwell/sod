@@ -11,6 +11,8 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class PostEventWait implements AvailableDataSubsetter {
 
@@ -18,13 +20,17 @@ public class PostEventWait implements AvailableDataSubsetter {
         postOriginTime = SodUtil.loadTimeInterval(config);
     }
 
-    public boolean accept(EventAccessOperations ev,
+    public StringTree accept(EventAccessOperations ev,
                           Channel chan,
                           RequestFilter[] orig,
                           RequestFilter[] avail,
                           CookieJar cookies) {
         MicroSecondDate originTime = new MicroSecondDate(EventUtil.extractOrigin(ev).origin_time);
-        return originTime.add(postOriginTime).after(ClockUtil.now());
+        MicroSecondDate waitTime = originTime.add(postOriginTime);
+        if ( ! waitTime.after(ClockUtil.now())) {
+        return new StringTreeLeaf(this, false, "Wait until: "+waitTime);
+        }
+        return new StringTreeLeaf(this, true);
     }
 
     private TimeInterval postOriginTime;

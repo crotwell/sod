@@ -7,6 +7,8 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 
 public final class AvailableDataOR extends AvailableDataLogicalSubsetter
         implements AvailableDataSubsetter {
@@ -15,16 +17,20 @@ public final class AvailableDataOR extends AvailableDataLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
+        StringTree[] result = new StringTree[filterList.size()];
+        int i=0;
         while(it.hasNext()) {
             AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-            if(filter.accept(event, channel, original, available, cookieJar)) { return true; }
+            result[i] = filter.accept(event, channel, original, available, cookieJar);
+            if(result[i].isSuccess()) { break; }
+            i++;
         }
-        return false;
+        return new StringTreeBranch(this, result[i].isSuccess(), result);
     }
 }// AvailableDataOR

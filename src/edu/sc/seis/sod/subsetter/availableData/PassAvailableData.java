@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
 
 /**
@@ -21,12 +23,12 @@ public class PassAvailableData implements AvailableDataSubsetter,
 
     public PassAvailableData(Element config) {}
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
                           CookieJar cookieJar) {
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     public boolean accept(EventAccessOperations event,

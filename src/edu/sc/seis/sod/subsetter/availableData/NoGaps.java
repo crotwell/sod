@@ -8,12 +8,14 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class NoGaps implements AvailableDataSubsetter, SodElement {
 
     public NoGaps(Element config) {}
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] original,
                           RequestFilter[] available,
@@ -38,10 +40,10 @@ public class NoGaps implements AvailableDataSubsetter, SodElement {
             }
             if(ok == false) {
                 logger.debug("NoGaps fail");
-                return false;
+                return new StringTreeLeaf(this, false);
             } // end of if (ok == false)
         }
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     private static Logger logger = Logger.getLogger(NoGaps.class);

@@ -14,6 +14,7 @@ import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 
 public class ANDAvailableDataWrapper implements VectorAvailableDataSubsetter {
@@ -41,12 +42,14 @@ public class ANDAvailableDataWrapper implements VectorAvailableDataSubsetter {
                           RequestFilter[][] original,
                           RequestFilter[][] available,
                           CookieJar cookieJar) throws Exception {
+        StringTree[] result = new StringTree[channelGroup.getChannels().length];
         for(int i = 0; i < channelGroup.getChannels().length; i++) {
-            if(!subsetter.accept(event,
-                                 channelGroup.getChannels()[i],
-                                 original[i],
-                                 available[i],
-                                 cookieJar)) { return false; }
+            result[i] = subsetter.accept(event,
+                                         channelGroup.getChannels()[i],
+                                         original[i],
+                                         available[i],
+                                         cookieJar);
+            if(! result[i].isSuccess()) { return false; }
         }
         return true;
     }
