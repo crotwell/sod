@@ -21,7 +21,7 @@ public interface MotionVectorSubsetter {
 
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccess network,
-			  ChannelGroup channel, 
+			  Channel[] channels, 
 			  LocalMotionVector motionVectors,
 			  CookieJar cookies) throws Exception;
     

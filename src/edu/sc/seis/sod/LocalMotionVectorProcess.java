@@ -22,7 +22,7 @@ public interface LocalMotionVectorProcess extends WaveFormArmProcess {
 
     public void process(EventAccessOperations event, 
 			NetworkAccess network, 
-			ChannelGroup channel, 
+			Channel[] channels, 
 			RequestFilter[] original, 
 			RequestFilter[] available,
 			LocalMotionVector vector, 
