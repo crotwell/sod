@@ -127,8 +127,8 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <requestSubsetterNOT>
-            <breqFastRequestSubsetter>
+        <requestNOT>
+            <breqFastRequest>
                 <dataDirectory>sample_breqfast</dataDirectory>
                 <label>
                     <originTime>yyyy_DDD_HH_mm_ss</originTime> _A </label>
@@ -142,8 +142,8 @@
                 <altmedia1>Electronic</altmedia1>
                 <altmedia2>Electronic</altmedia2>
                 <quality>b</quality>
-            </breqFastRequestSubsetter>
-        </requestSubsetterNOT>
+            </breqFastRequest>
+        </requestNOT>
         <fixedDataCenter>
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>

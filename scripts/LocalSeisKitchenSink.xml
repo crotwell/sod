@@ -275,26 +275,26 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <requestSubsetterAND>
-            <requestSubsetterOR>
-                <requestSubsetterXOR>
+        <requestAND>
+            <requestOR>
+                <requestXOR>
                     <requestPrint/>
                     <requestPrint/>
-                </requestSubsetterXOR>
+                </requestXOR>
                 <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
-                <requestSubsetterNOT>
+            </requestOR>
+            <requestOR>
+                <requestNOT>
                     <requestPrint/>
-                </requestSubsetterNOT>
+                </requestNOT>
                 <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
+            </requestOR>
+            <requestOR>
                 <requestPrint/>
                 <passRequest/>
-            </requestSubsetterOR>
-            <requestSubsetterOR>
-                <breqFastRequestSubsetter>
+            </requestOR>
+            <requestOR>
+                <breqFastRequest>
                     <dataDirectory>request</dataDirectory>
                     <name>Jagadeesh Danala</name>
                     <inst>USC</inst>
@@ -306,10 +306,10 @@
                     <altmedia1/>
                     <altmedia2/>
                     <quality/>
-                </breqFastRequestSubsetter>
+                </breqFastRequest>
                 <passRequest/>
-            </requestSubsetterOR>
-        </requestSubsetterAND>
+            </requestOR>
+        </requestAND>
         <fixedDataCenter>
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>

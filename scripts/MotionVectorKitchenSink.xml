@@ -108,25 +108,25 @@
         </networkInfoTemplateGenerator>
     </networkArm>
     <waveformVectorArm>
-        <eventChannelGroupAND>
-            <eventChannelGroupOR>
+        <eventVectorAND>
+            <eventVectorOR>
                 <ANDEventChannelWrapper>
                     <embeddedChannel>
                         <bandCode>B</bandCode>
                     </embeddedChannel>
                 </ANDEventChannelWrapper>
                 <passEventChannel/>
-            </eventChannelGroupOR>
-            <eventChannelGroupOR>
+            </eventVectorOR>
+            <eventVectorOR>
                 <OREventChannelWrapper>
                     <embeddedChannel>
                         <bandCode>B</bandCode>
                     </embeddedChannel>
                 </OREventChannelWrapper>
                 <passEventChannel/>
-            </eventChannelGroupOR>
-            <eventChannelGroupOR>
-                <eventChannelGroupXOR>
+            </eventVectorOR>
+            <eventVectorOR>
+                <eventVectorXOR>
                     <ANDEventChannelWrapper>
                         <embeddedChannel>
                             <bandCode>B</bandCode>
@@ -137,20 +137,20 @@
                             <bandCode>B</bandCode>
                         </embeddedChannel>
                     </ANDEventChannelWrapper>
-                </eventChannelGroupXOR>
+                </eventVectorXOR>
                 <passEventChannel/>
-            </eventChannelGroupOR>
-            <eventChannelGroupOR>
-                <eventChannelGroupNOT>
+            </eventVectorOR>
+            <eventVectorOR>
+                <eventVectorNOT>
                     <OREventChannelWrapper>
                         <embeddedChannel>
                             <bandCode>B</bandCode>
                         </embeddedChannel>
                     </OREventChannelWrapper>
-                </eventChannelGroupNOT>
+                </eventVectorNOT>
                 <passEventChannel/>
-            </eventChannelGroupOR>
-        </eventChannelGroupAND>
+            </eventVectorOR>
+        </eventVectorAND>
         <requestGeneratorWrapper>
             <phaseRequest>
                 <model>prem</model>
@@ -166,10 +166,10 @@
                 </endOffset>
             </phaseRequest>
         </requestGeneratorWrapper>
-        <channelGroupRequestSubsetterAND>
-            <channelGroupRequestSubsetterOR>
-                <ANDRequestSubsetterWrapper>
-                    <breqFastRequestSubsetter>
+        <vectorRequestAND>
+            <vectorRequestOR>
+                <ANDRequestWrapper>
+                    <breqFastRequest>
                         <dataDirectory>request</dataDirectory>
                         <name>Bob the Seismologist</name>
                         <inst>USC</inst>
@@ -181,13 +181,13 @@
                         <altmedia1>Electronic</altmedia1>
                         <altmedia2>Electronic</altmedia2>
                         <quality>A</quality>
-                    </breqFastRequestSubsetter>
-                </ANDRequestSubsetterWrapper>
-                <passChannelGroupRequest/>
-            </channelGroupRequestSubsetterOR>
-            <channelGroupRequestSubsetterOR>
-                <ORRequestSubsetterWrapper>
-                    <breqFastRequestSubsetter>
+                    </breqFastRequest>
+                </ANDRequestWrapper>
+                <passVectorRequest/>
+            </vectorRequestOR>
+            <vectorRequestOR>
+                <ORRequestWrapper>
+                    <breqFastRequest>
                         <dataDirectory>request</dataDirectory>
                         <name>Bob the Seismologist</name>
                         <inst>USC</inst>
@@ -199,82 +199,82 @@
                         <altmedia1>Electronic</altmedia1>
                         <altmedia2>Electronic</altmedia2>
                         <quality>A</quality>
-                    </breqFastRequestSubsetter>
-                </ORRequestSubsetterWrapper>
-                <passChannelGroupRequest/>
-            </channelGroupRequestSubsetterOR>
-            <channelGroupRequestSubsetterOR>
-                <channelGroupRequestSubsetterXOR>
-                    <ANDRequestSubsetterWrapper>
+                    </breqFastRequest>
+                </ORRequestWrapper>
+                <passVectorRequest/>
+            </vectorRequestOR>
+            <vectorRequestOR>
+                <vectorRequestXOR>
+                    <ANDRequestWrapper>
                         <requestPrint/>
-                    </ANDRequestSubsetterWrapper>
-                    <ANDRequestSubsetterWrapper>
+                    </ANDRequestWrapper>
+                    <ANDRequestWrapper>
                         <requestPrint/>
-                    </ANDRequestSubsetterWrapper>
-                </channelGroupRequestSubsetterXOR>
-                <passChannelGroupRequest/>
-            </channelGroupRequestSubsetterOR>
-            <channelGroupRequestSubsetterOR>
-                <channelGroupRequestSubsetterNOT>
-                    <ANDRequestSubsetterWrapper>
+                    </ANDRequestWrapper>
+                </vectorRequestXOR>
+                <passVectorRequest/>
+            </vectorRequestOR>
+            <vectorRequestOR>
+                <vectorRequestNOT>
+                    <ANDRequestWrapper>
                         <requestPrint/>
-                    </ANDRequestSubsetterWrapper>
-                </channelGroupRequestSubsetterNOT>
-                <passChannelGroupRequest/>
-            </channelGroupRequestSubsetterOR>
-        </channelGroupRequestSubsetterAND>
+                    </ANDRequestWrapper>
+                </vectorRequestNOT>
+                <passVectorRequest/>
+            </vectorRequestOR>
+        </vectorRequestAND>
         <fixedDataCenter>
             <name>IRIS_BudDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
-        <channelGroupAvailableDataAND>
-            <channelGroupAvailableDataOR>
+        <vectorAvailableDataAND>
+            <vectorAvailableDataOR>
                 <ANDAvailableDataWrapper>
                     <noGaps/>
                 </ANDAvailableDataWrapper>
-                <passChannelGroupAvailableData/>
-            </channelGroupAvailableDataOR>
-            <channelGroupAvailableDataOR>
+                <passVectorAvailableData/>
+            </vectorAvailableDataOR>
+            <vectorAvailableDataOR>
                 <ORAvailableDataWrapper>
                     <someCoverage/>
                 </ORAvailableDataWrapper>
-                <passChannelGroupAvailableData/>
-            </channelGroupAvailableDataOR>
-            <channelGroupAvailableDataOR>
-                <channelGroupAvailableDataXOR>
+                <passVectorAvailableData/>
+            </vectorAvailableDataOR>
+            <vectorAvailableDataOR>
+                <vectorAvailableDataXOR>
                     <ANDAvailableDataWrapper>
                         <noGaps/>
                     </ANDAvailableDataWrapper>
                     <ANDAvailableDataWrapper>
                         <noGaps/>
                     </ANDAvailableDataWrapper>
-                </channelGroupAvailableDataXOR>
-                <passChannelGroupAvailableData/>
-            </channelGroupAvailableDataOR>
-            <channelGroupAvailableDataOR>
-                <channelGroupAvailableDataNOT>
+                </vectorAvailableDataXOR>
+                <passVectorAvailableData/>
+            </vectorAvailableDataOR>
+            <vectorAvailableDataOR>
+                <vectorAvailableDataNOT>
                     <ANDAvailableDataWrapper>
                         <noGaps/>
                     </ANDAvailableDataWrapper>
-                </channelGroupAvailableDataNOT>
-                <passChannelGroupAvailableData/>
-            </channelGroupAvailableDataOR>
-        </channelGroupAvailableDataAND>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
+                </vectorAvailableDataNOT>
+                <passVectorAvailableData/>
+            </vectorAvailableDataOR>
+        </vectorAvailableDataAND>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
                 <threeComponentData/>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
                 <ANDLocalSeismogramWrapper>
                     <rMean/>
                     <rMean/>
                 </ANDLocalSeismogramWrapper>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
                 <ORLocalSeismogramWrapper>
                     <phaseSignalToNoise>
                         <modelName>prem</modelName>
@@ -298,46 +298,46 @@
                         <ratio>2</ratio>
                     </phaseSignalToNoise>
                 </ORLocalSeismogramWrapper>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
-                <channelGroupLegacyExecute>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
+                <vectorLegacyExecute>
                     <command>echo</command>
-                </channelGroupLegacyExecute>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
-                <channelGroupAND>
+                </vectorLegacyExecute>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
+                <vectorAND>
                     <rMean/>
                     <responseGain/>
-                </channelGroupAND>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
-                <channelGroupOR>
+                </vectorAND>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
+                <vectorOR>
                     <rMean/>
                     <responseGain/>
-                </channelGroupOR>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
-                <channelGroupXOR>
+                </vectorOR>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
+                <vectorXOR>
                     <threeComponentData/>
                     <threeComponentData/>
-                </channelGroupXOR>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
-        <channelGroupFork>
-            <channelGroupAlwaysSuccess>
-                <channelGroupNOT>
+                </vectorXOR>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
+        <waveformVectorFork>
+            <waveformVectorAlwaysSuccess>
+                <vectorNOT>
                     <responseGain/>
-                </channelGroupNOT>
-            </channelGroupAlwaysSuccess>
-        </channelGroupFork>
+                </vectorNOT>
+            </waveformVectorAlwaysSuccess>
+        </waveformVectorFork>
         <alwaysSuccess>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
