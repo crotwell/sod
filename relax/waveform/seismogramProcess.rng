@@ -5,6 +5,7 @@
         <ref name="seismogramProcess"/>
     </start>
     <include href="../base/include/eventLabel.rng"/>
+    <include href="../base/include/quantity.rng"/>
     <include href="phaseRequest.rng"/>
     <define name="seismogramProcess">
         <choice>
@@ -159,16 +160,10 @@
         </xsd:annotation>
         <element name="filter">
             <element name="lowFreqCorner">
-               <element name="value">
-                   <data type="float"/>
-               </element>
-               <ref name="unit"/>
+                <ref name="cornerSetting"/>
             </element>
             <element name="highFreqCorner">
-               <element name="value">
-                   <data type="float"/>
-               </element>
-               <ref name="unit"/>
+                <ref name="cornerSetting"/>
             </element>
             <element name="numPoles">
                 <data type="int"/>
@@ -181,6 +176,12 @@
                  </choice>
             </element>
         </element>
+    </define>
+    <define name="cornerSetting">
+        <choice>
+            <ref name="time"/>
+            <ref name="freq"/>
+        </choice>
     </define>
     <define name="rMean">
         <xsd:annotation>
