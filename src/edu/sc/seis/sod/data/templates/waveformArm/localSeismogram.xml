@@ -21,19 +21,21 @@
 <div id="Content">
 <h1>Seismograms for this Event</h1>
 <h2>Event Info</h2>
-<event>
 <table>
 <tr>
 <td><b>Region</b></td>
-<td><feRegionName/></td>
+<td>$FERegion.getRegionName(${sod_event.get_attributes().region})</td>
 </tr>
 <tr>
 <td><b>Time</b></td>
-<td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
+<td>$velocity_date.format("MM/dd/yyyy HH:mm:ss Z", $sod_event.get_preferred_origin().getTime())</td>
 </tr>
 <tr>
 <td><b>Magnitude</b></td>
-<td><magnitude/></td>
+<td>
+#foreach ($m in $sod_event.get_preferred_origin().Magnitudes)
+$fissures.formatMagnitude($m),
+#end</td>
 </tr>
 <tr>
 <td><b>Depth</b></td>
@@ -48,7 +50,6 @@
 <td><longitude/></td>
 </tr>
 </table>
-</event>
 <station>
 <h2>Station Info</h2>
 <table>
