@@ -17,10 +17,10 @@ import java.text.*;
 
 /**
  * Creates a breqfast email requset file based on the events and channels that
- * sod finds. This is done as a EventChannelSubsetter because the data may 
- * not be available via a DHI server.
- * 
- *
+ * sod finds. This is done as a AvailableDataSubsetter because the data may 
+ * not be available via a DHI server. See also BreqfastRequestSubsetter if
+ * calling available_data is not required, as the speed will be greatly 
+ * improved.
  *
  * Created: Fri Oct 11 15:40:03 2002
  *
