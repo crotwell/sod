@@ -263,8 +263,7 @@ public class EventArm implements Runnable{
             change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                      Standing.IN_PROG));
             EventAttr attr = event.get_attributes();
-            Origin origin = event.get_preferred_origin();
-            if(originSubsetter.accept(event, attr, origin)) {
+            if(originSubsetter.accept(event, attr, event.getOrigin())) {
                 change(event, Status.get(Stage.PROCESSOR,
                                          Standing.IN_PROG));
                 process(event);
