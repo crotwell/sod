@@ -1,7 +1,4 @@
 package edu.sc.seis.sod;
-import edu.sc.seis.sod.status.waveFormArm.*;
-import edu.sc.seis.sod.subsetter.waveFormArm.*;
-
 import java.util.*;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
@@ -9,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
+import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
 import edu.sc.seis.sod.database.NetworkDbObject;
@@ -19,8 +17,9 @@ import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
-import edu.sc.seis.sod.LocalSeismogramArm;
+import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
@@ -33,7 +32,7 @@ public class WaveFormArm implements Runnable {
         throws Exception {
         this(config, networkArm, 5);
     }
-
+    
     public WaveFormArm(Element config, NetworkArm networkArm, int threadPoolSize)
         throws Exception {
         eventStatus = new JDBCEventStatus();
@@ -43,7 +42,7 @@ public class WaveFormArm implements Runnable {
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
     }
-
+    
     public void run() {
         try {
             waitForInitialEvent();
@@ -59,7 +58,7 @@ public class WaveFormArm implements Runnable {
             CommonAccess.handleException("Problem running waveform arm", e);
         }
     }
-
+    
     //fills the eventchannel db with all available events and starts
     //WaveformWorkerUnits on all inserted event channel pairs
     //If there are no waiting events, this just returns
@@ -67,7 +66,7 @@ public class WaveFormArm implements Runnable {
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()){
             EventEffectiveTimeOverlap overlap =
                 new EventEffectiveTimeOverlap(ev.getEvent());
-
+            
             NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
             logger.debug("got " + networks.length + " networks from getSuccessfulNetworks()");
             for(int i = 0; i < networks.length; i++) {
@@ -76,10 +75,12 @@ public class WaveFormArm implements Runnable {
             //set the status of the event to be SUCCESS implying that
             //that all the network information for this particular event is inserted
             //in the waveformDatabase.
-            eventStatus.setStatus(ev.getEvent(),EventCondition.SUCCESS);
+            synchronized(eventStatus){
+                eventStatus.setStatus(ev.getEvent(),EventCondition.SUCCESS);
+            }
         }
     }
-
+    
     private void startNetwork(EventDbObject ev, EventEffectiveTimeOverlap overlap,
                               NetworkDbObject net)throws Exception{
         // don't bother with network if effective time does no
@@ -94,7 +95,7 @@ public class WaveFormArm implements Runnable {
             startStation(overlap, net, stations[i], ev);
         }
     }
-
+    
     private void startStation(EventEffectiveTimeOverlap overlap,
                               NetworkDbObject net,
                               StationDbObject station, EventDbObject ev) throws Exception{
@@ -108,7 +109,7 @@ public class WaveFormArm implements Runnable {
             startSite(overlap, net, sites[i], ev);
         }
     }
-
+    
     private void startSite(EventEffectiveTimeOverlap overlap, NetworkDbObject net,
                            SiteDbObject site, EventDbObject ev) throws Exception{
         if ( !overlap.overlaps(site.getSite())) {
@@ -121,7 +122,7 @@ public class WaveFormArm implements Runnable {
             startChannel(chans[i], ev);
         }
     }
-
+    
     private void startChannel(ChannelDbObject chan, EventDbObject ev)throws Exception{
         int chanId = chan.getDbId();
         //cache the channelInformation.
@@ -134,18 +135,18 @@ public class WaveFormArm implements Runnable {
         invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
         retryIfNeededAndAvailable();
     }
-
+    
     private void retryIfNeededAndAvailable() throws SQLException {
         if(getNumRetryWaiting()/(double)pool.getNumWaiting() < retryPercentage){
             retryIfAvailable();
         }
     }
-
+    
     private void retryIfAvailable() throws SQLException{
         WaveformWorkUnit retryUnit = getNextRetry();
         if(retryUnit != null)invokeLaterAsCapacityAllows(retryUnit);
     }
-
+    
     private WaveformWorkUnit getNextRetry() throws SQLException {
         int pairId;
         synchronized (eventRetryTable) {
@@ -154,13 +155,13 @@ public class WaveFormArm implements Runnable {
         if(pairId != -1) return new RetryWaveformWorkUnit(pairId);
         return null;
     }
-
+    
     private int getNumRetryWaiting() {
         synchronized(retryNumLock){
             return retryNum;
         }
     }
-
+    
     private class RetryWaveformWorkUnit extends WaveformWorkUnit{
         public RetryWaveformWorkUnit(int pairId) throws SQLException{
             super(pairId);
@@ -169,7 +170,7 @@ public class WaveFormArm implements Runnable {
                 retryNum++;
             }
         }
-
+        
         public void run(){
             synchronized(retryNumLock){
                 retryNum--;
@@ -177,7 +178,7 @@ public class WaveFormArm implements Runnable {
             super.run();
         }
     }
-
+    
     /**
      * This method blocks until there is space in the pool for wu to run, then
      * starts its execution.
@@ -190,7 +191,7 @@ public class WaveFormArm implements Runnable {
         }
         pool.invokeLater(wu);
     }
-
+    
     private void waitForInitialEvent() throws SQLException {
         while(Start.getEventArm().isAlive() && eventStatus.getNext() == -1){
             try {
@@ -198,7 +199,7 @@ public class WaveFormArm implements Runnable {
             } catch (InterruptedException e) {}
         }
     }
-
+    
     /**
      * processes the configuration file checking for waveformArmSubsetter types.
      *
@@ -212,11 +213,12 @@ public class WaveFormArm implements Runnable {
         for (int i=0; i<children.getLength(); i++) {
             node = children.item(i);
             if (node instanceof Element) {
-                if (((Element)node).getTagName().equals("description")) {
+                Element el = (Element)node;
+                if (el.getTagName().equals("description")) {
                     // skip description element
                     continue;
                 }
-                Object sodElement = SodUtil.load((Element)node,"waveFormArm");
+                Object sodElement = SodUtil.load(el,"waveFormArm");
                 if(sodElement instanceof EventStationSubsetter){
                     eventStationSubsetter = (EventStationSubsetter)sodElement;
                 }else if(sodElement instanceof LocalSeismogramArm){
@@ -224,18 +226,18 @@ public class WaveFormArm implements Runnable {
                 }else if(sodElement instanceof WaveFormStatus){
                     addStatusMonitor((WaveFormStatus)sodElement);
                 }else {
-                    System.err.println("Unknown tag "+((Element)node).getTagName()+" found in config file");
-                    throw new IllegalArgumentException("The waveformArm does not know about tag " + ((Element)node).getTagName());
+                    System.err.println("Unknown tag "+el.getTagName()+" found in config file");
+                    throw new IllegalArgumentException("The waveformArm does not know about tag " + el.getTagName());
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
-
+        
     }
-
+    
     public void addStatusMonitor(WaveFormStatus monitor){
         statusMonitors.add(monitor);
     }
-
+    
     public synchronized void setStatus(EventChannelPair ecp){
         synchronized(evChanStatus){
             try {
@@ -263,7 +265,7 @@ public class WaveFormArm implements Runnable {
             }
         }
     }
-
+    
     private EventDbObject popAndGet(){
         synchronized(eventStatus){
             try {
@@ -275,7 +277,7 @@ public class WaveFormArm implements Runnable {
             }
         }
     }
-
+    
     private EventDbObject getEvent(int eventDbId){
         synchronized(eventStatus){
             try {
@@ -293,18 +295,17 @@ public class WaveFormArm implements Runnable {
             }
         }
     }
-
+    
     private class WaveformWorkUnit implements Runnable{
         public WaveformWorkUnit(int pairId) throws SQLException{
             this.pairId = pairId;
-            eventStatus = new JDBCEventStatus();
         }
-
+        
         public void run(){
             EventChannelPair ecp = extractEventChannelPair();
             process(ecp);
         }
-
+        
         private EventChannelPair extractEventChannelPair(){
             int[] evAndChanIds = null;
             try {
@@ -336,7 +337,7 @@ public class WaveFormArm implements Runnable {
                                         channelDbObject,WaveFormArm.this,
                                         pairId);
         }
-
+        
         private void process(EventChannelPair ecp){
             try {
                 ecp.update("Subsetting Started", EventChannelCondition.SUBSETTING);
@@ -366,32 +367,32 @@ public class WaveFormArm implements Runnable {
                                              "Waveform processing thread dies unexpectantly.");
             }
         }
-
+        
         private int pairId;
     }
-
+    
     private WorkerThreadPool pool;
-
+    
     private EventStationSubsetter eventStationSubsetter = new NullEventStationSubsetter();
-
+    
     private LocalSeismogramArm localSeismogramArm = null;
-
+    
     private NetworkArm networkArm = null;
-
+    
     private Map channelDbCache = new HashMap();
-
+    
     private Map eventDbCache = new HashMap();
-
+    
     private JDBCEventStatus eventStatus;
-
+    
     private JDBCEventChannelStatus evChanStatus;
-
+    
     private JDBCEventChannelRetry eventRetryTable;
-
+    
     private double retryPercentage = .02;//2 percent of the pool will be
     //made up of retries if possible
     private static Logger logger = Logger.getLogger(WaveFormArm.class);
-
+    
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
     private int poolLineCapacity = 100, retryNum;
     private Object retryNumLock = new Object();
