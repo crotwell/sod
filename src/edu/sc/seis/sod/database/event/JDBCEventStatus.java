@@ -30,11 +30,11 @@ public class JDBCEventStatus extends SodJDBC{
         }
         getStatus = prepare("SELECT eventcondition FROM eventstatus WHERE eventid = ?");
         putEvent = prepare("INSERT into eventstatus (eventcondition, eventid) " +
-                                             "VALUES (?, ?)");
+                               "VALUES (?, ?)");
         updateStatus = prepare("UPDATE eventstatus SET eventcondition = ? WHERE eventid = ?");
         getNextStmt = prepare("SELECT TOP 1 eventid FROM eventstatus WHERE eventcondition = " +
-                                                Status.get(Stage.EVENT_CHANNEL_POPULATION,
-                                                           Standing.IN_PROG).getAsShort());
+                                  Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                             Standing.IN_PROG).getAsShort());
         getAllOfEventArmStatus = prepare(" SELECT * FROM eventstatus WHERE eventcondition = ? " );
         getAll = prepare("SELECT eventid, eventcondition FROM eventstatus");
     }
@@ -45,6 +45,14 @@ public class JDBCEventStatus extends SodJDBC{
         for (int i = 0; i < events.length; i++) {
             setStatus(events[i], Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                             Standing.IN_PROG));
+        }
+    }
+
+    public int getDbId(CacheEvent event) throws SQLException{
+        try {
+            return eventAccessTable.getDBId(event);
+        } catch (NotFound e) {
+            return -1;
         }
     }
 
