@@ -36,7 +36,7 @@ public abstract class AbstractWaveformDatabase implements WaveformDatabase{
 
 
 		getByStatusStmt = connection.prepareStatement(" SELECT waveformid FROM waveformchanneldb "+
-							      " WHERE status = ? ");
+							      " WHERE status = ? ORDER BY waveformeventid");
 
 		updateStatusStmt = connection.prepareStatement(" UPDATE waveformchanneldb "+
 								" SET status = ? ,  "+
