@@ -108,7 +108,10 @@ public class NetworkArm {
 	    networkIds[counter] = attr.get_id();
 	    if(networkIdSubsetter.accept(networkIds[counter], null)) {
 		handleNetworkAttrSubsetter(allNets[counter], attr);
-	    }
+	    } else {
+		failure.info("Fail "+attr.get_code());
+	    } // end of else
+	    
 	}
 	successfulChannels = new Channel[channelList.size()];
 	successfulChannels = (Channel[]) channelList.toArray(successfulChannels);
@@ -129,7 +132,9 @@ public class NetworkArm {
 	    for(int subCounter = 0; subCounter < stations.length; subCounter++) {
 		handleStationIdSubsetter(networkAccess, stations[subCounter]);
 	    }
-	}
+	} else {
+		failure.info("Fail NetworkAttr"+networkAttr.get_code());
+	    }
 
     }
 
@@ -144,7 +149,9 @@ public class NetworkArm {
 	
 	if(stationIdSubsetter.accept(station.get_id(), null)) {
 	    handleStationSubsetter(networkAccess, station); 
-	}
+	} else {
+		failure.info("Fail StationId"+station.get_code());
+	    }
     }
 
     /**
@@ -161,7 +168,9 @@ public class NetworkArm {
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
 		handleSiteIdSubsetter(networkAccess, channels[subCounter]);
 	    }
-	}
+	} else {
+		failure.info("Fail Station"+station.get_code());
+	    }
     }
 				       
     /**
@@ -175,7 +184,9 @@ public class NetworkArm {
 	
 	if(siteIdSubsetter.accept(channel.my_site.get_id(), null)) {
 	    handleSiteSubsetter(networkAccess, channel);
-	}
+	} else {
+		failure.info("Fail SiteId "+SiteIdUtil.toString(channel.my_site.get_id()));
+	    }
     }
 
     /**
@@ -189,7 +200,9 @@ public class NetworkArm {
 
 	if(siteSubsetter.accept(networkAccess, channel.my_site, null)) {
 	    handleChannelIdSubsetter(networkAccess, channel);
-	}
+	} else {
+		failure.info("Fail Site "+SiteIdUtil.toString(channel.my_site.get_id()));
+	    }
     }
 
     /**
@@ -203,7 +216,9 @@ public class NetworkArm {
 
 	if(channelIdSubsetter.accept(channel.get_id(), null)) {
 	    handleChannelSubsetter(networkAccess, channel);
-	}
+	} else {
+		failure.info("Fail ChannelId"+ChannelIdUtil.toStringNoDates(channel.get_id()));
+	    }
        
     }
     
@@ -218,7 +233,9 @@ public class NetworkArm {
 
 	if(channelSubsetter.accept(networkAccess, channel, null)) {
 	    handleNetworkArmProcess(networkAccess, channel);
-	}
+	} else {
+		failure.info("Fail Channel "+ChannelIdUtil.toStringNoDates(channel.get_id()));
+	    }
     }
 
     /**
@@ -288,6 +305,7 @@ public class NetworkArm {
     static Category logger = 
         Category.getInstance(NetworkArm.class.getName());
     
+    static Category failure = Category.getInstance(NetworkArm.class.getName()+".failure");
     
     
     }// NetworkArm
