@@ -16,8 +16,10 @@ public class Validator {
     public Validator(String schemaLoc) {
         this.schemaLoc = schemaLoc;
     }
-    
-    public String getErrorMessage(){ return errorMessage; }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
     public boolean validate(InputSource in) throws IOException, SAXException {
         return validate(in, true);
@@ -94,17 +96,17 @@ public class Validator {
         }
 
         private void handle(SAXParseException ex) {
-            errorMessage = "The strategy file is invalid\n";
+            errorMessage = "The strategy file is invalid.  SOD requires strategy files that conform to a set structure.  See the tactic guide in the docs that came with SOD for help with this.\n\n";
             errorMessage += "It appears there's something wrong on line "
-                    + ex.getLineNumber() + "\n";
-            errorMessage += "SOD requires strategy files that conform to a set structure.  See the tactic guide in the docs that came with SOD for help with this.\n";
-            errorMessage += "The strategy validator says: " + ex.getLocalizedMessage();
-            errorMessage += "If you think SOD will be ok with this strategy file, just wait 10 seconds.  SOD will start anyway then...";
+                    + ex.getLineNumber();
+            errorMessage += "The validator says '"
+                    + ex.getLocalizedMessage() + "'\n\n";
+            errorMessage += "If you think SOD will be ok with this strategy file, just wait 10 seconds.  SOD will start anyway...";
         }
     };
 
     private String errorMessage;
-    
+
     private String schemaLoc = "edu/sc/seis/sod/data/sod.rng";
 
     public static final String SOD_SCHEMA_LOC = "edu/sc/seis/sod/data/sod.rng";
