@@ -11,6 +11,10 @@ import edu.sc.seis.sod.status.StringTree;
 
 public class ChannelGroupLocalSeismogramResult {
 
+    public ChannelGroupLocalSeismogramResult(LocalSeismogramImpl[][] seismograms, StringTree reason) {
+        this(reason.isSuccess(), seismograms, reason);
+    }
+
     public ChannelGroupLocalSeismogramResult(boolean success, LocalSeismogramImpl[][] seismograms, StringTree reason) {
         this.success = success;
         this.seismograms = seismograms;
