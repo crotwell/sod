@@ -110,6 +110,8 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         NoPreferredOrigin {
 
         File eventDirectory = getEventDirectory(event);
+        File dataDirectory = new File(eventDirectory, "data");
+        dataDirectory.mkdirs();
         LocalSeismogramImpl[] lseis = new LocalSeismogramImpl[seismograms.length];
         for (int i = 0; i < lseis.length; i++) {
             lseis[i] = (LocalSeismogramImpl)seismograms[i];
@@ -117,8 +119,9 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
                                  "seismogram loaded via sod.");
+
         URLDataSetSeismogram urlDSS = URLDataSetSeismogram.saveLocally(dataset,
-                                                                       eventDirectory,
+                                                                       dataDirectory,
                                                                        lseis,
                                                                        channel,
                                                                        event,
