@@ -274,7 +274,7 @@ public class EventArm implements Runnable{
         }
     }
 
-    private void change(EventAccessOperations event, Status status) throws Exception{
+    public void change(EventAccessOperations event, Status status) throws Exception{
         eventStatus.setStatus(event, status);
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors){
