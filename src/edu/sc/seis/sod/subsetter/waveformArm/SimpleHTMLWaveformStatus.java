@@ -18,7 +18,7 @@ import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.WaveFormStatus;
 import edu.sc.seis.sod.subsetter.LinkSection;
-import edu.sc.seis.sod.subsetter.NameGenerator;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import edu.sc.seis.sod.subsetter.SimpleHTMLPage;
 import java.io.File;
 import java.text.DateFormat;
@@ -35,9 +35,9 @@ public class SimpleHTMLWaveformStatus extends SimpleHTMLPage implements WaveForm
         sections.add(eventSection);
         write();
         if(config != null){
-            nameGen = new NameGenerator(SodUtil.getElement(config, "eventDirLabel"));
+            nameGen = new EventFormatter(SodUtil.getElement(config, "eventDirLabel"));
         }else{
-            nameGen = new NameGenerator();
+            nameGen = new EventFormatter();
         }
     }
     
@@ -68,7 +68,7 @@ public class SimpleHTMLWaveformStatus extends SimpleHTMLPage implements WaveForm
     
     private LinkSection eventSection;
     
-    private NameGenerator nameGen;
+    private EventFormatter nameGen;
     
     private String eventOutputFormat = CacheEvent.LOC + " | " + CacheEvent.TIME + " | Mag: " + CacheEvent.MAG + " | Depth: " + CacheEvent.DEPTH + " " + CacheEvent.DEPTH_UNIT;
 }

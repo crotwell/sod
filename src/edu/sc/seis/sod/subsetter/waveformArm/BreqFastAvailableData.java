@@ -167,7 +167,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
     
     protected String getLabel(EventAccessOperations event) {
         if (nameGenerator == null) {
-            nameGenerator = new NameGenerator(SodUtil.getElement(config,
+            nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                                  "label"));
         }
         return nameGenerator.getFilizedName(event);
@@ -192,7 +192,7 @@ public class BreqFastAvailableData  implements AvailableDataSubsetter, SodElemen
     SimpleDateFormat tenths = new SimpleDateFormat("SSS");
     
     ParseRegions regions;
-    NameGenerator nameGenerator = null;
+    EventFormatter nameGenerator = null;
     
     Element config;
     

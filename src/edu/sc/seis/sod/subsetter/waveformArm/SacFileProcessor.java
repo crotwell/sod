@@ -18,7 +18,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.LocalSeismogramProcess;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.NameGenerator;
+import edu.sc.seis.sod.subsetter.EventFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -85,7 +85,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
         } catch (ParserConfigurationException e) {
             throw new ConfigurationException("Problem trying to create top level dataset", e);
         }
-        nameGenerator = new NameGenerator(SodUtil.getElement(config,
+        nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                              "eventDirLabel"));
     }
 
@@ -233,7 +233,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
     protected File getEventDirectory(EventAccessOperations event)
         throws ConfigurationException {
         String eventDirName = getLabel(event);
-        File eventDirectory = new File(dataDirectory, NameGenerator.filize(eventDirName));
+        File eventDirectory = new File(dataDirectory, EventFormatter.filize(eventDirName));
         if ( ! eventDirectory.exists()) {
             if ( ! eventDirectory.mkdirs()) {
                 throw new ConfigurationException("Unable to create directory."+eventDirectory);
@@ -341,7 +341,7 @@ public class SacFileProcessor implements LocalSeismogramProcess {
 
     LinkedList masterDSNames = new LinkedList();
 
-    NameGenerator nameGenerator = null;
+    EventFormatter nameGenerator = null;
 
     ParseRegions regions;
 
