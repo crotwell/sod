@@ -18,18 +18,20 @@
                      processor. Instead of doing something useful, we simply
                      use the echo program.
                      </p>
-                     <pre>
-                        <saveSeismogramToFile>
-                            <fileType>sac</fileType>
-                            <dataDirectory>POND_II</dataDirectory>
-                            <eventDirLabel>
-                            Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                            </eventDirLabel>
-                         </saveSeismogramToFile>
-                         <legacyExecute>
-                             <command>echo</command>
-                         </legacyExecute>
-                     </pre>
+                     <p>
+<pre>
+&lt;saveSeismogramToFile>
+    &lt;fileType>sac&lt;/fileType>
+    &lt;dataDirectory>POND_II&lt;/dataDirectory>
+    &lt;eventDirLabel>
+        Event_&lt;originTime>yyyy_DDD_HH_mm_ss&lt;/originTime>
+    &lt;/eventDirLabel>
+&lt;/saveSeismogramToFile>
+&lt;legacyExecute>
+    &lt;command>echo&lt;/command>
+&lt;/legacyExecute>
+</pre>
+                     </p>
                      <p>One important thing is that the legacyExecute works in cooperation
                      with the saveSeismogramToFile processor, which handles the saving
                      of the actual seismograms. LegacyExecute just uses the filenames
