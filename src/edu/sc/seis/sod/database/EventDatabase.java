@@ -58,4 +58,6 @@ public interface EventDatabase {
     public int getCount(Status status);
 
     public String getObject(int eventid);
+
+    public String getDatabaseName();
 }// EventDatabase

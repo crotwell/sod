@@ -6,6 +6,7 @@ import edu.sc.seis.fissuresUtil.cache.*;
 import edu.sc.seis.fissuresUtil.namingService.*;
 import edu.iris.Fissures.IfEvent.*;
 
+import java.util.Properties;
 import java.sql.*;
 import org.hsqldb.*;
 import org.omg.CORBA.*;
@@ -22,9 +23,35 @@ import org.omg.CORBA.*;
 
 public class HSqlDbQueue implements Queue {
     public HSqlDbQueue (){
-	eventDatabase = new PostgresDatabase();
+	Properties props = new Properties();
+	eventDatabase = new HSqlDatabase(props);
 	eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
 	delete(Status.COMPLETE_SUCCESS);
+    }
+
+    public HSqlDbQueue(Properties props) {
+	if(getDatabaseType(props) == 0) eventDatabase = new HSqlDatabase(props);
+	else eventDatabase =  new PostgresDatabase(props);
+	if(getPersistanceType(props) == 0) {
+	    eventDatabase.updateStatus(Status.PROCESSING, Status.NEW);
+	    delete(Status.COMPLETE_SUCCESS);
+	} else {
+	    delete(Status.COMPLETE_SUCCESS);
+	    delete(Status.PROCESSING);
+	}
+    }
+
+    private int getDatabaseType(Properties props) {
+	String value = props.getProperty("edu.sc.seis.sod.databasetype");
+	if(value.equalsIgnoreCase("POSTGRES")) return 1;
+	else return 0;
+    }
+
+    private int getPersistanceType(Properties props) {
+	
+	String value = props.getProperty("edu.sc.seis.sod.persistencetype");
+	if(value.equalsIgnoreCase("ATMOSTONCE")) return 1;
+	else return 0;
     }
     
     public void push(java.lang.Object obj) {}
@@ -271,6 +298,7 @@ public class HSqlDbQueue implements Queue {
     private PreparedStatement getStmt;
 
     private PreparedStatement getMaxIdStmt;
-    
+
+  
   
 }// HSqlDbQueue

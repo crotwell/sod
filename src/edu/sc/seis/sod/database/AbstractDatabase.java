@@ -19,12 +19,23 @@ public abstract class AbstractDatabase implements EventDatabase{
     public AbstractDatabase (){
 		init();
     }
+    
+    public AbstractDatabase (Properties props) {
+	this.props = props;
+	//	processProperties();
+	init();
+    }
+
 
     public abstract void create();
     
     public abstract Connection getConnection();
 	
-	public abstract String getTableName();
+	
+
+    public abstract String getTableName();
+
+   
   
     private void init() {
 
@@ -307,6 +318,22 @@ public abstract class AbstractDatabase implements EventDatabase{
 	
     }
 
+    public String getDatabaseName() {
+	String value = props.getProperty("edu.sc.seis.sod.databasename");
+	if(value == null) value = "sodDatabase";
+
+	return value;
+    }
+    
+    public String getUserName() {
+	String value = props.getProperty("edu.sc.seis.sod.username");
+	if(value == null) value = "sod";
+
+	return value;
+    }
+
+    
+
     public java.lang.Object getField(int index, int dbid) {
 	try {
 	    getStmt.setInt(1, dbid);
@@ -335,7 +362,8 @@ public abstract class AbstractDatabase implements EventDatabase{
 	}
     }
 	
-	 private int  insert(PreparedStatement stmt,
+	 
+    private int  insert(PreparedStatement stmt,
                        int index,
                        String serverName,
                        String serverDNS,
@@ -383,6 +411,7 @@ public abstract class AbstractDatabase implements EventDatabase{
     private PreparedStatement getStmt;
     
     private PreparedStatement iorUpdateStmt;
-    
-    
+
+    private Properties props;
+
 }// AbstractDatabase

@@ -3,6 +3,7 @@ package edu.sc.seis.sod.database;
 import edu.iris.Fissures.model.*;
 import edu.iris.Fissures.IfEvent.*;
 
+import java.util.Properties;
 import java.sql.*;
 import java.util.*;
 
@@ -24,19 +25,22 @@ public class HSqlDatabase extends AbstractDatabase{
 		
     }
 
+    public HSqlDatabase (Properties props) {
+	super(props);
+    }
 
-	public void create() {
-		try {
-			String driver = "org.hsqldb.jdbcDriver";
-			Class.forName(driver).newInstance();
-			
-			connection = DriverManager.getConnection("jdbc:hsqldb:myhsqldb", "sa", "");
-			Statement statement = connection.createStatement();
-			try {
-				statement.executeUpdate("CREATE TABLE eventconfig "+
-										"(eventid int IDENTITY PRIMARY KEY, "+
-										" serverName VARCHAR, "+
-										" serverDNS VARCHAR, "+
+    public void create() {
+	try {
+	    String driver = "org.hsqldb.jdbcDriver";
+	    Class.forName(driver).newInstance();
+	    
+	    connection = DriverManager.getConnection("jdbc:hsqldb:"+getDatabaseName(), "sa", "");
+	    Statement statement = connection.createStatement();
+	    try {
+		statement.executeUpdate("CREATE TABLE eventconfig "+
+					"(eventid int IDENTITY PRIMARY KEY, "+
+					" serverName VARCHAR, "+
+					" serverDNS VARCHAR, "+
 										" eventName VARCHAR, "+
 										" latitude float, "+
 										" longitude float, "+

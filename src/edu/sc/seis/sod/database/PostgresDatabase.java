@@ -2,21 +2,26 @@ package edu.sc.seis.sod.database;
 
 import edu.iris.Fissures.*;
 
+import java.util.Properties;
 import java.sql.*;
 
 public class PostgresDatabase extends AbstractDatabase {
 	
-	public PostgresDatabase() {
-		
-	}
+    public PostgresDatabase() {
+	
+    }
+    public PostgresDatabase(Properties props) {
+	super(props);
+    }
+    
 	
 	public void create() {
 		try {
 			String driverName = "org.postgresql.Driver";
 			Class.forName(driverName).newInstance();
 			
-			connection = DriverManager.getConnection("jdbc:postgresql:telukutl",
-															"telukutl",	"");
+			connection = DriverManager.getConnection("jdbc:postgresql:"+getDatabaseName(),
+								 getUserName(),	"");
 			Statement stmt = connection.createStatement();
 			
 			try {
