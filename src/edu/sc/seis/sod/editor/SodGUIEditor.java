@@ -90,7 +90,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
 
     protected void initEditors() {
         editors.put("property", new PropertyEditor());
-        editors.put("networkArm", new NetworkArmEditor(this));
+        //editors.put("networkArm", new NetworkArmEditor(this));
         DateEditor dateEdit = new DateEditor();
         editors.put("startTime", dateEdit);
         editors.put("endTime", dateEdit);
