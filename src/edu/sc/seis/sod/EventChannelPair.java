@@ -32,7 +32,23 @@ public class EventChannelPair{
     public void update(String info, Status status)throws InvalidDatabaseStateException{
         this.info = info;
         this.status = status;
-        owner.setStatus(this);
+        if(owner != null)owner.setStatus(this);
+    }
+    
+    public boolean equals(Object o){
+        if(!(o instanceof EventChannelPair)) return false;
+        EventChannelPair ecp = (EventChannelPair)o;
+        if(ecp.getEventDbId() == getEventDbId() &&
+           ecp.getChannelDbId() == chan.getDbId()){
+            return true;
+        }
+        return false;
+    }
+    
+    public int hashCode(){
+        int code = 47 * getChannelDbId();
+        code += 23 * getEventDbId();
+        return code;
     }
     
     public int getChannelDbId(){ return chan.getDbId(); }
