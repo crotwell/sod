@@ -20,5 +20,13 @@ public class EditorUtil {
         return textField;
     }
 
+    static String capFirstLetter(String in) {
+        char c = in.charAt(0);
+        if ( ! Character.isUpperCase(c)) {
+            return (""+c).toUpperCase()+in.substring(1);
+        }
+        return in;
+    }
+
 }
 
