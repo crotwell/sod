@@ -17,7 +17,7 @@ public class EventStatusTemplateTest extends TestCase{
     }
     
     public void setUp(){
-        init("<eventStatusTemplate xlink:link=\"jar:edu/sc/seis/sod/data/basicEventTemplate.xml\" outputLocation=\"test.txt\"/>");
+        init("<eventStatusTemplate xlink:href=\"jar:edu/sc/seis/sod/data/basicEventTemplate.xml\" outputLocation=\"test.txt\"/>");
     }
     
     private void init(String config){
@@ -31,7 +31,7 @@ public class EventStatusTemplateTest extends TestCase{
     }
     
     public void testHTMLTemplate(){
-        init("<eventStatusTemplate xlink:link=\"jar:edu/sc/seis/sod/data/htmlEventTemplate.xml\" outputLocation=\"test.txt\"/>");
+        init("<eventStatusTemplate xlink:href=\"jar:edu/sc/seis/sod/data/htmlEventTemplate.xml\" outputLocation=\"test.txt\"/>");
         assertEquals(plainHTMLOutput, temp.getResult());
     }
     

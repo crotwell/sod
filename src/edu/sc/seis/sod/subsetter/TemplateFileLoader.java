@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 public class TemplateFileLoader{
     public static Element getTemplate(Element el) throws MalformedURLException,
         IOException{
-        Attr attr =  (Attr)el.getAttributes().getNamedItem("xlink:link");
+        Attr attr =  (Attr)el.getAttributes().getNamedItem("xlink:href");
         URL loc = null;
         if(attr.getValue().startsWith("jar:")){
             loc = el.getClass().getClassLoader().getResource(attr.getValue().substring(4));

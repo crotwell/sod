@@ -15,7 +15,7 @@ public class MapEventStatus implements SodElement, EventStatus{
     protected String fileLoc;
     
     public MapEventStatus(Element element){
-        fileLoc = element.getAttribute("xlink:link");
+        fileLoc = element.getAttribute("xlink:href");
         events = new EventLayer(map.getMapBean());
         map.setEventLayer(events);
     }
