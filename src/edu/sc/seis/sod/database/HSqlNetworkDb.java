@@ -22,7 +22,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 
 	    Statement stmt = connection.createStatement();
 	    stmt.executeUpdate(" CREATE TABLE networkdatabase "+
-			       " networkid int IDENTITY PRIMARY KEY, "+
+			       " (networkid int IDENTITY PRIMARY KEY, "+
 			       " serverName VARCHAR, "+
 			       " serverDNS VARCHAR, "+
 			       " network_code VARCHAR, "+
@@ -31,7 +31,7 @@ public class HSqlNetworkDb extends AbstractNetworkDatabase{
 			       " channel_code VARCHAR, "+
 			       " network_time timestamp, "+
 			       " channel_time timestamp, "+
-			       " channelIdIOR VARCHAR");
+			       " channelIdIOR VARCHAR)");
 	        
 	} catch(SQLException sqle) {
 	    sqle.printStackTrace();
