@@ -37,13 +37,24 @@ public class StationWaveformContext  extends WaveformArmContext {
             } catch (SQLException e) {
                 throw new RuntimeException("can't get for key="+key, e);
             }
-        } else if (key.equals(SUCCESS_ECPS_KEY)) {
+        } else if (key.equals(SUCCESS_EVENTS_KEY)) {
             try {
                 EventChannelPair[] ecps = jdbcECS.getSuccessfulForStation(stationId);
                 // use a set to remove duplicate events
                 HashSet out = new HashSet();
                 for (int i = 0; i < ecps.length; i++) {
                     out.add(ecps[i].getEvent());
+                }
+                return out;
+            } catch (SQLException e) {
+                throw new RuntimeException("can't get for key="+key, e);
+            }
+        } else if (key.equals(SUCCESS_ECPS_KEY)) {
+            try {
+                EventChannelPair[] ecps = jdbcECS.getSuccessfulForStation(stationId);
+                HashSet out = new HashSet();
+                for (int i = 0; i < ecps.length; i++) {
+                    out.add(ecps[i]);
                 }
                 return out;
             } catch (SQLException e) {
@@ -70,6 +81,8 @@ public class StationWaveformContext  extends WaveformArmContext {
 
     public static final String ALL_EVENTS = "station_events";
 
-    public static final String SUCCESS_ECPS_KEY = "successful_station_events";
+    public static final String SUCCESS_EVENTS_KEY = "successful_station_events";
+
+    public static final String SUCCESS_ECPS_KEY = "successful_event_channels";
 }
 
