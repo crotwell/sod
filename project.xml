@@ -21,8 +21,9 @@ SOD automates the most tedious data selection, downloading and routine processin
   
   <url>http://www.seis.sc.edu/software/${pom.id}</url>
   <siteAddress>www.seis.sc.edu</siteAddress>
-  <siteDirectory>/seis/raid1/Apache/htdocs/software/mavenTEST/${pom.id}</siteDirectory>
-  <distributionDirectory>/seis/raid1/Apache/htdocs/software/dist/${pom.id}</distributionDirectory>
+  <siteDirectory>/seis/raid1/Apache/htdocs/software/${pom.id}</siteDirectory>
+  <distributionSite>www.seis.sc.edu</distributionSite>
+  <distributionDirectory>/seis/raid1/Apache/htdocs/software/mavenRepository/${pom.id}</distributionDirectory>
   <mailingList>
     <name>fissures-dev</name>
     <subscribe>majordomo@iris.washington.edu</subscribe>
@@ -97,16 +98,16 @@ oot:${pom.id}</connection>
       <version>1.0</version>
     </dependency>
     <dependency>
-      <id>FissuresImpl</id>
-      <version>1.1</version>
+      <id>fissuresImpl</id>
+      <version>1.1Beta</version>
     </dependency>
     <dependency>
-      <id>FissuresIDL</id>
+      <id>fissuresIDL</id>
       <version>1.0</version>
     </dependency>
     <dependency>
       <id>SeedCodec</id>
-      <version>1.0BetaNov26</version>
+      <version>1.0Beta</version>
     </dependency>
     <dependency>
       <id>TauP</id>
