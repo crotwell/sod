@@ -28,7 +28,7 @@ public class NullEventChannelSubsetter
      * @param cookies a <code>CookieJar</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Channel station,  CookieJar cookies) {
+    public boolean accept(EventAccessOperations o, NetworkAccess networkAccess, Channel channel,  CookieJar cookies) {
 	return true;
     }
 
