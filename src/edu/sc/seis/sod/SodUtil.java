@@ -6,10 +6,16 @@ import edu.iris.Fissures.model.BoxAreaImpl;
 import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.iris.Fissures.model.ISOTime;
 import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.sod.status.TemplateFileLoader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
@@ -17,18 +23,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-/**
- * SubsetterUtil.java
- *
- *
- * Created: Tue Mar 19 12:00:31 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
- */
+import java.io.FileNotFoundException;
 
 public class SodUtil {
+    
     public static synchronized Object loadExternal(Element config)
         throws ConfigurationException {
         try {
@@ -112,7 +110,6 @@ public class SodUtil {
             //Load for each of the arms....
             for (int i = 0; i < basePackageNames.length; i++) {
                 String packageName = baseName + "." + basePackageNames[i] + "." + armName;
-                System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + packageName);
                 try {
                     return loadClass(packageName + "."+ tagName, config);
                 } catch (ClassNotFoundException ex) {}//will be handled at the end
@@ -120,12 +117,10 @@ public class SodUtil {
             //load for the base packages....
             for (int i = 0; i < basePackageNames.length; i++) {
                 String packageName = baseName + "." + basePackageNames[i];
-                System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + packageName);
                 try {
                     return loadClass(packageName + "."+ tagName, config);
                 } catch (ClassNotFoundException ex) {}//will be handled at the end
             }
-            System.out.println("ATTEMPTING TO LOAD " + tagName + " from " + baseName);
             return loadClass(baseName + "." + tagName, config);
         } catch (InvocationTargetException e) {
             // occurs if the constructor throws an exception
@@ -175,6 +170,31 @@ public class SodUtil {
         } catch (Exception e) {
             throw new ConfigurationException("Can't find unit "+unitName, e);
         } // end of try-catch
+    }
+    public static void copyFile(String src, String dest) throws FileNotFoundException {
+        if(src.startsWith("jar")){
+            try {
+                URL url = TemplateFileLoader.getUrl(SodUtil.class.getClassLoader(), src);
+                copyStream(url.openStream(), dest);
+            } catch (Exception e) {
+                CommonAccess.handleException("trouble creating url for copying", e);
+            }
+        }else{
+            File f = new File(src);
+            copyStream(new FileInputStream(f), dest);
+        }
+    }
+    
+    public static void copyStream(InputStream src, String dest){
+        File f = new File(dest);
+        f.getParentFile().mkdirs();
+        try {
+            FileOutputStream fos =  new FileOutputStream(f);
+            int curChar;
+            while((curChar = src.read()) != -1) fos.write(curChar);
+        } catch (IOException e) {
+            CommonAccess.handleException("Troble copying a file", e);
+        }
     }
     
     public static edu.iris.Fissures.model.UnitRangeImpl loadUnitRange(Element config)  throws ConfigurationException {
