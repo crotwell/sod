@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import edu.sc.seis.sod.database.event.StatefulEvent;
 
 public class EventFormatter extends Template implements EventTemplate{
 
@@ -79,6 +80,8 @@ public class EventFormatter extends Template implements EventTemplate{
             };
         } else if(tag.equals("originTime")) {
             return new Time(SodUtil.getText((el)));
+        } else if(tag.equals("eventStatus")) {
+            return new EventStatusFormatter();
         }
         return super.getTemplate(tag, el);
     }
@@ -113,6 +116,16 @@ public class EventFormatter extends Template implements EventTemplate{
         }
 
         private SimpleDateFormat sdf;
+    }
+
+    private class EventStatusFormatter implements EventTemplate {
+        public String getResult(EventAccessOperations e){
+            if (e instanceof StatefulEvent) {
+                return ""+((StatefulEvent)e).getStatus();
+            } else {
+                return "unknown";
+            }
+        }
     }
 
     public void useDefaultConfig() {

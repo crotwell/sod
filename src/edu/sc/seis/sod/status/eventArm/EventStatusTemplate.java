@@ -50,15 +50,16 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
     }
 
     public void setArmStatus(String status) throws IOException {
-        this.status = status;
+        this.armStatus = status;
         write();
     }
 
     public Object getTemplate(String tag, Element el){
-        if(tag.equals("events")){
+        if(tag.equals("events")) {
             return  new EventGroupTemplate(el);
-        }else if(tag.equals("status")) return new StatusFormatter();
-        else if (tag.equals("mapEventStatus")){
+        } else if(tag.equals("armStatus")) {
+            return new ArmStatusFormatter();
+        } else if (tag.equals("mapEventStatus")){
             return new MapImgSrc(el);
         }
         return super.getTemplate(tag, el);
@@ -78,13 +79,16 @@ public class EventStatusTemplate extends FileWritingTemplate implements EventArm
     }
 
     public void change(EventAccessOperations event, Status status) {
+        eventStatus = status;
         write();
     }
 
-    private class StatusFormatter implements GenericTemplate{
-        public String getResult(){ return status; }
+    private class ArmStatusFormatter implements GenericTemplate{
+        public String getResult(){ return armStatus; }
     }
 
+
     private Logger logger = Logger.getLogger(EventStatusTemplate.class);
-    private String status = "";
+    private String armStatus = "";
+    private Status eventStatus = null;
 }

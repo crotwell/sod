@@ -24,12 +24,14 @@ Events (sorted by magnitude)
 <td><a href="time.html">Time (GMT)</a></td>
 <td id="selected"><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
+<td>Status</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td id="selected"><magnitude/></td>
 <td><depth/></td>
+<td><eventStatus/></td>
 </tr>
 </eventLabel><sorting><magnitude/></sorting></events>
 </table>

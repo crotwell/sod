@@ -14,7 +14,7 @@ Events (sorted by time)
 <div id="Content">
 <h1>Events</h1>
 <h2>Status:</h2>
-<status/><br/>
+<armStatus/><br/>
 <h2>Map:</h2>
 <img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
 <h2>Successful events sorted by time:</h2>
@@ -24,12 +24,14 @@ Events (sorted by time)
 <td id="selected"><a href="time.html">Time (GMT)</a></td>
 <td><a href="mag.html">Magnitude</a></td>
 <td><a href="depth.html">Depth</a></td>
+<td>Status</td>
 </tr>
 <events><eventLabel><tr>
 <td><a><attribute name="href"><originTime>yyyyMMddHHmmssSSS</originTime>/event.html</attribute><feRegionName/></a></td>
 <td id="selected"><originTime>MM/dd/yyyy HH:mm:ss</originTime></td>
 <td><magnitude/></td>
 <td><depth/></td>
+<td><eventStatus/></td>
 </tr>
 </eventLabel><sorting><time order="descending"/></sorting></events>
 </table>

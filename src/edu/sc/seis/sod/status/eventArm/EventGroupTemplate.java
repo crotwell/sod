@@ -87,4 +87,5 @@ public class EventGroupTemplate extends Template implements GenericTemplate{
     private Map eventToMonitors = new HashMap();
 
     private EventSorter sorter;
+
 }
