@@ -4,14 +4,16 @@
         <xsl:output method="html"/>
         <xsl:include href="pageGenerator.xsl"/>
         <xsl:template match="/pages">
+        	<xsl:for-each select="menu">
                 <xsl:for-each select="page">
                         <xsl:if test="contains(source/text(), '.xml')">
-                                <redirect:write select="concat(../baseDirectory/text(), destination/text())">
+                                <redirect:write select="concat(../../baseDirectory/text(), destination/text())">
                                         <xsl:apply-templates select="document(source/text())">
                                                 <xsl:with-param name="currentPage" select="destination/text()"/>
                                         </xsl:apply-templates>
                                 </redirect:write>
                         </xsl:if>
                 </xsl:for-each>
+        	</xsl:for-each>
         </xsl:template>
 </xsl:stylesheet>
