@@ -21,7 +21,7 @@
                         <xsl:apply-templates select="*"/>
                 </div>
         </xsl:template>
-        <xsl:template match="p">
+        <xsl:template match="*">
                 <xsl:copy-of select="."/>
         </xsl:template>
         <xsl:template name="head">
