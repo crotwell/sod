@@ -458,7 +458,9 @@ public class NetworkArm {
 	Site site = siteDbObject.getSite();
 	try {
 	    Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
+
 	    for(int subCounter = 0; subCounter < channels.length; subCounter++) {
+		if(!isSameSite(site, channels[subCounter].my_site)) continue;
 		if(channelIdSubsetter.accept(channels[subCounter].get_id(), null)) {
 		    if(channelSubsetter.accept(networkAccess, channels[subCounter], null)) {
 			int dbid = networkDatabase.putChannel(siteDbObject,
@@ -479,6 +481,18 @@ public class NetworkArm {
 	System.out.println("******* The elenght of the successful channels is "+values.length);
 	return values;
     }
+
+    private boolean isSameSite(Site givenSite, Site tempSite) {
+	SiteId givenSiteId = givenSite.get_id();
+	SiteId tempSiteId = tempSite.get_id();
+	if(givenSiteId.site_code.equals(tempSiteId.site_code)) {
+	    MicroSecondDate givenDate = new MicroSecondDate(givenSiteId.begin_time);
+	    MicroSecondDate tempDate = new  MicroSecondDate(tempSiteId.begin_time);
+	    if(tempDate.equals(givenDate)) return true;
+	}
+	return false;
+    }
+
    
     private Element config = null;
 
