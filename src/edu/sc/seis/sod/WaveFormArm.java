@@ -2,10 +2,10 @@ package edu.sc.seis.sod;
 import java.util.*;
 
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.LocalSeismogramArm;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
@@ -14,10 +14,9 @@ import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.waveform.EventChannelCondition;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
-import edu.sc.seis.sod.status.waveFormArm.WaveFormStatus;
+import edu.sc.seis.sod.status.waveFormArm.WaveformArmMonitor;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.waveFormArm.NullEventStationSubsetter;
@@ -135,7 +134,7 @@ public class WaveFormArm implements Runnable {
         int pairId;
         synchronized(evChanStatus){
             pairId = evChanStatus.put(ev.getDbId(), chanId,
-                                      EventChannelCondition.NEW);
+                                      Status.get(Status.SPECIAL, Status.NEW));
         }
         invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
         retryIfNeededAndAvailable();
@@ -224,8 +223,8 @@ public class WaveFormArm implements Runnable {
                     eventStationSubsetter = (EventStationSubsetter)sodElement;
                 }else if(sodElement instanceof LocalSeismogramArm){
                     localSeismogramArm = (LocalSeismogramArm)sodElement;
-                }else if(sodElement instanceof WaveFormStatus){
-                    addStatusMonitor((WaveFormStatus)sodElement);
+                }else if(sodElement instanceof WaveformArmMonitor){
+                    addStatusMonitor((WaveformArmMonitor)sodElement);
                 }else {
                     System.err.println("Unknown tag "+el.getTagName()+" found in config file");
                     throw new IllegalArgumentException("The waveformArm does not know about tag " + el.getTagName());
@@ -235,7 +234,7 @@ public class WaveFormArm implements Runnable {
 
     }
 
-    public void addStatusMonitor(WaveFormStatus monitor){
+    public void addStatusMonitor(WaveformArmMonitor monitor){
         statusMonitors.add(monitor);
     }
 
@@ -244,8 +243,10 @@ public class WaveFormArm implements Runnable {
         synchronized(evChanStatus){
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
-                if(ecp.getStatus().equals(EventChannelCondition.CORBA_FAILURE) ||
-                   ecp.getStatus().equals(EventChannelCondition.NO_AVAILABLE_DATA)){
+                Status stat = ecp.getStatus();
+                if(stat.getType() == Status.CORBA_FAILURE ||
+                       (stat.getStage() == Status.AVAILABLE_DATA_SUBSETTER &&
+                            stat.getType() == Status.REJECT)){
                     synchronized (eventRetryTable) {
                         eventRetryTable.failed(ecp.getPairId(), ecp.getStatus());
                     }
@@ -259,7 +260,7 @@ public class WaveFormArm implements Runnable {
             Iterator it = statusMonitors.iterator();
             while(it.hasNext()){
                 try {
-                    ((WaveFormStatus)it.next()).update(ecp);
+                    ((WaveformArmMonitor)it.next()).update(ecp);
                 } catch (Exception e) {
                     // oh well, log it and go to next status processor
                     CommonAccess.handleException("Problem in setStatus", e);
@@ -304,8 +305,25 @@ public class WaveFormArm implements Runnable {
         }
 
         public void run(){
-            EventChannelPair ecp = extractEventChannelPair();
-            process(ecp);
+            try{
+                EventChannelPair ecp = extractEventChannelPair();
+                ecp.update(Status.get(Status.EVENT_STATION_SUBSETTER,
+                                      Status.IN_PROG));
+                try {
+                    eventStationSubsetter.accept(ecp.getEvent(), ecp.getNet(),
+                                                 ecp.getChannel().my_site.my_station,
+                                                 null);
+                } catch (Exception e) {
+                    ecp.update(e, Status.get(Status.EVENT_STATION_SUBSETTER,
+                                             Status.SYSTEM_FAILURE));
+                }
+                ecp.update(Status.get(Status.EVENT_CHANNEL_SUBSETTER, Status.IN_PROG));
+                localSeismogramArm.processLocalSeismogramArm(ecp);
+            }catch(Throwable t){
+                System.err.println("An exception occured that would've croaked a waveform worker thread!  These types of exceptions are certainly possible, but they shouldn't be allowed to percolate this far up the stack.  If you are one of those esteemed few working on SOD, it behooves you to attempt to trudge down the stack trace following this message and make certain that whatever threw this exception is no longer allowed to throw beyond its scope.  If on the other hand, you are a user of SOD it would be most appreciated if you would send an email containing the text immediately following this mesage to sod@seis.sc.edu");
+                t.printStackTrace(System.err);
+                GlobalExceptionHandler.handle(t);
+            }
         }
 
         private EventChannelPair extractEventChannelPair(){
@@ -339,37 +357,6 @@ public class WaveFormArm implements Runnable {
                                         channelDbObject,WaveFormArm.this,
                                         pairId);
         }
-
-        private void process(EventChannelPair ecp){
-            try {
-                ecp.update("Subsetting Started", EventChannelCondition.SUBSETTING);
-                boolean passedESS;
-                synchronized(eventStationSubsetter) {
-                    Station station = ecp.getChannel().my_site.my_station;
-                    passedESS = eventStationSubsetter.accept(ecp.getEvent(),
-                                                             ecp.getNet(),
-                                                             station,
-                                                             null);
-                    if(!passedESS) {
-                        ecp.update("Event Station Subsetter Failed",
-                                   EventChannelCondition.SUBSETTER_FAILED);
-                    }else{
-                        try {
-                            localSeismogramArm.processLocalSeismogramArm(ecp);
-                        } catch (org.omg.CORBA.SystemException e) {
-                            ecp.update(e,
-                                       "Corba failure in the local seismogram arm",
-                                       EventChannelCondition.CORBA_FAILURE);
-                        }
-                    }
-                }
-            } catch(Throwable e) {
-                ecp.update("System failure", EventChannelCondition.FAILURE);
-                CommonAccess.handleException(e,
-                                             "Waveform processing thread dies unexpectantly.");
-            }
-        }
-
         private int pairId;
     }
 
