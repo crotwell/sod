@@ -97,6 +97,7 @@
                 <value>MINUTE</value>
                 <value>HOUR</value>
                 <value>DAY</value>
+                <value>WEEK</value>
                 <value>YEAR</value>
             </choice>
         </element>
