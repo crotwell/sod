@@ -39,7 +39,7 @@ public interface Queue {
     public int pop();
 
 
-    public void setFinalStatus(EventAccess eventAccess, Status status);
+    public void setFinalStatus(EventAccessOperations eventAccess, Status status);
 
 
     public void delete(Status status);
@@ -73,7 +73,7 @@ public interface Queue {
 
     public void closeDatabase();
 
-    public int getEventId(EventAccess eventAccess);
+    public int getEventId(EventAccessOperations eventAccess);
    
     public void setTime(String serverName,
 			String serverDNS,

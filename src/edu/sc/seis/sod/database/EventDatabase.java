@@ -14,7 +14,7 @@ import edu.iris.Fissures.IfEvent.*;
 
 public interface EventDatabase {
 
-    public int get(EventAccess eventAccess);
+    public int get(EventAccessOperations eventAccess);
     /*public int get(String serverName,
 		   String serverDNS,
 		   float lat,
@@ -51,7 +51,7 @@ public interface EventDatabase {
 		   
     public void delete(int id);
 
-    public void delete(EventAccess eventAccess);
+    public void delete(EventAccessOperations eventAccess);
     
     public void delete(Status status);
 

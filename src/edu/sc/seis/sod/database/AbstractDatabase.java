@@ -117,22 +117,13 @@ public abstract class AbstractDatabase implements EventDatabase{
 
 
     
-    public int get(EventAccess eventAccess) {
+    public int get(EventAccessOperations eventAccess) {
 	try {
 	    Origin origin = eventAccess.get_preferred_origin();
 	    String name = eventAccess.get_attributes().name;
 	    float lat = origin.my_location.latitude;
 	    float lon = origin.my_location.longitude;
 	    float depth = (float)origin.my_location.depth.value;
-
-	    String eventAccessIOR = null;
-	    try {
-		org.omg.CORBA.ORB orb = ((org.omg.CORBA.portable.ObjectImpl)eventAccess)._orb();
-		eventAccessIOR = orb.object_to_string(eventAccess);
-	    } catch(Exception e) {
-		e.printStackTrace();
-	    }
-
 	    edu.iris.Fissures.Time origin_time = origin.origin_time;
 	    return get(name,
 		       lat,
@@ -283,7 +274,7 @@ public abstract class AbstractDatabase implements EventDatabase{
 	}
     }
 
-    public void delete(EventAccess eventAccess) {
+    public void delete(EventAccessOperations eventAccess) {
 	int dbid = get(eventAccess);
 	delete(dbid);
     }
