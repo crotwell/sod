@@ -40,7 +40,6 @@ public class Start {
 
     static {
         GlobalExceptionHandler.add(new Extractor() {
-
             public boolean canExtract(Throwable throwable) {
                 return (throwable instanceof org.apache.velocity.exception.MethodInvocationException);
             }
@@ -216,10 +215,15 @@ public class Start {
         checkConfig(createInputSource(cl, getConfigFileName()));
         // this next line sets up the status page for exception reporting, so
         // it should be as early as possible in the startup sequence
-        IndexTemplate indexTemplate = new IndexTemplate();
+        IndexTemplate indexTemplate = null;
+        if(runProps.doIndex()) {
+            indexTemplate = new IndexTemplate();
+        }
         Element docElement = document.getDocumentElement();
         startArms(docElement.getChildNodes());
-        indexTemplate.performRegistration();
+        if(runProps.doIndex()) {
+            indexTemplate.performRegistration();
+        }
         new JDBCStatus();
     }
 
@@ -267,8 +271,10 @@ public class Start {
                 }
             }
         }
-        new Thread(event, "Event Arm").start();
-        new Thread(waveform, "Waveform Arm").start();
+        if(RUN_ARMS) {
+            new Thread(event, "Event Arm").start();
+            new Thread(waveform, "Waveform Arm").start();
+        }
     }
 
     private void handleStartupRunProperties() {
@@ -437,6 +443,8 @@ public class Start {
     private static MicroSecondDate startTime;
 
     private static String DATABASE_DIR = "SodDb";
+
+    public static boolean RUN_ARMS = true;
 
     protected static int[] suspendedPairs = new int[0];
 
