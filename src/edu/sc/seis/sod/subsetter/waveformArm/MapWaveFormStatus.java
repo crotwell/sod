@@ -41,6 +41,8 @@ public class MapWaveFormStatus implements WaveFormStatus {
         mainMap.setStationLayer(stationLayer);
     }
     
+    public void write(){ mainMap.writeMapToPNG(fileLoc); }
+    
     /**
      * Method update
      *
@@ -48,19 +50,29 @@ public class MapWaveFormStatus implements WaveFormStatus {
      *
      */
     public void update(EventChannelPair ecp) {
-        EventAccessOperations ecpEvent = ecp.getEvent();
-        Channel ecpChannel = ecp.getChannel();
-        
-        if (!eventMap.containsKey(ecpEvent)){
-            eventLayer.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ecpEvent}));
-            eventMap.put(ecpEvent, null);
+        if(add(ecp.getEvent())){
+            add(ecp.getChannel());
+            write();
+        }else if(add(ecp.getChannel()))
+            write();
+    }
+    
+    public boolean add(Channel chan){
+        if (!channelMap.containsKey(chan)){
+            stationLayer.stationDataChanged(new StationDataEvent(this, new Station[]{chan.my_site.my_station}));
+            channelMap.put(chan, null);
+            return true;
         }
-        if (!channelMap.containsKey(ecpChannel)){
-            stationLayer.stationDataChanged(new StationDataEvent(this, new Station[]{ecpChannel.my_site.my_station}));
-            channelMap.put(ecpChannel, null);
+        return false;
+    }
+    public boolean add(EventAccessOperations ev){
+        if (!eventMap.containsKey(ev)){
+            eventLayer.eventDataChanged(new EQDataEvent(this, new EventAccessOperations[]{ev}));
+            eventMap.put(ev, null);
+                    return true;
+                    
         }
-        
-        mainMap.writeMapToPNG(fileLoc);
+        return false;
     }
     
     //    private OpenMap getMapForEvent(EventAccessOperations event){
