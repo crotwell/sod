@@ -11,7 +11,6 @@ import edu.sc.seis.fissuresUtil.map.OpenMap;
 import edu.sc.seis.fissuresUtil.map.colorizer.event.FreshnessEventColorizer;
 import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.sod.SodElement;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.status.FileWritingTemplate;
@@ -23,19 +22,10 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
     private String fileLoc;
 
     public MapEventStatus(Element element) {
-        this(element, false);
+        this(getLocation(element));
     }
 
-    /**
-     * Creates a MapEventStatus that outputs to the location in the attribute
-     * xlink:href of the passed in element, and if addToEventArm is true, it
-     * adds itself to the EventArm's status listeners
-     */
-    public MapEventStatus(Element element, boolean addToEventArm) {
-        this(getLocation(element), addToEventArm);
-    }
-
-    public MapEventStatus(String location, boolean addToEventArm) {
+    public MapEventStatus(String location) {
         try {
             events = new JDBCEventStatus();
         } catch(SQLException e) {
@@ -43,9 +33,6 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
                                           e);
         }
         fileLoc = location;
-        if(addToEventArm) {
-            Start.getEventArm().add(this);
-        }
         run();
     }
 
