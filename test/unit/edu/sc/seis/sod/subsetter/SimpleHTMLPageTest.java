@@ -10,8 +10,8 @@ import java.io.File;
 import junit.framework.TestCase;
 import java.io.IOException;
 
-public class TestSimpleHTMLPage extends TestCase{
-    public TestSimpleHTMLPage(String name){
+public class SimpleHTMLPageTest extends TestCase{
+    public SimpleHTMLPageTest(String name){
         super(name);
     }
     
