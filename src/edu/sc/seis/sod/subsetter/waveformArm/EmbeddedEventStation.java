@@ -26,7 +26,7 @@ public class EmbeddedEventStation  implements EventChannelSubsetter{
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 eventStationSubsetter =
-                    (EventStationSubsetter) SodUtil.load((Element)node, "eventArm");
+                    (EventStationSubsetter) SodUtil.load((Element)node, "waveformArm");
                 break;
             }
         }
