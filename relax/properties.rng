@@ -33,6 +33,12 @@
                                         <element name="removeDatabase">
                                                 <ref name="trueOrFalse"/>
                                         </element>
+                                        <element name="eventChannelPairProcessing">
+                                                <choice>
+                                                        <value>atLeastOnce</value>
+                                                        <value>atMostOnce</value>
+                                                </choice>
+                                        </element>
                                 </choice>
                         </oneOrMore>
                 </element>
