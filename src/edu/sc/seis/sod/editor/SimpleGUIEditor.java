@@ -83,12 +83,33 @@ public class SimpleGUIEditor extends CommandLineEditor {
                         }
                     }
                 });
-        JMenuItem loadTutorial = new JMenuItem("Load Tutorial Config");
+        fileMenu.addSeparator();
+        JMenuItem load = new JMenuItem("Open");
+        fileMenu.add(load);
+        load.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        FileDialog fileDialog = new FileDialog(frame, "Load a SOD config file");
+                        fileDialog.setDirectory(".");
+                        fileDialog.show();
+                        String inFile = fileDialog.getFile();
+                        if (inFile != null) {
+                            try {
+                                setConfigFile(inFile);
+                                loadGUI();
+                            } catch (Exception ex) {
+                                GlobalExceptionHandler.handle("Unable to open "+inFile, ex);
+                            }
+                        }
+                    }
+
+                });
+        JMenuItem loadTutorial = new JMenuItem("Open Tutorial");
         loadTutorial.addActionListener(tutorialLoader);
         fileMenu.add(loadTutorial);
-        JMenuItem loadWeed = new JMenuItem("Load WEED Config");
+        JMenuItem loadWeed = new JMenuItem("Open WEED");
         loadWeed.addActionListener(new FileLoader("weed.xml"));
         fileMenu.add(loadWeed);
+        fileMenu.addSeparator();
         JMenuItem quit = new JMenuItem("Quit");
         fileMenu.add(quit);
         quit.addActionListener(new ActionListener() {
