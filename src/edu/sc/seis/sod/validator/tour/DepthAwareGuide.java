@@ -23,9 +23,8 @@ public class DepthAwareGuide implements TourGuide {
 
     public void internalLead(Tourist visitor, Form curForm) {
         if(calcDistance(curForm) > allowableDepth
-                && curForm.getParent().isFromDef()) {
-            return;
-        }
+                && curForm.getParent().isFromDef()
+                && (!(curForm instanceof Value))) { return; }
         if(curForm instanceof NamedElement) {
             NamedElement cur = (NamedElement)curForm;
             visitor.visit(cur);
@@ -68,9 +67,7 @@ public class DepthAwareGuide implements TourGuide {
     }
 
     public int calcDistance(Form f) {
-        if(f.equals(root)) {
-            return 0;
-        }
+        if(f.equals(root)) { return 0; }
         return calcDistance(f.getParent()) + 1;
     }
 
