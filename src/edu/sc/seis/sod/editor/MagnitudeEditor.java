@@ -36,23 +36,12 @@ public class MagnitudeEditor implements EditorPlugin{
                     }
                 });
         b.add(new JLabel(SimpleGUIEditor.getDisplayName("min")));
-        b.add(makeSpinner((Text)XPathAPI.selectSingleNode(element, "min/text()")));
+        b.add(EditorUtil.createNumberSpinner((Text)XPathAPI.selectSingleNode(element, "min/text()"), 0, 10, .1));
         b.add(Box.createHorizontalGlue());
         b.add(new JLabel(SimpleGUIEditor.getDisplayName("max")));
-        b.add(makeSpinner((Text)XPathAPI.selectSingleNode(element, "max/text()")));
+        b.add(EditorUtil.createNumberSpinner((Text)XPathAPI.selectSingleNode(element, "max/text()"), 0, 10, .1));
         b.add(Box.createHorizontalGlue());
         return b;
-    }
-
-    private JSpinner makeSpinner(final Text text){
-        final JSpinner spin = new JSpinner(new SpinnerNumberModel(Double.parseDouble(text.getNodeValue()),
-                                                                  0, 10, .1));
-        spin.addChangeListener(new ChangeListener(){
-                    public void stateChanged(ChangeEvent e) {
-                        text.setNodeValue(spin.getValue().toString());
-                    }
-                });
-        return spin;
     }
 
 }
