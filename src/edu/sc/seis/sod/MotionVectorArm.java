@@ -5,8 +5,10 @@
  */
 package edu.sc.seis.sod;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.UnitBase;
@@ -22,7 +24,9 @@ import edu.sc.seis.fissuresUtil.cache.NSSeismogramDC;
 import edu.sc.seis.fissuresUtil.cache.ProxySeismogramDC;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
+import edu.sc.seis.sod.process.waveform.vector.WaveformProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcess;
+import edu.sc.seis.sod.process.waveform.vector.WaveformVectorProcessWrapper;
 import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -35,14 +39,33 @@ import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
-import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
+import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
 
 public class MotionVectorArm implements Subsetter {
 
     public WaveformVectorProcess[] getProcesses() {
         WaveformVectorProcess[] result = new WaveformVectorProcess[processes.size()];
         return (WaveformVectorProcess[])processes.toArray(result);
+    }
+
+    public WaveformProcess[] getWaveformProcesses() {
+        List waveformProcesses = getWaveformProcesses(getProcesses());
+        return (WaveformProcess[])waveformProcesses.toArray(new WaveformProcess[0]);
+    }
+
+    public List getWaveformProcesses(WaveformVectorProcess[] procs) {
+        List waveformProcesses = new ArrayList();
+        for(int i = 0; i < procs.length; i++) {
+            if(procs[i] instanceof WaveformVectorProcessWrapper) {
+                WaveformVectorProcess[] subProcesses = ((WaveformVectorProcessWrapper)procs[i]).getWrappedProcessors();
+                waveformProcesses.addAll(getWaveformProcesses(subProcesses));
+            } else if(procs[i] instanceof WaveformProcessWrapper) {
+                WaveformProcessWrapper wrapper = (WaveformProcessWrapper)procs[i];
+                waveformProcesses.add(wrapper.getWrappedProcess());
+            }
+        }
+        return waveformProcesses;
     }
 
     public void handle(Object sodElement) {
@@ -394,7 +417,7 @@ public class MotionVectorArm implements Subsetter {
                             }
                         } else {
                             handle(ecp, Stage.DATA_RETRIEVAL, e);
-                            return (LocalSeismogram[][])null;
+                            return null;
                         }
                     }
                 }
@@ -419,7 +442,7 @@ public class MotionVectorArm implements Subsetter {
                 logger.info("added to queue request id: " + id[i]);
             } catch(org.omg.CORBA.SystemException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e);
-                return (LocalSeismogram[][])null;
+                return null;
             }
         }
         for(int i = 0; i < id.length; i++) {
@@ -430,7 +453,7 @@ public class MotionVectorArm implements Subsetter {
                     status = statusRequest(id[i], dataCenter);
                 } catch(org.omg.CORBA.SystemException e) {
                     handle(ecp, Stage.DATA_RETRIEVAL, e);
-                    return (LocalSeismogram[][])null;
+                    return null;
                 }
                 if(status.equals(LocalSeismogramArm.RETRIEVING_DATA)) {
                     try {
@@ -443,7 +466,7 @@ public class MotionVectorArm implements Subsetter {
                     localSeismograms[i] = retrieveRequest(id[i], dataCenter);
                 } catch(org.omg.CORBA.SystemException e) {
                     handle(ecp, Stage.DATA_RETRIEVAL, e);
-                    return (LocalSeismogram[][])null;
+                    return null;
                 }
             } else {
                 localSeismograms[i] = new LocalSeismogram[0];
