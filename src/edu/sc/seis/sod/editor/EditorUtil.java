@@ -137,7 +137,7 @@ public class EditorUtil {
     public static JComponent makeTimeIntervalTwiddler(Element el) throws TransformerException{
         Box b = Box.createHorizontalBox();
         Text t = (Text)XPathAPI.selectSingleNode(el, "value/text()");
-        b.add(EditorUtil.createNumberSpinner(t, 1, 50, 1));
+        b.add(EditorUtil.createNumberSpinner(t, 1, 60, 1));
         Element e = (Element)XPathAPI.selectSingleNode(el, "unit");
         b.add(EditorUtil.getComboBox(e, SodGUIEditor.TIME_UNITS));
         b.add(Box.createHorizontalGlue());

@@ -56,6 +56,7 @@ azimuthRange=Azimuth
 backAzimuthRange=Back Azimuth
 unitRange=Range
 distanceRange=Distance
+refreshInterval=Refresh Interval
 
 removeDatabase=Clean Database at Start
 
