@@ -46,9 +46,19 @@ public class Filter implements LocalSeismogramProcess {
                 } else if (element.getTagName().equals("numPoles")) {
                     numPoles = Integer.parseInt(XMLUtil.getText(element));
                 } else if (element.getTagName().equals("filterType")) {
-                    filterType = Integer.parseInt(XMLUtil.getText(element));
+                    if (XMLUtil.getText(element).equals("CAUSAL")) {
+                        filterType = ButterworthFilter.CAUSAL;
+                    } else {
+                        filterType = ButterworthFilter.NONCAUSAL;
+                    }
                 }
             }
+        }
+        if (lowFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+            lowFreqCorner = lowFreqCorner.inverse();
+        }
+        if (highFreqCorner.get_unit().isConvertableTo(UnitImpl.SECOND)) {
+            highFreqCorner = highFreqCorner.inverse();
         }
         filter = new ButterworthFilter(new SeisGramText(),
                                        lowFreqCorner.convertTo(UnitImpl.HERTZ).getValue(),
