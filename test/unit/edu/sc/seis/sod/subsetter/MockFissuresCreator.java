@@ -37,6 +37,13 @@ public class MockFissuresCreator{
         return createEvent(createWallFallOrigin(), createWallFallAttr());
     }
     
+    public static EventAccessOperations createEvent(MicroSecondDate eventTime,
+                                                    int magnitudeAndDepth,
+                                                   int feRegion){
+        Magnitude[] mags = {new Magnitude(null, magnitudeAndDepth, null) };
+        return createEvent(createOrigin(eventTime, mags), createEventAttr(feRegion));
+    }
+    
     public static EventAccessOperations createEvent(Origin origin, EventAttr attr){
         MockControl eventController = MockControl.createControl(EventAccessOperations.class);
         EventAccessOperations mockEvent = (EventAccessOperations) eventController.getMock();
@@ -75,6 +82,10 @@ public class MockFissuresCreator{
     }
     
     public static Origin createOrigin(){
+        return createOrigin(time, mags);
+    }
+    
+    public static Origin createOrigin(MicroSecondDate time, Magnitude[] mags){
         return new OriginImpl("Epoch in Central Alaska", "Test Data", "Charlie Groves", time.getFissuresTime(), loc, mags, null);
     }
     
@@ -82,8 +93,10 @@ public class MockFissuresCreator{
         return new OriginImpl("Fall of the Berlin Wall", "Test Data", "Charlie Groves", getFallOfBerlinWall().getFissuresTime(), berlin, mags, null);
     }
     
-    public static EventAttr createEventAttr(){
-        return new EventAttrImpl("Test Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), 1));
+    public static EventAttr createEventAttr(){ return createEventAttr(1); }
+    
+    public static EventAttr createEventAttr(int feRegion){
+        return new EventAttrImpl("Test Event", new FlinnEngdahlRegionImpl(FlinnEngdahlType.from_int(1), feRegion));
     }
     
     public static EventAttr createWallFallAttr(){
