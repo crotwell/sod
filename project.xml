@@ -179,10 +179,6 @@
             <url>http://junit.org/</url>
         </dependency>
         <dependency>
-            <id>mckoi</id>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
             <id>hsqldb</id>
             <version>1.7.2-rc5</version>
             <url>http://hsqldb.sourceforge.net</url>
@@ -201,10 +197,6 @@
             <id>xalan</id>
             <version>2.5.1</version>
             <url>http://xml.apache.org/xalan-j/index.html</url>
-        </dependency>
-        <dependency>
-            <id>easyMock</id>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <id>log4j</id>
