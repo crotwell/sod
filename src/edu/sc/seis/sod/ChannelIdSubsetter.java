@@ -14,6 +14,6 @@ import edu.iris.Fissures.network.*;
 
 public interface ChannelIdSubsetter extends Subsetter {
 
-    public boolean accept(ChannelId channelId, CookieJar cookies);
+    public boolean accept(ChannelId channelId, CookieJar cookies) throws Exception;
     
 }// ChannelIdSubsetter

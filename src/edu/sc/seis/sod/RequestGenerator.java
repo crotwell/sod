@@ -21,6 +21,6 @@ public interface  RequestGenerator {
     public RequestFilter[] generateRequest(EventAccessOperations event, 
 					   NetworkAccessOperations network, 
 					   Channel channel, 
-					   CookieJar cookies);
+					   CookieJar cookies) throws Exception;
     
 }// RequestGenerator

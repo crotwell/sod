@@ -16,6 +16,6 @@ public interface NetworkArmProcess extends Process {
 
     public void process(NetworkAccessOperations network, 
 			Channel chan, 
-			CookieJar cookieJar);
+			CookieJar cookieJar) throws Exception;
     
 }// NetworkProcess

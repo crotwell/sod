@@ -13,7 +13,7 @@ import edu.iris.Fissures.network.*;
 
 public interface NetworkAttrSubsetter extends Subsetter {
 
-    public boolean accept(NetworkAttr event, CookieJar cookies);
+    public boolean accept(NetworkAttr event, CookieJar cookies) throws Exception;
 
     
 }// NetworkSubsetter

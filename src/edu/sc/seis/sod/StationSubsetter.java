@@ -17,6 +17,6 @@ public interface StationSubsetter extends Subsetter{
 
     public boolean accept(NetworkAccessOperations network,
 			  Station station,
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// StationSubsetter

@@ -22,6 +22,6 @@ public interface LocalSeismogramProcessor extends WaveFormArmProcess {
 			RequestFilter[] original, 
 			RequestFilter[] available,
 			LocalSeismogram[] seismograms, 
-			CookieJar cookies);
+			CookieJar cookies) throws Exception;
     
 }// LocalSeismogramProcessor

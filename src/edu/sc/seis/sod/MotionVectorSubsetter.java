@@ -23,6 +23,6 @@ public interface MotionVectorSubsetter {
 			  NetworkAccessOperations network,
 			  ChannelGroup channel, 
 			  LocalMotionVector motionVectors,
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// MotionVectorFilter

@@ -22,6 +22,6 @@ public interface AvailableDataSubsetter {
 			  Channel channel, 
 			  RequestFilter[] original, 
 			  RequestFilter[] available, 
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// AvailableDataSubsetter

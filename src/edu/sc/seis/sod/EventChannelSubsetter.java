@@ -19,6 +19,6 @@ public interface EventChannelSubsetter {
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccessOperations network, 
 			  Channel channel, 
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// EventChannelSubsetter

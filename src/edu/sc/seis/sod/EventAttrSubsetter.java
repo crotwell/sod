@@ -13,7 +13,7 @@ import edu.iris.Fissures.event.*;
 
 public interface EventAttrSubsetter extends Subsetter {
 
-    public boolean accept(EventAttr event, CookieJar cookies);
+    public boolean accept(EventAttr event, CookieJar cookies) throws Exception;
 
     
 }// EventSubsetter

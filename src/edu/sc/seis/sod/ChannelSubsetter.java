@@ -15,6 +15,6 @@ public interface ChannelSubsetter extends Subsetter {
 
     public boolean accept(NetworkAccessOperations network,
 			  Channel channel, 
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// ChannelSubsetter

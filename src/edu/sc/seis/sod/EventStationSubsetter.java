@@ -20,6 +20,6 @@ public interface EventStationSubsetter {
     public boolean accept(EventAccessOperations event, 
 			  NetworkAccessOperations network, 
 			  Station station, 
-			  CookieJar cookies);
+			  CookieJar cookies) throws Exception;
     
 }// EventStationSubsetter

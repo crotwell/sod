@@ -26,7 +26,7 @@ public interface LocalMotionVectorProcessor extends WaveFormArmProcess {
 			RequestFilter[] original, 
 			RequestFilter[] available,
 			LocalMotionVector vector, 
-			CookieJar cookies);
+			CookieJar cookies) throws Exception;
     
     
 }// LocalMotionVectorProcessor
