@@ -51,7 +51,7 @@ public class NetworkFinder extends AbstractSource{
         netDC = new RetryNetworkDC(new NSNetworkDC(dns, objectName, fns), 2);
     }
 
-    public NetworkDCOperations getNetworkDC() throws Exception{
+    public NetworkDCOperations getNetworkDC() {
         return netDC;
     }
 
