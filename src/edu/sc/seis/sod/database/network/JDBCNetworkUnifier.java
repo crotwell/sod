@@ -10,7 +10,7 @@ package edu.sc.seis.sod.database.network;
 import edu.iris.Fissures.IfNetwork.*;
 
 import edu.sc.seis.fissuresUtil.cache.BulletproofNetworkAccessFactory;
-import edu.sc.seis.fissuresUtil.cache.SynchronizedDCNetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.SynchronizedNetworkAccess;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.JDBCLocation;
 import edu.sc.seis.fissuresUtil.database.JDBCQuantity;
