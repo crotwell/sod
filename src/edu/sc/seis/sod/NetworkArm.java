@@ -1,5 +1,7 @@
 package edu.sc.seis.sod;
 
+import edu.sc.seis.sod.subsetter.*;
+
 import org.w3c.dom.*;
 import org.apache.log4j.*;
 
@@ -8,6 +10,7 @@ import edu.sc.seis.fissuresUtil.chooser.*;
 
 import edu.iris.Fissures.IfNetwork.*;
 import edu.iris.Fissures.network.*;
+import edu.iris.Fissures.model.*;
 
 import java.util.*;
 
@@ -238,7 +241,17 @@ public class NetworkArm {
      */
     public Channel[] getSuccessfulChannels() {
 	try {
-	    processConfig();
+	    RefreshInterval refreshInterval = networkFinderSubsetter.getRefreshInterval();
+	    Date currentDate = Calendar.getInstance().getTime();
+	    MicroSecondDate lastTime = new MicroSecondDate(lastDate);
+	    MicroSecondDate currentTime = new MicroSecondDate(currentDate);
+	    TimeInterval timeInterval = currentTime.difference(lastTime);
+	    int minutes = (int)timeInterval.value / (100*1000);
+	    System.out.println("The number of minutes since the network Arm is Processed -------------->"+minutes);
+	    if(minutes >= refreshInterval.getValue()) {
+		processConfig();
+		lastDate = Calendar.getInstance().getTime();
+	    }
 	} catch(Exception e) {}
 	return successfulChannels;
 	
@@ -263,8 +276,11 @@ public class NetworkArm {
     private ArrayList channelList;
     private  Channel[] successfulChannels = new Channel[0];
     
+    private static java.util.Date lastDate = Calendar.getInstance().getTime();
+
     static Category logger = 
         Category.getInstance(NetworkArm.class.getName());
+    
     
     
     }// NetworkArm

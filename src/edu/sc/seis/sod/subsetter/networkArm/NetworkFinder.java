@@ -1,6 +1,8 @@
 package edu.sc.seis.sod.subsetter.networkArm;
 
 import edu.sc.seis.sod.*;
+import edu.sc.seis.sod.subsetter.*;
+
 import edu.sc.seis.fissuresUtil.namingService.*;
 import edu.iris.Fissures.IfNetwork.*;
 
@@ -37,6 +39,8 @@ public class NetworkFinder extends AbstractSource{
 	    System.out.println("The object name is "+getSourceName());
 	    dns = getDNSName();
 	    objectName = getSourceName();
+	    Element subElement = SodUtil.getElement(element,"refreshInterval");
+	    refreshInterval = (RefreshInterval)SodUtil.load(subElement,"edu.sc.seis.sod.subsetter");
 
 	} catch(Exception e) {
 	    
@@ -64,10 +68,17 @@ public class NetworkFinder extends AbstractSource{
 
     }
 
-   private FissuresNamingServiceImpl fissuresNamingService = null;
+    public RefreshInterval getRefreshInterval() {
 
-   private String dns = null;
+	return this.refreshInterval;
+    }
 
-   private String objectName = null;
+    private FissuresNamingServiceImpl fissuresNamingService = null;
+
+    private String dns = null;
+
+    private String objectName = null;
+
+    private RefreshInterval refreshInterval;
         
 }// NetworkFinder

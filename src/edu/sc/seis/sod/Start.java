@@ -68,6 +68,8 @@ public class Start {
 		} else if (subElement.getTagName().equals("eventArm")) {
 		    logger.info(subElement.getTagName());
 		    eventArm = new EventArm(subElement);
+		    Thread eventArmThread = new Thread(eventArm);
+		    eventArmThread.start();
 		} else if (subElement.getTagName().equals("networkArm")) {
 		    logger.info(subElement.getTagName());
 		    System.out.println("****** START OF NETWOTK ARM *********");
@@ -75,7 +77,9 @@ public class Start {
 		    
 		} else if (subElement.getTagName().equals("waveFormArm")) {
 		    logger.info(subElement.getTagName());
-		     waveFormArm = new WaveFormArm(subElement, networkArm);
+		    waveFormArm = new WaveFormArm(subElement, networkArm);
+		    Thread waveFormArmThread = new Thread(waveFormArm);
+		    waveFormArmThread.start();
 		    
 		} else {
 		logger.debug("process "+subElement.getTagName());

@@ -33,9 +33,7 @@ public class EventArm implements Runnable{
 	    throw new IllegalArgumentException("Configuration element must be a EventArm tag");
 	}
 	this.config = config;
-	//processConfig(config);
-	Thread t = new Thread(this);
-	t.start();	
+	processConfig(config);
     }
 
     /**
@@ -44,12 +42,16 @@ public class EventArm implements Runnable{
      */
     public void run() {
 	try {
-		processConfig(config);
-	} catch(ConfigurationException cee) {
-
-		System.out.println("Caught configuration Exception ");
-
+	    processEventArm();
+	} catch(Exception e) {
+	    
+	    System.out.println("Exception caught while processing the EventArm");
+	    e.printStackTrace();
 	}
+	Start.getEventQueue().setSourceAlive(false);
+	System.out.println("The number of events in the eventQueue are "
+			   +Start.getEventQueue().getLength());
+	
     }
 
     /**
@@ -80,16 +82,7 @@ public class EventArm implements Runnable{
 		else if(sodElement instanceof EventArmProcess) eventArmProcess = (EventArmProcess)sodElement;
 	    } // end of if (node instanceof Element)
 	} // end of for (int i=0; i<children.getSize(); i++)
-	try {
-	    processEventArm();
-	} catch(Exception e) {
-	    
-	    System.out.println("Exception caught while processing the EventArm");
-	    e.printStackTrace();
-	}
-	Start.getEventQueue().setSourceAlive(false);
-	System.out.println("The number of events in the eventQueue are "
-	+Start.getEventQueue().getLength());
+
 	/*Start.getEventQueue().pop();
 	Start.getEventQueue().pop();
 	Start.getEventQueue().pop();

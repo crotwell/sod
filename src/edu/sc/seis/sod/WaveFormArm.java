@@ -44,9 +44,7 @@ public class WaveFormArm implements Runnable {
 		}
 		this.config = config;
 		this.networkArm = networkArm;
-		Thread thread = new Thread(this);
-		thread.start();	
-	}
+    }
 	
     /**
      * Describe <code>run</code> method here.
@@ -62,15 +60,15 @@ public class WaveFormArm implements Runnable {
 	    if(eventAccess == null);// System.out.println("EventACCESS is NULL");
 	    
 	    else System.out.println("Event Access is VALID");
-	 
+	    
 	    if(eventAccess != null) {
 		Thread thread = new Thread(new WaveFormArmThread(eventAccess, 
 							     eventStationSubsetter, 
-							     localSeismogramArm,
-							     successfulChannels));
+								 localSeismogramArm,
+								 successfulChannels));
 		thread.start();
 	    }
-
+	    
 	    //	System.out.println("RETRIEVED THE EVENT ACCESS FROM EVENT QUEUE");
 	    
 	}while(eventAccess != null);
