@@ -15,13 +15,13 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 public class EventDbObject extends DbObject{
     public EventDbObject (int dbid, CacheEvent eventAccess){
         super(dbid);
-        this.getEvent = eventAccess;
+        this.event = eventAccess;
     }
     
-    public CacheEvent getGetEvent() {
-        return this.getEvent;
+    public CacheEvent getEvent() {
+        return event;
     }
     
-    private CacheEvent getEvent;
+    private CacheEvent event;
     
 }// EventDbObject
