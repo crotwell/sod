@@ -17,7 +17,7 @@ Events (sorted by region name)
 <h2>Status:</h2>
 <status/><br/>
 <h2>Map:</h2>
-<img><attribute name="src"><mapEventStatus xlink:href="status/eventMap.png"/></attribute></img>
+<img><attribute name="src"><mapEventStatus xlink:href="eventMap.png"/></attribute></img>
 <h2>Successful events sorted by region:</h2>
 <table>
 <tr id="title">
