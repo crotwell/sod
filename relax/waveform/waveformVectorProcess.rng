@@ -45,7 +45,7 @@
                     <summary>Allows a waveform processor to be used in a waveformVector as an AND</summary>
                     <description>Each of the components of the waveformVector are processed
                     independently by the waveformProcess and the results are ANDed together.
-                    This operation short circuts, so no waveforms after the first
+                    This operation short circuits, so no waveforms after the first
                     failure are processed.</description>
                 </xsd:documentation>
             </xsd:annotation>
@@ -61,7 +61,7 @@
                     <summary>Allows a waveform processor to be used in a waveformVector as an OR</summary>
                     <description>Each of the components of the waveformVector are processed
                     independently by the waveformProcess and the results are ORed together.
-                    This operation short circuts, so no waveforms after the first
+                    This operation short circuits, so no waveforms after the first
                     success are processed.</description>
                 </xsd:documentation>
             </xsd:annotation>
@@ -143,7 +143,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between waveformVector subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated.
+                        subsetters. The subsetters after the first false outputted are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored.</description>
                     <example>
@@ -172,7 +172,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between waveformVector subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputed are not evaluated.
+                        subsetters. The subsetters after the first true outputted are not evaluated.
                         The seismic data passed down the chain is the data passed in, seismogram
                         results of the contained processors are ignored. </description>
                     <example>

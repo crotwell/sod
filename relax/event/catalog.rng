@@ -5,7 +5,7 @@
         <element name="catalog">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
-                    <description>Checks the catalog an event belongs to against
+                    <description>Checks the catalog to which an event belongs against
                         the string specified here. If they match, the event passes.</description>
                     <summary>Matches events with a given catalog</summary>
                     <example>

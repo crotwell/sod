@@ -221,7 +221,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Apply a taper.</summary>
                     <description>Applies a taper to the seismograms. The type can be one of HANNING,
-                        HAMMIN or COSINE, with HANNING the default. The width is given as a fraction
+                        HAMMING or COSINE, with HANNING the default. The width is given as a fraction
                         of the seismogram length, and so should be 0.5 as otherwise the begin and
                         end taper will overlap each other. 0.05 is the default.</description>
                     <example>
@@ -549,8 +549,8 @@
                     <summary>Only allows seismograms with data covering the entire original request through</summary>
                     <description>This processor checks the data returned from the dataCenter for
                         complete coverage of the original request. If from the begin time of the
-                        earliest piece is before the start of the requset, and the end time of the
-                        latest piece is past the end of the requst, the data passes. This does not
+                        earliest piece is before the start of the request, and the end time of the
+                        latest piece is past the end of the request, the data passes. This does not
                         guarantee that there are no gaps in the middle of the request though. To
                         ensure that, combine this processor with a noDataGaps processor in a seismogramAND.</description>
                 </xsd:documentation>

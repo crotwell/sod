@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
     <include href="units.rng"/>
     <start combine="choice">
         <notAllowed/>
     </start>
     <define name="quantity" combine="choice">
         <interleave>
+            <xsd:annotation>
+                <summary>A quantity</summary>
+            </xsd:annotation>
             <ref name="unit"/>
             <element name="value">
                 <data type="float"/>
@@ -15,6 +18,9 @@
     </define>
     <define name="time" combine="choice">
         <interleave>
+            <xsd:annotation>
+                <summary>A length of time</summary>
+            </xsd:annotation>
             <ref name="timeUnit"/>
             <element name="value">
                 <data type="float"/>
@@ -23,6 +29,9 @@
     </define>
     <define name="length" combine="choice">
         <interleave>
+            <xsd:annotation>
+                <summary>A distance</summary>
+            </xsd:annotation>
             <ref name="lengthUnit"/>
             <element name="value">
                 <data type="float"/>
@@ -31,6 +40,9 @@
     </define>
     <define name="freq" combine="choice">
         <interleave>
+            <xsd:annotation>
+                <summary>A frequency of occurrence</summary>
+            </xsd:annotation>
             <ref name="freqUnit"/>
             <element name="value">
                 <data type="float"/>

@@ -15,8 +15,8 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Retrieve events from an EventFinder. </summary>
                     <description> A Fissures/DHI EventDC service is located via the name and dns
-                        tags. The EventFinder is aquired from the EventDC, and a query is sent with
-                        the given arguments. The events returned are then sent thrrough the EventArm
+                        tags. The EventFinder is acquired from the EventDC, and a query is sent with
+                        the given arguments. The events returned are then sent through the EventArm
                         for processing. </description>
                 </xsd:documentation>
             </xsd:annotation>

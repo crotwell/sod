@@ -69,7 +69,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between EventChannel subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
                     <example>
                         <eventChannelAND>
                             <embeddedEventStation>
@@ -96,7 +96,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical OR between EventChannel subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
-                        subsetters. The subsetters after the first true outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first true outputted are not evaluated. </description>
                     <example>
                         <eventChannelOR>
                             <embeddedEventStation>

@@ -195,7 +195,7 @@
                     but it doesn't know how far it progressed when SOD died.
                     This property tells SOD how to deal with these indeterminate
                     items. If "atLeastOnce" is used, SOD will grab the
-                    interminate items, set them to new, and process them. This
+                    indeterminate items, set them to new, and process them. This
                     means that no matter what happens to a SOD run, the items
                     will get processed through the entire set of waveform arm
                     processors. It also might mean that some processors get run

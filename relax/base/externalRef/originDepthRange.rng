@@ -5,7 +5,7 @@
     <start combine="choice">
         <element name="originDepthRange">
             <xsd:annotation>
-                <summary>Matches events with depth within a define range</summary>
+                <summary>Matches events with depth within a defined range</summary>
             </xsd:annotation>
             <ref name="range"/>
         </element>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" >
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start combine="choice">
         <notAllowed/>
     </start>
     <define name="unit" combine="choice">
         <element name="unit">
+            <xsd:annotation>
+                <summary>A unit of measure</summary>
+            </xsd:annotation>
             <choice>
                 <value>KILOMETER</value>
                 <value>METER</value>
@@ -71,6 +73,9 @@
     </define>
     <define name="lengthUnit" combine="choice">
         <element name="unit">
+            <xsd:annotation>
+                <summary>A unit of length</summary>
+            </xsd:annotation>
             <choice>
                 <value>KILOMETER</value>
                 <value>METER</value>
@@ -90,11 +95,17 @@
     </define>
     <define name="degrees" combine="choice">
         <element name="unit">
-                <value>DEGREE</value>
+            <xsd:annotation>
+                <summary>A unit of distance in degrees</summary>
+            </xsd:annotation>
+            <value>DEGREE</value>
         </element>
     </define>
     <define name="timeUnit" combine="choice">
         <element name="unit">
+            <xsd:annotation>
+                <summary>A unit of time</summary>
+            </xsd:annotation>            
             <choice>
                 <value>HOUR</value>
                 <value>NANOSECOND</value>
@@ -110,6 +121,9 @@
     </define>
     <define name="freqUnit" combine="choice">
         <element name="unit">
+            <xsd:annotation>
+                <summary>A unit of frequency</summary>
+            </xsd:annotation>
             <choice>
                 <value>HERTZ</value>
             </choice>

@@ -153,7 +153,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Logical AND between EventStation subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
                     <example>
                         <eventStationAND>
                             <distanceRange>
@@ -300,7 +300,7 @@
         </element>
     </define>
     <!--
-Temprarily remove phaseInteraction from the processors as it is both
+Temporarily remove phaseInteraction from the processors as it is both
 complicated and broken at present. It needs both recoding and a good
 test suite
 <define name="phaseTurnInteraction">

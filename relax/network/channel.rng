@@ -104,7 +104,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Logical AND between channel subsetters</summary>
                     <description>The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated.</description>
+                        subsetters. The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <channelAND>
                             <channelEffectiveTimeOverlap>
@@ -284,7 +284,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the azimuth of a channel</summary>
                     <description>The match is true if azimuth of the channel's orientation is with
-                        the the given azimuth range. The min and max are given in degrees.</description>
+                        the given azimuth range. The min and max are given in degrees.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <element name="min">
@@ -309,7 +309,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the dip of a channel</summary>
                     <description>The match is true if the dip of the channel's orientation is with
-                        the the given dip range. The min and max are given in degrees.</description>
+                        the given dip range. The min and max are given in degrees.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <element name="min">

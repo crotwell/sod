@@ -23,7 +23,7 @@
         <element name="boxArea">
             <xsd:annotation>
                 <summary>Accepts events that occur within a lat lon box </summary>
-                <description>Accepts events that occur within the latitutde
+                <description>Accepts events that occur within the latitude
                     longitude range defined here</description>
             </xsd:annotation>
             <externalRef href="../externalRef/latitudeRange.rng"/>

@@ -4,9 +4,9 @@
     <start>
         <element name="networkArm">
             <xsd:annotation>
-                <summary>Selects and proccesses networks, stations, sites and channels</summary>
+                <summary>Selects and processes networks, stations, sites and channels</summary>
                 <description>The network arm goes out to the server specified in the network finder,
-                    and retrieves all the networks, stations sites, and channels that that server
+                    and retrieves all the networks, stations sites, and channels that server
                     knows about that pass the subsetters contained in the arm. It then runs those
                     successful items through the processors, all the while keeping the network
                     status items abreast of the process.</description>

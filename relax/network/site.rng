@@ -91,7 +91,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Logical AND between site subsetters</summary>
                     <description>The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated.</description>
+                        subsetters. The subsetters after the first false outputted are not evaluated.</description>
                     <example>
                         <siteAND>
                             <siteDepthRange>

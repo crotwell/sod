@@ -63,7 +63,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the owner of a network</summary>
                     <description>Matches the owner of a network. This is a simple string
-                        comparision, and so care must be taken for it to be useful. </description>
+                        comparison, and so care must be taken for it to be useful. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
@@ -89,7 +89,7 @@
                 <xsd:documentation xml:lang="en">
                     <summary>Logical AND between network subsetters</summary>
                     <description> The output is the logical AND of the outputs of all included
-                        subsetters. The subsetters after the first false outputed are not evaluated. </description>
+                        subsetters. The subsetters after the first false outputted are not evaluated. </description>
                     <example>
                         <networkAND>
                             <networkOwner>Scripps Institution of Oceanography</networkOwner>
