@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 
-<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+<xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    
-    
+
+
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             Schema for the WaveFormArm of SOD
         </xsd:documentation>
     </xsd:annotation>
-    
+
     <!-- Include the external schemas necessary for this schema -->
-    <xsd:include schemaLocation="utilities.xsd"/>
-    <xsd:include schemaLocation="EventArm.xsd"/>
-    <xsd:include schemaLocation="NetworkArm.xsd"/>
-    
+    <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/utilities.xsd"/>
+    <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/EventArm.xsd"/>
+    <xsd:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/NetworkArm.xsd"/>
+
     <!-- Abstract Type Declarations -->
-    
+
     <!-- ABSTRACT TYPE EVENT STATION-->
     <xsd:complexType name="eventStationType" abstract="true">
       <xsd:annotation>
@@ -29,7 +29,7 @@
                 list of known subclasses for subsetters that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -37,7 +37,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE EVENT CHANNEL-->
     <xsd:complexType name="eventChannelType" abstract="true">
       <xsd:annotation>
@@ -50,7 +50,7 @@
                 list of known subclasses for subsetters that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -58,7 +58,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE REQUEST GENERATOR-->
     <xsd:complexType name="requestGeneratorType" abstract="true">
       <xsd:annotation>
@@ -71,7 +71,7 @@
                 list of known subclasses for elements that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -79,7 +79,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE REQUEST GENERATOR-->
     <xsd:complexType name="requestSubsetterType" abstract="true">
       <xsd:annotation>
@@ -92,7 +92,7 @@
                 list of known subclasses for elements that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -100,7 +100,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE AVAILABLE DATA-->
     <xsd:complexType name="availableDataType" abstract="true">
       <xsd:annotation>
@@ -113,7 +113,7 @@
                 list of known subclasses for subsetters that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -121,7 +121,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-       
+
     <!-- ABSTRACT TYPE Seismogram-->
     <xsd:complexType name="seismogramType" abstract="true">
       <xsd:annotation>
@@ -134,7 +134,7 @@
                 list of known subclasses for subsetters that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -142,7 +142,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-  
+
     <!-- ABSTRACT TYPE WAVE FORM-->
     <xsd:complexType name="seismogramProcessType" abstract="true">
         <xsd:annotation>
@@ -155,7 +155,7 @@
                 list of known subclasses for subsetters that can be used.
             </description>
                 <example>
-                   
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -163,7 +163,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE DATA CENTER SOURCE -->
     <xsd:complexType name="dataCenterType" abstract="true">
       <xsd:annotation>
@@ -176,7 +176,7 @@
                 list of known subclasses for elements that can be used.
             </description>
             <example>
-               
+
             </example>
     </xsd:documentation>
       </xsd:annotation>
@@ -184,11 +184,11 @@
             <xsd:extension base="sourceType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
-    
+
+
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTSTATION***** -->
-    
+
     <!-- EVENT STATION AND TYPE -->
     <xsd:complexType name="eventStationANDType">
         <xsd:annotation>
@@ -223,7 +223,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION OR TYPE -->
     <xsd:complexType name="eventStationORType">
         <xsd:annotation>
@@ -258,7 +258,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION XOR TYPE -->
     <xsd:complexType name="eventStationXORType">
         <xsd:annotation>
@@ -292,7 +292,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION NOT TYPE -->
     <xsd:complexType name="eventStationNOTType">
         <xsd:annotation>
@@ -322,7 +322,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION DISTANCE TYPE -->
     <xsd:complexType name="distanceRangeType">
         <xsd:annotation>
@@ -354,7 +354,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EMBEDDED ORIGIN TYPE -->
     <xsd:complexType name="embeddedOriginSubsetterType">
         <xsd:annotation>
@@ -385,7 +385,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION STATION TYPE -->
     <xsd:complexType name="embeddedStationSubsetterType">
         <xsd:annotation>
@@ -420,7 +420,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION AZIMUTH RANGE TYPE -->
     <xsd:complexType name="azimuthRangeType">
         <xsd:annotation>
@@ -451,8 +451,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- EVENT STATION BACK AZIMUTH RANGE TYPE -->
     <xsd:complexType name="backAzimuthRangeType">
         <xsd:annotation>
@@ -483,7 +483,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION BACK LINEAR DISTANCE MAGNITUDE RANGE TYPE -->
     <xsd:complexType name="linearDistanceMagnitudeRangeType">
         <xsd:annotation>
@@ -523,7 +523,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- PHASE TURN INTERACTION TYPE -->
     <xsd:simpleType name="phaseTurnInteractionType">
         <xsd:restriction base="xsd:string">
@@ -537,7 +537,7 @@
             <xsd:enumeration value="PATH"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <!-- ABSTRACT TYPE PHASE TYPE -->
     <xsd:complexType name="phaseAbstractType"  abstract="true">
         <xsd:complexContent>
@@ -549,7 +549,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION PHASE EXISTS TYPE -->
     <xsd:complexType name="phaseExistsType">
       <xsd:annotation>
@@ -573,8 +573,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- EVENT STATION PHASE INTERACTION TYPE -->
     <xsd:complexType name="phaseInteractionAbstractType"  abstract="true">
         <xsd:complexContent>
@@ -586,11 +586,11 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- PHASE RELATIVE ABSOLUTE ABSTRACT TYPE -->
     <xsd:complexType name="phaseRelativeAbsoluteAbstractType" abstract="true"/>
-    
-    
+
+
     <!-- PHASE RELATIVE TYPE -->
     <xsd:complexType name="phaseInteractionRelativeType">
         <xsd:complexContent>
@@ -610,7 +610,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION PHASE INTERACTION ABSOLUTE TYPE -->
     <xsd:complexType name="phaseInteractionAbsoluteType">
         <xsd:complexContent>
@@ -628,7 +628,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT STATION PHASE INTERACTION TYPE -->
     <xsd:complexType name="phaseInteractionType">
         <xsd:complexContent>
@@ -639,8 +639,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- PHASE DISTANCE REFERENCE TYPE -->
     <xsd:simpleType name="phaseDistanceReferenceType">
         <xsd:restriction base="xsd:string">
@@ -648,9 +648,9 @@
             <xsd:enumeration value="STATION"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****EVENTCHANNEL***** -->
-      
+
     <!-- EMBEDDED EVENT STATION TYPE -->
     <xsd:complexType name="embeddedEventStationType">
       <xsd:annotation>
@@ -682,7 +682,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EMBEDDED CHANNEL TYPE -->
     <xsd:complexType name="embeddedChannelType">
       <xsd:annotation>
@@ -718,7 +718,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EMBEDDED CHANNELID TYPE -->
     <xsd:complexType name="embeddedChannelIDType">
       <xsd:annotation>
@@ -747,8 +747,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-  
+
+
     <!-- EVENT CHANNEL AND TYPE -->
     <xsd:complexType name="eventChannelANDType">
         <xsd:annotation>
@@ -784,7 +784,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT CHANNEL OR TYPE -->
     <xsd:complexType name="eventChannelORType">
         <xsd:annotation>
@@ -820,7 +820,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT CHANNEL XOR TYPE -->
     <xsd:complexType name="eventChannelXORType">
         <xsd:annotation>
@@ -855,7 +855,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EVENT CHANNEL NOT TYPE -->
     <xsd:complexType name="eventChannelNOTType">
         <xsd:annotation>
@@ -887,10 +887,10 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****DATA CENTER***** -->
-    
+
     <!-- DATA CENTER FIXED DATA CENTER TYPE -->
     <xsd:complexType name="fixedDataCenterType">
         <xsd:complexContent>
@@ -900,9 +900,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER REQUESTGENERATOR********** -->
-    
+
     <!-- REQUEST GENERATOR PHASE REQUEST TYPE -->
     <xsd:complexType name="phaseRequestType">
         <xsd:complexContent>
@@ -917,16 +917,16 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-      
+
     <!-- REQUEST GENERATOR CHOICE REQUEST TYPE -->
-    
+
     <!-- ABSTRACT TYPE ChoicePartType-->
     <xsd:complexType name="choicePartType" abstract="true">
             <xsd:sequence>
                <xsd:element ref="requestGenerator" />
             </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:element name="choicePart" type="choicePartType" abstract="true" />
 
     <xsd:element name="eventStationChoice" substitutionGroup="choicePart" >
@@ -971,7 +971,7 @@
     </xsd:complexType>
 
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****REQUEST SUBSETTER***** -->
-    
+
     <!-- REQUEST SUBSETTER AND TYPE -->
     <xsd:complexType name="requestSubsetterANDType">
         <xsd:annotation>
@@ -1000,7 +1000,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- REQUEST SUBSETTER OR TYPE -->
     <xsd:complexType name="requestSubsetterORType">
         <xsd:annotation>
@@ -1029,7 +1029,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- REQUEST SUBSETTER XOR TYPE -->
     <xsd:complexType name="requestSubsetterXORType">
         <xsd:annotation>
@@ -1057,7 +1057,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- REQUEST SUBSETTER NOT TYPE -->
     <xsd:complexType name="requestSubsetterNOTType">
         <xsd:annotation>
@@ -1084,10 +1084,10 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-  
+
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****AVAILABLE DATA***** -->
-    
+
     <!-- AVAILABLE DATA AND TYPE -->
     <xsd:complexType name="availableDataANDType">
         <xsd:annotation>
@@ -1116,7 +1116,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA OR TYPE -->
     <xsd:complexType name="availableDataORType">
         <xsd:annotation>
@@ -1145,7 +1145,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA XOR TYPE -->
     <xsd:complexType name="availableDataXORType">
         <xsd:annotation>
@@ -1173,7 +1173,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA NOT TYPE -->
     <xsd:complexType name="availableDataNOTType">
         <xsd:annotation>
@@ -1200,7 +1200,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA NO GAPS TYPE -->
     <xsd:complexType name="nogapsType">
         <xsd:complexContent>
@@ -1210,7 +1210,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA FULL COVERAGE TYPE -->
     <xsd:complexType name="fullCoverageType">
         <xsd:complexContent>
@@ -1220,7 +1220,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AVAILABLE DATA SOME COVERAGE TYPE -->
     <xsd:complexType name="someCoverageType">
         <xsd:complexContent>
@@ -1230,9 +1230,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE WAVE FORM ARM -->
-    
+
     <xsd:complexType name="externalSeismogramProcessType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1243,7 +1243,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="printLineSeismogramProcessorType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1252,7 +1252,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="phaseCutType">
          <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1292,7 +1292,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="rMeanType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1301,7 +1301,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="rTrendType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1310,7 +1310,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="responseGainProcessorType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1319,7 +1319,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="sacSeismogramProcessType">
         <xsd:complexContent>
             <xsd:extension base="seismogramProcessType">
@@ -1349,7 +1349,7 @@
     </xsd:complexType>
 
 
-    
+
     <xsd:complexType name="eventLabelType" mixed="true" >
         <xsd:all>
            <xsd:element name="separator" type="xsd:string" minOccurs="0" />
@@ -1395,7 +1395,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
 
     <xsd:complexType name="breqfastRequestSubsetterType">
         <xsd:complexContent>
@@ -1417,9 +1417,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ELEMENT DECLARATIONS -->
-    
+
     <!-- ELEMENT DECLARATIONS FOR EVENT STATION TYPE -->
     <xsd:element name="eventStation" type="eventStationType" abstract="true"/>
     <xsd:element name="distanceRange" type="distanceRangeType" substitutionGroup="eventStation"/>
@@ -1428,18 +1428,18 @@
     <xsd:element name="azimuthRange" type="azimuthRangeType" substitutionGroup="eventStation"/>
     <xsd:element name="backAzimuthRange" type="backAzimuthRangeType" substitutionGroup="eventStation"/>
     <xsd:element name="linearDistanceMagnitudeRange" type="linearDistanceMagnitudeRangeType" substitutionGroup="eventStation"/>
-    
+
     <xsd:element name="phaseRelativeAbsolute" type="phaseRelativeAbsoluteAbstractType" abstract="true"/>
     <xsd:element name="relative" type="phaseInteractionRelativeType" substitutionGroup="phaseRelativeAbsolute"/>
     <xsd:element name="absolute" type="phaseInteractionAbsoluteType" substitutionGroup="phaseRelativeAbsolute"/>
     <xsd:element name="phaseInteraction" type="phaseInteractionType" substitutionGroup="eventStation"/>
     <xsd:element name="phaseExists" type="phaseExistsType" substitutionGroup="eventStation"/>
-    
+
     <xsd:element name="eventStationAND" type="eventStationANDType" substitutionGroup="eventStation"/>
     <xsd:element name="eventStationOR" type="eventStationORType" substitutionGroup="eventStation"/>
     <xsd:element name="eventStationXOR" type="eventStationXORType" substitutionGroup="eventStation"/>
     <xsd:element name="eventStationNOT" type="eventStationNOTType" substitutionGroup="eventStation"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR EVENT CHANNEL TYPE -->
     <xsd:element name="eventChannel" type="eventChannelType" abstract="true"/>
     <xsd:element name="embeddedEventStation" type="embeddedEventStationType" substitutionGroup="eventChannel"/>
@@ -1449,15 +1449,15 @@
     <xsd:element name="eventChannelOR" type="eventChannelORType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelXOR" type="eventChannelXORType" substitutionGroup="eventChannel"/>
     <xsd:element name="eventChannelNOT" type="eventChannelNOTType" substitutionGroup="eventChannel"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR DATA CENTER TYPE -->
     <xsd:element name="dataCenter" type="dataCenterType" abstract="true"/>
     <xsd:element name="fixedDataCenter" type="fixedDataCenterType" substitutionGroup="dataCenter"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR REQUEST GENERATOR TYPE -->
     <xsd:element name="requestGenerator" type="requestGeneratorType" abstract="true"/>
     <xsd:element name="phaseRequest" type="phaseRequestType" substitutionGroup="requestGenerator"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR REQUEST SUBSETTEROR TYPE -->
     <xsd:element name="requestSubsetter" type="requestSubsetterType" abstract="true"/>
     <xsd:element name="requestSubsetterAND" type="requestSubsetterANDType" substitutionGroup="requestSubsetter"/>
@@ -1479,10 +1479,10 @@
 
     <!-- ELEMENT DECLARATIONS FOR SEISMOGRAM TYPE -->
     <xsd:element name="seismogram" type="seismogramType" abstract="true"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR WAVE FORM TYPE -->
     <xsd:element name="seismogramProcess" type="seismogramProcessType" abstract="true"/>
-    
+
     <!-- element representing the process -->
     <xsd:element name="printlineSeismogramProcess" type="printLineSeismogramProcessorType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="sacFileProcessor" type="sacSeismogramProcessType" substitutionGroup="seismogramProcess"/>
@@ -1491,7 +1491,7 @@
     <xsd:element name="rMean" type="rMeanType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="rTrend" type="rTrendType" substitutionGroup="seismogramProcess"/>
     <xsd:element name="externalSeismogramProcess" type="externalSeismogramProcessType" substitutionGroup="seismogramProcess"/>
-    
+
     <xsd:element name="statusProcess" type="statusProcessType" abstract="true"/>
     <xsd:element name="HTMLStatusProcessor" type="HTMLStatusProcessType"  substitutionGroup="statusProcess"/>
 
@@ -1510,7 +1510,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:element name="localSeismogramArm" type="localSeismogramArmType"/>
 
     <xsd:complexType name="waveFormArmType">
@@ -1525,9 +1525,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <xsd:element name="waveFormArm" type="waveFormArmType"/>
-    
-    
+
+
 </xsd:schema>

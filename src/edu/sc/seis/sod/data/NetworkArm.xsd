@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 
-<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+<xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    
-    
+
+
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             Schema for the NetworkArm of SOD
         </xsd:documentation>
     </xsd:annotation>
-    
+
     <!-- Include the external schemas necessary for this schema -->
-    <xi:include schemaLocation="./utilities.xsd"/>
-    
+    <xi:include schemaLocation="http://www.seis.sc.edu/xschema/sod/1.0/utilities.xsd"/>
+
     <!-- ABSTRACT TYPE DECLARATIONS -->
-    
+
     <!--  abstractType networkSource -->
     <xsd:complexType name="networkSource" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sourceType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType networkID -->
     <xsd:complexType name="networkIDType" abstract="true">
         <xsd:annotation>
@@ -34,7 +34,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -42,7 +42,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--abstractType networkAttr -->
     <xsd:complexType name="networkAttrType" abstract="true">
         <xsd:annotation>
@@ -55,7 +55,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -63,7 +63,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType stationID -->
     <xsd:complexType name="stationIDType" abstract="true">
         <xsd:annotation>
@@ -76,7 +76,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -84,7 +84,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType station -->
     <xsd:complexType name="stationType" abstract="true">
         <xsd:annotation>
@@ -97,7 +97,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -105,7 +105,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType siteID -->
     <xsd:complexType name="siteIDType" abstract="true">
         <xsd:annotation>
@@ -118,7 +118,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -126,7 +126,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--abstracType site -->
     <xsd:complexType name="siteType" abstract="true">
         <xsd:annotation>
@@ -139,7 +139,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -147,7 +147,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType channelID -->
     <xsd:complexType name="channelIDType" abstract="true">
         <xsd:annotation>
@@ -160,7 +160,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -168,7 +168,7 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- abstractType channel -->
     <xsd:complexType name="channelType" abstract="true">
         <xsd:annotation>
@@ -181,7 +181,7 @@
                     list of known subclasses for subsetters that can be used.
                 </description>
                 <example>
-                    
+
                 </example>
             </xsd:documentation>
         </xsd:annotation>
@@ -189,9 +189,9 @@
             <xsd:extension base="subsetterType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
-    
+
+
+
     <xsd:complexType name="networkFinderType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -227,7 +227,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORK CODE TYPE -->
     <xsd:complexType name="networkCodeType">
         <xsd:annotation>
@@ -252,7 +252,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORKID AND TYPE -->
     <xsd:complexType name="networkIDANDType">
         <xsd:annotation>
@@ -281,7 +281,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORKID OR TYPE -->
     <xsd:complexType name="networkIDORType">
         <xsd:annotation>
@@ -310,7 +310,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORKID XOR TYPE -->
     <xsd:complexType name="networkIDXORType">
         <xsd:annotation>
@@ -338,7 +338,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORKID NOT TYPE -->
     <xsd:complexType name="networkIDNOTType">
         <xsd:annotation>
@@ -365,7 +365,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- NETWORK EFFECTIVE TIME OVERLAP TYPE -->
     <xsd:complexType name="networkEffectiveTimeOverlapType">
         <xsd:annotation>
@@ -398,7 +398,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrNameType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -423,7 +423,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrOwnerType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -449,7 +449,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -484,7 +484,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -519,7 +519,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -553,7 +553,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="networkAttrNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -581,7 +581,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -604,8 +604,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <xsd:complexType name="stationIDANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -633,7 +633,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--STATIONID OR TYPE-->
     <xsd:complexType name="stationIDORType">
         <xsd:annotation>
@@ -662,7 +662,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--STATIONID XOR TYPE-->
     <xsd:complexType name="stationIDXORType">
         <xsd:annotation>
@@ -690,7 +690,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--STATIONID NOT TYPE-->
     <xsd:complexType name="stationIDNOTType">
         <xsd:annotation>
@@ -717,8 +717,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- STATION NAME TYPE -->
     <xsd:complexType name="stationNameType">
         <xsd:annotation>
@@ -745,7 +745,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- STATION OPERATOR TYPE -->
     <xsd:complexType name="stationOperatorType">
         <xsd:annotation>
@@ -772,7 +772,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- STATION DEPTH RANGE TYPE -->
     <xsd:complexType name="stationDepthRangeType">
         <xsd:annotation>
@@ -802,8 +802,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!--STATION EFFECTIVE TIME OVERLAP TYPE-->
     <xsd:complexType name="stationEffectiveTimeOverlapType">
         <xsd:annotation>
@@ -836,7 +836,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationAreaType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -871,7 +871,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -915,7 +915,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -959,7 +959,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1002,7 +1002,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="stationNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1039,7 +1039,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteIDANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1067,7 +1067,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteIDORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1095,7 +1095,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteIDXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1122,7 +1122,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteIDNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1148,7 +1148,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1171,10 +1171,10 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER SITE -->
-    
+
     <xsd:complexType name="siteDepthRangeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1204,8 +1204,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <xsd:complexType name="siteEffectiveTimeOverlapType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1237,8 +1237,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <xsd:complexType name="siteAreaType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1273,7 +1273,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1312,7 +1312,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1351,7 +1351,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1389,7 +1389,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="siteNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1421,9 +1421,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER CHANNELID -->
-    
+
     <xsd:complexType name="channelIDANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1451,7 +1451,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelIDORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1479,7 +1479,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelIDXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1506,7 +1506,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelIDNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1532,7 +1532,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="bandCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1557,7 +1557,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="gainCodeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1582,7 +1582,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!--BAND CODE TYPE-->
     <xsd:complexType name="orientationCodeType">
         <xsd:annotation>
@@ -1608,10 +1608,10 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- TYPE DECLARATIONS FOR THE SUBSETTER *****CHANNEL***** -->
-    
+
     <xsd:complexType name="channelANDType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1651,7 +1651,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1691,7 +1691,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelXORType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1730,7 +1730,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelNOTType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1763,7 +1763,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="samplingType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1798,7 +1798,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="channelEffectiveTimeOverlapType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1830,7 +1830,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="orientationRangeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1861,7 +1861,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="orientationAzimuthRangeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1889,7 +1889,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="orientationDipRangeType">
         <xsd:annotation>
             <xsd:documentation xml:lang="en">
@@ -1917,17 +1917,17 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- TYPE DECLARATIONS FOR THE PROCESSES AT THE END OF THE NETWORKARM -->
-    
+
     <xsd:complexType name="externalNetworkProcessType">
         <xsd:complexContent>
             <xsd:extension base="externalProcessType">
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="printLineChannelProcessorType">
         <xsd:complexContent>
             <xsd:extension base="internalProcessType">
@@ -1936,17 +1936,17 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- common Global Elements of Network Arm -->
     <xsd:element name="azimuth" type="xsd:float"/>
     <xsd:element name="dip" type="xsd:float"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR NETWORK SOURCE TYPE -->
     <xsd:element name="networkSource" abstract="true"/>
-    
+
     <xsd:element name="networkFinder" type="networkFinderType" substitutionGroup="networkSource"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR NETWORK ID TYPE -->
     <xsd:element name="networkID" abstract="true"/>
     <xsd:element name="networkCode" type="networkCodeType" substitutionGroup="networkID"/>
@@ -1954,8 +1954,8 @@
     <xsd:element name="networkIDOR" type="networkIDORType" substitutionGroup="networkID"/>
     <xsd:element name="networkIDXOR" type="networkIDXORType" substitutionGroup="networkID"/>
     <xsd:element name="networkIDNOT" type="networkIDNOTType" substitutionGroup="networkID"/>
-    
-    
+
+
     <!-- ELEMENT DECLARATIONS FOR NETWORK ATTR TYPE -->
     <xsd:element name="networkAttr" type="networkAttrType" abstract="true"/>
     <xsd:element name="networkAttrName" type="networkAttrNameType" substitutionGroup="networkAttr"/>
@@ -1965,7 +1965,7 @@
     <xsd:element name="networkAttrOR" type="networkAttrORType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrXOR" type="networkAttrXORType" substitutionGroup="networkAttr"/>
     <xsd:element name="networkAttrNOT" type="networkAttrNOTType" substitutionGroup="networkAttr"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR STATION ID TYPE -->
     <xsd:element name="stationID" type="stationIDType" abstract="true"/>
     <xsd:element name="stationCode" type="stationCodeType" substitutionGroup="stationID"/>
@@ -1973,7 +1973,7 @@
     <xsd:element name="stationIDOR" type="stationIDORType" substitutionGroup="stationID"/>
     <xsd:element name="stationIDXOR" type="stationIDXORType" substitutionGroup="stationID"/>
     <xsd:element name="stationIDNOT" type="stationIDNOTType" substitutionGroup="stationID"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR STATION TYPE -->
     <xsd:element name="station" type="stationType" abstract="true"/>
     <xsd:element name="stationName" type="stationNameType" substitutionGroup="station"/>
@@ -1986,7 +1986,7 @@
     <xsd:element name="stationOR" type="stationORType" substitutionGroup="station"/>
     <xsd:element name="stationXOR" type="stationXORType" substitutionGroup="station"/>
     <xsd:element name="stationNOT" type="stationNOTType" substitutionGroup="station"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR SITE ID TYPE -->
     <xsd:element name="siteID" type="siteIDType" abstract="true"/>
     <xsd:element name="siteCode" type="siteCodeType" substitutionGroup="siteID"/>
@@ -1994,7 +1994,7 @@
     <xsd:element name="siteIDOR" type="siteIDORType" substitutionGroup="siteID"/>
     <xsd:element name="siteIDXOR" type="siteIDXORType" substitutionGroup="siteID"/>
     <xsd:element name="siteIDNOT" type="siteIDNOTType" substitutionGroup="siteID"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR SITE TYPE -->
     <xsd:element name="site" type="siteType" abstract="true"/>
     <xsd:element name="siteDepthRange" type="siteDepthRangeType" substitutionGroup="site"/>
@@ -2005,7 +2005,7 @@
     <xsd:element name="siteOR" type="siteORType" substitutionGroup="site"/>
     <xsd:element name="siteXOR" type="siteXORType" substitutionGroup="site"/>
     <xsd:element name="siteNOT" type="siteNOTType" substitutionGroup="site"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR CHANNEL ID TYPE -->
     <xsd:element name="channelID" type="channelIDType" abstract="true"/>
     <xsd:element name="bandCode" type="bandCodeType" substitutionGroup="channelID"/>
@@ -2015,7 +2015,7 @@
     <xsd:element name="channelIDOR" type="channelIDORType" substitutionGroup="channelID"/>
     <xsd:element name="channelIDXOR" type="channelIDXORType" substitutionGroup="channelID"/>
     <xsd:element name="channelIDNOT" type="channelIDNOTType" substitutionGroup="channelID"/>
-    
+
     <!-- ELEMENT DECLARATIONS FOR CHANNEL TYPE -->
     <xsd:element name="channel" type="channelType" abstract="true"/>
     <xsd:element name="sampling" type="samplingType" substitutionGroup="channel"/>
@@ -2027,14 +2027,14 @@
     <xsd:element name="channelOR" type="channelORType" substitutionGroup="channel"/>
     <xsd:element name="channelXOR" type="channelXORType" substitutionGroup="channel"/>
     <xsd:element name="channelNOT" type="channelNOTType" substitutionGroup="channel"/>
-    
-    
-    
+
+
+
     <!-- element representing the process -->
     <xsd:element name="networkProcess" type="processType" abstract="true"/>
     <xsd:element name="printlineChannelProcessor" type="printLineChannelProcessorType"  substitutionGroup="networkProcess"/>
     <xsd:element name="externalNetworkProcess" type="externalNetworkProcessType" substitutionGroup="networkProcess"/>
-    
+
     <xsd:complexType name="networkArmType">
         <xsd:complexContent>
             <xsd:extension base="armType">
@@ -2053,7 +2053,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <xsd:element name="networkArm" type="networkArmType"/>
-    
+
 </xsd:schema>

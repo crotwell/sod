@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 
-<xsd:schema targetNamespace="http://www.seis.sc.edu/software/sod"
+<xsd:schema targetNamespace="http://www.seis.sc.edu/xschema/sod/1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    
-    
+
+
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             Schema for the EventArm of SOD
         </xsd:documentation>
     </xsd:annotation>
-    
+
     <!-- MAIN ABSTRACT BASE TYPE FOR SOD -->
     <xsd:complexType name="sodItemType" abstract="true">
         <xsd:sequence>
             <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE FOR SOURCE -->
     <xsd:complexType name="sourceType" abstract="true">
         <xsd:complexContent>
@@ -28,22 +28,22 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- ABSTRACT TYPE FOR ARMS -->
     <xsd:complexType name="armType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sodItemType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- ABSTRACT TYPE FOR SUBSETTER -->
     <xsd:complexType name="subsetterType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sodItemType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- mainly used in the NetworkARm EFFECTIVE TIME OVERLAP TYPE -->
     <xsd:complexType name="effectiveTimeOverlapType">
         <xsd:sequence>
@@ -51,8 +51,8 @@
             <xsd:element name="max" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
-    
+
+
     <!-- PARAMS TYPE -->
     <xsd:complexType name="paramsType">
         <xsd:sequence>
@@ -74,14 +74,14 @@
             <xsd:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <!-- PROCESS TYPE -->
     <xsd:complexType name="processType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sodItemType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- EXTERNAL PROCESS TYPE -->
     <xsd:complexType name="externalProcessType" abstract="true">
         <xsd:complexContent>
@@ -93,7 +93,7 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- INTERNAL PROCESS TYPE -->
     <xsd:complexType name="internalProcessType" abstract="true">
         <xsd:complexContent>
@@ -103,8 +103,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- UNIT  TYPE -->
     <xsd:simpleType name="unitType">
         <xsd:restriction base="xsd:string">
@@ -166,10 +166,10 @@
             <xsd:enumeration value="JOULE"/>
             <xsd:enumeration value="DYNE"/>
             <xsd:enumeration value="ENERGY"/>
-            
+
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <!-- QUANTITY TYPE -->
     <xsd:complexType name="quantityType">
         <xsd:sequence>
@@ -177,9 +177,9 @@
             <xsd:element name="value" type="xsd:integer"/>
         </xsd:sequence>
     </xsd:complexType>
-    
-    
-    
+
+
+
     <!-- UNIT RANGE TYPE -->
     <xsd:complexType name="unitRangeType">
         <xsd:sequence>
@@ -188,35 +188,35 @@
             <xsd:element name="max" type="xsd:double"  minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <!-- TIME INTERVAL TYPE -->
     <xsd:complexType name="timeIntervalType">
         <xsd:complexContent>
             <xsd:extension base="quantityType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- REFRESH INTERVAL TYPE -->
     <xsd:complexType name="refreshIntervalType">
         <xsd:complexContent>
             <xsd:extension base="timeIntervalType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- LENGTH TYPE -->
     <xsd:complexType name="lengthType">
         <xsd:complexContent>
             <xsd:extension base="quantityType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- AREA TYPE is abstract -->
     <xsd:complexType name="areaType" abstract="true">
         <xsd:complexContent>
             <xsd:extension base="sodItemType"/>
         </xsd:complexContent>
     </xsd:complexType>
-    
+
     <!-- BOX AREA TYPE -->
     <xsd:complexType name="boxAreaType">
         <xsd:complexContent>
@@ -228,8 +228,8 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
+
+
     <!-- POINT AREA TYPE -->
     <xsd:complexType name="pointAreaType">
         <xsd:complexContent>
@@ -242,9 +242,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
-    
+
+
+
     <!-- LATITUDE TYPE -->
     <xsd:complexType name="latitudeLongitudeRangeType">
         <xsd:sequence>
@@ -252,8 +252,8 @@
             <xsd:element name="max" type="xsd:float"  minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
-    
+
+
     <!-- GLOBAL AREA TYPE -->
     <xsd:complexType name="globalAreaType">
         <xsd:complexContent>
@@ -263,9 +263,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-    
-    
-    
+
+
+
     <!-- TIME  RANGE TYPE -->
     <xsd:complexType name="timeRangeType">
         <xsd:sequence>
@@ -273,41 +273,41 @@
             <xsd:element name="endTime" type="xsd:dateTime"  minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <!-- abstract element areaType -->
     <xsd:element name="area" type="areaType" abstract="true"/>
-    
+
     <!-- element representing boxArea -->
     <xsd:element name="boxArea" type="boxAreaType" substitutionGroup="area"/>
-    
+
     <!-- element representing globalArea -->
     <xsd:element name="globalArea" type="globalAreaType" substitutionGroup="area"/>
-    
+
     <!-- element representing pointArea -->
     <xsd:element name="pointArea" type="pointAreaType" substitutionGroup="area"/>
-    
+
     <!-- element representing latitude -->
     <xsd:element name="latitudeRange" type="latitudeLongitudeRangeType"/>
-    
+
     <!-- element representing longitude -->
     <xsd:element name="longitudeRange" type="latitudeLongitudeRangeType"/>
-    
+
     <!-- timeRangeType element -->
     <xsd:element name="timeRange" type="timeRangeType"/>
-    
+
     <!-- REFRESH INTERVAL element -->
     <xsd:element name="refreshInterval" type="refreshIntervalType"/>
 
     <!-- PROPERTIES ELEMENT -->
     <xsd:element name="properties" type="propertySequenceType"/>
-    
+
     <xsd:simpleType name="channelCodeUtilType">
         <xsd:restriction base="xsd:string">
             <xsd:pattern value="[A-Z]{1}"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
-    
-    
-    
+
+
+
+
 </xsd:schema>
