@@ -69,6 +69,7 @@ oot:${pom.artifactId}</connection>
     </developers>
 
   <dependencies>
+<!--
     <dependency>
       <groupId>openorb</groupId>
       <artifactId>openorb</artifactId>
@@ -79,6 +80,35 @@ oot:${pom.artifactId}</connection>
       <artifactId>openorb_notify</artifactId>
       <version>1.3.0</version>
     </dependency>
+-->
+    <dependency>
+      <groupId>OB</groupId>
+      <artifactId>OB</artifactId>
+      <version>4.1.0</version>
+      <url>www.orbacus.com</url>
+      <properties>
+        <jnlp.jar>true</jnlp.jar>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>OB</groupId>
+      <artifactId>OBNaming</artifactId>
+      <version>4.1.0</version>
+      <url>www.orbacus.com</url>
+      <properties>
+        <jnlp.jar>true</jnlp.jar>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>OB</groupId>
+      <artifactId>OBEvent</artifactId>
+      <version>4.1.0</version>
+      <url>www.orbacus.com</url>
+      <properties>
+        <jnlp.jar>true</jnlp.jar>
+      </properties>
+    </dependency>
+
     <dependency>
       <id>fissuresUtil</id>
       <version>1.0Beta</version>
