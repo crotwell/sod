@@ -28,7 +28,7 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
         write();
     }
 
-    public void update(EventChannelPair ecp) throws Exception {
+    public void update(EventChannelPair ecp){
         if(ecp.getEvent().equals(event)){
             Iterator it = waveformStatusListeners.iterator();
             while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
@@ -73,4 +73,5 @@ public class WaveformEventTemplate extends FileWritingTemplate implements Wavefo
 
     private List channelListeners = new ArrayList();
 }
+
 

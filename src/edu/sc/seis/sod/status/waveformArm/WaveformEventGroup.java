@@ -30,7 +30,7 @@ public class WaveformEventGroup extends EventGroupTemplate implements WaveformAr
         return super.getTemplate(tag, el);
     }
 
-    public void update(EventChannelPair ecp) throws Exception {
+    public void update(EventChannelPair ecp) {
         Iterator it = ecpListeners.iterator();
         while(it.hasNext())((WaveformArmMonitor)it.next()).update(ecp);
     }

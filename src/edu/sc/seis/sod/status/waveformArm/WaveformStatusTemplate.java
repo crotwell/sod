@@ -31,7 +31,7 @@ public class WaveformStatusTemplate extends FileWritingTemplate implements Wavef
         return super.getTemplate(tag, el);
     }
 
-    public void update(EventChannelPair ecp) throws Exception{
+    public void update(EventChannelPair ecp) {
         Iterator it = eventTemplates.iterator();
         while(it.hasNext()) ((WaveformArmMonitor)it.next()).update(ecp);
         write();
