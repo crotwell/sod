@@ -27,10 +27,21 @@
                         <h3>
                                 <xsl:value-of select="@name"/>
                         </h3>
-                        <xsl:apply-templates select="*"/>
+                        <xsl:apply-templates select="*" mode="sub"/>
+                </div>
+        </xsl:template>
+        <xsl:template match="section" mode="sub">
+                <div class="subsection">
+                        <h4>
+                                <xsl:value-of select="@name"/>
+                        </h4>
+                        <xsl:apply-templates select="*" mode="sub"/>
                 </div>
         </xsl:template>
         <xsl:template match="*">
+                <xsl:copy-of select="."/>
+        </xsl:template>
+        <xsl:template match="*" mode="sub">
                 <xsl:copy-of select="."/>
         </xsl:template>
         <xsl:template name="head">
@@ -47,7 +58,8 @@
         </xsl:template>
         <xsl:template name="header">
                 <div id="header">
-                        <h2>SOD</h2>
+                        <img class="left" src="sodtractor100.jpg"/>
+                        <img class="right" src="seisheader100.jpg"/>
                 </div>
         </xsl:template>
         <xsl:template name="footer">
