@@ -63,6 +63,31 @@
   </developers>
 
   <dependencies>
+    <dependency>
+      <groupId>isti</groupId>
+      <artifactId>isti.util</artifactId>
+      <version>1.0.1USC</version>
+      <url>http://www.isti.com</url> 
+      <properties>
+        <jnlp.jar>true</jnlp.jar>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>isti</groupId>
+      <artifactId>isti.util.toplevel</artifactId>
+      <version>1.0USC</version>
+      <url>http://www.isti.com</url>
+      <properties>
+        <jnlp.jar>true</jnlp.jar>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>b9</version>
+      <url>http://www.jdom.org</url>
+    </dependency>
+
 <dependency>
   <id>jing</id>
   <version>20030619</version>
