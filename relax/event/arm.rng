@@ -3,9 +3,7 @@
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
     <start>
         <element name="eventArm">
-            <oneOrMore>
-                <externalRef href="source.rng"/>
-            </oneOrMore>
+            <externalRef href="source.rng"/>
             <optional>
                 <externalRef href="origin.rng"/>
             </optional>
