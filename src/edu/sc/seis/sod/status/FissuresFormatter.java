@@ -25,6 +25,7 @@ import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.UnitDisplayUtil;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -107,6 +108,14 @@ public class FissuresFormatter {
         return loc.longitude;
     }
 
+    public static MicroSecondDate getEffectiveBegin(Station station) {
+        return new MicroSecondDate(station.effective_time.start_time);
+    }
+
+    public static MicroSecondDate getEffectiveEnd(Station station) {
+        return new MicroSecondDate(station.effective_time.end_time);
+    }
+
     public static MicroSecondDate getRangeBegin(TimeRange range) {
         return new MicroSecondDate(range.start_time);
     }
@@ -115,13 +124,29 @@ public class FissuresFormatter {
         return new MicroSecondDate(range.end_time);
     }
 
+    public static QuantityImpl getDistance(ArrayList list) {
+        System.out.println("getDistance via ArrayList");
+        return getDistance((Station)list.get(0), (Origin)list.get(1));
+    }
+
     public static QuantityImpl getDistance(Station station, Origin origin) {
+        if (station == null) {
+            throw new NullPointerException("station is null");
+        }
+        if (origin == null) {
+            throw new NullPointerException("origin is null");
+        }
+        System.out.println("getDistance slat="+station.my_location.latitude+" olat="+origin.my_location.latitude);
         return getDistance(station.my_location, origin.my_location);
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
+    }
+
+    public static QuantityImpl getAzimuth(ArrayList list) {
+        return getAzimuth((Station)list.get(0), (Origin)list.get(1));
     }
 
     public static QuantityImpl getAzimuth(Station station, Origin origin) {
@@ -131,6 +156,10 @@ public class FissuresFormatter {
     public static QuantityImpl getAzimuth(Location from, Location to) {
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getAz(), UnitImpl.DEGREE);
+    }
+
+    public static QuantityImpl getBackAzimuth(ArrayList list) {
+        return getBackAzimuth((Station)list.get(0), (Origin)list.get(1));
     }
 
     public static QuantityImpl getBackAzimuth(Station station, Origin origin) {
@@ -144,6 +173,10 @@ public class FissuresFormatter {
 
     public static String formatDate(Date d) {
         return longFormat.format(d);
+    }
+
+    public static String formatDate(Time t) {
+        return formatDate(new MicroSecondDate(t));
     }
 
     public static String formatDateForFile(Date d) {
