@@ -30,10 +30,14 @@ public class Annotation{
         formProvider = fp;
     }
 
+    public FormProvider getFormProvider(){
+        return formProvider;
+    }
+
     public String getExample(boolean htmlize){
         //System.out.println("getExample(" + htmlize + ")");
         if (example.equals("") || example == null){
-            ExampleBuilder eb = new ExampleBuilder(htmlize);
+            ExampleBuilder eb = new ExampleBuilder(false);
             //System.out.println("created new ExampleBuilder");
             eb.write(formProvider.getForm());
             //System.out.println("wrote example");
@@ -41,7 +45,7 @@ public class Annotation{
             //System.out.println("got example");
             //System.out.println(example);
         }
-        else if (htmlize){
+        if (htmlize){
             //System.out.println("htmlize");
             String string = getHTMLizedString(example);
             //System.out.println("htmlized existed example");
