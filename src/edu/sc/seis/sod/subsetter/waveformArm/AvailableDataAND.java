@@ -9,6 +9,7 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 import edu.iris.Fissures.*;
+import org.apache.log4j.*;
 
 /** 
  * availableDataAND contains a sequence of availableSubsetters. The minimum value of the sequence is 0 and
@@ -56,11 +57,14 @@ public class AvailableDataAND
 	Iterator it = filterList.iterator();
 	while (it.hasNext()) {
 	    AvailableDataSubsetter filter = (AvailableDataSubsetter)it.next();
-	    if (!filter.accept(event, network, channel, original, available, cookies)) {
+	    if (filter.accept(event, network, channel, original, available, cookies) == false) {
 		return false;
 	    }
 	}
 	return true;
     }
+
+    static Category logger = 
+	Category.getInstance(AvailableDataAND.class.getName());
 
 }// AvailableDataAND

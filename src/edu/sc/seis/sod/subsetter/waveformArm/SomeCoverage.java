@@ -10,6 +10,7 @@ import edu.iris.Fissures.network.*;
 import edu.iris.Fissures.IfSeismogramDC.*;
 
 import org.w3c.dom.*;
+import org.apache.log4j.*;
 
 /**
  * sample xml
@@ -52,5 +53,8 @@ public class SomeCoverage implements AvailableDataSubsetter, SodElement{
 	
 	return false;
     }
-    
+
+    static Category logger = 
+	Category.getInstance(SomeCoverage.class.getName());
+
 }// SomeCoverage
