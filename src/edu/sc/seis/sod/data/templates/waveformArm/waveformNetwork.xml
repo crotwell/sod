@@ -17,14 +17,14 @@ window.onload=function(){
 $network.getNetworkAccess().get_attributes().get_code() $fissures.networkName($network.getNetworkAccess())
 </div>
 <div id="Content">
-<table class="sortable ruler" id="stationtable">
 #set( $extraRows = 20 )
-<th class="title">
-<td>Code</td>
-<td>Name</td>
-<td>Latitude</td>
-<td>Longitude</td>
-</th>
+<table class="sortable ruler" id="stationtable">
+<tr class="title">
+<th>Code</th>
+<th>Name</th>
+<th>Latitude</th>
+<th>Longitude</th>
+</tr>
 #foreach ( $sta in $stations.getSuccessful() )
 #set ( $stacode = $sta.get_code())
 <tr>
