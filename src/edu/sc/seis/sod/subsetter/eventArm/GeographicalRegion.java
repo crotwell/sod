@@ -9,13 +9,7 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * GeographicalRegion.java
- *
- *
- * Created: Tue Mar 19 13:42:28 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * &lt;geographicalRegion&gt;10 20 30 40&lt;/geographicalRegion&gt;
  */
 
 public class GeographicalRegion  extends FlinnEngdahlRegion{

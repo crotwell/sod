@@ -8,13 +8,15 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * OriginNOT.java
- *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * This subsetter is used to specify a negation of OriginSubsetter. This subsetter is accepted only when the included
+ * subsetter is false.
+ *  &lt;originNOT&gt;
+ *         &lt;magnitudeRange&gt;
+ *                 &lt;magType&gt;mb&lt;/magType&gt;
+ *                  &lt;min&gt;7&lt;/min&gt;
+ *                  &lt;max&gt;10&lt;/max&gt;
+ *           &lt;/magnitudeRange&gt;
+ *    &lt;/originNOT&gt;
  */
 
 public class OriginNOT 

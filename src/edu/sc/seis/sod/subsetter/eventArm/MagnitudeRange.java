@@ -10,14 +10,37 @@ import edu.iris.Fissures.*;
 
 import org.w3c.dom.*;
 
-/**
- * MagnitudeRange.java
+/** 
+ * This subsetter specifies the MagnitudeRange
+ * &lt;magnitudeRange&gt;
+ *	 &lt;magType&gt;mb&lt;/magType&gt;
+ *	 &lt;magType&gt;MS&lt;/magType&gt;
+ *	 &lt;min&gt;3.5&lt;/min&gt;
+ *       &lt;max&gt;8.0&lt;/max&gt;
+ *  &lt;/magnitudeRange&gt;
  *
+ *         (or)
  *
- * Created: Tue Apr  2 15:08:05 2002
+ * &lt;magnitudeRange&gt;
+ *	 &lt;magType&gt;mb&lt;/magType&gt;
+ *	 &lt;magType&gt;MS&lt;/magType&gt;
+ *       &lt;max&gt;8.0&lt;/max&gt;
+ *  &lt;/magnitudeRange&gt;
  *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
+ *         (or)
+ * 
+ * &lt;magnitudeRange&gt;
+ *	 &lt;magType&gt;mb&lt;/magType&gt;
+ *	 &lt;magType&gt;MS&lt;/magType&gt;
+ *	 &lt;min&gt;3.5&lt;/min&gt;
+ *  &lt;/magnitudeRange&gt;
+ *
+ *          (or)
+ *
+ * &lt;magnitudeRange&gt;
+ *	 &lt;magType&gt;mb&lt;/magType&gt;
+ *	 &lt;magType&gt;MS&lt;/magType&gt;
+ *  &lt;/magnitudeRange&gt;
  */
 
 public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter{

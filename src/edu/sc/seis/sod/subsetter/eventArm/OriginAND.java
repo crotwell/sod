@@ -6,15 +6,61 @@ import org.w3c.dom.*;
 import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
-
 /**
- * OriginAND.java
+ * This subsetter is used to specify a sequence of OriginANDSubsetters. This subsetter is accepted only when all the
+ * subsetters forming the sequence are accepted.
+ *  &lt;originAND&gt;
+ *	&lt;description&gt;take any global 6.5 or better EQ&lt;/description&gt;
+ * 		&lt;magnitudeRange&gt;
+ *			&lt;magType&gt;mb&lt;/magType&gt;
+ *			&lt;min&gt;4.5&lt;/min&gt;
+ *              &lt;/magnitudeRange&gt;
+ *		&lt;eventArea&gt;
+ *                  &lt;globalArea/&gt;
+ *               &lt;/eventArea&gt;
+ *  &lt;/originAND&gt;
+ *                    
+ *                           (or)
+ * 
+ *   &lt;originAND&gt;
+ *		&lt;description&gt;take any 4.5 or better EQ in the southeast&lt;/description&gt;
+ *		&lt;eventArea&gt;
+ *		   &lt;boxArea&gt;
+ *			&lt;latitudeRange&gt;
+ *				&lt;min&gt;28&lt;/min&gt;
+ *				&lt;max&gt;38&lt;/max&gt;
+ *			&lt;/latitudeRange&gt;
+ *			&lt;longitudeRange&gt;
+ *				&lt;min&gt;-85&lt;/min&gt;
+ *				&lt;max&gt;-75&lt;/max&gt;
+ *			&lt;/longitudeRange&gt;
+ *	           &lt;/boxArea&gt;
+ *		&lt;/eventArea&gt;
+ *		&lt;magnitudeRange&gt;
+ *			&lt;magType&gt;mb&lt;/magType&gt;
+ *			&lt;min&gt;4.5&lt;/min&gt;
+ *		&lt;/magnitudeRange&gt;
+ *     &lt;/originAND&gt;
  *
+ *                          (or)
  *
- * Created: Thu Mar 14 14:02:33 2002
+ *      &lt;originAND&gt;
+ *               &lt;originAND&gt;
+ *                       &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
+ *                       &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
+ *                       &lt;catalog&gt;&lt;value&gt;BIGQUAKE&lt;/value&gt;&lt;/catalog&gt;
+ *               &lt;/originAND&gt;
+ *               &lt;originArrayAND&gt;
+ *                       &lt;originNOT&gt;
+ *                               &lt;magnitudeRange&gt;
+ *                                       &lt;magType&gt;mb&lt;/magType&gt;
+ *                                       &lt;min&gt;7&lt;/min&gt;
+ *                                       &lt;max&gt;10&lt;/max&gt;
+ *                               &lt;/magnitudeRange&gt;
+ *                       &lt;/originNOT&gt;
+ *                &lt;/originArrayAND&gt;
  *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ *     &lt;/originAND&gt;
  */
 
 public class OriginAND 

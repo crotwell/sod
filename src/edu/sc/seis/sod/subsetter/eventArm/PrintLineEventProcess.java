@@ -7,14 +7,9 @@ import org.w3c.dom.*;
 import java.io.*;
 
 /**
- * PrintLineEventProcess.java
- *
- *
- * Created: Tue Mar 19 14:08:39 2002
- *
- * @author <a href="mailto:crotwell@pooh">Philip Crotwell</a>
- * @version
+ * &lt;printLineEventProcess/&gt;
  */
+
 
 public class PrintLineEventProcess implements EventArmProcess {
     /**

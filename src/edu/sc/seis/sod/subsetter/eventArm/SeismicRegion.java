@@ -8,6 +8,8 @@ import edu.iris.Fissures.IfEvent.*;
 import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
+/*
+ *&lt;seismicRegion&gt;&lt;value&gt;314 248 562 0 &lt;/value&gt;&lt;/seismicRegion&gt;
 /**
  * SeismicRegion.java
  *

@@ -11,14 +11,39 @@ import edu.iris.Fissures.*;
 import org.w3c.dom.*;
 
 /**
- * EventTimeRange.java
+ * This subsetter specifies the EventTimeRange.
+ *	&lt;eventTimeRange&gt;
+ *		&lt;timeRange&gt;
+ *			&lt;startTime&gt;1999-01-01T00:00:00Z&lt;/startTime&gt;
+ *			&lt;endTime&gt;2003-01-01T00:00:00Z&lt;/endTime&gt;
+ *		&lt;/timeRange&gt;
+ *	&lt;/eventTimeRange&gt;
  *
+ *                         (or)
  *
- * Created: Tue Apr  2 14:42:41 2002
+ *	&lt;eventTimeRange&gt;
+ *		&lt;timeRange&gt;
+ *			&lt;startTime&gt;1999-01-01T00:00:00Z&lt;/startTime&gt;
+ *		&lt;/timeRange&gt;
+ *	&lt;/eventTimeRange&gt;
  *
- * @author <a href="mailto:telukutl@piglet">Srinivasa Telukutla</a>
- * @version
+ *                         (or)
+ *
+ *	&lt;eventTimeRange&gt;
+ *		&lt;timeRange&gt;
+ *		&lt;/timeRange&gt;
+ *	&lt;/eventTimeRange&gt;
+ *
+ *                         (or)
+ *
+ *	&lt;eventTimeRange&gt;
+ *		&lt;timeRange&gt;
+ *			&lt;endTime&gt;1999-01-01T00:00:00Z&lt;/endTime&gt;
+ *		&lt;/timeRange&gt;
+ *	&lt;/eventTimeRange&gt;
+ *
  */
+
 
 public class EventTimeRange extends edu.sc.seis.sod.subsetter.TimeRange implements OriginSubsetter {
     /**

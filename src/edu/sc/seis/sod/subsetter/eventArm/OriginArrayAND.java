@@ -8,13 +8,17 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * OriginArrayAND.java
- *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * Contains a single OriginSubsetter. OriginArrayAND returns true when the contained originSubsetter is
+ * true for all the origins.
+ *  &lt;originArrayAND&gt;
+ *        &lt;originNOT&gt;
+ *               &lt;magnitudeRange&gt;
+ *               &lt;magType&gt;mb&lt;/magType&gt;
+ *               &lt;min&gt;7&lt;/min&gt;
+ *               &lt;max&gt;10&lt;/max&gt;
+ *               &lt;/magnitudeRange&gt;
+ *        &lt;/originNOT&gt;
+ *  &lt;/originArrayAND&gt;
  */
 
 public class OriginArrayAND 

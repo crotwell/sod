@@ -11,7 +11,9 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * FlinnEngdahlRegion.java
+ * FlinnEngdahlRegion.java 
+ *
+ * FlinnEngdahlRegion can be either GeorgraphicRegion or SeismicRegion
  *
  *
  * Created: Tue Mar 19 13:27:02 2002

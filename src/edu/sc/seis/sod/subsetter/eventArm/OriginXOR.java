@@ -8,6 +8,29 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
+ * originXOR contains a sequence of originSubsetters. The minimum value of the sequence is 2 and
+ * the max value of the sequence is 2.
+ *      &lt;originXOR&gt;
+ *		&lt;eventArea&gt;
+ *		   &lt;boxArea&gt;
+ *			&lt;latitudeRange&gt;
+ *				&lt;min&gt;32&lt;/min&gt;
+ *				&lt;max&gt;35.5&lt;/max&gt;
+ *			&lt;/latitudeRange&gt;
+ *			&lt;longitudeRange&gt;
+ *				&lt;min&gt;-83.5&lt;/min&gt;
+ *				&lt;max&gt;-78.5&lt;/max&gt;
+ *			&lt;/longitudeRange&gt;
+ *	           &lt;/boxArea&gt;
+ *		&lt;/eventArea&gt;
+ *		&lt;magnitudeRange&gt;
+ *			&lt;magType&gt;mb&lt;/magType&gt;
+ *			&lt;min&gt;3.5&lt;/min&gt;
+ *		&lt;/magnitudeRange&gt;
+ *      &lt;/originNOT&gt;
+ */
+
+/**
  * OriginXOR.java
  *
  *

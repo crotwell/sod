@@ -8,13 +8,8 @@ import edu.iris.Fissures.event.*;
 import edu.iris.Fissures.*;
 
 /**
- * EventAttrName.java
- *
- *
- * Created: Thu Mar 14 14:02:33 2002
- *
- * @author <a href="mailto:">Philip Crotwell</a>
- * @version
+ * This tag is used to specify the name of the EventAttr.
+ * &lt;eventAttrName&gt;&lt;value&gt;somename&lt;/value&gt;&lt;/eventAttrName&gt;
  */
 
 public class EventAttrName implements EventAttrSubsetter {
