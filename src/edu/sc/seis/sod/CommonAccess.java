@@ -1,11 +1,10 @@
 package edu.sc.seis.sod;
 
 import edu.iris.Fissures.model.AllVTFactory;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
-import java.io.IOException;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
 
 /**
@@ -59,13 +58,6 @@ public class CommonAccess {
             initORB(null, null);
         } // end of if (orb == null)
         return orb;
-    }
-
-    public LogMonitorAdapter getLF5Adapter(){
-        if(adapter == null){
-            adapter = LogMonitorAdapter.newInstance(RunStatus.getLogLevels());
-        }
-        return adapter;
     }
 
     private static CommonAccess commonAccess = new CommonAccess();
