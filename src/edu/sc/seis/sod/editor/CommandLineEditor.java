@@ -10,6 +10,7 @@ import org.w3c.dom.*;
 
 import edu.sc.seis.sod.SimpleErrorHandler;
 import edu.sc.seis.sod.Start;
+import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +26,8 @@ public class CommandLineEditor {
 
     public CommandLineEditor(String[] args) throws ParserConfigurationException, IOException, SAXException, ParserConfigurationException, SAXException, DOMException, IOException, TransformerException {
         this.args = args;
+        props = new Properties();
+        props.load(this.getClass().getClassLoader().getResourceAsStream(Start.DEFAULT_PROPS));
         processArgs();
     }
 
@@ -40,6 +43,7 @@ public class CommandLineEditor {
 
     void processArgs() throws DOMException, IOException, ParserConfigurationException, IOException, SAXException, ParserConfigurationException, TransformerException {
         boolean help = false;
+
         for (int i = 0; i < args.length; i++) {
             if (i < args.length-1 && args[i].equals("-f")) {
                 configFilename = args[i+1];
@@ -190,6 +194,8 @@ public class CommandLineEditor {
     String[] args;
 
     String configFilename;
+
+    Properties props;
 
     private Document document;
 
