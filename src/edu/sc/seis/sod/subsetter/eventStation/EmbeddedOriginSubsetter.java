@@ -1,14 +1,16 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class EmbeddedOriginSubsetter implements EventStationSubsetter {
 
@@ -25,12 +27,12 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           Station station,
                           CookieJar cookieJar) throws Exception {
-        return originSubsetter.accept(eventAccess,
+        return new StringTreeLeaf(this, originSubsetter.accept(eventAccess,
                                       eventAccess.get_attributes(),
-                                      eventAccess.get_preferred_origin());
+                                      eventAccess.get_preferred_origin()));
     }
 
     private OriginSubsetter originSubsetter = null;

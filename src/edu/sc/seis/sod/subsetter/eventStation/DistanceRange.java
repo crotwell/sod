@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -10,7 +8,11 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 public class DistanceRange extends DistanceRangeSubsetter implements
         EventStationSubsetter {
@@ -19,7 +21,7 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         super(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           Station station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = null;
@@ -32,9 +34,9 @@ public class DistanceRange extends DistanceRangeSubsetter implements
         if(dist.greaterThanEqual(getMin()) && dist.lessThanEqual(getMax())) {
             logger.debug("Distance ok " + dist + " from " + getMin() + " "
                     + getMax());
-            return true;
+            return new StringTreeLeaf(this, true);
         } else {
-            return false;
+            return new StringTreeLeaf(this, false);
         }
     }
 

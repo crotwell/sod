@@ -1,26 +1,28 @@
 /**
  * MidPoint.java
- * 
+ *
  * @author Created by Omnicore CodeGuide
  */
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import edu.iris.Fissures.Area;
 import edu.iris.Fissures.GlobalArea;
-import edu.iris.Fissures.Location;
-import edu.iris.Fissures.PointDistanceArea;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.Location;
+import edu.iris.Fissures.PointDistanceArea;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class MidPoint implements EventStationSubsetter {
 
@@ -36,7 +38,7 @@ public class MidPoint implements EventStationSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           Station station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = eventAccess.get_preferred_origin();
@@ -65,10 +67,10 @@ public class MidPoint implements EventStationSubsetter {
                     && latitude <= boxArea.max_latitude
                     && longitude >= boxArea.min_longitude
                     && longitude <= boxArea.max_longitude) {
-                return true;
-            } else return false;
+                return new StringTreeLeaf(this, true);
+            } else return new StringTreeLeaf(this, false);
         } else if(area instanceof GlobalArea) {
-            return true;
+            return new StringTreeLeaf(this, true);
         } else if(area instanceof PointDistanceArea) {
             PointDistanceArea pDist = (PointDistanceArea)area;
             pDist.min_distance = QuantityImpl.createQuantityImpl(pDist.min_distance)
@@ -81,9 +83,9 @@ public class MidPoint implements EventStationSubsetter {
                                                       pDist.longitude);
             if(midDist >= pDist.min_distance.value
                     && midDist <= pDist.max_distance.value) {
-                return true;
+                return new StringTreeLeaf(this, true);
             } else {
-                return false;
+                return new StringTreeLeaf(this, false);
             }
         }
         throw new Exception("Unknown Area, class=" + area.getClass());

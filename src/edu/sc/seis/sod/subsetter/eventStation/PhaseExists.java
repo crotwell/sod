@@ -1,6 +1,5 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
@@ -10,17 +9,20 @@ import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import org.w3c.dom.Element;
 
 /**
  * sample xml
- * 
+ *
  * <pre>
- * 
+ *
  *       &lt;phaseExists&gt;
  *       &lt;modelName&gt;prem&lt;/modelName&gt;
  *       &lt;phaseName&gt;ttp&lt;/phaseName&gt;
  *   &lt;/phaseExists&gt;
- * 
+ *
  * </pre>
  */
 public class PhaseExists implements EventStationSubsetter {
@@ -42,15 +44,15 @@ public class PhaseExists implements EventStationSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           Station station,
                           CookieJar cookieJar) throws Exception {
         Origin origin = event.get_preferred_origin();
         Arrival[] arrivals = tauPTime.calcTravelTimes(station,
                                                       origin,
                                                       new String[] {phaseName});
-        if(getRequiredArrival(arrivals) == null) return false;
-        else return true;
+        if(getRequiredArrival(arrivals) == null) return new StringTreeLeaf(this, false);
+        else return new StringTreeLeaf(this, true);
     }
 
     public Arrival getRequiredArrival(Arrival[] arrivals) {

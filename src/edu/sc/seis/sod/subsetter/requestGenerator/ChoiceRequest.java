@@ -132,7 +132,7 @@ public class ChoiceRequest implements RequestGenerator {
                               CookieJar cookieJar) throws Exception {
             return eventStationSubsetter.accept(event,
                                                 channel.my_site.my_station,
-                                                cookieJar);
+                                                cookieJar).isSuccess();
         }
 
         EventStationSubsetter eventStationSubsetter;

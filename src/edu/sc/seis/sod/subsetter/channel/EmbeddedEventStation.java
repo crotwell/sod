@@ -36,7 +36,7 @@ public class EmbeddedEventStation  implements EventChannelSubsetter{
 
     public boolean accept(EventAccessOperations o, Channel channel, CookieJar cookieJar)
         throws Exception {
-        return eventStationSubsetter.accept(o, channel.my_site.my_station, cookieJar);
+        return eventStationSubsetter.accept(o, channel.my_site.my_station, cookieJar).isSuccess();
     }
 
     EventStationSubsetter eventStationSubsetter;

@@ -1,27 +1,39 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import java.util.Iterator;
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 public final class EventStationAND extends EventStationLogicalSubsetter
-        implements EventStationSubsetter {
+    implements EventStationSubsetter {
 
     public EventStationAND(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o,
+    public StringTree accept(EventAccessOperations o,
                           Station station,
                           CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
-        while(it.hasNext()) {
+        ArrayList reasons = new ArrayList();
+        StringTree result = new StringTreeLeaf(this, true);
+        while(it.hasNext() && result.isSuccess()) {
             EventStationSubsetter filter = (EventStationSubsetter)it.next();
-            if(!filter.accept(o, station, cookieJar)) { return false; }
+            result = filter.accept(o, station, cookieJar);
+            reasons.add(result);
         }
-        return true;
+        if (reasons.size() < filterList.size()) {
+            reasons.add(new StringTreeLeaf("ShortCurcit", result.isSuccess()));
+        }
+        return new StringTreeBranch(this,
+                                    result.isSuccess(),
+                                        (StringTree[])reasons.toArray(new StringTree[0]));
     }
 }// EventStationAND

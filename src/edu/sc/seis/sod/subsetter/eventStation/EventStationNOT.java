@@ -1,27 +1,33 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import java.util.Iterator;
-import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
+import java.util.Iterator;
+import org.w3c.dom.Element;
 
 public final class EventStationNOT extends EventStationLogicalSubsetter
-        implements EventStationSubsetter {
+    implements EventStationSubsetter {
 
     public EventStationNOT(Element config) throws ConfigurationException {
         super(config);
     }
 
-    public boolean accept(EventAccessOperations o,
-                          Station station,
-                          CookieJar cookieJar) throws Exception {
+    public StringTree accept(EventAccessOperations o,
+                             Station station,
+                             CookieJar cookieJar) throws Exception {
         Iterator it = filterList.iterator();
+        StringTree result;
         if(it.hasNext()) {
             EventStationSubsetter filter = (EventStationSubsetter)it.next();
-            if(filter.accept(o, station, cookieJar)) { return false; }
+            result = filter.accept(o, station, cookieJar);
+            return new StringTreeBranch(this, ! result.isSuccess(), result);
         }
-        return true;
+        return new StringTreeLeaf(this, true, "Empty NOT");
+
     }
 }// EventStationNOT

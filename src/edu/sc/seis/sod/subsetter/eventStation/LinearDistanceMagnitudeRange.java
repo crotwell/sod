@@ -1,17 +1,19 @@
 package edu.sc.seis.sod.subsetter.eventStation;
 
-import org.w3c.dom.Element;
-import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.Location;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.DistanceRangeSubsetter;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
+import org.w3c.dom.Element;
 
 public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
         implements EventStationSubsetter {
@@ -23,11 +25,11 @@ public class LinearDistanceMagnitudeRange extends DistanceRangeSubsetter
         magnitudeRange = (MagnitudeRange)SodUtil.load(subElement, "origin");
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           Station station,
                           CookieJar cookieJar) {
         Location stationLoc = station.my_location;
-        return accept(eventAccess, stationLoc.latitude, stationLoc.longitude);
+        return new StringTreeLeaf(this, accept(eventAccess, stationLoc.latitude, stationLoc.longitude));
     }
 
     public boolean accept(EventAccessOperations eventAccess,

@@ -23,6 +23,8 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
@@ -178,7 +180,7 @@ public class WaveformArm implements Runnable {
                            EventDbObject ev) throws Exception {
         if(!overlap.overlaps(site.getSite())) {
             failLogger.debug(SiteIdUtil.toString(site.getSite().get_id())+
-                                 "The sites effective time does not overlap the event time: ");
+                                 "  The sites effective time does not overlap the event time: ");
             return;
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
@@ -199,6 +201,7 @@ public class WaveformArm implements Runnable {
                                                    Standing.REJECT);
             while(it.hasNext()) {
                 Channel failchan = (Channel)it.next();
+                failLogger.info(ChannelIdUtil.toString(failchan.get_id())+"  Channel not grouped.");
                 for(int k = 0; k < chans.length; k++) {
                     if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
                                               failchan.get_id())) {
@@ -208,7 +211,6 @@ public class WaveformArm implements Runnable {
                                              chanDbId,
                                              eventStationReject);
                         }
-                        failLogger.info(ChannelIdUtil.toString(chans[k].getChannel().get_id())+"  Channel not grouped.");
                     }
                 }
             }
@@ -576,7 +578,7 @@ public class WaveformArm implements Runnable {
                 ecp = extractEventChannelPair();
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
-                boolean accepted = false;
+                StringTree accepted = new StringTreeLeaf(this, false);
                 try {
                     Station evStation = ecp.getChannel().my_site.my_station;
                     accepted = eventStationSubsetter.accept(ecp.getEvent(),
@@ -588,7 +590,7 @@ public class WaveformArm implements Runnable {
                     failLogger.warn(ecp, e);
                     return;
                 }
-                if(accepted) {
+                if(accepted.isSuccess()) {
                     ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                           Standing.IN_PROG));
                     localSeismogramArm.processLocalSeismogramArm(ecp);
@@ -672,7 +674,7 @@ public class WaveformArm implements Runnable {
                 EventChannelGroupPair ecp = extractEventChannelGroupPair();
                 ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                       Standing.IN_PROG));
-                boolean accepted = false;
+                StringTree accepted = new StringTreeLeaf(this, false);
                 try {
                     Station evStation = ecp.getChannelGroup().getChannels()[0].my_site.my_station;
                     accepted = eventStationSubsetter.accept(ecp.getEvent(),
@@ -684,7 +686,7 @@ public class WaveformArm implements Runnable {
                     failLogger.warn(ecp, e);
                     return;
                 }
-                if(accepted) {
+                if(accepted.isSuccess()) {
                     ecp.update(Status.get(Stage.EVENT_CHANNEL_SUBSETTER,
                                           Standing.IN_PROG));
                     motionVectorArm.processMotionVectorArm(ecp);
