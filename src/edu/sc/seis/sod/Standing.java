@@ -6,9 +6,10 @@
 
 package edu.sc.seis.sod;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
-public class Standing {
+public class Standing implements Serializable {
 
     private Standing(int val, String name) {
         this.val = val;

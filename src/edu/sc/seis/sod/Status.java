@@ -1,8 +1,8 @@
 package edu.sc.seis.sod;
 
-import edu.iris.Fissures.model.UnitImpl;
+import java.io.Serializable;
 
-public class Status{
+public class Status implements Serializable {
 
     private Status(Stage stage, Standing standing){
         this.standing = standing;

@@ -6,7 +6,9 @@
 
 package edu.sc.seis.sod;
 
-public class Stage {
+import java.io.Serializable;
+
+public class Stage implements Serializable {
 
     private Stage(int val, String name) {
         this.val = val;
