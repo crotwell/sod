@@ -1,13 +1,87 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>SOD - Help for Tag Docs</title>
+        <title>SOD - How to Interpret This Consists Of</title>
     </properties>
     <body>
+        <section name="The 'This Consists Of' Section of the Tactics Documentation">
+            <p>During startup, SOD validates the structure of the strategy file. From the 'sod'
+                element at the root to strings and numbers at the deepest levels of the structure,
+                only certain items are allowed. The 'This Consists Of' section of the Tactic
+                documentation describes the allowed structure for the entirety of the current
+                tactic. If you don't know anything about XML it would be helpful to read our <a
+                href="../xmlIntro.html">introduction</a> before reading this document. The
+                explanation uses the terminology of XML to explain what the pieces are.</p>
+        </section>
+        <section name="A Basic Example">
+            <p>This the 'This consists of' section of the <a
+                    href="event/origin/originPointDistance.html">origin point distance</a> tactic.</p>
+            <div id="contained">
+                <p> &lt;<a href="event/origin/originPointDistance.html"
+                    title="Distance range from a fixed point">originPointDistance</a>&gt; <div>
+                        <div id="group"> &lt;latitude&gt;<b>
+                                <a href="datatypes/DoubleDatatype.html">double</a>
+                            </b>&lt;/latitude&gt; <div/> &lt;longitude&gt;<b>
+                                <a href="datatypes/DoubleDatatype.html">double</a>
+                            </b>&lt;/longitude&gt; <div/>
+                            <a href="base/include/range/range.html" title="A range of lengths">range</a>
+                            <div/>
+                        </div>
+                    </div> &lt;/<a href="event/origin/originPointDistance.html" title="Distance range from a fixed point">originPointDistance</a>&gt;<div/>
+                </p>
+            </div>
+            <section name="The containing originPointDistance tag">
+                <p>The first line shows the start tag &lt;originPointDistance&gt; . This
+                    means that at this point in the strategy file (ie every place in the 'Places
+                    containing this' section) the element originPointDistance along with its
+                    contents are acceptable. The next three lines along the black line must appear
+                    inside the originPointDistance element since they're directly below and indented
+                    from it. The black line indicates they're grouped together and must appear in
+                    the order they're given going down the page. </p>
+            </section>
+            <section name="The latitude and longitude elements">
+                <p>So the latitude element must be the first thing inside of the originPointDistance
+                    element. latitude only contains one thing, a 'double'. Text without brackets in
+                    bold indicates a single piece of data. Here anything that matches a generic
+                    datatype is acceptable. To see what qualifies under the umbrella of this
+                    datatype, click on its link. Since this is a double, pretty much any numeric
+                    value can be given. After the latitude element and its double contents, the very
+                    similar longitude element must be added to originPointDistance. It is also just
+                    an element with a double value inside of it.</p>
+            </section>
+            <section name="Generic range definition">
+                <p> Finally, there is a link to range. A simple link like range without any brackets
+                    indicates that the link should be replaced with the 'This consists of' section
+                    in the page it links to. So to see what must go in the place of the range link,
+                    click on it to get to its page. It consists of a unit, min and max element. The
+                    unit element links to a deeper page which in turn shows that it must be a
+                    complete unit element with a unit of distance inside of it. So
+                    &lt;unit&gt;KILOMETER&lt;/unit&gt; or
+                    &lt;unit&gt;MILE&lt;/unit&gt; can replace the unit element in
+                    range. The min and max elements are very similar to the latitude and longitude
+                    elements defined earlier. They're just a simple element with a double inside of
+                    them. So the range link in originPointDistance should be replaced with a unit
+                    element, a min element, and a max element.</p>
+            </section>
+            <section name="Putting it all together">
+                <p>So taking each of those previous sections, this is telling us that
+                    originPointDistance consists of an originPointDistance tag with latitude,
+                    longitude, unit, min and max tags inside of it as follows:</p>
+                <pre>&lt;originPointDistance&gt;
+    &lt;latitude&gt;35&lt;/latitude&gt;
+    &lt;longitude&gt;-85&lt;/longitude&gt;
+    &lt;unit&gt;DEGREE&lt;/unit&gt;
+    &lt;min&gt;30&lt;/min&gt;
+    &lt;max&gt;90&lt;/max&gt;
+&lt;/originPointDistance&gt;</pre>
+            </section>
+        </section>
         <section name="Any number of times">
             <p> This indicates that whatever item is next to this can appear any number of times,
                 from 0 to infinity. So if a choice has this next to it, you can use as many of the
-                items in the choice as you want, as many times as you want.</p>
+                items in the choice as you want, as many times as you want. If it's next to a
+                regular item that item can be left out of the strategy file completely, or you can
+                use 16 of them in a row</p>
         </section>
         <section name="At Least Once">
             <p> This indicates the item this is associated with can appear as many times as you
@@ -33,8 +107,8 @@
                 least once'. You can leave it out, or you can have it six times, or you can use it once.</p>
         </section>
         <section name="optional">
-            <p> If an item has 'optional' showing up after it, you can include it in your SOD strategy
-                file or you can leave it out entirely.</p>
+            <p> If an item has 'optional' showing up after it, you can include it in your SOD
+                strategy file or you can leave it out entirely.</p>
         </section>
     </body>
 </document>
