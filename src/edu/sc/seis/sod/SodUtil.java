@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
+import org.apache.xpath.XPathAPI;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -227,8 +231,7 @@ public class SodUtil {
         } // end of try-catch
     }
 
-    public static Time loadTime(Element el)
-            throws ConfigurationException {
+    public static Time loadTime(Element el) throws ConfigurationException {
         if(el == null) return null;
         edu.iris.Fissures.Time rtnTime = null;
         NodeList kids = el.getChildNodes();
@@ -239,7 +242,7 @@ public class SodUtil {
                 Element element = (Element)node;
                 if(tagName.equals("earlier") || tagName.equals("later")) {
                     rtnTime = loadRelativeTime(element);
-                } else if (tagName.equals("now")){
+                } else if(tagName.equals("now")) {
                     rtnTime = ClockUtil.now().getFissuresTime();
                 }
             }
@@ -341,7 +344,8 @@ public class SodUtil {
         return unitRange;
     }
 
-    public static MicroSecondTimeRange loadTimeRange(Element config) throws ConfigurationException {
+    public static MicroSecondTimeRange loadTimeRange(Element config)
+            throws ConfigurationException {
         NodeList children = config.getChildNodes();
         Time begin = null, end = null;
         for(int i = 0; i < children.getLength(); i++) {
@@ -356,6 +360,17 @@ public class SodUtil {
             }
         }
         return new MicroSecondTimeRange(begin, end);
+    }
+
+    public static Dimension loadDimensions(Element element) throws Exception {
+        String width = nodeValueOfXPath(element, "width/text()");
+        String height = nodeValueOfXPath(element, "height/text()");
+        return new Dimension(Integer.parseInt(width), Integer.parseInt(height));
+    }
+
+    public static String nodeValueOfXPath(Element el, String xpath)
+            throws DOMException, TransformerException {
+        return XPathAPI.selectSingleNode(el, xpath).getNodeValue();
     }
 
     public static BoxAreaImpl loadBoxArea(Element config)
