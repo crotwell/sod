@@ -14,31 +14,6 @@ import java.util.*;
 import org.w3c.dom.*;
 
 
-/** sample xml
- *<pre>
- *  &lt;phaseInteraction&gt;
- *          &lt;modelName&gt;prem&lt;/modelName&gt;
- *          &lt;phaseName&gt;PcP&lt;/phaseName&gt;
- *          &lt;interactionStyle&gt;PATH&lt;/interactionStyle&gt;
- *          &lt;interactionNumber&gt;1&lt;/interactionNumber&gt;
- *          &lt;relative&gt;
- *              &lt;reference&gt;EVENT&lt;/reference&gt;
- *              &lt;depthRange&gt;
- *                  &lt;unitRange&gt;
- *                      &lt;unit&gt;KILOMETER&lt;/unit&gt;
- *                      &lt;min&gt;-1000&lt;/min&gt;
- *                      &lt;max&gt;1000&lt;/max&gt;
- *                  &lt;/unitRange&gt;
- *              &lt;/depthRange&gt;
- *              &lt;distanceRange&gt;
- *                  &lt;unit&gt;DEGREE&lt;/unit&gt;
- *                  &lt;min&gt;60&lt;/min&gt;
- *                  &lt;max&gt;70&lt;/max&gt;
- *              &lt;/distanceRange&gt;
- *          &lt;/relative&gt;
- *  &lt;/phaseInteraction&gt;
- *</pre>
- */
 
 public class PhaseInteraction implements EventStationSubsetter {
 
@@ -56,7 +31,17 @@ public class PhaseInteraction implements EventStationSubsetter {
         element = SodUtil.getElement(config, "absolute");
         if(element != null) phaseInteractionType = (PhaseInteractionType) SodUtil.load(element, "waveformArm");
 
+        try {
+            tauPPierce = new TauP_Pierce(modelName);
+            tauPPierce.clearPhaseNames();
+            tauPPierce.parsePhaseList(phaseName);
 
+            tauPPath = new TauP_Path(tauPPierce.getTauModel());
+            tauPPath.clearPhaseNames();
+            tauPPath.parsePhaseList(phaseName);
+        } catch (TauModelException e) {
+            throw new ConfigurationException("Can't load TauP_Pierce", e);
+        }
     }
 
     public boolean accept(EventAccessOperations event,  Station station, CookieJar cookieJar)
@@ -71,10 +56,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         double originDepth;
         double eventStationDistance;
         origin = event.get_preferred_origin();
-        TauP_Path tauPPath = new TauP_Path(modelName);
-        tauPPath.clearPhaseNames();
-        tauPPath.parsePhaseList(phaseName);
-        UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
+
         originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
         tauPPath.setSourceDepth(originDepth);
 
@@ -106,10 +88,7 @@ public class PhaseInteraction implements EventStationSubsetter {
         double originDepth;
         double eventStationDistance;
         Origin origin = event.get_preferred_origin();
-        TauP_Pierce tauPPierce = new TauP_Pierce(modelName);
-        tauPPierce.clearPhaseNames();
-        tauPPierce.parsePhaseList(phaseName);
-        UnitImpl originUnit = (UnitImpl)origin.my_location.depth.the_units;
+
         originDepth = ((QuantityImpl)origin.my_location.depth).convertTo(UnitImpl.KILOMETER).value;
         tauPPierce.setSourceDepth(originDepth);
         eventStationDistance = SphericalCoords.distance(origin.my_location.latitude,
@@ -149,8 +128,8 @@ public class PhaseInteraction implements EventStationSubsetter {
             QuantityImpl maxDistance;
             if(((Relative)phaseInteractionType).getDepthRange() != null) {
 
-                minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
-                maxDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
+                minDepth = ((Relative)phaseInteractionType).getDepthRange().getMinDepth();
+                maxDepth = ((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
             } else {
                 minDepth = timeDistDepth;
                 maxDepth = timeDistDepth;
@@ -159,8 +138,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                 if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
                     timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.KILOMETER);
                 }
-                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMin();
-                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMax();
+                minDistance = ((Relative)phaseInteractionType).getDistanceRange().getMin();
+                maxDistance = ((Relative)phaseInteractionType).getDistanceRange().getMax();
 
             } else {
                 minDistance = timeDistDistance;
@@ -205,8 +184,8 @@ public class PhaseInteraction implements EventStationSubsetter {
 
             if(((Relative)phaseInteractionType).getDepthRange() != null) {
 
-                minDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMinDepth();
-                maxDepth = (QuantityImpl)((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
+                minDepth = ((Relative)phaseInteractionType).getDepthRange().getMinDepth();
+                maxDepth = ((Relative)phaseInteractionType).getDepthRange().getMaxDepth();
             } else {
                 minDepth = timeDistDepth;
                 maxDepth = timeDistDepth;
@@ -215,8 +194,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                 if(((Relative)phaseInteractionType).getReference().equals("STATION")) {
                     timeDistDistance = new QuantityImpl((eventStationDistance - timeDist.dist)*180/Math.PI, UnitImpl.DEGREE);
                 }
-                minDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMin();
-                maxDistance = (QuantityImpl)((Relative)phaseInteractionType).getDistanceRange().getMax();
+                minDistance = ((Relative)phaseInteractionType).getDistanceRange().getMin();
+                maxDistance = ((Relative)phaseInteractionType).getDistanceRange().getMax();
 
             } else {
                 minDistance = timeDistDistance;
@@ -263,8 +242,8 @@ public class PhaseInteraction implements EventStationSubsetter {
                 QuantityImpl minDepth;
                 QuantityImpl maxDepth;
                 if(((Absolute)phaseInteractionType).getDepthRange() != null) {
-                    minDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMinDepth();
-                    maxDepth = (QuantityImpl)((Absolute)phaseInteractionType).getDepthRange().getMaxDepth();
+                    minDepth = ((Absolute)phaseInteractionType).getDepthRange().getMinDepth();
+                    maxDepth = ((Absolute)phaseInteractionType).getDepthRange().getMaxDepth();
                 } else {
                     minDepth = timeDistDepth;
                     maxDepth = timeDistDepth;
@@ -350,14 +329,18 @@ public class PhaseInteraction implements EventStationSubsetter {
         return azimuth;
     }
 
-    private String modelName = null;
+    private String modelName = "prem";
 
     private String phaseName = null;
 
     private String interactionStyle = null;
 
-    private int interactionNumber = -1;
+    private int interactionNumber = 1;
 
     private PhaseInteractionType phaseInteractionType = null;
+
+    private TauP_Pierce tauPPierce;
+
+    private TauP_Path tauPPath;
 
 }// PhaseInteraction
