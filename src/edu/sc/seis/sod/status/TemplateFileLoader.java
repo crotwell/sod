@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.status;
 
+import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import java.io.IOException;
@@ -19,9 +20,9 @@ public class TemplateFileLoader{
         if(templateEl == null || SodUtil.getNestedText(templateEl).equals("")) {
             throw new IllegalArgumentException("Expected the passed in element '" + el.getNodeName() + "' to have a template element, but none found");
         }
-        return getTemplate(el.getClass().getClassLoader(), SodUtil.getNestedText(templateEl));
+        return getTemplate(CommonAccess.getLoader(), SodUtil.getNestedText(templateEl));
     }
-
+    
     public static Element getTemplate(ClassLoader cl, String loc) throws MalformedURLException, SAXException, ParserConfigurationException, IOException{
         URL url = getUrl(cl, loc);
         InputStream in = url.openStream();
