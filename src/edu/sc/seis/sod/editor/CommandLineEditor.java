@@ -197,8 +197,12 @@ public class CommandLineEditor {
     public String getConfigFilename(){ return configFilename; }
 
     public void setConfigFile(String filename) throws ParserConfigurationException, IOException, SAXException{
-        this.configFilename = filename;
+        setConfigFileLocation(filename);
         initConfigFile();
+    }
+
+    public void setConfigFileLocation(String filename) {
+        this.configFilename = filename;
     }
 
     public Document getDocument() { return document; }
