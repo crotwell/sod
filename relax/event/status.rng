@@ -29,9 +29,11 @@
         </define>
         <define name="eventStatusTemplate">
                 <element name="eventStatusTemplate">
-                		<element name="fileDir">
+                		<optional>
+                			<element name="fileDir">
                 				<data type="string"/>
-                		</element>
+                			</element>
+                		</optional>
                 		<element name="eventConfig">
                         		<attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
                         </element>

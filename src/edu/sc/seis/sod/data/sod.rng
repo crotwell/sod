@@ -240,9 +240,11 @@
                             </zeroOrMore>
                         </element>
                         <element name="eventStatusTemplate">
-                            <element name="fileDir">
-                                <data type="string"/>
-                            </element>
+                            <optional>
+                                <element name="fileDir">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
                             <element name="eventConfig">
                                 <attribute>
                                     <name ns="http://www.w3.org/1999/xlink/">href</name>
@@ -328,9 +330,11 @@
                             <empty/>
                         </element>
                         <element name="networkInfoTemplateGenerator">
-                            <element name="fileDir">
-                                <data type="string"/>
-                            </element>
+                            <optional>
+                                <element name="fileDir">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
                             <element name="netConfig">
                                 <attribute>
                                     <name ns="http://www.w3.org/1999/xlink/">href</name>
@@ -489,9 +493,11 @@
                                 </zeroOrMore>
                             </element>
                             <element name="localSeismogramTemplateGenerator">
-                                <element name="fileDir">
+                                <optional>
+                                    <element name="fileDir">
                                     <data type="string"/>
-                                </element>
+                                    </element>
+                                </optional>
                                 <element name="seismogramConfig">
                                     <attribute>
                                     <name ns="http://www.w3.org/1999/xlink/">href</name>
@@ -556,9 +562,11 @@
                             </optional>
                         </element>
                         <element name="waveformEventTemplateGenerator">
-                            <element name="fileDir">
-                                <data type="string"/>
-                            </element>
+                            <optional>
+                                <element name="fileDir">
+                                    <data type="string"/>
+                                </element>
+                            </optional>
                             <element name="waveformConfig">
                                 <attribute>
                                     <name ns="http://www.w3.org/1999/xlink/">href</name>

@@ -19,9 +19,11 @@
                                 </optional>
                         </element>
                         <element name="waveformEventTemplateGenerator">
-                                <element name="fileDir">
+                                <optional>
+                                	<element name="fileDir">
                                         <data type="string"/>
-                                </element>
+                                	</element>
+                                </optional>
                                 <element name="waveformConfig">
                                         <attribute name="href" ns="http://www.w3.org/1999/xlink/"/>
                                 </element>
