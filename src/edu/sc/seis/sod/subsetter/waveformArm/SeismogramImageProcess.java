@@ -14,6 +14,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.CookieJar;
@@ -96,13 +97,14 @@ public class SeismogramImageProcess implements LocalSeismogramProcess {
 		BasicSeismogramDisplay bsd = new BasicSeismogramDisplay(null);
 		bsd.PRINTING = true;
 		
-		MemoryDataSetSeismogram[] memDSS = new MemoryDataSetSeismogram[seismograms.length];
+		LocalSeismogramImpl[] seismoImpl = new LocalSeismogramImpl[seismograms.length];
 		for (int i = 0; i < seismograms.length; i++) {
-			memDSS[i] = new MemoryDataSetSeismogram(new LocalSeismogramImpl(seismograms[i], seismograms[i].get_as_floats()));
-			memDSS[i].setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
-			memDSS[i].setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
+			seismoImpl[i] = (LocalSeismogramImpl)seismograms[i];
 		}
-		bsd.add(memDSS);
+		MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(seismoImpl, (DataSet)null);
+		memDSS.setBeginTime(DisplayUtils.firstBeginDate(original).getFissuresTime());
+		memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
+		bsd.add(new MemoryDataSetSeismogram[]{memDSS});
 		
 		String picFileName = fileDir + '/'
 			+ eventFormatter.getResult(event) + '/'
