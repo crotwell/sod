@@ -64,12 +64,6 @@
                     <summary> Logical AND between Request subsetters. </summary>
                     <description> The output is the logical AND of the outputs of all included
                         subsetters. The subsetters after the first false outputed are not evaluated. </description>
-                    <example>
-                        <vectorRequestAND>
-                            <something/>
-                            <somethingelse/>
-                        </vectorRequestAND>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
@@ -84,12 +78,6 @@
                     <summary> Logical OR between Request subsetters. </summary>
                     <description> The output is the logical OR of the outputs of all included
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
-                    <example>
-                        <vectorRequestOR>
-                            <something/>
-                            <somethingelse/>
-                        </vectorRequestOR>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <oneOrMore>
@@ -104,12 +92,6 @@
                     <summary> Logical XOR between Request subsetters. </summary>
                     <description> The output is the logical XOR of the outputs of all included
                         subsetters. </description>
-                    <example>
-                        <vectorRequestXOR>
-                            <something/>
-                            <somethingelse/>
-                        </vectorRequestXOR>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="vectorRequest"/>
@@ -123,11 +105,6 @@
                     <summary> Logical NOT of an Request subsetter. </summary>
                     <description> The output is the logical NOT of the output of the included
                         subsetters. </description>
-                    <example>
-                        <vectorRequestNOT>
-                            <something/>
-                        </vectorRequestNOT>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="vectorRequest"/>
@@ -139,9 +116,6 @@
                 <xsd:documentation xml:lang="en">
                     <summary> Always returns true. </summary>
                     <description> Simple subsetter that always returns true, useful for testing. </description>
-                    <example>
-                        <passVectorRequest/>
-                    </example>
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>

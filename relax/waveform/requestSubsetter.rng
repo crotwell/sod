@@ -28,16 +28,11 @@
                     <example>
                         <requestAND>
                             <requestPrint/>
-                            <requestOR>
-                                <passRequest/>
-                                <requestNOT>
-                                    <externalRequestSubsetter>
-                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
-                                        <someTag/>
-                                        <someOtherTag/>
-                                    </externalRequestSubsetter>
-                                </requestNOT>
-                            </requestOR>
+                            <externalRequest>
+                                <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                                <someTag/>
+                                <someOtherTag/>
+                            </externalRequest>
                         </requestAND>
                     </example>
                 </xsd:documentation>
@@ -57,16 +52,7 @@
                     <example>
                         <requestOR>
                             <requestPrint/>
-                            <requestAND>
-                                <passRequest/>
-                                <requestNOT>
-                                    <externalRequestSubsetter>
-                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
-                                        <someTag/>
-                                        <someOtherTag/>
-                                    </externalRequestSubsetter>
-                                </requestNOT>
-                            </requestAND>
+                            <passRequest/>
                         </requestOR>
                     </example>
                 </xsd:documentation>
@@ -86,16 +72,9 @@
                     <example>
                         <requestXOR>
                             <requestPrint/>
-                            <requestAND>
-                                <passRequest/>
-                                <requestNOT>
-                                    <externalRequestSubsetter>
-                                        <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
-                                        <someTag/>
-                                        <someOtherTag/>
-                                    </externalRequestSubsetter>
-                                </requestNOT>
-                            </requestAND>
+                            <externalRequest>
+                                <classname>edu.somewhere.seis.sodExt.subsetters.SampleExternalRequestSubsetter</classname>
+                            </externalRequest>
                         </requestXOR>
                     </example>
                 </xsd:documentation>

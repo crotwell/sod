@@ -49,7 +49,7 @@
                         most often used within the motion vector arm. </description>
                     <example>
                         <ORAvailableDataWrapper>
-                            <someData/>
+                            <someCoverage/>
                         </ORAvailableDataWrapper>
                     </example>
                 </xsd:documentation>
@@ -66,8 +66,12 @@
                         subsetters. The subsetters after the first false outputed are not evaluated. </description>
                     <example>
                         <vectorAvailableDataAND>
-                            <noGaps/>
-                            <fullCoverage/>
+                            <ANDAvailableDataWrapper>
+                                <noGaps/>
+                            </ANDAvailableDataWrapper>
+                            <ANDAvailableDataWrapper>
+                                <fullCoverage/>
+                            </ANDAvailableDataWrapper>
                         </vectorAvailableDataAND>
                     </example>
                 </xsd:documentation>
@@ -86,8 +90,12 @@
                         subsetters. The subsetters after the first true outputed are not evaluated. </description>
                     <example>
                         <vectorAvailableDataOR>
-                            <noGaps/>
-                            <fullCoverage/>
+                            <ANDAvailableDataWrapper>
+                                <noGaps/>
+                            </ANDAvailableDataWrapper>
+                            <ANDAvailableDataWrapper>
+                                <fullCoverage/>
+                            </ANDAvailableDataWrapper>
                         </vectorAvailableDataOR>
                     </example>
                 </xsd:documentation>
@@ -106,8 +114,12 @@
                         subsetters. </description>
                     <example>
                         <vectorAvailableDataXOR>
-                            <noGaps/>
-                            <fullCoverage/>
+                            <ANDAvailableDataWrapper>
+                                <noGaps/>
+                            </ANDAvailableDataWrapper>
+                            <ANDAvailableDataWrapper>
+                                <someCoverage/>
+                            </ANDAvailableDataWrapper>
                         </vectorAvailableDataXOR>
                     </example>
                 </xsd:documentation>
@@ -125,7 +137,9 @@
                         subsetters. </description>
                     <example>
                         <vectorAvailableDataNOT>
-                            <noGaps/>
+                            <ANDAvailableDataWrapper>
+                                <noGaps/>
+                            </ANDAvailableDataWrapper>
                         </vectorAvailableDataNOT>
                     </example>
                 </xsd:documentation>
