@@ -10,7 +10,7 @@ import edu.iris.Fissures.Area;
 import edu.iris.Fissures.GlobalArea;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.PointDistanceArea;
 import edu.iris.Fissures.model.QuantityImpl;
@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class MidPoint implements EventChannelSubsetter {
+public class MidPoint implements EventStationSubsetter {
     public MidPoint (Element config) throws ConfigurationException {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength() ; i++) {
@@ -35,11 +35,11 @@ public class MidPoint implements EventChannelSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations eventAccess, Channel chan, CookieJar cookieJar)
+    public boolean accept(EventAccessOperations eventAccess, Station station, CookieJar cookieJar)
         throws Exception {
         Origin origin = eventAccess.get_preferred_origin();
         Location originLoc = origin.my_location;
-        Location loc = chan.my_site.my_location;
+        Location loc = station.my_location;
         double azimuth = SphericalCoords.azimuth(originLoc.latitude,
                                                  originLoc.longitude,
                                                  loc.latitude,
