@@ -16,30 +16,22 @@ import org.w3c.dom.*;
  * @author <a href="mailto:crotwell@owl.seis.sc.edu">Philip Crotwell</a>
  * @version 1.0
  */
-public class BreqFastRequestSubsetter 
-    implements RequestSubsetter {
-
-    public BreqFastRequestSubsetter(Element config) 
-        throws ConfigurationException 
-    {
+public class BreqFastRequestSubsetter implements RequestSubsetter {
+    public BreqFastRequestSubsetter(Element config) {
         breqfast = new BreqFastAvailableData(config);
     }
     
-    public boolean accept(EventAccessOperations event, 
-                          NetworkAccess network, 
-                          Channel channel, 
+    public boolean accept(EventAccessOperations event,
+                          NetworkAccess network,
+                          Channel channel,
                           RequestFilter[] request,
-                          CookieJar cookies) 
-        throws Exception 
-    {
-        return breqfast.accept(event, 
-                        network, 
-                        channel, 
-                        request, 
-                        request,
-                        cookies);
+                          CookieJar cookies)throws Exception {
+        return breqfast.accept(event,
+                               network,
+                               channel,
+                               request,
+                               request,
+                               cookies);
     }
-
     BreqFastAvailableData breqfast;
-
 } // BreqFastRequestGenerator
