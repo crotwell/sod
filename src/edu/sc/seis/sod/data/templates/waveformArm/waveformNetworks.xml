@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<html>
+<header><title>Networks in the waveform arm</title></header>
+<body>
+<table>
+#foreach ( $net in $network_arm_successful )
+<tr>
+#if ($net.getNetworkAccess().get_attributes().get_code().startsWith("X") ||
+     $net.getNetworkAccess().get_attributes().get_code().startsWith("X") ||
+     $net.getNetworkAccess().get_attributes().get_code().startsWith("X"))
+<td>$net.getNetworkAccess().get_attributes().get_code()$velocity_date.format("yyyy", $net.get_id())</td>
+#else
+<td>$net.getNetworkAccess().get_attributes().get_code()</td>
+#end
+<td><a href="$net.getNetworkAccess().get_attributes().get_code()$velocity_date.format("yyyy", $net.get_id())_stations">$net.getNetworkAccess().get_attributes().name</a></td>
+<td><a><attribute name="href">networks/<networkCode/>-<firstWord/>/stations.html"</attribute><name/></a></td>
+</tr>
+#end
+</table>
+</body>
+</html></template>
+
