@@ -613,7 +613,7 @@
             <element name="eventChannelGroupNOT">
                 <ref name="eventChannel4"/>
             </element>
-            <element name="passEventChannelGroup">
+            <element name="passEventChannel">
                 <zeroOrMore>
                     <ref name="eventChannel4"/>
                 </zeroOrMore>
