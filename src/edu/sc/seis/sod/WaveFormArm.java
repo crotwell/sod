@@ -14,6 +14,7 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.EventCondition;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.EventChannelCondition;
+import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.subsetter.waveFormArm.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.waveFormArm.LocalSeismogramArm;
@@ -34,6 +35,7 @@ public class WaveFormArm implements Runnable {
         throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
+        eventRetryTable = new JDBCEventChannelRetry();
         processConfig(config);
         this.networkArm = networkArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor", threadPoolSize);
@@ -45,8 +47,9 @@ public class WaveFormArm implements Runnable {
             while(Start.getEventArm().isAlive()){
                 populateEventChannelDb();
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {}
+                retryIfAvailable();
             }
             logger.info("Waveform arm done.");
         } catch(Throwable e) {
@@ -54,6 +57,9 @@ public class WaveFormArm implements Runnable {
         }
     }
     
+    //fills the eventchannel db with all available events and starts
+    //WaveformWorkerUnits on all inserted event channel pairs
+    //If there are no waiting events, this just returns
     private void populateEventChannelDb()throws Exception{
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()){
             EventEffectiveTimeOverlap overlap =
@@ -122,12 +128,57 @@ public class WaveFormArm implements Runnable {
             pairId = evChanStatus.put(ev.getDbId(), chanId,
                                       EventChannelCondition.NEW);
         }
-        while(pool.getNumWaiting() > 100){
+        invokeLaterAsCapacityAllows(new WaveformWorkUnit(pairId));
+        retryIfNeededAndAvailable();
+    }
+    
+    private void retryIfNeededAndAvailable() throws SQLException {
+        if(getNumRetryWaiting()/(double)pool.getNumWaiting() < retryPercentage){
+            retryIfAvailable();
+        }
+    }
+    
+    private void retryIfAvailable() throws SQLException{
+        WaveformWorkUnit retryUnit = getNextRetry();
+        if(retryUnit != null)invokeLaterAsCapacityAllows(retryUnit);
+    }
+    
+    private WaveformWorkUnit getNextRetry() throws SQLException {
+        int pairId = eventRetryTable.next();
+        if(pairId != -1) return new RetryWaveformWorkUnit(pairId);
+        return null;
+    }
+    
+    private int getNumRetryWaiting() {
+        synchronized(retryNumLock){
+            return retryNum;
+        }
+    }
+    
+    private class RetryWaveformWorkUnit extends WaveformWorkUnit{
+        public RetryWaveformWorkUnit(int pairId) throws SQLException{
+            super(pairId);
+            logger.debug("Retrying on pair id " + pairId);
+            synchronized(retryNumLock){
+                retryNum++;
+            }
+        }
+        
+        public void run(){
+            synchronized(retryNumLock){
+                retryNum--;
+            }
+            super.run();
+        }
+    }
+    
+    private void invokeLaterAsCapacityAllows(WaveformWorkUnit wu){
+        while(pool.getNumWaiting() > poolLineCapacity){
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {}
         }
-        pool.invokeLater(new WaveformWorkUnit(pairId));
+        pool.invokeLater(wu);
     }
     
     private void waitForInitialEvent() throws SQLException {
@@ -189,6 +240,11 @@ public class WaveFormArm implements Runnable {
         synchronized(evChanStatus){
             try {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
+                if(ecp.getStatus().equals(EventChannelCondition.FAILURE) ||
+                   ecp.getStatus().equals(EventChannelCondition.SUBSETTER_FAILED) ||
+                   ecp.getStatus().equals(EventChannelCondition.PROCESSOR_FAILED)){
+                    eventRetryTable.failed(ecp.getPairId(), EventChannelCondition.FAILURE);
+                }
             } catch (SQLException e) {
                 CommonAccess.handleException("Trouble setting the status on an event channel pair",
                                              e);
@@ -296,7 +352,13 @@ public class WaveFormArm implements Runnable {
     
     private JDBCEventChannelStatus evChanStatus;
     
+    private JDBCEventChannelRetry eventRetryTable;
+    
+    private double retryPercentage = .02;//2 percent of the pool will be
+    //made up of retries if possible
     private static Logger logger = Logger.getLogger(WaveFormArm.class);
     
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
+    private int poolLineCapacity = 100, retryNum;
+    private Object retryNumLock = new Object();
 }
