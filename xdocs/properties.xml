@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author>Philip Crotwell</author>
+    <title>Tuning SOD</title>
+  </properties>
+
+<body>
+
+<section name="SOD's Properties">
+<p>
+Sod has several parameters that can be set at run time in the xml config file.  These are set in the properties element which is the first element in the sod element of sod's config file.  Each property is set in a property element inside the properties element.  These property elements each contain a name and value element.
+</p>
+<subsection name="Run Properties">
+<b>sod.start.RunName</b>
+<p>
+This property sets the current sod run name.  It shows up in the html output for the run.  The following example would name the run "Test Run".
+</p>
+<source>
+<property>
+<name>sod.start.RunName</name>
+<value>Test Run</value>
+</property>
+</source>
+</subsection>
+</section>
+</body>
+</document>
