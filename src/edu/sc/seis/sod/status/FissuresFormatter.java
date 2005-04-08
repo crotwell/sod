@@ -278,6 +278,12 @@ public class FissuresFormatter {
         }
     }
 
+    public static NumberFormat getDepthFormat() {
+        return depthFormat;
+    }
+    public static NumberFormat getDistFormat() {
+        return distFormat;
+    }
     private static NumberFormat distFormat = ChoiceDecimalFormat.createTomStyleA();
 
     private static NumberFormat depthFormat = ChoiceDecimalFormat.createTomStyleB();
