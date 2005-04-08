@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
@@ -20,6 +23,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
@@ -68,6 +72,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private void initConfig(Element config) throws NoSuchFieldException {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
+        saveSeisId = DOMHelper.extractText(config, "saveSeisId", id);
         displayOption = SodUtil.getText(SodUtil.getElement(config,
                                                            "displayOption"));
         if(DOMHelper.hasElement(config, "fileNameBase")) {
@@ -120,7 +125,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     public SaveSeismogramToFile getSaveSeismogramToFile()
             throws ConfigurationException {
-        return getSaveSeismogramToFile(Start.getWaveformArm(), id);
+        return getSaveSeismogramToFile(Start.getWaveformArm(), saveSeisId);
     }
 
     public static SaveSeismogramToFile getSaveSeismogramToFile(WaveformArm waveform,
@@ -152,6 +157,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
             IncomprehensibleDSMLException, UnsupportedFileTypeException,
             ConfigurationException, NotFound, SQLException,
             InterruptedException, NoPreferredOrigin {
+        acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         try {
             saveSeisToFile = getSaveSeismogramToFile();
             DataSet ds = DataSetToXML.load(saveSeisToFile.getDSMLFile(event)
@@ -159,8 +165,13 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                     .toURL());
             String[] dataSeisNames = ds.getDataSetSeismogramNames();
             DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
+            ChannelId[] ids = ds.getChannelIds();
+            List acceptableSeis = new ArrayList();
             for(int i = 0; i < dataSeisNames.length; i++) {
                 dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
+                if(acceptableChannels.contains(ChannelIdUtil.toString(ids[i]))) {
+                    acceptableSeis.add(dss[i]);
+                }
             }
             String regionName = ParseRegions.getInstance()
                     .getRegionName(event.get_attributes().region);
@@ -169,6 +180,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                     + " DataSetSeismograms from DSML file for event in "
                     + regionName + " at " + dateTime;
             logger.debug(msg);
+            dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
             if(displayOption.equals("BEST")) {
                 outputBestRecordSection(event, dss);
             } else {
@@ -421,7 +433,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
 
     private SaveSeismogramToFile saveSeisToFile;
 
-    private String id;
+    private String id, saveSeisId;
 
     private DistanceRange distRange = new DistanceRange(0, 180);
 
@@ -450,6 +462,8 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
     private SeismogramDisplayConfiguration displayCreator = null;
 
     private Dimension recSecDim = new Dimension(500, 500);
+
+    private Set acceptableChannels = new HashSet();
 
     private final static String fileExtension = ".png";
 }
