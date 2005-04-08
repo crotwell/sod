@@ -69,7 +69,6 @@ public class PhaseSignalToNoise  implements WaveformProcess {
                                         shortOffsetEnd,
                                         longOffsetBegin,
                                         longOffsetEnd,
-                                        modelName,
                                         taupUtil);
     }
 
