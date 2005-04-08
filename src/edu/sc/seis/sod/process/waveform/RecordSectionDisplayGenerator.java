@@ -152,11 +152,7 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                                   RequestFilter[] original,
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
-                                  CookieJar cookieJar)
-            throws ParserConfigurationException, IOException,
-            IncomprehensibleDSMLException, UnsupportedFileTypeException,
-            ConfigurationException, NotFound, SQLException,
-            InterruptedException, NoPreferredOrigin {
+                                  CookieJar cookieJar) throws Exception {
         acceptableChannels.add(ChannelIdUtil.toString(chan.get_id()));
         try {
             saveSeisToFile = getSaveSeismogramToFile();
@@ -165,11 +161,10 @@ public class RecordSectionDisplayGenerator implements WaveformProcess {
                     .toURL());
             String[] dataSeisNames = ds.getDataSetSeismogramNames();
             DataSetSeismogram[] dss = new DataSetSeismogram[dataSeisNames.length];
-            ChannelId[] ids = ds.getChannelIds();
             List acceptableSeis = new ArrayList();
             for(int i = 0; i < dataSeisNames.length; i++) {
                 dss[i] = ds.getDataSetSeismogram(dataSeisNames[i]);
-                if(acceptableChannels.contains(ChannelIdUtil.toString(ids[i]))) {
+                if(acceptableChannels.contains(ChannelIdUtil.toString(dss[i].getChannelId()))) {
                     acceptableSeis.add(dss[i]);
                 }
             }
