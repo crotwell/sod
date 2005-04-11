@@ -3666,19 +3666,23 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
-                <element name="displayOption">
-                    <choice>
-                        <value>BEST</value>
-                        <value>ALL</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="saveSeisId">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="fileNameBase">
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
-                    <element name="numSeisPerRecordSection">
+                    <element name="idealNumberOfSeismograms">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
                 </optional>
@@ -3698,11 +3702,6 @@
                 </optional>
                 <optional>
                     <element name="percentSeisHeight">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="minimumSpacing">
                         <data type="double"/>
                     </element>
                 </optional>
@@ -4103,19 +4102,23 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
-                <element name="displayOption">
-                    <choice>
-                        <value>BEST</value>
-                        <value>ALL</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="saveSeisId">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="fileNameBase">
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
-                    <element name="numSeisPerRecordSection">
+                    <element name="idealNumberOfSeismograms">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
                 </optional>
@@ -4135,11 +4138,6 @@
                 </optional>
                 <optional>
                     <element name="percentSeisHeight">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="minimumSpacing">
                         <data type="double"/>
                     </element>
                 </optional>
@@ -4540,19 +4538,23 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
-                <element name="displayOption">
-                    <choice>
-                        <value>BEST</value>
-                        <value>ALL</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="saveSeisId">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="fileNameBase">
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
-                    <element name="numSeisPerRecordSection">
+                    <element name="idealNumberOfSeismograms">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
                 </optional>
@@ -4572,11 +4574,6 @@
                 </optional>
                 <optional>
                     <element name="percentSeisHeight">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="minimumSpacing">
                         <data type="double"/>
                     </element>
                 </optional>
@@ -4977,19 +4974,23 @@
                 <element name="id">
                     <data type="string"/>
                 </element>
-                <element name="displayOption">
-                    <choice>
-                        <value>BEST</value>
-                        <value>ALL</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="saveSeisId">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="fileNameBase">
                         <data type="string"/>
                     </element>
                 </optional>
                 <optional>
-                    <element name="numSeisPerRecordSection">
+                    <element name="idealNumberOfSeismograms">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
                 </optional>
@@ -5009,11 +5010,6 @@
                 </optional>
                 <optional>
                     <element name="percentSeisHeight">
-                        <data type="double"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="minimumSpacing">
                         <data type="double"/>
                     </element>
                 </optional>
