@@ -21,24 +21,31 @@ public class SodFlag extends Flag {
 
     public int getFlagLocation(Dimension size, MicroSecondTimeRange timeRange) {
         int relFlagLocation = super.getFlagLocation(size, timeRange);
-        int ampBorderWidth = sd.get(SeismogramDisplay.CENTER_LEFT).getWidth();
-        flagLoc = ampBorderWidth + relFlagLocation + sd.getInsets().left;
-        int timeBorderHeight = sd.get(SeismogramDisplay.TOP_CENTER).getHeight();
-        flagY_bottom = sd.getHeight() - sd.getInsets().bottom;
-        flagY_top = timeBorderHeight + sd.getInsets().top;
+        x = relFlagLocation + sd.getInsets().left;
+        if(sd.get(SeismogramDisplay.CENTER_LEFT) != null) {
+            x += sd.get(SeismogramDisplay.CENTER_LEFT).getWidth();
+        }
+        top = sd.getInsets().top;
+        if(sd.get(SeismogramDisplay.TOP_CENTER) != null) {
+            top += sd.get(SeismogramDisplay.TOP_CENTER).getHeight();
+        }
+        bottom = sd.getHeight() - sd.getInsets().bottom + top;
+        if(sd.get(SeismogramDisplay.BOTTOM_CENTER) != null) {
+            bottom -= sd.get(SeismogramDisplay.BOTTOM_CENTER).getHeight();
+        }
         return relFlagLocation;
     }
 
     public FlagData getFlagData() {
-        FlagData flagData = new FlagData(flagLoc, flagY_top, flagY_bottom);
+        FlagData flagData = new FlagData(x, top, bottom);
         return flagData;
     }
 
     private SeismogramDisplay sd = null;
 
-    private int flagLoc = -1;
+    private int x = -1;
 
-    private int flagY_bottom = -1;
+    private int bottom = -1;
 
-    private int flagY_top = -1;
+    private int top = -1;
 }
