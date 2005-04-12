@@ -7,9 +7,6 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -40,7 +37,6 @@ import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.FlagData;
 import edu.sc.seis.sod.SodFlag;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -48,11 +44,8 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
 
 public class SeismogramImageProcess implements WaveformProcess {
 
-    public SeismogramImageProcess(SeismogramImageOutputLocator locator)
-            throws TauModelException {
+    public SeismogramImageProcess(SeismogramImageOutputLocator locator) {
         this.locator = locator;
-        tauP = TauPUtil.getTauPUtil();
-        putDataInCookieJar = true;
     }
 
     public SeismogramImageProcess(Element el) throws Exception {
@@ -63,8 +56,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                 phaseWindow = new PhaseWindow((Element)n);
             } else if(n.getNodeName().equals("modelName")) {
                 modelName = SodUtil.getNestedText((Element)n);
-            } else if(n.getNodeName().equals("putDataInCookieJar")) {
-                putDataInCookieJar = true;
+                tauP = TauPUtil.getTauPUtil(modelName);
             } else if(n.getNodeName().equals("dimension")) {
                 dims = SodUtil.loadDimensions((Element)n);
             } else if(n.getNodeName().equals("showOnlyFirstArrivals")) {
@@ -84,7 +76,6 @@ public class SeismogramImageProcess implements WaveformProcess {
             }
         }
         locator = new SeismogramImageOutputLocator(el);
-        tauP = TauPUtil.getTauPUtil(modelName);
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -185,6 +176,7 @@ public class SeismogramImageProcess implements WaveformProcess {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));
             flags[i] = new SodFlag(flagTime, renamer.rename(arrivals[i]), bsd);
+            bsd.add(flags[i]);
         }
         return flags;
     }
@@ -209,22 +201,15 @@ public class SeismogramImageProcess implements WaveformProcess {
         DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
                 + memDSS.getName(), "temp", new AuditInfo[0]);
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
-        Origin o = EventUtil.extractOrigin(event);
         dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
-        Arrival[] arrivals = getArrivals(channel, o, phases);
-        SodFlag[] flags = createSodFlags(arrivals, o, bsd);
+        Origin o = EventUtil.extractOrigin(event);
+        createSodFlags(getArrivals(channel, o, phases), o, bsd);
         String picFileName = locator.getLocation(event, channel, fileType);
-        SwingUtilities.invokeAndWait(new ImageWriter(cookieJar,
-                                                     bsd,
-                                                     fileType,
-                                                     picFileName,
-                                                     flags));
+        SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
     protected class ImageWriter implements Runnable {
-
-        private final CookieJar cookieJar;
 
         private final SeismogramDisplay bsd;
 
@@ -232,15 +217,11 @@ public class SeismogramImageProcess implements WaveformProcess {
 
         private final String picFileName;
 
-        private final SodFlag[] flags;
-
-        private ImageWriter(CookieJar cookieJar, SeismogramDisplay bsd,
-                String fileType, String picFileName, SodFlag[] flags) {
-            this.cookieJar = cookieJar;
+        private ImageWriter(SeismogramDisplay bsd, String fileType,
+                String picFileName) {
             this.bsd = bsd;
             this.fileType = fileType;
             this.picFileName = picFileName;
-            this.flags = flags;
         }
 
         public void run() {
@@ -251,28 +232,6 @@ public class SeismogramImageProcess implements WaveformProcess {
                 } else {
                     bsd.outputToPNG(new File(picFileName), dims);
                 }
-                if(putDataInCookieJar) {
-                    if(!pairsInserted.add(new Integer(cookieJar.getEventChannelPair()
-                            .getPairId()))) {
-                        logger.debug("inserting same key into cookie jar!  You can fix this by making sure each channel in a vector process gets its correct cookie jar...");
-                        return;
-                    }
-                    //Currently only the regions around first P and first S
-                    //Flags are made clickable
-                    int pLeft = NUM_P_TO_MARK;
-                    int sLeft = NUM_S_TO_MARK;
-                    for(int i = 0; i < flags.length; i++) {
-                        String phase = flags[i].getName();
-                        FlagData flagData = flags[i].getFlagData();
-                        if(phase.startsWith("P") && pLeft-- > 0) {
-                            cookieJar.put(locator.getPrefix() + COOKIE_KEY
-                                    + "P", flagData);
-                        } else if(phase.startsWith("S") && sLeft-- > 0) {
-                            cookieJar.put(locator.getPrefix() + COOKIE_KEY
-                                    + "S", flagData);
-                        }
-                    }
-                }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("unable to save seismogram image to "
                                                       + picFileName,
@@ -281,19 +240,15 @@ public class SeismogramImageProcess implements WaveformProcess {
         }
     }
 
-    private static Set pairsInserted = Collections.synchronizedSet(new HashSet());
-
-    private boolean putDataInCookieJar = false;
-
     private SeismogramDisplayConfiguration sdc = new SeismogramDisplayConfiguration();
 
     protected SeismogramImageOutputLocator locator;
 
-    private TauPUtil tauP;
+    private TauPUtil tauP = TauPUtil.getTauPUtil();
 
     private boolean showOnlyFirst;
 
-    protected PhaseWindow phaseWindow = null;
+    protected PhaseWindow phaseWindow;
 
     private PhasePhilter.PhaseRenamer renamer = new PhasePhilter.PhaseRenamer();
 
@@ -307,13 +262,7 @@ public class SeismogramImageProcess implements WaveformProcess {
 
     public static final String PNG = "png";
 
-    public static final String COOKIE_KEY = "SeismogramImageProcess_flagPixels_";
-
-    private static final String[] DEFAULT_PHASES = {"ttp", "tts"};
-
-    private static final int NUM_P_TO_MARK = 1;
-
-    private static final int NUM_S_TO_MARK = 1;
+    private static final String[] DEFAULT_PHASES = {};
 
     private static Dimension DEFAULT_DIMENSION = new Dimension(500, 200);
 
