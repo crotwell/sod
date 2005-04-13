@@ -8,6 +8,7 @@ import java.sql.Statement;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.JDBCSequence;
+import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.sod.database.SodJDBC;
 
 public class JDBCEventRecordSection extends SodJDBC {
@@ -19,7 +20,7 @@ public class JDBCEventRecordSection extends SodJDBC {
 
     public JDBCEventRecordSection(String tableName, String recChannelTableName,
             Connection conn) throws SQLException {
-        String createStmt =  getCreateStatement(tableName);
+        String createStmt = getCreateStatement(tableName);
         String insertStmt = "INSERT INTO " + tableName
                 + "(recSecId, eventid, imageName) VALUES (?, ?, ?)";
         String getRecSecIdStmt = "SELECT recSecId FROM " + tableName
@@ -33,7 +34,7 @@ public class JDBCEventRecordSection extends SodJDBC {
                 + "eventid=? AND channelid=? ";
         String imageNameExistsStmt = "SELECT count(imageName) FROM "
                 + tableName + " WHERE eventid=? AND imageName=?";
-        if(!DBUtil.tableExists(recChannelTableName,conn)){
+        if(!DBUtil.tableExists(recChannelTableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(JDBCRecordSectionChannel.getCreateStatement(recChannelTableName));
         }
@@ -49,12 +50,13 @@ public class JDBCEventRecordSection extends SodJDBC {
         seq = new JDBCSequence(conn, "RecordSectionSeq");
     }
 
-    public static String getCreateStatement(String tableName){
+    public static String getCreateStatement(String tableName) {
         String createStmt = "CREATE TABLE "
-            + tableName
-            + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
+                + tableName
+                + "( recSecId int,  eventid int,  imageName varchar, PRIMARY KEY (recSecId))";
         return createStmt;
     }
+
     public int insert(int eventid, String imageName) throws SQLException {
         int recSecId = seq.next();
         insert.setInt(1, recSecId);
@@ -64,19 +66,20 @@ public class JDBCEventRecordSection extends SodJDBC {
         return recSecId;
     }
 
-    public String getImageForEvent(int eventid) throws SQLException {
+    public String getImageForEvent(int eventid) throws SQLException, NotFound {
         return executeGetImageQuery(eventid).getString("imageName");
     }
 
-    public int getRecSecId(int eventId) throws SQLException {
+    public int getRecSecId(int eventId) throws SQLException, NotFound {
         return executeGetImageQuery(eventId).getInt("recSecId");
     }
 
-    public ResultSet executeGetImageQuery(int eventid) throws SQLException {
+    public ResultSet executeGetImageQuery(int eventid) throws SQLException,
+            NotFound {
         getImageForEvent.setInt(1, eventid);
         ResultSet rs = getImageForEvent.executeQuery();
-        rs.next();
-        return rs;
+        if(rs.next()) { return rs; }
+        throw new NotFound("No record section for event " + eventid);
     }
 
     public String getImageforEventChannel(int eventid, int channelid)
