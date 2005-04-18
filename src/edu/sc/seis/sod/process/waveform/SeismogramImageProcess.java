@@ -31,13 +31,13 @@ import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
+import edu.sc.seis.fissuresUtil.display.drawable.Flag;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodFlag;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
@@ -167,18 +167,13 @@ public class SeismogramImageProcess implements WaveformProcess {
         return arrivals;
     }
 
-    protected SodFlag[] createSodFlags(Arrival[] arrivals,
-                                       Origin o,
-                                       SeismogramDisplay bsd) {
-        final SodFlag[] flags = new SodFlag[arrivals.length];
+    protected void addFlags(Arrival[] arrivals, Origin o, SeismogramDisplay bsd) {
         MicroSecondDate originTime = new MicroSecondDate(o.origin_time);
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));
-            flags[i] = new SodFlag(flagTime, renamer.rename(arrivals[i]), bsd);
-            bsd.add(flags[i]);
+            bsd.add(new Flag(flagTime, renamer.rename(arrivals[i])));
         }
-        return flags;
     }
 
     /** allows specifying a fileType, png or pdf, and a list of phases. */
@@ -203,7 +198,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
         dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
         Origin o = EventUtil.extractOrigin(event);
-        createSodFlags(getArrivals(channel, o, phases), o, bsd);
+        addFlags(getArrivals(channel, o, phases), o, bsd);
         String picFileName = locator.getLocation(event, channel, fileType);
         SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));

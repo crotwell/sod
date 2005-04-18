@@ -78,7 +78,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                  channelGroup.getChannels()[i]);
             sd.add(new DataSetSeismogram[] {seis[i]});
             dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
-            createSodFlags(arrivals, o, sd.get(seis[i]));
+            addFlags(arrivals, o, sd.get(seis[i]));
         }
         final String picFileName = locator.getLocation(event, chan);
         SwingUtilities.invokeAndWait(new Runnable() {
