@@ -155,14 +155,7 @@ public class Start {
         logger.info("logging configured");
         //now override the properties with the properties specified
         // in the configuration file.
-        Element docElement = getDocument().getDocumentElement();
-        Element propertiesElement = SodUtil.getElement(docElement, "properties");
-        if(propertiesElement != null) {
-            //load the properties fromt the configurationfile.
-            runProps = new RunProperties(propertiesElement);
-        } else {
-            logger.debug("No properties specified in the configuration file");
-        }
+        loadRunProps(getDocument().getDocumentElement());
         if(props.containsKey(DBURL_KEY)) {
             ConnMgr.setURL(props.getProperty(DBURL_KEY));
         }
@@ -171,6 +164,17 @@ public class Start {
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
+    }
+
+    public static void loadRunProps(Element document)
+            throws ConfigurationException {
+        Element propertiesElement = SodUtil.getElement(document, "properties");
+        if(propertiesElement != null) {
+            //load the properties fromt the configurationfile.
+            runProps = new RunProperties(propertiesElement);
+        } else {
+            logger.debug("No properties specified in the configuration file");
+        }
     }
 
     public static InputSource createInputSource(ClassLoader cl)
