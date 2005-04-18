@@ -29,7 +29,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
                           Origin origin) {
         for(int i = 0; i < origin.magnitudes.length; i++) {
             if(origin.magnitudes[i].value >= getMinValue()
-                    && origin.magnitudes[i].value <= getMaxValue()) {
+                    && origin.magnitudes[i].value < getMaxValue()) {
                 if(getSearchTypes().length == 0) {
                     // don't care about search types
                     return true;
