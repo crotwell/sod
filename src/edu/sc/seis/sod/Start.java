@@ -198,6 +198,9 @@ public class Start {
         return new InputSource(new BufferedInputStream(in));
     }
 
+    public static void initDocument(Document doc){
+        document = doc;
+    }
     public static WaveformArm getWaveformArm() {
         return waveform;
     }
@@ -382,7 +385,7 @@ public class Start {
         }
     }
 
-    public Document getDocument() {
+    public static Document getDocument() {
         return document;
     }
 
@@ -457,7 +460,7 @@ public class Start {
 
     public static final String DEFAULT_PARSER = "org.apache.xerces.parsers.SAXParser";
 
-    private Document document;
+    private static Document document;
 
     private static Logger logger = Logger.getLogger(Start.class);
 
