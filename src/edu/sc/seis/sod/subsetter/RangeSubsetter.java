@@ -5,7 +5,8 @@ import org.w3c.dom.NodeList;
 import edu.sc.seis.sod.SodUtil;
 
 public class RangeSubsetter {
-    public RangeSubsetter(){}
+
+    public RangeSubsetter() {}
 
     public RangeSubsetter(Element config) {
         NodeList children = config.getChildNodes();
@@ -13,28 +14,49 @@ public class RangeSubsetter {
             if(children.item(i) instanceof Element) {
                 Element el = (Element)children.item(i);
                 String tagName = el.getTagName();
-                if(tagName.equals("min")) {
+                if(tagName.equals("min") || tagName.equals("lessThanEquals")) {
                     min = extractValue(el);
-                } else if(tagName.equals("max")) {
+                } else if(tagName.equals("max")
+                        || tagName.equals("greaterThanEquals")) {
                     max = extractValue(el);
+                } else if(tagName.equals("lessThan")) {
+                    min = extractValue(el);
+                    allowEqualsToMin = false;
+                } else if(tagName.equals("greaterThan")) {
+                    max = extractValue(el);
+                    allowEqualsToMax = false;
                 }
             }
         }
     }
 
-    private static float extractValue(Element e) {
-        return Float.parseFloat(SodUtil.getNestedText(e));
+    public boolean accept(double value) {
+        return acceptMin(value) && acceptMax(value);
     }
 
-    public float getMinValue() {
+    public boolean acceptMin(double value) {
+        return min < value || (allowEqualsToMin && min == value);
+    }
+
+    public boolean acceptMax(double value) {
+        return max > value || (allowEqualsToMax && max == value);
+    }
+
+    boolean allowEqualsToMin = true, allowEqualsToMax = true;
+
+    private static double extractValue(Element e) {
+        return Double.parseDouble(SodUtil.getNestedText(e));
+    }
+
+    public double getMinValue() {
         return min;
     }
 
-    public float getMaxValue() {
+    public double getMaxValue() {
         return max;
     }
 
-    float min = -1f * (Float.MAX_VALUE - 1);
+    protected double min = -1f * (Double.MAX_VALUE - 1);
 
-    float max = Float.MAX_VALUE;
+    protected double max = Double.MAX_VALUE;
 }
