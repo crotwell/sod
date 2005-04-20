@@ -14990,6 +14990,11 @@
                         <ref name="fontContents"/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="titleColor">
+                        <ref name="colorContents"/>
+                    </element>
+                </optional>
                 <zeroOrMore>
                     <element name="title">
                         <element name="text">
@@ -14998,6 +15003,11 @@
                         <optional>
                             <element name="font">
                                 <ref name="fontContents"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="titleColor">
+                                <ref name="colorContents"/>
                             </element>
                         </optional>
                     </element>
@@ -32678,6 +32688,11 @@
                     <ref name="fontContents2"/>
                 </element>
             </optional>
+            <optional>
+                <element name="titleColor">
+                    <ref name="colorContents2"/>
+                </element>
+            </optional>
             <zeroOrMore>
                 <element name="title">
                     <element name="text">
@@ -32686,6 +32701,11 @@
                     <optional>
                         <element name="font">
                             <ref name="fontContents2"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="titleColor">
+                            <ref name="colorContents2"/>
                         </element>
                     </optional>
                 </element>
@@ -32726,6 +32746,11 @@
                     <ref name="fontContents3"/>
                 </element>
             </optional>
+            <optional>
+                <element name="titleColor">
+                    <ref name="colorContents3"/>
+                </element>
+            </optional>
             <zeroOrMore>
                 <element name="title">
                     <element name="text">
@@ -32734,6 +32759,11 @@
                     <optional>
                         <element name="font">
                             <ref name="fontContents3"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="titleColor">
+                            <ref name="colorContents3"/>
                         </element>
                     </optional>
                 </element>
@@ -32774,6 +32804,11 @@
                     <ref name="fontContents4"/>
                 </element>
             </optional>
+            <optional>
+                <element name="titleColor">
+                    <ref name="colorContents4"/>
+                </element>
+            </optional>
             <zeroOrMore>
                 <element name="title">
                     <element name="text">
@@ -32782,6 +32817,11 @@
                     <optional>
                         <element name="font">
                             <ref name="fontContents4"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="titleColor">
+                            <ref name="colorContents4"/>
                         </element>
                     </optional>
                 </element>
@@ -32822,6 +32862,11 @@
                     <ref name="fontContents5"/>
                 </element>
             </optional>
+            <optional>
+                <element name="titleColor">
+                    <ref name="colorContents5"/>
+                </element>
+            </optional>
             <zeroOrMore>
                 <element name="title">
                     <element name="text">
@@ -32830,6 +32875,11 @@
                     <optional>
                         <element name="font">
                             <ref name="fontContents5"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="titleColor">
+                            <ref name="colorContents5"/>
                         </element>
                     </optional>
                 </element>

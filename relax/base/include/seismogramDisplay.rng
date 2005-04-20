@@ -35,10 +35,10 @@
             <ref name="border"/>
         </zeroOrMore>
         <optional>
-        	<ref name="timeConfig"/>
+            <ref name="timeConfig"/>
         </optional>
         <optional>
-        	<ref name="ampConfig"/>
+            <ref name="ampConfig"/>
         </optional>
     </define>
     <define name="basicSeismogramDisplayContents">
@@ -191,6 +191,11 @@
                     <ref name="fontContents"/>
                 </element>
             </optional>
+            <optional>
+                <element name="titleColor">
+                    <ref name="colorContents"/>
+                </element>
+            </optional>
             <zeroOrMore>
                 <element name="title">
                     <element name="text">
@@ -199,6 +204,11 @@
                     <optional>
                         <element name="font">
                             <ref name="fontContents"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="titleColor">
+                            <ref name="colorContents"/>
                         </element>
                     </optional>
                 </element>
@@ -228,53 +238,53 @@
         </optional>
     </define>
     <define name="timeConfig">
-    	<element name="timeConfig">
-	    	<ref name="defineAndReference"/>
-	    	<element name="type">
-    			<choice>
-    				<value>basic</value>
-    				<value>relative</value>
-    				<value>originAligned</value>
-	    			<value>phaseAligned</value>
-    				<value>autoAdvance</value>
-    			</choice>
-	    	</element>
-    		<optional>
-	    		<ref name="timeConfig"/>
-	    	</optional>
-    		<optional>
-    			<element name="advanceInterval">
-    					<ref name="timeUnit"/>
-    				<element name="value">
-    					<data type="double"/>
-	    			</element>
-    			</element>
-    		</optional>
-	    	<optional>
-    			<element name="advancesPerSecond">
-    				<data type="float"/>
-    			</element>
-	    	</optional>
-    		<optional>
-    			<element name="phaseName">
-    				<data type="string"/>
-	    		</element>
-    		</optional>
-	    </element>
+        <element name="timeConfig">
+            <ref name="defineAndReference"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>relative</value>
+                    <value>originAligned</value>
+                    <value>phaseAligned</value>
+                    <value>autoAdvance</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="timeConfig"/>
+            </optional>
+            <optional>
+                <element name="advanceInterval">
+                    <ref name="timeUnit"/>
+                    <element name="value">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
+                <element name="advancesPerSecond">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
     </define>
     <define name="ampConfig">
-	    <element name="ampConfig">
-		    <ref name="defineAndReference"/>
-    		<element name="type">
-    			<choice>
-    				<value>basic</value>
-	    			<value>rmean</value>
-    				<value>individual</value>
-    			</choice>
-	    	</element>
-	    	<optional>
-		    	<ref name="ampConfig"/>
-	    	</optional>
-	   	</element>
+        <element name="ampConfig">
+            <ref name="defineAndReference"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>rmean</value>
+                    <value>individual</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="ampConfig"/>
+            </optional>
+        </element>
     </define>
 </grammar>
