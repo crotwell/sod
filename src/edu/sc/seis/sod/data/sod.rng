@@ -163,14 +163,30 @@
                                 </element>
                             </zeroOrMore>
                             <optional>
-                                <element name="min">
-                                    <data type="float"/>
-                                </element>
+                                <choice>
+                                    <element name="min">
+                                    <data type="double"/>
+                                    </element>
+                                    <element name="greaterThan">
+                                    <data type="double"/>
+                                    </element>
+                                    <element name="greaterThanEquals">
+                                    <data type="double"/>
+                                    </element>
+                                </choice>
                             </optional>
                             <optional>
-                                <element name="max">
-                                    <data type="float"/>
-                                </element>
+                                <choice>
+                                    <element name="max">
+                                    <data type="double"/>
+                                    </element>
+                                    <element name="lessThan">
+                                    <data type="double"/>
+                                    </element>
+                                    <element name="lessThanEquals">
+                                    <data type="double"/>
+                                    </element>
+                                </choice>
                             </optional>
                         </element>
                     </optional>
@@ -3421,13 +3437,6 @@
             </element>
         </element>
     </define>
-    <define name="regExp18">
-        <element name="stationRegularExpression">
-            <element name="url">
-                <data type="string"/>
-            </element>
-        </element>
-    </define>
     <define name="regExp3">
         <element name="stationRegularExpression">
             <element name="url">
@@ -3506,6 +3515,13 @@
         </element>
     </define>
     <define name="regExp32">
+        <element name="stationRegularExpression">
+            <element name="url">
+                <data type="string"/>
+            </element>
+        </element>
+    </define>
+    <define name="regExp18">
         <element name="stationRegularExpression">
             <element name="url">
                 <data type="string"/>
@@ -3745,10 +3761,10 @@
                             <ref name="border2"/>
                         </zeroOrMore>
                         <optional>
-                            <ref name="timeConfig2"/>
+                            <ref name="timeConfig3"/>
                         </optional>
                         <optional>
-                            <ref name="ampConfig2"/>
+                            <ref name="ampConfig3"/>
                         </optional>
                     </element>
                 </optional>
@@ -3980,6 +3996,12 @@
                     <zeroOrMore>
                         <ref name="border2"/>
                     </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig3"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig3"/>
+                    </optional>
                 </element>
             </element>
             <element name="legacyExecute">
@@ -4181,10 +4203,10 @@
                             <ref name="border4"/>
                         </zeroOrMore>
                         <optional>
-                            <ref name="timeConfig4"/>
+                            <ref name="timeConfig5"/>
                         </optional>
                         <optional>
-                            <ref name="ampConfig4"/>
+                            <ref name="ampConfig5"/>
                         </optional>
                     </element>
                 </optional>
@@ -4416,6 +4438,12 @@
                     <zeroOrMore>
                         <ref name="border4"/>
                     </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig5"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig5"/>
+                    </optional>
                 </element>
             </element>
             <element name="legacyExecute">
@@ -4617,10 +4645,10 @@
                             <ref name="border"/>
                         </zeroOrMore>
                         <optional>
-                            <ref name="timeConfig"/>
+                            <ref name="timeConfig2"/>
                         </optional>
                         <optional>
-                            <ref name="ampConfig"/>
+                            <ref name="ampConfig2"/>
                         </optional>
                     </element>
                 </optional>
@@ -4852,6 +4880,12 @@
                     <zeroOrMore>
                         <ref name="border"/>
                     </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig2"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig2"/>
+                    </optional>
                 </element>
             </element>
             <element name="legacyExecute">
@@ -5053,10 +5087,10 @@
                             <ref name="border3"/>
                         </zeroOrMore>
                         <optional>
-                            <ref name="timeConfig3"/>
+                            <ref name="timeConfig4"/>
                         </optional>
                         <optional>
-                            <ref name="ampConfig3"/>
+                            <ref name="ampConfig4"/>
                         </optional>
                     </element>
                 </optional>
@@ -5288,6 +5322,12 @@
                     <zeroOrMore>
                         <ref name="border3"/>
                     </zeroOrMore>
+                    <optional>
+                        <ref name="timeConfig4"/>
+                    </optional>
+                    <optional>
+                        <ref name="ampConfig4"/>
+                    </optional>
                 </element>
             </element>
             <element name="legacyExecute">
@@ -6973,6 +7013,20 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="xml139">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml139"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="xml83">
         <element>
             <anyName/>
@@ -7207,20 +7261,6 @@
                     </attribute>
                     <text/>
                     <ref name="xml16"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="xml139">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml139"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -15014,6 +15054,12 @@
                 </zeroOrMore>
             </element>
         </zeroOrMore>
+        <optional>
+            <ref name="timeConfig"/>
+        </optional>
+        <optional>
+            <ref name="ampConfig"/>
+        </optional>
     </define>
     <define name="stationPointDistance16">
         <element name="stationPointDistance">
@@ -15043,6 +15089,13 @@
             <ref name="lon31"/>
         </element>
     </define>
+    <define name="stationPointDistance12">
+        <element name="stationPointDistance">
+            <ref name="range16"/>
+            <ref name="lat12"/>
+            <ref name="lon12"/>
+        </element>
+    </define>
     <define name="stationPointDistance22">
         <element name="stationPointDistance">
             <ref name="range30"/>
@@ -15055,13 +15108,6 @@
             <ref name="range34"/>
             <ref name="lat26"/>
             <ref name="lon26"/>
-        </element>
-    </define>
-    <define name="stationPointDistance12">
-        <element name="stationPointDistance">
-            <ref name="range16"/>
-            <ref name="lat12"/>
-            <ref name="lon12"/>
         </element>
     </define>
     <define name="stationPointDistance3">
@@ -17040,14 +17086,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -17097,14 +17159,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -17317,14 +17395,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -17374,14 +17468,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -17594,14 +17704,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -17651,14 +17777,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -17871,14 +18013,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -17928,14 +18086,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -18148,14 +18322,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -18205,14 +18395,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -18425,14 +18631,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -18482,14 +18704,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -18702,14 +18940,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -18759,14 +19013,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -18979,14 +19249,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -19036,14 +19322,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -19256,14 +19558,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -19313,14 +19631,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -19533,14 +19867,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -19590,14 +19940,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -19810,14 +20176,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -19867,14 +20249,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -20087,14 +20485,30 @@
                     </element>
                 </zeroOrMore>
                 <optional>
-                    <element name="min">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="min">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="greaterThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
                 <optional>
-                    <element name="max">
-                        <data type="float"/>
-                    </element>
+                    <choice>
+                        <element name="max">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThan">
+                            <data type="double"/>
+                        </element>
+                        <element name="lessThanEquals">
+                            <data type="double"/>
+                        </element>
+                    </choice>
                 </optional>
             </element>
             <element name="originDepthRange">
@@ -20144,14 +20558,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
             </element>
@@ -21849,76 +22279,6 @@
     </define>
     <define name="timeConfig3">
         <element name="timeConfig">
-            <ref name="defineAndReference4"/>
-            <element name="type">
-                <choice>
-                    <value>basic</value>
-                    <value>relative</value>
-                    <value>originAligned</value>
-                    <value>phaseAligned</value>
-                    <value>autoAdvance</value>
-                </choice>
-            </element>
-            <optional>
-                <ref name="timeConfig3"/>
-            </optional>
-            <optional>
-                <element name="advanceInterval">
-                    <ref name="timeUnit4"/>
-                    <element name="value">
-                        <data type="double"/>
-                    </element>
-                </element>
-            </optional>
-            <optional>
-                <element name="advancesPerSecond">
-                    <data type="float"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-            </optional>
-        </element>
-    </define>
-    <define name="timeConfig">
-        <element name="timeConfig">
-            <ref name="defineAndReference2"/>
-            <element name="type">
-                <choice>
-                    <value>basic</value>
-                    <value>relative</value>
-                    <value>originAligned</value>
-                    <value>phaseAligned</value>
-                    <value>autoAdvance</value>
-                </choice>
-            </element>
-            <optional>
-                <ref name="timeConfig"/>
-            </optional>
-            <optional>
-                <element name="advanceInterval">
-                    <ref name="timeUnit2"/>
-                    <element name="value">
-                        <data type="double"/>
-                    </element>
-                </element>
-            </optional>
-            <optional>
-                <element name="advancesPerSecond">
-                    <data type="float"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="phaseName">
-                    <data type="string"/>
-                </element>
-            </optional>
-        </element>
-    </define>
-    <define name="timeConfig2">
-        <element name="timeConfig">
             <ref name="defineAndReference3"/>
             <element name="type">
                 <choice>
@@ -21930,7 +22290,7 @@
                 </choice>
             </element>
             <optional>
-                <ref name="timeConfig2"/>
+                <ref name="timeConfig3"/>
             </optional>
             <optional>
                 <element name="advanceInterval">
@@ -21952,9 +22312,114 @@
             </optional>
         </element>
     </define>
-    <define name="timeConfig4">
+    <define name="timeConfig5">
         <element name="timeConfig">
             <ref name="defineAndReference5"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>relative</value>
+                    <value>originAligned</value>
+                    <value>phaseAligned</value>
+                    <value>autoAdvance</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="timeConfig5"/>
+            </optional>
+            <optional>
+                <element name="advanceInterval">
+                    <ref name="timeUnit7"/>
+                    <element name="value">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
+                <element name="advancesPerSecond">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="timeConfig">
+        <element name="timeConfig">
+            <ref name="defineAndReference"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>relative</value>
+                    <value>originAligned</value>
+                    <value>phaseAligned</value>
+                    <value>autoAdvance</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="timeConfig"/>
+            </optional>
+            <optional>
+                <element name="advanceInterval">
+                    <ref name="timeUnit"/>
+                    <element name="value">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
+                <element name="advancesPerSecond">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="timeConfig2">
+        <element name="timeConfig">
+            <ref name="defineAndReference2"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>relative</value>
+                    <value>originAligned</value>
+                    <value>phaseAligned</value>
+                    <value>autoAdvance</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="timeConfig2"/>
+            </optional>
+            <optional>
+                <element name="advanceInterval">
+                    <ref name="timeUnit2"/>
+                    <element name="value">
+                        <data type="double"/>
+                    </element>
+                </element>
+            </optional>
+            <optional>
+                <element name="advancesPerSecond">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="timeConfig4">
+        <element name="timeConfig">
+            <ref name="defineAndReference4"/>
             <element name="type">
                 <choice>
                     <value>basic</value>
@@ -21969,7 +22434,7 @@
             </optional>
             <optional>
                 <element name="advanceInterval">
-                    <ref name="timeUnit7"/>
+                    <ref name="timeUnit4"/>
                     <element name="value">
                         <data type="double"/>
                     </element>
@@ -24079,7 +24544,7 @@
     </define>
     <define name="ampConfig4">
         <element name="ampConfig">
-            <ref name="defineAndReference5"/>
+            <ref name="defineAndReference4"/>
             <element name="type">
                 <choice>
                     <value>basic</value>
@@ -24094,7 +24559,7 @@
     </define>
     <define name="ampConfig">
         <element name="ampConfig">
-            <ref name="defineAndReference2"/>
+            <ref name="defineAndReference"/>
             <element name="type">
                 <choice>
                     <value>basic</value>
@@ -24107,9 +24572,24 @@
             </optional>
         </element>
     </define>
+    <define name="ampConfig5">
+        <element name="ampConfig">
+            <ref name="defineAndReference5"/>
+            <element name="type">
+                <choice>
+                    <value>basic</value>
+                    <value>rmean</value>
+                    <value>individual</value>
+                </choice>
+            </element>
+            <optional>
+                <ref name="ampConfig5"/>
+            </optional>
+        </element>
+    </define>
     <define name="ampConfig2">
         <element name="ampConfig">
-            <ref name="defineAndReference3"/>
+            <ref name="defineAndReference2"/>
             <element name="type">
                 <choice>
                     <value>basic</value>
@@ -24124,7 +24604,7 @@
     </define>
     <define name="ampConfig3">
         <element name="ampConfig">
-            <ref name="defineAndReference4"/>
+            <ref name="defineAndReference3"/>
             <element name="type">
                 <choice>
                     <value>basic</value>
@@ -24162,14 +24642,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range19"/>
@@ -24273,14 +24769,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range36"/>
@@ -24384,14 +24896,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range42"/>
@@ -24495,14 +25023,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range7"/>
@@ -24606,14 +25150,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range21"/>
@@ -24717,14 +25277,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range3"/>
@@ -24828,14 +25404,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range25"/>
@@ -24939,14 +25531,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range27"/>
@@ -25050,14 +25658,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range15"/>
@@ -25161,14 +25785,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range11"/>
@@ -25272,14 +25912,30 @@
                         </element>
                     </zeroOrMore>
                     <optional>
-                        <element name="min">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="greaterThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                     <optional>
-                        <element name="max">
-                            <data type="float"/>
-                        </element>
+                        <choice>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThan">
+                                <data type="double"/>
+                            </element>
+                            <element name="lessThanEquals">
+                                <data type="double"/>
+                            </element>
+                        </choice>
                     </optional>
                 </element>
                 <ref name="range40"/>
@@ -26929,6 +27585,13 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="OR10">
+        <element name="stationOR">
+            <oneOrMore>
+                <ref name="stationLogical6"/>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="OR28">
         <element name="stationOR">
             <oneOrMore>
@@ -27122,13 +27785,6 @@
         <element name="channelOR">
             <oneOrMore>
                 <ref name="channelLogical9"/>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="OR10">
-        <element name="stationOR">
-            <oneOrMore>
-                <ref name="stationLogical6"/>
             </oneOrMore>
         </element>
     </define>
@@ -32594,12 +33250,12 @@
             <data type="string"/>
         </element>
     </define>
-    <define name="name34">
+    <define name="name25">
         <element name="stationName">
             <data type="string"/>
         </element>
     </define>
-    <define name="name25">
+    <define name="name34">
         <element name="stationName">
             <data type="string"/>
         </element>
