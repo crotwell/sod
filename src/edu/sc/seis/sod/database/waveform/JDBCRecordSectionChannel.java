@@ -30,6 +30,8 @@ public class JDBCRecordSectionChannel extends SodJDBC {
                 + " WHERE recSecId=? and eq_dbid=? and best=?";
         String channelExistsStmt = "SELECT count(channelid) from " + tableName
                 + " where  recSecId=? AND eq_dbid=? AND channelid=?";
+        String recSecExistsStmt = "SELECT TOP 1 recSecId from " + tableName
+                + " where  recSecId=? AND eq_dbid=? ";
         if(!DBUtil.tableExists(tableName, conn)) {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(createStmt);
@@ -37,6 +39,7 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         insert = conn.prepareStatement(insertStmt);
         getChannels = conn.prepareStatement(getChannelsStmt);
         channelExists = conn.prepareStatement(channelExistsStmt);
+        recSecExists = conn.prepareStatement(recSecExistsStmt);
     }
 
     public void insert(String recSecId,
@@ -112,8 +115,8 @@ public class JDBCRecordSectionChannel extends SodJDBC {
     }
 
     /*
-     * Set the value in best column to 1 for channels that go into the best recordsection
-     * and 0 for other channels
+     * Set the value in best column to 1 for channels that go into the best
+     * recordsection and 0 for other channels
      */
     public void updateChannels(String recSecId, int eq_dbid, int[] channelIds)
             throws SQLException {
@@ -138,7 +141,15 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         st.executeUpdate(updateBestChannelStmt);
     }
 
-    PreparedStatement insert, getPixelInfo, getChannels, channelExists;
+    public boolean recSecExists(int eventDbId, String recSecId)
+            throws SQLException {
+        recSecExists.setString(1, recSecId);
+        recSecExists.setInt(2, eventDbId);
+        return recSecExists.executeQuery().next();
+    }
+
+    PreparedStatement insert, getPixelInfo, getChannels, channelExists,
+            recSecExists;
 
     Connection conn;
 
