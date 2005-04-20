@@ -28,8 +28,7 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
                           EventAttr eventAttr,
                           Origin origin) {
         for(int i = 0; i < origin.magnitudes.length; i++) {
-            if(origin.magnitudes[i].value >= getMinValue()
-                    && origin.magnitudes[i].value < getMaxValue()) {
+            if(accept(origin.magnitudes[i].value)) {
                 if(getSearchTypes().length == 0) {
                     // don't care about search types
                     return true;
