@@ -67,7 +67,9 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         Origin o = EventUtil.extractOrigin(event);
         Arrival[] arrivals = getArrivals(chan, o, phaseFlagNames);
         final ComponentSortedSeismogramDisplay sd = new ComponentSortedSeismogramDisplay(false);
-        sd.setZ((BasicSeismogramDisplay)vdc.createDisplay());
+        BasicSeismogramDisplay vert = (BasicSeismogramDisplay)vdc.createDisplay();
+        sd.setTimeConfig(vert.getTimeConfig());
+        sd.setZ(vert);
         sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
         sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
         for(int i = 0; i < seis.length; i++) {
@@ -76,8 +78,8 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                  phaseWindow,
                                  event,
                                  channelGroup.getChannels()[i]);
-            sd.add(new DataSetSeismogram[] {seis[i]});
             dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
+            sd.add(new DataSetSeismogram[] {seis[i]});
             addFlags(arrivals, o, sd.get(seis[i]));
         }
         final String picFileName = locator.getLocation(event, chan);
