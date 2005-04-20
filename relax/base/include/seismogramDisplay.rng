@@ -66,6 +66,12 @@
         <zeroOrMore>
             <ref name="border"/>
         </zeroOrMore>
+        <optional>
+            <ref name="timeConfig"/>
+        </optional>
+        <optional>
+            <ref name="ampConfig"/>
+        </optional>
     </define>
     <define name="displaySpecificElements">
         <notAllowed/>
