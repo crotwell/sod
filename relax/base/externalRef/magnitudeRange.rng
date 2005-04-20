@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="magnitudeRange">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Accepts a range of magnitudes</summary>
-                    <description> If the origin has a magnitude of the given types, and it is greater than or equals to
-                        the min and less than the max, then it is accepted. If the type is missing, then any
-                        type is accepted. </description>
+                    <description> If the origin has a magnitude of the given types, and it falls
+                        within the ranges specified, it is accepted. min is the same as
+                        greaterThanEquals and max is the same as lessThanEquals. If the type is
+                        missing, then any type is accepted. </description>
                     <example>
                         <magnitudeRange>
                             <magType>mb</magType>
@@ -23,14 +25,30 @@
                 </element>
             </zeroOrMore>
             <optional>
-                <element name="min">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="min">
+                        <data type="double"/>
+                    </element>
+                    <element name="greaterThan">
+                        <data type="double"/>
+                    </element>
+                    <element name="greaterThanEquals">
+                        <data type="double"/>
+                    </element>
+                </choice>
             </optional>
             <optional>
-                <element name="max">
-                    <data type="float"/>
-                </element>
+                <choice>
+                    <element name="max">
+                        <data type="double"/>
+                    </element>
+                    <element name="lessThan">
+                        <data type="double"/>
+                    </element>
+                    <element name="lessThanEquals">
+                        <data type="double"/>
+                    </element>
+                </choice>
             </optional>
         </element>
     </start>
