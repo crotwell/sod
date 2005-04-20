@@ -11,16 +11,15 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodUtil;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 
@@ -113,8 +112,6 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     }
 
     private String filename = "recordsection" + FILE_EXTENSION;
-
-    private SeismogramDisplayConfiguration displayCreator;
 
     private Set acceptableChannels = new HashSet();
 
