@@ -14599,14 +14599,10 @@
                 <empty/>
             </element>
             <element name="ANDWaveformProcessWrapper">
-                <zeroOrMore>
-                    <ref name="seismogramProcess3"/>
-                </zeroOrMore>
+                <ref name="seismogramProcess3"/>
             </element>
             <element name="ORWaveformProcessWrapper">
-                <zeroOrMore>
-                    <ref name="seismogramProcess2"/>
-                </zeroOrMore>
+                <ref name="seismogramProcess2"/>
             </element>
             <element name="legacyVectorExecute">
                 <optional>

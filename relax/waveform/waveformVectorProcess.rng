@@ -50,9 +50,7 @@
                     operation short circuits, so no waveforms after the first failure are
                 processed.</description>
             </xsd:annotation>
-            <zeroOrMore>
-                <externalRef href="waveformProcess.rng"/>
-            </zeroOrMore>
+            <externalRef href="waveformProcess.rng"/>
         </element>
     </define>
     <define name="ORWaveformProcessWrapper">
@@ -64,9 +62,7 @@
                     operation short circuits, so no waveforms after the first success are
                 processed.</description>
             </xsd:annotation>
-            <zeroOrMore>
-                <externalRef href="waveformProcess.rng"/>
-            </zeroOrMore>
+            <externalRef href="waveformProcess.rng"/>
         </element>
     </define>
     <define name="legacyVectorExecute">
