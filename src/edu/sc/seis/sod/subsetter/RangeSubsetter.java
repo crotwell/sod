@@ -14,15 +14,15 @@ public class RangeSubsetter {
             if(children.item(i) instanceof Element) {
                 Element el = (Element)children.item(i);
                 String tagName = el.getTagName();
-                if(tagName.equals("min") || tagName.equals("lessThanEquals")) {
+                if(tagName.equals("min") || tagName.equals("greaterThanEquals")) {
                     min = extractValue(el);
                 } else if(tagName.equals("max")
-                        || tagName.equals("greaterThanEquals")) {
+                        || tagName.equals("lessThanEquals")) {
                     max = extractValue(el);
-                } else if(tagName.equals("lessThan")) {
+                } else if(tagName.equals("greaterThan")) {
                     min = extractValue(el);
                     allowEqualsToMin = false;
-                } else if(tagName.equals("greaterThan")) {
+                } else if(tagName.equals("lessThan")) {
                     max = extractValue(el);
                     allowEqualsToMax = false;
                 }
