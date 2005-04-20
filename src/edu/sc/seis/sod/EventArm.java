@@ -137,7 +137,6 @@ public class EventArm implements Runnable {
                         logger.debug("Found " + events.length
                                 + " events between " + queryStart + " and "
                                 + queryEnd);
-                        
                         //Scarab: Sod8
                         //We have the source and dns here. If we wanted to go
                         //back to the server to refresh the events instead of
@@ -257,11 +256,9 @@ public class EventArm implements Runnable {
                 cached[counter] = (CacheEvent)uncached[counter];
             } else {
                 cached[counter] = new CacheEvent(uncached[counter]);
-                
                 // preload cache
                 EventLoader backLoader = new EventLoader(cached[counter]);
                 WorkerThreadPool.getDefaultPool().invokeLater(backLoader);
-                
             }
         }
         return cached;
@@ -434,8 +431,8 @@ public class EventArm implements Runnable {
                                                                            maxDepth,
                                                                            tr,
                                                                            searchTypes,
-                                                                           minMag,
-                                                                           maxMag,
+                                                                           (float)minMag,
+                                                                           (float)maxMag,
                                                                            catalogs,
                                                                            contributors,
                                                                            sequenceMaximum,
@@ -499,7 +496,7 @@ public class EventArm implements Runnable {
 
         private String[] searchTypes = {"%"};
 
-        private float minMag = -99.0f, maxMag = 99.0f;
+        private double minMag = -99.0f, maxMag = 99.0f;
 
         private Area area = finder.getArea();
 

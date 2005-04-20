@@ -397,11 +397,11 @@ public class SodUtil {
             if(children.item(i) instanceof Element) {
                 Object obj = SodUtil.load((Element)children.item(i), "");
                 if(obj instanceof LatitudeRange) {
-                    minLatitude = ((LatitudeRange)obj).getMinValue();
-                    maxLatitude = ((LatitudeRange)obj).getMaxValue();
+                    minLatitude = (float)((LatitudeRange)obj).getMinValue();
+                    maxLatitude = (float)((LatitudeRange)obj).getMaxValue();
                 } else if(obj instanceof LongitudeRange) {
-                    minLongitude = ((LongitudeRange)obj).getMinValue();
-                    maxLongitude = ((LongitudeRange)obj).getMaxValue();
+                    minLongitude = (float)((LongitudeRange)obj).getMinValue();
+                    maxLongitude = (float)((LongitudeRange)obj).getMaxValue();
                 }
             }
         }
