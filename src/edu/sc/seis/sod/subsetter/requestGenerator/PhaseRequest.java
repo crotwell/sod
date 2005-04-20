@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
@@ -19,8 +20,9 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 
-public class PhaseRequest implements RequestGenerator{
-    public PhaseRequest (Element config) throws ConfigurationException{
+public class PhaseRequest implements RequestGenerator {
+
+    public PhaseRequest(Element config) throws ConfigurationException {
         String model = "prem";
         NodeList childNodes = config.getChildNodes();
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
@@ -30,7 +32,7 @@ public class PhaseRequest implements RequestGenerator{
                     beginPhase = SodUtil.getNestedText(el);
                 } else if(el.getTagName().equals("endPhase")) {
                     endPhase = SodUtil.getNestedText(el);
-                }else if(el.getTagName().equals("model")){
+                } else if(el.getTagName().equals("model")) {
                     model = SodUtil.getNestedText(el);
                 } else if(el.getTagName().equals("beginOffset")) {
                     beginOffset = SodUtil.loadTimeInterval(el);
@@ -41,20 +43,23 @@ public class PhaseRequest implements RequestGenerator{
         }
         try {
             util = TauPUtil.getTauPUtil(model);
-        } catch (TauModelException e) {
-            throw new ConfigurationException(model + " caused a TauModelException", e);
+        } catch(TauModelException e) {
+            throw new ConfigurationException(model
+                    + " caused a TauModelException", e);
         }
     }
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
-                                           Channel channel, CookieJar cookieJar) throws Exception{
+                                           Channel channel,
+                                           CookieJar cookieJar)
+            throws Exception {
         Origin origin = EventUtil.extractOrigin(event);
-        if ( prevRequestFilters != null &&
-            origin.my_location.equals(prevOriginLoc) &&
-            channel.my_site.my_location.equals(prevSiteLoc) ) {
+        if(prevRequestFilters != null
+                && origin.my_location.equals(prevOriginLoc)
+                && channel.my_site.my_location.equals(prevSiteLoc)) {
             // don't need to do any work
             RequestFilter[] out = new RequestFilter[prevRequestFilters.length];
-            for (int i = 0; i < out.length; i++) {
+            for(int i = 0; i < out.length; i++) {
                 out[i] = new RequestFilter(channel.get_id(),
                                            prevRequestFilters[i].start_time,
                                            prevRequestFilters[i].end_time);
@@ -65,15 +70,13 @@ public class PhaseRequest implements RequestGenerator{
             prevSiteLoc = channel.my_site.my_location;
             prevRequestFilters = null;
         } // end of else
-
         double begin = getArrivalTime(beginPhase, channel, origin);
         double end = getArrivalTime(endPhase, channel, origin);
-        if (begin == -1 || end == -1) {
+        if(begin == -1 || end == -1) {
             // no arrivals found, return zero length request filters
             prevRequestFilters = new RequestFilter[0];
             return prevRequestFilters;
         }
-
         MicroSecondDate originDate = new MicroSecondDate(origin.origin_time);
         TimeInterval bInterval = beginOffset.add(new TimeInterval(begin,
                                                                   UnitImpl.SECOND));
@@ -84,35 +87,45 @@ public class PhaseRequest implements RequestGenerator{
         RequestFilter filter = new RequestFilter(channel.get_id(),
                                                  bDate.getFissuresTime(),
                                                  eDate.getFissuresTime());
-        prevRequestFilters = new RequestFilter[]{filter};
+        prevRequestFilters = new RequestFilter[] {filter};
+        logger.debug("Generated request from "
+                + bDate
+                + " to "
+                + eDate
+                + " for "
+                + StationIdUtil.toStringNoDates(channel.my_site.my_station.get_id()));
         return prevRequestFilters;
     }
 
-
-
-    private double getArrivalTime(String phase, Channel chan, Origin origin) throws TauModelException {
-        if (phase.equals(ORIGIN)) {
+    private double getArrivalTime(String phase, Channel chan, Origin origin)
+            throws TauModelException {
+        if(phase.equals(ORIGIN)) {
             return 0;
-        }else{
+        } else {
             String[] phases = {phase};
             Arrival[] arrivals = util.calcTravelTimes(chan.my_site.my_location,
                                                       origin,
                                                       phases);
-            if(arrivals.length == 0){
+            if(arrivals.length == 0) {
                 return -1;
-            }else{
+            } else {
                 // round to milliseconds
-                return Math.rint(1000*arrivals[0].getTime())/1000;
+                return Math.rint(1000 * arrivals[0].getTime()) / 1000;
             }
         }
     }
 
     private String beginPhase, endPhase;
+
     private TimeInterval beginOffset, endOffset;
 
     private TauPUtil util;
+
     private RequestFilter[] prevRequestFilters;
+
     private Location prevOriginLoc, prevSiteLoc;
+
     private static Logger logger = Logger.getLogger(PhaseRequest.class);
+
     private static final String ORIGIN = "origin";
 }// PhaseRequest

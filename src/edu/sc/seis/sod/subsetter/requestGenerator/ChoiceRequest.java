@@ -1,8 +1,8 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,20 +20,15 @@ import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 public class ChoiceRequest implements RequestGenerator {
 
     public ChoiceRequest(Element config) throws ConfigurationException {
-        NodeList childNodes = config.getChildNodes();
-        Node node;
-        for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            node = childNodes.item(counter);
-            if(node instanceof Element) {
-                Element element = (Element)node;
-                if(element.getTagName().equals("choice")) {
-                    choices.add(new Choice(element));
-                } else if(element.getTagName().equals("otherwise")) {
-                    otherwise = (RequestGenerator)SodUtil.load(DOMHelper.extractElement((Element)node,
-                                                                                        "*"),
-                                                               "requestGenerator");
-                } // end of else
-            }
+        NodeList choiceNodes = DOMHelper.extractNodes(config, "choice");
+        for(int i = 0; i < choiceNodes.getLength(); i++) {
+            choices.add(new Choice((Element)choiceNodes.item(i)));
+        }
+        if(DOMHelper.hasElement(config, "otherwise")) {
+            Element otherwiseEl = DOMHelper.extractElement(config,
+                                                           "otherwise/*");
+            otherwise = (RequestGenerator)SodUtil.load(otherwiseEl,
+                                                       "requestGenerator");
         }
     }
 
@@ -41,16 +36,18 @@ public class ChoiceRequest implements RequestGenerator {
                                            Channel channel,
                                            CookieJar cookieJar)
             throws Exception {
-        Iterator it = choices.iterator();
-        while(it.hasNext()) {
-            Choice c = (Choice)it.next();
-            if(c.accept(event, channel, cookieJar).isSuccess()) { return c.generateRequest(event,
-                                                                                           channel,
-                                                                                           cookieJar); }
+        for(int i = 0; i < choices.size(); i++) {
+            Choice c = (Choice)choices.get(i);
+            if(c.accept(event, channel, cookieJar).isSuccess()) {
+                logger.debug("Generating request from choice " + i);
+                return c.generateRequest(event, channel, cookieJar);
+            }
         } // end of while (it.hasNext())
         if(otherwise != null) {
+            logger.debug("Generating request with otherwise");
             return otherwise.generateRequest(event, channel, cookieJar);
         } else {
+            logger.debug("Generating no request");
             return new RequestFilter[0];
         } // end of else
     }
@@ -96,4 +93,6 @@ public class ChoiceRequest implements RequestGenerator {
 
         EventChannelSubsetter eventChannelSubsetter;
     }
+
+    private static Logger logger = Logger.getLogger(ChoiceRequest.class);
 }// PhaseRequest
