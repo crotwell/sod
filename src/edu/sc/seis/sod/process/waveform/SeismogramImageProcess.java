@@ -35,6 +35,7 @@ import edu.sc.seis.fissuresUtil.display.drawable.Flag;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
+import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSet;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.sod.CookieJar;
@@ -167,12 +168,17 @@ public class SeismogramImageProcess implements WaveformProcess {
         return arrivals;
     }
 
-    protected void addFlags(Arrival[] arrivals, Origin o, SeismogramDisplay bsd) {
+    protected void addFlags(Arrival[] arrivals,
+                            Origin o,
+                            SeismogramDisplay bsd,
+                            DataSetSeismogram seis) {
         MicroSecondDate originTime = new MicroSecondDate(o.origin_time);
         for(int i = 0; i < arrivals.length; i++) {
             MicroSecondDate flagTime = originTime.add(new TimeInterval(arrivals[i].getTime(),
                                                                        UnitImpl.SECOND));
-            bsd.add(new Flag(flagTime, renamer.rename(arrivals[i])));
+            bsd.add(new Flag(flagTime,
+                             renamer.rename(arrivals[i]),
+                             bsd.getDrawableSeismogram(seis)));
         }
     }
 
@@ -198,7 +204,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
         dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
         Origin o = EventUtil.extractOrigin(event);
-        addFlags(getArrivals(channel, o, phases), o, bsd);
+        addFlags(getArrivals(channel, o, phases), o, bsd, memDSS);
         String picFileName = locator.getLocation(event, channel, fileType);
         SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));

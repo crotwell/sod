@@ -80,7 +80,7 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                  channelGroup.getChannels()[i]);
             dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
             sd.add(new DataSetSeismogram[] {seis[i]});
-            addFlags(arrivals, o, sd.get(seis[i]));
+            addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
         }
         final String picFileName = locator.getLocation(event, chan);
         SwingUtilities.invokeAndWait(new Runnable() {
