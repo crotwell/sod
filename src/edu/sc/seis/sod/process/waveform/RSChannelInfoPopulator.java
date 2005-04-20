@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.transform.TransformerException;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
@@ -27,12 +29,12 @@ import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.MemoryDataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
-import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.database.waveform.JDBCRecordSectionChannel;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.ConfigurationException;
 
 /**
  * @author danala Created on Mar 30, 2005
@@ -45,7 +47,19 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         recordSectionChannel = new JDBCRecordSectionChannel();
         eventAccess = new JDBCEventAccess();
         channel = new JDBCChannel();
+        internalId = find(config);
     }
+
+    private static int find(Element config) throws TransformerException {
+        NodeList nl = XPathAPI.selectNodeList(config, GENS_POPS_XPATH);
+        for(int i = 0; i < nl.getLength(); i++) {
+            if(nl.item(i).equals(config)) { return i; }
+        }
+        throw new RuntimeException("This element doesn't match any nodes returned by "
+                + GENS_POPS_XPATH);
+    }
+
+    public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator";
 
     private void initConfig(Element config) throws NoSuchFieldException {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
@@ -90,6 +104,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public Dimension getRecSecDimension() {
         return recSecDim;
+    }
+
+    public JDBCRecordSectionChannel getRSChannel() {
+        return recordSectionChannel;
     }
 
     public SaveSeismogramToFile getSaveSeismogramToFile() throws Exception {
@@ -151,13 +169,15 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                             eq_dbid,
                                             channelIds[j],
                                             (double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
-                                            0);
+                                            0,
+                                            internalId);
             }
         }
         DataSetSeismogram[] bestSeismos = spacer.spaceOut(dss);
         recordSectionChannel.updateChannels(id,
                                             eq_dbid,
-                                            getChannelDBIds(bestSeismos));
+                                            getChannelDBIds(bestSeismos),
+                                            internalId);
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
@@ -215,4 +235,6 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private SeismogramDisplayConfiguration displayCreator;
 
     private Set acceptableChannels = new HashSet();
+
+    private int internalId;
 }
