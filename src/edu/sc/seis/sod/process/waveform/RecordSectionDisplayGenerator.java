@@ -85,12 +85,15 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         writeImage(wrap(spacer.spaceOut(dataSeis)), event);
     }
 
-    public void outputBestRecordSection(EventAccessOperations event,
-                                        DataSetSeismogram[] dataSeis,
+    public void outputBestRecordSection(DataSetSeismogram[] dataSeis,
                                         OutputStream out) throws Exception {
-        DataSetSeismogram[] bestSeismos = spacer.spaceOut(dataSeis);
+        outputRecordSection(spacer.spaceOut(dataSeis), out);
+    }
+
+    public void outputRecordSection(DataSetSeismogram[] dataSeis,
+                                    OutputStream out) throws Exception {
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-        rsDisplay.add(wrap(bestSeismos));
+        rsDisplay.add(wrap(dataSeis));
         rsDisplay.outputToPNG(out, getRecSecDimension());
     }
 
