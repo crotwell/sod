@@ -172,6 +172,7 @@
                     <value>dist</value>
                     <value>amp</value>
                     <value>time</value>
+                    <value>triangle</value>
                 </choice>
             </element>
             <element name="position">
@@ -182,6 +183,15 @@
                     <value>right</value>
                 </choice>
             </element>
+            <optional>
+                <element name="triangleColors">
+                    <oneOrMore>
+                        <element name="color">
+                            <ref name="colorContents"/>
+                        </element>
+                    </oneOrMore>
+                </element>
+            </optional>
             <optional>
                 <element name="clipTicks">
                     <element name="min">
