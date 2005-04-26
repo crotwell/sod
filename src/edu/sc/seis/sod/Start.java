@@ -3,6 +3,7 @@ package edu.sc.seis.sod;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -146,9 +147,7 @@ public class Start {
                 // override with values in local directory,
                 // but still load defaults with original name
                 loadProps(new FileInputStream(args[i + 1]));
-                System.out.println("loaded file props from " + args[i + 1]
-                        + "  log4j.rootCategory="
-                        + props.getProperty("log4j.rootCategory"));
+                System.out.println("loaded file props from " + args[i + 1]);
             }
         }
         PropertyConfigurator.configure(props);
@@ -156,14 +155,46 @@ public class Start {
         //now override the properties with the properties specified
         // in the configuration file.
         loadRunProps(getDocument().getDocumentElement());
-        if(props.containsKey(DBURL_KEY)) {
-            ConnMgr.setURL(props.getProperty(DBURL_KEY));
-        }
         //Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
+    }
+
+    public static void loadDbProperties(Properties sysProperties, String[] args)
+            throws FileNotFoundException {
+        Properties dbProperties = new Properties();
+        for(int i = 0; i < args.length - 1; i++) {
+            if(args[i].equals("-hsql")) {
+                System.out.println("Loading db props");
+                loadProps(new FileInputStream(args[i + 1]), dbProperties);
+            }
+        }
+        loadDbProperties(props, dbProperties);
+    }
+
+    public static void loadDbProperties(Properties sysProperties,
+                                        Properties dbProperties) {
+        if(dbProperties.containsKey("server.port")) {
+            if(dbProperties.containsKey(DBURL_KEY)) {
+                logger.error("-hsql properties and SOD properties are both specifying the db connection.  Using -hsql properties");
+            }
+            //Use hsqldb properties specified in
+            // http://hsqldb.sourceforge.net/doc/guide/ch04.html
+            String url = "jdbc:hsqldb:hsql://localhost";
+            if(dbProperties.containsKey("server.port")) {
+                url += ":" + dbProperties.getProperty("server.port");
+            }
+            url += "/";
+            if(dbProperties.containsKey("server.dbname.0")) {
+                url += dbProperties.getProperty("server.dbname.0");
+            }
+            System.out.println("Connecting to db at " + url);
+            ConnMgr.setURL(url);
+        } else if(sysProperties.containsKey(DBURL_KEY)) {
+            ConnMgr.setURL(sysProperties.getProperty(DBURL_KEY));
+        }
     }
 
     public static void loadRunProps(Element document)
@@ -198,9 +229,10 @@ public class Start {
         return new InputSource(new BufferedInputStream(in));
     }
 
-    public static void initDocument(Document doc){
+    public static void initDocument(Document doc) {
         document = doc;
     }
+
     public static WaveformArm getWaveformArm() {
         return waveform;
     }
@@ -445,8 +477,12 @@ public class Start {
     }
 
     private static void loadProps(InputStream propStream) {
+        loadProps(propStream, props);
+    }
+
+    private static void loadProps(InputStream propStream, Properties baseProps) {
         try {
-            props.load(propStream);
+            baseProps.load(propStream);
             propStream.close();
         } catch(Exception f) {
             GlobalExceptionHandler.handle("Problem loading props!", f);
