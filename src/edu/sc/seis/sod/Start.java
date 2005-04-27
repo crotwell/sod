@@ -163,13 +163,27 @@ public class Start {
         CommonAccess.getCommonAccess().initORB(args, props);
     }
 
-    public static void loadDbProperties(Properties sysProperties, String[] args)
-            throws FileNotFoundException {
+    public static void loadDbProperties(Properties sysProperties, String[] args) {
         Properties dbProperties = new Properties();
+        boolean loadedFromArg = false;
         for(int i = 0; i < args.length - 1; i++) {
             if(args[i].equals("-hsql")) {
                 System.out.println("Loading db props");
-                loadProps(new FileInputStream(args[i + 1]), dbProperties);
+                try {
+                    loadProps(new FileInputStream(args[i + 1]), dbProperties);
+                } catch(FileNotFoundException e) {
+                    logger.error("Unable to find file " + args[i + 1]
+                            + " specified by -hsql");
+                }
+                loadedFromArg = true;
+            }
+        }
+        if(!loadedFromArg) {
+            try {
+                loadProps(new FileInputStream("server.properties"),
+                          dbProperties);
+            } catch(FileNotFoundException e) {
+                logger.debug("Didn't find default server.properties file");
             }
         }
         loadDbProperties(props, dbProperties);
@@ -191,9 +205,11 @@ public class Start {
             if(dbProperties.containsKey("server.dbname.0")) {
                 url += dbProperties.getProperty("server.dbname.0");
             }
-            System.out.println("Connecting to db at " + url);
+            logger.debug("Setting db url to " + url);
             ConnMgr.setURL(url);
         } else if(sysProperties.containsKey(DBURL_KEY)) {
+            logger.debug("Setting db url to "
+                    + sysProperties.getProperty(DBURL_KEY));
             ConnMgr.setURL(sysProperties.getProperty(DBURL_KEY));
         }
     }
