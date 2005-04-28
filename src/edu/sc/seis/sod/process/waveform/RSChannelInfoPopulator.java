@@ -2,6 +2,7 @@ package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.event.JDBCEventAccess;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
@@ -42,10 +44,15 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class RSChannelInfoPopulator implements WaveformProcess {
 
     public RSChannelInfoPopulator(Element config) throws Exception {
+        this(config, ConnMgr.createConnection());
+    }
+
+    public RSChannelInfoPopulator(Element config, Connection conn)
+            throws Exception {
         initConfig(config);
         saveSeisToFile = getSaveSeismogramToFile();
-        recordSectionChannel = new JDBCRecordSectionChannel();
-        eventAccess = new JDBCEventAccess();
+        recordSectionChannel = new JDBCRecordSectionChannel(conn);
+        eventAccess = new JDBCEventAccess(recordSectionChannel.getConnection());
         channel = new JDBCChannel();
         internalId = find(config);
     }
@@ -53,7 +60,9 @@ public class RSChannelInfoPopulator implements WaveformProcess {
     private static int find(Element config) throws TransformerException {
         NodeList nl = XPathAPI.selectNodeList(config, GENS_POPS_XPATH);
         for(int i = 0; i < nl.getLength(); i++) {
-            if(nl.item(i).equals(config)) { return i; }
+            if(nl.item(i).equals(config)) {
+                return i;
+            }
         }
         throw new RuntimeException("This element doesn't match any nodes returned by "
                 + GENS_POPS_XPATH);
