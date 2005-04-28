@@ -11,6 +11,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -56,7 +57,6 @@ public class VectorImageProcess extends SeismogramImageProcess implements
                                         RequestFilter[][] available,
                                         LocalSeismogramImpl[][] seismograms,
                                         CookieJar cookieJar) throws Exception {
-        logger.debug("process() called");
         Channel chan = channelGroup.getChannels()[0];
         MemoryDataSetSeismogram[] seis = new MemoryDataSetSeismogram[seismograms.length];
         DataSet dataset = new MemoryDataSet("temp",
@@ -73,14 +73,17 @@ public class VectorImageProcess extends SeismogramImageProcess implements
         sd.setNorth((BasicSeismogramDisplay)ndc.createDisplay());
         sd.setEast((BasicSeismogramDisplay)edc.createDisplay());
         for(int i = 0; i < seis.length; i++) {
-            seis[i] = createSeis(seismograms[i],
-                                 original[i],
-                                 phaseWindow,
-                                 event,
-                                 channelGroup.getChannels()[i]);
+            seis[i] = createSeis(seismograms[i], original[i]);
             dataset.addDataSetSeismogram(seis[i], new AuditInfo[0]);
             sd.add(new DataSetSeismogram[] {seis[i]});
             addFlags(arrivals, o, sd.get(seis[i]), seis[i]);
+            dataset.addParameter(DataSet.CHANNEL
+                                         + ChannelIdUtil.toString(channelGroup.getChannels()[i].get_id()),
+                                 channelGroup.getChannels()[i],
+                                 new AuditInfo[0]);
+        }
+        if(seis.length > 0) {
+            setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
         }
         final String picFileName = locator.getLocation(event, chan);
         SwingUtilities.invokeAndWait(new Runnable() {
