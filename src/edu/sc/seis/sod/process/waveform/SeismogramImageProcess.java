@@ -21,6 +21,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
@@ -28,11 +29,13 @@ import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.BasicSeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.PhasePhilter;
 import edu.sc.seis.fissuresUtil.display.SeismogramDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.SeismogramDisplayConfiguration;
 import edu.sc.seis.fissuresUtil.display.drawable.Flag;
 import edu.sc.seis.fissuresUtil.display.registrar.BasicTimeConfig;
+import edu.sc.seis.fissuresUtil.display.registrar.TimeConfig;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
@@ -127,27 +130,13 @@ public class SeismogramImageProcess implements WaveformProcess {
     }
 
     public static MemoryDataSetSeismogram createSeis(LocalSeismogramImpl[] seismograms,
-                                                     RequestFilter[] original,
-                                                     PhaseWindow phaseWindow,
-                                                     EventAccessOperations ev,
-                                                     Channel chan)
+                                                     RequestFilter[] original)
             throws Exception {
-        MemoryDataSetSeismogram memDSS = null;
-        if(phaseWindow == null) {
-            memDSS = new MemoryDataSetSeismogram(original[0], "");
-            memDSS.setBeginTime(DisplayUtils.firstBeginDate(original)
-                    .getFissuresTime());
-            memDSS.setEndTime(DisplayUtils.lastEndDate(original)
-                    .getFissuresTime());
-        } else {
-            PhaseRequest req = phaseWindow.getPhaseRequest();
-            RequestFilter[] request = req.generateRequest(ev, chan, null);
-            memDSS = new MemoryDataSetSeismogram(request[0], "");
-            memDSS.setBeginTime(DisplayUtils.firstBeginDate(request)
-                    .getFissuresTime());
-            memDSS.setEndTime(DisplayUtils.lastEndDate(request)
-                    .getFissuresTime());
-        }
+        MemoryDataSetSeismogram memDSS = new MemoryDataSetSeismogram(original[0],
+                                                                     "");
+        memDSS.setBeginTime(DisplayUtils.firstBeginDate(original)
+                .getFissuresTime());
+        memDSS.setEndTime(DisplayUtils.lastEndDate(original).getFissuresTime());
         for(int i = 0; i < seismograms.length; i++) {
             memDSS.add(seismograms[i]);
         }
@@ -194,20 +183,38 @@ public class SeismogramImageProcess implements WaveformProcess {
         logger.debug("process() called");
         SeismogramDisplay bsd = sdc.createDisplay();
         bsd.setTimeConfig(new BasicTimeConfig());
-        MemoryDataSetSeismogram memDSS = createSeis(seismograms,
-                                                    original,
-                                                    phaseWindow,
-                                                    event,
-                                                    channel);
+        MemoryDataSetSeismogram memDSS = createSeis(seismograms, original);
         DataSet dataset = new MemoryDataSet("temp", "Temp Dataset for "
                 + memDSS.getName(), "temp", new AuditInfo[0]);
         dataset.addDataSetSeismogram(memDSS, new AuditInfo[0]);
         dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
+        dataset.addParameter(DataSet.CHANNEL
+                                     + ChannelIdUtil.toString(channel.get_id()),
+                             channel,
+                             new AuditInfo[0]);
         Origin o = EventUtil.extractOrigin(event);
         addFlags(getArrivals(channel, o, phases), o, bsd, memDSS);
         String picFileName = locator.getLocation(event, channel, fileType);
+        if(seismograms.length > 0) {
+            setTimeWindow(bsd.getTimeConfig(), phaseWindow, memDSS);
+        }
         SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
+    }
+
+    public void setTimeWindow(TimeConfig tc,
+                              PhaseWindow pw,
+                              DataSetSeismogram dss) throws Exception {
+        if(pw != null) {
+            PhaseRequest pr = pw.getPhaseRequest();
+            RequestFilter rf = pr.generateRequest(dss.getEvent(),
+                                                  dss.getChannel());
+            double[] shiftNScale = DisplayUtils.getShiftAndScale(new MicroSecondTimeRange(rf),
+                                                                 tc.getTime(dss));
+            System.out.println("SHIFTING BY " + shiftNScale[0] + " SCALING BY "
+                    + shiftNScale[1]);
+            tc.shaleTime(shiftNScale[0], shiftNScale[1]);
+        }
     }
 
     protected class ImageWriter implements Runnable {
