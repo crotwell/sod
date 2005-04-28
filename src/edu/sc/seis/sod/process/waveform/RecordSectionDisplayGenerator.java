@@ -3,6 +3,7 @@ package edu.sc.seis.sod.process.waveform;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.RecordSectionDisplay;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
@@ -26,7 +28,12 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
 
     public RecordSectionDisplayGenerator(Element config) throws Exception {
-        super(config);
+        this(config, ConnMgr.createConnection());
+    }
+
+    public RecordSectionDisplayGenerator(Element config, Connection conn)
+            throws Exception {
+        super(config, conn);
         if(DOMHelper.hasElement(config, "fileNameBase")) {
             filename = SodUtil.getText(SodUtil.getElement(config,
                                                           "fileNameBase"))
