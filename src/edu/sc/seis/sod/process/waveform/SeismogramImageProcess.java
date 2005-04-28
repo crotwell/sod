@@ -211,8 +211,6 @@ public class SeismogramImageProcess implements WaveformProcess {
                                                   dss.getChannel());
             double[] shiftNScale = DisplayUtils.getShiftAndScale(new MicroSecondTimeRange(rf),
                                                                  tc.getTime(dss));
-            System.out.println("SHIFTING BY " + shiftNScale[0] + " SCALING BY "
-                    + shiftNScale[1]);
             tc.shaleTime(shiftNScale[0], shiftNScale[1]);
         }
     }
