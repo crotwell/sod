@@ -276,6 +276,15 @@ public class Start {
         return doc;
     }
 
+    public static void addMailExceptionReporter(Properties mailProps) {
+        try {
+            GlobalExceptionHandler.add(new MailExceptionReporter(mailProps));
+        } catch(ConfigurationException e) {
+            logger.debug("Not able to add a mail reporter.  This is only a problem if you specified one",
+                         e);
+        }
+    }
+
     public void start() throws Exception {
         startTime = ClockUtil.now();
         new UpdateChecker(false);
@@ -295,6 +304,7 @@ public class Start {
             indexTemplate.performRegistration();
         }
         new JDBCStatus();
+        addMailExceptionReporter(props);
     }
 
     public static void allHopeAbandon(String message) {
