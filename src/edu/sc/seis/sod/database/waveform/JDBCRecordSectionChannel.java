@@ -115,7 +115,9 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         channelExists.setInt(3, channelid);
         ResultSet rs = channelExists.executeQuery();
         while(rs.next()) {
-            if(rs.getInt(1) != 0) { return true; }
+            if(rs.getInt(1) != 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -158,6 +160,10 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         return recSecExists.executeQuery().next();
     }
 
+    public Connection getConnection() {
+        return conn;
+    }
+
     PreparedStatement insert, getPixelInfo, getChannels, channelExists,
             recSecExists, getInternalId;
 
@@ -170,7 +176,9 @@ public class JDBCRecordSectionChannel extends SodJDBC {
         getInternalId.setString(1, recSecId);
         getInternalId.setInt(2, eventDbId);
         ResultSet rs = getInternalId.executeQuery();
-        if(rs.next()) { return rs.getInt("internalId"); }
+        if(rs.next()) {
+            return rs.getInt("internalId");
+        }
         throw new NotFound("No event " + eventDbId + " with recSecId "
                 + recSecId);
     }
