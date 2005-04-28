@@ -51,31 +51,34 @@ public class PhaseRequest implements RequestGenerator {
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
                                            Channel channel,
-                                           CookieJar cookieJar)
-            throws Exception {
+                                           CookieJar jar) throws Exception {
+        RequestFilter rf = generateRequest(event, channel);
+        if(rf == null) {
+            return new RequestFilter[0];
+        }
+        return new RequestFilter[] {generateRequest(event, channel)};
+    }
+
+    public RequestFilter generateRequest(EventAccessOperations event,
+                                         Channel channel) throws Exception {
         Origin origin = EventUtil.extractOrigin(event);
-        if(prevRequestFilters != null
+        if(prevRequestFilter != null
                 && origin.my_location.equals(prevOriginLoc)
                 && channel.my_site.my_location.equals(prevSiteLoc)) {
             // don't need to do any work
-            RequestFilter[] out = new RequestFilter[prevRequestFilters.length];
-            for(int i = 0; i < out.length; i++) {
-                out[i] = new RequestFilter(channel.get_id(),
-                                           prevRequestFilters[i].start_time,
-                                           prevRequestFilters[i].end_time);
-            }
-            return out;
+            return new RequestFilter(channel.get_id(),
+                                     prevRequestFilter.start_time,
+                                     prevRequestFilter.end_time);
         } else {
             prevOriginLoc = origin.my_location;
             prevSiteLoc = channel.my_site.my_location;
-            prevRequestFilters = null;
+            prevRequestFilter = null;
         } // end of else
         double begin = getArrivalTime(beginPhase, channel, origin);
         double end = getArrivalTime(endPhase, channel, origin);
         if(begin == -1 || end == -1) {
             // no arrivals found, return zero length request filters
-            prevRequestFilters = new RequestFilter[0];
-            return prevRequestFilters;
+            return null;
         }
         MicroSecondDate originDate = new MicroSecondDate(origin.origin_time);
         TimeInterval bInterval = beginOffset.add(new TimeInterval(begin,
@@ -84,17 +87,16 @@ public class PhaseRequest implements RequestGenerator {
                                                                 UnitImpl.SECOND));
         MicroSecondDate bDate = originDate.add(bInterval);
         MicroSecondDate eDate = originDate.add(eInterval);
-        RequestFilter filter = new RequestFilter(channel.get_id(),
-                                                 bDate.getFissuresTime(),
-                                                 eDate.getFissuresTime());
-        prevRequestFilters = new RequestFilter[] {filter};
+        prevRequestFilter = new RequestFilter(channel.get_id(),
+                                              bDate.getFissuresTime(),
+                                              eDate.getFissuresTime());
         logger.debug("Generated request from "
                 + bDate
                 + " to "
                 + eDate
                 + " for "
                 + StationIdUtil.toStringNoDates(channel.my_site.my_station.get_id()));
-        return prevRequestFilters;
+        return prevRequestFilter;
     }
 
     private double getArrivalTime(String phase, Channel chan, Origin origin)
@@ -121,7 +123,7 @@ public class PhaseRequest implements RequestGenerator {
 
     private TauPUtil util;
 
-    private RequestFilter[] prevRequestFilters;
+    private RequestFilter prevRequestFilter;
 
     private Location prevOriginLoc, prevSiteLoc;
 
