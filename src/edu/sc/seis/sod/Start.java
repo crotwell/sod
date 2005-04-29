@@ -58,7 +58,9 @@ public class Start {
             }
 
             public Throwable getSubThrowable(Throwable throwable) {
-                if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) { return ((org.apache.velocity.exception.MethodInvocationException)throwable).getWrappedThrowable(); }
+                if(throwable instanceof org.apache.velocity.exception.MethodInvocationException) {
+                    return ((org.apache.velocity.exception.MethodInvocationException)throwable).getWrappedThrowable();
+                }
                 return null;
             }
         });
@@ -214,9 +216,8 @@ public class Start {
         }
     }
 
-    public static void loadRunProps(Element document)
-            throws ConfigurationException {
-        Element propertiesElement = SodUtil.getElement(document, "properties");
+    public static void loadRunProps(Element doc) throws ConfigurationException {
+        Element propertiesElement = SodUtil.getElement(doc, "properties");
         if(propertiesElement != null) {
             //load the properties fromt the configurationfile.
             runProps = new RunProperties(propertiesElement);
@@ -241,8 +242,9 @@ public class Start {
         } else {
             in = new FileInputStream(loc);
         }
-        if(in == null) { throw new IOException("Unable to load configuration file "
-                + loc); }
+        if(in == null) {
+            throw new IOException("Unable to load configuration file " + loc);
+        }
         return new InputSource(new BufferedInputStream(in));
     }
 
@@ -277,11 +279,15 @@ public class Start {
     }
 
     public static void addMailExceptionReporter(Properties mailProps) {
-        try {
-            GlobalExceptionHandler.add(new MailExceptionReporter(mailProps));
-        } catch(ConfigurationException e) {
-            logger.debug("Not able to add a mail reporter.  This is only a problem if you specified one",
-                         e);
+        if(mailProps.containsKey("mail.smtp.host")) {
+            try {
+                GlobalExceptionHandler.add(new MailExceptionReporter(mailProps));
+            } catch(ConfigurationException e) {
+                logger.debug("Not able to add a mail reporter.  This is only a problem if you specified one",
+                             e);
+            }
+        } else {
+            logger.debug("Not trying to add a mail reporter since mail.smtp.host isn't set");
         }
     }
 
@@ -452,7 +458,9 @@ public class Start {
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("-conf") || args[i].equals("-f")) {
                 return args[i + 1];
-            } else if(args[i].equals("-demo")) { return SimpleGUIEditor.TUTORIAL_LOC; }
+            } else if(args[i].equals("-demo")) {
+                return SimpleGUIEditor.TUTORIAL_LOC;
+            }
         }
         return null;
     }
