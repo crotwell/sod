@@ -35,12 +35,6 @@ public class MailExceptionReporter implements ExceptionReporter {
 
     public MailExceptionReporter(Properties props)
             throws ConfigurationException {
-        this(props, true);
-    }
-
-    public MailExceptionReporter(Properties props, boolean displayExceptionClass)
-            throws ConfigurationException {
-        this.displayExceptionClass = displayExceptionClass;
         this.props = props;
         checkProperties();
         logger.info("Exception mailer going to " + props.getProperty(TO)
@@ -56,8 +50,10 @@ public class MailExceptionReporter implements ExceptionReporter {
     }
 
     private void checkProperty(String property) throws ConfigurationException {
-        if(props.getProperty(property) == null) { throw new ConfigurationException("A system properties required by this class isn't set! "
-                + property + " must be set"); }
+        if(props.getProperty(property) == null) {
+            throw new ConfigurationException("A system properties required by this class isn't set! "
+                    + property + " must be set");
+        }
     }
 
     public void report(String message, Throwable e, List sections)
@@ -68,10 +64,7 @@ public class MailExceptionReporter implements ExceptionReporter {
         msg.setFrom(addressFrom);
         Address addressTo = new InternetAddress(props.getProperty(TO));
         msg.setRecipient(Message.RecipientType.TO, addressTo);
-        String subject = props.getProperty(SUBJECT);
-        if(displayExceptionClass) {
-            subject += " " + ExceptionReporterUtils.getClassName(e);
-        }
+        String subject = props.getProperty(SUBJECT) + " " + message;
         msg.setSubject(subject);
         Multipart multipart = new MimeMultipart();
         BodyPart bodyPart = new MimeBodyPart();
@@ -118,8 +111,6 @@ public class MailExceptionReporter implements ExceptionReporter {
      * the key mail.subject specifies the subject of the exception email
      */
     public static final String SUBJECT = "mail.subject";
-
-    private boolean displayExceptionClass;
 
     private Properties props;
 
