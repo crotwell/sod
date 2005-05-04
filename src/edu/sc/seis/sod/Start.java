@@ -75,8 +75,8 @@ public class Start {
         configFileName = confFilename;
         ClassLoader cl = getClass().getClassLoader();
         try {
-            document = createDoc(createInputSource(cl, confFilename),
-                                 confFilename);
+            setConfig(createDoc(createInputSource(cl, confFilename),
+                                confFilename).getDocumentElement());
         } catch(IOException io) {
             informUserOfBadFileAndExit(confFilename);
         } catch(Exception e) {
@@ -124,7 +124,7 @@ public class Start {
     }
 
     public Start(Document document, String[] args) throws Exception {
-        this.document = document;
+        setConfig(document.getDocumentElement());
         initDocument(args);
     }
 
@@ -156,7 +156,7 @@ public class Start {
         logger.info("logging configured");
         //now override the properties with the properties specified
         // in the configuration file.
-        loadRunProps(getDocument().getDocumentElement());
+        loadRunProps(getConfig());
         loadDbProperties(props, args);
         //Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
@@ -248,8 +248,8 @@ public class Start {
         return new InputSource(new BufferedInputStream(in));
     }
 
-    public static void initDocument(Document doc) {
-        document = doc;
+    public static void setConfig(Element config) {
+        Start.config = config;
     }
 
     public static WaveformArm getWaveformArm() {
@@ -304,8 +304,7 @@ public class Start {
         if(runProps.doIndex()) {
             indexTemplate = new IndexTemplate();
         }
-        Element docElement = document.getDocumentElement();
-        startArms(docElement.getChildNodes());
+        startArms(getConfig().getChildNodes());
         if(runProps.doIndex()) {
             indexTemplate.performRegistration();
         }
@@ -450,8 +449,8 @@ public class Start {
         }
     }
 
-    public static Document getDocument() {
-        return document;
+    public static Element getConfig() {
+        return config;
     }
 
     public static String getConfFileName(String[] args) {
@@ -531,7 +530,7 @@ public class Start {
 
     public static final String DEFAULT_PARSER = "org.apache.xerces.parsers.SAXParser";
 
-    private static Document document;
+    private static Element config;
 
     private static Logger logger = Logger.getLogger(Start.class);
 

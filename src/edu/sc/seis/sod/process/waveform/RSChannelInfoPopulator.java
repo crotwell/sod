@@ -125,7 +125,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public SaveSeismogramToFile getSaveSeismogramToFile(String id)
             throws Exception {
-        Element docElement = Start.getDocument().getDocumentElement();
+        Element docElement = Start.getConfig();
         Element saveSeisConf = (Element)XPathAPI.selectSingleNode(docElement,
                                                                   "//saveSeismogramToFile[id/text() = \""
                                                                           + id
