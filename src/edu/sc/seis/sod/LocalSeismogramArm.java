@@ -245,7 +245,10 @@ public class LocalSeismogramArm implements Subsetter {
                                 String id = dataCenter.queue_seismograms(infilters);
                                 logger.info("request id: " + id);
                                 String status = dataCenter.request_status(id);
+                                int i = 0;
                                 while(status.equals(RETRIEVING_DATA)) {
+                                    logger.info("Waiting for data to be returned from the archive.  We've been waiting for "
+                                            + i++ + " minutes");
                                     try {
                                         Thread.sleep(60 * 1000);
                                     } catch(InterruptedException ex) {}
