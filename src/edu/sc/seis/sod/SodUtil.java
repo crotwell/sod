@@ -35,6 +35,7 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.model.UnitRangeImpl;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.TemplateFileLoader;
@@ -45,12 +46,16 @@ public class SodUtil {
 
     public static boolean isTrue(Element el, String tagName) {
         Element booleanElement = getElement(el, tagName);
-        if(booleanElement != null && isTrueText(getNestedText(booleanElement))) { return true; }
+        if(booleanElement != null && isTrueText(getNestedText(booleanElement))) {
+            return true;
+        }
         return false;
     }
 
     public static boolean isTrueText(String nestedText) {
-        if(nestedText.equals("TRUE")) { return true; }
+        if(nestedText.equals("TRUE")) {
+            return true;
+        }
         return false;
     }
 
@@ -67,9 +72,13 @@ public class SodUtil {
             }
         }
         File htmlDir = new File(outputDirName);
-        if(outputDirName != null) htmlDir = new File(outputDirName);
-        if(!htmlDir.exists()) htmlDir.mkdirs();
-        if(!htmlDir.isDirectory()) { throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory"); }
+        if(outputDirName != null)
+            htmlDir = new File(outputDirName);
+        if(!htmlDir.exists())
+            htmlDir.mkdirs();
+        if(!htmlDir.isDirectory()) {
+            throw new ConfigurationException("The output directory specified in the config file already exists, and isn't a directory");
+        }
         return htmlDir;
     }
 
@@ -98,11 +107,13 @@ public class SodUtil {
                 return new GlobalAreaImpl();
             } else if(tagName.equals("BoxArea")) {
                 return loadBoxArea(config);
-            } else if(tagName.equals("PointArea")) { return loadBoxArea(config); }
+            } else if(tagName.equals("PointArea")) {
+                return loadBoxArea(config);
+            }
             // not a known non-sodElement type, so load via reflection
-            if(tagName.startsWith("External")) { return loadExternal(tagName,
-                                                                     armNames,
-                                                                     config); }
+            if(tagName.startsWith("External")) {
+                return loadExternal(tagName, armNames, config);
+            }
             return loadClass(load(tagName, armNames), config);
         } catch(InvocationTargetException e) {
             // occurs if the constructor throws an exception
@@ -168,8 +179,9 @@ public class SodUtil {
             Class[] implementedInterfaces = getInterfaces(extClass);
             for(int i = 0; i < implementedInterfaces.length; i++) {
                 Class curInterface = implementedInterfaces[i];
-                if(curInterface.equals(mustImplement)) { return loadClass(extClass,
-                                                                          config); }
+                if(curInterface.equals(mustImplement)) {
+                    return loadClass(extClass, config);
+                }
             }
             throw new ConfigurationException("External class " + classname
                     + " does not implement the class it's working with, "
@@ -234,7 +246,8 @@ public class SodUtil {
     }
 
     public static Time loadTime(Element el) throws ConfigurationException {
-        if(el == null) return null;
+        if(el == null)
+            return null;
         edu.iris.Fissures.Time rtnTime = null;
         NodeList kids = el.getChildNodes();
         for(int i = 0; i < kids.getLength(); i++) {
@@ -258,7 +271,8 @@ public class SodUtil {
 
     private static Time loadRelativeTime(Element el)
             throws ConfigurationException {
-        TimeInterval duration = loadTimeInterval(el);
+        TimeInterval duration = loadTimeInterval(DOMHelper.getElement(el,
+                                                                      "timeInterval"));
         MicroSecondDate now = ClockUtil.now();
         if(el.getTagName().equals("earlier")) {
             return now.subtract(duration).getFissuresTime();
@@ -270,8 +284,8 @@ public class SodUtil {
     public static TimeInterval loadTimeInterval(Element config)
             throws ConfigurationException {
         try {
-            double value = Double.parseDouble(XMLUtil.getText(XMLUtil.getElement(config,
-                                                                                 "value")));
+            double value = Double.parseDouble(DOMHelper.extractText(config,
+                                                                    "value"));
             UnitImpl unit = loadUnit(XMLUtil.getElement(config, "unit"));
             return new TimeInterval(value, unit);
         } catch(Exception e) {
@@ -419,7 +433,9 @@ public class SodUtil {
         for(int counter = 0; counter < children.getLength(); counter++) {
             if(children.item(counter) instanceof Element) {
                 Element el = (Element)children.item(counter);
-                if(el.getTagName().equals(elementName)) { return el; }
+                if(el.getTagName().equals(elementName)) {
+                    return el;
+                }
             }
         }
         return null;
@@ -431,8 +447,9 @@ public class SodUtil {
     public static String getText(Element config) {
         NodeList children = config.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
-            if(children.item(i) instanceof Text) { return children.item(i)
-                    .getNodeValue(); }
+            if(children.item(i) instanceof Text) {
+                return children.item(i).getNodeValue();
+            }
         }
         //nothing found, return null
         return null;
@@ -531,7 +548,9 @@ public class SodUtil {
 
     private static int countDots(String relativeLocation) {
         int lastDots = relativeLocation.lastIndexOf("..");
-        if(lastDots == -1) { return 0; }
+        if(lastDots == -1) {
+            return 0;
+        }
         return 1 + lastDots / 3;
     }
 
