@@ -157,7 +157,10 @@
     </define>
     <define name="defineAndReference">
         <optional>
-            <attribute name="id"/>
+            <choice>
+                <attribute name="id"/>
+                <attribute name="overwritingId"/>
+            </choice>
         </optional>
         <optional>
             <attribute name="base"/>
