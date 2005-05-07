@@ -41,11 +41,9 @@ public class ChoiceDataCenter implements SeismogramDCLocator {
         while(it.hasNext()) {
             Choice cur = (Choice)it.next();
             if(cur.accept(event, channel, cookieJar).isSuccess()) {
-                System.out.println("GOING WITH CHOICE");
                 return cur.getSeismogramDC(event, channel, infilters, cookieJar);
             }
         }
-        System.out.println("GOT OTHERWISE");
         return otherwise.getSeismogramDC(event, channel, infilters, cookieJar);
     }
 
