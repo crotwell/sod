@@ -14,6 +14,7 @@
                 <description>This collects all of the subsetters that make decisions on the contents
                     of a channel.</description>
             </xsd:annotation>
+            <ref name="hadDataLastWeek"/>
             <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
@@ -49,6 +50,7 @@
             <externalRef href="site.rng"/>
             <externalRef href="station.rng"/>
             <externalRef href="network.rng"/>
+            <ref name="hadDataLastWeek"/>
         </choice>
     </define>
     <define name="singleLetterOrNumber">
@@ -332,6 +334,15 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="hadDataLastWeek">
+        <element name="hadDataLastWeek">
+            <xsd:annotation>
+                <summary>Checks if a channel has any available data for the given seismogram server
+                    for the past week</summary>
+            </xsd:annotation>
+            <externalRef href="../waveform/fixedDataCenter.rng"/>
         </element>
     </define>
 </grammar>
