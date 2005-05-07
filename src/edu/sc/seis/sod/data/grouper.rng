@@ -376,6 +376,9 @@
                     </choice>
                 </oneOrMore>
             </element>
+            <element name="temporaryNetwork">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="network6">
@@ -425,6 +428,9 @@
                         <ref name="xml10"/>
                     </choice>
                 </oneOrMore>
+            </element>
+            <element name="temporaryNetwork">
+                <empty/>
             </element>
         </choice>
     </define>
@@ -476,6 +482,9 @@
                     </choice>
                 </oneOrMore>
             </element>
+            <element name="temporaryNetwork">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="network4">
@@ -525,6 +534,9 @@
                         <ref name="xml5"/>
                     </choice>
                 </oneOrMore>
+            </element>
+            <element name="temporaryNetwork">
+                <empty/>
             </element>
         </choice>
     </define>
@@ -576,6 +588,9 @@
                     </choice>
                 </oneOrMore>
             </element>
+            <element name="temporaryNetwork">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="network2">
@@ -625,6 +640,9 @@
                         <ref name="xml2"/>
                     </choice>
                 </oneOrMore>
+            </element>
+            <element name="temporaryNetwork">
+                <empty/>
             </element>
         </choice>
     </define>
@@ -676,6 +694,9 @@
                     </choice>
                 </oneOrMore>
             </element>
+            <element name="temporaryNetwork">
+                <empty/>
+            </element>
         </choice>
     </define>
     <define name="network3">
@@ -725,6 +746,9 @@
                         <ref name="xml4"/>
                     </choice>
                 </oneOrMore>
+            </element>
+            <element name="temporaryNetwork">
+                <empty/>
             </element>
         </choice>
     </define>
@@ -862,6 +886,30 @@
     <define name="code">
         <element name="stationCode">
             <data type="string"/>
+        </element>
+    </define>
+    <define name="hadDataLastWeek">
+        <element name="hadDataLastWeek">
+            <element name="fixedDataCenter">
+                <element name="name">
+                    <choice>
+                        <value>IRIS_BudDataCenter</value>
+                        <value>IRIS_PondDataCenter</value>
+                        <value>IRIS_ArchiveDataCenter</value>
+                        <value>NCEDC_DataCenter</value>
+                        <value>SCEPPSeismogramDC</value>
+                        <data type="string"/>
+                    </choice>
+                </element>
+                <element name="dns">
+                    <choice>
+                        <value>edu/iris/dmc</value>
+                        <value>edu/berkley/geo/quake</value>
+                        <value>edu/sc/seis</value>
+                        <data type="string"/>
+                    </choice>
+                </element>
+            </element>
         </element>
     </define>
     <define name="stationLogical3">
@@ -1118,6 +1166,7 @@
     </define>
     <define name="channel">
         <choice>
+            <ref name="hadDataLastWeek"/>
             <ref name="channelCode"/>
             <ref name="bandCode"/>
             <ref name="gainCode"/>
@@ -1445,6 +1494,7 @@
             <ref name="site2"/>
             <ref name="station"/>
             <ref name="network"/>
+            <ref name="hadDataLastWeek"/>
         </choice>
     </define>
     <define name="NOT">
