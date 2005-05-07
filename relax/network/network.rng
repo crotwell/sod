@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="network"/>
@@ -9,7 +10,8 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting networks</summary>
-                <description>All of the subsetters that make decisions on the contents of a network.</description>
+                <description>All of the subsetters that make decisions on the contents of a
+                network.</description>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="name"/>
@@ -20,6 +22,7 @@
             <ref name="NOT"/>
             <ref name="PASS"/>
             <ref name="externalNetworkSubsetter"/>
+            <ref name="temporaryNetwork"/>
         </choice>
     </define>
     <define name="code">
@@ -27,7 +30,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches a given network code</summary>
-                    <description> A network is accepted if its network code matches the given code exactly. </description>
+                    <description> A network is accepted if its network code matches the given code
+                        exactly. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
@@ -37,13 +41,23 @@
             </data>
         </element>
     </define>
+    <define name="temporaryNetwork">
+        <element name="temporaryNetwork">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary>Matches networks starting with X, Y and Z</summary>
+                </xsd:documentation>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
     <define name="name">
         <element name="networkName">
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary> Matches the name of a network</summary>
-                    <description>Compares the name of a network to the value given here and if they match exactly, the
-                        network is accepted. </description>
+                    <description>Compares the name of a network to the value given here and if they
+                        match exactly, the network is accepted. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
@@ -58,8 +72,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the owner of a network</summary>
-                    <description>Matches the owner of a network. This is a simple string comparison, and so care must be
-                        taken for it to be useful. </description>
+                    <description>Matches the owner of a network. This is a simple string comparison,
+                        and so care must be taken for it to be useful. </description>
                 </xsd:documentation>
             </xsd:annotation>
             <data type="string">
@@ -84,9 +98,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches all enclosed Network subsetters</summary>
-                    <description>The output is the logical AND of the outputs of all included Network subsetters. This
-                        means that it will evaluate to true only if all the enclosed Network subsetters evaluate to
-                        true. The subsetters after the first false outputted are not evaluated.</description>
+                    <description>The output is the logical AND of the outputs of all included
+                        Network subsetters. This means that it will evaluate to true only if all the
+                        enclosed Network subsetters evaluate to true. The subsetters after the first
+                        false outputted are not evaluated.</description>
                     <example>
                         <networkAND>
                             <networkOwner>Scripps Institution of Oceanography</networkOwner>
@@ -108,9 +123,10 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches at least one enclosed Network subsetter</summary>
-                    <description>The output is the logical OR of the outputs of all included Network subsetters. This
-                        means that it will evaluate to true if at least one of the enclosed Network subsetters evaluate
-                        to true. The subsetters after the first true outputted are not evaluated.</description>
+                    <description>The output is the logical OR of the outputs of all included Network
+                        subsetters. This means that it will evaluate to true if at least one of the
+                        enclosed Network subsetters evaluate to true. The subsetters after the first
+                        true outputted are not evaluated.</description>
                     <example>
                         <networkOR>
                             <networkOwner>Scripps Institution of Oceanography</networkOwner>
@@ -132,9 +148,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Matches the negated output of the enclosed Network subsetter</summary>
-                    <description>The output is the logical NOT of the output of the enclosed Network subsetter. This
-                        means that it will evaluate to false if the enclosed Network subsetter evaluates to true, and
-                        vice versa.</description>
+                    <description>The output is the logical NOT of the output of the enclosed Network
+                        subsetter. This means that it will evaluate to false if the enclosed Network
+                        subsetter evaluates to true, and vice versa.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <ref name="network"/>
@@ -145,8 +161,8 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <summary>Accepts any network</summary>
-                    <description>This is a simple subsetter that always returns true for any network, which is useful
-                        for testing purposes.</description>
+                    <description>This is a simple subsetter that always returns true for any
+                        network, which is useful for testing purposes.</description>
                 </xsd:documentation>
             </xsd:annotation>
             <zeroOrMore>
@@ -158,8 +174,8 @@
         <element name="externalNetworkSubsetter">
             <xsd:annotation>
                 <summary>Use a Network subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements NetworkSubsetter, SOD
-                    calls accept() on the class for every network.</description>
+                <description>Attempts to load the class named by classname, and if it implements
+                    NetworkSubsetter, SOD calls accept() on the class for every network.</description>
                 <example>
                     <externalNetworkSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</classname>
