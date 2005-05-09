@@ -123,18 +123,28 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return getSaveSeismogramToFile(saveSeisId);
     }
 
-    public SaveSeismogramToFile getSaveSeismogramToFile(String id)
+    public SaveSeismogramToFile geFirstSaveSeismogramToFile() throws Exception {
+        return extractSaveSeis("(//saveSeismogramToFile)[1]",
+                               "No SaveSeismogramToFile found");
+    }
+
+    public static SaveSeismogramToFile getSaveSeismogramToFile(String saveId)
             throws Exception {
-        Element docElement = Start.getConfig();
-        Element saveSeisConf = (Element)XPathAPI.selectSingleNode(docElement,
-                                                                  "//saveSeismogramToFile[id/text() = \""
-                                                                          + id
-                                                                          + "\"]");
+        String xpath = "//saveSeismogramToFile[id/text() = \"" + saveId + "\"]";
+        return extractSaveSeis(xpath,
+                               "No SaveSeismogramToFile element with id "
+                                       + saveId + " found");
+    }
+
+    private static SaveSeismogramToFile extractSaveSeis(String xpath,
+                                                        String errorMsgIfNotFound)
+            throws ConfigurationException {
+        Element saveSeisConf = DOMHelper.extractElement(Start.getConfig(),
+                                                        xpath);
         if(saveSeisConf != null) {
             return new SaveSeismogramToFile(saveSeisConf);
         } else {
-            throw new ConfigurationException("No SaveSeismogramToFile element with id "
-                    + id + " found");
+            throw new ConfigurationException(errorMsgIfNotFound);
         }
     }
 
