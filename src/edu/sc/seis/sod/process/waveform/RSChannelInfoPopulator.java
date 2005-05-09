@@ -123,7 +123,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         return getSaveSeismogramToFile(saveSeisId);
     }
 
-    public SaveSeismogramToFile geFirstSaveSeismogramToFile() throws Exception {
+    public SaveSeismogramToFile getFirstSaveSeismogramToFile() throws Exception {
         return extractSaveSeis("(//saveSeismogramToFile)[1]",
                                "No SaveSeismogramToFile found");
     }
