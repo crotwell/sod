@@ -310,6 +310,9 @@ public class Start {
         }
         new JDBCStatus();
         addMailExceptionReporter(props);
+        if(runProps.checkpointPeriodically()) {
+            new PeriodicCheckpointer();
+        }
     }
 
     public static void allHopeAbandon(String message) {

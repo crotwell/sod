@@ -8,8 +8,11 @@ package edu.sc.seis.sod;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class RunProperties {
+
+    private boolean checkpointPeriodically;
 
     public RunProperties(Element el) throws ConfigurationException {
         Element runNameChild = SodUtil.getElement(el, "runName");
@@ -62,6 +65,9 @@ public class RunProperties {
                 && !SodUtil.isTrue(el, "makeIndexPage")) {
             doIndex = false;
         }
+        if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
+            checkpointPeriodically = true;
+        }
     }
 
     public TimeInterval getMaxRetryDelay() {
@@ -110,6 +116,10 @@ public class RunProperties {
 
     public boolean doIndex() {
         return doIndex;
+    }
+
+    public boolean checkpointPeriodically() {
+        return checkpointPeriodically;
     }
 
     public static final TimeInterval NO_TIME = new TimeInterval(0,
