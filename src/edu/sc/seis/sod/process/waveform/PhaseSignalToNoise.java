@@ -36,6 +36,7 @@ import org.w3c.dom.NodeList;
  * subsetters or later velocity output. */
 public class PhaseSignalToNoise  implements WaveformProcess {
 
+    
     public PhaseSignalToNoise(Element config) throws ConfigurationException, TauModelException{
         NodeList childNodes = config.getChildNodes();
         Node node;
@@ -86,7 +87,7 @@ public class PhaseSignalToNoise  implements WaveformProcess {
         LongShortTrigger trigger = calcTrigger(event, channel, seismograms);
         if (trigger != null) {
             if (trigger.getValue() > ratio) {
-                cookieJar.put("sod_phaseStoN_"+phaseName, trigger);
+                cookieJar.put(PHASE_STON_PREFIX+phaseName, trigger);
                 return new WaveformResult(seismograms,
                                                  new StringTreeLeaf(this, true));
             }
@@ -128,6 +129,8 @@ public class PhaseSignalToNoise  implements WaveformProcess {
     public String toString() {
         return "PhaseSignalToNoise("+getPhaseName()+")";
     }
+
+    public static final String PHASE_STON_PREFIX = "sod_phaseStoN_";
 
     protected SimplePhaseStoN phaseStoN;
 
