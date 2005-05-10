@@ -43,15 +43,8 @@
                 <max>1000</max>
             </originDepthRange>
             <originTimeRange>
-                <startTime>
-                    <earlier>
-                        <timeInterval>
-                            <value>1</value>
-                            <unit>GREGORIAN_YEAR</unit>
-                        </timeInterval>
-                    </earlier>
-                </startTime>
-                <endTime>21050912T17:53:00.001Z</endTime>
+                <startTime>20050101T00:00:00.001Z</startTime>
+                <endTime>20050131T00:00:00.001Z</endTime>
             </originTimeRange>
             <magnitudeRange>
                 <min>5.5</min>
@@ -70,51 +63,19 @@
                 <value>50</value>
             </refreshInterval>
         </networkFinder>
-        <networkNOT>
-            <temporaryNetwork/>
-        </networkNOT>
-        <stationAND>
-            <stationEffectiveTimeOverlap>
-                <startTime>
-                    <earlier>
-                        <timeInterval>
-                            <value>1</value>
-                            <unit>GREGORIAN_YEAR</unit>
-                        </timeInterval>
-                    </earlier>
-                </startTime>
-                <endTime>21050912T17:53:00.001Z</endTime>
-            </stationEffectiveTimeOverlap>
-        </stationAND>
-        <siteAND>
-            <siteOR>
-                <siteCode/>
-                <siteCode>00</siteCode>
-            </siteOR>
-            <siteEffectiveTimeOverlap>
-                <startTime>
-                    <earlier>
-                        <timeInterval>
-                            <value>1</value>
-                            <unit>GREGORIAN_YEAR</unit>
-                        </timeInterval>
-                    </earlier>
-                </startTime>
-                <endTime>21050912T17:53:00.001Z</endTime>
-            </siteEffectiveTimeOverlap>
-        </siteAND>
+        <stationEffectiveTimeOverlap>
+            <startTime>20050101T00:00:00.001Z</startTime>
+            <endTime>21050912T17:53:00.001Z</endTime>
+        </stationEffectiveTimeOverlap>
+        <siteEffectiveTimeOverlap>
+            <startTime>20050101T00:00:00.001Z</startTime>
+            <endTime>21050912T17:53:00.001Z</endTime>
+        </siteEffectiveTimeOverlap>
         <channelAND>
             <bandCode>B</bandCode>
             <gainCode>H</gainCode>
             <channelEffectiveTimeOverlap>
-                <startTime>
-                    <earlier>
-                        <timeInterval>
-                            <value>1</value>
-                            <unit>GREGORIAN_YEAR</unit>
-                        </timeInterval>
-                    </earlier>
-                </startTime>
+                <startTime>20050101T00:00:00.001Z</startTime>
                 <endTime>21050912T17:53:00.001Z</endTime>
             </channelEffectiveTimeOverlap>
         </channelAND>
@@ -134,12 +95,10 @@
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>
-            <name>IRIS_BudDataCenter</name>
+            <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
-        <ANDAvailableDataWrapper>
-            <fullCoverage/>
-        </ANDAvailableDataWrapper>
+        <someCoverage/>
         <alwaysSuccess>
             <phaseSignalToNoise>
                 <modelName>prem</modelName>
@@ -160,12 +119,12 @@
                     <unit>SECOND</unit>
                     <value>-5</value>
                 </longOffsetEnd>
-                <ratio>2</ratio>
+                <ratio>0</ratio>
             </phaseSignalToNoise>
         </alwaysSuccess>
         <externalWaveformProcess>
             <classname>edu.iris.dmc.OracleSNRStuffer</classname>
+            <phaseName>ttp</phaseName>
         </externalWaveformProcess>
-        <printlineSeismogramProcess/>
     </waveformArm>
 </sod>
