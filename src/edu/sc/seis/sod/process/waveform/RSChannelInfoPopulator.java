@@ -68,7 +68,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                 + GENS_POPS_XPATH);
     }
 
-    public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator";
+    public static final String GENS_POPS_XPATH = "//recordSectionDisplayGenerator | //RSChannelInfoPopulator | //externalWaveformProcess[classname/text() = \"edu.sc.seis.rev.map.RecordSectionAndMapGenerator\"]";
 
     private void initConfig(Element config) throws NoSuchFieldException {
         id = SodUtil.getText(SodUtil.getElement(config, "id"));
