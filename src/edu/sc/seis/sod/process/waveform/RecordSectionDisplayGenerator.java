@@ -104,7 +104,7 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         rsDisplay.outputToPNG(out, getRecSecDimension());
     }
 
-    private void writeImage(DataSetSeismogram[] dataSeis,
+    protected void writeImage(DataSetSeismogram[] dataSeis,
                             EventAccessOperations event) throws Exception {
         String fileLoc = getFileLoc(event);
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
@@ -121,11 +121,11 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         }
     }
 
-    private String filename = "recordsection" + FILE_EXTENSION;
+    protected String filename = "recordsection" + FILE_EXTENSION;
 
     private Set acceptableChannels = new HashSet();
 
-    private static final String FILE_EXTENSION = ".png";
+    protected static final String FILE_EXTENSION = ".png";
 
     private static final ParseRegions PR = ParseRegions.getInstance();
 
