@@ -166,6 +166,10 @@ public class Start {
     }
 
     public static void loadDbProperties(Properties sysProperties, String[] args) {
+        loadDbProperties(props, loadDbProperties(args));
+    }
+
+    public static Properties loadDbProperties(String[] args) {
         Properties dbProperties = new Properties();
         boolean loadedFromArg = false;
         for(int i = 0; i < args.length - 1; i++) {
@@ -188,20 +192,20 @@ public class Start {
                 logger.debug("Didn't find default server.properties file");
             }
         }
-        loadDbProperties(props, dbProperties);
+        return dbProperties;
     }
 
     public static void loadDbProperties(Properties sysProperties,
                                         Properties dbProperties) {
-        if(dbProperties.containsKey("server.port")) {
+        if(dbProperties.containsKey(DB_SERVER_PORT)) {
             if(dbProperties.containsKey(DBURL_KEY)) {
                 logger.error("-hsql properties and SOD properties are both specifying the db connection.  Using -hsql properties");
             }
             //Use hsqldb properties specified in
             // http://hsqldb.sourceforge.net/doc/guide/ch04.html
             String url = "jdbc:hsqldb:hsql://localhost";
-            if(dbProperties.containsKey("server.port")) {
-                url += ":" + dbProperties.getProperty("server.port");
+            if(dbProperties.containsKey(DB_SERVER_PORT)) {
+                url += ":" + dbProperties.getProperty(DB_SERVER_PORT);
             }
             url += "/";
             if(dbProperties.containsKey("server.dbname.0")) {
@@ -560,4 +564,6 @@ public class Start {
     protected static int[] suspendedPairs = new int[0];
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
+
+    public static final String DB_SERVER_PORT = "server.port";
 }// Start
