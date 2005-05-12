@@ -366,7 +366,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return eventDirectory;
     }
 
-    protected String getLabel(EventAccessOperations event) {
+    public String getLabel(EventAccessOperations event) {
         return nameGenerator.getFilizedName(event);
     }
 
