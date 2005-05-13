@@ -3,7 +3,6 @@ package edu.sc.seis.sod;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -28,6 +27,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.SystemOutReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.WindowConnectionInterceptor;
+import edu.sc.seis.fissuresUtil.simple.Initializer;
 import edu.sc.seis.sod.database.JDBCConfig;
 import edu.sc.seis.sod.database.JDBCStatus;
 import edu.sc.seis.sod.database.JDBCVersion;
@@ -157,67 +157,12 @@ public class Start {
         //now override the properties with the properties specified
         // in the configuration file.
         loadRunProps(getConfig());
-        loadDbProperties(props, args);
+        ConnMgr.loadDbProperties(props, args);
         //Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
         //here the orb must be initialized ..
         //configure commonAccess
         CommonAccess.getCommonAccess().initORB(args, props);
-    }
-
-    public static void loadDbProperties(Properties sysProperties, String[] args) {
-        loadDbProperties(props, loadDbProperties(args));
-    }
-
-    public static Properties loadDbProperties(String[] args) {
-        Properties dbProperties = new Properties();
-        boolean loadedFromArg = false;
-        for(int i = 0; i < args.length - 1; i++) {
-            if(args[i].equals("-hsql")) {
-                System.out.println("Loading db props");
-                try {
-                    loadProps(new FileInputStream(args[i + 1]), dbProperties);
-                } catch(FileNotFoundException e) {
-                    logger.error("Unable to find file " + args[i + 1]
-                            + " specified by -hsql");
-                }
-                loadedFromArg = true;
-            }
-        }
-        if(!loadedFromArg) {
-            try {
-                loadProps(new FileInputStream("server.properties"),
-                          dbProperties);
-            } catch(FileNotFoundException e) {
-                logger.debug("Didn't find default server.properties file");
-            }
-        }
-        return dbProperties;
-    }
-
-    public static void loadDbProperties(Properties sysProperties,
-                                        Properties dbProperties) {
-        if(dbProperties.containsKey(DB_SERVER_PORT)) {
-            if(dbProperties.containsKey(DBURL_KEY)) {
-                logger.error("-hsql properties and SOD properties are both specifying the db connection.  Using -hsql properties");
-            }
-            //Use hsqldb properties specified in
-            // http://hsqldb.sourceforge.net/doc/guide/ch04.html
-            String url = "jdbc:hsqldb:hsql://localhost";
-            if(dbProperties.containsKey(DB_SERVER_PORT)) {
-                url += ":" + dbProperties.getProperty(DB_SERVER_PORT);
-            }
-            url += "/";
-            if(dbProperties.containsKey("server.dbname.0")) {
-                url += dbProperties.getProperty("server.dbname.0");
-            }
-            logger.debug("Setting db url to " + url);
-            ConnMgr.setURL(url);
-        } else if(sysProperties.containsKey(DBURL_KEY)) {
-            logger.debug("Setting db url to "
-                    + sysProperties.getProperty(DBURL_KEY));
-            ConnMgr.setURL(sysProperties.getProperty(DBURL_KEY));
-        }
     }
 
     public static void loadRunProps(Element doc) throws ConfigurationException {
@@ -517,18 +462,8 @@ public class Start {
         System.exit(1);
     }
 
-    private static void loadProps(InputStream propStream) {
-        loadProps(propStream, props);
-    }
-
-    private static void loadProps(InputStream propStream, Properties baseProps) {
-        try {
-            baseProps.load(propStream);
-            propStream.close();
-        } catch(Exception f) {
-            GlobalExceptionHandler.handle("Problem loading props!", f);
-            System.exit(0);
-        }
+    public static void loadProps(InputStream propStream) {
+        Initializer.loadProps(propStream, props);
     }
 
     public static void add(Properties newProps) {
@@ -564,6 +499,4 @@ public class Start {
     protected static int[] suspendedPairs = new int[0];
 
     public static final String DEFAULT_PROPS = "edu/sc/seis/sod/data/sod.prop";
-
-    public static final String DB_SERVER_PORT = "server.port";
 }// Start
