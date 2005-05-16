@@ -19,7 +19,9 @@ public class NetworkFinder extends AbstractSource {
         Element subElement = SodUtil.getElement(element, "refreshInterval");
         if(subElement != null) {
             refreshInterval = SodUtil.loadTimeInterval(subElement);
-        } else refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+        } else {
+            refreshInterval = new TimeInterval(1, UnitImpl.FORTNIGHT);
+        }
     }
 
     public synchronized ProxyNetworkDC getNetworkDC() {
