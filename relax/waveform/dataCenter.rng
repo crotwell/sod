@@ -3,15 +3,61 @@
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <choice>
-            <externalRef href="fixedDataCenter.rng"/>
             <ref name="choiceDataCenter"/>
+            <externalRef href="fixedDataCenter.rng"/>
         </choice>
     </start>
     <define name="choiceDataCenter">
         <element name="choiceDataCenter">
             <xsd:annotation>
-                <summary>Allows a choice between data centers based on an
-                eventChannelSubsetter</summary>
+                <summary>Allows a choice between data centers based on an eventChannelSubsetter</summary>
+                <description> This type of datacenter allows for a choice to be made between several
+                    data centers based on characteristics of an event and channel. It goes through
+                    each of the choices in order, and if the subsetter inside of a choice matches,
+                    it uses it. If no choice matches, the data center in the otherwise is used. The
+                    example gets data from the POND from half a year ago up until 8 weeks ago. For
+                    anything more recent, it gets data from the BUD. Other uses for this are to
+                    switch datacenters based on the preferred datacenter for a station, or to use
+                    the POND to retrieve data if an event meets the POND criteria but use the
+                    Archive otherwise.</description>
+                <example>
+                    <choiceDataCenter>
+                        <choice>
+                            <embeddedEventStation>
+                                <embeddedOriginSubsetter>
+                                    <originTimeRange>
+                                        <startTime>
+                                            <earlier>
+                                                <timeInterval>
+                                                  <value>26</value>
+                                                  <unit>WEEK</unit>
+                                                </timeInterval>
+                                            </earlier>
+                                        </startTime>
+                                        <endTime>
+                                            <earlier>
+                                                <timeInterval>
+                                                  <value>8</value>
+                                                  <unit>WEEK</unit>
+                                                </timeInterval>
+                                            </earlier>
+                                        </endTime>
+                                    </originTimeRange>
+                                </embeddedOriginSubsetter>
+                            </embeddedEventStation>
+                            <fixedDataCenter>
+                                <name>IRIS_PondDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                        </choice>
+                        <otherwise>
+                            <fixedDataCenter>
+                                <name>IRIS_BudDataCenter</name>
+                                <dns>edu/iris/dmc</dns>
+                            </fixedDataCenter>
+                        </otherwise>
+                    </choiceDataCenter>
+                </example>
             </xsd:annotation>
             <oneOrMore>
                 <element name="choice">
