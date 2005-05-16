@@ -31,7 +31,9 @@
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>
-            <externalRef href="../base/externalRef/refreshInterval.rng"/>
+            <optional>
+                <externalRef href="../base/externalRef/refreshInterval.rng"/>
+            </optional>
         </element>
     </define>
     <define name="filterFinder">
@@ -55,7 +57,9 @@
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>
-            <externalRef href="../base/externalRef/refreshInterval.rng"/>
+            <optional>
+                <externalRef href="../base/externalRef/refreshInterval.rng"/>
+            </optional>
             <element name="filterURL">
                 <data type="string"/>
             </element>
@@ -70,7 +74,8 @@
                         network DC. The name "IRIS_NetworkDC" must be used in combination with the
                         "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC" must be used in
                         conjunction with the "edu/berkley/geo/quake" dns value. The name
-                        "SCEPPNetworkDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
+                        "SCEPPNetworkDC" must be used in conjunction with a DNS value
+                    "edu/sc/seis".</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
@@ -90,7 +95,8 @@
                         server from an network DC. The name "IRIS_NetworkDC" must be used in
                         combination with the "edu/iris/dmc" dns value. The name "NCEDC_NetworkDC"
                         must be used in conjunction with the "edu/berkley/geo/quake" dns value. The
-                        name "SCEPPNetworkDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                        name "SCEPPNetworkDC" must be used in conjunction with a DNS value
+                        "edu/sc/seis"</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
