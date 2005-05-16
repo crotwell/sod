@@ -9,7 +9,7 @@
                         the string specified here. If they match, the event passes.</description>
                     <summary>Matches events with a given catalog</summary>
                     <example>
-                        <contributor>FINGER</contributor>
+                        <catalog>FINGER</catalog>
                     </example>
                 </xsd:documentation>
             </xsd:annotation>
