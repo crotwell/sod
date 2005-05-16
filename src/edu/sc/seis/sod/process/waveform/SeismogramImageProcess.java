@@ -126,6 +126,7 @@ public class SeismogramImageProcess implements WaveformProcess {
                        seismograms,
                        fileType,
                        phases,
+                       true,
                        cookieJar);
     }
 
@@ -223,8 +224,9 @@ public class SeismogramImageProcess implements WaveformProcess {
 
         private final String picFileName;
 
-        private ImageWriter(SeismogramDisplay bsd, String fileType,
-                String picFileName) {
+        private ImageWriter(SeismogramDisplay bsd,
+                            String fileType,
+                            String picFileName) {
             this.bsd = bsd;
             this.fileType = fileType;
             this.picFileName = picFileName;
