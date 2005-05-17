@@ -7,7 +7,6 @@ package edu.sc.seis.sod.status.networkArm;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
