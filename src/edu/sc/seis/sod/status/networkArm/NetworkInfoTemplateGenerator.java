@@ -42,11 +42,11 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     private NetworkStatusTemplate netTemplate;
 
     private HashMap stationTemplates = new HashMap(); //station templates by
-                                                      // network id string
 
+    // network id string
     private HashMap channelTemplates = new HashMap(); //channel templates by
-                                                      // station id string
 
+    // station id string
     private Logger logger = Logger.getLogger(NetworkInfoTemplateGenerator.class);
 
     private Element netConfig, staConfig, siteConfig, chanConfig;
@@ -64,7 +64,8 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
                     netConfig.removeChild(tmpEl);
                 } else if(n.getNodeName().equals("stationConfig")) {
                     staConfig = TemplateFileLoader.getTemplate(n);
-                    Element tmpEl = SodUtil.getElement(staConfig, "outputLocation");
+                    Element tmpEl = SodUtil.getElement(staConfig,
+                                                       "outputLocation");
                     netFormatter = new NetworkFormatter(tmpEl);
                     staConfig.removeChild(tmpEl);
                     tmpEl = SodUtil.getElement(staConfig, "filename");
@@ -74,7 +75,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
                 } else if(n.getNodeName().equals("channelConfig")) {
                     chanConfig = TemplateFileLoader.getTemplate(n);
                     Element tmpEl = SodUtil.getElement(chanConfig,
-                                                    "outputLocation");
+                                                       "outputLocation");
                     staFormatter = new StationFormatter(tmpEl);
                     chanConfig.removeChild(tmpEl);
                     tmpEl = SodUtil.getElement(chanConfig, "filename");
@@ -158,7 +159,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         return netTemplate;
     }
 
-    public StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net)
+    public synchronized StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net)
             throws ConfigurationException {
         if(!contains(net)) {
             try {
@@ -200,21 +201,21 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         return cst;
     }
 
-    public ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan)
+    public synchronized ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan)
             throws IOException, ConfigurationException {
         return getChannelsInStationTemplate(chan.my_site.my_station);
     }
 
     public NetworkAccess getNetworkFromStation(Station station) {
-        NetworkAccess staNet = null;
         Iterator it = stationTemplates.keySet().iterator();
-        while(it.hasNext() && staNet == null) {
+        String netId = getIDString(station.my_network);
+        while(it.hasNext()) {
             String cur = (String)it.next();
-            if(cur.equals(getIDString(station.my_network))) {
-                staNet = ((StationsInNetworkTemplate)stationTemplates.get(cur)).getNetwork();
+            if(cur.equals(netId)) {
+                return ((StationsInNetworkTemplate)stationTemplates.get(cur)).getNetwork();
             }
         }
-        return staNet;
+        return null;
     }
 
     public boolean contains(NetworkAccess net) {
