@@ -348,6 +348,10 @@ public class EventArm implements Runnable {
         }
     }
 
+    public void setWaitForWaveformProcessing(boolean b) {
+        this.waitForWaveformProcessing = b;
+    }
+
     private void setStatus(String status) throws Exception {
         Iterator it = statusMonitors.iterator();
         synchronized(statusMonitors) {
