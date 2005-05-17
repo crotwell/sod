@@ -683,4 +683,8 @@ public class NetworkArm implements Runnable {
     private List statusMonitors = new ArrayList();
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
+
+    public boolean isFinished() {
+        return netPopulators.isEmployed();
+    }
 }// NetworkArm
