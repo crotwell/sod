@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <include href="base/include/quantity.rng"/>
     <start>
         <element name="properties">
@@ -43,6 +44,12 @@
                 </optional>
                 <optional>
                     <ref name="makeIndex"/>
+                </optional>
+                <optional>
+                    <ref name="checkpoint"/>
+                </optional>
+                <optional>
+                    <ref name="allowNetworksOutsideEventRequestTime"/>
                 </optional>
             </interleave>
         </element>
@@ -206,6 +213,29 @@
             <xsd:annotation>
                 <summary>Should SOD create the status index page?</summary>
                 <description>If TRUE, SOD creates the index page. If false it doesn't</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="checkpoint">
+        <element name="checkpointPeriodically">
+            <xsd:annotation>
+                <summary>Periodically send a CHECKPOINT to the database</summary>
+                <description>If present, SOD sends a CHECKPOINT command to the database every
+                hour</description>
+            </xsd:annotation>
+            <ref name="trueOrFalse"/>
+        </element>
+    </define>
+    <define name="allowNetworksOutsideEventRequestTime">
+        <element name="allowNetworksOutsideEventRequestTime">
+            <xsd:annotation>
+                <summary>Instructs SOD to allow networks, stations, sites and channels that aren't
+                    active at all during the requested event times</summary>
+                <description>By default SOD doesn't attempt to retrieve data for any network item
+                    that isn't active during the requested event interval in the event arm. By
+                    adding this tag, SOD will ignore effective times and work on every item returned
+                    by the network arm</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>
