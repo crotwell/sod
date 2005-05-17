@@ -94,7 +94,8 @@ public class EventArm implements Runnable {
             Node node = children.item(i);
             if(node instanceof Element) {
                 Element el = (Element)node;
-                if((el).getTagName().equals("description")) continue;
+                if((el).getTagName().equals("description"))
+                    continue;
                 Object sodElement = SodUtil.load(el, new String[] {"eventArm",
                                                                    "origin"});
                 if(sodElement instanceof EventFinder) {
@@ -111,7 +112,8 @@ public class EventArm implements Runnable {
     }
 
     private void getEvents() throws Exception {
-        if(finder == null) return;
+        if(finder == null)
+            return;
         logger.debug("getting events from "
                 + finder.getEventTimeRange().getMSTR());
         Querier querier = new Querier(finder);
@@ -192,7 +194,8 @@ public class EventArm implements Runnable {
             MicroSecondDate curEnd = new MicroSecondDate(queryTimes.getQuery(server,
                                                                              dns));
             MicroSecondDate newEnd = curEnd.subtract(lag);
-            if(queryStart.after(newEnd)) newEnd = queryStart;
+            if(queryStart.after(newEnd))
+                newEnd = queryStart;
             queryTimes.setQuery(server, dns, newEnd);
         } catch(SQLException e) {
             GlobalExceptionHandler.handle("The query time table just threw this SQLException.  This shouldn't happen.  Something nasty is probably happening to the database now",
@@ -211,7 +214,9 @@ public class EventArm implements Runnable {
                     numEvents = eventStatus.getAll(Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                               Standing.IN_PROG)).length;
                 }
-                if(numEvents < 10) { return; }
+                if(numEvents < 10) {
+                    return;
+                }
                 try {
                     Thread.sleep(5000);
                 } catch(InterruptedException e) {}
@@ -323,7 +328,9 @@ public class EventArm implements Runnable {
         int dbId = eventStatus.getDbId(event);
         if(dbId != -1) {
             Status status = eventStatus.getStatus(dbId);
-            if(status == IN_PROG || status == SUCCESS) { return true; }
+            if(status == IN_PROG || status == SUCCESS) {
+                return true;
+            }
         }
         return false;
     }
@@ -365,7 +372,8 @@ public class EventArm implements Runnable {
         MicroSecondDate quitDate = finder.getEventTimeRange()
                 .getEndMSD()
                 .add(lag);
-        if(quitDate.before(ClockUtil.now())) return true;
+        if(quitDate.before(ClockUtil.now()))
+            return true;
         return false;
     }
 
@@ -538,4 +546,8 @@ public class EventArm implements Runnable {
     private static Logger logger = Logger.getLogger(EventArm.class);
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.EventArm");
+
+    public EventFinder getFinder() {
+        return finder;
+    }
 }// EventArm
