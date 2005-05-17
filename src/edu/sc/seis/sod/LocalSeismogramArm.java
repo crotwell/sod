@@ -419,4 +419,8 @@ public class LocalSeismogramArm implements Subsetter {
     private static final Logger logger = Logger.getLogger(LocalSeismogramArm.class);
 
     private static final org.apache.log4j.Logger failLogger = org.apache.log4j.Logger.getLogger("Fail.Waveform");
+
+    public void add(WaveformProcess proc) {
+        processes.add(proc);
+    }
 }// LocalSeismogramArm

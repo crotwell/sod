@@ -1,6 +1,16 @@
 package edu.sc.seis.sod;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -22,16 +32,14 @@ import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
+import edu.sc.seis.sod.process.waveform.WaveformProcess;
+import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
 import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
-import java.sql.SQLException;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class WaveformArm implements Runnable {
 
@@ -460,6 +468,14 @@ public class WaveformArm implements Runnable {
             synchronized(eventStatus) {
                 next = eventStatus.getNext();
             }
+        }
+    }
+    
+    public void add(WaveformProcess proc){
+        if(motionVectorArm != null){
+            motionVectorArm.add(new ANDWaveformProcessWrapper(proc));
+        }else{
+            localSeismogramArm.add(proc);
         }
     }
 

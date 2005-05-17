@@ -45,6 +45,10 @@ import edu.sc.seis.sod.subsetter.requestGenerator.vector.VectorRequestGenerator;
 
 public class MotionVectorArm implements Subsetter {
 
+    public void add(WaveformVectorProcess process) {
+        processes.add(process);
+    }
+
     public WaveformVectorProcess[] getProcesses() {
         WaveformVectorProcess[] result = new WaveformVectorProcess[processes.size()];
         return (WaveformVectorProcess[])processes.toArray(result);
@@ -277,7 +281,9 @@ public class MotionVectorArm implements Subsetter {
                 MicroSecondDate after = new MicroSecondDate();
                 logger.info("After getting seismograms, time taken="
                         + after.subtract(before).convertTo(UnitImpl.SECOND));
-                if(localSeismograms == null) { return; }
+                if(localSeismograms == null) {
+                    return;
+                }
             } catch(FissuresException e) {
                 handle(ecp, Stage.DATA_RETRIEVAL, e);
                 return;
@@ -361,18 +367,21 @@ public class MotionVectorArm implements Subsetter {
             failLogger.info(ecp + " " + result.getReason());
         }
     }
-    
-    public static WaveformVectorProcess loadAndWrap(Element element) throws ConfigurationException {
+
+    public static WaveformVectorProcess loadAndWrap(Element element)
+            throws ConfigurationException {
         Object sodElement = SodUtil.load(element,
                                          new String[] {"waveform",
                                                        "waveform.vector"});
         if(sodElement instanceof WaveformProcess
                 && !(sodElement instanceof WaveformVectorProcess)) {
             return new ANDWaveformProcessWrapper((WaveformProcess)sodElement);
-        } else if (sodElement instanceof WaveformVectorProcess) {
+        } else if(sodElement instanceof WaveformVectorProcess) {
             return (WaveformVectorProcess)sodElement;
         } else {
-            throw new ConfigurationException("Element "+element.getLocalName()+" is not a WaveformProcess or a WaveformVectorProcess");
+            throw new ConfigurationException("Element "
+                    + element.getLocalName()
+                    + " is not a WaveformProcess or a WaveformVectorProcess");
         }
     }
 
