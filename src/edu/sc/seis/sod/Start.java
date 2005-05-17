@@ -310,10 +310,19 @@ public class Start {
                 }
             }
         }
+        if(waveform == null && event != null) {
+            event.setWaitForWaveformProcessing(false);
+        }
         if(RUN_ARMS) {
-            new Thread(network, "Network Arm").start();
-            new Thread(event, "Event Arm").start();
-            new Thread(waveform, "Waveform Arm").start();
+            startArm(network, "Network Arm");
+            startArm(event, "Event Arm");
+            startArm(waveform, "Waveform Arm");
+        }
+    }
+
+    private void startArm(Runnable arm, String name) {
+        if(arm != null) {
+            new Thread(arm, name).start();
         }
     }
 
