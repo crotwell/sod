@@ -2,26 +2,6 @@
 <sod>
     <properties>
         <runName>Three component legacy code</runName>
-        <statusBase>status</statusBase>
-        <eventQueryIncrement>
-            <value>1</value>
-            <unit>WEEK</unit>
-        </eventQueryIncrement>
-        <eventRefreshInterval>
-            <value>6</value>
-            <unit>MINUTE</unit>
-        </eventRefreshInterval>
-        <eventLag>
-            <value>1</value>
-            <unit>WEEK</unit>
-        </eventLag>
-        <maxRetryDelay>
-            <value>16</value>
-            <unit>DAY</unit>
-        </maxRetryDelay>
-        <waveformWorkerThreads>1</waveformWorkerThreads>
-        <removeDatabase>FALSE</removeDatabase>
-        <eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
     </properties>
     <eventArm>
         <eventFinder>
@@ -55,9 +35,6 @@
         </eventFinder>
         <removeEventDuplicate/>
         <printLineEventProcess/>
-        <eventStatusTemplate>
-            <template>jar:edu/sc/seis/sod/data/templates/eventArm/eventStatus.xml</template>
-        </eventStatusTemplate>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -69,42 +46,17 @@
             </refreshInterval>
         </networkFinder>
         <networkCode>II</networkCode>
-        <stationEffectiveTimeOverlap>
-            <startTime>20030101T00:00:00.001Z</startTime>
-            <endTime>20030131T23:59:59.999Z</endTime>
-        </stationEffectiveTimeOverlap>
-        <siteAND>
-            <siteOR>
-                <siteCode/>
-                <siteCode>00</siteCode>
-            </siteOR>
-            <siteEffectiveTimeOverlap>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
-            </siteEffectiveTimeOverlap>
-        </siteAND>
+        <siteOR>
+            <siteCode/>
+            <siteCode>00</siteCode>
+        </siteOR>
         <channelAND>
             <bandCode>L</bandCode>
             <channelNOT>
                 <!-- to prevent LOG channels -->
                 <gainCode>O</gainCode>
             </channelNOT>
-            <channelEffectiveTimeOverlap>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
-            </channelEffectiveTimeOverlap>
         </channelAND>
-        <networkInfoTemplateGenerator>
-            <netConfig>
-                <template>jar:edu/sc/seis/sod/data/templates/networkArm/networks.xml</template>
-            </netConfig>
-            <stationConfig>
-                <template>jar:edu/sc/seis/sod/data/templates/networkArm/stations.xml</template>
-            </stationConfig>
-            <channelConfig>
-                <template>jar:edu/sc/seis/sod/data/templates/networkArm/channels.xml</template>
-            </channelConfig>
-        </networkInfoTemplateGenerator>
     </networkArm>
     <waveformVectorArm>
         <distanceRange>
@@ -142,18 +94,5 @@
         <legacyVectorExecute>
             <command>echo</command>
         </legacyVectorExecute>
-        <localSeismogramTemplateGenerator>
-            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/localSeismogram.xml</template>
-        </localSeismogramTemplateGenerator>
-        <waveformEventTemplateGenerator>
-            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformEvent.xml</template>
-        </waveformEventTemplateGenerator>
-        <waveformNetworkStatus>
-            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetwork.xml</template>
-            <networkListTemplate>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformNetworks.xml</networkListTemplate>
-        </waveformNetworkStatus>
-        <waveformStationStatus>
-            <template>jar:edu/sc/seis/sod/data/templates/waveformArm/waveformStation.xml</template>
-        </waveformStationStatus>
     </waveformVectorArm>
 </sod>

@@ -2,26 +2,13 @@
 <sod xmlns:xlink="http://www.w3.org/1999/xlink/">
     <properties>
         <runName>REV Test Run</runName>
-        <statusBase>status</statusBase>
-        <eventQueryIncrement>
-            <value>1</value>
-            <unit>WEEK</unit>
-        </eventQueryIncrement>
-        <eventRefreshInterval>
-            <value>6</value>
-            <unit>MINUTE</unit>
-        </eventRefreshInterval>
-        <eventLag>
-            <value>1</value>
-            <unit>WEEK</unit>
-        </eventLag>
         <maxRetryDelay>
             <value>45</value>
             <unit>DAY</unit>
         </maxRetryDelay>
         <waveformWorkerThreads>2</waveformWorkerThreads>
         <eventChannelPairProcessing>atMostOnce</eventChannelPairProcessing>
-        <makeIndexPage>FALSE</makeIndexPage>
+        <statusPages>FALSE</statusPages>
     </properties>
     <eventArm>
         <eventFinder>
@@ -58,26 +45,10 @@
         <networkFinder>
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
-            <refreshInterval>
-                <unit>HOUR</unit>
-                <value>50</value>
-            </refreshInterval>
         </networkFinder>
-        <stationEffectiveTimeOverlap>
-            <startTime>20050101T00:00:00.001Z</startTime>
-            <endTime>21050912T17:53:00.001Z</endTime>
-        </stationEffectiveTimeOverlap>
-        <siteEffectiveTimeOverlap>
-            <startTime>20050101T00:00:00.001Z</startTime>
-            <endTime>21050912T17:53:00.001Z</endTime>
-        </siteEffectiveTimeOverlap>
         <channelAND>
             <bandCode>B</bandCode>
             <gainCode>H</gainCode>
-            <channelEffectiveTimeOverlap>
-                <startTime>20050101T00:00:00.001Z</startTime>
-                <endTime>21050912T17:53:00.001Z</endTime>
-            </channelEffectiveTimeOverlap>
         </channelAND>
     </networkArm>
     <waveformArm>
