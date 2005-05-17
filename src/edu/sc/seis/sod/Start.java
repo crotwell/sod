@@ -250,11 +250,11 @@ public class Start {
         // this next line sets up the status page for exception reporting, so
         // it should be as early as possible in the startup sequence
         IndexTemplate indexTemplate = null;
-        if(runProps.doIndex()) {
+        if(runProps.doStatusPages()) {
             indexTemplate = new IndexTemplate();
         }
         startArms(getConfig().getChildNodes());
-        if(runProps.doIndex()) {
+        if(runProps.doStatusPages()) {
             indexTemplate.performRegistration();
         }
         new JDBCStatus();

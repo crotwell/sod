@@ -59,9 +59,9 @@ public class RunProperties {
         if(SodUtil.isTrue(el, "removeDatabase")) {
             removeDatabase = true;
         }
-        if(SodUtil.getElement(el, "makeIndexPage") != null
-                && !SodUtil.isTrue(el, "makeIndexPage")) {
-            doIndex = false;
+        if(SodUtil.getElement(el, "statusPages") != null
+                && !SodUtil.isTrue(el, "statusPages")) {
+            statusPages = false;
         }
         if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
             checkpointPeriodically = true;
@@ -115,8 +115,8 @@ public class RunProperties {
         return evChanPairProc;
     }
 
-    public boolean doIndex() {
-        return doIndex;
+    public boolean doStatusPages() {
+        return statusPages;
     }
 
     public boolean checkpointPeriodically() {
@@ -159,7 +159,7 @@ public class RunProperties {
 
     private boolean removeDatabase = false;
 
-    private boolean doIndex = true;
+    private boolean statusPages = true;
 
     public static final String AT_LEAST_ONCE = "atLeastOnce";
 
