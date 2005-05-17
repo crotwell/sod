@@ -15,7 +15,9 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.EventChannelPair;
+import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.WaveformArm;
@@ -98,31 +100,43 @@ public class IndexTemplate extends FileWritingTemplate implements
      * exceptions in initialization to be in the status pages.
      */
     public void performRegistration() throws Exception {
-        Start.getEventArm().add(mapEventStatus);
+        if(Start.getEventArm() != null) {
+            Start.getEventArm().add(mapEventStatus);
+        }
         loadStatusTemplates();
-        Start.getWaveformArm().addStatusMonitor(this);
+        if(Start.getWaveformArm() != null) {
+            Start.getWaveformArm().addStatusMonitor(this);
+        }
     }
 
     private void loadStatusTemplates() throws Exception {
         ClassLoader cl = this.getClass().getClassLoader();
         Element statusConfig = TemplateFileLoader.getTemplate(cl,
                                                               "jar:edu/sc/seis/sod/data/statusPageConfig.xml");
-        Start.getEventArm()
-                .add(new EventStatusTemplate(DOMHelper.extractElement(statusConfig,
-                                                                      "eventStatusTemplate")));
-        Start.getNetworkArm()
-                .add(new NetworkInfoTemplateGenerator(DOMHelper.extractElement(statusConfig,
-                                                                               "networkInfoTemplateGenerator")));
+        EventArm event = Start.getEventArm();
+        if(event != null) {
+            Element eventStatusEl = DOMHelper.extractElement(statusConfig,
+                                                             "eventStatusTemplate");
+            event.add(new EventStatusTemplate(eventStatusEl));
+        }
+        NetworkArm net = Start.getNetworkArm();
+        if(net != null) {
+            Element netInfoEl = DOMHelper.extractElement(statusConfig,
+                                                         "networkInfoTemplateGenerator");
+            net.add(new NetworkInfoTemplateGenerator(netInfoEl));
+        }
         WaveformArm waveformArm = Start.getWaveformArm();
-        Element seisTempEl = DOMHelper.extractElement(statusConfig,
-                                                      "localSeismogramTemplateGenerator");
-        waveformArm.add(new LocalSeismogramTemplateGenerator(seisTempEl));
-        Element waveformEventTempEl = DOMHelper.extractElement(statusConfig,
-                                                               "waveformEventTemplateGenerator");
-        waveformArm.addStatusMonitor(new WaveformEventTemplateGenerator(waveformEventTempEl));
-        Element waveformStationEl = DOMHelper.extractElement(statusConfig,
-                                                             "waveformStationStatus");
-        waveformArm.addStatusMonitor(new WaveformStationStatus(waveformStationEl));
+        if(waveformArm != null) {
+            Element seisTempEl = DOMHelper.extractElement(statusConfig,
+                                                          "localSeismogramTemplateGenerator");
+            waveformArm.add(new LocalSeismogramTemplateGenerator(seisTempEl));
+            Element waveformEventTempEl = DOMHelper.extractElement(statusConfig,
+                                                                   "waveformEventTemplateGenerator");
+            waveformArm.addStatusMonitor(new WaveformEventTemplateGenerator(waveformEventTempEl));
+            Element waveformStationEl = DOMHelper.extractElement(statusConfig,
+                                                                 "waveformStationStatus");
+            waveformArm.addStatusMonitor(new WaveformStationStatus(waveformStationEl));
+        }
     }
 
     protected Object getTemplate(String tagName, Element el)
