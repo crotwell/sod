@@ -13,9 +13,19 @@
             <optional>
                 <externalRef href="properties.rng"/>
             </optional>
-            <externalRef href="event/arm.rng"/>
-            <externalRef href="network/arm.rng"/>
-            <externalRef href="waveform/arm.rng"/>
+            <choice>
+                <externalRef href="event/arm.rng"/>
+                <externalRef href="network/arm.rng"/>
+                <group>
+                    <externalRef href="event/arm.rng"/>
+                    <externalRef href="network/arm.rng"/>
+                </group>
+                <group>
+                    <externalRef href="event/arm.rng"/>
+                    <externalRef href="network/arm.rng"/>
+                    <externalRef href="waveform/arm.rng"/>
+                </group>
+            </choice>
         </element>
     </start>
 </grammar>
