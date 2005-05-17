@@ -33,7 +33,7 @@ import edu.sc.seis.sod.status.TemplateFileLoader;
 public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     private String fileDir, netsOutputFileName, stasOutputFileName,
-            sitesOutputFileName, chansOutputFileName;
+            chansOutputFileName;
 
     private NetworkFormatter netFormatter;
 
@@ -49,7 +49,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     // station id string
     private Logger logger = Logger.getLogger(NetworkInfoTemplateGenerator.class);
 
-    private Element netConfig, staConfig, siteConfig, chanConfig;
+    private Element netConfig, staConfig, chanConfig;
 
     public NetworkInfoTemplateGenerator(Element el) throws Exception {
         NodeList nl = el.getChildNodes();
@@ -94,7 +94,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
     public void change(NetworkAccess net, Status status) {
         try {
             netTemplate.change(net, status);
-            getStationsInNetworkTemplate(net);
+            getStationsInNetworkTemplate(net.get_attributes());
         } catch(ConfigurationException e) {
             String msg = "Got an ConfigurationException changing station status: ";
             msg += NetworkIdUtil.toString(net.get_attributes().get_id());
@@ -159,7 +159,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         return netTemplate;
     }
 
-    public synchronized StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAccess net)
+    public synchronized StationsInNetworkTemplate getStationsInNetworkTemplate(NetworkAttr net)
             throws ConfigurationException {
         if(!contains(net)) {
             try {
@@ -181,16 +181,16 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
 
     public StationsInNetworkTemplate getStationsInNetworkTemplate(Station station)
             throws ConfigurationException {
-        return getStationsInNetworkTemplate(getNetworkFromStation(station));
+        return getStationsInNetworkTemplate(station.my_network);
     }
 
-    public ChannelsInStationTemplate getChannelsInStationTemplate(Station station)
+    public synchronized ChannelsInStationTemplate getChannelsInStationTemplate(Station station)
             throws IOException, ConfigurationException {
         if(!contains(station)) {
             channelTemplates.put(getIDString(station),
                                  new ChannelsInStationTemplate(chanConfig,
                                                                fileDir,
-                                                               netFormatter.getResult(getNetworkFromStation(station))
+                                                               netFormatter.getResult(station.my_network)
                                                                        + '/'
                                                                        + staFormatter.getResult(station)
                                                                        + '/'
@@ -201,33 +201,17 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         return cst;
     }
 
-    public synchronized ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan)
+    public ChannelsInStationTemplate getChannelsInStationTemplate(Channel chan)
             throws IOException, ConfigurationException {
         return getChannelsInStationTemplate(chan.my_site.my_station);
     }
 
-    public NetworkAccess getNetworkFromStation(Station station) {
-        Iterator it = stationTemplates.keySet().iterator();
-        String netId = getIDString(station.my_network);
-        while(it.hasNext()) {
-            String cur = (String)it.next();
-            if(cur.equals(netId)) {
-                return ((StationsInNetworkTemplate)stationTemplates.get(cur)).getNetwork();
-            }
-        }
-        return null;
-    }
-
-    public boolean contains(NetworkAccess net) {
+    public boolean contains(NetworkAttr net) {
         return stationTemplates.containsKey(getIDString(net));
     }
 
     public boolean contains(Station sta) {
         return channelTemplates.containsKey(getIDString(sta));
-    }
-
-    private String getIDString(NetworkAccess net) {
-        return getIDString(net.get_attributes());
     }
 
     private String getIDString(NetworkAttr netAttr) {
@@ -238,7 +222,7 @@ public class NetworkInfoTemplateGenerator implements NetworkMonitor {
         return StationIdUtil.toString(sta.get_id());
     }
 
-    public void setArmStatus(String status) throws IOException {
+    public void setArmStatus(String status) {
         netTemplate.setArmStatus(status);
     }
 }

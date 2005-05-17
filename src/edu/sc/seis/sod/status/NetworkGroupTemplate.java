@@ -13,14 +13,16 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.network.NetworkIdUtil;
-import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Status;
 
 public class NetworkGroupTemplate extends Template implements GenericTemplate {
+
+    Map statusMap = new HashMap();
 
     Map networkMap = new HashMap();
 
@@ -79,7 +81,7 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
     protected Object textTemplate(final String text) {
         return new NetworkTemplate() {
 
-            public String getResult(NetworkAccess net) {
+            public String getResult(NetworkAttr net) {
                 return text;
             }
         };
@@ -88,10 +90,10 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
     public String getResult() {
         StringBuffer buf = new StringBuffer();
         synchronized(networkMap) {
-            Iterator it = networkMap.keySet().iterator();
+            Iterator it = networkMap.values().iterator();
             while(it.hasNext()) {
-                NetworkAccess cur = (NetworkAccess)it.next();
-                Status status = (Status)networkMap.get(cur);
+                NetworkAttr cur = (NetworkAttr)it.next();
+                Status status = (Status)statusMap.get(NetworkIdUtil.toString(cur.get_id()));
                 if((useStanding.size() == 0 && !notUseStanding.contains(status.getStanding()))
                         || useStanding.contains(status.getStanding())) {
                     Iterator tempIt = templates.iterator();
@@ -105,30 +107,10 @@ public class NetworkGroupTemplate extends Template implements GenericTemplate {
     }
 
     public void change(NetworkAccess net, Status status) {
-        NetAccessWithEquals ea = new NetAccessWithEquals(net);
         synchronized(networkMap) {
-            networkMap.put(ea, status);
-        }
-    }
-
-    private class NetAccessWithEquals extends ProxyNetworkAccess {
-
-        public NetAccessWithEquals(NetworkAccess net) {
-            super(net);
-        }
-
-        public boolean equals(Object o) {
-            if(o == this) { return true; }
-            if(o instanceof NetworkAccess) {
-                NetworkAccess oNet = (NetworkAccess)o;
-                return NetworkIdUtil.areEqual(oNet.get_attributes().get_id(),
-                                              get_attributes().get_id());
-            }
-            return false;
-        }
-
-        public int hashCode() {
-            return NetworkIdUtil.toString(get_attributes().get_id()).hashCode();
+            String id = NetworkIdUtil.toString(net.get_attributes().get_id());
+            statusMap.put(id, status);
+            networkMap.put(id, net.get_attributes());
         }
     }
 
