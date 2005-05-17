@@ -11,14 +11,21 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Element;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.WaveformArm;
+import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
+import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
 import edu.sc.seis.sod.status.eventArm.MapEventStatus;
+import edu.sc.seis.sod.status.networkArm.NetworkInfoTemplateGenerator;
+import edu.sc.seis.sod.status.waveformArm.WaveformEventTemplateGenerator;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformStationStatus;
 
 public class IndexTemplate extends FileWritingTemplate implements
         WaveformMonitor {
@@ -90,9 +97,32 @@ public class IndexTemplate extends FileWritingTemplate implements
      * Exists so IndexTemplate can be created before arms, in order for
      * exceptions in initialization to be in the status pages.
      */
-    public void performRegistration() {
+    public void performRegistration() throws Exception {
         Start.getEventArm().add(mapEventStatus);
+        loadStatusTemplates();
         Start.getWaveformArm().addStatusMonitor(this);
+    }
+
+    private void loadStatusTemplates() throws Exception {
+        ClassLoader cl = this.getClass().getClassLoader();
+        Element statusConfig = TemplateFileLoader.getTemplate(cl,
+                                                              "jar:edu/sc/seis/sod/data/statusPageConfig.xml");
+        Start.getEventArm()
+                .add(new EventStatusTemplate(DOMHelper.extractElement(statusConfig,
+                                                                      "eventStatusTemplate")));
+        Start.getNetworkArm()
+                .add(new NetworkInfoTemplateGenerator(DOMHelper.extractElement(statusConfig,
+                                                                               "networkInfoTemplateGenerator")));
+        WaveformArm waveformArm = Start.getWaveformArm();
+        Element seisTempEl = DOMHelper.extractElement(statusConfig,
+                                                      "localSeismogramTemplateGenerator");
+        waveformArm.add(new LocalSeismogramTemplateGenerator(seisTempEl));
+        Element waveformEventTempEl = DOMHelper.extractElement(statusConfig,
+                                                               "waveformEventTemplateGenerator");
+        waveformArm.addStatusMonitor(new WaveformEventTemplateGenerator(waveformEventTempEl));
+        Element waveformStationEl = DOMHelper.extractElement(statusConfig,
+                                                             "waveformStationStatus");
+        waveformArm.addStatusMonitor(new WaveformStationStatus(waveformStationEl));
     }
 
     protected Object getTemplate(String tagName, Element el)
