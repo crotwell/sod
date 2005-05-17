@@ -12,8 +12,6 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class RunProperties {
 
-    private boolean checkpointPeriodically;
-
     public RunProperties(Element el) throws ConfigurationException {
         Element runNameChild = SodUtil.getElement(el, "runName");
         if(runNameChild != null) {
@@ -67,6 +65,9 @@ public class RunProperties {
         }
         if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
             checkpointPeriodically = true;
+        }
+        if(DOMHelper.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
+            allowDeadNets = true;
         }
     }
 
@@ -122,6 +123,10 @@ public class RunProperties {
         return checkpointPeriodically;
     }
 
+    public boolean allowDeadNets() {
+        return allowDeadNets;
+    }
+
     public static final TimeInterval NO_TIME = new TimeInterval(0,
                                                                 UnitImpl.SECOND);
 
@@ -161,4 +166,8 @@ public class RunProperties {
     public static final String AT_MOST_ONCE = "atMostOnce";
 
     private String evChanPairProc = AT_LEAST_ONCE;
+
+    private boolean checkpointPeriodically;
+
+    private boolean allowDeadNets;
 }
