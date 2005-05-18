@@ -685,6 +685,6 @@ public class NetworkArm implements Runnable {
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 
     public boolean isFinished() {
-        return netPopulators.isEmployed();
+        return !netPopulators.isEmployed();
     }
 }// NetworkArm
