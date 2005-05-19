@@ -13,9 +13,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
@@ -246,9 +248,6 @@ public class SodUtil {
     }
 
     public static Time loadTime(Element el) throws ConfigurationException {
-        if(el == null)
-            return null;
-        edu.iris.Fissures.Time rtnTime = null;
         NodeList kids = el.getChildNodes();
         for(int i = 0; i < kids.getLength(); i++) {
             Node node = kids.item(i);
@@ -256,17 +255,37 @@ public class SodUtil {
                 String tagName = ((Element)node).getTagName();
                 Element element = (Element)node;
                 if(tagName.equals("earlier") || tagName.equals("later")) {
-                    rtnTime = loadRelativeTime(element);
+                    return loadRelativeTime(element);
                 } else if(tagName.equals("now")) {
-                    rtnTime = ClockUtil.now().getFissuresTime();
+                    return ClockUtil.now().getFissuresTime();
+                } else {
+                    return loadSplitupTime(el);
                 }
             }
         }
-        if(rtnTime == null) {
-            String time = getNestedText(el);
-            rtnTime = new Time(time, 0);
+        return new Time(getNestedText(el), 0);
+    }
+
+    private static Time loadSplitupTime(Element element) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        cal.setTime(ClockUtil.now());
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        if(DOMHelper.hasElement(element, "year")) {
+            cal.set(Calendar.YEAR,
+                    Integer.parseInt(DOMHelper.extractText(element, "year")));
         }
-        return rtnTime;
+        if(DOMHelper.hasElement(element, "month")) {
+            cal.set(Calendar.MONTH,
+                    Integer.parseInt(DOMHelper.extractText(element, "month")) - 1);
+        }
+        if(DOMHelper.hasElement(element, "day")) {
+            cal.set(Calendar.DAY_OF_MONTH,
+                    Integer.parseInt(DOMHelper.extractText(element, "day")));
+        }
+        return new MicroSecondDate(cal.getTime()).getFissuresTime();
     }
 
     private static Time loadRelativeTime(Element el)
