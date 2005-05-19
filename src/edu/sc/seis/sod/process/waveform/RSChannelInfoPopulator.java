@@ -138,7 +138,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private static SaveSeismogramToFile extractSaveSeis(String xpath,
                                                         String errorMsgIfNotFound)
-            throws ConfigurationException {
+            throws ConfigurationException{
         Element saveSeisConf = DOMHelper.extractElement(Start.getConfig(),
                                                         xpath);
         if(saveSeisConf != null) {
