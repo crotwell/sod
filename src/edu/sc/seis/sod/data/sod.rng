@@ -17,22 +17,22 @@
                         </optional>
                         <optional>
                             <element name="eventQueryIncrement">
-                                <ref name="time105"/>
+                                <ref name="time104"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventRefreshInterval">
-                                <ref name="time105"/>
+                                <ref name="time104"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="eventLag">
-                                <ref name="time105"/>
+                                <ref name="time104"/>
                             </element>
                         </optional>
                         <optional>
                             <element name="maxRetryDelay">
-                                <ref name="time105"/>
+                                <ref name="time104"/>
                             </element>
                         </optional>
                         <optional>
@@ -59,7 +59,7 @@
                             </element>
                         </optional>
                         <optional>
-                            <element name="makeIndexPage">
+                            <element name="statusPages">
                                 <ref name="trueOrFalse"/>
                             </element>
                         </optional>
@@ -96,12 +96,13 @@
                                 <data type="string"/>
                             </choice>
                         </element>
-                        <choice>
-                            <element name="globalArea">
-                                <empty/>
-                            </element>
-                            <element name="boxArea">
-                                <element name="latitudeRange">
+                        <optional>
+                            <choice>
+                                <element name="globalArea">
+                                    <empty/>
+                                </element>
+                                <element name="boxArea">
+                                    <element name="latitudeRange">
                                     <optional>
                                     <element name="min">
                                     <data type="double"/>
@@ -112,8 +113,8 @@
                                     <data type="double"/>
                                     </element>
                                     </optional>
-                                </element>
-                                <element name="longitudeRange">
+                                    </element>
+                                    <element name="longitudeRange">
                                     <optional>
                                     <element name="min">
                                     <data type="double"/>
@@ -124,9 +125,10 @@
                                     <data type="double"/>
                                     </element>
                                     </optional>
+                                    </element>
                                 </element>
-                            </element>
-                        </choice>
+                            </choice>
+                        </optional>
                         <optional>
                             <element name="originDepthRange">
                                 <element name="unit">
@@ -160,10 +162,10 @@
                         </optional>
                         <element name="originTimeRange">
                             <element name="startTime">
-                                <ref name="time104"/>
+                                <ref name="time103"/>
                             </element>
                             <element name="endTime">
-                                <ref name="time104"/>
+                                <ref name="time103"/>
                             </element>
                         </element>
                         <optional>
@@ -429,11 +431,12 @@
                                     <data type="string"/>
                                 </choice>
                             </element>
-                            <choice>
-                                <element name="globalArea">
+                            <optional>
+                                <choice>
+                                    <element name="globalArea">
                                     <empty/>
-                                </element>
-                                <element name="boxArea">
+                                    </element>
+                                    <element name="boxArea">
                                     <element name="latitudeRange">
                                     <optional>
                                     <element name="min">
@@ -458,8 +461,9 @@
                                     </element>
                                     </optional>
                                     </element>
-                                </element>
-                            </choice>
+                                    </element>
+                                </choice>
+                            </optional>
                             <optional>
                                 <element name="originDepthRange">
                                     <element name="unit">
@@ -763,11 +767,12 @@
                                     <data type="string"/>
                                 </choice>
                             </element>
-                            <choice>
-                                <element name="globalArea">
+                            <optional>
+                                <choice>
+                                    <element name="globalArea">
                                     <empty/>
-                                </element>
-                                <element name="boxArea">
+                                    </element>
+                                    <element name="boxArea">
                                     <element name="latitudeRange">
                                     <optional>
                                     <element name="min">
@@ -792,8 +797,9 @@
                                     </element>
                                     </optional>
                                     </element>
-                                </element>
-                            </choice>
+                                    </element>
+                                </choice>
+                            </optional>
                             <optional>
                                 <element name="originDepthRange">
                                     <element name="unit">
@@ -13504,10 +13510,10 @@
             </element>
             <element name="networkEffectiveTimeOverlap">
                 <element name="startTime">
-                    <ref name="time101"/>
+                    <ref name="time105"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time101"/>
+                    <ref name="time105"/>
                 </element>
             </element>
             <element name="networkAND">
@@ -20423,20 +20429,6 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="xml205">
-        <element>
-            <anyName/>
-            <oneOrMore>
-                <choice>
-                    <attribute>
-                        <anyName/>
-                    </attribute>
-                    <text/>
-                    <ref name="xml205"/>
-                </choice>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="xml222">
         <element>
             <anyName/>
@@ -20447,6 +20439,20 @@
                     </attribute>
                     <text/>
                     <ref name="xml222"/>
+                </choice>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="xml205">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml205"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -26641,25 +26647,58 @@
         </choice>
     </define>
     <define name="time105">
-        <interleave>
-            <element name="unit">
-                <choice>
-                    <value>HOUR</value>
-                    <value>NANOSECOND</value>
-                    <value>MICROSECOND</value>
-                    <value>MILLISECOND</value>
-                    <value>SECOND</value>
-                    <value>MINUTE</value>
-                    <value>DAY</value>
-                    <value>WEEK</value>
-                    <value>FORTNIGHT</value>
-                    <value>GREGORIAN_YEAR</value>
-                </choice>
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
             </element>
-            <element name="value">
-                <data type="float"/>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
             </element>
-        </interleave>
+            <element name="now">
+                <empty/>
+            </element>
+        </choice>
     </define>
     <define name="time90">
         <choice>
@@ -30201,41 +30240,6 @@
             <element name="now">
                 <empty/>
             </element>
-            <interleave>
-                <choice>
-                    <element name="unit">
-                        <choice>
-                            <value>HOUR</value>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>DAY</value>
-                            <value>WEEK</value>
-                            <value>FORTNIGHT</value>
-                            <value>GREGORIAN_YEAR</value>
-                        </choice>
-                    </element>
-                    <element name="unit">
-                        <choice>
-                            <value>HOUR</value>
-                            <value>NANOSECOND</value>
-                            <value>MICROSECOND</value>
-                            <value>MILLISECOND</value>
-                            <value>SECOND</value>
-                            <value>MINUTE</value>
-                            <value>DAY</value>
-                            <value>WEEK</value>
-                            <value>FORTNIGHT</value>
-                            <value>GREGORIAN_YEAR</value>
-                        </choice>
-                    </element>
-                </choice>
-                <element name="value">
-                    <data type="float"/>
-                </element>
-            </interleave>
         </choice>
     </define>
     <define name="time65">
@@ -30474,58 +30478,25 @@
         </choice>
     </define>
     <define name="time104">
-        <choice>
-            <data type="string"/>
-            <element name="earlier">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+        <interleave>
+            <element name="unit">
+                <choice>
+                    <value>HOUR</value>
+                    <value>NANOSECOND</value>
+                    <value>MICROSECOND</value>
+                    <value>MILLISECOND</value>
+                    <value>SECOND</value>
+                    <value>MINUTE</value>
+                    <value>DAY</value>
+                    <value>WEEK</value>
+                    <value>FORTNIGHT</value>
+                    <value>GREGORIAN_YEAR</value>
+                </choice>
             </element>
-            <element name="later">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
+            <element name="value">
+                <data type="float"/>
             </element>
-            <element name="now">
-                <empty/>
-            </element>
-        </choice>
+        </interleave>
     </define>
     <define name="time182">
         <choice>
@@ -31856,6 +31827,41 @@
             <element name="now">
                 <empty/>
             </element>
+            <interleave>
+                <choice>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                    <element name="unit">
+                        <choice>
+                            <value>HOUR</value>
+                            <value>NANOSECOND</value>
+                            <value>MICROSECOND</value>
+                            <value>MILLISECOND</value>
+                            <value>SECOND</value>
+                            <value>MINUTE</value>
+                            <value>DAY</value>
+                            <value>WEEK</value>
+                            <value>FORTNIGHT</value>
+                            <value>GREGORIAN_YEAR</value>
+                        </choice>
+                    </element>
+                </choice>
+                <element name="value">
+                    <data type="float"/>
+                </element>
+            </interleave>
         </choice>
     </define>
     <define name="time156">
@@ -37641,7 +37647,7 @@
             <element name="removeEventDuplicate">
                 <optional>
                     <element name="timeVariance">
-                        <ref name="time102"/>
+                        <ref name="time101"/>
                     </element>
                 </optional>
                 <optional>
@@ -37674,10 +37680,10 @@
             </element>
             <element name="originTimeRange">
                 <element name="startTime">
-                    <ref name="time103"/>
+                    <ref name="time102"/>
                 </element>
                 <element name="endTime">
-                    <ref name="time103"/>
+                    <ref name="time102"/>
                 </element>
             </element>
             <element name="magnitudeRange">
@@ -37862,7 +37868,7 @@
                 </oneOrMore>
             </element>
             <element name="youngerThan">
-                <ref name="time102"/>
+                <ref name="time101"/>
             </element>
         </choice>
     </define>
