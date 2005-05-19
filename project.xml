@@ -326,6 +326,13 @@
                 </includes>
             </resource>
             <resource>
+	    <directory>src/edu/sc/seis/sod/database/waveform</directory>
+	    <targetPath>edu/sc/seis/sod/database/waveform</targetPath>
+	    <includes>
+		<include>*.vm</include>
+	    </includes>
+	</resource>
+<resource>
                 <directory>src/edu/sc/seis/sod/database/props</directory>
                 <targetPath>edu/sc/seis/sod/database/props</targetPath>
                 <includes>
