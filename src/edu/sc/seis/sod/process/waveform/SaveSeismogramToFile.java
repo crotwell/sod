@@ -78,8 +78,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                                 "dataDirectory"));
         dataDirectory = new File(datadirName);
         if(!dataDirectory.exists()) {
-            if(!dataDirectory.mkdirs()) { throw new ConfigurationException("Unable to create directory."
-                    + dataDirectory); } // end of if (!)
+            if(!dataDirectory.mkdirs()) {
+                throw new ConfigurationException("Unable to create directory."
+                        + dataDirectory);
+            } // end of if (!)
         } // end of if (dataDirectory.exits())
         Element subDSElement = SodUtil.getElement(config, "subEventDataSet");
         if(subDSElement != null) {
@@ -105,6 +107,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
         Element reqElement = SodUtil.getElement(config, "preserveRequest");
         if(reqElement != null) {
             preserveRequest = true;
+        }
+        Element dbElement = SodUtil.getElement(config, "storeSeismogramsInDB");
+        if(dbElement != null) {
+            storeSeismogramsInDB = true;
         }
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                               "eventDirLabel"));
@@ -132,9 +138,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 + ChannelIdUtil.toString(channel.get_id()) + " for event in "
                 + regions.getRegionName(event.get_attributes().region) + " at "
                 + event.get_preferred_origin().origin_time.date_time);
-        if(seismograms.length == 0) { return new WaveformResult(seismograms,
-                                                                new StringTreeLeaf(this,
-                                                                                   true)); }
+        if(seismograms.length == 0) {
+            return new WaveformResult(seismograms, new StringTreeLeaf(this,
+                                                                      true));
+        }
         URLDataSetSeismogram urlDSS;
         if(preserveRequest) {
             urlDSS = saveInDataSet(event,
@@ -360,8 +367,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
         File eventDirectory = new File(dataDirectory,
                                        FissuresFormatter.filize(eventDirName));
         if(!eventDirectory.exists()) {
-            if(!eventDirectory.mkdirs()) { throw new IOException("Unable to create directory."
-                    + eventDirectory); } // end of if (!)
+            if(!eventDirectory.mkdirs()) {
+                throw new IOException("Unable to create directory."
+                        + eventDirectory);
+            } // end of if (!)
         } // end of if (dataDirectory.exits())
         return eventDirectory;
     }
@@ -393,7 +402,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
         File eventDirectory = getEventDirectory(event);
         // assume that processing is in event order and never reopens
         // bad but just temporary
-        if(lastDataSet != null && lastDataSet.getEvent().equals(event)) { return lastDataSet; }
+        if(lastDataSet != null && lastDataSet.getEvent().equals(event)) {
+            return lastDataSet;
+        }
         //always create it so we can get the file name
         logger.debug("creating new dataset " + getLabel(event));
         DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
@@ -431,9 +442,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                             new AuditInfo[0]);
         File dsmlFile = new File(eventDirectory,
                                  DataSetToXML.createFileName(dataset));
-        if(dsmlFile.exists()) return dsmlFile;
-        else throw new FileNotFoundException("Dsml File not found for "
-                + EventUtil.getEventInfo(event));
+        if(dsmlFile.exists())
+            return dsmlFile;
+        else
+            throw new FileNotFoundException("Dsml File not found for "
+                    + EventUtil.getEventInfo(event));
     }
 
     public DataSet prepareDataset(EventAccessOperations event, String subDSName)
@@ -443,7 +456,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
         DataSet eventDS = prepareDataset(event);
         String[] dsNames = eventDS.getDataSetNames();
         for(int i = 0; i < dsNames.length; i++) {
-            if(dsNames[i].equals(subDSName)) { return eventDS.getDataSet(dsNames[i]); }
+            if(dsNames[i].equals(subDSName)) {
+                return eventDS.getDataSet(dsNames[i]);
+            }
         }
         MemoryDataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time
                                                           + "/" + subDSName,
@@ -498,7 +513,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     String id = "";
 
-    private boolean preserveRequest = false;
+    private boolean preserveRequest = false, storeSeismogramsInDB = false;
 
     public static final String COOKIE_PREFIX = "SeisFile_";
 
