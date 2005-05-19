@@ -205,8 +205,6 @@ public class EventFormatter extends Template implements EventTemplate{
     }
 
     public void useDefaultConfig() {
-        templates.add(new MagnitudeTemplate());
-        templates.add(textTemplate("_"));
         templates.add(new RegionName());
         templates.add(textTemplate("_"));
         templates.add(new Time());
