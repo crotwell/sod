@@ -66,29 +66,31 @@ public class JDBCRecordSectionChannel extends SodJDBC {
 
     public double[] getPixelInfo(String recSecId, int eq_dbid, int channelId)
             throws SQLException {
-        if(getPixelInfo == null) {
-            String getPixelInfoStmt = "select topLeftX,topLeftY,bottomRightX,bottomRightY from "
-                    + tableName
-                    + " WHERE"
-                    + " recSecId=? AND eq_dbid=? AND channelid=?";
-            getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
-        }
-        getPixelInfo.setString(1, recSecId);
-        getPixelInfo.setInt(2, eq_dbid);
-        getPixelInfo.setInt(3, channelId);
-        double[] pixelInfo = {-1, -1, -1, -1};
-        ResultSet rs = getPixelInfo.executeQuery();
-        if(rs.next()) {
-            double topLeftX = rs.getInt(1);
-            double topLeftY = rs.getInt(2);
-            double bottomRightX = rs.getInt(3);
-            double bottomRightY = rs.getInt(4);
-            pixelInfo[0] = topLeftX;
-            pixelInfo[1] = topLeftY;
-            pixelInfo[2] = bottomRightX;
-            pixelInfo[3] = bottomRightY;
-        }
-        return pixelInfo;
+        throw new UnsupportedOperationException("Pixel information isn't being inserted at the moment because JD's implementation is ridiculously memory intensive");
+        //        if(getPixelInfo == null) {
+        //            String getPixelInfoStmt = "select
+        // topLeftX,topLeftY,bottomRightX,bottomRightY from "
+        //                    + tableName
+        //                    + " WHERE"
+        //                    + " recSecId=? AND eq_dbid=? AND channelid=?";
+        //            getPixelInfo = conn.prepareStatement(getPixelInfoStmt);
+        //        }
+        //        getPixelInfo.setString(1, recSecId);
+        //        getPixelInfo.setInt(2, eq_dbid);
+        //        getPixelInfo.setInt(3, channelId);
+        //        double[] pixelInfo = {-1, -1, -1, -1};
+        //        ResultSet rs = getPixelInfo.executeQuery();
+        //        if(rs.next()) {
+        //            double topLeftX = rs.getInt(1);
+        //            double topLeftY = rs.getInt(2);
+        //            double bottomRightX = rs.getInt(3);
+        //            double bottomRightY = rs.getInt(4);
+        //            pixelInfo[0] = topLeftX;
+        //            pixelInfo[1] = topLeftY;
+        //            pixelInfo[2] = bottomRightX;
+        //            pixelInfo[3] = bottomRightY;
+        //        }
+        //        return pixelInfo;
     }
 
     public int[] getChannels(String recSecId, int eq_dbid, int best)
