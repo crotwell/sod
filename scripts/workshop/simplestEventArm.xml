@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <originTimeRange>
+                <startTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>1</day>
+                </startTime>
+                <endTime>
+                    <year>2003</year>
+                    <month>2</month>
+                    <day>1</day>
+                </endTime>
+            </originTimeRange>
+        </eventFinder>
+        <printLineEventProcess/>
+    </eventArm>
+</sod>

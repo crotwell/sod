@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+        <networkCode>II</networkCode>
+        <siteOR>
+            <siteCode/>
+            <siteCode>00</siteCode>
+        </siteOR>
+        <channelAND>
+            <bandCode>L</bandCode>
+            <channelNOT>
+                <!-- to prevent LOG channels -->
+                <gainCode>O</gainCode>
+            </channelNOT>
+        </channelAND>
+        <printlineChannelProcessor/>
+    </networkArm>
+</sod>
