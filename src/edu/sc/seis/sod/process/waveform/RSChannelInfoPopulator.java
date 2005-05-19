@@ -175,19 +175,19 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
         dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
-        RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-        rsDisplay.add(wrap(dss));
-        File temp = File.createTempFile("tempRecSec", "png");
-        rsDisplay.outputToPNG(temp);
-        temp.delete();
-        HashMap pixelMap = rsDisplay.getPixelMap();
+//        RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
+//        rsDisplay.add(wrap(dss));
+//        File temp = File.createTempFile("tempRecSec", "png");
+//        rsDisplay.outputToPNG(temp);
+//        temp.delete();
+//        HashMap pixelMap = rsDisplay.getPixelMap();
         int[] channelIds = getChannelDBIds(dss);
         for(int j = 0; j < channelIds.length; j++) {
             if(!recordSectionChannel.channelExists(id, eq_dbid, channelIds[j])) {
                 recordSectionChannel.insert(id,
                                             eq_dbid,
                                             channelIds[j],
-                                            (double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
+                                            new double[]{0,0,0,0},//(double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
                                             0,
                                             internalId);
             }
