@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventDCOperations;
+import edu.iris.Fissures.model.GlobalAreaImpl;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
@@ -105,7 +106,7 @@ public class EventFinder extends AbstractSource implements SodElement {
 
     private OriginTimeRange eventTimeRange;
 
-    private edu.iris.Fissures.Area area;
+    private edu.iris.Fissures.Area area = new GlobalAreaImpl();
 
     private static Logger logger = Logger.getLogger(EventFinder.class);
 }// EventFinder
