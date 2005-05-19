@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,10 +27,15 @@ import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.database.ConnMgr;
+import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
+import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
+import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
@@ -58,8 +64,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
      * @param config
      *            an <code>Element</code> that contains the configuration for
      *            this Processor
+     * @throws SQLException
      */
-    public SaveSeismogramToFile(Element config) throws ConfigurationException {
+    public SaveSeismogramToFile(Element config) throws ConfigurationException,
+            SQLException {
         this.config = config;
         String fileTypeStr = SodUtil.getText(SodUtil.getElement(config,
                                                                 "fileType"));
@@ -126,6 +134,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         //                        }
         //                    }
         //                });
+        jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -276,22 +285,17 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes fileType)
-            throws CodecException, IOException, NoPreferredOrigin,
-            UnsupportedFileTypeException, SeedFormatException,
-            XMLStreamException, IncomprehensibleDSMLException,
-            ParserConfigurationException {
+            throws Exception {
         return saveInDataSet(event, channel, seismograms, fileType, null);
     }
 
+    //Used to save a seismogram locally.
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes fileType,
                                                  RequestFilter request)
-            throws CodecException, IOException, NoPreferredOrigin,
-            UnsupportedFileTypeException, SeedFormatException,
-            XMLStreamException, IncomprehensibleDSMLException,
-            ParserConfigurationException {
+            throws Exception {
         if(subDS.length() != 0) {
             prepareDataset(event, subDS);
         } else {
@@ -320,6 +324,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                         channel,
                                                         event,
                                                         fileType);
+            if(storeSeismogramsInDB){
+	            jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
+	                                                  seismograms[i],
+	                                                  seisFile.toString());
+            }
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
             seisFileTypeArray[i] = fileType; // all are the same
@@ -520,4 +529,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
     EventFormatter nameGenerator = null;
 
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
+
+    private JDBCSeismogramFiles jdbcSeisFile;
 }
