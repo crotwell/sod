@@ -57,7 +57,9 @@ public class OutputScheduler extends Thread {
                 return;
             }
             try {
-                sleep(ACTION_INTERVAL_MILLIS);
+                synchronized(this) {
+                    wait(ACTION_INTERVAL_MILLIS);
+                }
             } catch(InterruptedException e) {}
         }
     }
