@@ -66,8 +66,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
      *            this Processor
      * @throws SQLException
      */
-    public SaveSeismogramToFile(Element config) throws ConfigurationException,
-            SQLException {
+    public SaveSeismogramToFile(Element config) throws ConfigurationException{
         this.config = config;
         String fileTypeStr = SodUtil.getText(SodUtil.getElement(config,
                                                                 "fileType"));
@@ -118,6 +117,12 @@ public class SaveSeismogramToFile implements WaveformProcess {
         }
         Element dbElement = SodUtil.getElement(config, "storeSeismogramsInDB");
         if(dbElement != null) {
+            try{
+                jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
+            }
+            catch (SQLException e){
+                throw new ConfigurationException("Trouble creating database connection", e);
+            }
             storeSeismogramsInDB = true;
         }
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
@@ -134,7 +139,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
         //                        }
         //                    }
         //                });
-        jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
     }
 
     public WaveformResult process(EventAccessOperations event,
