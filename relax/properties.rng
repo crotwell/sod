@@ -43,7 +43,7 @@
                     <ref name="eventChannelPairProcessing"/>
                 </optional>
                 <optional>
-                    <ref name="makeIndex"/>
+                    <ref name="statusPages"/>
                 </optional>
                 <optional>
                     <ref name="checkpoint"/>
@@ -208,8 +208,8 @@
             </choice>
         </element>
     </define>
-    <define name="makeIndex">
-        <element name="makeIndexPage">
+    <define name="statusPages">
+        <element name="statusPages">
             <xsd:annotation>
                 <summary>Should SOD create the status index page?</summary>
                 <description>If TRUE, SOD creates the index page. If false it doesn't</description>
