@@ -34,6 +34,7 @@ import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
@@ -43,8 +44,10 @@ import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 
 public class WaveformArm implements Runnable {
 
-    public WaveformArm(Element config, EventArm eventArm,
-            NetworkArm networkArm, int threadPoolSize) throws Exception {
+    public WaveformArm(Element config,
+                       EventArm eventArm,
+                       NetworkArm networkArm,
+                       int threadPoolSize) throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         eventRetryTable = new JDBCEventChannelRetry();
@@ -104,6 +107,9 @@ public class WaveformArm implements Runnable {
             GlobalExceptionHandler.handle("Problem running waveform arm", e);
         }
         finished = true;
+        synchronized(OutputScheduler.getDefault()) {
+            OutputScheduler.getDefault().notify();
+        }
         logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
                 + "honey; I need hands outstretched to take it.");
     }
@@ -316,8 +322,10 @@ public class WaveformArm implements Runnable {
                     break;
                 }
             }
-            if(pairGroup == null) { throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "
-                    + ecp); }
+            if(pairGroup == null) {
+                throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "
+                        + ecp);
+            }
             int[] pairIds;
             synchronized(evChanStatus) {
                 pairIds = evChanStatus.getPairs(ecp.getEvent(), pairGroup);
@@ -359,7 +367,9 @@ public class WaveformArm implements Runnable {
                     }
                     try {
                         EventVectorPair ecgp = getEventVectorPair(ecp);
-                        if(ecgp == null) { return null; }
+                        if(ecgp == null) {
+                            return null;
+                        }
                         int[] pairs;
                         synchronized(evChanStatus) {
                             pairs = evChanStatus.getPairs(ecgp);
@@ -470,11 +480,11 @@ public class WaveformArm implements Runnable {
             }
         }
     }
-    
-    public void add(WaveformProcess proc){
-        if(motionVectorArm != null){
+
+    public void add(WaveformProcess proc) {
+        if(motionVectorArm != null) {
             motionVectorArm.add(new ANDWaveformProcessWrapper(proc));
-        }else{
+        } else {
             localSeismogramArm.add(proc);
         }
     }
@@ -574,7 +584,8 @@ public class WaveformArm implements Runnable {
         synchronized(eventStatus) {
             try {
                 int id = eventStatus.getNext();
-                if(id != -1) return getEvent(id);
+                if(id != -1)
+                    return getEvent(id);
                 return null;
             } catch(SQLException e) {
                 throw new RuntimeException("Trouble with event db", e);

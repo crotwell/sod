@@ -32,6 +32,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.process.eventArm.EventProcess;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.subsetter.origin.EventFinder;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
@@ -82,6 +83,9 @@ public class EventArm implements Runnable {
         }
         logger.debug("Event arm finished");
         alive = false;
+        synchronized(OutputScheduler.getDefault()) {
+            OutputScheduler.getDefault().notify();
+        }
     }
 
     public void add(EventMonitor monitor) {

@@ -40,6 +40,7 @@ import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
 import edu.sc.seis.sod.process.networkArm.NetworkProcess;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -237,6 +238,7 @@ public class NetworkArm implements Runnable {
         }
         logger.debug("found " + allNets.length
                 + " network access objects from the network DC finder");
+        NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
             try {
                 allNets[i] = BulletproofVestFactory.vestNetworkAccess(allNets[i],
@@ -254,7 +256,8 @@ public class NetworkArm implements Runnable {
                         networkDBs.add(netDb);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
-                        netPopulators.invokeLater(new NetworkPusher(netDb));
+                        lastPusher = new NetworkPusher(netDb);
+                        netPopulators.invokeLater(lastPusher);
                     } else {
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
@@ -271,6 +274,9 @@ public class NetworkArm implements Runnable {
                                                       + i + "th networkAccess",
                                               th);
             }
+        }
+        if(lastPusher != null) {
+            lastPusher.setLastPusher();
         }
         //Set the time of the last check to now
         queryTimeTable.setQuery(finder.getSourceName(),
@@ -327,7 +333,27 @@ public class NetworkArm implements Runnable {
                     getSuccessfulChannels(netDb, siteDbs[k]);
                 }
             }
+            synchronized(this) {
+                pusherFinished = true;
+                finishArm();
+            }
         }
+
+        private void finishArm() {
+            if(lastPusher && pusherFinished) {
+                armFinished = true;
+                synchronized(OutputScheduler.getDefault()) {
+                    OutputScheduler.getDefault().notify();
+                }
+            }
+        }
+
+        public synchronized void setLastPusher() {
+            lastPusher = true;
+            finishArm();
+        }
+
+        private boolean lastPusher = false, pusherFinished = false;
 
         private NetworkDbObject netDb;
     }
@@ -684,7 +710,9 @@ public class NetworkArm implements Runnable {
 
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 
+    private boolean armFinished = false;
+
     public boolean isFinished() {
-        return !netPopulators.isEmployed();
+        return armFinished;
     }
 }// NetworkArm
