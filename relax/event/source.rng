@@ -22,10 +22,12 @@
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>
-            <choice>
-                <ref name="globalArea"/>
-                <ref name="boxArea"/>
-            </choice>
+            <optional>
+                <choice>
+                    <ref name="globalArea"/>
+                    <ref name="boxArea"/>
+                </choice>
+            </optional>
             <optional>
                 <externalRef href="../base/externalRef/originDepthRange.rng"/>
             </optional>
@@ -50,7 +52,8 @@
                         an event DC. The name "IRIS_EventDC" must be used in combination with the
                         "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
                         be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
-                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis".</description>
+                        "SCEPPEventDC" must be used in conjunction with a DNS value
+                    "edu/sc/seis".</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
@@ -71,7 +74,8 @@
                         an event DC. The name "IRIS_EventDC" must be used in combination with the
                         "edu/iris/dmc" dns value. The names "NCEDC_EventDC" and "NCSN_EventDC" must
                         be used in conjunction with the "edu/berkley/geo/quake" dns value. The name
-                        "SCEPPEventDC" must be used in conjunction with a DNS value "edu/sc/seis"</description>
+                        "SCEPPEventDC" must be used in conjunction with a DNS value
+                    "edu/sc/seis"</description>
                 </xsd:documentation>
             </xsd:annotation>
             <choice>
