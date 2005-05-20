@@ -61,8 +61,9 @@ public class EditorUtil {
 
     public static String capFirstLetter(String in) {
         char c = in.charAt(0);
-        if(!Character.isUpperCase(c)) { return ("" + c).toUpperCase()
-                + in.substring(1); }
+        if(!Character.isUpperCase(c)) {
+            return ("" + c).toUpperCase() + in.substring(1);
+        }
         return in;
     }
 
@@ -193,7 +194,11 @@ public class EditorUtil {
 
     public static JComponent makeTimeIntervalTwiddler(Element el)
             throws TransformerException {
-        return makeTimeIntervalTwiddler(el, new Integer(1), null);
+        // hopefully, no one is going to twiddle towards a number larger than
+        // one million...
+        return makeTimeIntervalTwiddler(el,
+                                        new Integer(1),
+                                        new Integer(1000000));
     }
 
     public static JComponent makeTimeIntervalTwiddler(Element el,
@@ -240,7 +245,9 @@ public class EditorUtil {
                 Element el = (Element)kids.item(i);
                 Text text = (Text)XPathAPI.selectSingleNode(el, "text()");
                 if(el.getTagName().equals("unit")) {
-                    JComboBox unitCombo = getComboBox(el, unitStrings, text.getNodeValue());
+                    JComboBox unitCombo = getComboBox(el,
+                                                      unitStrings,
+                                                      text.getNodeValue());
                     b.add(unitCombo);
                     b.add(Box.createHorizontalStrut(10));
                 } else if(el.getTagName().equals("value")) {
