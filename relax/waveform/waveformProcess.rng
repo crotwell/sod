@@ -293,6 +293,11 @@
                     <empty/>
                 </element>
             </optional>
+            <optional>
+                <element name="storeSeismogramsInDB">
+                    <empty/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="recordSectionDisplayGenerator">
