@@ -29,6 +29,7 @@
             <ref name="external"/>
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
+            <ref name="rotateGCP"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -263,6 +264,19 @@
             <oneOrMore>
                 <ref name="waveformVectorProcess"/>
             </oneOrMore>
+        </element>
+    </define><define name="rotateGCP">
+        <element name="rotateGCP">
+            <xsd:annotation>
+                <summary>Rotate the seismograms to Great Circle Path</summary>
+                <description>The horizontal seismograms are rotated to the great circle path. 
+                The channel codes are changed to end in R for radial or T for transverse, so 
+                BHN and BHE would become BHR and BHT. The actual channel information is not
+                changed, so if you need the Channel object associated with these transformed
+                seismograms, you should use the ChannelGroup.getChannel(ChannelId) method as it
+                    will detect the R and T ending and give the appropriate transformed Channel.</description>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
 </grammar>
