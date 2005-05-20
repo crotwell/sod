@@ -88,9 +88,21 @@ public class EditorUtil {
 
     public static JComponent getLabeledComboBox(Element element, Object[] vals)
             throws TransformerException {
+        return getLabeledComboBox(element, getComboBox(element, vals));
+    }
+
+    public static JComponent getLabeledComboBox(Element element,
+                                                Object[] vals,
+                                                Object selected)
+            throws TransformerException {
+        return getLabeledComboBox(element, getComboBox(element, vals, selected));
+    }
+
+    public static JComponent getLabeledComboBox(Element element, JComboBox comboBox)
+            throws TransformerException {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
-        b.add(getComboBox(element, vals));
+        b.add(comboBox);
         b.add(Box.createHorizontalGlue());
         return b;
     }
@@ -113,6 +125,11 @@ public class EditorUtil {
             throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
         Text text = (Text)node;
+        if (text == null) {
+            logger.debug("text node was null.  appending text node for selected object");
+            text = element.getOwnerDocument().createTextNode(selected.toString());
+            element.appendChild(text);
+        }
         JComboBox combo = new JComboBox(vals);
         boolean found = false;
         for(int i = 0; i < vals.length; i++) {
