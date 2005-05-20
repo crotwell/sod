@@ -194,11 +194,9 @@ public class EditorUtil {
 
     public static JComponent makeTimeIntervalTwiddler(Element el)
             throws TransformerException {
-        // hopefully, no one is going to twiddle towards a number larger than
-        // one million...
         return makeTimeIntervalTwiddler(el,
                                         new Integer(1),
-                                        new Integer(1000000));
+                                        new Integer(Integer.MAX_VALUE));
     }
 
     public static JComponent makeTimeIntervalTwiddler(Element el,
