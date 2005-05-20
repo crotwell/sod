@@ -70,12 +70,11 @@ public class ANDWaveformProcessWrapper implements WaveformProcessWrapper {
             reason[i] = result.getReason();
             b &= result.isSuccess();
         }
-        if(!b) { return new WaveformVectorResult(false,
-                                                 seismograms,
+        if(!b) { return new WaveformVectorResult(seismograms,
                                                  new StringTreeBranch(this,
                                                                       false,
                                                                       reason)); }
-        return new WaveformVectorResult(true, out, new StringTreeBranch(this,
+        return new WaveformVectorResult(out, new StringTreeBranch(this,
                                                                         true,
                                                                         reason));
     }

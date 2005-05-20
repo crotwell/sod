@@ -333,8 +333,7 @@ public class MotionVectorArm implements Subsetter {
                                    RequestFilter[][] outfilters,
                                    LocalSeismogramImpl[][] localSeismograms) {
         WaveformVectorProcess processor;
-        WaveformVectorResult result = new WaveformVectorResult(true,
-                                                               localSeismograms,
+        WaveformVectorResult result = new WaveformVectorResult(localSeismograms,
                                                                new StringTreeLeaf(this,
                                                                                   true));
         Iterator it = processes.iterator();

@@ -25,23 +25,20 @@ public class ThreeComponentData implements WaveformVectorProcess {
                                         CookieJar cookieJar) {
         for (int i = 0; i < seismograms.length; i++) {
             if (seismograms[i].length == 0) {
-                return new WaveformVectorResult(false,
-                                                seismograms,
+                return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
                                                                    "seismograms["+i+"] is empty"));
             }
             
             if (seismograms[i][0].num_points == 0) {
-                return new WaveformVectorResult(false,
-                                                seismograms,
+                return new WaveformVectorResult(seismograms,
                                                 new StringTreeLeaf(this,
                                                                    false,
                                                                    "seismograms["+i+"][0] has zero data points"));
             }
         }
-        return new WaveformVectorResult(true,
-                                        seismograms,
+        return new WaveformVectorResult(seismograms,
                                         new StringTreeLeaf(this,
                                                            true));
     }

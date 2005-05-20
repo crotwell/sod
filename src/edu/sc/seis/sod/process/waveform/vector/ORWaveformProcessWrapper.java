@@ -73,13 +73,11 @@ public class ORWaveformProcessWrapper implements WaveformProcessWrapper {
             b |= result.isSuccess();
             reason[i] = result.getReason();
         }
-        if(b) { return new WaveformVectorResult(true,
-                                                out,
+        if(b) { return new WaveformVectorResult(out,
                                                 new StringTreeBranch(this,
                                                                      true,
                                                                      reason)); }
-        return new WaveformVectorResult(false,
-                                        seismograms,
+        return new WaveformVectorResult(seismograms,
                                         new StringTreeBranch(this,
                                                              false,
                                                              reason));
