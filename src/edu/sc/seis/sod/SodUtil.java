@@ -459,6 +459,16 @@ public class SodUtil {
         }
         return null;
     }
+    
+    public static Element getFirstEmbeddedElement(Element config){
+        NodeList nl = config.getChildNodes();
+        for(int i = 0; i < nl.getLength(); i++) {
+            if (nl.item(i) instanceof Element){
+                return (Element)nl.item(i);
+            }
+        }
+        return null;
+    }
 
     /**
      * returns the first text child within the node.
