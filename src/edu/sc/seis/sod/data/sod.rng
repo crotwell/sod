@@ -16841,6 +16841,11 @@
                         <empty/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -17280,6 +17285,11 @@
                 </optional>
                 <optional>
                     <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
                         <empty/>
                     </element>
                 </optional>
@@ -17725,6 +17735,11 @@
                         <empty/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -18164,6 +18179,11 @@
                 </optional>
                 <optional>
                     <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
                         <empty/>
                     </element>
                 </optional>
@@ -33723,6 +33743,9 @@
                 <oneOrMore>
                     <ref name="waveformVectorProcess"/>
                 </oneOrMore>
+            </element>
+            <element name="rotateGCP">
+                <empty/>
             </element>
         </choice>
     </define>
