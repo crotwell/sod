@@ -8,7 +8,9 @@ package edu.sc.seis.sod.editor;
 
 import javax.swing.JComponent;
 import javax.xml.transform.TransformerException;
+import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class NetCodeEditor implements EditorPlugin {
 
@@ -42,6 +44,11 @@ public class NetCodeEditor implements EditorPlugin {
     }
 
     public JComponent getSiteCodeGUI(Element element) throws TransformerException {
+        //for some reason, "  " site codes are considered to be null text nodes
+        Node node = XPathAPI.selectSingleNode(element, "text()");
+        if(node == null) {
+            return EditorUtil.getLabeledComboBox(element, allSites, allSites[0]);
+        }
         return EditorUtil.getLabeledComboBox(element, allSites);
     }
 
