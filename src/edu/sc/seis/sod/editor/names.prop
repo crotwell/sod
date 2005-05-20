@@ -125,3 +125,7 @@ quality=Quality
 phaseSignalToNoise=Phase Signal To Noise
 modelName=Model Name
 phaseName=Phase Name
+
+requestGeneratorWrapper=Request Generator
+
+embeddedOriginSubsetter=Embedded Origin

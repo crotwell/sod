@@ -8,8 +8,6 @@ package edu.sc.seis.sod.editor;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import javax.swing.JComponent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -128,7 +126,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
             }
         }
 
-
+        editors.put("requestGeneratorWrapper", new WrapperEditor(this));
 
         String[] wrapperTypes = { "AvailableDataWrapper", "RequestWrapper", "WaveformProcessWrapper", "EventChannelWrapper" };
         String[] wrapperLogicals = { "AND", "OR" };
@@ -138,11 +136,15 @@ public class SodGUIEditor extends SimpleGUIEditor {
             }
         }
 
+        EmbeddedEditor embedded = new EmbeddedEditor(this);
+        editors.put("embeddedOriginSubsetter", embedded);
 
         // this puts "switchers" in place of the editors, which are stored with the suffix
         // the switchers contian the origins, plus a popup menu for the types that could
         // go in this place
-        for (int i = 0; i < switchTypes.length; i++) {
+            
+        /* COMMENTED OUT 2005/05/20 because switchers don't work
+         for (int i = 0; i < switchTypes.length; i++) {
             Switcher originSwitcher = new Switcher(switchTypes[i], this);
             List subTypes = originSwitcher.getSubTypes();
             Iterator it = subTypes.iterator();
@@ -164,7 +166,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
                     editors.put(tagName, originSwitcher);
                 }
             }
-        }
+        }*/
 
     }
 
