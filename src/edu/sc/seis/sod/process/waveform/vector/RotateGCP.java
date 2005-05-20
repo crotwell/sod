@@ -5,10 +5,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.Location;
+import edu.iris.Fissures.Orientation;
+import edu.iris.Fissures.Sampling;
+import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.iris.Fissures.network.ChannelImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Rotate;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -96,5 +102,7 @@ public class RotateGCP implements WaveformVectorProcess {
                                                              true));
     }
     
-    String radialOrientationCode, transverseOrientationCode;
+    String radialOrientationCode = "R";
+    
+    String transverseOrientationCode = "T";
 }
