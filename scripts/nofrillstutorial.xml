@@ -22,7 +22,7 @@
         <waveformWorkerThreads>1</waveformWorkerThreads>
         <removeDatabase>FALSE</removeDatabase>
         <eventChannelPairProcessing>atLeastOnce</eventChannelPairProcessing>
-        <makeIndexPage>FALSE</makeIndexPage>
+        <statusPages>FALSE</statusPages>
     </properties>
     <eventArm>
         <eventFinder>
@@ -82,7 +82,7 @@
             </siteEffectiveTimeOverlap>
         </siteAND>
         <channelAND>
-            <bandCode>L</bandCode>
+            <bandCode>B</bandCode>
             <channelNOT>
                 <!-- to prevent LOG channels -->
                 <gainCode>O</gainCode>
@@ -123,6 +123,7 @@
             <dataDirectory>POND_II</dataDirectory>
             <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
             </eventDirLabel>
+            <storeSeismogramsInDB/>
         </saveSeismogramToFile>
     </waveformArm>
 </sod>
