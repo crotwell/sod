@@ -53,8 +53,11 @@ public class WaveformArm implements Runnable {
         eventRetryTable = new JDBCEventChannelRetry();
         for(int i = 0; i < Status.ALL.length; i++) {
             for(int j = 0; j < Status.ALL[i].length; j++) {
-                logger.info("Status: " + Status.ALL[i][j] + " found "
-                        + evChanStatus.getNumOfStatus(Status.ALL[i][j]));
+                int numOfStatus = evChanStatus.getNumOfStatus(Status.ALL[i][j]);
+                if(numOfStatus > 0) {
+                    logger.info("Status: " + Status.ALL[i][j] + " found "
+                            + numOfStatus);
+                }
             }
         }
         processConfig(config);
