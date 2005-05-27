@@ -1,37 +1,28 @@
 package edu.sc.seis.sod.subsetter.channel;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.iris.Fissures.IfNetwork.NetworkFinder;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ResponsePrint;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.status.ChannelFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {
 
-    public ResponseWriter(Element config) throws ConfigurationException {
-        String dirName = SodUtil.getNestedText(SodUtil.getElement(config,
-                                                                  "directory"));
-        directory = new File(dirName);
-        directory.mkdirs();
-        cf = new ChannelFormatter(SodUtil.getElement(config, "filePattern"),
-                                  true);
+    public ResponseWriter(Element config) {
+        template = DOMHelper.extractText(config,
+                                         "responseFileTemplate",
+                                         DEFAULT_TEMPLATE);
     }
 
     public boolean accept(Channel chan) throws Exception {
-        PrintWriter printWriter = null;
         try {
             ChannelId channel_id = chan.get_id();
             NetworkAccess network = Start.getNetworkArm()
@@ -39,13 +30,7 @@ public class ResponseWriter implements ChannelSubsetter {
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
             String response = ResponsePrint.printResponse(channel_id, inst);
-            String location = cf.getResult(chan);
-            File f = new File(directory, location);
-            f.getParentFile().mkdirs();
-            FileOutputStream fileStream = new FileOutputStream(f);
-            printWriter = new PrintWriter(fileStream);
-            printWriter.print(response);
-            printWriter.close();
+            velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound ex) {
             GlobalExceptionHandler.handle("Channel not found: "
                     + ChannelIdUtil.toString(chan.get_id()), ex);
@@ -58,9 +43,9 @@ public class ResponseWriter implements ChannelSubsetter {
         return true;
     }
 
-    protected NetworkFinder finder;
+    private static final String DEFAULT_TEMPLATE = "responses/${network.code}-${station.code}-${channel.code}.resp";
 
-    protected ChannelFormatter cf;
+    private String template;
 
-    protected File directory;
+    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 }
