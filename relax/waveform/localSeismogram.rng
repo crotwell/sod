@@ -22,9 +22,7 @@
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
             </zeroOrMore>
-            <zeroOrMore>
-                <externalRef href="status.rng"/>
-            </zeroOrMore>
+            
         </element>
     </start>
 </grammar>
