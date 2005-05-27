@@ -431,7 +431,16 @@
                     processed. It can be used as a simple status monitor.</description>
                 <include/>
             </xsd:annotation>
-            <empty/>
+            <optional>
+                <element name="filename">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="template">
+                    <text/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="localSeismogramStatus">
@@ -646,8 +655,9 @@
         <element name="sacExecute">
             <xsd:annotation>
                 <summary>Sends commands to SAC to act on seismograms.</summary>
-                <description>This processor sends the given commands to SAC. The filesnames of the seismograms
-                    saved with a previous instance of SaveSeismogramToFile are in $files.</description>
+                <description>This processor sends the given commands to SAC. The filesnames of the
+                    seismograms saved with a previous instance of SaveSeismogramToFile are in
+                    $files.</description>
             </xsd:annotation>
             <element name="application">
                 <data type="string"/>
