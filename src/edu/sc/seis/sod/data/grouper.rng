@@ -55,6 +55,13 @@
             </oneOrMore>
         </element>
     </define>
+    <define name="AND3">
+        <element name="siteAND">
+            <oneOrMore>
+                <ref name="siteLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
     <define name="AND7">
         <element name="siteAND">
             <oneOrMore>
@@ -66,13 +73,6 @@
         <element name="stationAND">
             <oneOrMore>
                 <ref name="stationLogical"/>
-            </oneOrMore>
-        </element>
-    </define>
-    <define name="AND3">
-        <element name="siteAND">
-            <oneOrMore>
-                <ref name="siteLogical"/>
             </oneOrMore>
         </element>
     </define>
@@ -372,7 +372,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml8"/>
+                        <ref name="xml9"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -425,7 +425,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml10"/>
+                        <ref name="xml11"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -478,7 +478,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml13"/>
+                        <ref name="xml14"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -531,7 +531,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml5"/>
+                        <ref name="xml6"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -584,7 +584,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml12"/>
+                        <ref name="xml13"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -637,7 +637,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml2"/>
+                        <ref name="xml3"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -690,7 +690,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml"/>
+                        <ref name="xml2"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -743,7 +743,7 @@
                 <oneOrMore>
                     <choice>
                         <text/>
-                        <ref name="xml4"/>
+                        <ref name="xml5"/>
                     </choice>
                 </oneOrMore>
             </element>
@@ -909,6 +909,21 @@
                         <data type="string"/>
                     </choice>
                 </element>
+            </element>
+        </element>
+    </define>
+    <define name="responseWriter">
+        <element name="responseWriter">
+            <element name="directory">
+                <data type="string"/>
+            </element>
+            <element name="filePattern">
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml"/>
+                    </choice>
+                </oneOrMore>
             </element>
         </element>
     </define>
@@ -1146,7 +1161,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml7"/>
+                    <ref name="xml8"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1159,7 +1174,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml15"/>
+                    <ref name="xml16"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1181,6 +1196,8 @@
             <ref name="NOT"/>
             <ref name="PASS"/>
             <ref name="externalChannelSubsetter"/>
+            <ref name="printline"/>
+            <ref name="responseWriter"/>
         </choice>
     </define>
     <define name="area2">
@@ -1426,6 +1443,11 @@
             </zeroOrMore>
         </element>
     </define>
+    <define name="printline">
+        <element name="printlineChannelProcessor">
+            <empty/>
+        </element>
+    </define>
     <define name="PASS3">
         <element name="passSite">
             <zeroOrMore>
@@ -1495,6 +1517,8 @@
             <ref name="station"/>
             <ref name="network"/>
             <ref name="hadDataLastWeek"/>
+            <ref name="printline"/>
+            <ref name="responseWriter"/>
         </choice>
     </define>
     <define name="NOT">
@@ -1555,7 +1579,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml3"/>
+                    <ref name="xml4"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1568,7 +1592,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml11"/>
+                    <ref name="xml12"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1581,7 +1605,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml9"/>
+                    <ref name="xml10"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1594,7 +1618,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml6"/>
+                    <ref name="xml7"/>
                 </choice>
             </oneOrMore>
         </element>
@@ -1714,6 +1738,20 @@
                 <data type="double"/>
             </element>
         </optional>
+    </define>
+    <define name="xml16">
+        <element>
+            <anyName/>
+            <oneOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="xml16"/>
+                </choice>
+            </oneOrMore>
+        </element>
     </define>
     <define name="xml14">
         <element>
@@ -1933,7 +1971,7 @@
             <oneOrMore>
                 <choice>
                     <text/>
-                    <ref name="xml14"/>
+                    <ref name="xml15"/>
                 </choice>
             </oneOrMore>
         </element>
