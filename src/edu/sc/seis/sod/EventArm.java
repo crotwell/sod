@@ -31,14 +31,12 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.JDBCQueryTime;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.process.eventArm.EventProcess;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.subsetter.origin.EventFinder;
 import edu.sc.seis.sod.subsetter.origin.MagnitudeRange;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
 import edu.sc.seis.sod.subsetter.origin.OriginTimeRange;
-import edu.sc.seis.sod.subsetter.origin.PassOrigin;
 
 /**
  * This class handles the subsetting of the Events based on the subsetters
@@ -105,11 +103,7 @@ public class EventArm implements Runnable {
                 if(sodElement instanceof EventFinder) {
                     finder = (EventFinder)sodElement;
                 } else if(sodElement instanceof OriginSubsetter) {
-                    originSubsetter = (OriginSubsetter)sodElement;
-                } else if(sodElement instanceof EventProcess) {
-                    processors.add(sodElement);
-                } else if(sodElement instanceof EventMonitor) {
-                    add((EventMonitor)sodElement);
+                    subsetters.add(sodElement);
                 }
             } // end of if (node instanceof Element)
         } // end of for (int i=0; i<children.getSize(); i++)
@@ -313,16 +307,18 @@ public class EventArm implements Runnable {
             change(event, Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                      Standing.IN_PROG));
             EventAttr attr = event.get_attributes();
-            if(originSubsetter.accept(event, attr, event.getOrigin())) {
-                change(event, Status.get(Stage.PROCESSOR, Standing.IN_PROG));
-                process(event);
-                change(event, IN_PROG);
-            } else {
-                Status status = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
-                                           Standing.REJECT);
-                change(event, status);
-                failLogger.info(event + " " + status);
+            Iterator it = subsetters.iterator();
+            while(it.hasNext()) {
+                OriginSubsetter cur = (OriginSubsetter)it.next();
+                if(!cur.accept(event, attr, event.getOrigin())) {
+                    Status status = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
+                                               Standing.REJECT);
+                    change(event, status);
+                    failLogger.info(event + " " + status);
+                    return;
+                }
             }
+            change(event, IN_PROG);
             lastEvent = event;
         }
     }
@@ -362,13 +358,6 @@ public class EventArm implements Runnable {
             while(it.hasNext()) {
                 ((EventMonitor)it.next()).setArmStatus(status);
             }
-        }
-    }
-
-    private void process(EventAccessOperations eventAccess) throws Exception {
-        Iterator it = processors.iterator();
-        while(it.hasNext()) {
-            ((EventProcess)it.next()).process(eventAccess);
         }
     }
 
@@ -535,9 +524,7 @@ public class EventArm implements Runnable {
 
     private EventFinder finder;
 
-    private OriginSubsetter originSubsetter = new PassOrigin();
-
-    private List processors = new ArrayList();
+    private List subsetters = new ArrayList();
 
     private List statusMonitors = Collections.synchronizedList(new ArrayList());
 
