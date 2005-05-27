@@ -354,27 +354,36 @@
             <xsd:annotation>
                 <summary>Prints channel responses to file</summary>
             </xsd:annotation>
-            <element name="directory">
-                <data type="string">
-                    <xsd:annotation>
-                        <example>responses</example>
-                    </xsd:annotation>
-                </data>
-            </element>
-            <element name="filePattern">
-                <xsd:annotation>
-                    <example><filePattern><networkCode/>-<stationCode/>-<channelCode/>.resp</filePattern></example>
-                </xsd:annotation>
-                <externalRef href="../base/externalRef/anyXML.rng"/>
-            </element>
+            <optional>
+                <element name="responseFileTemplate">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>Each response is put in a single file using this template to
+                                determine the file name. If no template is given, the example
+                                template is the default.</summary>
+                            <example>responses/$network.code-$station.code-${channel.code}.resp</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="printline">
         <element name="printlineChannelProcessor">
             <xsd:annotation>
-                <summary>Prints every successful channel to the console</summary>
+                <summary>Prints every successful channel to the console or to the specified
+                file</summary>
             </xsd:annotation>
-            <empty/>
+            <optional>
+                <element name="filename">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="template">
+                    <text/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
