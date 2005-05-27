@@ -34,6 +34,6 @@
             <contributor>IRIS</contributor>
         </eventFinder>
         <removeEventDuplicate/>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
 </sod>

@@ -32,7 +32,7 @@
             </magnitudeRange>
         </eventFinder>
         <removeEventDuplicate/>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
     <networkArm>
         <networkFinder>

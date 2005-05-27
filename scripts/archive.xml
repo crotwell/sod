@@ -34,7 +34,7 @@
             <catalog>PREF</catalog>
             <contributor>IRIS</contributor>
         </eventFinder>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
     <networkArm>
         <networkFinder>

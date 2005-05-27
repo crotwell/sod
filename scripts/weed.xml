@@ -59,7 +59,7 @@
             </originPointBackAzimuth>
             <removeEventDuplicate/>
         </originAND>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
     <networkArm>
         <networkFinder>

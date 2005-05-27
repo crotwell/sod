@@ -34,7 +34,7 @@
             <contributor>IRIS</contributor>
         </eventFinder>
         <removeEventDuplicate/>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
     <networkArm>
         <networkFinder>
