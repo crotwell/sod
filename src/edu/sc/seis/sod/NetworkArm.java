@@ -39,7 +39,6 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
-import edu.sc.seis.sod.process.networkArm.NetworkProcess;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -132,23 +131,13 @@ public class NetworkArm implements Runnable {
         } else if(sodElement instanceof SiteSubsetter) {
             siteSubsetter = (SiteSubsetter)sodElement;
         } else if(sodElement instanceof ChannelSubsetter) {
-            channelSubsetter = (ChannelSubsetter)sodElement;
-        } else if(sodElement instanceof NetworkProcess) {
-            networkArmProcesses.add(sodElement);
-        } else if(sodElement instanceof NetworkMonitor) {
-            statusMonitors.add(sodElement);
+            chanSubsetters.add(sodElement);
         }
     }
 
     public void add(NetworkMonitor monitor) {
-        statusMonitors.add(monitor);
-    }
-
-    public void processNetworkArm(NetworkAccess networkAccess, Channel channel)
-            throws Exception {
-        Iterator it = networkArmProcesses.iterator();
-        while(it.hasNext()) {
-            ((NetworkProcess)it.next()).process(networkAccess, channel);
+        synchronized(statusMonitors) {
+            statusMonitors.add(monitor);
         }
     }
 
@@ -532,7 +521,20 @@ public class NetworkArm implements Runnable {
                     }
                     change(chan, inProg);
                     if(chanEffectiveSubsetter.accept(chan)) {
-                        if(channelSubsetter.accept(chan)) {
+                        boolean accepted = true;
+                        synchronized(chanSubsetters) {
+                            Iterator it = chanSubsetters.iterator();
+                            while(it.hasNext() && accepted) {
+                                ChannelSubsetter cur = (ChannelSubsetter)it.next();
+                                if(!cur.accept(chan)) {
+                                    change(chan,
+                                           Status.get(Stage.NETWORK_SUBSETTER,
+                                                      Standing.REJECT));
+                                    accepted = false;
+                                }
+                            }
+                        }
+                        if(accepted) {
                             int dbid;
                             synchronized(netTable) {
                                 try {
@@ -545,14 +547,9 @@ public class NetworkArm implements Runnable {
                             ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                                   chan);
                             successes.add(channelDbObject);
-                            change(chan, Status.get(Stage.PROCESSOR,
-                                                    Standing.IN_PROG));
-                            processNetworkArm(networkAccess, chan);
                             change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                     Standing.SUCCESS));
-                        } else
-                            change(chan, Status.get(Stage.NETWORK_SUBSETTER,
-                                                    Standing.REJECT));
+                        }
                     } else {
                         change(chan, Status.get(Stage.NETWORK_SUBSETTER,
                                                 Standing.REJECT));
@@ -585,71 +582,86 @@ public class NetworkArm implements Runnable {
     private Map channelMap = Collections.synchronizedMap(new HashMap());
 
     private void statusChanged(String newStatus) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()) {
-            try {
-                ((NetworkMonitor)it.next()).setArmStatus(newStatus);
-            } catch(Exception e) {
-                // caught for one, but should continue with rest after logging
-                // it
-                GlobalExceptionHandler.handle("Problem changing status in NetworkArm",
-                                              e);
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    ((NetworkMonitor)it.next()).setArmStatus(newStatus);
+                } catch(Throwable e) {
+                    // caught for one, but should continue with rest after
+                    // logging
+                    // it
+                    GlobalExceptionHandler.handle("Problem changing status in NetworkArm",
+                                                  e);
+                }
             }
         }
     }
 
     private void change(Channel chan, Status newStatus) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()) {
-            try {
-                ((NetworkMonitor)it.next()).change(chan, newStatus);
-            } catch(Throwable e) {
-                // caught for one, but should continue with rest after logging
-                // it
-                GlobalExceptionHandler.handle("Problem changing channel status in NetworkArm",
-                                              e);
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    ((NetworkMonitor)it.next()).change(chan, newStatus);
+                } catch(Throwable e) {
+                    // caught for one, but should continue with rest after
+                    // logging
+                    // it
+                    GlobalExceptionHandler.handle("Problem changing channel status in NetworkArm",
+                                                  e);
+                }
             }
         }
     }
 
     private void change(Station sta, Status newStatus) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()) {
-            try {
-                ((NetworkMonitor)it.next()).change(sta, newStatus);
-            } catch(Exception e) {
-                // caught for one, but should continue with rest after logging
-                // it
-                GlobalExceptionHandler.handle("Problem changing station status in NetworkArm",
-                                              e);
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    ((NetworkMonitor)it.next()).change(sta, newStatus);
+                } catch(Throwable e) {
+                    // caught for one, but should continue with rest after
+                    // logging
+                    // it
+                    GlobalExceptionHandler.handle("Problem changing station status in NetworkArm",
+                                                  e);
+                }
             }
         }
     }
 
     private void change(NetworkAccess na, Status newStatus) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()) {
-            try {
-                ((NetworkMonitor)it.next()).change(na, newStatus);
-            } catch(Throwable e) {
-                // caught for one, but should continue with rest after logging
-                // it
-                GlobalExceptionHandler.handle("Problem changing network status in NetworkArm",
-                                              e);
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    ((NetworkMonitor)it.next()).change(na, newStatus);
+                } catch(Throwable e) {
+                    // caught for one, but should continue with rest after
+                    // logging
+                    // it
+                    GlobalExceptionHandler.handle("Problem changing network status in NetworkArm",
+                                                  e);
+                }
             }
         }
     }
 
     private void change(Site site, Status newStatus) {
-        Iterator it = statusMonitors.iterator();
-        while(it.hasNext()) {
-            try {
-                ((NetworkMonitor)it.next()).change(site, newStatus);
-            } catch(Throwable e) {
-                // caught for one, but should continue with rest after logging
-                // it
-                GlobalExceptionHandler.handle("Problem changing site status in NetworkArm",
-                                              e);
+        synchronized(statusMonitors) {
+            Iterator it = statusMonitors.iterator();
+            while(it.hasNext()) {
+                try {
+                    ((NetworkMonitor)it.next()).change(site, newStatus);
+                } catch(Throwable e) {
+                    // caught for one, but should continue with rest after
+                    // logging
+                    // it
+                    GlobalExceptionHandler.handle("Problem changing site status in NetworkArm",
+                                                  e);
+                }
             }
         }
     }
@@ -693,17 +705,14 @@ public class NetworkArm implements Runnable {
 
     private SiteSubsetter siteEffectiveSubsetter = new PassSite();
 
-    private ChannelSubsetter channelSubsetter = new PassChannel();
+    private List chanSubsetters = new ArrayList();
 
     private ChannelSubsetter chanEffectiveSubsetter = new PassChannel();
-
-    private List networkArmProcesses = new ArrayList();
 
     private JDBCQueryTime queryTimeTable;
 
     private JDBCNetworkUnifier netTable;
 
-    //private JDBCNetworkStatus networkStatusTable;w
     private NetworkDbObject[] netDbs;
 
     private List statusMonitors = new ArrayList();
