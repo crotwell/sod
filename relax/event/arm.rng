@@ -4,27 +4,18 @@
     <start>
         <element name="eventArm">
             <xsd:annotation>
-                <description> The event arm gathers events from the server
-                    specified in the event finder. If there are any origin
-                    subsetters present, the event arm then runs those over the
-                    events returned by the finder. The events that pass through
-                    the subsetters are then run through any event processors
-                    present. After this point, the events are marked as accepted
-                    and the waveform arm begins to work on them. If there are
-                    any event status items present, they generate status
-                    information about the events as they step through the
-                    process described above. </description>
+                <description> The event arm gathers events from the server specified in the event
+                    finder. If there are any origin subsetters present, the event arm then runs
+                    those over the events returned by the finder. The events that pass through the
+                    subsetters are then run through any event processors present. After this point,
+                    the events are marked as accepted and the waveform arm begins to work on them.
+                    If there are any event status items present, they generate status information
+                    about the events as they step through the process described above. </description>
                 <summary>Selects and processes events</summary>
             </xsd:annotation>
             <externalRef href="source.rng"/>
-            <optional>
+            <zeroOrMore>
                 <externalRef href="origin.rng"/>
-            </optional>
-            <zeroOrMore>
-                <externalRef href="process.rng"/>
-            </zeroOrMore>
-            <zeroOrMore>
-                <externalRef href="status.rng"/>
             </zeroOrMore>
         </element>
     </start>
