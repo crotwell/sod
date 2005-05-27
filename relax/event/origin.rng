@@ -37,6 +37,7 @@
             <ref name="PASS"/>
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
+            <ref name="printline"/>
         </choice>
     </define>
     <define name="name">
@@ -345,6 +346,25 @@
                     interval</summary>
             </xsd:annotation>
             <ref name="time"/>
+        </element>
+    </define>
+    <define name="printline">
+        <element name="printlineEventProcess">
+            <xsd:annotation>
+                <summary>Prints out each event on a new line</summary>
+                <description>Prints out each event on a new line. If a filename is included, the
+                    printout goes to the specified file. </description>
+            </xsd:annotation>
+            <optional>
+                <element name="filename">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="template">
+                    <text/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>
