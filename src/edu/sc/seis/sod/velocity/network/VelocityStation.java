@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfNetwork.StationId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -187,4 +188,9 @@ public class VelocityStation extends Station {
     }
 
     private DecimalFormat df = new DecimalFormat("0.00");
+
+    public void insertIntoContext(VelocityContext ctx) {
+            ctx.put("station", this);
+            getNet().insertIntoContext(ctx);
+    }
 }

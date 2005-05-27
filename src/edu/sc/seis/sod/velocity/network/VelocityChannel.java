@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.velocity.network;
 
+import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -69,5 +70,10 @@ public class VelocityChannel extends Channel {
             velChans[i] = new VelocityChannel(chans[i]);
         }
         return velChans;
+    }
+
+    public void insertIntoContext(VelocityContext ctx) {
+            ctx.put("channel", this);
+            getSite().insertIntoContext(ctx);
     }
 }

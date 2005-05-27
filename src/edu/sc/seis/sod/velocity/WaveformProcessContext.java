@@ -24,7 +24,7 @@ public class WaveformProcessContext extends VelocityContext {
                                   CookieJar cookieJar) {
         put("event", new VelocityEvent(cookieJar.getEventChannelPair()
                 .getEvent()));
-        put("channel", new VelocityChannel(channel));
+        new VelocityChannel(channel).insertIntoContext(this);
         put("originalRequest", VelocityRequest.wrap(original, channel));
         put("availableRequest", VelocityRequest.wrap(available, channel));
         put("seismograms", VelocitySeismogram.wrap(seismograms));

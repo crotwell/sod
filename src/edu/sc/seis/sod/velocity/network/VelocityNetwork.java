@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.velocity.network;
 
 import java.util.List;
+import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
@@ -18,7 +19,7 @@ public class VelocityNetwork extends NetworkAttr {
     public VelocityNetwork(NetworkAttr net) {
         this(net, -1);
     }
-    
+
     /**
      * Creates a VelocityNetwork with no stations. Will throw
      * UnsupportedOperationException if getStations is called
@@ -34,7 +35,7 @@ public class VelocityNetwork extends NetworkAttr {
     private VelocityNetwork(NetworkAttr net, List stations) {
         this(net, -1, stations);
     }
-    
+
     private VelocityNetwork(NetworkAttr net, int dbid, List stations) {
         this.net = net;
         this.stations = stations;
@@ -56,7 +57,7 @@ public class VelocityNetwork extends NetworkAttr {
     public String getCode() {
         return get_code();
     }
-    
+
     public String getCodeWithYear() {
         return NetworkIdUtil.toStringNoDates(net.get_id());
     }
@@ -64,9 +65,9 @@ public class VelocityNetwork extends NetworkAttr {
     public String getRawBeginDate() {
         return net.get_id().begin_time.date_time;
     }
-    
+
     public String getRawBeginLeapSeconds() {
-        return ""+net.get_id().begin_time.leap_seconds_version;
+        return "" + net.get_id().begin_time.leap_seconds_version;
     }
 
     public MicroSecondDate getStartDate() {
@@ -76,7 +77,7 @@ public class VelocityNetwork extends NetworkAttr {
     public MicroSecondDate getEndDate() {
         return new MicroSecondDate(effective_time.end_time);
     }
-    
+
     public String getName() {
         return name;
     }
@@ -90,21 +91,27 @@ public class VelocityNetwork extends NetworkAttr {
     }
 
     public List getStations() {
-        if(stations == null) { throw new UnsupportedOperationException("Stations have not been added for this network!"); }
+        if(stations == null) {
+            throw new UnsupportedOperationException("Stations have not been added for this network!");
+        }
         return stations;
     }
 
     public void setDbId(int dbid) {
         this.dbid = dbid;
     }
-    
+
     public int getDbId() {
         return dbid;
     }
-    
+
     private int dbid = -1;
-    
+
     private List stations;
 
     private NetworkAttr net;
+
+    public void insertIntoContext(VelocityContext ctx) {
+        ctx.put("network", this);
+    }
 }
