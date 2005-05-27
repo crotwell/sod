@@ -1,32 +1,22 @@
 package edu.sc.seis.sod.subsetter.origin;
 
+import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
-import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
-import org.w3c.dom.Element;
 
-/**
- * This tag is used to specify the name of the EventAttr.
- * 
- * <pre>
- * 
- *  &lt;eventAttrName&gt;&lt;value&gt;somename&lt;/value&gt;&lt;/eventAttrName&gt;
- * 
- * </pre>
- */
 public class EventAttrName implements OriginSubsetter {
 
-    public EventAttrName(Element config) throws ConfigurationException {
+    public EventAttrName(Element config) {
         name = SodUtil.getNestedText(config);
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
-                          EventAttr eventAttr,
-                          Origin preferred_origin) {
-        return name.equals(eventAttr);
+    public boolean accept(EventAccessOperations event,
+                          EventAttr attr,
+                          Origin origin) {
+        return name.equals(attr);
     }
 
-    String name;
+    private String name;
 }// EventAttrName
