@@ -524,13 +524,14 @@ public class NetworkArm implements Runnable {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
-                            while(it.hasNext() && accepted) {
+                            while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
                                 if(!cur.accept(chan)) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
                                     accepted = false;
+                                    break;
                                 }
                             }
                         }
