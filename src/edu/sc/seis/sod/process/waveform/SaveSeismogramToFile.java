@@ -58,15 +58,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class SaveSeismogramToFile implements WaveformProcess {
 
-    /**
-     * Creates a new <code>SacFileProcessor</code> instance.
-     * 
-     * @param config
-     *            an <code>Element</code> that contains the configuration for
-     *            this Processor
-     * @throws SQLException
-     */
-    public SaveSeismogramToFile(Element config) throws ConfigurationException{
+    public SaveSeismogramToFile(Element config) throws ConfigurationException {
         this.config = config;
         String fileTypeStr = SodUtil.getText(SodUtil.getElement(config,
                                                                 "fileType"));
@@ -117,11 +109,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
         }
         Element dbElement = SodUtil.getElement(config, "storeSeismogramsInDB");
         if(dbElement != null) {
-            try{
+            try {
                 jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
-            }
-            catch (SQLException e){
-                throw new ConfigurationException("Trouble creating database connection", e);
+            } catch(SQLException e) {
+                throw new ConfigurationException("Trouble creating database connection",
+                                                 e);
             }
             storeSeismogramsInDB = true;
         }
@@ -328,10 +320,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                         channel,
                                                         event,
                                                         fileType);
-            if(storeSeismogramsInDB){
-	            jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
-	                                                  seismograms[i],
-	                                                  seisFile.toString());
+            if(storeSeismogramsInDB) {
+                jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
+                                                      seismograms[i],
+                                                      seisFile.toString());
             }
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
