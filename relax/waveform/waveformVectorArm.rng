@@ -27,9 +27,7 @@
             <zeroOrMore>
                 <externalRef href="waveformVectorProcess.rng"/>
             </zeroOrMore>
-            <zeroOrMore>
-                <externalRef href="status.rng"/>
-            </zeroOrMore>
+            
         </element>
     </start>
 </grammar>
