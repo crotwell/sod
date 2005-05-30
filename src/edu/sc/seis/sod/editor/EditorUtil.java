@@ -30,9 +30,15 @@ public class EditorUtil {
 
     public static Box getLabeledTextField(Element element)
             throws TransformerException {
+        return labelTextField(element.getTagName(),
+                              getTextField((Text)XPathAPI.selectSingleNode(element,
+                                                                           "text()")));
+    }
+
+    public static Box labelTextField(String name, JTextField jtf) {
         Box b = Box.createHorizontalBox();
-        b.add(getLabel(element.getTagName()));
-        b.add(getTextField((Text)XPathAPI.selectSingleNode(element, "text()")));
+        b.add(getLabel(name));
+        b.add(jtf);
         return b;
     }
 
@@ -98,7 +104,8 @@ public class EditorUtil {
         return getLabeledComboBox(element, getComboBox(element, vals, selected));
     }
 
-    public static JComponent getLabeledComboBox(Element element, JComboBox comboBox)
+    public static JComponent getLabeledComboBox(Element element,
+                                                JComboBox comboBox)
             throws TransformerException {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(SimpleGUIEditor.getDisplayName(element.getTagName())));
@@ -125,9 +132,10 @@ public class EditorUtil {
             throws TransformerException {
         Node node = XPathAPI.selectSingleNode(element, "text()");
         Text text = (Text)node;
-        if (text == null) {
+        if(text == null) {
             logger.debug("text node was null.  appending text node for selected object");
-            text = element.getOwnerDocument().createTextNode(selected.toString());
+            text = element.getOwnerDocument()
+                    .createTextNode(selected.toString());
             element.appendChild(text);
         }
         JComboBox combo = new JComboBox(vals);
