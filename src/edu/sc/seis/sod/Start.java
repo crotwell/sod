@@ -35,6 +35,7 @@ import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.editor.SimpleGUIEditor;
 import edu.sc.seis.sod.status.IndexTemplate;
+import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.TemplateFileLoader;
 import edu.sc.seis.sod.validator.Validator;
 
@@ -297,16 +298,20 @@ public class Start {
     }
 
     private void startArms(NodeList armNodes) throws Exception {
+        OutputScheduler sched = OutputScheduler.getDefault();
         for(int i = 0; i < armNodes.getLength(); i++) {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
                 if(el.getTagName().equals("eventArm")) {
                     event = new EventArm(el);
+                    sched.registerArm(event);
                 } else if(el.getTagName().equals("networkArm")) {
                     network = new NetworkArm(el);
+                    sched.registerArm(network);
                 } else if(el.getTagName().startsWith("waveform")) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, event, network, poolSize);
+                    sched.registerArm(waveform);
                 }
             }
         }
