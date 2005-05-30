@@ -6,29 +6,22 @@ import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 import org.w3c.dom.Element;
 
 /**
- *
- * sample xml file
- * <pre>
- * &lt;siteCode&gt;&lt;value&gt;00&lt;/value&gt;&lt;/siteCode&gt;
- * </pre>
- * @author <a href="mailto:">Srinivasa Telukutla</a>
- * @version 1.0
+ * @author Srinivasa Telukutla
  */
 public class SiteCode implements SiteSubsetter {
 
     public SiteCode(Element config) {
         this.code = SodUtil.getNestedText(config);
-        if (code == null || code.length() == 0) {
+        if(code == null || code.length() == 0) {
             // site codes can be space-space and some
-            // xml editors will pruge the empty space, so we take
+            // xml editors will prune the empty space, so we take
             // the empty siteCode tag to mean space-space
             code = "  ";
         }
     }
 
     public boolean accept(Site site) {
-        if(site.get_id().site_code.equals(code)) return true;
-        else return false;
+        return site.get_id().site_code.equals(code);
     }
 
     private String code;
