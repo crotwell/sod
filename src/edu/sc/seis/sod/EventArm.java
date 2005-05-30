@@ -46,7 +46,7 @@ import edu.sc.seis.sod.subsetter.origin.OriginTimeRange;
  * @author <a href="mailto:">Philip Crotwell </a>
  * @version
  */
-public class EventArm implements Runnable {
+public class EventArm implements Arm {
 
     public EventArm(Element config) throws ConfigurationException {
         this(config, true);
@@ -68,7 +68,7 @@ public class EventArm implements Runnable {
         processConfig(config);
     }
 
-    public boolean isAlive() {
+    public boolean isActive() {
         return alive;
     }
 

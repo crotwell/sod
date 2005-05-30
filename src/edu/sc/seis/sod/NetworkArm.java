@@ -61,7 +61,7 @@ import edu.sc.seis.sod.subsetter.station.StationSubsetter;
  * 
  * @author <a href="mailto:">Srinivasa Telukutla </a>
  */
-public class NetworkArm implements Runnable {
+public class NetworkArm implements Arm {
 
     public NetworkArm(Element config) throws SQLException,
             ConfigurationException {
@@ -76,6 +76,10 @@ public class NetworkArm implements Runnable {
         } catch(Exception e) {
             GlobalExceptionHandler.handle(e);
         }
+    }
+    
+    public boolean isActive() {
+        return !armFinished;
     }
 
     public NetworkAccess getNetwork(NetworkId network_id) throws Exception {
@@ -722,7 +726,4 @@ public class NetworkArm implements Runnable {
 
     private boolean armFinished = false;
 
-    public boolean isFinished() {
-        return armFinished;
-    }
 }// NetworkArm

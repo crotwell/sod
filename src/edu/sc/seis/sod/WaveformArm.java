@@ -42,7 +42,7 @@ import edu.sc.seis.sod.subsetter.EventEffectiveTimeOverlap;
 import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 import edu.sc.seis.sod.subsetter.eventStation.PassEventStation;
 
-public class WaveformArm implements Runnable {
+public class WaveformArm implements Arm {
 
     public WaveformArm(Element config,
                        EventArm eventArm,
@@ -68,9 +68,9 @@ public class WaveformArm implements Runnable {
         MAX_RETRY_DELAY = Start.getRunProps().getMaxRetryDelay();
         SERVER_RETRY_DELAY = Start.getRunProps().getServerRetryDelay();
     }
-
-    public boolean isFinished() {
-        return finished;
+    
+    public boolean isActive() {
+        return !finished;
     }
 
     public void run() {
@@ -90,7 +90,7 @@ public class WaveformArm implements Runnable {
                     Thread.sleep(5000);
                 } catch(InterruptedException e) {}
                 retryIfNeededAndAvailable();
-            } while(eventArm.isAlive());
+            } while(eventArm.isActive());
             logger.info("Main waveform arm done.  Retrying failures.");
             MicroSecondDate runFinishTime = ClockUtil.now();
             MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
@@ -474,7 +474,7 @@ public class WaveformArm implements Runnable {
         synchronized(eventStatus) {
             next = eventStatus.getNext();
         }
-        while(eventArm.isAlive() && next == -1) {
+        while(eventArm.isActive() && next == -1) {
             try {
                 Thread.sleep(1000);
             } catch(InterruptedException e) {}
