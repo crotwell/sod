@@ -6,7 +6,6 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 import edu.sc.seis.sod.velocity.seismogram.VelocityRequest;
 import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
@@ -22,8 +21,7 @@ public class WaveformProcessContext extends VelocityContext {
                                   RequestFilter[] available,
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) {
-        put("event", new VelocityEvent(cookieJar.getEventChannelPair()
-                .getEvent()));
+        ContextWrangler.insertIntoContext(event, this);
         new VelocityChannel(channel).insertIntoContext(this);
         put("originalRequest", VelocityRequest.wrap(original, channel));
         put("availableRequest", VelocityRequest.wrap(available, channel));
