@@ -4,7 +4,7 @@ import java.io.IOException;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
-import edu.sc.seis.sod.velocity.SimpleVelocitizer;
+import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 /**
  * @author <a href="mailto:crotwell@pooh">Philip Crotwell </a>
@@ -21,9 +21,9 @@ public class PrintlineChannelProcessor implements ChannelSubsetter {
         return true;
     }
 
-    private static final String DEFAULT_TEMPLATE = "Channel: $channel";
+    public static final String DEFAULT_TEMPLATE = "Channel: $channel";
 
-    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
 
     private String filename, template;
 }// PrintlineChannelProcessor

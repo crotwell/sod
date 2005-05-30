@@ -173,6 +173,7 @@ public class Start {
             runProps = new RunProperties(propertiesElement);
         } else {
             logger.debug("No properties specified in the configuration file");
+            runProps = new RunProperties();
         }
     }
 

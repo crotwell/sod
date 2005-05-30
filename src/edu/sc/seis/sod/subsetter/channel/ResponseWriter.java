@@ -12,7 +12,7 @@ import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.Start;
-import edu.sc.seis.sod.velocity.SimpleVelocitizer;
+import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {
 
@@ -47,5 +47,5 @@ public class ResponseWriter implements ChannelSubsetter {
 
     private String template;
 
-    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
 }

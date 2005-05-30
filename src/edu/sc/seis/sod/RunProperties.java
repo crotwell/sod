@@ -12,6 +12,8 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class RunProperties {
 
+    public RunProperties() {}
+
     public RunProperties(Element el) throws ConfigurationException {
         Element runNameChild = SodUtil.getElement(el, "runName");
         if(runNameChild != null) {
@@ -59,9 +61,8 @@ public class RunProperties {
         if(SodUtil.isTrue(el, "removeDatabase")) {
             removeDatabase = true;
         }
-        if(SodUtil.getElement(el, "statusPages") != null
-                && !SodUtil.isTrue(el, "statusPages")) {
-            statusPages = false;
+        if(SodUtil.isTrue(el, "statusPages")) {
+            statusPages = true;
         }
         if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
             checkpointPeriodically = true;
@@ -159,7 +160,7 @@ public class RunProperties {
 
     private boolean removeDatabase = false;
 
-    private boolean statusPages = true;
+    private boolean statusPages = false;
 
     public static final String AT_LEAST_ONCE = "atLeastOnce";
 

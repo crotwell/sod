@@ -9,7 +9,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
-import edu.sc.seis.sod.velocity.SimpleVelocitizer;
+import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class PrintlineSeismogramProcess implements WaveformProcess {
 
@@ -35,9 +35,9 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
 
     private String template, filename;
 
-    private static final String DEFAULT_TEMPLATE = "Got $seismograms.size() seismograms for $channel for $event";
+    public static final String DEFAULT_TEMPLATE = "Got $seismograms.size() seismograms for $channel for $event";
 }// PrintlineWaveformProcessor
