@@ -73,6 +73,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("stationEffectiveTimeOverlap", timeRangeEdit);
         editors.put("siteEffectiveTimeOverlap", timeRangeEdit);
         editors.put("channelEffectiveTimeOverlap", timeRangeEdit);
+        editors.put("eventAttrName", new EventNameEditor(this));
         editors.put("magnitudeRange", new MagnitudeEditor());
         editors.put("distanceRange", new UnitRangeEditor(ANGLE_UNITS,
                                                          0,
@@ -85,7 +86,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("originPointBackAzimuth",
                     new OriginPointBackAzimuthEditor());
         editors.put("seismicRegion", new SeismicRegionEditor());
-        editors.put("geographicRegion", new GeographicRegionEditor());
+        editors.put("geographicalRegion", new GeographicRegionEditor());
         editors.put("eventStatusTemplate", new EventStatusTemplateEditor());
         editors.put("eventFinder", new EventFinderEditor(this));
         editors.put("networkFinder", new NetworkFinderEditor(this));
@@ -99,6 +100,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
                     new LinearDistanceMagnitudeEditor(this,
                                                       DISTANCE_UNITS,
                                                       true));
+        editors.put("pointLinearDistanceMagnitude",
+                    new PointLinearDistanceMagnitudeEditor(this,
+                                                           DIST_ANG_UNITS,
+                                                           true));
         editors.put("midPoint", new MidPointEditor(this));
         editors.put("latitudeRange", new UnitRangeEditor(ANGLE_UNITS,
                                                          -90,
@@ -134,7 +139,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         editors.put("legacyVectorExecute", new LegacyExecuteEditor());
         editors.put("breqFastRequest", new BreqFastRequestSubsetterEditor());
         editors.put("phaseSignalToNoise", new PhaseSignalToNoiseEditor());
-        editors.put("removeEventDuplicate", new RemoveEventDuplicateEditor());
+        editors.put("removeEventDuplicate", new RemoveEventDuplicateEditor(this));
         editors.put("printlineChannelProcess", new PrintlineChannelEditor());
         editors.put("printlineSeismogramProcess",
                     new PrintlineSeismogramEditor());
@@ -156,7 +161,10 @@ public class SodGUIEditor extends SimpleGUIEditor {
                 editors.put(switchTypes[i] + logicals[j], bool);
             }
         }
-        editors.put("requestGeneratorWrapper", new WrapperEditor(this));
+        WrapperEditor wrappEd = new WrapperEditor(this);
+        editors.put("requestGeneratorWrapper", wrappEd);
+        editors.put("alwaysSuccess", wrappEd);
+        editors.put("forkProcess", wrappEd);
         String[] wrapperTypes = {"AvailableDataWrapper",
                                  "RequestWrapper",
                                  "WaveformProcessWrapper",
@@ -196,6 +204,9 @@ public class SodGUIEditor extends SimpleGUIEditor {
     public static final UnitImpl[] DISTANCE_UNITS = {UnitImpl.KILOMETER};
 
     public static final UnitImpl[] ANGLE_UNITS = {UnitImpl.DEGREE};
+
+    public static final UnitImpl[] DIST_ANG_UNITS = {UnitImpl.KILOMETER,
+                                                     UnitImpl.DEGREE};
 
     public static final UnitImpl[] TIME_UNITS = {UnitImpl.SECOND,
                                                  UnitImpl.MINUTE,
