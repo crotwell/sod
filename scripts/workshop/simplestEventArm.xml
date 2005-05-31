@@ -12,12 +12,12 @@
                 </startTime>
                 <endTime>
                     <year>2003</year>
-                    <month>2</month>
-                    <day>1</day>
+                    <month>1</month>
+                    <day>10</day>
                 </endTime>
             </originTimeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
 </sod>

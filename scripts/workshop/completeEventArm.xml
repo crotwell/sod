@@ -12,10 +12,13 @@
                 </startTime>
                 <endTime>
                     <year>2003</year>
-                    <month>2</month>
-                    <day>1</day>
+                    <month>1</month>
+                    <day>10</day>
                 </endTime>
             </originTimeRange>
+            <magnitudeRange>
+                <min>5.1</min>
+            </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
         <originOR>
@@ -42,8 +45,7 @@
             <magnitudeRange>
                 <min>6</min>
             </magnitudeRange>
-            <originOR/>
         </originOR>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
 </sod>

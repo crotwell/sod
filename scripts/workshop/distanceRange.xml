@@ -44,14 +44,14 @@
             </magnitudeRange>
             <originOR/>
         </originOR>
-        <printLineEventProcess/>
+        <printlineEventProcess/>
     </eventArm>
     <networkArm>
         <networkFinder>
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
-        <networkCode>II</networkCode>
+        <networkCode>IC</networkCode>
         <bandCode>B</bandCode>
         <printlineChannelProcessor/>
     </networkArm>
