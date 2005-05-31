@@ -11,10 +11,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import edu.sc.seis.sod.SodUtil;
@@ -40,17 +36,13 @@ public class SchemaDocumenter {
         c.put("util", new SodUtil());
         c.put("helper", new VelocityModelHelper());
         c.put("doc", new SchemaDocumenter());
-        //Setup xsl transforms
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer transformer = tFactory.newTransformer(new StreamSource(base
-                + "site/pageGenerator.xsl"));
-        //Run velocity then xsl on all definitions
+        //Run velocity on all definitions
         Collection defs = StAXModelBuilder.getAllDefinitions();
         Iterator it = defs.iterator();
         while(it.hasNext()) {
             Definition cur = (Definition)it.next();
             //if(makePath(cur).startsWith("network/station")) {
-            render(c, ve, cur, transformer);
+            render(c, ve, cur);
             System.out.print(".");
             //}
         }
@@ -60,10 +52,9 @@ public class SchemaDocumenter {
 
     public static void render(VelocityContext c,
                               VelocityEngine ve,
-                              Definition def,
-                              Transformer t) throws Exception {
+                              Definition def) throws Exception {
         String path = makePath(def);
-        File xmlFile = new File(base + "site/schemaDocs/xml/" + path + ".xml");
+        File xmlFile = new File(base + "site/schemaDocs/vm/" + path + ".vm");
         xmlFile.getParentFile().mkdirs();
         FileWriter fw = new FileWriter(xmlFile);
         c.put("def", def);
@@ -73,28 +64,12 @@ public class SchemaDocumenter {
         c.put("contained", tourist.getResult());
         ve.mergeTemplate("elementPage.vm", new VelocityContext(c), fw);
         fw.close();
-        String outputLoc = base + "site/generatedSite/tagDocs/" + path
-                + ".html";
-        File htmlFile = new File(outputLoc);
-        htmlFile.getParentFile().mkdirs();
-        String relPath = "../";
-        int numDirs = 0;
-        for(int i = 0; i < path.length(); i++) {
-            if(path.charAt(i) == '/' | path.charAt(i) == '\\') {
-                numDirs++;
-            }
-        }
-        for(int j = 0; j < numDirs; j++) {
-            relPath += "../";
-        }
-        t.setParameter("base", relPath);
-        t.setParameter("menu", "Reference");
-        t.setParameter("page", "tagDocs/" + path + ".html");
-        t.transform(new StreamSource(xmlFile), new StreamResult(htmlFile));
     }
 
     public static Definition getNearestDef(Form f) {
-        if(f.isFromDef()) { return f.getDef(); }
+        if(f.isFromDef()) {
+            return f.getDef();
+        }
         return getNearestDef(f.getParent());
     }
 
@@ -114,6 +89,4 @@ public class SchemaDocumenter {
     }
 
     static String base;
-
-    static Set writtenFiles = new HashSet();
 }
