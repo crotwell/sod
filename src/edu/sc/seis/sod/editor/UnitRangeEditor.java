@@ -52,7 +52,10 @@ public class UnitRangeEditor implements EditorPlugin {
         b.add(new JLabel("  to  "));
         b.add(maxSpinner);
         if(units.length > 1) {
-            JComboBox box = new JComboBox(units);
+            Element el = (Element)XPathAPI.selectSingleNode(element, "unit");
+            Text unitText = (Text)XPathAPI.selectSingleNode(el, "text()");
+            UnitImpl unit = UnitImpl.getUnitFromString(unitText.getData());
+            JComboBox box = EditorUtil.getComboBox(el, units, unit);
             b.add(box);
         }else{
             JLabel unitLabel = new JLabel(UnitDisplayUtil.getNameForUnit(units[0]));
