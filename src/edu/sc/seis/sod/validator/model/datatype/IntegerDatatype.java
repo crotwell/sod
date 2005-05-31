@@ -17,6 +17,10 @@ public class IntegerDatatype implements ModelDatatype {
         return "integer";
     }
 
+    public String toString() {
+        return getDescription();
+    }
+
     public boolean isValid(String arg0, ValidationContext arg1) {
         // TODO Auto-generated method stub
         return false;
