@@ -90,6 +90,11 @@
             <version>0.76</version>
         </dependency>
         <dependency>
+            <id>nachocalendar</id>
+            <version>0.21_USC1</version>
+            <url>http://nachocalendar.sf.net</url>
+        </dependency>
+        <dependency>
             <groupId>JacORB</groupId>
             <artifactId>JacORB</artifactId>
             <version>2.1</version>
