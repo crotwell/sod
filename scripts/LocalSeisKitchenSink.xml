@@ -255,17 +255,19 @@
             </requestOR>
             <requestOR>
                 <breqFastRequest>
-                    <dataDirectory>request</dataDirectory>
-                    <name>Jagadeesh Danala</name>
-                    <inst>USC</inst>
-                    <mail>abc</mail>
-                    <email>danala@seis.sc.edu</email>
-                    <phone>8037778986</phone>
-                    <fax>9999</fax>
-                    <media>asdf</media>
-                    <altmedia1/>
-                    <altmedia2/>
-                    <quality/>
+                    <dataDirectory>sample_breqfast</dataDirectory>
+                    <label>
+                        <originTime>yyyy_DDD_HH_mm_ss</originTime>_A</label>
+                    <name>Felix T. Cat</name>
+                    <inst>Univ. of Somewhere</inst>
+                    <mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
+                    <email>cat@seis.somewhere.edu</email>
+                    <phone>555-555-5555</phone>
+                    <fax>none</fax>
+                    <media>Electronic</media>
+                    <altmedia1>Electronic</altmedia1>
+                    <altmedia2>Electronic</altmedia2>
+                    <quality>b</quality>
                 </breqFastRequest>
                 <passRequest/>
             </requestOR>
@@ -382,7 +384,8 @@
         <forkProcess>
             <alwaysSuccess>
                 <phaseSignalToNoise>
-                    <phaseName>P</phaseName>
+                    <modelName>prem</modelName>
+                    <phaseName>ttp</phaseName>
                     <shortOffsetBegin>
                         <unit>SECOND</unit>
                         <value>100</value>
