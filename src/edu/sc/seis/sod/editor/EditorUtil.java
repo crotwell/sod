@@ -30,7 +30,12 @@ public class EditorUtil {
 
     public static Box getLabeledTextField(Element element)
             throws TransformerException {
-        return labelTextField(element.getTagName(),
+        return getLabeledTextField(element, element.getTagName());
+    }
+
+    public static Box getLabeledTextField(Element element, String label)
+            throws TransformerException {
+        return labelTextField(label,
                               getTextField((Text)XPathAPI.selectSingleNode(element,
                                                                            "text()")));
     }
