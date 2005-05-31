@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 #set($instance=$def.form)
 #set($ann=$instance.annotation)
 #set($curBase=$doc.makePath($def))
@@ -60,14 +59,22 @@
         </section>
     #end
 #end
-
-
-<document>
-    <properties>
-        <title>SOD Strategy File Reference - #print($def) Tag</title>
-    </properties>
-    <body>
-	<section name="#print($def)">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    #set($name = "#print($def)")
+	#set($currentPageTitle = "$name")
+	<head>
+		#sod_head()
+	</head>
+	<body>
+		#sod_header()
+		#sod_menu()
+		<div id="content">
+			<div class="section">
+				<h3>
+					<a name="#print($name)">#print($name)
+					</a>
+				</h3>
 		#if($ann.description)
 			<p>
 			$ann.description
@@ -77,45 +84,75 @@
             $ann.summary
             </p>
 		#end
-	</section>
-    <section name="Example">
+	</div>
+			<div class="section">
+				<h3>
+					<a name="Example">Example
+					</a>
+				</h3>
 		<pre>$ann.example</pre>
-    </section>
-        <section name="This consists of">
+    </div>
+        
+			<div class="section">
+				<h3>
+					<a name="This consists of">This consists of
+					</a>
+				</h3>
 			<div id="contained">
 				<p>
 			$contained
 				</p>
 			</div>
-        </section>
-        <section name="Places this can be found">
+        </div>
+		
+        
+			<div class="section">
+				<h3>
+					<a name="Places this can be found">Places this can be found
+					</a>
+				</h3>
             #containment()
-        </section>
+        </div>
        #if($curEl.attributes)
-			<section name="Attributes">
+        
+			<div class="section">
+				<h3>
+					<a name="Attributes">Attributes
+					</a>
+				</h3>
 				#foreach($attr in $curEl.attributes)
+			<div class="section">
+				<h3>
+					<a name="$attr.name">$attr.name
+					</a>
+				</h3>
 					<section name="$attr.name">
+			<div class="section">
+				<h3>
+					<a name="Description">Description
+					</a>
+				</h3>
+							<p>
 						#if($attr.annotation.description)
-						<section name="Description">
-							<p>
 $attr.annotation.description
-							</p>
-						</section>
 						#elseif($attr.annotation.summary)
-						<section name="Description">
-							<p>
 $attr.annotation.summary
+#end
 							</p>
-						</section>
-						#end
-						<section name="Possible Values">
+						</div>
+			<div class="section">
+				<h3>
+					<a name="Possible Values">Possible Values
+					</a>
+				</h3>
 							<p>
 $attr.child
 							</p>
-						</section>
-					</section>
+						</div>
+					</div>
 				#end
-			</section>
-		#end
+			</div>
+	   #end
+			</div>
     </body>
-</document>
+</html>
