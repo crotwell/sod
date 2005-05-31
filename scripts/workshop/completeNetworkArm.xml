@@ -6,17 +6,7 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
-        <siteOR>
-            <siteCode/>
-            <siteCode>00</siteCode>
-        </siteOR>
-        <channelAND>
-            <bandCode>L</bandCode>
-            <channelNOT>
-                <!-- to prevent LOG channels -->
-                <gainCode>O</gainCode>
-            </channelNOT>
-        </channelAND>
+            <bandCode>B</bandCode>
         <printlineChannelProcessor/>
     </networkArm>
 </sod>

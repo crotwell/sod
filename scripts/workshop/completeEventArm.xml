@@ -16,6 +16,7 @@
                     <day>1</day>
                 </endTime>
             </originTimeRange>
+            <catalog>WHDF</catalog>
         </eventFinder>
         <originOR>
             <originAND>
