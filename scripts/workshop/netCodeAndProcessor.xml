@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+        <networkCode>II</networkCode>
+        <printlineChannelProcessor/>
+    </networkArm>
+</sod>
