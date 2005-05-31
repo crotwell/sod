@@ -12,64 +12,70 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class RunProperties {
 
-    public RunProperties() {}
+    public RunProperties() throws ConfigurationException {
+        this(null);
+    }
 
     public RunProperties(Element el) throws ConfigurationException {
-        Element runNameChild = SodUtil.getElement(el, "runName");
-        if(runNameChild != null) {
-            runName = SodUtil.getText(runNameChild);
-            CookieJar.getCommonContext().put("runName", runName);
+        if(el != null) {
+            Element runNameChild = SodUtil.getElement(el, "runName");
+            if(runNameChild != null) {
+                runName = SodUtil.getText(runNameChild);
+            }
+            Element statusBaseChild = SodUtil.getElement(el, "statusBase");
+            if(statusBaseChild != null) {
+                statusDir = SodUtil.getText(statusBaseChild);
+            }
+            Element eventQueryChild = SodUtil.getElement(el,
+                                                         "eventQueryIncrement");
+            if(eventQueryChild != null) {
+                eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
+            }
+            Element eventLagChild = SodUtil.getElement(el, "eventLag");
+            if(eventLagChild != null) {
+                eventLag = SodUtil.loadTimeInterval(eventLagChild);
+            }
+            Element eventRefreshChild = SodUtil.getElement(el,
+                                                           "eventRefreshInterval");
+            if(eventRefreshChild != null) {
+                eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
+            }
+            Element maxRetryChild = SodUtil.getElement(el, "maxRetryDelay");
+            if(maxRetryChild != null) {
+                maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
+            }
+            Element serverRetryChild = SodUtil.getElement(el,
+                                                          "serverRetryDelay");
+            if(serverRetryChild != null) {
+                serverRetryDelay = SodUtil.loadTimeInterval(serverRetryChild);
+            }
+            Element numWorkersChild = SodUtil.getElement(el,
+                                                         "waveformWorkerThreads");
+            if(numWorkersChild != null) {
+                numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
+            }
+            Element evChanPairProcChild = SodUtil.getElement(el,
+                                                             "eventChannelPairProcessing");
+            if(evChanPairProcChild != null) {
+                evChanPairProc = SodUtil.getText(evChanPairProcChild);
+            }
+            if(SodUtil.isTrue(el, "reopenEvents")) {
+                reopenEvents = true;
+            }
+            if(SodUtil.isTrue(el, "removeDatabase")) {
+                removeDatabase = true;
+            }
+            if(SodUtil.isTrue(el, "statusPages")) {
+                statusPages = true;
+            }
+            if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
+                checkpointPeriodically = true;
+            }
+            if(DOMHelper.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
+                allowDeadNets = true;
+            }
         }
-        Element statusBaseChild = SodUtil.getElement(el, "statusBase");
-        if(statusBaseChild != null) {
-            statusDir = SodUtil.getText(statusBaseChild);
-        }
-        Element eventQueryChild = SodUtil.getElement(el, "eventQueryIncrement");
-        if(eventQueryChild != null) {
-            eventQueryIncrement = SodUtil.loadTimeInterval(eventQueryChild);
-        }
-        Element eventLagChild = SodUtil.getElement(el, "eventLag");
-        if(eventLagChild != null) {
-            eventLag = SodUtil.loadTimeInterval(eventLagChild);
-        }
-        Element eventRefreshChild = SodUtil.getElement(el,
-                                                       "eventRefreshInterval");
-        if(eventRefreshChild != null) {
-            eventRefresh = SodUtil.loadTimeInterval(eventRefreshChild);
-        }
-        Element maxRetryChild = SodUtil.getElement(el, "maxRetryDelay");
-        if(maxRetryChild != null) {
-            maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
-        }
-        Element serverRetryChild = SodUtil.getElement(el, "serverRetryDelay");
-        if(serverRetryChild != null) {
-            serverRetryDelay = SodUtil.loadTimeInterval(serverRetryChild);
-        }
-        Element numWorkersChild = SodUtil.getElement(el,
-                                                     "waveformWorkerThreads");
-        if(numWorkersChild != null) {
-            numWorkers = Integer.parseInt(SodUtil.getText(numWorkersChild));
-        }
-        Element evChanPairProcChild = SodUtil.getElement(el,
-                                                         "eventChannelPairProcessing");
-        if(evChanPairProcChild != null) {
-            evChanPairProc = SodUtil.getText(evChanPairProcChild);
-        }
-        if(SodUtil.isTrue(el, "reopenEvents")) {
-            reopenEvents = true;
-        }
-        if(SodUtil.isTrue(el, "removeDatabase")) {
-            removeDatabase = true;
-        }
-        if(SodUtil.isTrue(el, "statusPages")) {
-            statusPages = true;
-        }
-        if(DOMHelper.hasElement(el, "checkpointPeriodically")) {
-            checkpointPeriodically = true;
-        }
-        if(DOMHelper.hasElement(el, "allowNetworksOutsideEventRequestTime")) {
-            allowDeadNets = true;
-        }
+        CookieJar.getCommonContext().put("runName", runName);
     }
 
     public TimeInterval getMaxRetryDelay() {
