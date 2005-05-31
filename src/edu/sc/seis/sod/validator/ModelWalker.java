@@ -7,8 +7,10 @@ package edu.sc.seis.sod.validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import edu.sc.seis.sod.validator.documenter.SchemaDocumenter;
 import edu.sc.seis.sod.validator.model.Choice;
@@ -22,29 +24,31 @@ import edu.sc.seis.sod.validator.model.NamedElement;
 
 public class ModelWalker {
 
-    public static Definition[] getContainingDefs(Form root, Definition def) {
-        Set instances = new HashSet();
-        getContainingDefs(root, def, instances);
-        return (Definition[])instances.toArray(new Definition[instances.size()]);
+    public static Collection getContainingDefs(Form root, Definition def) {
+        if(!defsToContainment.containsKey(def)) {
+            internalGetContainingDefs(root);
+        }
+        return (Set)defsToContainment.get(def);
     }
 
-    public static void getContainingDefs(Form root,
-                                         Definition def,
-                                         Collection accumDefs) {
-        if(def.equals(root.getDef())) {
-            if(root.getParent() == null) { return; }
-            accumDefs.add(SchemaDocumenter.getNearestDef(root.getParent()));
+    private static Map defsToContainment = new HashMap();
+
+    public static void internalGetContainingDefs(Form root) {
+        if(root.isFromDef() && root.getParent() != null) {
+            Definition def = root.getDef();
+            if(!defsToContainment.containsKey(def)) {
+                defsToContainment.put(def, new HashSet());
+            }
+            ((Set)defsToContainment.get(def)).add(SchemaDocumenter.getNearestDef(root.getParent()));
         }
         if(!isSelfReferential(root)) {
             if(root instanceof GenitorForm) {
-                getContainingDefs(((GenitorForm)root).getChild(),
-                                  def,
-                                  accumDefs);
+                internalGetContainingDefs(((GenitorForm)root).getChild());
             } else if(root instanceof MultigenitorForm) {
                 MultigenitorForm multiRoot = (MultigenitorForm)root;
                 Form[] kids = multiRoot.getChildren();
                 for(int i = 0; i < kids.length; i++) {
-                    getContainingDefs(kids[i], def, accumDefs);
+                    internalGetContainingDefs(kids[i]);
                 }
             }
         }
@@ -88,25 +92,31 @@ public class ModelWalker {
                 Form[] kids = multiRoot.getChildren();
                 for(int i = 0; i < kids.length; i++) {
                     Form result = getInstance(kids[i], def);
-                    if(result != null) { return result; }
+                    if(result != null) {
+                        return result;
+                    }
                 }
             }
         }
         return null;
     }
-    
-    public static boolean isSelfReferential(Form f){
+
+    public static boolean isSelfReferential(Form f) {
         return isSelfReferential(f, null);
     }
 
     public static boolean isSelfReferential(Form f, Form root) {
-        if(f.isFromDef() && !f.equals(root)) { return lineageContainsRefTo(f, f.getDef(), root); }
+        if(f.isFromDef() && !f.equals(root)) {
+            return lineageContainsRefTo(f, f.getDef(), root);
+        }
         return false;
     }
 
     public static boolean requiresSelfReferentiality(Form f) {
-        if(f.getMin() == 0) return false;
-        if(isSelfReferential(f)) return true;
+        if(f.getMin() == 0)
+            return false;
+        if(isSelfReferential(f))
+            return true;
         if(f instanceof NamedElement) {
             NamedElement el = (NamedElement)f;
             Form kid = el.getChild();
@@ -115,14 +125,17 @@ public class ModelWalker {
             Choice c = (Choice)f;
             Form[] kids = c.getChildren();
             for(int i = 0; i < kids.length; i++) {
-                if(!requiresSelfReferentiality(kids[i])) return false;
+                if(!requiresSelfReferentiality(kids[i]))
+                    return false;
             }
             return true;
         } else if(f instanceof Interleave || f instanceof Group) {
             MultigenitorForm multi = (MultigenitorForm)f;
             Form[] kids = multi.getChildren();
             for(int i = 0; i < kids.length; i++) {
-                if(requiresSelfReferentiality(kids[i])) { return true; }
+                if(requiresSelfReferentiality(kids[i])) {
+                    return true;
+                }
             }
             return false;
         }
@@ -135,8 +148,12 @@ public class ModelWalker {
 
     public static boolean lineageContainsRefTo(Form f, Definition def, Form root) {
         Form parent = f.getParent();
-        if(parent == null || def == null || f.equals(root)) { return false; }
-        if(def.equals(parent.getDef())) { return true; }
+        if(parent == null || def == null || f.equals(root)) {
+            return false;
+        }
+        if(def.equals(parent.getDef())) {
+            return true;
+        }
         return lineageContainsRefTo(parent, def, root);
     }
 
@@ -145,8 +162,9 @@ public class ModelWalker {
         Form child = parent.getChild();
         if(child instanceof NamedElement && isTowards(child, result)) {
             return (NamedElement)child;
-        } else if(child instanceof MultigenitorForm) { return getDescendantTowards((MultigenitorForm)child,
-                                                                                   result); }
+        } else if(child instanceof MultigenitorForm) {
+            return getDescendantTowards((MultigenitorForm)child, result);
+        }
         return null;
     }
 
@@ -159,7 +177,9 @@ public class ModelWalker {
             } else if(kids[i] instanceof MultigenitorForm) {
                 NamedElement subresult = getDescendantTowards((MultigenitorForm)kids[i],
                                                               result);
-                if(subresult != null) { return subresult; }
+                if(subresult != null) {
+                    return subresult;
+                }
             }
         }
         return null;
@@ -168,8 +188,9 @@ public class ModelWalker {
     public static boolean isTowards(Form parent, Form result) {
         //System.out.println("isTowards called");
         //System.out.println("PARENT=" + ModelUtil.toString(parent));
-       // System.out.println("RESULT=" + ModelUtil.toString(result));
-        boolean b = parent.isAncestorOf(result, parent) || parent.equals(result);
+        // System.out.println("RESULT=" + ModelUtil.toString(result));
+        boolean b = parent.isAncestorOf(result, parent)
+                || parent.equals(result);
         //System.out.println("isTowards: " + b);
         return b;
     }
@@ -179,13 +200,19 @@ public class ModelWalker {
     }
 
     private static int getDistance(Form initialBase, Form base, Form result) {
-        if(result == null) { return -1; }
-        if(result.equals(base)) { return 0; }
+        if(result == null) {
+            return -1;
+        }
+        if(result.equals(base)) {
+            return 0;
+        }
         if(base.isFromDef() && base != initialBase) {
             Form[] lineageToInitial = getLineage(base.getParent(), initialBase);
             for(int i = 0; i < lineageToInitial.length; i++) {
                 Form cur = lineageToInitial[i];
-                if(cur.isFromDef() && cur.getDef().equals(base.getDef())) { return -1; }
+                if(cur.isFromDef() && cur.getDef().equals(base.getDef())) {
+                    return -1;
+                }
             }
         }
         if(base instanceof MultigenitorForm) {
@@ -198,18 +225,24 @@ public class ModelWalker {
                     minDist = curDist;
                 }
             }
-            if(minDist < Integer.MAX_VALUE) { return minDist; }
+            if(minDist < Integer.MAX_VALUE) {
+                return minDist;
+            }
         } else if(base instanceof GenitorForm) {
             GenitorForm gf = (GenitorForm)base;
             int subDist = getDistance(initialBase, gf.getChild(), result);
-            if(subDist > -1) { return subDist + 1; }
+            if(subDist > -1) {
+                return subDist + 1;
+            }
         }
         return -1;
     }
 
     public static NamedElement[] getSiblings(NamedElement brother) {
         Form parent = brother.getParent();
-        if(parent == null) { return new NamedElement[] {brother}; }
+        if(parent == null) {
+            return new NamedElement[] {brother};
+        }
         while(!(parent instanceof NamedElement)) {
             parent = parent.getParent();
         }
@@ -233,7 +266,9 @@ public class ModelWalker {
     public static boolean isInLineage(Form parent, Form result) {
         Form[] lineage = getLineage(result);
         for(int i = 0; i < lineage.length; i++) {
-            if(lineage[i].equals(parent)) { return true; }
+            if(lineage[i].equals(parent)) {
+                return true;
+            }
         }
         return false;
     }
