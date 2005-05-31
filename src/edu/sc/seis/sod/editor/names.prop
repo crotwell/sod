@@ -104,6 +104,7 @@ timeVariance=Time Variance
 depthVariance=Depth Variance
 distanceVariance=Distance Variance
 linearDistanceMagnitudeRange=Linear Distance with Magnitude
+pointLinearDistanceMagnitude=Origin Linear Distance from Point with Magnitude
 
 legacyExecute=Legacy Execute
 channelGroupLegacyExecute=Channel Group Legacy Execute
@@ -129,3 +130,8 @@ phaseName=Phase Name
 requestGeneratorWrapper=Request Generator
 
 embeddedOriginSubsetter=Embedded Origin
+
+alwaysSuccess=Always Successful
+passOrigin=Always Successful for Origin
+
+forkProcess=Fork Process
