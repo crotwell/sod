@@ -2017,6 +2017,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time8">
@@ -2071,6 +2088,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time9">
@@ -2125,6 +2159,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time7">
@@ -2179,6 +2230,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time12">
@@ -2233,6 +2301,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time11">
@@ -2287,6 +2372,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time10">
@@ -2341,6 +2443,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time5">
@@ -2395,6 +2514,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time">
@@ -2449,6 +2585,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time2">
@@ -2503,6 +2656,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time6">
@@ -2557,6 +2727,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time14">
@@ -2611,6 +2798,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time3">
@@ -2665,6 +2869,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time4">
@@ -2719,6 +2940,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
     <define name="time13">
@@ -2773,6 +3011,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
             <interleave>
                 <element name="unit">
                     <choice>
