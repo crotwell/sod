@@ -27,6 +27,23 @@
             <element name="now">
                 <empty/>
             </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
         </choice>
     </define>
 </grammar>
