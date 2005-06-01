@@ -5,17 +5,14 @@
  */
 package edu.sc.seis.sod.process.waveform;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -23,21 +20,15 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.iris.dmc.seedcodec.CodecException;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
-import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
-import edu.sc.seis.fissuresUtil.database.util.TableSetup;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.mseed.SeedFormatException;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXMLStAX;
@@ -59,7 +50,6 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class SaveSeismogramToFile implements WaveformProcess {
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
-        this.config = config;
         String fileTypeStr = SodUtil.getText(SodUtil.getElement(config,
                                                                 "fileType"));
         if(fileTypeStr == null || fileTypeStr.length() == 0
@@ -120,17 +110,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
         nameGenerator = new EventFormatter(SodUtil.getElement(config,
                                                               "eventDirLabel"));
         createMasterDS();
-        //        OutputScheduler.getDefault().scheduleForExit(new Runnable(){
-        //                    public void run() {
-        //                        if (lastDataSetStaxWriter != null){
-        //                            try {
-        //                                lastDataSetStaxWriter.close();
-        //                            } catch (Exception e) {
-        //                                GlobalExceptionHandler.handle(e);
-        //                            }
-        //                        }
-        //                    }
-        //                });
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -238,43 +217,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                          getRelativeURLString(masterDSFile, childDataset),
                          childName);
         masterDSWriter.close();
-        //      //create temporary dataset with new information to be merged into
-        // master dataset
-        //      DataSet tempMasterDS = createTempDataSet("Temp Master");
-        //      File tempMasterDSFile = new File(dataDirectory,
-        // DataSetToXMLStAX.createFileName(tempMasterDS));
-        //      StAXFileWriter staxWriter = new StAXFileWriter(tempMasterDSFile);
-        //      XMLStreamWriter tempWriter = staxWriter.getStreamWriter();
-        //      dsToXML.writeDataSetStartElement(tempWriter);
-        //      dsToXML.insertDSInfo(tempWriter, tempMasterDS, dataDirectory,
-        // SeismogramFileTypes.SAC);
-        //      dsToXML.writeRef(tempWriter,
-        //                       getRelativeURLString(masterDSFile, childDataset),
-        //                       childName);
-        //      XMLUtil.writeEndElementWithNewLine(tempWriter);
-        //      staxWriter.close();
-        //
-        //      XMLUtil.mergeDocs(masterDSFile, tempMasterDSFile, datasetRef,
-        // dataSetEl);
-        //
-        //      if (tempMasterDSFile.exists()){
-        //          tempMasterDSFile.delete();
         //      }
-    }
-
-    //purely a debugging venture
-    private void printFile(File file) throws IOException {
-        System.out.println("******************");
-        System.out.println(file.getName() + ':');
-        BufferedReader r1 = new BufferedReader(new FileReader(file));
-        StringBuffer buf = new StringBuffer();
-        String line;
-        while((line = r1.readLine()) != null) {
-            buf.append(line);
-        }
-        r1.close();
-        System.out.println(buf.toString());
-        System.out.println("******************");
     }
 
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
@@ -298,8 +241,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
             prepareDataset(event);
         }
         File eventDirectory = getEventDirectory(event);
-        File dataDirectory = new File(eventDirectory, "data");
-        dataDirectory.mkdirs();
+        File seisFileDirectory = new File(eventDirectory, "data");
+        seisFileDirectory.mkdirs();
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
                                  "seismogram loaded via sod.");
@@ -316,7 +259,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                     + ChannelIdUtil.toString(seismograms[i].channel_id));
             seismograms[i].channel_id = channel.get_id();
             File seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
-                                                        dataDirectory,
+                                                        seisFileDirectory,
                                                         channel,
                                                         event,
                                                         fileType);
@@ -330,12 +273,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
             seisFileTypeArray[i] = fileType; // all are the same
             bytesWritten += seisFile.length();
         }
-        URLDataSetSeismogram urlDSS;
-        urlDSS = new URLDataSetSeismogram(seisURL,
-                                          seisFileTypeArray,
-                                          lastDataSet,
-                                          "",
-                                          request);
+        URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
+                                                               seisFileTypeArray,
+                                                               lastDataSet,
+                                                               "",
+                                                               request);
         if(prefix != null && prefix.length() != 0) {
             urlDSS.setName(prefix + urlDSS.getName());
         }
@@ -481,17 +423,6 @@ public class SaveSeismogramToFile implements WaveformProcess {
     private static long bytesWritten = 0;
 
     static long lastDataSetFileModTime;
-
-    private static QName dataSetEl = new QName("http://www.seis.sc.edu/xschema/dataset/2.0",
-                                               "dataset");
-
-    private static QName datasetRef = new QName("http://www.seis.sc.edu/xschema/dataset/2.0",
-                                                "datasetRef");
-
-    private static QName xlinkHref = new QName("http://www.w3.org/1999/xlink",
-                                               "href");
-
-    private Element config;
 
     static File dataDirectory;
 
