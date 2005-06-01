@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="vectorAvailableData"/>
@@ -16,16 +17,18 @@
             <ref name="vectorAvailableDataNOT"/>
             <ref name="PASS"/>
             <ref name="external"/>
+            <externalRef href="availableData.rng"/>
         </choice>
     </define>
     <define name="ANDAvailableDataWrapper">
         <element name="ANDAvailableDataWrapper">
             <xsd:annotation>
-                <summary>Allows an event channel available data subsetter to be embedded within an event vector
-                    available data subsetter.</summary>
-                <description>Allows an event channel available data subsetter to be embedded within an event
-                    channelgroup available data subsetter. The result is the AND of result of all the individual per
-                    channel available data subsetters. The is most often used within the motion vector arm.</description>
+                <summary>Allows an event channel available data subsetter to be embedded within an
+                    event vector available data subsetter.</summary>
+                <description>Allows an event channel available data subsetter to be embedded within
+                    an event channelgroup available data subsetter. The result is the AND of result
+                    of all the individual per channel available data subsetters. The is most often
+                    used within the motion vector arm.</description>
                 <example>
                     <ANDAvailableDataWrapper>
                         <noGaps/>
@@ -38,10 +41,12 @@
     <define name="ORAvailableDataWrapper">
         <element name="ORAvailableDataWrapper">
             <xsd:annotation>
-                <summary>Allows an event channel request subsetter to be embedded within an event vector available data subsetter.</summary>
-                <description>Allows an event channel request subsetter to be embedded within an event channelgroup
-                    available data subsetter. The result is the OR of the result of all the individual per channel
-                    available data subsetters. The is most often used within the motion vector arm.</description>
+                <summary>Allows an event channel request subsetter to be embedded within an event
+                    vector available data subsetter.</summary>
+                <description>Allows an event channel request subsetter to be embedded within an
+                    event channelgroup available data subsetter. The result is the OR of the result
+                    of all the individual per channel available data subsetters. The is most often
+                    used within the motion vector arm.</description>
                 <example>
                     <ORAvailableDataWrapper>
                         <someCoverage/>
@@ -55,9 +60,10 @@
         <element name="vectorAvailableDataAND">
             <xsd:annotation>
                 <summary>Matches all vectorAvailableData subsetters</summary>
-                <description>The output is the logical AND of the outputs of all included subsetters. This means that it
-                    will evaluate to true only if all the included subsetters evaluate to true. The subsetters after the
-                    first false outputted are not evaluated.</description>
+                <description>The output is the logical AND of the outputs of all included
+                    subsetters. This means that it will evaluate to true only if all the included
+                    subsetters evaluate to true. The subsetters after the first false outputted are
+                    not evaluated.</description>
                 <example>
                     <vectorAvailableDataAND>
                         <ANDAvailableDataWrapper>
@@ -78,9 +84,10 @@
         <element name="vectorAvailableDataOR">
             <xsd:annotation>
                 <summary>Match at least one vectorAvailableData subsetter</summary>
-                <description>The output is the logical OR of the outputs of all included subsetters. This means that it
-                    will evaluate to true as long as one of the included subsetters evaluates to true. The subsetters
-                    after the first true outputted are not evaluated.</description>
+                <description>The output is the logical OR of the outputs of all included subsetters.
+                    This means that it will evaluate to true as long as one of the included
+                    subsetters evaluates to true. The subsetters after the first true outputted are
+                    not evaluated.</description>
                 <example>
                     <vectorAvailableDataOR>
                         <ANDAvailableDataWrapper>
@@ -101,8 +108,9 @@
         <element name="vectorAvailableDataNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of included vectorAvailableData subsetter</summary>
-                <description>The output is the logical NOT of the output of the included subsetters. This means that it
-                    will only evaluate to true if the included subsetter evaluates to false, and vice versa.</description>
+                <description>The output is the logical NOT of the output of the included subsetters.
+                    This means that it will only evaluate to true if the included subsetter
+                    evaluates to false, and vice versa.</description>
                 <example>
                     <vectorAvailableDataNOT>
                         <ANDAvailableDataWrapper>
@@ -118,7 +126,8 @@
         <element name="passVectorAvailableData">
             <xsd:annotation>
                 <summary>Accepts any available vector data</summary>
-                <description>This is a simple subsetter that always returns true, which is particularly useful for testing.</description>
+                <description>This is a simple subsetter that always returns true, which is
+                    particularly useful for testing.</description>
                 <example>
                     <passVectorAvailableData/>
                 </example>
@@ -132,9 +141,10 @@
         <element name="externalVectorAvailableData">
             <xsd:annotation>
                 <summary>Use a VectorAvailableData subsetter external to sod</summary>
-                <description>This allows you to use a VectorAvailableData subsetter that is external to SOD. SOD
-                    attempts to load the class named by classname and, provided it implements the
-                    VectorAvailableDataSubsetter, it will called the accept() method for every available data request.</description>
+                <description>This allows you to use a VectorAvailableData subsetter that is external
+                    to SOD. SOD attempts to load the class named by classname and, provided it
+                    implements the VectorAvailableDataSubsetter, it will called the accept() method
+                    for every available data request.</description>
                 <example>
                     <externalVectorAvailableData>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyVectorAvailableData</classname>

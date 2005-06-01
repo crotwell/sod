@@ -14,9 +14,7 @@
             <optional>
                 <externalRef href="eventVector.rng"/>
             </optional>
-            <element name="requestGeneratorWrapper">
-                <externalRef href="requestGenerator.rng"/>
-            </element>
+            <externalRef href="requestGenerator.rng"/>
             <optional>
                 <externalRef href="vectorRequestSubsetter.rng"/>
             </optional>
@@ -27,7 +25,6 @@
             <zeroOrMore>
                 <externalRef href="waveformVectorProcess.rng"/>
             </zeroOrMore>
-            
         </element>
     </start>
 </grammar>
