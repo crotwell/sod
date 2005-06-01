@@ -32,7 +32,9 @@ import edu.sc.seis.sod.process.waveform.vector.WaveformVectorResult;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.Subsetter;
+import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
+import edu.sc.seis.sod.subsetter.availableData.vector.ANDAvailableDataWrapper;
 import edu.sc.seis.sod.subsetter.availableData.vector.VectorAvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
@@ -86,6 +88,8 @@ public class MotionVectorArm implements Subsetter {
             dcLocator = (SeismogramDCLocator)sodElement;
         } else if(sodElement instanceof VectorAvailableDataSubsetter) {
             availData = (VectorAvailableDataSubsetter)sodElement;
+        } else if(sodElement instanceof AvailableDataSubsetter) {
+            availData = new ANDAvailableDataWrapper((AvailableDataSubsetter)sodElement);
         } else if(sodElement instanceof WaveformVectorProcess) {
             processes.add(sodElement);
         } else if(sodElement instanceof WaveformProcess) {
