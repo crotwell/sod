@@ -136,8 +136,6 @@
         <saveSeismogramToFile>
             <fileType>sac</fileType>
             <dataDirectory>POND_II</dataDirectory>
-            <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-            </eventDirLabel>
         </saveSeismogramToFile>
     </waveformArm>
 </sod>
