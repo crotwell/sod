@@ -16,8 +16,11 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
+import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -29,6 +32,7 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXMLStAX;
@@ -43,9 +47,9 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.EventFormatter;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class SaveSeismogramToFile implements WaveformProcess {
 
@@ -107,8 +111,13 @@ public class SaveSeismogramToFile implements WaveformProcess {
             }
             storeSeismogramsInDB = true;
         }
-        nameGenerator = new EventFormatter(SodUtil.getElement(config,
-                                                              "eventDirLabel"));
+        Text veloText = null;
+        try {
+            veloText = (Text)XPathAPI.selectSingleNode(config, "eventDirLabel/text()");
+        } catch (TransformerException ex) {
+            GlobalExceptionHandler.handle("problem getting eventDirLabel.  using default.", ex);
+        }
+        veloTemplate = ((veloText != null) ? veloText.getData() : DEFAULT_TEMPLATE);
         createMasterDS();
     }
 
@@ -323,7 +332,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
     }
 
     public String getLabel(EventAccessOperations event) {
-        return nameGenerator.getFilizedName(event);
+        return velocitizer.evaluate(veloTemplate, event);
     }
 
     String getRelativeURLString(File base, File ref) {
@@ -452,8 +461,12 @@ public class SaveSeismogramToFile implements WaveformProcess {
     private boolean preserveRequest = false, storeSeismogramsInDB = false;
 
     public static final String COOKIE_PREFIX = "SeisFile_";
+    
+    public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
 
-    EventFormatter nameGenerator = null;
+    SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+    
+    String veloTemplate;
 
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 

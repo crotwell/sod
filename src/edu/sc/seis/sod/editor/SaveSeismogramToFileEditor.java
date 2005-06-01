@@ -5,29 +5,35 @@
  */
 
 package edu.sc.seis.sod.editor;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import edu.sc.seis.sod.process.waveform.SaveSeismogramToFile;
 
-public class SaveSeismogramToFileEditor implements EditorPlugin{
+public class SaveSeismogramToFileEditor extends PrintlineEventEditor{
 
     public SaveSeismogramToFileEditor(){
 
     }
+    
+    protected String getTitle() {
+        return "Event Directory";
+    }
+    
+    protected String getDefaultTemplateValue() {
+        return SaveSeismogramToFile.DEFAULT_TEMPLATE;
+    }
 
     public JComponent getGUI(Element element) throws Exception {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getNodeName())));
+        Box vBox= Box.createVerticalBox();
+        vBox.setBorder(new TitledBorder(SimpleGUIEditor.getDisplayName(element.getNodeName())));
 
         Box b = Box.createHorizontalBox();
         b.add(Box.createHorizontalGlue());
@@ -43,7 +49,7 @@ public class SaveSeismogramToFileEditor implements EditorPlugin{
                 });
         b.add(fileTypeBox);
         b.add(Box.createHorizontalGlue());
-        panel.add(b, BorderLayout.NORTH);
+        vBox.add(b);
 
         b = Box.createHorizontalBox();
         b.add(Box.createHorizontalGlue());
@@ -52,25 +58,15 @@ public class SaveSeismogramToFileEditor implements EditorPlugin{
         Text text2 = (Text)XPathAPI.selectSingleNode(element, "dataDirectory/text()");
         b.add(EditorUtil.getTextField(text2));
         b.add(Box.createHorizontalGlue());
-        panel.add(b, BorderLayout.CENTER);
+        vBox.add(b);
 
         b = Box.createHorizontalBox();
-        b.setBorder(new TitledBorder("Event Directory"));
-        b.add(Box.createHorizontalGlue());
-        Box innerBox = Box.createHorizontalBox();
-        innerBox.setBorder(new TitledBorder("Prefix"));
-        text2 = (Text)XPathAPI.selectSingleNode(element, "eventDirLabel/text()");
-        innerBox.add(EditorUtil.getTextField(text2));
-        b.add(innerBox);
-        Box origBox = Box.createHorizontalBox();
-        origBox.setBorder(new TitledBorder("Origin Format"));
-        text2 = (Text)XPathAPI.selectSingleNode(element, "eventDirLabel/originTime/text()");
-        origBox.add(EditorUtil.getTextField(text2));
-        b.add(origBox);
-        b.add(Box.createHorizontalGlue());
-        panel.add(b, BorderLayout.SOUTH);
+        b.setBorder(new TitledBorder(getTitle()));
+        JComponent comp = createVelocityEditor(element, getDefaultTemplateValue(), "eventDirLabel", "Label", false);
+        b.add(comp);
+        vBox.add(b);
 
-        return panel;
+        return vBox;
     }
 
     public static String[] fileTypes = {"sac", "mseed"};
