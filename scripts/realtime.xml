@@ -46,10 +46,10 @@
             <networkCode>IC</networkCode>
             <networkCode>US</networkCode>
         </networkOR>
-            <siteOR>
-                <siteCode/>
-                <siteCode>00</siteCode>
-            </siteOR>
+        <siteOR>
+            <siteCode/>
+            <siteCode>00</siteCode>
+        </siteOR>
         <channelAND>
             <bandCode>B</bandCode>
             <gainCode>H</gainCode>
@@ -136,21 +136,19 @@
                 </embeddedOriginSubsetter>
             </eventStationAND>
         </eventStationOR>
-        <requestGeneratorWrapper>
-            <phaseRequest>
-                <model>prem</model>
-                <beginPhase>ttp</beginPhase>
-                <beginOffset>
-                    <unit>SECOND</unit>
-                    <value>-120</value>
-                </beginOffset>
-                <endPhase>2.0kmps</endPhase>
-                <endOffset>
-                    <unit>SECOND</unit>
-                    <value>60</value>
-                </endOffset>
-            </phaseRequest>
-        </requestGeneratorWrapper>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-120</value>
+            </beginOffset>
+            <endPhase>2.0kmps</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>60</value>
+            </endOffset>
+        </phaseRequest>
         <fixedDataCenter>
             <name>IRIS_BudDataCenter</name>
             <dns>edu/iris/dmc</dns>

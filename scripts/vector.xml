@@ -42,10 +42,10 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
-            <siteOR>
-                <siteCode/>
-                <siteCode>00</siteCode>
-            </siteOR>
+        <siteOR>
+            <siteCode/>
+            <siteCode>00</siteCode>
+        </siteOR>
         <channelAND>
             <bandCode>L</bandCode>
             <channelNOT>
@@ -60,28 +60,24 @@
             <min>30</min>
             <max>90</max>
         </distanceRange>
-        <requestGeneratorWrapper>
-            <phaseRequest>
-                <model>prem</model>
-                <beginPhase>ttp</beginPhase>
-                <beginOffset>
-                    <unit>SECOND</unit>
-                    <value>-60</value>
-                </beginOffset>
-                <endPhase>tts</endPhase>
-                <endOffset>
-                    <unit>SECOND</unit>
-                    <value>360</value>
-                </endOffset>
-            </phaseRequest>
-        </requestGeneratorWrapper>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-60</value>
+            </beginOffset>
+            <endPhase>tts</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>360</value>
+            </endOffset>
+        </phaseRequest>
         <fixedDataCenter>
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
-        <ANDAvailableDataWrapper>
-            <someCoverage/>
-        </ANDAvailableDataWrapper>
+        <someCoverage/>
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
             <fileType>sac</fileType>
