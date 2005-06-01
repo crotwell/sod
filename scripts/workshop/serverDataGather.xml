@@ -16,34 +16,11 @@
                     <day>1</day>
                 </endTime>
             </originTimeRange>
+            <magnitudeRange>
+                <min>5.0</min>
+            </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
-        <originOR>
-            <originAND>
-                <magnitudeRange>
-                    <min>5.1</min>
-                </magnitudeRange>
-                <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>200</min>
-                    <max>1000</max>
-                </originDepthRange>
-            </originAND>
-            <originAND>
-                <magnitudeRange>
-                    <min>5.3</min>
-                </magnitudeRange>
-                <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>100</min>
-                    <max>200</max>
-                </originDepthRange>
-            </originAND>
-            <magnitudeRange>
-                <min>6</min>
-            </magnitudeRange>
-            <originOR/>
-        </originOR>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
@@ -51,17 +28,21 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
-        <networkCode>IC</networkCode>
+        <networkOR>
+            <networkCode>II</networkCode>
+            <networkCode>IU</networkCode>
+            <networkCode>IC</networkCode>
+        </networkOR>
         <bandCode>B</bandCode>
         <printlineChannelProcessor/>
     </networkArm>
     <waveformArm>
         <phaseRequest>
             <model>prem</model>
-            <beginPhase>ttp</beginPhase>
+            <beginPhase>origin</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>-60</value>
+                <value>0</value>
             </beginOffset>
             <endPhase>tts</endPhase>
             <endOffset>
@@ -74,5 +55,12 @@
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <printlineSeismogramProcess/>
+        <saveSeismogramToFile>
+            <fileType>sac</fileType>
+            <dataDirectory>POND_II</dataDirectory>
+            <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
+            </eventDirLabel>
+            <storeSeismogramsInDB/>
+        </saveSeismogramToFile>
     </waveformArm>
 </sod>
