@@ -2,17 +2,13 @@
 #set($ann=$instance.annotation)
 #set($curBase=$doc.makePath($def))
 #set($curLoc="${curBase}.html")
-
 #macro(printDef $exp)$helper.getDefName($exp)#end
-
 #macro(print $exp)$helper.getName($exp)#end
-
 #macro(makeLink $exp)
 #set($base = $doc.makePath($exp))
 #set($dest = "${base}.html")
 <a href="$util.getRelativePath($curLoc, $dest, '/')">#printDef($exp)</a>
 #end
-
 #macro(printSibs $item $kids)
 <ul>
     #foreach($sib in $kids)
@@ -23,9 +19,8 @@
     #end
 </ul>
 #end
-
 #macro(containment)
-    #foreach($item in $walker.getContainingDefs($root, $def))
+    #foreach($item in $walker.getContainingDefs($def))
         <section name="#print($item)">
         #set($rent=$walker.getInstance($root, $item))
         #if($helper.isMultigen($rent))
@@ -62,7 +57,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     #set($name = "#print($def)")
-	#set($currentPageTitle = "$name")
+	\#set($currentPageTitle = "$name")
 	<head>
 		#sod_head()
 	</head>
@@ -72,8 +67,7 @@
 		<div id="content">
 			<div class="section">
 				<h3>
-					<a name="#print($name)">#print($name)
-					</a>
+					<a name="$name">$name</a>
 				</h3>
 		#if($ann.description)
 			<p>
@@ -87,16 +81,14 @@
 	</div>
 			<div class="section">
 				<h3>
-					<a name="Example">Example
-					</a>
+					<a name="Example">Example</a>
 				</h3>
 		<pre>$ann.example</pre>
     </div>
         
 			<div class="section">
 				<h3>
-					<a name="This consists of">This consists of
-					</a>
+					<a name="This consists of">This consists of</a>
 				</h3>
 			<div id="contained">
 				<p>
@@ -108,8 +100,7 @@
         
 			<div class="section">
 				<h3>
-					<a name="Places this can be found">Places this can be found
-					</a>
+					<a name="Places this can be found">Places this can be found</a>
 				</h3>
             #containment()
         </div>
@@ -123,14 +114,12 @@
 				#foreach($attr in $curEl.attributes)
 			<div class="section">
 				<h3>
-					<a name="$attr.name">$attr.name
-					</a>
+					<a name="$attr.name">$attr.name</a>
 				</h3>
 					<section name="$attr.name">
 			<div class="section">
 				<h3>
-					<a name="Description">Description
-					</a>
+					<a name="Description">Description</a>
 				</h3>
 							<p>
 						#if($attr.annotation.description)
@@ -142,12 +131,9 @@ $attr.annotation.summary
 						</div>
 			<div class="section">
 				<h3>
-					<a name="Possible Values">Possible Values
-					</a>
+					<a name="Possible Values">Possible Values</a>
 				</h3>
-							<p>
-$attr.child
-							</p>
+							<p>$attr.child</p>
 						</div>
 					</div>
 				#end
