@@ -37,15 +37,19 @@ public class OREventChannelWrapper implements EventVectorSubsetter {
     }
 
     public StringTree accept(EventAccessOperations event,
-                          ChannelGroup channelGroup,
-                          CookieJar cookieJar) throws Exception {
+                             ChannelGroup channelGroup,
+                             CookieJar cookieJar) throws Exception {
         StringTree[] result = new StringTree[channelGroup.getChannels().length];
         int i;
         for(i = 0; i < channelGroup.getChannels().length; i++) {
-            result[i] = subsetter.accept(event, channelGroup.getChannels()[i], cookieJar);
-            if(result[i].isSuccess()) { break; }
+            result[i] = subsetter.accept(event,
+                                         channelGroup.getChannels()[i],
+                                         cookieJar);
+            if(result[i].isSuccess()) {
+                return new StringTreeBranch(this, true, result);
+            }
         }
-        return new StringTreeBranch(this, result[i].isSuccess(), result);
+        return new StringTreeBranch(this, false, result);
     }
 
     EventChannelSubsetter subsetter;
