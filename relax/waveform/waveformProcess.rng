@@ -48,7 +48,6 @@
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
             <ref name="embeddedEventChannelProcessor"/>
-            <ref name="sacExecute"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -649,32 +648,6 @@
                 <summary>Allows any event channel subsetter to be embedded here</summary>
             </xsd:annotation>
             <externalRef href="eventChannel.rng"/>
-        </element>
-    </define>
-    <define name="sacExecute">
-        <element name="sacExecute">
-            <xsd:annotation>
-                <summary>Sends commands to SAC to act on seismograms.</summary>
-                <description>This processor sends the given commands to SAC. The filesnames of the
-                    seismograms saved with a previous instance of SaveSeismogramToFile are in
-                    $files.</description>
-            </xsd:annotation>
-            <element name="application">
-                <data type="string"/>
-            </element>
-            <element name="commands">
-                <data type="string"/>
-            </element>
-            <optional>
-                <element name="prefix">
-                    <data type="string"/>
-                </element>
-            </optional>
-            <optional>
-                <element name="workingDirectory">
-                    <data type="string"/>
-                </element>
-            </optional>
         </element>
     </define>
 </grammar>
