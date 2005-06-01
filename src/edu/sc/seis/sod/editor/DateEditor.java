@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DateFormatter;
@@ -50,14 +51,19 @@ public class DateEditor implements EditorPlugin {
 
     public JComponent getGUI(final Element element) throws TransformerException {
         Box vBox = Box.createVerticalBox();
+        vBox.add(Box.createVerticalGlue());
         Box absRelChooser = Box.createHorizontalBox();
+        absRelChooser.setBorder(new TitledBorder("Type of date"));
+        absRelChooser.add(Box.createHorizontalGlue());
         ButtonGroup aRCGroup = new ButtonGroup();
         JRadioButton absButton = new JRadioButton("Absolute");
         aRCGroup.add(absButton);
         absRelChooser.add(absButton);
+        absRelChooser.add(Box.createHorizontalStrut(10));
         JRadioButton relButton = new JRadioButton("Relative");
         aRCGroup.add(relButton);
         absRelChooser.add(relButton);
+        absRelChooser.add(Box.createHorizontalGlue());
         vBox.add(absRelChooser);
         vBox.add(Box.createVerticalStrut(10));
         final Box editorBox = Box.createHorizontalBox();
@@ -69,6 +75,7 @@ public class DateEditor implements EditorPlugin {
             editorBox.add(getAbsoluteDateGUI(element));
         }
         vBox.add(editorBox);
+        vBox.add(Box.createVerticalGlue());
         ActionListener absRelActionListener = new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +107,7 @@ public class DateEditor implements EditorPlugin {
         return vBox;
     }
 
-    protected void printOptions(Element element){
+    protected void printOptions(Element element) {
         NodeList nodes = element.getChildNodes();
         for(int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
@@ -117,7 +124,7 @@ public class DateEditor implements EditorPlugin {
             }
         }
     }
-    
+
     protected String getFullName(Element e) {
         if(e.getParentNode() != null && e.getParentNode() instanceof Element) {
             return getFullName((Element)e.getParentNode()) + "/"
@@ -252,6 +259,8 @@ public class DateEditor implements EditorPlugin {
         }
         Box vBox = Box.createVerticalBox();
         Box directionBox = Box.createHorizontalBox();
+        directionBox.setBorder(new TitledBorder("Time relative to run"));
+        directionBox.add(Box.createHorizontalGlue());
         ButtonGroup directionBG = new ButtonGroup();
         final JRadioButton nowButton = new JRadioButton("Now");
         directionBG.add(nowButton);
@@ -262,25 +271,20 @@ public class DateEditor implements EditorPlugin {
         final JRadioButton laterButton = new JRadioButton("Later");
         directionBG.add(laterButton);
         directionBox.add(laterButton);
+        directionBox.add(Box.createHorizontalGlue());
         vBox.add(directionBox);
+        vBox.add(Box.createVerticalStrut(10));
         final Box editorBox = Box.createVerticalBox();
-        try {
-            Element firstEl = SodUtil.getFirstEmbeddedElement(element);
-            String firstElName = firstEl.getTagName();
-            if(firstElName.equals("earlier")) {
-                directionBG.setSelected(earlierButton.getModel(), true);
-                editorBox.add(EditorUtil.makeQuantityTwiddler(firstEl,
-                                                              TIME_UNITS));
-            } else if(firstElName.equals("later")) {
-                directionBG.setSelected(laterButton.getModel(), true);
-                editorBox.add(EditorUtil.makeQuantityTwiddler(firstEl,
-                                                              TIME_UNITS));
-            } else {
-                directionBG.setSelected(nowButton.getModel(), true);
-            }
-        } catch(NoSuchFieldException ex) {
-            GlobalExceptionHandler.handle("problem adding quantity twiddler",
-                                          ex);
+        Element firstEl = SodUtil.getFirstEmbeddedElement(element);
+        String firstElName = firstEl.getTagName();
+        if(firstElName.equals("earlier")) {
+            directionBG.setSelected(earlierButton.getModel(), true);
+            editorBox.add(EditorUtil.makeTimeIntervalTwiddler(firstEl));
+        } else if(firstElName.equals("later")) {
+            directionBG.setSelected(laterButton.getModel(), true);
+            editorBox.add(EditorUtil.makeTimeIntervalTwiddler(firstEl));
+        } else {
+            directionBG.setSelected(nowButton.getModel(), true);
         }
         ActionListener dirButtonActionListener = new ActionListener() {
 
@@ -304,7 +308,7 @@ public class DateEditor implements EditorPlugin {
                                 : EditorUtil.makeTimeIntervalTwiddler(firstEl)));
                     }
                 } catch(Exception ex) {
-                    GlobalExceptionHandler.handle("problem adding quantity twiddler",
+                    GlobalExceptionHandler.handle("problem adding timeinterval twiddler",
                                                   ex);
                 }
             }
@@ -351,12 +355,4 @@ public class DateEditor implements EditorPlugin {
     private Set relTypesSet = new HashSet();
 
     private static final String[] REL_TYPES = {"earlier", "later", "now"};
-
-    private static final UnitImpl[] TIME_UNITS = {UnitImpl.SECOND,
-                                                  UnitImpl.MINUTE,
-                                                  UnitImpl.HOUR,
-                                                  UnitImpl.DAY,
-                                                  UnitImpl.WEEK,
-                                                  UnitImpl.FORTNIGHT,
-                                                  UnitImpl.GREGORIAN_YEAR};
 }
