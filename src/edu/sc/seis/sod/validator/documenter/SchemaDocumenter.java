@@ -32,7 +32,7 @@ public class SchemaDocumenter {
         ve.init();
         VelocityContext c = new VelocityContext();
         c.put("root", handler.getRoot());
-        c.put("walker", new ModelWalker());
+        c.put("walker", new ModelWalker(handler.getRoot()));
         c.put("util", new SodUtil());
         c.put("helper", new VelocityModelHelper());
         c.put("doc", new SchemaDocumenter());
