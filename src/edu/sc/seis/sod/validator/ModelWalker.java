@@ -24,81 +24,42 @@ import edu.sc.seis.sod.validator.model.NamedElement;
 
 public class ModelWalker {
 
-    public static Collection getContainingDefs(Form root, Definition def) {
-        if(!defsToContainment.containsKey(def)) {
-            internalGetContainingDefs(root);
-        }
+    public ModelWalker(Form root) {
+        populateMapCaches(root);
+    }
+
+    public Collection getContainingDefs(Definition def) {
         return (Set)defsToContainment.get(def);
     }
 
-    private static Map defsToContainment = new HashMap();
+    public Form getInstance(Form root, Definition def) {
+        return (Form)defsToInstance.get(def);
+    }
 
-    public static void internalGetContainingDefs(Form root) {
+    private Map defsToContainment = new HashMap();
+
+    private Map defsToInstance = new HashMap();
+
+    private void populateMapCaches(Form root) {
         if(root.isFromDef() && root.getParent() != null) {
             Definition def = root.getDef();
             if(!defsToContainment.containsKey(def)) {
                 defsToContainment.put(def, new HashSet());
             }
+            defsToInstance.put(root.getDef(), root);
             ((Set)defsToContainment.get(def)).add(SchemaDocumenter.getNearestDef(root.getParent()));
         }
         if(!isSelfReferential(root)) {
             if(root instanceof GenitorForm) {
-                internalGetContainingDefs(((GenitorForm)root).getChild());
+                populateMapCaches(((GenitorForm)root).getChild());
             } else if(root instanceof MultigenitorForm) {
                 MultigenitorForm multiRoot = (MultigenitorForm)root;
                 Form[] kids = multiRoot.getChildren();
                 for(int i = 0; i < kids.length; i++) {
-                    internalGetContainingDefs(kids[i]);
+                    populateMapCaches(kids[i]);
                 }
             }
         }
-    }
-
-    public static Form[] getAllInstances(Form root, Definition def) {
-        Set instances = new HashSet();
-        getAllInstances(root, def, instances);
-        return (Form[])instances.toArray(new Form[instances.size()]);
-    }
-
-    public static void getAllInstances(Form root,
-                                       Definition def,
-                                       Collection accumInstance) {
-        if(!isSelfReferential(root)) {
-            if(def.equals(root.getDef())) {
-                accumInstance.add(root);
-            }
-            if(root instanceof GenitorForm) {
-                getAllInstances(((GenitorForm)root).getChild(),
-                                def,
-                                accumInstance);
-            } else if(root instanceof MultigenitorForm) {
-                MultigenitorForm multiRoot = (MultigenitorForm)root;
-                Form[] kids = multiRoot.getChildren();
-                for(int i = 0; i < kids.length; i++) {
-                    getAllInstances(kids[i], def, accumInstance);
-                }
-            }
-        }
-    }
-
-    public static Form getInstance(Form root, Definition def) {
-        if(root.isFromDef() && root.getDef().equals(def)) {
-            return root;
-        } else if(!isSelfReferential(root)) {
-            if(root instanceof GenitorForm) {
-                return getInstance(((GenitorForm)root).getChild(), def);
-            } else if(root instanceof MultigenitorForm) {
-                MultigenitorForm multiRoot = (MultigenitorForm)root;
-                Form[] kids = multiRoot.getChildren();
-                for(int i = 0; i < kids.length; i++) {
-                    Form result = getInstance(kids[i], def);
-                    if(result != null) {
-                        return result;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     public static boolean isSelfReferential(Form f) {
