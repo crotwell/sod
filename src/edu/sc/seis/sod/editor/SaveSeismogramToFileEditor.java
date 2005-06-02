@@ -30,6 +30,10 @@ public class SaveSeismogramToFileEditor extends PrintlineEventEditor{
     protected String getDefaultTemplateValue() {
         return SaveSeismogramToFile.DEFAULT_TEMPLATE;
     }
+    
+    protected String evaluate(String template) {
+        return super.evaluate(template);
+    }
 
     public JComponent getGUI(Element element) throws Exception {
         Box vBox= Box.createVerticalBox();
@@ -62,7 +66,7 @@ public class SaveSeismogramToFileEditor extends PrintlineEventEditor{
 
         b = Box.createHorizontalBox();
         b.setBorder(new TitledBorder(getTitle()));
-        JComponent comp = createVelocityEditor(element, getDefaultTemplateValue(), "eventDirLabel", "Label", false);
+        JComponent comp = createVelocityFilenameEditor(element, getDefaultTemplateValue(), "eventDirLabel", "Label", false);
         b.add(comp);
         vBox.add(b);
 
