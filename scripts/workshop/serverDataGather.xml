@@ -17,7 +17,7 @@
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
-                <min>5.0</min>
+                <min>5.5</min>
             </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
@@ -54,10 +54,11 @@
             <name>IRIS_PondDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
+        <someCoverage/>
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
-            <fileType>sac</fileType>
-            <dataDirectory>POND_II</dataDirectory>
+            <fileType>mseed</fileType>
+            <dataDirectory>seismograms</dataDirectory>
             <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
             </eventDirLabel>
             <storeSeismogramsInDB/>
