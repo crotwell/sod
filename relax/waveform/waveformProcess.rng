@@ -261,8 +261,7 @@
                     <saveSeismogramToFile>
                         <fileType>sac</fileType>
                         <dataDirectory>POND_II</dataDirectory>
-                        <eventDirLabel> Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-                        </eventDirLabel>
+                        <eventDirLabel>Event_$event.getTime('yyyy_DDD_HH_mm_ss')</eventDirLabel>
                     </saveSeismogramToFile>
                 </example>
             </xsd:annotation>
@@ -281,7 +280,7 @@
                 <data type="string"/>
             </element>
             <element name="eventDirLabel">
-                <ref name="eventLabel"/>
+                <data type="string"/>
             </element>
             <optional>
                 <element name="id">

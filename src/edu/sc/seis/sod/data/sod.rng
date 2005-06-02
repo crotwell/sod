@@ -16395,44 +16395,7 @@
                     <data type="string"/>
                 </element>
                 <element name="eventDirLabel">
-                    <interleave>
-                        <text/>
-                        <optional>
-                            <element name="feRegionName">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="feRegionNumber">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="depth">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="magnitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="latitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="longitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="originTime">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                    </interleave>
+                    <data type="string"/>
                 </element>
                 <optional>
                     <element name="id">
@@ -16853,44 +16816,7 @@
                     <data type="string"/>
                 </element>
                 <element name="eventDirLabel">
-                    <interleave>
-                        <text/>
-                        <optional>
-                            <element name="feRegionName">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="feRegionNumber">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="depth">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="magnitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="latitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="longitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="originTime">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                    </interleave>
+                    <data type="string"/>
                 </element>
                 <optional>
                     <element name="id">
@@ -17311,44 +17237,7 @@
                     <data type="string"/>
                 </element>
                 <element name="eventDirLabel">
-                    <interleave>
-                        <text/>
-                        <optional>
-                            <element name="feRegionName">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="feRegionNumber">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="depth">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="magnitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="latitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="longitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="originTime">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                    </interleave>
+                    <data type="string"/>
                 </element>
                 <optional>
                     <element name="id">
@@ -17769,44 +17658,7 @@
                     <data type="string"/>
                 </element>
                 <element name="eventDirLabel">
-                    <interleave>
-                        <text/>
-                        <optional>
-                            <element name="feRegionName">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="feRegionNumber">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="depth">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="magnitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="latitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="longitude">
-                                <empty/>
-                            </element>
-                        </optional>
-                        <optional>
-                            <element name="originTime">
-                                <data type="string"/>
-                            </element>
-                        </optional>
-                    </interleave>
+                    <data type="string"/>
                 </element>
                 <optional>
                     <element name="id">
