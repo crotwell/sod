@@ -56,7 +56,6 @@ public class SchemaDocumenter {
         File velFile = new File(outputdir + path + ".vm");
         velFile.getParentFile().mkdirs();
         Writer w = new BufferedWriter(new FileWriter(velFile));
-        System.out.println(velFile);
         c.put("def", def);
         HTMLOutlineTourist tourist = new HTMLOutlineTourist(makePath(def));
         DepthAwareGuide guide = new DepthAwareGuide(def.getForm());
