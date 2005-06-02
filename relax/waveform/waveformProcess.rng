@@ -558,9 +558,11 @@
                 <summary>Make images of the processed seismograms</summary>
             </xsd:annotation>
             <ref name="seismogramImageBase"/>
-            <element name="displayConfig">
-                <ref name="basicSeismogramDisplayContents"/>
-            </element>
+            <optional>
+                <element name="displayConfig">
+                    <ref name="basicSeismogramDisplayContents"/>
+                </element>
+            </optional>
         </element>
     </define>
     <define name="legacyExecute">

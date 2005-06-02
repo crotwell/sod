@@ -16743,38 +16743,40 @@
                         </oneOrMore>
                     </element>
                 </optional>
-                <element name="displayConfig">
-                    <ref name="defineAndReference3"/>
-                    <optional>
-                        <element name="type">
-                            <value>basic</value>
-                        </element>
-                    </optional>
-                    <optional>
-                        <ref name="dontDrawNamed2"/>
-                    </optional>
-                    <optional>
-                        <ref name="flagColors2"/>
-                    </optional>
-                    <optional>
-                        <ref name="traceColors2"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderBackground2"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderColor2"/>
-                    </optional>
-                    <zeroOrMore>
-                        <ref name="border2"/>
-                    </zeroOrMore>
-                    <optional>
-                        <ref name="timeConfig3"/>
-                    </optional>
-                    <optional>
-                        <ref name="ampConfig3"/>
-                    </optional>
-                </element>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference3"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed2"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor2"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border2"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig3"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig3"/>
+                        </optional>
+                    </element>
+                </optional>
             </element>
             <element name="legacyExecute">
                 <optional>
@@ -16818,24 +16820,6 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel2"/>
-            </element>
-            <element name="sacExecute">
-                <element name="application">
-                    <data type="string"/>
-                </element>
-                <element name="commands">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
             </element>
         </choice>
     </define>
@@ -17217,38 +17201,40 @@
                         </oneOrMore>
                     </element>
                 </optional>
-                <element name="displayConfig">
-                    <ref name="defineAndReference2"/>
-                    <optional>
-                        <element name="type">
-                            <value>basic</value>
-                        </element>
-                    </optional>
-                    <optional>
-                        <ref name="dontDrawNamed"/>
-                    </optional>
-                    <optional>
-                        <ref name="flagColors"/>
-                    </optional>
-                    <optional>
-                        <ref name="traceColors"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderBackground"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderColor"/>
-                    </optional>
-                    <zeroOrMore>
-                        <ref name="border"/>
-                    </zeroOrMore>
-                    <optional>
-                        <ref name="timeConfig2"/>
-                    </optional>
-                    <optional>
-                        <ref name="ampConfig2"/>
-                    </optional>
-                </element>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference2"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig2"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig2"/>
+                        </optional>
+                    </element>
+                </optional>
             </element>
             <element name="legacyExecute">
                 <optional>
@@ -17292,24 +17278,6 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel"/>
-            </element>
-            <element name="sacExecute">
-                <element name="application">
-                    <data type="string"/>
-                </element>
-                <element name="commands">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
             </element>
         </choice>
     </define>
@@ -17691,38 +17659,40 @@
                         </oneOrMore>
                     </element>
                 </optional>
-                <element name="displayConfig">
-                    <ref name="defineAndReference4"/>
-                    <optional>
-                        <element name="type">
-                            <value>basic</value>
-                        </element>
-                    </optional>
-                    <optional>
-                        <ref name="dontDrawNamed3"/>
-                    </optional>
-                    <optional>
-                        <ref name="flagColors3"/>
-                    </optional>
-                    <optional>
-                        <ref name="traceColors3"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderBackground3"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderColor3"/>
-                    </optional>
-                    <zeroOrMore>
-                        <ref name="border3"/>
-                    </zeroOrMore>
-                    <optional>
-                        <ref name="timeConfig4"/>
-                    </optional>
-                    <optional>
-                        <ref name="ampConfig4"/>
-                    </optional>
-                </element>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference4"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed3"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor3"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border3"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig4"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig4"/>
+                        </optional>
+                    </element>
+                </optional>
             </element>
             <element name="legacyExecute">
                 <optional>
@@ -17766,24 +17736,6 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel3"/>
-            </element>
-            <element name="sacExecute">
-                <element name="application">
-                    <data type="string"/>
-                </element>
-                <element name="commands">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
             </element>
         </choice>
     </define>
@@ -18165,38 +18117,40 @@
                         </oneOrMore>
                     </element>
                 </optional>
-                <element name="displayConfig">
-                    <ref name="defineAndReference5"/>
-                    <optional>
-                        <element name="type">
-                            <value>basic</value>
-                        </element>
-                    </optional>
-                    <optional>
-                        <ref name="dontDrawNamed4"/>
-                    </optional>
-                    <optional>
-                        <ref name="flagColors4"/>
-                    </optional>
-                    <optional>
-                        <ref name="traceColors4"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderBackground4"/>
-                    </optional>
-                    <optional>
-                        <ref name="borderColor4"/>
-                    </optional>
-                    <zeroOrMore>
-                        <ref name="border4"/>
-                    </zeroOrMore>
-                    <optional>
-                        <ref name="timeConfig5"/>
-                    </optional>
-                    <optional>
-                        <ref name="ampConfig5"/>
-                    </optional>
-                </element>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference5"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed4"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor4"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border4"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig5"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig5"/>
+                        </optional>
+                    </element>
+                </optional>
             </element>
             <element name="legacyExecute">
                 <optional>
@@ -18240,24 +18194,6 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel8"/>
-            </element>
-            <element name="sacExecute">
-                <element name="application">
-                    <data type="string"/>
-                </element>
-                <element name="commands">
-                    <data type="string"/>
-                </element>
-                <optional>
-                    <element name="prefix">
-                        <data type="string"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="workingDirectory">
-                        <data type="string"/>
-                    </element>
-                </optional>
             </element>
         </choice>
     </define>
