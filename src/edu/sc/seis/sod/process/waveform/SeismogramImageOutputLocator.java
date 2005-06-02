@@ -44,7 +44,7 @@ public class SeismogramImageOutputLocator {
                     }
                 }
             } else if(n.getNodeName().equals("seismogramConfig")) {
-                if (fileDir.equals("")) {
+                if(fileDir.equals("")) {
                     fileDir = FileWritingTemplate.getBaseDirectoryName();
                 }
                 Element config = TemplateFileLoader.getTemplate((Element)n);
@@ -58,7 +58,7 @@ public class SeismogramImageOutputLocator {
                 configuredFileType = SodUtil.getNestedText((Element)n);
             }
         }
-        if(fileDir == null) {
+        if(fileDir.equals("")) {
             fileDir = FileWritingTemplate.getBaseDirectoryName();
         }
     }
@@ -104,11 +104,11 @@ public class SeismogramImageOutputLocator {
     private String fileDir = "", prefix = "",
             configuredFileType = SeismogramImageProcess.PNG;
 
-    private EventFormatter eventFormatter;
+    private EventFormatter eventFormatter = EventFormatter.makeTime();
 
-    private StationFormatter stationFormatter;
+    private StationFormatter stationFormatter = StationFormatter.makeNetAndCode();
 
-    private ChannelFormatter chanFormatter;
+    private ChannelFormatter chanFormatter = ChannelFormatter.makeSiteAndCode();
 
     public String getDirectory(EventAccessOperations event,
                                Channel chan,
@@ -116,6 +116,7 @@ public class SeismogramImageOutputLocator {
         String dir = useStatusDir ? fileDir : "";
         dir += '/' + eventFormatter.getResult(event) + '/'
                 + stationFormatter.getResult(chan.my_site.my_station) + '/';
+        System.out.println(dir);
         return dir;
     }
 }
