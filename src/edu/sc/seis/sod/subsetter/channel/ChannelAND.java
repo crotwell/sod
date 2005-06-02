@@ -17,7 +17,7 @@ public final class ChannelAND extends  ChannelLogicalSubsetter
         Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            if ( !filter.accept(e, null)) { return false; }
+            if ( !filter.accept(e, network)) { return false; }
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.site;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.subsetter.station.StationSubsetter;
 
@@ -12,8 +13,8 @@ public class StationSubsetterWrapper implements SiteSubsetter {
         this.sub = sub;
     }
 
-    public boolean accept(Site site) throws Exception {
-        return sub.accept(site.my_station, null);
+    public boolean accept(Site site, NetworkAccess network) throws Exception {
+        return sub.accept(site.my_station, network);
     }
 
     private StationSubsetter sub;

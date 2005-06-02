@@ -17,7 +17,7 @@ public final class StationOR extends StationLogicalSubsetter
         Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             StationSubsetter filter = (StationSubsetter)it.next();
-            if ( filter.accept(e, null)){ return true; }
+            if ( filter.accept(e, network)){ return true; }
         }
         return false;
     }

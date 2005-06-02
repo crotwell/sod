@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.site;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.subsetter.Subsetter;
 
@@ -11,5 +12,5 @@ import edu.sc.seis.sod.subsetter.Subsetter;
  */
 public interface SiteSubsetter extends Subsetter {
 
-    public boolean accept(Site site) throws Exception;
+    public boolean accept(Site site, NetworkAccess network) throws Exception;
 }// SiteSubsetter

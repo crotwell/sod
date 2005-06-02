@@ -17,7 +17,7 @@ public final class ChannelNOT extends  ChannelLogicalSubsetter
         Iterator it = subsetters.iterator();
         if (it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            if ( filter.accept(e, null)) { return false; }
+            if ( filter.accept(e, network)) { return false; }
         }
         return true;
     }

@@ -446,8 +446,10 @@ public class NetworkArm implements Arm {
                         + station.get_id().network_id.network_code + "."
                         + station.get_id().station_code);
                 for(int i = 0; i < channels.length; i++) {
-                    if(siteEffectiveSubsetter.accept(channels[i].my_site)) {
-                        if(siteSubsetter.accept(channels[i].my_site)) {
+                    if(siteEffectiveSubsetter.accept(channels[i].my_site,
+                                                     networkAccess)) {
+                        if(siteSubsetter.accept(channels[i].my_site,
+                                                networkAccess)) {
                             int dbid;
                             synchronized(netTable) {
                                 dbid = netTable.put(channels[i].my_site);
@@ -526,15 +528,13 @@ public class NetworkArm implements Arm {
                         continue;
                     }
                     change(chan, inProg);
-                    if(chanEffectiveSubsetter.accept(chan,
-                                                     networkDbObject.getNetworkAccess())) {
+                    if(chanEffectiveSubsetter.accept(chan, networkAccess)) {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
-                                if(!cur.accept(chan,
-                                               networkDbObject.getNetworkAccess())) {
+                                if(!cur.accept(chan, networkAccess)) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));

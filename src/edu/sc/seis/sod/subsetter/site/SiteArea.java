@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.site;
 
 import edu.iris.Fissures.GlobalArea;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
@@ -30,7 +31,7 @@ public class SiteArea implements SiteSubsetter, SodElement {
         }
     }
 
-    public boolean accept(Site e) {
+    public boolean accept(Site e, NetworkAccess network) {
         if(area instanceof edu.iris.Fissures.BoxArea) {
             edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
             if(e.my_location.latitude >= boxArea.min_latitude

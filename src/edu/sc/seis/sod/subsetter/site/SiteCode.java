@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.site;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
@@ -20,7 +21,7 @@ public class SiteCode implements SiteSubsetter {
         }
     }
 
-    public boolean accept(Site site) {
+    public boolean accept(Site site, NetworkAccess network) {
         return site.get_id().site_code.equals(code);
     }
 

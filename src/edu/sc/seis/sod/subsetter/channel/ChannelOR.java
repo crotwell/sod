@@ -17,7 +17,7 @@ public final class ChannelOR extends  ChannelLogicalSubsetter
         Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            if ( filter.accept(e, null)) { return true; }
+            if ( filter.accept(e, network)) { return true; }
         }
         return false;
     }

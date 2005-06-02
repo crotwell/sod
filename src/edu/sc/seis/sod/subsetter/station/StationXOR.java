@@ -15,6 +15,6 @@ public final class StationXOR extends StationLogicalSubsetter implements
     public boolean accept(Station e, NetworkAccess network) throws Exception {
         StationSubsetter filterA = (StationSubsetter)subsetters.get(0);
         StationSubsetter filterB = (StationSubsetter)subsetters.get(1);
-        return (filterA.accept(e, null) != filterB.accept(e, null));
+        return (filterA.accept(e, null) != filterB.accept(e, network));
     }
 }// StationXOR

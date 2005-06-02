@@ -17,7 +17,7 @@ public final class StationAND extends StationLogicalSubsetter implements
         Iterator it = subsetters.iterator();
         while(it.hasNext()) {
             StationSubsetter filter = (StationSubsetter)it.next();
-            if(!filter.accept(e, null)) { return false; }
+            if(!filter.accept(e, network)) { return false; }
         }
         return true;
     }

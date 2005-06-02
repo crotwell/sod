@@ -14,7 +14,7 @@ public class SiteSubsetterWrapper implements ChannelSubsetter {
     }
 
     public boolean accept(Channel channel, NetworkAccess network) throws Exception {
-        return s.accept(channel.my_site);
+        return s.accept(channel.my_site, network);
     }
 
     private SiteSubsetter s;
