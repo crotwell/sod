@@ -40,7 +40,7 @@ public class ResponseWriter implements ChannelSubsetter {
         return true;
     }
 
-    private static final String DEFAULT_TEMPLATE = "responses/${network.code}-${station.code}-${channel.code}.resp";
+    public static final String DEFAULT_TEMPLATE = "responses/${network.code}-${station.code}-${channel.code}.resp";
 
     private String template;
 
