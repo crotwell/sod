@@ -5,8 +5,10 @@
  */
 package edu.sc.seis.sod.validator.documenter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,10 +27,11 @@ public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
         base = args[0];
+        outputdir = args[1];
         StAXModelBuilder handler = new StAXModelBuilder(base + "relax/sod.rng");
         //Setup velocity
         VelocityEngine ve = new VelocityEngine();
-        ve.setProperty("file.resource.loader.path", base + "site\\schemaDocs");
+        ve.setProperty("file.resource.loader.path", base + "site");
         ve.init();
         VelocityContext c = new VelocityContext();
         c.put("root", handler.getRoot());
@@ -36,15 +39,11 @@ public class SchemaDocumenter {
         c.put("util", new SodUtil());
         c.put("helper", new VelocityModelHelper());
         c.put("doc", new SchemaDocumenter());
-        //Run velocity on all definitions
         Collection defs = StAXModelBuilder.getAllDefinitions();
         Iterator it = defs.iterator();
         while(it.hasNext()) {
-            Definition cur = (Definition)it.next();
-            //if(makePath(cur).startsWith("network/station")) {
-            render(c, ve, cur);
-            System.out.print(".");
-            //}
+            render(c, ve, (Definition)it.next());
+            System.out.print('.');
         }
     }
 
@@ -54,16 +53,17 @@ public class SchemaDocumenter {
                               VelocityEngine ve,
                               Definition def) throws Exception {
         String path = makePath(def);
-        File xmlFile = new File(base + "site/schemaDocs/vm/" + path + ".vm");
-        xmlFile.getParentFile().mkdirs();
-        FileWriter fw = new FileWriter(xmlFile);
+        File velFile = new File(outputdir + path + ".vm");
+        velFile.getParentFile().mkdirs();
+        Writer w = new BufferedWriter(new FileWriter(velFile));
+        System.out.println(velFile);
         c.put("def", def);
         HTMLOutlineTourist tourist = new HTMLOutlineTourist(makePath(def));
         DepthAwareGuide guide = new DepthAwareGuide(def.getForm());
         guide.lead(tourist);
         c.put("contained", tourist.getResult());
-        ve.mergeTemplate("elementPage.vm", new VelocityContext(c), fw);
-        fw.close();
+        ve.mergeTemplate("elementPage.vm", new VelocityContext(c), w);
+        w.close();
     }
 
     public static Definition getNearestDef(Form f) {
@@ -88,5 +88,5 @@ public class SchemaDocumenter {
         return path;
     }
 
-    static String base;
+    static String base, outputdir;
 }
