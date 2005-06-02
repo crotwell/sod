@@ -197,6 +197,7 @@ public class SeismogramImageProcess implements WaveformProcess {
         addFlags(getArrivals(channel, o, phases), o, bsd, memDSS);
         String picFileName = locator.getLocation(event, channel, fileType);
         if(seismograms.length > 0) {
+            bsd.add(new DataSetSeismogram[] {memDSS});
             setTimeWindow(bsd.getTimeConfig(), phaseWindow, memDSS);
         }
         SwingUtilities.invokeAndWait(new ImageWriter(bsd, fileType, picFileName));
@@ -206,14 +207,16 @@ public class SeismogramImageProcess implements WaveformProcess {
     public void setTimeWindow(TimeConfig tc,
                               PhaseWindow pw,
                               DataSetSeismogram dss) throws Exception {
+        RequestFilter rf;
         if(pw != null) {
             PhaseRequest pr = pw.getPhaseRequest();
-            RequestFilter rf = pr.generateRequest(dss.getEvent(),
-                                                  dss.getChannel());
-            double[] shiftNScale = DisplayUtils.getShiftAndScale(new MicroSecondTimeRange(rf),
-                                                                 tc.getTime(dss));
-            tc.shaleTime(shiftNScale[0], shiftNScale[1]);
+            rf = pr.generateRequest(dss.getEvent(), dss.getChannel());
+        } else {
+            rf = dss.getRequestFilter();
         }
+        double[] shiftNScale = DisplayUtils.getShiftAndScale(new MicroSecondTimeRange(rf),
+                                                             tc.getTime(dss));
+        tc.shaleTime(shiftNScale[0], shiftNScale[1]);
     }
 
     protected class ImageWriter implements Runnable {
