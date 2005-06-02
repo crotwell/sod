@@ -12,6 +12,7 @@ import javax.swing.text.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.status.FissuresFormatter;
 
 /**
  * @author groves
@@ -21,12 +22,11 @@ import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 public abstract class PrintlineEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws Exception {
-        JComponent templateEditor = createVelocityEditor(element,
+        JComponent templateEditor = createVelocityTemplateEditor(element,
                                                          getDefaultTemplateValue(),
                                                          "template",
-                                                         "Output Template",
-                                                         false);
-        JComponent filenameEditor = createVelocityEditor(element,
+                                                         "Output Template");
+        JComponent filenameEditor = createVelocityFilenameEditor(element,
                                                          "",
                                                          "filename",
                                                          "Output File",
@@ -43,23 +43,40 @@ public abstract class PrintlineEditor implements EditorPlugin {
     protected abstract String getDefaultTemplateValue();
 
     protected abstract String evaluate(String template);
+    
+    public JComponent createVelocityTemplateEditor(Element el,
+                                                   String defaultText,
+                                                   String elementName,
+                                                   String name) {
+        return createVelocityEditor(el, defaultText, elementName, name, new MaxLengthLabel("", false), false);
+    }
 
+    public JComponent createVelocityFilenameEditor(Element el, 
+                                               String defaultText,
+                                               String elementName,
+                                               String name,
+                                               boolean useSystemOutLabel) {
+        JLabel results = null;
+        if(useSystemOutLabel) {
+            results = new SystemOutOnEmptyLabel("");
+        } else {
+            results = new MaxLengthLabel("", true);
+        }
+        return createVelocityEditor(el, defaultText, elementName, name, results, true);
+    }
+    
     public JComponent createVelocityEditor(Element el,
                                            String defaultText,
                                            String elementName,
                                            String name,
-                                           boolean useSystemOutLabel) {
+                                           JLabel results,
+                                           boolean filize) {
         final Text template = getTextChildFromPossiblyNonexistentElement(el,
                                                                          elementName,
                                                                          defaultText);
         JTextField jtf = new JTextField();
         jtf.setText(template.getData());
-        final JLabel results;
-        if(useSystemOutLabel) {
-            results = new SystemOutOnEmptyLabel(evaluate(template.getData()));
-        } else {
-            results = new MaxLengthLabel(evaluate(template.getData()));
-        }
+        results.setText(evaluate(template.getData()));
         jtf.getDocument().addDocumentListener(new VelocityUpdater(template,
                                                                   results));
         Box vertBox = Box.createVerticalBox();
@@ -110,11 +127,15 @@ public abstract class PrintlineEditor implements EditorPlugin {
 
     private class MaxLengthLabel extends JLabel {
 
-        public MaxLengthLabel(String text) {
+        public MaxLengthLabel(String text, boolean filize) {
             super(text, JLabel.LEFT);
+            this.filize = filize;
         }
 
         public void setText(String text) {
+            if (filize) {
+                text = FissuresFormatter.filize(text);
+            }
             if(text.length() < 60) {
                 super.setText("Result: " + text);
             } else {
@@ -122,17 +143,23 @@ public abstract class PrintlineEditor implements EditorPlugin {
                 setToolTipText(text);
             }
         }
+        
+        public void setTextIgnoreFilize(String text) {
+            super.setText(text);
+        }
+        
+        private boolean filize;
     }
 
     private class SystemOutOnEmptyLabel extends MaxLengthLabel {
 
         public SystemOutOnEmptyLabel(String text) {
-            super(text);
+            super(text, true);
         }
 
         public void setText(String text) {
             if(text.equals("")) {
-                super.setText("Outputting to standard out");
+                super.setTextIgnoreFilize("Outputting to standard out");
             } else {
                 super.setText(text);
             }
