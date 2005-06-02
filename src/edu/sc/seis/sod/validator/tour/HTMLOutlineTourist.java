@@ -35,8 +35,8 @@ public class HTMLOutlineTourist implements Tourist {
 
     public void leave(Choice choice) {
         appendIfChildren = "</div>end " + getDefLink(choice) + " "
-                + getCardinality(choice) + getChoiceLink() + "\n<div/>";
-        appendIfNoChildren = "<div/>\n";
+                + getCardinality(choice) + getChoiceLink() + "\n<br />";
+        appendIfNoChildren = "<br />\n";
         genericLeave(choice);
     }
 
@@ -79,7 +79,7 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     public void leave(Group g) {
-        appendIfNoChildren = getDefLink(g) + getCardinality(g) + "<div/>\n";
+        appendIfNoChildren = getDefLink(g) + getCardinality(g) + "<br />\n";
         appendIfChildren = "</div>\n";
         genericLeave(g);
     }
@@ -96,7 +96,7 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     public void leave(Interleave i) {
-        appendIfNoChildren = "<div/>\n";
+        appendIfNoChildren = "<br />\n";
         appendIfChildren = "</div>end " + getDefLink(i) + getCardinality(i)
                 + getInterLink() + "\n";
         genericLeave(i);
@@ -120,14 +120,14 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     public void leave(NamedElement ne) {
-        appendIfNoChildren = " " + getCardinality(ne) + "<div/>";
+        appendIfNoChildren = " " + getCardinality(ne) + "<br />";
         if(!(ne.getChild() instanceof Empty)) {
             if(!isData(ne.getChild())) {
                 appendIfChildren = "</div>\n&lt;/" + getName(ne)
-                        + "&gt;<div/>\n";
+                        + "&gt;<br />\n";
             } else {
                 appendIfChildren = "&lt;/" + getName(ne) + "&gt; "
-                        + getCardinality(ne) + "<div/>\n";
+                        + getCardinality(ne) + "<br />\n";
             }
         }
         genericLeave(ne);
