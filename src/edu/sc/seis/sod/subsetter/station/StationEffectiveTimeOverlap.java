@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.station;
 import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.TimeRange;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
@@ -19,7 +20,7 @@ public class StationEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(tr);
     }
 
-    public boolean accept(Station station) {
+    public boolean accept(Station station, NetworkAccess network) {
         return overlaps(station.effective_time);
     }
 

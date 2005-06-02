@@ -369,8 +369,10 @@ public class NetworkArm implements Arm {
                         .retrieve_stations();
                 logger.debug("after NetworkAccess().retrieve_stations()");
                 for(int subCounter = 0; subCounter < stations.length; subCounter++) {
-                    if(staEffectiveSubsetter.accept(stations[subCounter])) {
-                        if(stationSubsetter.accept(stations[subCounter])) {
+                    if(staEffectiveSubsetter.accept(stations[subCounter],
+                                                    networkDbObject.getNetworkAccess())) {
+                        if(stationSubsetter.accept(stations[subCounter],
+                                                   networkDbObject.getNetworkAccess())) {
                             int dbid;
                             synchronized(netTable) {
                                 dbid = netTable.put(stations[subCounter]);

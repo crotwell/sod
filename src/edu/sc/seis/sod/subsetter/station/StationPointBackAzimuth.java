@@ -7,6 +7,7 @@ package edu.sc.seis.sod.subsetter.station;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
@@ -19,7 +20,7 @@ public class StationPointBackAzimuth extends AbstractOriginPoint implements
         super(config);
     }
 
-    public boolean accept(Station station) {
+    public boolean accept(Station station, NetworkAccess network) {
         double oLat = station.my_location.latitude;
         double oLon = station.my_location.longitude;
         DistAz distaz = new DistAz(oLat, oLon, latitude, longitude);

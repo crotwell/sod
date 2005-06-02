@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 
 /**
@@ -14,6 +15,6 @@ import edu.iris.Fissures.IfNetwork.Station;
 
 public class  PassStation implements StationSubsetter{
 
-    public boolean accept(Station station) { return true;  }
+    public boolean accept(Station station, NetworkAccess network) { return true;  }
 
 }// PassStation

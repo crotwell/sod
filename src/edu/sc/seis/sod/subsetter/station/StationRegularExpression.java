@@ -3,6 +3,7 @@ package edu.sc.seis.sod.subsetter.station;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
@@ -18,7 +19,7 @@ public class StationRegularExpression implements StationSubsetter {
         patterns = FilterNetworkDC.readPattern(url);
     }
 
-    public boolean accept(Station station) throws Exception {
+    public boolean accept(Station station, NetworkAccess network) throws Exception {
         for(int i = 0; i < patterns.length; i++) {
             if(patterns[i].matcher(FilterNetworkAccess.getStationString(station.get_id()))
                     .matches()) { return true; }

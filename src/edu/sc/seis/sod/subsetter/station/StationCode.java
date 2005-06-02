@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
@@ -17,7 +18,7 @@ public class StationCode implements StationSubsetter {
 
     public StationCode(Element config) { this.config = config; }
 
-    public boolean accept(Station station) {
+    public boolean accept(Station station, NetworkAccess network) {
         if(station.get_id().station_code.equals(SodUtil.getNestedText(config))) return true;
         else return false;
 

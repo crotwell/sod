@@ -13,7 +13,7 @@ public class StationSubsetterWrapper implements SiteSubsetter {
     }
 
     public boolean accept(Site site) throws Exception {
-        return sub.accept(site.my_station);
+        return sub.accept(site.my_station, null);
     }
 
     private StationSubsetter sub;

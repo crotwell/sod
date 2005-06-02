@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.station;
 
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
@@ -22,7 +23,7 @@ public class StationOperator implements StationSubsetter {
         this.config = config;
     }
 
-    public boolean accept(Station e) {
+    public boolean accept(Station e, NetworkAccess network) {
         if(e.operator.equals(SodUtil.getNestedText(config))) return true;
         else return false;
     }

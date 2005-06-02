@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.GlobalArea;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
@@ -22,7 +23,7 @@ public class StationArea implements StationSubsetter, SodElement {
         }
     }
 
-    public boolean accept(Station e) {
+    public boolean accept(Station e, NetworkAccess network) {
         if(area instanceof edu.iris.Fissures.BoxArea) {
             edu.iris.Fissures.BoxArea boxArea = (edu.iris.Fissures.BoxArea)area;
             if(e.my_location.latitude >= boxArea.min_latitude
