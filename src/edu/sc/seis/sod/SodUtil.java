@@ -459,11 +459,11 @@ public class SodUtil {
         }
         return null;
     }
-    
-    public static Element getFirstEmbeddedElement(Element config){
+
+    public static Element getFirstEmbeddedElement(Element config) {
         NodeList nl = config.getChildNodes();
         for(int i = 0; i < nl.getLength(); i++) {
-            if (nl.item(i) instanceof Element){
+            if(nl.item(i) instanceof Element) {
                 return (Element)nl.item(i);
             }
         }
@@ -530,7 +530,9 @@ public class SodUtil {
                 pathBuf.append(toTok.nextToken() + separator);
             }
         }
-        pathBuf.append(toTok.nextToken());
+        if(toTok.countTokens() > 0) {
+            pathBuf.append(toTok.nextToken());
+        }
         return dotBuf.toString() + pathBuf.toString();
     }
 
