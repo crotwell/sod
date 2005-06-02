@@ -49,13 +49,20 @@ public class SimpleVelocitizer {
             try {
                 Velocity.evaluate(ctx, writer, "SimpleVelocitizer", template);
             } catch(ParseErrorException parseError) {
-                return parseError.getMessage();
+                return ERR_PREFIX + "Invalid Velocity";
             }
             return writer.toString();
         } catch(Exception e) {
             GlobalExceptionHandler.handle(e);
             return "Unable to evaluate " + template;
         }
+    }
+    
+    public static String cleanUpErrorStringForDisplay(String string) {
+        if (string.startsWith(ERR_PREFIX)){
+            return string.substring(ERR_PREFIX.length());
+        }
+        return string;
     }
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SimpleVelocitizer.class);
@@ -72,4 +79,6 @@ public class SimpleVelocitizer {
             GlobalExceptionHandler.handle("Trouble initializing velocity", e);
         }
     }
+    
+    public static final String ERR_PREFIX = "#ERROR#";
 }

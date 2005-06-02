@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.editor;
 
+import java.awt.Color;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves
@@ -23,14 +25,14 @@ public abstract class PrintlineEditor implements EditorPlugin {
 
     public JComponent getGUI(Element element) throws Exception {
         JComponent templateEditor = createVelocityTemplateEditor(element,
-                                                         getDefaultTemplateValue(),
-                                                         "template",
-                                                         "Output Template");
+                                                                 getDefaultTemplateValue(),
+                                                                 "template",
+                                                                 "Output Template");
         JComponent filenameEditor = createVelocityFilenameEditor(element,
-                                                         "",
-                                                         "filename",
-                                                         "Output File",
-                                                         true);
+                                                                 "",
+                                                                 "filename",
+                                                                 "Output File",
+                                                                 true);
         Box vert = Box.createVerticalBox();
         vert.add(templateEditor);
         vert.add(filenameEditor);
@@ -43,28 +45,38 @@ public abstract class PrintlineEditor implements EditorPlugin {
     protected abstract String getDefaultTemplateValue();
 
     protected abstract String evaluate(String template);
-    
+
     public JComponent createVelocityTemplateEditor(Element el,
                                                    String defaultText,
                                                    String elementName,
                                                    String name) {
-        return createVelocityEditor(el, defaultText, elementName, name, new MaxLengthLabel("", false), false);
+        return createVelocityEditor(el,
+                                    defaultText,
+                                    elementName,
+                                    name,
+                                    new MaxLengthLabel("", false),
+                                    false);
     }
 
-    public JComponent createVelocityFilenameEditor(Element el, 
-                                               String defaultText,
-                                               String elementName,
-                                               String name,
-                                               boolean useSystemOutLabel) {
+    public JComponent createVelocityFilenameEditor(Element el,
+                                                   String defaultText,
+                                                   String elementName,
+                                                   String name,
+                                                   boolean useSystemOutLabel) {
         JLabel results = null;
         if(useSystemOutLabel) {
             results = new SystemOutOnEmptyLabel("");
         } else {
             results = new MaxLengthLabel("", true);
         }
-        return createVelocityEditor(el, defaultText, elementName, name, results, true);
+        return createVelocityEditor(el,
+                                    defaultText,
+                                    elementName,
+                                    name,
+                                    results,
+                                    true);
     }
-    
+
     public JComponent createVelocityEditor(Element el,
                                            String defaultText,
                                            String elementName,
@@ -133,21 +145,27 @@ public abstract class PrintlineEditor implements EditorPlugin {
         }
 
         public void setText(String text) {
-            if (filize) {
-                text = FissuresFormatter.filize(text);
-            }
-            if(text.length() < 60) {
-                super.setText("Result: " + text);
+            if(text.startsWith(SimpleVelocitizer.ERR_PREFIX)) {
+                setForeground(Color.RED);
+                setTextIgnoreFilize(SimpleVelocitizer.cleanUpErrorStringForDisplay(text));
             } else {
-                super.setText("Result: " + text.substring(0, 57) + "...");
-                setToolTipText(text);
+                setForeground(Color.BLACK);
+                if(filize) {
+                    text = FissuresFormatter.filize(text);
+                }
+                if(text.length() < 60) {
+                    super.setText("Result: " + text);
+                } else {
+                    super.setText("Result: " + text.substring(0, 57) + "...");
+                    setToolTipText(text);
+                }
             }
         }
-        
+
         public void setTextIgnoreFilize(String text) {
             super.setText(text);
         }
-        
+
         private boolean filize;
     }
 
@@ -159,6 +177,7 @@ public abstract class PrintlineEditor implements EditorPlugin {
 
         public void setText(String text) {
             if(text.equals("")) {
+                setForeground(Color.BLACK);
                 super.setTextIgnoreFilize("Outputting to standard out");
             } else {
                 super.setText(text);
