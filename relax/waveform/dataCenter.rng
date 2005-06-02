@@ -2,11 +2,17 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
     xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
+        <ref name="dataCenter"/>
+    </start>
+    <define name="dataCenter">
         <choice>
+            <xsd:annotation>
+                <summary>Specifies the server to ask for seismograms</summary>
+            </xsd:annotation>
             <ref name="choiceDataCenter"/>
             <externalRef href="fixedDataCenter.rng"/>
         </choice>
-    </start>
+    </define>
     <define name="choiceDataCenter">
         <element name="choiceDataCenter">
             <xsd:annotation>
