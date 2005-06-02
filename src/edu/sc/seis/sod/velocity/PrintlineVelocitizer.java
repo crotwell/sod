@@ -10,6 +10,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.FissuresFormatter;
 
 /**
  * Handles getting stuff in the context and directing output to System.out or a
@@ -69,7 +70,7 @@ public class PrintlineVelocitizer {
     private void appendToFile(String fileTemplate,
                               String toAppend,
                               VelocityContext ctx) throws IOException {
-        String filename = simple.evaluate(fileTemplate, ctx);
+        String filename = FissuresFormatter.filize(simple.evaluate(fileTemplate, ctx));
         File file = new File(filename);
         file.getParentFile().mkdirs();
         FileWriter fwriter = new FileWriter(file, true);
