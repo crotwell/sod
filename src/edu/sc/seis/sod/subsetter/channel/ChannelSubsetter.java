@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.subsetter.channel;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.subsetter.Subsetter;
 /**
  * ChannelSubsetter.java
@@ -13,6 +14,6 @@ import edu.sc.seis.sod.subsetter.Subsetter;
 
 public interface ChannelSubsetter extends Subsetter {
 
-    public boolean accept(Channel channel) throws Exception;
+    public boolean accept(Channel channel, NetworkAccess network) throws Exception;
 
 }// ChannelSubsetter

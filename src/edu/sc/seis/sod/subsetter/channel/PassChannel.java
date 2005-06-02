@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 
 /**
  * PassChannel.java
@@ -14,7 +15,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 
 public class  PassChannel implements ChannelSubsetter{
 
-    public boolean accept(Channel channel) { return true; }
+    public boolean accept(Channel channel, NetworkAccess network) { return true; }
 
 }// PassChannel
 

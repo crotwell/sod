@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -19,7 +20,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public boolean accept(Channel channel) throws Exception {
+    public boolean accept(Channel channel, NetworkAccess network) throws Exception {
         //Make 7 requests for a day as the BUD likes it that way
         RequestFilter[] reqs = new RequestFilter[7];
         MicroSecondDate now = new MicroSecondDate();

@@ -11,7 +11,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {
@@ -22,11 +21,9 @@ public class ResponseWriter implements ChannelSubsetter {
                                          DEFAULT_TEMPLATE);
     }
 
-    public boolean accept(Channel chan) throws Exception {
+    public boolean accept(Channel chan, NetworkAccess network) throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
-            NetworkAccess network = Start.getNetworkArm()
-                    .getNetwork(chan.get_id().network_id);
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
             String response = ResponsePrint.printResponse(channel_id, inst);

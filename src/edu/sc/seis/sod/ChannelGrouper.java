@@ -137,7 +137,7 @@ public class ChannelGrouper {
 										if(accept) {
 											ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
 											for(int count =0;count<channels.length;count++) {
-												if(!channelSubsetter.accept(channels[count])){
+												if(!channelSubsetter.accept(channels[count], null)){
 													accept = false;
 												}
 											}

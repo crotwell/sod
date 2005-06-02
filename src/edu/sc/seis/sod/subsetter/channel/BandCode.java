@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.SodUtil;
 import org.w3c.dom.Element;
 
@@ -10,7 +11,7 @@ public class BandCode implements ChannelSubsetter {
 
     }
 
-    public boolean accept(Channel channel){
+    public boolean accept(Channel channel, NetworkAccess network){
         return channel.get_id().channel_code.charAt(0) == acceptedBand;
     }
 

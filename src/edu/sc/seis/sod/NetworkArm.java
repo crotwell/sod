@@ -77,7 +77,7 @@ public class NetworkArm implements Arm {
             GlobalExceptionHandler.handle(e);
         }
     }
-    
+
     public boolean isActive() {
         return !armFinished;
     }
@@ -524,13 +524,15 @@ public class NetworkArm implements Arm {
                         continue;
                     }
                     change(chan, inProg);
-                    if(chanEffectiveSubsetter.accept(chan)) {
+                    if(chanEffectiveSubsetter.accept(chan,
+                                                     networkDbObject.getNetworkAccess())) {
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
-                                if(!cur.accept(chan)) {
+                                if(!cur.accept(chan,
+                                               networkDbObject.getNetworkAccess())) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.REJECT));
@@ -725,5 +727,4 @@ public class NetworkArm implements Arm {
     private static Logger logger = Logger.getLogger(NetworkArm.class);
 
     private boolean armFinished = false;
-
 }// NetworkArm

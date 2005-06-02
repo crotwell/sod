@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.Orientation;
 import edu.sc.seis.TauP.SphericalCoords;
 import edu.sc.seis.sod.SodUtil;
@@ -14,7 +15,7 @@ public class OrientationRange implements ChannelSubsetter {
         offset = Float.parseFloat(SodUtil.getNestedText(SodUtil.getElement(config, "maxOffset")));
     }
 
-    public boolean accept(Channel e) throws Exception{
+    public boolean accept(Channel e, NetworkAccess network) throws Exception{
         Orientation ori = e.an_orientation;
         double actualDistance = SphericalCoords.distance(ori.dip, ori.azimuth,
                                                          dip, azimuth);

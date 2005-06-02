@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.subsetter.channel;
 
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.subsetter.site.SiteSubsetter;
 
 /**
@@ -12,7 +13,7 @@ public class SiteSubsetterWrapper implements ChannelSubsetter {
         this.s = s;
     }
 
-    public boolean accept(Channel channel) throws Exception {
+    public boolean accept(Channel channel, NetworkAccess network) throws Exception {
         return s.accept(channel.my_site);
     }
 

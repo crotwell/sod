@@ -5,9 +5,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -34,9 +36,13 @@ public class EmbeddedChannel implements EventChannelSubsetter {
     }
 
     public StringTree accept(EventAccessOperations o,
-                          Channel channel,
-                          CookieJar cookieJar) throws Exception {
-        return new StringTreeLeaf(this, channelSubsetter.accept(channel), channelSubsetter.toString());
+                             Channel channel,
+                             CookieJar cookieJar) throws Exception {
+        NetworkAccess network = Start.getNetworkArm()
+                .getNetwork(channel.get_id().network_id);
+        return new StringTreeLeaf(this,
+                                  channelSubsetter.accept(channel, network),
+                                  channelSubsetter.toString());
     }
 
     ChannelSubsetter channelSubsetter;
