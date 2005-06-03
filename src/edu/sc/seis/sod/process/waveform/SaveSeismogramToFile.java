@@ -275,7 +275,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
             if(storeSeismogramsInDB) {
                 jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
                                                       seismograms[i],
-                                                      seisFile.toString());
+                                                      seisFile.toString(), fileType);
             }
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
