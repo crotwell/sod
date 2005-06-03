@@ -30,8 +30,6 @@
         </networkFinder>
         <networkOR>
             <networkCode>II</networkCode>
-            <networkCode>IU</networkCode>
-            <networkCode>IC</networkCode>
         </networkOR>
         <bandCode>B</bandCode>
         <printlineChannelProcessor/>
@@ -39,10 +37,10 @@
     <waveformArm>
         <phaseRequest>
             <model>prem</model>
-            <beginPhase>origin</beginPhase>
+            <beginPhase>ttp</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>0</value>
+                <value>-100</value>
             </beginOffset>
             <endPhase>tts</endPhase>
             <endOffset>
