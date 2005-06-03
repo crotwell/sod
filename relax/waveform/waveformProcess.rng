@@ -276,9 +276,11 @@
                     <data type="string"/>
                 </element>
             </optional>
-            <element name="dataDirectory">
-                <data type="string"/>
-            </element>
+            <optional>
+                <element name="dataDirectory">
+                    <data type="string"/>
+                </element>
+            </optional>
             <element name="eventDirLabel">
                 <data type="string"/>
             </element>
