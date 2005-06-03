@@ -38,12 +38,12 @@ public class JDBCConfig extends SodJDBC {
         try {
             if(!isSameConfig(config)) {
                 stmt.executeUpdate("UPDATE config SET configString = '"
-                        + config + "'");
+                        + escapeConfigString(config) + "'");
             }
         } catch(NotFound e) {
             // database is empty, so insert
             stmt.executeUpdate("INSERT INTO config (configString) values ('"
-                    + config + "')");
+                    + escapeConfigString(config) + "')");
         }
     }
 
@@ -51,7 +51,7 @@ public class JDBCConfig extends SodJDBC {
         ResultSet rs = getConfig.executeQuery();
         if(rs.next()) {
             String val = rs.getString("configString");
-            return val;
+            return unEscapeConfigString(val);
         }
         throw new NotFound("There is no config stored in the database");
     }
@@ -81,6 +81,14 @@ public class JDBCConfig extends SodJDBC {
         r1.close();
         return buf.toString();
     }
+    
+    private static String escapeConfigString(String config) {
+        return config.replaceAll("'", SINGLE_QUOTE);
+    }
+    
+    private static String unEscapeConfigString(String config) {
+        return config.replaceAll(SINGLE_QUOTE, "'");
+    }
 
     private PreparedStatement prepare(String query) throws SQLException {
         return conn.prepareStatement(query);
@@ -89,4 +97,6 @@ public class JDBCConfig extends SodJDBC {
     private Connection conn;
 
     private PreparedStatement getConfig;
+    
+    private static String SINGLE_QUOTE = "#SINGLE_QUOTE#";
 }
