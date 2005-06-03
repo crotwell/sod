@@ -152,9 +152,6 @@
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
             <fileType>mseed</fileType>
-            <dataDirectory>seismograms</dataDirectory>
-            <eventDirLabel>Event_$event.getTime("yyyy_DDD_HH_mm_ss")</eventDirLabel>
-            <storeSeismogramsInDB/>
         </saveSeismogramToFile>
     </waveformArm>
 </sod>

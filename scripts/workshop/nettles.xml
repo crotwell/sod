@@ -102,10 +102,7 @@
         <someCoverage/>
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
-            <fileType>mseed</fileType>
-            <dataDirectory>mseed</dataDirectory>
-            <eventDirLabel>Event_<originTime>yyyy_DDD_HH_mm_ss</originTime>
-            </eventDirLabel>
+            <fileType>sac</fileType>
         </saveSeismogramToFile>
     </waveformArm>
 </sod>
