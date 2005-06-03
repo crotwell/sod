@@ -1,5 +1,6 @@
 package edu.sc.seis.sod;
 
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.lf5.util.LogMonitorAdapter;
 import edu.iris.Fissures.model.AllVTFactory;
@@ -28,9 +29,10 @@ public class CommonAccess {
     public FissuresNamingService getFissuresNamingService(){
         if (fissuresNamingService == null) {
             fissuresNamingService = new FissuresNamingService(getORB());
-            java.util.Properties props = System.getProperties();
             if ( props.containsKey(FissuresNamingService.CORBALOC_PROP)) {
                 fissuresNamingService.setNameServiceCorbaLoc((String)props.get(FissuresNamingService.CORBALOC_PROP));
+            } else if ( System.getProperties().containsKey(FissuresNamingService.CORBALOC_PROP)) {
+                fissuresNamingService.setNameServiceCorbaLoc((String)System.getProperties().get(FissuresNamingService.CORBALOC_PROP));
             } // end of if ()
         } // end of if (fissuresNamingService == null)
 
@@ -56,6 +58,10 @@ public class CommonAccess {
         return orb;
     }
 
+    public void setProps(Properties props) {
+        this.props = props;
+    }
+    
     private static CommonAccess commonAccess = new CommonAccess();
 
     private LogMonitorAdapter adapter;
@@ -64,7 +70,10 @@ public class CommonAccess {
 
     FissuresNamingService fissuresNamingService;
 
+    Properties props;
+    
     private static Logger logger = Logger.getLogger(CommonAccess.class);
+
 
 }// CommonAccess
 

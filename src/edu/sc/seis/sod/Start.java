@@ -163,6 +163,7 @@ public class Start {
         IndexTemplate.setConfigFileLoc();
         //here the orb must be initialized ..
         //configure commonAccess
+        CommonAccess.getCommonAccess().setProps(props);
         CommonAccess.getCommonAccess().initORB(args, props);
     }
 
