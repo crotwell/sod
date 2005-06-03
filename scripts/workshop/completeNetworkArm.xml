@@ -6,7 +6,7 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>IC</networkCode>
-            <bandCode>B</bandCode>
+        <bandCode>B</bandCode>
         <printlineChannelProcessor/>
     </networkArm>
 </sod>
