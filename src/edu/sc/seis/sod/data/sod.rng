@@ -37012,6 +37012,9 @@
             <ref name="externalChannelSubsetter4"/>
             <ref name="printline4"/>
             <ref name="responseWriter4"/>
+            <element name="stationHas">
+                <ref name="channel4"/>
+            </element>
         </choice>
     </define>
     <define name="channel9">
@@ -37033,6 +37036,9 @@
             <ref name="externalChannelSubsetter8"/>
             <ref name="printline8"/>
             <ref name="responseWriter8"/>
+            <element name="stationHas">
+                <ref name="channel9"/>
+            </element>
         </choice>
     </define>
     <define name="channel3">
@@ -37054,6 +37060,9 @@
             <ref name="externalChannelSubsetter3"/>
             <ref name="printline3"/>
             <ref name="responseWriter3"/>
+            <element name="stationHas">
+                <ref name="channel3"/>
+            </element>
         </choice>
     </define>
     <define name="channel12">
@@ -37075,6 +37084,9 @@
             <ref name="externalChannelSubsetter12"/>
             <ref name="printline12"/>
             <ref name="responseWriter12"/>
+            <element name="stationHas">
+                <ref name="channel12"/>
+            </element>
         </choice>
     </define>
     <define name="channel8">
@@ -37096,6 +37108,9 @@
             <ref name="externalChannelSubsetter7"/>
             <ref name="printline7"/>
             <ref name="responseWriter7"/>
+            <element name="stationHas">
+                <ref name="channel8"/>
+            </element>
         </choice>
     </define>
     <define name="channel7">
@@ -37117,6 +37132,9 @@
             <ref name="externalChannelSubsetter6"/>
             <ref name="printline6"/>
             <ref name="responseWriter6"/>
+            <element name="stationHas">
+                <ref name="channel7"/>
+            </element>
         </choice>
     </define>
     <define name="channel">
@@ -37138,6 +37156,9 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <element name="stationHas">
+                <ref name="channel"/>
+            </element>
         </choice>
     </define>
     <define name="channel14">
@@ -37159,6 +37180,9 @@
             <ref name="externalChannelSubsetter14"/>
             <ref name="printline14"/>
             <ref name="responseWriter14"/>
+            <element name="stationHas">
+                <ref name="channel14"/>
+            </element>
         </choice>
     </define>
     <define name="channel11">
@@ -37180,6 +37204,9 @@
             <ref name="externalChannelSubsetter11"/>
             <ref name="printline11"/>
             <ref name="responseWriter11"/>
+            <element name="stationHas">
+                <ref name="channel11"/>
+            </element>
         </choice>
     </define>
     <define name="channel5">
@@ -37201,6 +37228,9 @@
             <ref name="externalChannelSubsetter9"/>
             <ref name="printline9"/>
             <ref name="responseWriter9"/>
+            <element name="stationHas">
+                <ref name="channel5"/>
+            </element>
         </choice>
     </define>
     <define name="channel10">
@@ -37222,6 +37252,9 @@
             <ref name="externalChannelSubsetter10"/>
             <ref name="printline10"/>
             <ref name="responseWriter10"/>
+            <element name="stationHas">
+                <ref name="channel10"/>
+            </element>
         </choice>
     </define>
     <define name="channel13">
@@ -37243,6 +37276,9 @@
             <ref name="externalChannelSubsetter13"/>
             <ref name="printline13"/>
             <ref name="responseWriter13"/>
+            <element name="stationHas">
+                <ref name="channel13"/>
+            </element>
         </choice>
     </define>
     <define name="channel6">
@@ -37264,6 +37300,9 @@
             <ref name="externalChannelSubsetter5"/>
             <ref name="printline5"/>
             <ref name="responseWriter5"/>
+            <element name="stationHas">
+                <ref name="channel6"/>
+            </element>
         </choice>
     </define>
     <define name="channel2">
@@ -37285,6 +37324,9 @@
             <ref name="externalChannelSubsetter2"/>
             <ref name="printline2"/>
             <ref name="responseWriter2"/>
+            <element name="stationHas">
+                <ref name="channel2"/>
+            </element>
         </choice>
     </define>
     <define name="printline4">

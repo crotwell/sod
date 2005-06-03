@@ -1192,6 +1192,9 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <element name="stationHas">
+                <ref name="channel"/>
+            </element>
         </choice>
     </define>
     <define name="area2">
