@@ -31,6 +31,7 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <ref name="stationHas"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -384,6 +385,17 @@
                     <text/>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="stationHas">
+        <element name="stationHas">
+            <xsd:annotation>
+                <summary>Matches the current channel if any channel in the station matches the enclosed channel subsetter.</summary>
+                <description>The output is true if any channel passess the enclosed channel
+                    subsetter. For example this could be used with a channelNOT to select SH? only
+                    if the station does not have BH?.</description>
+            </xsd:annotation>
+            <ref name="channel"/>
         </element>
     </define>
 </grammar>
