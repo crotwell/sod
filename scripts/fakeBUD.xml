@@ -137,9 +137,10 @@
                 <value>50</value>
             </refreshInterval>
         </networkFinder>
-        <networkNOT>
-            <temporaryNetwork/>
-        </networkNOT>
+        <networkOR>
+            <networkCode>II</networkCode>
+            <networkCode>US</networkCode>
+        </networkOR>
         <stationAND>
             <stationEffectiveTimeOverlap>
                 <startTime>
