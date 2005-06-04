@@ -103,7 +103,6 @@ public class SodUtil {
             } else if(tagName.equals("UnitRange")) {
                 return loadUnitRange(config);
             } else if(tagName.equals("TimeRange")) {
-                System.out.println("TIMERANGE!");
                 return loadTimeRange(config);
             } else if(tagName.equals("GlobalArea")) {
                 return new GlobalAreaImpl();
