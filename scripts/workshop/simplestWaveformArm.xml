@@ -12,8 +12,8 @@
                 </startTime>
                 <endTime>
                     <year>2003</year>
-                    <month>2</month>
-                    <day>1</day>
+                    <month>1</month>
+                    <day>10</day>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -49,15 +49,15 @@
     <waveformArm>
         <phaseRequest>
             <model>prem</model>
-            <beginPhase>ttp</beginPhase>
+            <beginPhase>origin</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>-60</value>
+                <value>0</value>
             </beginOffset>
-            <endPhase>tts</endPhase>
+            <endPhase>origin</endPhase>
             <endOffset>
                 <unit>SECOND</unit>
-                <value>360</value>
+                <value>60</value>
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>
