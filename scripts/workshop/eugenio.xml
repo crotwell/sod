@@ -10,7 +10,6 @@
             </originTimeRange>
             <magnitudeRange>
                 <min>6.0</min>
-                <max>10.0</max>
             </magnitudeRange>
         </eventFinder>
         <removeEventDuplicate/>
