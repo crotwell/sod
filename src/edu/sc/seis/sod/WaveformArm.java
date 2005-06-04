@@ -68,7 +68,7 @@ public class WaveformArm implements Arm {
         MAX_RETRY_DELAY = Start.getRunProps().getMaxRetryDelay();
         SERVER_RETRY_DELAY = Start.getRunProps().getServerRetryDelay();
     }
-    
+
     public boolean isActive() {
         return !finished;
     }
@@ -443,8 +443,6 @@ public class WaveformArm implements Arm {
                 }
             }
             if(workUnit != null) {
-                //                System.out.println("putting workunit for pairId "
-                //                                  + pairIds[i] + " in pool");
                 pool.invokeLater(workUnit);
             }
         }
