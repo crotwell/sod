@@ -16,11 +16,8 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -32,7 +29,7 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXMLStAX;
@@ -46,7 +43,6 @@ import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -54,21 +50,17 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public class SaveSeismogramToFile implements WaveformProcess {
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
-        String fileTypeStr = SodUtil.getText(SodUtil.getElement(config,
-                                                                "fileType"));
-        if(fileTypeStr == null || fileTypeStr.length() == 0
-                || fileTypeStr.equals(SeismogramFileTypes.MSEED.getValue())) {
+        String fileTypeStr = DOMHelper.extractText(config, "fileType", "mseed");
+        if(fileTypeStr.equals(SeismogramFileTypes.MSEED.getValue())) {
             fileType = SeismogramFileTypes.MSEED;
         } else if(fileTypeStr.equals(SeismogramFileTypes.SAC.getValue())) {
             fileType = SeismogramFileTypes.SAC;
         } else if(fileTypeStr.equals(SeismogramFileTypes.PSN.getValue())) {
             fileType = SeismogramFileTypes.PSN;
-        } else {
-            throw new ConfigurationException("Unrecognized file type: "
-                    + fileTypeStr);
         }
-        String datadirName = SodUtil.getText(SodUtil.getElement(config,
-                                                                "dataDirectory"));
+        String datadirName = DOMHelper.extractText(config,
+                                                   "dataDirectory",
+                                                   "seismograms");
         dataDirectory = new File(datadirName);
         if(!dataDirectory.exists()) {
             if(!dataDirectory.mkdirs()) {
@@ -76,33 +68,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
                         + dataDirectory);
             } // end of if (!)
         } // end of if (dataDirectory.exits())
-        Element subDSElement = SodUtil.getElement(config, "subEventDataSet");
-        if(subDSElement != null) {
-            String subDSText = SodUtil.getText(subDSElement);
-            if(subDSText != null && subDSText.length() != 0) {
-                subDS = subDSText;
-            } // end of if (dataDirectory.exits())
-        }
-        Element prefixElement = SodUtil.getElement(config, "prefix");
-        if(prefixElement != null) {
-            String dssPrefix = SodUtil.getText(prefixElement);
-            if(dssPrefix != null && dssPrefix.length() != 0) {
-                prefix = dssPrefix;
-            } // end of if (dataDirectory.exits())
-        }
-        Element idElement = SodUtil.getElement(config, "id");
-        if(idElement != null) {
-            String identifier = SodUtil.getText(idElement);
-            if(identifier != null && identifier.length() != 0) {
-                id = identifier;
-            }
-        }
-        Element reqElement = SodUtil.getElement(config, "preserveRequest");
-        if(reqElement != null) {
-            preserveRequest = true;
-        }
-        Element dbElement = SodUtil.getElement(config, "storeSeismogramsInDB");
-        if(dbElement != null) {
+        subDS = DOMHelper.extractText(config, "subEventDataSet", "");
+        prefix = DOMHelper.extractText(config, "prefix", "");
+        id = DOMHelper.extractText(config, "id", "");
+        preserveRequest = DOMHelper.hasElement(config, "preserveRequest");
+        if(DOMHelper.hasElement(config, "storeSeismogramsInDB")) {
             try {
                 jdbcSeisFile = new JDBCSeismogramFiles(ConnMgr.createConnection());
             } catch(SQLException e) {
@@ -111,13 +81,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
             }
             storeSeismogramsInDB = true;
         }
-        Text veloText = null;
-        try {
-            veloText = (Text)XPathAPI.selectSingleNode(config, "eventDirLabel/text()");
-        } catch (TransformerException ex) {
-            GlobalExceptionHandler.handle("problem getting eventDirLabel.  using default.", ex);
-        }
-        veloTemplate = ((veloText != null) ? veloText.getData() : DEFAULT_TEMPLATE);
+        veloTemplate = DOMHelper.extractText(config,
+                                             "eventDirLabel",
+                                             DEFAULT_TEMPLATE);
         createMasterDS();
     }
 
@@ -275,7 +241,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
             if(storeSeismogramsInDB) {
                 jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
                                                       seismograms[i],
-                                                      seisFile.toString(), fileType);
+                                                      seisFile.toString(),
+                                                      fileType);
             }
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
@@ -452,21 +419,21 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     SeismogramFileTypes fileType;
 
-    String subDS = "";
+    private String subDS = "";
 
-    String prefix = "";
+    private String prefix = "";
 
-    String id = "";
+    private String id = "";
 
     private boolean preserveRequest = false, storeSeismogramsInDB = false;
 
     public static final String COOKIE_PREFIX = "SeisFile_";
-    
+
     public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
 
-    SimpleVelocitizer velocitizer = new SimpleVelocitizer();
-    
-    String veloTemplate;
+    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
+
+    private String veloTemplate;
 
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 
