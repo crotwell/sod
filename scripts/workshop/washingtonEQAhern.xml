@@ -150,8 +150,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>mseed</fileType>
-        </saveSeismogramToFile>
+        <saveSeismogramToFile/>
     </waveformArm>
 </sod>
