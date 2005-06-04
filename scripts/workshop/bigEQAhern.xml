@@ -35,14 +35,16 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <stationArea>
-            <latitudeRange>
-                <min>42</min>
-                <max>49</max>
-            </latitudeRange>
-            <longitudeRange>
-                <min>-124</min>
-                <max>-112</max>
-            </longitudeRange>
+            <boxArea>
+                <latitudeRange>
+                    <min>42</min>
+                    <max>49</max>
+                </latitudeRange>
+                <longitudeRange>
+                    <min>-124</min>
+                    <max>-112</max>
+                </longitudeRange>
+            </boxArea>
         </stationArea>
         <channelOR>
             <!-- accept broadband-->
@@ -119,13 +121,11 @@
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>
-            <name>IRIS_BUDDataCenter</name>
+            <name>IRIS_BudDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>mseed</fileType>
-        </saveSeismogramToFile>
+        <saveSeismogramToFile/>
     </waveformArm>
 </sod>
