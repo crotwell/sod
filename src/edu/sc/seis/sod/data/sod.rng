@@ -16380,23 +16380,30 @@
                 </optional>
             </element>
             <element name="saveSeismogramToFile">
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                            <value>psn</value>
+                        </choice>
+                    </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <element name="eventDirLabel">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="id">
                         <data type="string"/>
@@ -16801,23 +16808,30 @@
                 </optional>
             </element>
             <element name="saveSeismogramToFile">
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                            <value>psn</value>
+                        </choice>
+                    </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <element name="eventDirLabel">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="id">
                         <data type="string"/>
@@ -17222,23 +17236,30 @@
                 </optional>
             </element>
             <element name="saveSeismogramToFile">
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                            <value>psn</value>
+                        </choice>
+                    </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <element name="eventDirLabel">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="id">
                         <data type="string"/>
@@ -17643,23 +17664,30 @@
                 </optional>
             </element>
             <element name="saveSeismogramToFile">
-                <element name="fileType">
-                    <choice>
-                        <value>sac</value>
-                        <value>mseed</value>
-                    </choice>
-                </element>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                            <value>psn</value>
+                        </choice>
+                    </element>
+                </optional>
                 <optional>
                     <element name="prefix">
                         <data type="string"/>
                     </element>
                 </optional>
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
-                <element name="eventDirLabel">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="id">
                         <data type="string"/>
