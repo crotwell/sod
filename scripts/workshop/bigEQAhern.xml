@@ -34,11 +34,6 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
-        <networkOR>
-            <networkCode>II</networkCode>
-            <networkCode>IU</networkCode>
-            <networkCode>IC</networkCode>
-        </networkOR>
         <stationArea>
             <latitudeRange>
                 <min>42</min>
