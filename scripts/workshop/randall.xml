@@ -11,7 +11,7 @@
                 </latitudeRange>
                 <longitudeRange>
                     <min>-180</min>
-                    <max>-1180</max>
+                    <max>180</max>
                 </longitudeRange>
             </boxArea>
             <originTimeRange>
