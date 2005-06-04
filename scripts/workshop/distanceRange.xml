@@ -51,7 +51,7 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
-        <networkCode>IC</networkCode>
+        <networkCode>II</networkCode>
         <bandCode>B</bandCode>
         <printlineChannelProcessor/>
     </networkArm>
