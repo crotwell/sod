@@ -26,9 +26,13 @@ public class ModelWalker {
 
     public ModelWalker(Form root) {
         populateMapCaches(root);
+        defsToInstance.put(root.getDef(), root);
     }
 
     public Collection getContainingDefs(Definition def) {
+        if(!defsToContainment.containsKey(def)) {
+            defsToContainment.put(def, new HashSet());
+        }
         return (Set)defsToContainment.get(def);
     }
 
