@@ -13,7 +13,7 @@ import edu.sc.seis.sod.validator.model.*;
 public class HTMLOutlineTourist implements Tourist {
 
     public HTMLOutlineTourist(String curLoc) {
-        this.curLoc = curLoc;
+        this.curLoc = curLoc.replace('\\', '/');
     }
 
     public void visit(Attribute attr) {
