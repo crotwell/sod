@@ -12,9 +12,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
-import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.subsetter.Interval;
 
 /**
  * OriginOffsetRequest.java Created: Wed Apr 2 16:06:39 2003
@@ -29,15 +27,10 @@ public class OriginOffsetRequest implements RequestGenerator {
         for(int counter = 0; counter < childNodes.getLength(); counter++) {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
-                Element element = (Element)node;
-                if(element.getTagName().equals("beginOffset")) {
-                    SodElement sodElement = (SodElement)SodUtil.load(element,
-                                                                     "");
-                    beginOffset = (Interval)sodElement;
-                } else if(element.getTagName().equals("endOffset")) {
-                    SodElement sodElement = (SodElement)SodUtil.load(element,
-                                                                     "");
-                    endOffset = (Interval)sodElement;
+                Element el = (Element)node;if(el.getTagName().equals("beginOffset")) {
+                    beginOffset = SodUtil.loadTimeInterval(el);
+                } else if(el.getTagName().equals("endOffset")) {
+                    endOffset = SodUtil.loadTimeInterval(el);
                 }
             }
         }
@@ -49,15 +42,14 @@ public class OriginOffsetRequest implements RequestGenerator {
             throws Exception {
         Origin origin = EventUtil.extractOrigin(event);
         MicroSecondDate originDate = new MicroSecondDate(origin.origin_time);
-        TimeInterval bInterval = beginOffset.getTimeInterval();
-        TimeInterval eInterval = endOffset.getTimeInterval();
-        MicroSecondDate bDate = originDate.add(bInterval);
-        MicroSecondDate eDate = originDate.add(eInterval);
+        MicroSecondDate bDate = originDate.add(beginOffset);
+        MicroSecondDate eDate = originDate.add(endOffset);
         RequestFilter[] filters = {new RequestFilter(channel.get_id(),
                                                      bDate.getFissuresTime(),
                                                      eDate.getFissuresTime())};
         return filters;
     }
 
-    private Interval beginOffset, endOffset;
+    TimeInterval beginOffset;
+    private TimeInterval endOffset;
 } // OriginOffsetRequest
