@@ -2,7 +2,6 @@ package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import edu.iris.Fissures.Location;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -16,6 +15,7 @@ import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -23,24 +23,13 @@ import edu.sc.seis.sod.SodUtil;
 public class PhaseRequest implements RequestGenerator {
 
     public PhaseRequest(Element config) throws ConfigurationException {
-        String model = "prem";
-        NodeList childNodes = config.getChildNodes();
-        for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            if(childNodes.item(counter) instanceof Element) {
-                Element el = (Element)childNodes.item(counter);
-                if(el.getTagName().equals("beginPhase")) {
-                    beginPhase = SodUtil.getNestedText(el);
-                } else if(el.getTagName().equals("endPhase")) {
-                    endPhase = SodUtil.getNestedText(el);
-                } else if(el.getTagName().equals("model")) {
-                    model = SodUtil.getNestedText(el);
-                } else if(el.getTagName().equals("beginOffset")) {
-                    beginOffset = SodUtil.loadTimeInterval(el);
-                } else if(el.getTagName().equals("endOffset")) {
-                    endOffset = SodUtil.loadTimeInterval(el);
-                }
-            }
-        }
+        beginPhase = DOMHelper.extractText(config, "beginPhase");
+        endPhase = DOMHelper.extractText(config, "endPhase");
+        Element beginEl = DOMHelper.extractElement(config, "beginOffset");
+        beginOffset = SodUtil.loadTimeInterval(beginEl);
+        Element endEl = DOMHelper.extractElement(config, "endOffset");
+        endOffset = SodUtil.loadTimeInterval(endEl);
+        String model = DOMHelper.extractText(config, "model", "prem");
         try {
             util = TauPUtil.getTauPUtil(model);
         } catch(TauModelException e) {
@@ -69,11 +58,10 @@ public class PhaseRequest implements RequestGenerator {
             return new RequestFilter(channel.get_id(),
                                      prevRequestFilter.start_time,
                                      prevRequestFilter.end_time);
-        } else {
-            prevOriginLoc = origin.my_location;
-            prevSiteLoc = channel.my_site.my_location;
-            prevRequestFilter = null;
-        } // end of else
+        }
+        prevOriginLoc = origin.my_location;
+        prevSiteLoc = channel.my_site.my_location;
+        prevRequestFilter = null;
         double begin = getArrivalTime(beginPhase, channel, origin);
         double end = getArrivalTime(endPhase, channel, origin);
         if(begin == -1 || end == -1) {
@@ -103,18 +91,16 @@ public class PhaseRequest implements RequestGenerator {
             throws TauModelException {
         if(phase.equals(ORIGIN)) {
             return 0;
-        } else {
-            String[] phases = {phase};
-            Arrival[] arrivals = util.calcTravelTimes(chan.my_site.my_location,
-                                                      origin,
-                                                      phases);
-            if(arrivals.length == 0) {
-                return -1;
-            } else {
-                // round to milliseconds
-                return Math.rint(1000 * arrivals[0].getTime()) / 1000;
-            }
         }
+        String[] phases = {phase};
+        Arrival[] arrivals = util.calcTravelTimes(chan.my_site.my_location,
+                                                  origin,
+                                                  phases);
+        if(arrivals.length == 0) {
+            return -1;
+        }
+        // round to milliseconds
+        return Math.rint(1000 * arrivals[0].getTime()) / 1000;
     }
 
     private String beginPhase, endPhase;
