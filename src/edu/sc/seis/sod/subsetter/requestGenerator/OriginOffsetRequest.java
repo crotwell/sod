@@ -1,8 +1,6 @@
 package edu.sc.seis.sod.subsetter.requestGenerator;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.IfNetwork.Channel;
@@ -10,6 +8,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -23,17 +22,10 @@ import edu.sc.seis.sod.SodUtil;
 public class OriginOffsetRequest implements RequestGenerator {
 
     public OriginOffsetRequest(Element config) throws ConfigurationException {
-        NodeList childNodes = config.getChildNodes();
-        for(int counter = 0; counter < childNodes.getLength(); counter++) {
-            Node node = childNodes.item(counter);
-            if(node instanceof Element) {
-                Element el = (Element)node;if(el.getTagName().equals("beginOffset")) {
-                    beginOffset = SodUtil.loadTimeInterval(el);
-                } else if(el.getTagName().equals("endOffset")) {
-                    endOffset = SodUtil.loadTimeInterval(el);
-                }
-            }
-        }
+        Element beginEl = DOMHelper.extractElement(config, "beginOffset");
+        beginOffset = SodUtil.loadTimeInterval(beginEl);
+        Element endEl = DOMHelper.extractElement(config, "endOffset");
+        endOffset = SodUtil.loadTimeInterval(endEl);
     }
 
     public RequestFilter[] generateRequest(EventAccessOperations event,
@@ -50,6 +42,5 @@ public class OriginOffsetRequest implements RequestGenerator {
         return filters;
     }
 
-    TimeInterval beginOffset;
-    private TimeInterval endOffset;
+    private TimeInterval beginOffset, endOffset;
 } // OriginOffsetRequest
