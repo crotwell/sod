@@ -2,6 +2,7 @@ package edu.sc.seis.sod.velocity.event;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -141,6 +142,24 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public int[] getPosition() {
         return position;
+    }
+
+    public String getURL() {
+        return makeDateIdentifier(this);
+    }
+
+    private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HHmmss");
+    static {
+        fullDateIdentifier.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+
+    public static String makeDateIdentifier(VelocityEvent event) {
+        return fullDateIdentifier.format(new MicroSecondDate(event.getOrigin().origin_time));
+    }
+
+    public static MicroSecondDate parseDateIdentifier(String eqIdentifier)
+            throws ParseException {
+        return new MicroSecondDate(fullDateIdentifier.parse(eqIdentifier));
     }
 
     private Origin origin;
