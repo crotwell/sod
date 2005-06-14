@@ -391,13 +391,15 @@
     <define name="stationHas">
         <element name="stationHas">
             <xsd:annotation>
-                <summary>Matches the current channel if at least one channel in the station matches
-                    each of the enclosed channel subsetters.</summary>
+                <summary>Matches the current channel if the enclosed channel subsetters are
+                    satisfied by the channels in the station</summary>
                 <description>The output is true if at least one channel in the station matches each
                     of the enclosed channel subsetters. For example this could be used with a
                     channelNOT to select SH? only if the station does not have BH?.</description>
             </xsd:annotation>
-            <ref name="channel"/>
+            <oneOrMore>
+                <ref name="channel"/>
+            </oneOrMore>
         </element>
     </define>
 </grammar>
