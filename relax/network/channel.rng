@@ -56,6 +56,7 @@
             <ref name="hadDataLastWeek"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <ref name="stationHas"/>
         </choice>
     </define>
     <define name="singleLetterOrNumber">
@@ -390,10 +391,11 @@
     <define name="stationHas">
         <element name="stationHas">
             <xsd:annotation>
-                <summary>Matches the current channel if any channel in the station matches the enclosed channel subsetter.</summary>
-                <description>The output is true if any channel passess the enclosed channel
-                    subsetter. For example this could be used with a channelNOT to select SH? only
-                    if the station does not have BH?.</description>
+                <summary>Matches the current channel if at least one channel in the station matches
+                    each of the enclosed channel subsetters.</summary>
+                <description>The output is true if at least one channel in the station matches each
+                    of the enclosed channel subsetters. For example this could be used with a
+                    channelNOT to select SH? only if the station does not have BH?.</description>
             </xsd:annotation>
             <ref name="channel"/>
         </element>
