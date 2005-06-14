@@ -890,7 +890,9 @@
     </define>
     <define name="stationHas">
         <element name="stationHas">
-            <ref name="channel"/>
+            <oneOrMore>
+                <ref name="channel"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="hadDataLastWeek">

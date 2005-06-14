@@ -47937,72 +47937,100 @@
     </define>
     <define name="stationHas7">
         <element name="stationHas">
-            <ref name="channel8"/>
+            <oneOrMore>
+                <ref name="channel8"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas8">
         <element name="stationHas">
-            <ref name="channel9"/>
+            <oneOrMore>
+                <ref name="channel9"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas11">
         <element name="stationHas">
-            <ref name="channel11"/>
+            <oneOrMore>
+                <ref name="channel11"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas">
         <element name="stationHas">
-            <ref name="channel"/>
+            <oneOrMore>
+                <ref name="channel"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas4">
         <element name="stationHas">
-            <ref name="channel4"/>
+            <oneOrMore>
+                <ref name="channel4"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas2">
         <element name="stationHas">
-            <ref name="channel2"/>
+            <oneOrMore>
+                <ref name="channel2"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas9">
         <element name="stationHas">
-            <ref name="channel5"/>
+            <oneOrMore>
+                <ref name="channel5"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas3">
         <element name="stationHas">
-            <ref name="channel3"/>
+            <oneOrMore>
+                <ref name="channel3"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas13">
         <element name="stationHas">
-            <ref name="channel13"/>
+            <oneOrMore>
+                <ref name="channel13"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas12">
         <element name="stationHas">
-            <ref name="channel12"/>
+            <oneOrMore>
+                <ref name="channel12"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas6">
         <element name="stationHas">
-            <ref name="channel7"/>
+            <oneOrMore>
+                <ref name="channel7"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas5">
         <element name="stationHas">
-            <ref name="channel6"/>
+            <oneOrMore>
+                <ref name="channel6"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas14">
         <element name="stationHas">
-            <ref name="channel14"/>
+            <oneOrMore>
+                <ref name="channel14"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="stationHas10">
         <element name="stationHas">
-            <ref name="channel10"/>
+            <oneOrMore>
+                <ref name="channel10"/>
+            </oneOrMore>
         </element>
     </define>
     <define name="timeUnit6">
