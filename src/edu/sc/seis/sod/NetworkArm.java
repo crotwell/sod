@@ -108,7 +108,8 @@ public class NetworkArm implements Arm {
 
     private void configureEffectiveTimeCheckers() {
         EventArm arm = Start.getEventArm();
-        if(arm != null && Start.getRunProps().allowDeadNets()) {
+        if(arm != null && !Start.getRunProps().allowDeadNets()) {
+            logger.debug("Using event time range to constrain effective times");
             edu.iris.Fissures.TimeRange eventQueryTimes = arm.getFinder()
                     .getEventTimeRange()
                     .getTimeRange();
@@ -116,6 +117,8 @@ public class NetworkArm implements Arm {
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             siteEffectiveSubsetter = new SiteEffectiveTimeOverlap(eventQueryTimes);
             chanEffectiveSubsetter = new ChannelEffectiveTimeOverlap(eventQueryTimes);
+        } else {
+            logger.debug("No implicit effective time constraint");
         }
     }
 
@@ -167,11 +170,10 @@ public class NetworkArm implements Arm {
             timeInterval = (TimeInterval)timeInterval.convertTo(refreshInterval.getUnit());
             if(timeInterval.getValue() >= refreshInterval.getValue()) {
                 return true;
-            } else {
-                statusChanged("Waiting until " + lastTime.add(refreshInterval)
-                        + " to recheck networks");
-                return false;
             }
+            statusChanged("Waiting until " + lastTime.add(refreshInterval)
+                    + " to recheck networks");
+            return false;
         } catch(NotFound e) {
             logger.debug("The query database has no info about the network arm.  Hopefull this the first time through");
             return true;
@@ -271,7 +273,7 @@ public class NetworkArm implements Arm {
         if(lastPusher != null) {
             lastPusher.setLastPusher();
         }
-        //Set the time of the last check to now
+        // Set the time of the last check to now
         queryTimeTable.setQuery(finder.getSourceName(),
                                 finder.getDNSName(),
                                 ClockUtil.now());
@@ -580,10 +582,10 @@ public class NetworkArm implements Arm {
         }
     }
 
-    //This is a HACK. Since we're already storing the channels whole hog, it
-    //isn't much of a stretch to cache them by dbid, and this allows
-    //JDBCEventChannelStatus to quickly pull them out instead of going to the
-    //Net database
+    // This is a HACK. Since we're already storing the channels whole hog, it
+    // isn't much of a stretch to cache them by dbid, and this allows
+    // JDBCEventChannelStatus to quickly pull them out instead of going to the
+    // Net database
     public Channel getChannel(int chanId) {
         return (Channel)channelMap.get(new Integer(chanId));
     }
@@ -691,7 +693,7 @@ public class NetworkArm implements Arm {
         return false;
     }
 
-    //Since we synchronize around the NetDC, only 1 thread can get stuff from
+    // Since we synchronize around the NetDC, only 1 thread can get stuff from
     // the network server at the same time. The pool is here in the off chance
     // the IRIS Network Server is fixed and we can run multiple threads to fill
     // up the db. If so, remove SynchronizedNetworkAccess from
