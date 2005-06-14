@@ -888,6 +888,11 @@
             <data type="string"/>
         </element>
     </define>
+    <define name="stationHas">
+        <element name="stationHas">
+            <ref name="channel"/>
+        </element>
+    </define>
     <define name="hadDataLastWeek">
         <element name="hadDataLastWeek">
             <element name="fixedDataCenter">
@@ -1192,9 +1197,7 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
-            <element name="stationHas">
-                <ref name="channel"/>
-            </element>
+            <ref name="stationHas"/>
         </choice>
     </define>
     <define name="area2">
@@ -1525,6 +1528,7 @@
             <ref name="hadDataLastWeek"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <ref name="stationHas"/>
         </choice>
     </define>
     <define name="NOT">
@@ -1542,6 +1546,11 @@
             <ref name="site"/>
         </element>
     </define>
+    <define name="NOT4">
+        <element name="stationNOT">
+            <ref name="station2"/>
+        </element>
+    </define>
     <define name="NOT6">
         <element name="stationNOT">
             <ref name="station4"/>
@@ -1555,11 +1564,6 @@
     <define name="NOT5">
         <element name="stationNOT">
             <ref name="station3"/>
-        </element>
-    </define>
-    <define name="NOT4">
-        <element name="stationNOT">
-            <ref name="station2"/>
         </element>
     </define>
     <define name="orientationAzimuthRange">
