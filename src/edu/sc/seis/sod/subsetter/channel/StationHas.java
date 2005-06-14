@@ -19,14 +19,26 @@ public class StationHas extends ChannelLogicalSubsetter implements
     public boolean accept(Channel channel, NetworkAccess network)
             throws Exception {
         Iterator it = subsetters.iterator();
-        if(it.hasNext()) {
-            ChannelSubsetter filter = (ChannelSubsetter)it.next();
-            Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
-            for(int i = 0; i < allChans.length; i++) {
-                if(filter.accept(allChans[i], network)) { return true; }
+        Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
+        while(it.hasNext()) {
+            if(!atLeastOneChannelPasses((ChannelSubsetter)it.next(),
+                                        allChans,
+                                        network)) {
+                return false;
             }
-            return false;
         }
         return true;
+    }
+
+    private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
+                                                   Channel[] chans,
+                                                   NetworkAccess net)
+            throws Exception {
+        for(int i = 0; i < chans.length; i++) {
+            if(filter.accept(chans[i], net)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
