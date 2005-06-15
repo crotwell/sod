@@ -173,9 +173,9 @@ public class MotionVectorArm implements Subsetter {
             ProxySeismogramDC dataCenter;
             synchronized(dcLocator) {
                 try {
-                    //********************************************************
+                    // ********************************************************
                     // WARNING, the dcLocator only uses the first channel!!! *
-                    //********************************************************
+                    // ********************************************************
                     dataCenter = dcLocator.getSeismogramDC(ecp.getEvent(),
                                                            ecp.getChannelGroup()
                                                                    .getChannels()[0],
@@ -218,7 +218,7 @@ public class MotionVectorArm implements Subsetter {
                                 // milliseconds
                             } catch(InterruptedException ex) {}
                             if(retries % 2 == 0) {
-                                //force reload from name service evey other try
+                                // force reload from name service evey other try
                                 dataCenter.reset();
                             }
                         } else {
@@ -251,10 +251,10 @@ public class MotionVectorArm implements Subsetter {
                                               ProxySeismogramDC dataCenter,
                                               RequestFilter[][] infilters,
                                               RequestFilter[][] outfilters) {
-        boolean passed;
+        StringTree result;
         synchronized(availData) {
             try {
-                passed = availData.accept(ecp.getEvent(),
+                result = availData.accept(ecp.getEvent(),
                                           ecp.getChannelGroup(),
                                           infilters,
                                           outfilters,
@@ -264,7 +264,7 @@ public class MotionVectorArm implements Subsetter {
                 return;
             }
         }
-        if(passed) {
+        if(result.isSuccess()) {
             ecp.update(Status.get(Stage.DATA_RETRIEVAL, Standing.IN_PROG));
             for(int i = 0; i < infilters.length; i++) {
                 for(int j = 0; j < infilters[i].length; j++) {
@@ -328,7 +328,7 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.REJECT));
-            failLogger.info(ecp);
+            failLogger.info(ecp + " " + result);
         }
     }
 
