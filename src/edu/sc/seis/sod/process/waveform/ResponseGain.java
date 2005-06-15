@@ -17,7 +17,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 12213 2005-02-24 16:59:53Z crotwell $
+ * @version $Id: ResponseGain.java 13876 2005-06-15 16:35:25Z groves $
  */
 public class ResponseGain implements WaveformProcess {
 
@@ -40,15 +40,15 @@ public class ResponseGain implements WaveformProcess {
                 } // end of for (int i=0; i<seismograms.length; i++)
                 return new WaveformResult(out, new StringTreeLeaf(this, true));
             } catch(ChannelNotFound e) {
-                // channel not found is thrown if there is no response for a channel at a time
+                // channel not found is thrown if there is no response for a
+                // channel at a time
                 return new WaveformResult(out,
                                           new StringTreeLeaf(this,
                                                              false,
                                                              "No instrumentation found for time "
                                                                      + seismograms[0].begin_time.date_time));
             }
-        } else {
-            return new WaveformResult(true, seismograms);
         }
+        return new WaveformResult(true, seismograms);
     }
 }// ResponseGainProcessor
