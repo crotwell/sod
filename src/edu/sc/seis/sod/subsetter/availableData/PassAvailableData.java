@@ -24,26 +24,18 @@ public class PassAvailableData implements AvailableDataSubsetter,
     public PassAvailableData(Element config) {}
 
     public StringTree accept(EventAccessOperations event,
-                          Channel channel,
-                          RequestFilter[] original,
-                          RequestFilter[] available,
-                          CookieJar cookieJar) {
+                             Channel channel,
+                             RequestFilter[] original,
+                             RequestFilter[] available,
+                             CookieJar cookieJar) {
         return new StringTreeLeaf(this, true);
     }
 
-    public boolean accept(EventAccessOperations event,
-                          ChannelGroup channel,
-                          RequestFilter[] original,
-                          RequestFilter[] available,
-                          CookieJar cookieJar) throws Exception {
-        return true;
-    }
-
-    public boolean accept(EventAccessOperations event,
-                          ChannelGroup channelGroup,
-                          RequestFilter[][] original,
-                          RequestFilter[][] available,
-                          CookieJar cookieJar) throws Exception {
-        return true;
+    public StringTree accept(EventAccessOperations event,
+                             ChannelGroup channelGroup,
+                             RequestFilter[][] original,
+                             RequestFilter[][] available,
+                             CookieJar cookieJar) throws Exception {
+        return new StringTreeLeaf(this, true);
     }
 }// PassAvailableData
