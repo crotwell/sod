@@ -32,6 +32,8 @@
             <ref name="printline"/>
             <ref name="responseWriter"/>
             <ref name="stationHas"/>
+            <ref name="alwaysSuccess"/>
+            <ref name="hasResponse"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -57,6 +59,8 @@
             <ref name="printline"/>
             <ref name="responseWriter"/>
             <ref name="stationHas"/>
+            <ref name="alwaysSuccess"/>
+            <ref name="hasResponse"/>
         </choice>
     </define>
     <define name="singleLetterOrNumber">
@@ -400,6 +404,31 @@
             <oneOrMore>
                 <ref name="channel"/>
             </oneOrMore>
+        </element>
+    </define>
+    <define name="alwaysSuccess">
+        <element name="alwaysSuccess">
+            <xsd:annotation>
+                <summary>Runs the enclosed subsetters in order until one fails, then passes the
+                    channel</summary>
+                <description>Allows a failing channel subsetter to run while passing the channel
+                    onto the waveform arm. This can be useful if you only want to run a particular
+                    processor if a channel meets a certain criteria, but you want the waveform arm
+                    to process it regardless.</description>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="channelLogical"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="hasResponse">
+        <element name="hasResponse">
+            <xsd:annotation>
+                <summary>Passes a channel if the network server has reponse information for it</summary>
+            </xsd:annotation>
+            <zeroOrMore>
+                <ref name="channelLogical"/>
+            </zeroOrMore>
         </element>
     </define>
 </grammar>
