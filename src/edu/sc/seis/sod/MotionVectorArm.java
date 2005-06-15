@@ -328,7 +328,7 @@ public class MotionVectorArm implements Subsetter {
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
                                   Standing.REJECT));
-            failLogger.info(ecp + " " + result);
+            failLogger.info(ecp + " " + result + " on server " + dataCenter);
         }
     }
 
