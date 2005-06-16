@@ -40,6 +40,8 @@ import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
+import edu.sc.seis.sod.subsetter.request.Request;
+import edu.sc.seis.sod.subsetter.request.vector.ANDRequestWrapper;
 import edu.sc.seis.sod.subsetter.request.vector.VectorRequest;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.vector.RequestGeneratorWrapper;
@@ -84,6 +86,8 @@ public class MotionVectorArm implements Subsetter {
             requestGenerator = new RequestGeneratorWrapper((RequestGenerator)sodElement);
         } else if(sodElement instanceof VectorRequest) {
             request = (VectorRequest)sodElement;
+        } else if(sodElement instanceof Request) {
+            request = new ANDRequestWrapper((Request)sodElement);
         } else if(sodElement instanceof SeismogramDCLocator) {
             dcLocator = (SeismogramDCLocator)sodElement;
         } else if(sodElement instanceof VectorAvailableDataSubsetter) {
@@ -398,9 +402,8 @@ public class MotionVectorArm implements Subsetter {
         if(nsDC.getServerDNS().equals("edu/iris/dmc")
                 && nsDC.getServerName().equals("IRIS_ArchiveDataCenter")) {
             return getDataViaQueue(ecp, rf, dataCenter);
-        } else {
-            return getDataNormal(ecp, rf, dataCenter);
         }
+        return getDataNormal(ecp, rf, dataCenter);
     }
 
     private LocalSeismogram[][] getDataNormal(EventVectorPair ecp,
