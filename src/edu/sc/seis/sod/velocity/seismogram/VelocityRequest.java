@@ -14,11 +14,15 @@ import edu.sc.seis.sod.velocity.network.VelocityChannel;
 public class VelocityRequest {
 
     public VelocityRequest(RequestFilter rf, Channel chan) {
-        range = new MicroSecondTimeRange(rf);
-        this.chan = new VelocityChannel(chan);
+        this(rf, new VelocityChannel(chan));
     }
 
-    public MicroSecondDate getStart() {
+    public VelocityRequest(RequestFilter rf, VelocityChannel chan) {
+        range = new MicroSecondTimeRange(rf);
+        this.chan = chan;
+    }
+
+    public MicroSecondDate getBegin() {
         return range.getBeginTime();
     }
 
@@ -28,6 +32,11 @@ public class VelocityRequest {
 
     public VelocityChannel getChannel() {
         return chan;
+    }
+
+    public String toString() {
+        return "Request for " + chan + " from " + getBegin() + " to "
+                + getEnd();
     }
 
     private VelocityChannel chan;
