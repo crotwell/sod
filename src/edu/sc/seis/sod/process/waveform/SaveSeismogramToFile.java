@@ -23,6 +23,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -183,16 +184,16 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     protected void updateMasterDataSet(File childDataset, String childName)
             throws FileNotFoundException, XMLStreamException, IOException {
-        //the merging code has been rendered useless since the advent of the
+        // the merging code has been rendered useless since the advent of the
         // newlines
-        //after end elements, So I'm just going to do it this way since I know
+        // after end elements, So I'm just going to do it this way since I know
         // this works.
         StAXFileWriter masterDSWriter = XMLUtil.openXMLFileForAppending(masterDSFile);
         dsToXML.writeRef(masterDSWriter.getStreamWriter(),
                          getRelativeURLString(masterDSFile, childDataset),
                          childName);
         masterDSWriter.close();
-        //      }
+        // }
     }
 
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
@@ -203,7 +204,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return saveInDataSet(event, channel, seismograms, fileType, null);
     }
 
-    //Used to save a seismogram locally.
+    // Used to save a seismogram locally.
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
@@ -328,7 +329,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         if(lastDataSet != null && lastDataSet.getEvent().equals(event)) {
             return lastDataSet;
         }
-        //always create it so we can get the file name
+        // always create it so we can get the file name
         logger.debug("creating new dataset " + getLabel(event));
         DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
                                             getLabel(event),
@@ -348,10 +349,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
             XMLUtil.writeEndElementWithNewLine(writer);
             staxWriter.close();
         }
-        //if (lastDataSetStaxWriter != null){
-        //lastDataSetStaxWriter.close();
-        //}
-        //lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
+        // if (lastDataSetStaxWriter != null){
+        // lastDataSetStaxWriter.close();
+        // }
+        // lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
         lastDataSet = dataset;
         lastEvent = event;
         return dataset;
@@ -365,11 +366,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                             new AuditInfo[0]);
         File dsmlFile = new File(eventDirectory,
                                  DataSetToXML.createFileName(dataset));
-        if(dsmlFile.exists())
+        if(dsmlFile.exists()) {
             return dsmlFile;
-        else
-            throw new FileNotFoundException("Dsml File not found for "
-                    + EventUtil.getEventInfo(event));
+        }
+        throw new FileNotFoundException("Dsml File not found for "
+                + EventUtil.getEventInfo(event));
     }
 
     public DataSet prepareDataset(EventAccessOperations event, String subDSName)
@@ -412,7 +413,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     static File dataSetFile;
 
-    //static StAXFileWriter lastDataSetStaxWriter;
+    // static StAXFileWriter lastDataSetStaxWriter;
     static EventAccessOperations lastEvent = null;
 
     static DataSetToXMLStAX dsToXML = new DataSetToXMLStAX();
