@@ -1,11 +1,9 @@
 package edu.sc.seis.sod.process.waveform;
 
 import java.awt.Dimension;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.transform.TransformerException;
@@ -138,14 +136,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private static SaveSeismogramToFile extractSaveSeis(String xpath,
                                                         String errorMsgIfNotFound)
-            throws ConfigurationException{
+            throws ConfigurationException {
         Element saveSeisConf = DOMHelper.extractElement(Start.getConfig(),
                                                         xpath);
-        if(saveSeisConf != null) {
-            return new SaveSeismogramToFile(saveSeisConf);
-        } else {
+        if(saveSeisConf == null) {
             throw new ConfigurationException(errorMsgIfNotFound);
         }
+        return new SaveSeismogramToFile(saveSeisConf);
     }
 
     public MemoryDataSetSeismogram[] wrap(DataSetSeismogram[] dss)
@@ -154,7 +151,8 @@ public class RSChannelInfoPopulator implements WaveformProcess {
         for(int i = 0; i < memDss.length; i++) {
             memDss[i] = new MemoryDataSetSeismogram(((URLDataSetSeismogram)dss[i]).getSeismograms(),
                                                     dss[i].getDataSet(),
-                                                    dss[i].getName());
+                                                    dss[i].getName(),
+                                                    dss[i].getRequestFilter());
         }
         return memDss;
     }
@@ -175,19 +173,19 @@ public class RSChannelInfoPopulator implements WaveformProcess {
             }
         }
         dss = (DataSetSeismogram[])acceptableSeis.toArray(new DataSetSeismogram[0]);
-//        RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
-//        rsDisplay.add(wrap(dss));
-//        File temp = File.createTempFile("tempRecSec", "png");
-//        rsDisplay.outputToPNG(temp);
-//        temp.delete();
-//        HashMap pixelMap = rsDisplay.getPixelMap();
+        // RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
+        // rsDisplay.add(wrap(dss));
+        // File temp = File.createTempFile("tempRecSec", "png");
+        // rsDisplay.outputToPNG(temp);
+        // temp.delete();
+        // HashMap pixelMap = rsDisplay.getPixelMap();
         int[] channelIds = getChannelDBIds(dss);
         for(int j = 0; j < channelIds.length; j++) {
             if(!recordSectionChannel.channelExists(id, eq_dbid, channelIds[j])) {
                 recordSectionChannel.insert(id,
                                             eq_dbid,
                                             channelIds[j],
-                                            new double[]{0,0,0,0},//(double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
+                                            new double[] {0, 0, 0, 0},// (double[])pixelMap.get(dss[j].getRequestFilter().channel_id),
                                             0,
                                             internalId);
             }
