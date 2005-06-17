@@ -8,8 +8,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 
 public class HasResponse implements ChannelSubsetter {
 
-    public boolean accept(Channel channel, NetworkAccess network)
-            throws Exception {
+    public boolean accept(Channel channel, NetworkAccess network) {
         try {
             return network.retrieve_instrumentation(channel.get_id(),
                                                     channel.get_id().begin_time) != null;
