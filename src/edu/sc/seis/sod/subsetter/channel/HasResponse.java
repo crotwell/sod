@@ -10,8 +10,9 @@ public class HasResponse implements ChannelSubsetter {
 
     public boolean accept(Channel channel, NetworkAccess network) {
         try {
-            return network.retrieve_instrumentation(channel.get_id(),
-                                                    channel.get_id().begin_time) != null;
+            network.retrieve_instrumentation(channel.get_id(),
+                                             channel.get_id().begin_time);
+            return true;
         } catch(ChannelNotFound e) {
             logger.debug("No instrumentation for "
                     + ChannelIdUtil.toString(channel.get_id()));

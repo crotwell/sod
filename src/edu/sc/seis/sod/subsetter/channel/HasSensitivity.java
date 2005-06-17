@@ -14,9 +14,6 @@ public class HasSensitivity implements ChannelSubsetter {
         try {
             Instrumentation instrumentation = network.retrieve_instrumentation(channel.get_id(),
                                                                                channel.get_id().begin_time);
-            if(instrumentation == null) {
-                return false;
-            }
             return ResponseGain.isValid(instrumentation.the_response.the_sensitivity);
         } catch(ChannelNotFound e) {
             logger.debug("No instrumentation for "
