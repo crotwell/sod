@@ -34,6 +34,8 @@
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
+            <ref name="hasSensitivity"/>
+            <ref name="repairSensitivity"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -61,6 +63,8 @@
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
+            <ref name="hasSensitivity"/>
+            <ref name="repairSensitivity"/>
         </choice>
     </define>
     <define name="singleLetterOrNumber">
@@ -426,9 +430,23 @@
             <xsd:annotation>
                 <summary>Passes a channel if the network server has reponse information for it</summary>
             </xsd:annotation>
-            <zeroOrMore>
-                <ref name="channelLogical"/>
-            </zeroOrMore>
+            <empty/>
+        </element>
+    </define>
+    <define name="hasSensitivity">
+        <element name="hasSensitivity">
+            <xsd:annotation>
+                <summary>Passes a channel if the network server has sensitivity information for it</summary>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="repairSensitivity">
+        <element name="repairSensitivity">
+            <xsd:annotation>
+                <summary>Corrects sensitivity information for a channel from the response if the sensitivity is incorrect.</summary>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
 </grammar>

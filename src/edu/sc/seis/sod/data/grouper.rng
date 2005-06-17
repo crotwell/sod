@@ -62,17 +62,17 @@
             </oneOrMore>
         </element>
     </define>
-    <define name="AND7">
-        <element name="siteAND">
-            <oneOrMore>
-                <ref name="siteLogical2"/>
-            </oneOrMore>
-        </element>
-    </define>
     <define name="AND">
         <element name="stationAND">
             <oneOrMore>
                 <ref name="stationLogical"/>
+            </oneOrMore>
+        </element>
+    </define>
+    <define name="AND7">
+        <element name="siteAND">
+            <oneOrMore>
+                <ref name="siteLogical2"/>
             </oneOrMore>
         </element>
     </define>
@@ -220,6 +220,11 @@
     <define name="depthRange3">
         <element name="stationDepthRange">
             <ref name="range2"/>
+        </element>
+    </define>
+    <define name="hasSensitivity">
+        <element name="hasSensitivity">
+            <empty/>
         </element>
     </define>
     <define name="stationPointBackAzimuth4">
@@ -880,17 +885,17 @@
             <data type="string"/>
         </element>
     </define>
+    <define name="code">
+        <element name="stationCode">
+            <data type="string"/>
+        </element>
+    </define>
     <define name="code5">
         <element name="stationCode">
             <data type="string"/>
         </element>
     </define>
     <define name="code3">
-        <element name="stationCode">
-            <data type="string"/>
-        </element>
-    </define>
-    <define name="code">
         <element name="stationCode">
             <data type="string"/>
         </element>
@@ -1209,6 +1214,8 @@
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
+            <ref name="hasSensitivity"/>
+            <ref name="repairSensitivity"/>
         </choice>
     </define>
     <define name="area2">
@@ -1421,6 +1428,11 @@
             </choice>
         </element>
     </define>
+    <define name="repairSensitivity">
+        <element name="repairSensitivity">
+            <empty/>
+        </element>
+    </define>
     <define name="orientationCode">
         <element name="orientationCode">
             <ref name="singleLetterOrNumber"/>
@@ -1542,6 +1554,8 @@
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
+            <ref name="hasSensitivity"/>
+            <ref name="repairSensitivity"/>
         </choice>
     </define>
     <define name="NOT">
@@ -1591,9 +1605,7 @@
     </define>
     <define name="hasResponse">
         <element name="hasResponse">
-            <zeroOrMore>
-                <ref name="channelLogical"/>
-            </zeroOrMore>
+            <empty/>
         </element>
     </define>
     <define name="singleLetterOrNumber">
@@ -2418,77 +2430,6 @@
             </group>
         </choice>
     </define>
-    <define name="time10">
-        <choice>
-            <data type="string"/>
-            <element name="earlier">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
-            </element>
-            <element name="later">
-                <element name="timeInterval">
-                    <interleave>
-                        <element name="unit">
-                            <choice>
-                                <value>HOUR</value>
-                                <value>NANOSECOND</value>
-                                <value>MICROSECOND</value>
-                                <value>MILLISECOND</value>
-                                <value>SECOND</value>
-                                <value>MINUTE</value>
-                                <value>DAY</value>
-                                <value>WEEK</value>
-                                <value>FORTNIGHT</value>
-                                <value>GREGORIAN_YEAR</value>
-                            </choice>
-                        </element>
-                        <element name="value">
-                            <data type="float"/>
-                        </element>
-                    </interleave>
-                </element>
-            </element>
-            <element name="now">
-                <empty/>
-            </element>
-            <group>
-                <optional>
-                    <element name="year">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="month">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="day">
-                        <data type="integer"/>
-                    </element>
-                </optional>
-            </group>
-        </choice>
-    </define>
     <define name="time5">
         <choice>
             <data type="string"/>
@@ -2703,6 +2644,77 @@
         </choice>
     </define>
     <define name="time6">
+        <choice>
+            <data type="string"/>
+            <element name="earlier">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="later">
+                <element name="timeInterval">
+                    <interleave>
+                        <element name="unit">
+                            <choice>
+                                <value>HOUR</value>
+                                <value>NANOSECOND</value>
+                                <value>MICROSECOND</value>
+                                <value>MILLISECOND</value>
+                                <value>SECOND</value>
+                                <value>MINUTE</value>
+                                <value>DAY</value>
+                                <value>WEEK</value>
+                                <value>FORTNIGHT</value>
+                                <value>GREGORIAN_YEAR</value>
+                            </choice>
+                        </element>
+                        <element name="value">
+                            <data type="float"/>
+                        </element>
+                    </interleave>
+                </element>
+            </element>
+            <element name="now">
+                <empty/>
+            </element>
+            <group>
+                <optional>
+                    <element name="year">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="month">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="day">
+                        <data type="integer"/>
+                    </element>
+                </optional>
+            </group>
+        </choice>
+    </define>
+    <define name="time10">
         <choice>
             <data type="string"/>
             <element name="earlier">
