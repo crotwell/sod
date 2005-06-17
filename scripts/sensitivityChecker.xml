@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+        <hasResponse/>
+        <channelNOT>
+            <hasSensitivity/>
+        </channelNOT>
+        <printlineChannelProcessor>
+            <filename>invalidSensitivityChannels</filename>
+            <template>$channel</template>
+        </printlineChannelProcessor>
+        <repairSensitivity/>
+        <printlineChannelProcessor>
+            <filename>inferrableSensitivityChannels</filename>
+            <template>$channel</template>
+        </printlineChannelProcessor>
+    </networkArm>
+</sod>
