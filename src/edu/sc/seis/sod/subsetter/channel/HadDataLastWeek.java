@@ -20,8 +20,9 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public boolean accept(Channel channel, NetworkAccess network) throws Exception {
-        //Make 7 requests for a day as the BUD likes it that way
+    public boolean accept(Channel channel, NetworkAccess network)
+            throws Exception {
+        // Make 7 requests for a day as the BUD likes it that way
         RequestFilter[] reqs = new RequestFilter[7];
         MicroSecondDate now = new MicroSecondDate();
         for(int i = 0; i < reqs.length; i++) {
@@ -34,11 +35,10 @@ public class HadDataLastWeek implements ChannelSubsetter {
         if(fixDC.getDataCenter().available_data(reqs).length > 0) {
             logger.debug(ChannelIdUtil.toStringNoDates(channel) + " had data");
             return true;
-        } else {
-            logger.debug(ChannelIdUtil.toStringNoDates(channel)
-                    + " didn't have data");
-            return false;
         }
+        logger.debug(ChannelIdUtil.toStringNoDates(channel)
+                + " didn't have data");
+        return false;
     }
 
     private TimeInterval makeDayInterval(int days) {
