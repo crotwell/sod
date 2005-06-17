@@ -70,9 +70,10 @@ public class PrintlineVelocitizer {
     private void appendToFile(String fileTemplate,
                               String toAppend,
                               VelocityContext ctx) throws IOException {
-        String filename = FissuresFormatter.filize(simple.evaluate(fileTemplate, ctx));
+        String filename = FissuresFormatter.filize(simple.evaluate(fileTemplate,
+                                                                   ctx));
         File file = new File(filename);
-        file.getParentFile().mkdirs();
+        file.getAbsoluteFile().getParentFile().mkdirs();
         FileWriter fwriter = new FileWriter(file, true);
         BufferedWriter bwriter = null;
         try {
