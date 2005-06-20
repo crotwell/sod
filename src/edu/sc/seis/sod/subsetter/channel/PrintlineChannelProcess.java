@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.channel;
 import java.io.IOException;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
@@ -17,7 +17,7 @@ public class PrintlineChannelProcess implements ChannelSubsetter {
         template = DOMHelper.extractText(config, "template", DEFAULT_TEMPLATE);
     }
 
-    public boolean accept(Channel channel, NetworkAccess network)
+    public boolean accept(Channel channel, ProxyNetworkAccess network)
             throws IOException {
         velocitizer.evaluate(filename, template, channel);
         return true;

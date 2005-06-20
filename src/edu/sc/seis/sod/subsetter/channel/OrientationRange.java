@@ -3,8 +3,8 @@ package edu.sc.seis.sod.subsetter.channel;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.Orientation;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.TauP.SphericalCoords;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 
 public class OrientationRange implements ChannelSubsetter {
@@ -15,7 +15,7 @@ public class OrientationRange implements ChannelSubsetter {
         offset = Float.parseFloat(DOMHelper.extractText(config, "maxOffset"));
     }
 
-    public boolean accept(Channel e, NetworkAccess network) throws Exception {
+    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception {
         Orientation ori = e.an_orientation;
         double actualDistance = SphericalCoords.distance(ori.dip,
                                                          ori.azimuth,

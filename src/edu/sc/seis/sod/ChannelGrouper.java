@@ -27,6 +27,7 @@ import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.subsetter.channel.ChannelSubsetter;
@@ -116,7 +117,7 @@ public class ChannelGrouper {
                                         Channel[] successfulChannels = (Channel[])channelGroup.toArray(new Channel[0]);
                                         if(sanityCheck(successfulChannels)) {
                                             groupableChannels.add(channelGroup);
-                                            //remove the channels that are
+                                            // remove the channels that are
                                             // successfully grouped
                                             for(int count = 0; count < successfulChannels.length; count++) {
                                                 chn.remove(successfulChannels[count]);
@@ -159,7 +160,7 @@ public class ChannelGrouper {
                                         if(accept) {
                                             ChannelSubsetter channelSubsetter = (ChannelSubsetter)subsetter;
                                             for(int count = 0; count < channels.length; count++) {
-                                                NetworkAccess network = Start.getNetworkArm()
+                                                ProxyNetworkAccess network = Start.getNetworkArm()
                                                         .getNetwork(channels[count].get_id().network_id);
                                                 if(!channelSubsetter.accept(channels[count],
                                                                             network)) {
@@ -261,7 +262,7 @@ public class ChannelGrouper {
         return bandGain;
     }
 
-    //If the config file in invalid the validator throws a SAXException
+    // If the config file in invalid the validator throws a SAXException
     private Element[] loadRules(String configFileLoc) {
         if(configFileLoc == null) {
             return new Element[0];

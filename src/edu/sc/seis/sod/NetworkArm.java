@@ -27,6 +27,7 @@ import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
@@ -82,7 +83,7 @@ public class NetworkArm implements Arm {
         return !armFinished;
     }
 
-    public NetworkAccess getNetwork(NetworkId network_id) throws Exception {
+    public ProxyNetworkAccess getNetwork(NetworkId network_id) throws Exception {
         NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
         for(int i = 0; i < tmpNetDbs.length; i++) {
             if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
@@ -247,7 +248,7 @@ public class NetworkArm implements Arm {
                             dbid = netTable.put(allNets[i].get_attributes());
                         }
                         NetworkDbObject netDb = new NetworkDbObject(dbid,
-                                                                    allNets[i]);
+                                                                    (ProxyNetworkAccess)allNets[i]);
                         networkDBs.add(netDb);
                         change(allNets[i], Status.get(Stage.NETWORK_SUBSETTER,
                                                       Standing.SUCCESS));
@@ -517,7 +518,7 @@ public class NetworkArm implements Arm {
         synchronized(this) {
             statusChanged("Getting channels for " + siteDbObject);
             List successes = new ArrayList();
-            NetworkAccess networkAccess = networkDbObject.getNetworkAccess();
+            ProxyNetworkAccess networkAccess = networkDbObject.getNetworkAccess();
             Site site = siteDbObject.getSite();
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());

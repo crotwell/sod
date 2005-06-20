@@ -2,12 +2,12 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.subsetter.dataCenter.FixedDataCenter;
 
@@ -20,7 +20,7 @@ public class HadDataLastWeek implements ChannelSubsetter {
         fixDC = new FixedDataCenter(DOMHelper.getElement(el, "fixedDataCenter"));
     }
 
-    public boolean accept(Channel channel, NetworkAccess network)
+    public boolean accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         // Make 7 requests for a day as the BUD likes it that way
         RequestFilter[] reqs = new RequestFilter[7];

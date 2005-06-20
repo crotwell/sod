@@ -4,7 +4,7 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.subsetter.EffectiveTimeOverlap;
 
@@ -20,7 +20,7 @@ public class ChannelEffectiveTimeOverlap extends EffectiveTimeOverlap implements
         super(tr);
     }
 
-    public boolean accept(Channel channel, NetworkAccess network) {
+    public boolean accept(Channel channel, ProxyNetworkAccess network) {
         return overlaps(channel.effective_time);
     }
 

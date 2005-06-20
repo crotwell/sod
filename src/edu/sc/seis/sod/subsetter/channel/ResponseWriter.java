@@ -6,9 +6,9 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ResponsePrint;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
@@ -21,7 +21,7 @@ public class ResponseWriter implements ChannelSubsetter {
                                          DEFAULT_TEMPLATE);
     }
 
-    public boolean accept(Channel chan, NetworkAccess network) throws Exception {
+    public boolean accept(Channel chan, ProxyNetworkAccess network) throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,

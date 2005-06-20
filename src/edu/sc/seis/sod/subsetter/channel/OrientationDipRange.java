@@ -2,7 +2,7 @@ package edu.sc.seis.sod.subsetter.channel;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 
 public class OrientationDipRange extends RangeSubsetter implements
@@ -12,7 +12,7 @@ public class OrientationDipRange extends RangeSubsetter implements
         super(config);
     }
 
-    public boolean accept(Channel e, NetworkAccess network) throws Exception {
+    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception {
         return accept(e.an_orientation.dip);
     }
 }// OrientationDipRange

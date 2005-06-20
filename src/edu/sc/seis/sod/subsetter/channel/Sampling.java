@@ -4,9 +4,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.subsetter.Interval;
@@ -34,7 +34,7 @@ public class Sampling extends RangeSubsetter implements ChannelSubsetter {
         max = maxSampling.getFrequency().getValue(UnitImpl.HERTZ);
     }
 
-    public boolean accept(Channel channel, NetworkAccess network) throws Exception {
+    public boolean accept(Channel channel, ProxyNetworkAccess network) throws Exception {
         SamplingImpl channelSampling = (SamplingImpl)channel.sampling_info;
         double chanSampling = channelSampling.getFrequency()
                 .getValue(UnitImpl.HERTZ);

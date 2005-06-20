@@ -4,6 +4,7 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 
 /**
@@ -16,7 +17,7 @@ public class StationHas extends ChannelLogicalSubsetter implements
         super(config);
     }
 
-    public boolean accept(Channel channel, NetworkAccess network)
+    public boolean accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
         Iterator it = subsetters.iterator();
         Channel[] allChans = network.retrieve_for_station(channel.my_site.my_station.get_id());
@@ -32,7 +33,7 @@ public class StationHas extends ChannelLogicalSubsetter implements
 
     private static boolean atLeastOneChannelPasses(ChannelSubsetter filter,
                                                    Channel[] chans,
-                                                   NetworkAccess net)
+                                                   ProxyNetworkAccess net)
             throws Exception {
         for(int i = 0; i < chans.length; i++) {
             if(filter.accept(chans[i], net)) {

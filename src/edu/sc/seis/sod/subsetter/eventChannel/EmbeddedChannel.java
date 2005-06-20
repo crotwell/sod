@@ -5,7 +5,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
@@ -38,7 +38,7 @@ public class EmbeddedChannel implements EventChannelSubsetter {
     public StringTree accept(EventAccessOperations o,
                              Channel channel,
                              CookieJar cookieJar) throws Exception {
-        NetworkAccess network = Start.getNetworkArm()
+        ProxyNetworkAccess network = Start.getNetworkArm()
                 .getNetwork(channel.get_id().network_id);
         return new StringTreeLeaf(this,
                                   channelSubsetter.accept(channel, network),

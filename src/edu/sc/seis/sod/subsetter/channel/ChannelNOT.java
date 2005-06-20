@@ -3,7 +3,7 @@ package edu.sc.seis.sod.subsetter.channel;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.ConfigurationException;
 
 public final class ChannelNOT extends  ChannelLogicalSubsetter
@@ -13,7 +13,7 @@ public final class ChannelNOT extends  ChannelLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(Channel e, NetworkAccess network) throws Exception{
+    public boolean accept(Channel e, ProxyNetworkAccess network) throws Exception{
         Iterator it = subsetters.iterator();
         if (it.hasNext()) {
             ChannelSubsetter filter = (ChannelSubsetter)it.next();
