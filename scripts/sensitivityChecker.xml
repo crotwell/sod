@@ -9,14 +9,14 @@
         <channelNOT>
             <hasSensitivity/>
         </channelNOT>
-        <printlineChannelProcessor>
+        <printlineChannelProcess>
             <filename>invalidSensitivityChannels</filename>
             <template>$channel</template>
-        </printlineChannelProcessor>
+        </printlineChannelProcess>
         <repairSensitivity/>
-        <printlineChannelProcessor>
+        <printlineChannelProcess>
             <filename>inferrableSensitivityChannels</filename>
             <template>$channel</template>
-        </printlineChannelProcessor>
+        </printlineChannelProcess>
     </networkArm>
 </sod>

@@ -53,6 +53,6 @@
                 <gainCode>O</gainCode>
             </channelNOT>
         </channelAND>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
 </sod>
