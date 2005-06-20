@@ -379,7 +379,7 @@
         </element>
     </define>
     <define name="printline">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <xsd:annotation>
                 <summary>Prints every successful channel to the console or to the specified
                 file</summary>
