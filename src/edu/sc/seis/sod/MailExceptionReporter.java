@@ -40,6 +40,9 @@ public class MailExceptionReporter implements ExceptionReporter {
         logger.info("Exception mailer going to " + props.getProperty(TO)
                 + " from " + props.getProperty(FROM) + " through "
                 + props.getProperty(SMTP) + " created");
+        if(props.containsKey(LIMIT)) {
+            limit = Integer.parseInt(props.getProperty(LIMIT));
+        }
     }
 
     private void checkProperties() throws ConfigurationException {
@@ -58,24 +61,32 @@ public class MailExceptionReporter implements ExceptionReporter {
 
     public void report(String message, Throwable e, List sections)
             throws Exception {
-        Session session = Session.getDefaultInstance(props, null);
-        Message msg = new MimeMessage(session);
-        InternetAddress addressFrom = new InternetAddress(props.getProperty(FROM));
-        msg.setFrom(addressFrom);
-        Address addressTo = new InternetAddress(props.getProperty(TO));
-        msg.setRecipient(Message.RecipientType.TO, addressTo);
-        String subject = props.getProperty(SUBJECT) + " " + message;
-        msg.setSubject(subject);
-        Multipart multipart = new MimeMultipart();
-        BodyPart bodyPart = new MimeBodyPart();
-        bodyPart.setText(message + "\n" + ExceptionReporterUtils.getTrace(e));
-        multipart.addBodyPart(bodyPart);
-        Iterator it = sections.iterator();
-        while(it.hasNext()) {
-            multipart.addBodyPart(createAttachement((Section)it.next()));
+        if(numSent < limit) {
+            numSent++;
+            Session session = Session.getDefaultInstance(props, null);
+            Message msg = new MimeMessage(session);
+            InternetAddress addressFrom = new InternetAddress(props.getProperty(FROM));
+            msg.setFrom(addressFrom);
+            Address addressTo = new InternetAddress(props.getProperty(TO));
+            msg.setRecipient(Message.RecipientType.TO, addressTo);
+            String subject = props.getProperty(SUBJECT) + " " + message;
+            msg.setSubject(subject);
+            Multipart multipart = new MimeMultipart();
+            BodyPart bodyPart = new MimeBodyPart();
+            bodyPart.setText(message + "\n"
+                    + ExceptionReporterUtils.getTrace(e));
+            multipart.addBodyPart(bodyPart);
+            Iterator it = sections.iterator();
+            while(it.hasNext()) {
+                multipart.addBodyPart(createAttachement((Section)it.next()));
+            }
+            msg.setContent(multipart);
+            Transport.send(msg);
+        } else {
+            logger.debug("Not sending an email since " + numSent
+                    + " have been sent and " + limit
+                    + " is the max number to send");
         }
-        msg.setContent(multipart);
-        Transport.send(msg);
     }
 
     private BodyPart createAttachement(Section section) throws IOException,
@@ -93,26 +104,35 @@ public class MailExceptionReporter implements ExceptionReporter {
     }
 
     /**
-     * The key mail.smtp.host specifies the smtp server you want to use
+     * mail.smtp.host specifies the smtp server you want to use
      */
     public static final String SMTP = "mail.smtp.host";
 
     /**
-     * the key mail.to specifies the recipient of the exception email
+     * mail.to specifies the recipient of the exception email
      */
     public static final String TO = "mail.to";
 
     /**
-     * the key mail.from specifies the sender of the exception email
+     * mail.from specifies the sender of the exception email
      */
     public static final String FROM = "mail.from";
 
     /**
-     * the key mail.subject specifies the subject of the exception email
+     * mail.subject specifies the subject of the exception email
      */
     public static final String SUBJECT = "mail.subject";
 
+    /**
+     * mail.limit specifies the number of emails to send
+     */
+    public static final String LIMIT = "mail.limit";
+
     private Properties props;
+
+    private int numSent = 0;
+
+    private int limit = Integer.MAX_VALUE;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(MailExceptionReporter.class);
 
