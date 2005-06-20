@@ -153,6 +153,12 @@ public class Start {
                 System.out.println("loaded file props from " + args[i + 1]);
             }
         }
+        for(int i = 0; i < args.length - 1; i++) {
+        	if(args[i].equals("-NameServiceIOR")){
+        		loadIOR(new FileInputStream(args[i + 1]));
+        		System.out.println("loaded IOR from " + args[i + 1]);
+        	}
+        }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
         //now override the properties with the properties specified
@@ -480,6 +486,11 @@ public class Start {
 
     public static void loadProps(InputStream propStream) {
         Initializer.loadProps(propStream, props);
+    }
+    
+    public static void loadIOR(FileInputStream iorLocFile) throws IOException{
+    	Initializer.loadProps(iorLocFile, props);
+    	iorLocFile.close();
     }
 
     public static void add(Properties newProps) {
