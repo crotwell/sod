@@ -1,7 +1,7 @@
 package edu.sc.seis.sod.editor;
 
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
-import edu.sc.seis.sod.subsetter.channel.PrintlineChannelProcessor;
+import edu.sc.seis.sod.subsetter.channel.PrintlineChannelProcess;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
@@ -16,7 +16,7 @@ public class PrintlineChannelEditor extends PrintlineEditor {
     }
 
     protected String getDefaultTemplateValue() {
-        return PrintlineChannelProcessor.DEFAULT_TEMPLATE;
+        return PrintlineChannelProcess.DEFAULT_TEMPLATE;
     }
 
     private SimpleVelocitizer sv = new SimpleVelocitizer();
