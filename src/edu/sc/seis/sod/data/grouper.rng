@@ -1467,7 +1467,7 @@
         </element>
     </define>
     <define name="printline">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>

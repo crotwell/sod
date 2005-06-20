@@ -37666,7 +37666,7 @@
         </choice>
     </define>
     <define name="printline4">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37680,7 +37680,7 @@
         </element>
     </define>
     <define name="printline12">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37694,7 +37694,7 @@
         </element>
     </define>
     <define name="printline3">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37708,7 +37708,7 @@
         </element>
     </define>
     <define name="printline13">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37722,7 +37722,7 @@
         </element>
     </define>
     <define name="printline7">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37736,7 +37736,7 @@
         </element>
     </define>
     <define name="printline14">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37750,7 +37750,7 @@
         </element>
     </define>
     <define name="printline6">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37764,7 +37764,7 @@
         </element>
     </define>
     <define name="printline5">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37778,7 +37778,7 @@
         </element>
     </define>
     <define name="printline8">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37792,7 +37792,7 @@
         </element>
     </define>
     <define name="printline">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37806,7 +37806,7 @@
         </element>
     </define>
     <define name="printline11">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37820,7 +37820,7 @@
         </element>
     </define>
     <define name="printline9">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37834,7 +37834,7 @@
         </element>
     </define>
     <define name="printline10">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
@@ -37848,7 +37848,7 @@
         </element>
     </define>
     <define name="printline2">
-        <element name="printlineChannelProcessor">
+        <element name="printlineChannelProcess">
             <optional>
                 <element name="filename">
                     <text/>
