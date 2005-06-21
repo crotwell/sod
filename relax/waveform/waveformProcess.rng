@@ -437,12 +437,12 @@
                 <include/>
             </xsd:annotation>
             <optional>
-                <element name="filename">
+                <element name="template">
                     <text/>
                 </element>
             </optional>
             <optional>
-                <element name="template">
+                <element name="filename">
                     <text/>
                 </element>
             </optional>
