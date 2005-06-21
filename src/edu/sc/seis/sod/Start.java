@@ -154,21 +154,29 @@ public class Start {
             }
         }
         for(int i = 0; i < args.length - 1; i++) {
-        	if(args[i].equals("-NameServiceIOR")){
-        		loadIOR(new FileInputStream(args[i + 1]));
-        		System.out.println("loaded IOR from " + args[i + 1]);
-        	}
+            if(args[i].equals("-NameServiceIOR")) {
+                InputStream iorInput = null;
+                try {
+                    iorInput = new FileInputStream(args[i + 1]);
+                    loadProps(iorInput);
+                    System.out.println("loaded IOR from " + args[i + 1]);
+                } finally {
+                    if(iorInput != null) {
+                        iorInput.close();
+                    }
+                }
+            }
         }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
-        //now override the properties with the properties specified
+        // now override the properties with the properties specified
         // in the configuration file.
         loadRunProps(getConfig());
         ConnMgr.loadDbProperties(props, args);
-        //Must happen after the run props have been loaded
+        // Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
-        //here the orb must be initialized ..
-        //configure commonAccess
+        // here the orb must be initialized ..
+        // configure commonAccess
         CommonAccess.getCommonAccess().setProps(props);
         CommonAccess.getCommonAccess().initORB(args, props);
     }
@@ -176,7 +184,7 @@ public class Start {
     public static void loadRunProps(Element doc) throws ConfigurationException {
         Element propertiesElement = SodUtil.getElement(doc, "properties");
         if(propertiesElement != null) {
-            //load the properties fromt the configurationfile.
+            // load the properties fromt the configurationfile.
             runProps = new RunProperties(propertiesElement);
         } else {
             logger.debug("No properties specified in the configuration file");
@@ -486,11 +494,6 @@ public class Start {
 
     public static void loadProps(InputStream propStream) {
         Initializer.loadProps(propStream, props);
-    }
-    
-    public static void loadIOR(FileInputStream iorLocFile) throws IOException{
-    	Initializer.loadProps(iorLocFile, props);
-    	iorLocFile.close();
     }
 
     public static void add(Properties newProps) {
