@@ -522,7 +522,7 @@ public class Start {
 
     private static String DATABASE_DIR = "SodDb";
 
-    public static final String DBURL_KEY = "sod.dburl";
+    public static final String DBURL_KEY = "fissuresUtil.database.url";
 
     public static boolean RUN_ARMS = true;
 
