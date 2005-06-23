@@ -106,17 +106,15 @@ public class VelocityStation extends Station {
     public String getOrientedLatitude() {
         if(sta.my_location.latitude < 0) {
             return df.format(-sta.my_location.latitude) + " S";
-        } else {
-            return df.format(sta.my_location.latitude) + " N";
         }
+        return df.format(sta.my_location.latitude) + " N";
     }
 
     public String getOrientedLongitude() {
         if(sta.my_location.longitude < 0) {
             return df.format(-sta.my_location.longitude) + " W";
-        } else {
-            return df.format(sta.my_location.longitude) + " E";
         }
+        return df.format(sta.my_location.longitude) + " E";
     }
 
     public String getDepth() {
@@ -148,6 +146,10 @@ public class VelocityStation extends Station {
         double baz = new DistAz(this, event).getBaz();
         return FissuresFormatter.formatQuantity(new QuantityImpl(baz,
                                                                  UnitImpl.DEGREE));
+    }
+
+    public String getURL() {
+        return "stations/" + getNetCode() + "/" + getCode();
     }
 
     public boolean equals(Object o) {
@@ -190,7 +192,7 @@ public class VelocityStation extends Station {
     private DecimalFormat df = new DecimalFormat("0.00");
 
     public void insertIntoContext(VelocityContext ctx) {
-            ctx.put("station", this);
-            getNet().insertIntoContext(ctx);
+        ctx.put("station", this);
+        getNet().insertIntoContext(ctx);
     }
 }
