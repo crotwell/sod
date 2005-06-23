@@ -172,7 +172,7 @@ public class Start {
         // now override the properties with the properties specified
         // in the configuration file.
         loadRunProps(getConfig());
-        ConnMgr.loadDbProperties(props, args);
+        ConnMgr.installDbProperties(props, args);
         // Must happen after the run props have been loaded
         IndexTemplate.setConfigFileLoc();
         // here the orb must be initialized ..
