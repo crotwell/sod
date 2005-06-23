@@ -64,17 +64,15 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public String getOrientedLatitude() {
         if(origin.my_location.latitude < 0) {
             return df.format(-origin.my_location.latitude) + " S";
-        } else {
-            return df.format(origin.my_location.latitude) + " N";
         }
+        return df.format(origin.my_location.latitude) + " N";
     }
 
     public String getOrientedLongitude() {
         if(origin.my_location.longitude < 0) {
             return df.format(-origin.my_location.longitude) + " W";
-        } else {
-            return df.format(origin.my_location.longitude) + " E";
         }
+        return df.format(origin.my_location.longitude) + " E";
     }
 
     public String getDepth() {
@@ -145,10 +143,10 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getURL() {
-        return makeDateIdentifier(this);
+        return "earthquakes/" + makeDateIdentifier(this);
     }
 
-    private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HHmmss");
+    private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
     static {
         fullDateIdentifier.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
