@@ -111,9 +111,9 @@ public class NetworkArm implements Arm {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
             logger.debug("Using event time range to constrain effective times");
-            edu.iris.Fissures.TimeRange eventQueryTimes = arm.getFinder()
+            edu.iris.Fissures.TimeRange eventQueryTimes = arm.getSource()
                     .getEventTimeRange()
-                    .getTimeRange();
+                    .getFissuresTimeRange();
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             siteEffectiveSubsetter = new SiteEffectiveTimeOverlap(eventQueryTimes);
@@ -161,8 +161,8 @@ public class NetworkArm implements Arm {
                 + refreshInterval.getValue() + " " + refreshInterval.getUnit());
         MicroSecondDate databaseTime;
         try {
-            databaseTime = queryTimeTable.getQuery(finder.getSourceName(),
-                                                   finder.getDNSName());
+            databaseTime = queryTimeTable.getQuery(finder.getName(),
+                                                   finder.getDNS());
             logger.debug("the last time the networks were checked was "
                     + databaseTime);
             MicroSecondDate lastTime = new MicroSecondDate(databaseTime);
@@ -238,8 +238,8 @@ public class NetworkArm implements Arm {
         for(int i = 0; i < allNets.length; i++) {
             try {
                 allNets[i] = BulletproofVestFactory.vestNetworkAccess(allNets[i],
-                                                                      BulletproofVestFactory.vestNetworkDC(finder.getDNSName(),
-                                                                                                           finder.getSourceName(),
+                                                                      BulletproofVestFactory.vestNetworkDC(finder.getDNS(),
+                                                                                                           finder.getName(),
                                                                                                            finder.getFissuresNamingService()));
                 if(netEffectiveSubsetter.accept(allNets[i].get_attributes())) {
                     if(attrSubsetter.accept(allNets[i].get_attributes())) {
@@ -275,8 +275,8 @@ public class NetworkArm implements Arm {
             lastPusher.setLastPusher();
         }
         // Set the time of the last check to now
-        queryTimeTable.setQuery(finder.getSourceName(),
-                                finder.getDNSName(),
+        queryTimeTable.setQuery(finder.getName(),
+                                finder.getDNS(),
                                 ClockUtil.now());
         netDbs = new NetworkDbObject[networkDBs.size()];
         networkDBs.toArray(netDbs);
