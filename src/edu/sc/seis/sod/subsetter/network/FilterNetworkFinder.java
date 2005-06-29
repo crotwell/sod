@@ -20,8 +20,8 @@ public class FilterNetworkFinder extends NetworkFinder {
 
     public synchronized ProxyNetworkDC getNetworkDC() {
         if(netDC == null) {
-            netDC = BulletproofVestFactory.vestNetworkDC(getDNSName(),
-                                                         getSourceName(),
+            netDC = BulletproofVestFactory.vestNetworkDC(getDNS(),
+                                                         getName(),
                                                          getFissuresNamingService());
             netDC = new FilterNetworkDC(netDC, patterns);
         }

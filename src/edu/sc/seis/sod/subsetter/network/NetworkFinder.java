@@ -26,8 +26,8 @@ public class NetworkFinder extends AbstractSource {
 
     public synchronized ProxyNetworkDC getNetworkDC() {
         if(netDC == null) {
-            netDC = BulletproofVestFactory.vestNetworkDC(getDNSName(),
-                                                         getSourceName(),
+            netDC = BulletproofVestFactory.vestNetworkDC(getDNS(),
+                                                         getName(),
                                                          getFissuresNamingService());
         }
         return netDC;

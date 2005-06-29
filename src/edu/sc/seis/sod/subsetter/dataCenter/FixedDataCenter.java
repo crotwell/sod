@@ -25,8 +25,8 @@ public class FixedDataCenter extends AbstractSource implements SodElement,
         super(element);
         CommonAccess commonAccess = CommonAccess.getCommonAccess();
         fissuresNamingService = commonAccess.getFissuresNamingService();
-        dns = getDNSName();
-        objectName = getSourceName();
+        dns = getDNS();
+        objectName = getName();
         dataCenter = BulletproofVestFactory.vestSeismogramDC(dns,
                                                              objectName,
                                                              fissuresNamingService);
