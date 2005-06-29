@@ -11,22 +11,23 @@ import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.DBUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 
-public class JDBCQueryTime extends SodJDBC{
-    public JDBCQueryTime() throws SQLException{
+public class JDBCQueryTime extends SodJDBC {
+
+    public JDBCQueryTime() throws SQLException {
         conn = ConnMgr.createConnection();
-        if(!DBUtil.tableExists("querytimes", conn)){
-            conn.createStatement().executeUpdate(ConnMgr.getSQL("querytimes.create"));
+        if(!DBUtil.tableExists("querytimes", conn)) {
+            conn.createStatement()
+                    .executeUpdate(ConnMgr.getSQL("querytimes.create"));
         }
         getQuery = conn.prepareStatement("SELECT query_time FROM querytimes WHERE server = ? AND dns = ?");
-        putServerDNS = conn.prepareStatement("INSERT into querytimes ( server, dns, query_time) " +
-                                                 "VALUES (?, ?, ?)");
+        putServerDNS = conn.prepareStatement("INSERT into querytimes ( server, dns, query_time) "
+                + "VALUES (?, ?, ?)");
         serverDNSExist = conn.prepareStatement("SELECT query_time FROM querytimes WHERE server = ? AND dns = ?");
         setQuery = conn.prepareStatement("UPDATE querytimes SET query_time = ? WHERE server = ? AND dns = ?");
     }
 
-
     public void setQuery(String server, String dns, MicroSecondDate time)
-        throws SQLException{
+            throws SQLException {
         if(!rowExists(server, dns)) {
             insert(server, dns, time);
         } else {
@@ -34,22 +35,18 @@ public class JDBCQueryTime extends SodJDBC{
         }
     }
 
-    public MicroSecondDate getQuery(String server, String dns) throws SQLException, NotFound{
+    public MicroSecondDate getQuery(String server, String dns)
+            throws SQLException, NotFound {
         getQuery.setString(1, server);
         getQuery.setString(2, dns);
         ResultSet rs = getQuery.executeQuery();
-        
         if(rs.next()) {
-            Timestamp t = rs.getTimestamp("query_time");
-            if (t == null) {
-                throw new NotFound("query time is null for " + server + " " + dns);
-            }
-            return new MicroSecondDate(t);
+            return new MicroSecondDate(rs.getTimestamp("query_time"));
         }
         throw new NotFound("no stored query time for " + server + " " + dns);
     }
 
-    private boolean rowExists(String server, String dns) throws SQLException{
+    private boolean rowExists(String server, String dns) throws SQLException {
         synchronized(conn) {
             serverDNSExist.setString(1, server);
             serverDNSExist.setString(2, dns);
@@ -58,7 +55,8 @@ public class JDBCQueryTime extends SodJDBC{
         }
     }
 
-    private void update(String server, String dns, MicroSecondDate d) throws SQLException{
+    private void update(String server, String dns, MicroSecondDate d)
+            throws SQLException {
         synchronized(conn) {
             setQuery.setTimestamp(1, d.getTimestamp());
             setQuery.setString(2, server);
@@ -66,8 +64,9 @@ public class JDBCQueryTime extends SodJDBC{
             setQuery.executeUpdate();
         }
     }
-    
-    private void insert(String server, String dns, MicroSecondDate d) throws SQLException{
+
+    private void insert(String server, String dns, MicroSecondDate d)
+            throws SQLException {
         synchronized(conn) {
             putServerDNS.setString(1, server);
             putServerDNS.setString(2, dns);
@@ -76,8 +75,7 @@ public class JDBCQueryTime extends SodJDBC{
         }
     }
 
-    private PreparedStatement getQuery, setQuery, serverDNSExist,
-        putServerDNS;
-    
+    private PreparedStatement getQuery, setQuery, serverDNSExist, putServerDNS;
+
     private Connection conn;
 }
