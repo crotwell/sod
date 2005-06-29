@@ -23,7 +23,7 @@ public abstract class AbstractSource{
      *
      * @return a <code>String</code> value
      */
-    public String getDNSName() {// end of for (int i=0; i<children.getSize(); i++)
+    public String getDNS() {// end of for (int i=0; i<children.getSize(); i++)
         return dns;
     }
     
@@ -33,7 +33,7 @@ public abstract class AbstractSource{
      *
      * @returns a <code>String</code> value
      */
-    public String getSourceName() {
+    public String getName() {
         return name;
     }
     
