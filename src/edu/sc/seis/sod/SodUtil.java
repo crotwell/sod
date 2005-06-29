@@ -140,7 +140,7 @@ public class SodUtil {
         if(tagName.equals("beginOffset") || tagName.equals("endOffset")) {
             tagName = "interval";
         }
-        //Load for each of the arms....
+        // Load for each of the arms....
         for(int j = 0; j < armNames.length; j++) {
             String armName = armNames[j];
             for(int i = 0; i < basePackageNames.length; i++) {
@@ -148,16 +148,17 @@ public class SodUtil {
                         + armName;
                 try {
                     return Class.forName(packageName + "." + tagName);
-                } catch(ClassNotFoundException ex) {}//will be handled at the
+                } catch(ClassNotFoundException ex) {}// will be handled at
+                // the
                 // end
             }
         }
-        //load for the base packages....
+        // load for the base packages....
         for(int i = 0; i < basePackageNames.length; i++) {
             String packageName = baseName + "." + basePackageNames[i];
             try {
                 return Class.forName(packageName + "." + tagName);
-            } catch(ClassNotFoundException ex) {}//will be handled at the
+            } catch(ClassNotFoundException ex) {}// will be handled at the
             // end
         }
         return Class.forName(baseName + "." + tagName);
@@ -230,7 +231,8 @@ public class SodUtil {
 
     private static String[] basePackageNames = {"subsetter",
                                                 "process",
-                                                "status"};
+                                                "status",
+                                                "source"};
 
     public static UnitImpl loadUnit(Element config)
             throws ConfigurationException {
@@ -294,9 +296,8 @@ public class SodUtil {
         MicroSecondDate now = ClockUtil.now();
         if(el.getTagName().equals("earlier")) {
             return now.subtract(duration).getFissuresTime();
-        } else {
-            return now.add(duration).getFissuresTime();
         }
+        return now.add(duration).getFissuresTime();
     }
 
     public static TimeInterval loadTimeInterval(Element config)
@@ -479,26 +480,26 @@ public class SodUtil {
                 return children.item(i).getNodeValue();
             }
         }
-        //nothing found, return null
+        // nothing found, return null
         return null;
     }
 
     /** returns the nested text in the tag * */
     public static String getNestedText(Element config) {
-        //logger.debug("The element name in sod util is "+config.getTagName());
+        // logger.debug("The element name in sod util is "+config.getTagName());
         String rtnValue = null;
         NodeList children = config.getChildNodes();
         Node node;
-        //logger.debug("The length of the children is "+children.getLength());
+        // logger.debug("The length of the children is "+children.getLength());
         for(int i = 0; i < children.getLength(); i++) {
             node = children.item(i);
             if(node instanceof Text) {
-                //logger.debug("In sodUtil textnode value is
+                // logger.debug("In sodUtil textnode value is
                 // "+node.getNodeValue());
                 rtnValue = node.getNodeValue();
-                //break;
+                // break;
             } else if(node instanceof Element) {
-                //logger.debug("in sod util tag name is
+                // logger.debug("in sod util tag name is
                 // "+((Element)node).getTagName());
                 rtnValue = getNestedText((Element)node);
                 break;
@@ -542,14 +543,13 @@ public class SodUtil {
             int numDirUp = countDots(relativeLoc);
             String relBase = stripDirs(noFileBase, numDirUp);
             return relBase + stripRelativeBits(relativeLoc);
-        } else {
-            String base = new File(baseLoc).getCanonicalFile().getParent();
-            int numDirUp = countDots(relativeLoc);
-            for(int i = 0; i < numDirUp; i++) {
-                base = new File(base).getParent();
-            }
-            return base + '/' + stripRelativeBits(relativeLoc);
         }
+        String base = new File(baseLoc).getCanonicalFile().getParent();
+        int numDirUp = countDots(relativeLoc);
+        for(int i = 0; i < numDirUp; i++) {
+            base = new File(base).getParent();
+        }
+        return base + '/' + stripRelativeBits(relativeLoc);
     }
 
     private static String stripDirs(String base, int numDirUp) {
