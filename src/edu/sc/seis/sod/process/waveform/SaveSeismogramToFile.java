@@ -1,8 +1,3 @@
-/**
- * SaveSeismogramToFileAlt.java
- * 
- * @author Created by Omnicore CodeGuide
- */
 package edu.sc.seis.sod.process.waveform;
 
 import java.io.File;
@@ -23,7 +18,6 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
@@ -51,7 +45,9 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public class SaveSeismogramToFile implements WaveformProcess {
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
-        String fileTypeStr = DOMHelper.extractText(config, "fileType", "mseed");
+        String fileTypeStr = DOMHelper.extractText(config,
+                                                   "fileType",
+                                                   SeismogramFileTypes.MSEED.getValue());
         if(fileTypeStr.equals(SeismogramFileTypes.MSEED.getValue())) {
             fileType = SeismogramFileTypes.MSEED;
         } else if(fileTypeStr.equals(SeismogramFileTypes.SAC.getValue())) {
@@ -199,16 +195,16 @@ public class SaveSeismogramToFile implements WaveformProcess {
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
-                                                 SeismogramFileTypes fileType)
+                                                 SeismogramFileTypes type)
             throws Exception {
-        return saveInDataSet(event, channel, seismograms, fileType, null);
+        return saveInDataSet(event, channel, seismograms, type, null);
     }
 
     // Used to save a seismogram locally.
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
-                                                 SeismogramFileTypes fileType,
+                                                 SeismogramFileTypes type,
                                                  RequestFilter request)
             throws Exception {
         if(subDS.length() != 0) {
@@ -238,16 +234,16 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                         seisFileDirectory,
                                                         channel,
                                                         event,
-                                                        fileType);
+                                                        type);
             if(storeSeismogramsInDB) {
                 jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
                                                       seismograms[i],
                                                       seisFile.toString(),
-                                                      fileType);
+                                                      type);
             }
             seisURLStr[i] = getRelativeURLString(dataSetFile, seisFile);
             seisURL[i] = seisFile.toURI().toURL();
-            seisFileTypeArray[i] = fileType; // all are the same
+            seisFileTypeArray[i] = type; // all are the same
             bytesWritten += seisFile.length();
         }
         URLDataSetSeismogram urlDSS = new URLDataSetSeismogram(seisURL,
@@ -259,7 +255,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
             urlDSS.setName(prefix + urlDSS.getName());
         }
         for(int i = 0; i < seisURL.length; i++) {
-            urlDSS.addToCache(seisURL[i], fileType, seismograms[i]);
+            urlDSS.addToCache(seisURL[i], type, seismograms[i]);
         }
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.NETWORK_BEGIN,
                                 channel.get_id().network_id.begin_time.date_time);
