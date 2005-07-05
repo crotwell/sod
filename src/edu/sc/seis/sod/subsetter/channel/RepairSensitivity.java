@@ -14,10 +14,6 @@ public class RepairSensitivity implements ChannelSubsetter {
 
     public boolean accept(Channel channel, ProxyNetworkAccess network)
             throws Exception {
-        if(ResponseGain.isValid(network.retrieve_sensitivity(channel.get_id(),
-                                                             channel.get_id().begin_time))) {
-            return true;
-        }
         Instrumentation instrumentation;
         try {
             instrumentation = network.retrieve_instrumentation(channel.get_id(),
@@ -26,6 +22,10 @@ public class RepairSensitivity implements ChannelSubsetter {
             logger.debug("No instrumentation for "
                     + ChannelIdUtil.toString(channel.get_id()));
             return false;
+        }
+        if(ResponseGain.isValid(network.retrieve_sensitivity(channel.get_id(),
+                                                             channel.get_id().begin_time))) {
+            return true;
         }
         Response resp = instrumentation.the_response;
         Stage[] stages = resp.stages;
