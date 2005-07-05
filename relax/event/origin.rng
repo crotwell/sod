@@ -38,6 +38,7 @@
             <ref name="externalOriginSubsetter"/>
             <ref name="youngerThan"/>
             <ref name="printline"/>
+            <ref name="CSVEventPrinter"/>
         </choice>
     </define>
     <define name="name">
@@ -365,6 +366,20 @@
                     <text/>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="CSVEventPrinter">
+        <element name="CSVEventPrinter">
+            <xsd:annotation>
+                <summary>Prints out events into a comma-separated text file</summary>
+            </xsd:annotation>
+            <element name="filename">
+                <text>
+                    <xsd:annotation>
+                        <example>events.csv</example>
+                    </xsd:annotation>
+                </text>
+            </element>
         </element>
     </define>
 </grammar>

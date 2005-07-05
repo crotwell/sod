@@ -38891,6 +38891,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin13">
@@ -39132,6 +39137,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -39375,6 +39385,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin5">
@@ -39616,6 +39631,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -39859,6 +39879,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin9">
@@ -40100,6 +40125,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -40343,6 +40373,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin7">
@@ -40584,6 +40619,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -40827,6 +40867,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin">
@@ -41068,6 +41113,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -41311,6 +41361,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin8">
@@ -41552,6 +41607,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -41795,6 +41855,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin12">
@@ -42036,6 +42101,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
@@ -42279,6 +42349,11 @@
                     </element>
                 </optional>
             </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
+            </element>
         </choice>
     </define>
     <define name="origin14">
@@ -42520,6 +42595,11 @@
                         <text/>
                     </element>
                 </optional>
+            </element>
+            <element name="CSVEventPrinter">
+                <element name="filename">
+                    <text/>
+                </element>
             </element>
         </choice>
     </define>
