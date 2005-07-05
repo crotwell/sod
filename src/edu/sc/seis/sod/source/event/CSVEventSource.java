@@ -43,12 +43,10 @@ public class CSVEventSource extends SimpleEventSource {
                                              e);
         }
     }
-    
 
     public CacheEvent[] getEvents() {
         return events;
     }
-    
 
     public static CacheEvent[] getEventsFromCSVFile(String filename)
             throws IOException, FileNotFoundException, ConfigurationException,
@@ -148,18 +146,21 @@ public class CSVEventSource extends SimpleEventSource {
             if(fields.contains(NAME)) {
                 name = (String)values.get(fields.indexOf(NAME));
             }
-            FlinnEngdahlRegion feRegion = new FlinnEngdahlRegionImpl(FlinnEngdahlType.SEISMIC_REGION,
-                                                                     0);
-            if(fields.contains(FE_SEIS_REGION)) {
-                feRegion = new FlinnEngdahlRegionImpl(FlinnEngdahlType.SEISMIC_REGION,
-                                                      Integer.parseInt((String)values.get(fields.indexOf(FE_SEIS_REGION))));
-            } else if(fields.contains(FE_GEO_REGION)) {
-                feRegion = new FlinnEngdahlRegionImpl(FlinnEngdahlType.GEOGRAPHIC_REGION,
-                                                      Integer.parseInt((String)values.get(fields.indexOf(FE_GEO_REGION))));
+            FlinnEngdahlType feType = FlinnEngdahlType.SEISMIC_REGION;
+            if(fields.contains(FE_REGION_TYPE)) {
+                int type = Integer.parseInt((String)values.get(fields.indexOf(FE_REGION_TYPE)));
+                if(type == FlinnEngdahlType._SEISMIC_REGION) {
+                    feType = FlinnEngdahlType.SEISMIC_REGION;
+                } else if(type == FlinnEngdahlType._GEOGRAPHIC_REGION) {
+                    feType = FlinnEngdahlType.GEOGRAPHIC_REGION;
+                }
             }
-            events.add(new CacheEvent(new EventAttrImpl(name, feRegion),
-                                              origin));
-            
+            FlinnEngdahlRegion feRegion = new FlinnEngdahlRegionImpl(feType, 0);
+            if(fields.contains(FE_REGION)) {
+                feRegion = new FlinnEngdahlRegionImpl(feType,
+                                                      Integer.parseInt((String)values.get(fields.indexOf(FE_REGION))));
+            }
+            events.add(new CacheEvent(new EventAttrImpl(name, feRegion), origin));
         }
         return (CacheEvent[])events.toArray(new CacheEvent[0]);
     }
@@ -169,8 +170,8 @@ public class CSVEventSource extends SimpleEventSource {
                 || field.equals(LATITUDE) || field.equals(ELEVATION)
                 || field.equals(DEPTH) || field.equals(MAGNITUDE)
                 || field.equals(CATALOG) || field.equals(CONTRIBUTOR)
-                || field.equals(NAME) || field.equals(FE_SEIS_REGION)
-                || field.equals(FE_GEO_REGION) || field.equals(ELEVATION_UNITS)
+                || field.equals(NAME) || field.equals(FE_REGION)
+                || field.equals(FE_REGION_TYPE) || field.equals(ELEVATION_UNITS)
                 || field.equals(DEPTH_UNITS) || field.equals(MAGNITUDE_TYPE);
     }
 
@@ -202,11 +203,14 @@ public class CSVEventSource extends SimpleEventSource {
 
     public static final String FE_GEO_REGION = "flinnEngdahlGeographicRegion";
 
+    public static final String FE_REGION = "flinnEngdahlRegion";
+
+    public static final String FE_REGION_TYPE = "flinnEngdahlRegionType";
+
     //defaultable
     public static final String ELEVATION_UNITS = "elevationUnits";
 
     public static final String DEPTH_UNITS = "depthUnits";
 
     public static final String MAGNITUDE_TYPE = "magnitudeType";
-
 }
