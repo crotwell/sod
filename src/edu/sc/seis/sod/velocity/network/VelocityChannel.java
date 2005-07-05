@@ -31,6 +31,14 @@ public class VelocityChannel extends Channel {
         return chan.get_code();
     }
 
+    public float getAzimuth() {
+        return an_orientation.azimuth;
+    }
+
+    public float getDip() {
+        return an_orientation.dip;
+    }
+
     public String getCode() {
         return get_code();
     }
@@ -56,7 +64,9 @@ public class VelocityChannel extends Channel {
     }
 
     public int getDbId() {
-        if(hasDbId()) { return dbid; }
+        if(hasDbId()) {
+            return dbid;
+        }
         throw new UnsupportedOperationException("This channel had no dbid");
     }
 
@@ -73,7 +83,7 @@ public class VelocityChannel extends Channel {
     }
 
     public void insertIntoContext(VelocityContext ctx) {
-            ctx.put("channel", this);
-            getSite().insertIntoContext(ctx);
+        ctx.put("channel", this);
+        getSite().insertIntoContext(ctx);
     }
 }
