@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<project name="The Standing Order for Data"
+     href="http://www.seis.sc.edu/software/sod/">
+
+  <title>The Standing Order for Data</title>
+<logo href="/images/fissures_header.gif">The FISSURES Project</logo>
+
+  <body>
+    <menu name="Essentials">
+      <item name="SOD Home Page"            href="/index.html"/>
+      <item name="JavaDocs"                  href="/apidocs/index.html"/>
+    </menu>
+
+    <menu name="Download">
+      <item name="Binaries"      href="/../mavenRepository/sod/jars"/>
+      <item name="Source Code"   href="/../mavenRepository/sod/distributions"/>
+    </menu>
+
+    <menu name="Related Projects">
+        <item name="Seed Codec"               href="/../SeedCodec"/>
+        <item name="Core IDL"               href="/../fissuresIDL"/>
+        <item name="Fissures Impl"          href="/../fissuresImpl"/>
+        <item name="Fissures Util"          href="/../fissuresUtil"/>
+        <item name="SEED"                   href="/../Fissures/seed.html"/>
+        <item name="SOD"          href="/../sod"/>
+        <item name="GEE"          href="/../gee"/>
+        <item name="Wily"          href="/../wily"/>
+        <item name="JEvalResp"          href="http://www.isti.com/JEvalResp/"/>
+        <item name="VASE"          href="http://www.iris.washington.edu/DHI/clients.html"/>
+        <item name="TauP"          item="/../TauP"/>
+        <item name="FMI"      item="http://www.ess.washington.edu/SIES/FMI"/>
+    </menu>
+
+  </body>
+</project>
