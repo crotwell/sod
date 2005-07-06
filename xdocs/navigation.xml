@@ -3,19 +3,18 @@
      href="http://www.seis.sc.edu/software/sod/">
 
   <title>The Standing Order for Data</title>
-<logo href="/images/fissures_header.gif">The FISSURES Project</logo>
+<logo href="http://www.seis.sc.edu/SOD/images/full-sodlogo-y100.gif">SOD</logo>
 
   <body>
     <menu name="Essentials">
-      <item name="SOD Home Page"            href="/index.html"/>
+      <item name="SOD Dev Home Page"            href="/index.html"/>
+      <item name="Real SOD Home Page"            href="http://www.seis.sc.edu/SOD"/>
       <item name="JavaDocs"                  href="/apidocs/index.html"/>
     </menu>
-
     <menu name="Download">
-      <item name="Binaries"      href="/../mavenRepository/sod/jars"/>
-      <item name="Source Code"   href="/../mavenRepository/sod/distributions"/>
+      <item name="Jars"      href="/../mavenRepository/sod/jars"/>
+      <item name="Source"   href="/../mavenRepository/sod/distributions"/>
     </menu>
-
     <menu name="Related Projects">
         <item name="Seed Codec"               href="/../SeedCodec"/>
         <item name="Core IDL"               href="/../fissuresIDL"/>
@@ -30,6 +29,5 @@
         <item name="TauP"          item="/../TauP"/>
         <item name="FMI"      item="http://www.ess.washington.edu/SIES/FMI"/>
     </menu>
-
   </body>
 </project>
