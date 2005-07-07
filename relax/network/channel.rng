@@ -36,6 +36,22 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="clockId"/>
+            <ref name="clockManufacturer"/>
+            <ref name="clockModel"/>
+            <ref name="clockSerial"/>
+            <ref name="clockType"/>
+            <ref name="dasId"/>
+            <ref name="dasManufacturer"/>
+            <ref name="dasModel"/>
+            <ref name="dasSerial"/>
+            <ref name="dasStyle"/>
+            <ref name="sensorId"/>
+            <ref name="sensorManufacturer"/>
+            <ref name="sensorModel"/>
+            <ref name="sensorSerial"/>
+            <ref name="sensorNominalHighFreq"/>
+            <ref name="sensorNominalLowFreq"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -447,6 +463,134 @@
                 <summary>Corrects sensitivity information for a channel from the response if the sensitivity is incorrect.</summary>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="clockId">
+        <element name="clockId">
+            <xsd:annotation>
+                <summary>Matches the clock id of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="integer"/>
+        </element>
+    </define>
+    <define name="clockManufacturer">
+        <element name="clockManufacturer">
+            <xsd:annotation>
+                <summary>Matches the clock manufacturer of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="clockModel">
+        <element name="clockModel">
+            <xsd:annotation>
+                <summary>Matches the clock model of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="clockSerial">
+        <element name="clockSerial">
+            <xsd:annotation>
+                <summary>Matches the clock's serial number of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="clockType">
+        <element name="clockType">
+            <xsd:annotation>
+                <summary>Matches the clock type of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="dasId">
+        <element name="dasId">
+            <xsd:annotation>
+                <summary>Matches the DAS id of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="integer"/>
+        </element>
+    </define>
+    <define name="dasManufacturer">
+        <element name="dasManufacturer">
+            <xsd:annotation>
+                <summary>Matches the DAS manufacturer of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="dasModel">
+        <element name="dasModel">
+            <xsd:annotation>
+                <summary>Matches the DAS's model of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="dasSerial">
+        <element name="dasSerial">
+            <xsd:annotation>
+                <summary>Matches the DAS's serial number of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="dasStyle">
+        <element name="dasStyle">
+            <xsd:annotation>
+                <summary>Matches the DAS's recording style of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="integer"/>
+        </element>
+    </define>
+    <define name="sensorId">
+        <element name="sensorId">
+            <xsd:annotation>
+                <summary>Matches the sensor id of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="integer"/>
+        </element>
+    </define>
+    <define name="sensorManufacturer">
+        <element name="sensorManufacturer">
+            <xsd:annotation>
+                <summary>Matches the sensor manufacturer of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="sensorModel">
+        <element name="sensorModel">
+            <xsd:annotation>
+                <summary>Matches the sensor's model of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="sensorSerial">
+        <element name="sensorSerial">
+            <xsd:annotation>
+                <summary>Matches the sensor's serial number of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+    <define name="sensorNominalHighFreq">
+        <element name="sensorNominalHighFreq">
+            <xsd:annotation>
+                <summary>Matches the sensor's nominal high frequency of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="float"/>
+        </element>
+    </define>
+    <define name="sensorNominalLowFreq">
+        <element name="sensorNominalLowFreq">
+            <xsd:annotation>
+                <summary>Matches the sensor's nominal low frequency of the channel's instrumentation</summary>
+            </xsd:annotation>
+            <data type="float"/>
         </element>
     </define>
 </grammar>
