@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.Quantity;
-import edu.iris.Fissures.TimeRange;
 import edu.iris.Fissures.IfEvent.EventAccess;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAccessSeqHolder;
@@ -22,6 +21,7 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.EventLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.ConfigurationException;
@@ -83,23 +83,12 @@ public class EventDCQuerier {
         return eventDC;
     }
 
-    public CacheEvent[] query(TimeRange tr) {
-        edu.iris.Fissures.IfEvent.EventFinder evFinder = getEventDC().a_finder();
-        logger.debug("before finder.query_events(" + tr.start_time.date_time
-                + " to " + tr.end_time.date_time);
-        EventAccessOperations[] events = evFinder.query_events(area,
-                                                               minDepth,
-                                                               maxDepth,
-                                                               tr,
-                                                               searchTypes,
-                                                               minMag,
-                                                               maxMag,
-                                                               catalogs,
-                                                               contributors,
-                                                               sequenceMaximum,
-                                                               holder);
-        logger.debug("after finder.query_events(" + tr.start_time.date_time
-                + " to " + tr.end_time.date_time + " got " + events.length);
+    public CacheEvent[] query(MicroSecondTimeRange tr) {
+        logger.debug("querying for events from " + tr);
+        EventAccessOperations[] events;
+        EventSeqIterHolder holder = new EventSeqIterHolder();
+        events = getEvents(tr, holder);
+        logger.debug("got " + events.length + " events from query " + tr);
         if(holder.value != null) {
             // might be events in the iterator...
             LinkedList allEvents = new LinkedList();
@@ -120,6 +109,21 @@ public class EventDCQuerier {
         return cacheEvents(events);
     }
 
+    private EventAccessOperations[] getEvents(MicroSecondTimeRange tr,
+                                              EventSeqIterHolder holder) {
+        return getEventDC().a_finder().query_events(area,
+                                                    minDepth,
+                                                    maxDepth,
+                                                    tr.getFissuresTimeRange(),
+                                                    searchTypes,
+                                                    minMag,
+                                                    maxMag,
+                                                    catalogs,
+                                                    contributors,
+                                                    sequenceMaximum,
+                                                    holder);
+    }
+
     private CacheEvent[] cacheEvents(EventAccessOperations[] uncached) {
         CacheEvent[] cached = new CacheEvent[uncached.length];
         for(int counter = 0; counter < cached.length; counter++) {
@@ -136,8 +140,6 @@ public class EventDCQuerier {
     }
 
     private int sequenceMaximum = 100;
-
-    private EventSeqIterHolder holder = new EventSeqIterHolder();
 
     private ProxyEventDC eventDC;
 
