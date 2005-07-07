@@ -2,6 +2,7 @@ package edu.sc.seis.sod.source.event;
 
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.SystemException;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
@@ -11,6 +12,7 @@ import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
@@ -52,7 +54,25 @@ public class EventFinder extends AbstractSource implements EventSource {
 
     public CacheEvent[] next() {
         MicroSecondTimeRange queryTime = getQueryTime();
-        CacheEvent[] results = querier.query(queryTime.getFissuresTimeRange());
+        CacheEvent[] results = null;
+        long retrySleepMillis = 1000;
+        while(results == null) {
+            try {
+                results = querier.query(queryTime);
+            } catch(SystemException se) {
+                GlobalExceptionHandler.handle("This exception was thrown by the event server.  I'm resetting the connection to the server and waiting "
+                                                      + (retrySleepMillis / 1000)
+                                                      + " seconds for things to calm down so that hopefully the next query will be successful.",
+                                              se);
+                querier.getEventDC().reset();
+                try {
+                    Thread.sleep(retrySleepMillis);
+                } catch(InterruptedException e) {
+                    logger.debug("Query retry sleep interrupted", e);
+                }
+                retrySleepMillis *= 10;
+            }
+        }
         setQueryEdge(queryTime.getEndTime());
         return results;
     }
