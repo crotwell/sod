@@ -5,7 +5,15 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
+        <printlineChannelProcess>
+            <filename>allChannels</filename>
+            <template>$channel</template>
+        </printlineChannelProcess>
         <hasResponse/>
+        <printlineChannelProcess>
+            <filename>responseChannels</filename>
+            <template>$channel</template>
+        </printlineChannelProcess>
         <channelNOT>
             <hasSensitivity/>
         </channelNOT>
