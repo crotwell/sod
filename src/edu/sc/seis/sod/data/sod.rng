@@ -37346,6 +37346,54 @@
             <ref name="hasResponse4"/>
             <ref name="hasSensitivity4"/>
             <ref name="repairSensitivity4"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel9">
@@ -37372,6 +37420,54 @@
             <ref name="hasResponse9"/>
             <ref name="hasSensitivity9"/>
             <ref name="repairSensitivity9"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel3">
@@ -37398,6 +37494,54 @@
             <ref name="hasResponse3"/>
             <ref name="hasSensitivity3"/>
             <ref name="repairSensitivity3"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel12">
@@ -37424,6 +37568,54 @@
             <ref name="hasResponse13"/>
             <ref name="hasSensitivity13"/>
             <ref name="repairSensitivity13"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel8">
@@ -37450,6 +37642,54 @@
             <ref name="hasResponse8"/>
             <ref name="hasSensitivity8"/>
             <ref name="repairSensitivity8"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel7">
@@ -37476,6 +37716,54 @@
             <ref name="hasResponse7"/>
             <ref name="hasSensitivity7"/>
             <ref name="repairSensitivity7"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel14">
@@ -37502,6 +37790,54 @@
             <ref name="hasResponse5"/>
             <ref name="hasSensitivity5"/>
             <ref name="repairSensitivity5"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel">
@@ -37528,6 +37864,54 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel11">
@@ -37554,6 +37938,54 @@
             <ref name="hasResponse12"/>
             <ref name="hasSensitivity12"/>
             <ref name="repairSensitivity12"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel5">
@@ -37580,6 +38012,54 @@
             <ref name="hasResponse10"/>
             <ref name="hasSensitivity10"/>
             <ref name="repairSensitivity10"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel10">
@@ -37606,6 +38086,54 @@
             <ref name="hasResponse11"/>
             <ref name="hasSensitivity11"/>
             <ref name="repairSensitivity11"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel13">
@@ -37632,6 +38160,54 @@
             <ref name="hasResponse14"/>
             <ref name="hasSensitivity14"/>
             <ref name="repairSensitivity14"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel6">
@@ -37658,6 +38234,54 @@
             <ref name="hasResponse6"/>
             <ref name="hasSensitivity6"/>
             <ref name="repairSensitivity6"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="channel2">
@@ -37684,6 +38308,54 @@
             <ref name="hasResponse2"/>
             <ref name="hasSensitivity2"/>
             <ref name="repairSensitivity2"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="printline4">

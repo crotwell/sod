@@ -1216,6 +1216,54 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <element name="clockId">
+                <data type="integer"/>
+            </element>
+            <element name="clockManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="clockModel">
+                <data type="string"/>
+            </element>
+            <element name="clockSerial">
+                <data type="string"/>
+            </element>
+            <element name="clockType">
+                <data type="string"/>
+            </element>
+            <element name="dasId">
+                <data type="integer"/>
+            </element>
+            <element name="dasManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="dasModel">
+                <data type="string"/>
+            </element>
+            <element name="dasSerial">
+                <data type="string"/>
+            </element>
+            <element name="dasStyle">
+                <data type="integer"/>
+            </element>
+            <element name="sensorId">
+                <data type="integer"/>
+            </element>
+            <element name="sensorManufacturer">
+                <data type="string"/>
+            </element>
+            <element name="sensorModel">
+                <data type="string"/>
+            </element>
+            <element name="sensorSerial">
+                <data type="string"/>
+            </element>
+            <element name="sensorNominalHighFreq">
+                <data type="float"/>
+            </element>
+            <element name="sensorNominalLowFreq">
+                <data type="float"/>
+            </element>
         </choice>
     </define>
     <define name="area2">
