@@ -92,6 +92,7 @@ public class EventArm implements Arm {
     private void getEvents() throws Exception {
         logger.debug("getting events from " + source.getEventTimeRange());
         while(source.hasNext()) {
+            logger.debug("EventSource has more events");
             TimeInterval wait = source.getWaitBeforeNext();
             long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
                     .get_value();
@@ -132,6 +133,7 @@ public class EventArm implements Arm {
     }
 
     private void handle(CacheEvent[] events) {
+        logger.debug("Handling " + events.length + " events");
         for(int i = 0; i < events.length; i++) {
             try {
                 handle(events[i]);
