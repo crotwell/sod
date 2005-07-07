@@ -41,6 +41,11 @@ public class EventFinder extends AbstractSource implements EventSource {
     public boolean hasNext() {
         MicroSecondDate queryEnd = getEventTimeRange().getEndTime();
         MicroSecondDate quitDate = queryEnd.add(lag);
+        logger.debug("Checking if more queries to the event server are in order.  The quit date is "
+                + quitDate
+                + " the last query was for "
+                + getQueryStart()
+                + " and we're querying to " + queryEnd);
         return quitDate.after(ClockUtil.now())
                 || !getQueryStart().equals(queryEnd);
     }
