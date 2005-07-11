@@ -18,7 +18,9 @@
             <contributor>IRIS</contributor>
         </eventFinder>
         <removeEventDuplicate/>
-        <printlineEventProcess/>
+        <printlineEventProcess>
+            <template>Successful event: $event</template>
+        </printlineEventProcess>
     </eventArm>
     <networkArm>
         <networkFinder>
@@ -37,6 +39,9 @@
                 <gainCode>O</gainCode>
             </channelNOT>
         </channelAND>
+        <printlineChannelProcess>
+            <template>Successful Channel:${network.code}.${station.code}.${site.code}.${channel.code}</template>
+        </printlineChannelProcess>
     </networkArm>
     <waveformArm>
         <distanceRange>
@@ -62,7 +67,9 @@
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <someCoverage/>
-        <printlineSeismogramProcess/>
+        <printlineSeismogramProcess>
+            <template>Got $seismograms.size() seismograms for ${network.code}.${station.code}.${site.code}.${channel.code} for event in $event.region with magnitude $event.magnitude at $event.getTime('yyyy-MM-dd HH:mm')</template>
+        </printlineSeismogramProcess>
         <saveSeismogramToFile>
             <fileType>sac</fileType>
         </saveSeismogramToFile>
