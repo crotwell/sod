@@ -135,7 +135,6 @@
         <printlineSeismogramProcess/>
         <saveSeismogramToFile>
             <fileType>sac</fileType>
-            <dataDirectory>POND_II</dataDirectory>
         </saveSeismogramToFile>
     </waveformArm>
 </sod>
