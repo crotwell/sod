@@ -51,8 +51,8 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 InputSource relaxSource = Start.createInputSource(cl, relaxLoc);
                 reader = XMLUtil.staxInputFactory.createXMLStreamReader(relaxSource.getByteStream());
                 definedGrammar = new Grammar(relaxLoc);
-                reader.next();//SKIP SPACE
-                reader.next();//GET TO GRAMMAR START TAG
+                reader.next();// SKIP SPACE
+                reader.next();// GET TO GRAMMAR START TAG
                 try {
                     handleGrammar();
                 } catch(XMLStreamException e) {
@@ -115,7 +115,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
     }
 
     private void handleInclude() {
-        //TODO handle inclusion overrides
+        // TODO handle inclusion overrides
         definedGrammar.include(getGrammar(getAbsPath()));
     }
 
@@ -178,9 +178,13 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 System.exit(0);
             }
         }
-        if(kids.size() == 0) { return null; }//Hopefully an attribute called
+        if(kids.size() == 0) {
+            return null;
+        }// Hopefully an attribute called
         // handleAll
-        if(kids.size() == 1) { return (FormProvider)kids.get(0); }
+        if(kids.size() == 1) {
+            return (FormProvider)kids.get(0);
+        }
         Group g = new Group(1, 1);
         Iterator it = kids.iterator();
         while(it.hasNext()) {
@@ -223,6 +227,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
                         example = example.trim();
                         note.setExample(example.replaceAll("[ \\t]{" + j + "}",
                                                            ""));
+                    } else if(reader.getLocalName().equals("velocity")) {
+                        reader.next();
+                        note.setVelocity(reader.getText());
                     } else if(!reader.getLocalName().equals("documentation")) {
                         System.out.println("Unrecognized tag "
                                 + reader.getLocalName() + " in annotation in "
@@ -243,7 +250,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         while(reader.getEventType() != END_ELEMENT
                 || !reader.getLocalName().equals(stopTagName)) {
             int curEventType = reader.getEventType();
-            //this if-else block takes care of empty tags
+            // this if-else block takes care of empty tags
             if(prevEventType == START_ELEMENT && curEventType == END_ELEMENT) {
                 buf.setCharAt(buf.length() - 1, ' ');
                 buf.append("/>");
@@ -266,7 +273,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
      * this.
      */
     private FormProvider handleCardinality() throws XMLStreamException {
-        //get cardinality based on the tag name
+        // get cardinality based on the tag name
         int min = 1;
         int max = 1;
         String tag = reader.getLocalName();
@@ -276,7 +283,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
         if(tag.equals("zeroOrMore") || tag.equals("oneOrMore")) {
             max = Integer.MAX_VALUE;
         }
-        //make sub structure
+        // make sub structure
         reader.nextTag();
         if(isAnn(reader.getLocalName())) {
             Annotation note = handleAnn();
@@ -285,14 +292,14 @@ public class StAXModelBuilder implements XMLStreamConstants {
                     + " not allowed directly in cardinality tag");
         }
         FormProvider result = handleAll();
-        //set cardinality on substructure
+        // set cardinality on substructure
         if(min == 0) {
             result.setMin(min);
         }
         if(max == Integer.MAX_VALUE) {
             result.setMax(max);
         }
-        //advance past the end of cardinality end element and return
+        // advance past the end of cardinality end element and return
         reader.nextTag();
         return result;
     }
@@ -332,13 +339,13 @@ public class StAXModelBuilder implements XMLStreamConstants {
         Attribute result = new Attribute(1, 1, name);
         if(ns == null) {
             ns = ModelWalker.getNamespaceFromAncestors(result);
-        } //inherit ns from parents if there is no specified ns
+        } // inherit ns from parents if there is no specified ns
         result.setNamespace(ns);
         result.setAnnotation(handleAnn());
         FormProvider child = handleAll();
         if(child == null) {
             child = new Text();
-        } //An empty attribute has text as a value
+        } // An empty attribute has text as a value
         result.setChild(child);
         nextTag();
         return result;
@@ -361,9 +368,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
         FormProvider child = handleAll();
         nextTag();
         if(child instanceof AbstractMultigenitorForm) {
-            //If the child is an AbstractMultigenitorForm, there were multiple
-            //child FormProviders, so suck all of them out of the child and put
-            //them in this one
+            // If the child is an AbstractMultigenitorForm, there were multiple
+            // child FormProviders, so suck all of them out of the child and put
+            // them in this one
             FormProvider[] myKids = ((AbstractMultigenitorForm)child).getFormProviders();
             for(int i = 0; i < myKids.length; i++) {
                 parent.add(myKids[i].copyWithNewParent(parent));
@@ -437,7 +444,7 @@ public class StAXModelBuilder implements XMLStreamConstants {
     }
 
     private void handleParam(Data result) throws XMLStreamException {
-        //TODO handle params
+        // TODO handle params
         while(reader.getEventType() != END_ELEMENT) {
             reader.next();
         }
@@ -460,7 +467,9 @@ public class StAXModelBuilder implements XMLStreamConstants {
                 return new DoubleDatatype();
             } else if(type.equals("integer")) {
                 return new IntegerDatatype();
-            } else if(type.equals("nonNegativeInteger")) { return new NonnegativeIntegerDatatype(); }
+            } else if(type.equals("nonNegativeInteger")) {
+                return new NonnegativeIntegerDatatype();
+            }
             return new Token();
         }
         return null;
