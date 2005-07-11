@@ -8,6 +8,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Specifies the server to ask for seismograms</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="choiceDataCenter"/>
             <externalRef href="fixedDataCenter.rng"/>

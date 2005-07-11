@@ -10,6 +10,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting acceptable combinations of stations and events</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="distanceRange"/>
             <ref name="embeddedOriginSubsetter"/>

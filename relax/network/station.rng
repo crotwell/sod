@@ -14,6 +14,7 @@
                 <summary>Tactics for selecting stations</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
                     of a station.</description>
+                <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="regExp"/>

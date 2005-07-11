@@ -14,6 +14,7 @@
                 <summary>Tactics for selecting events</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
                     of an event.</description>
+                <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="removeEventDuplicate"/>
             <ref name="name"/>

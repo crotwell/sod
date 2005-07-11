@@ -9,6 +9,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for handling vector data requests</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <ref name="ANDRequestWrapper"/>
             <ref name="ORRequestWrapper"/>

@@ -7,6 +7,7 @@
                 <summary>Downloads and processes wavforms by channel groups</summary>
                 <description>The waveformVectorArm groups three orthogonal components from a site
                     and then does its processing on them as a group.</description>
+                <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <optional>
                 <externalRef href="eventStation.rng"/>

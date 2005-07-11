@@ -13,6 +13,7 @@
                 <summary>Tactics for selecting channels</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
                     of a channel.</description>
+                <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="hadDataLastWeek"/>
             <ref name="channelCode"/>

@@ -11,7 +11,8 @@
             <xsd:annotation>
                 <summary>Tactics for selecting networks</summary>
                 <description>All of the subsetters that make decisions on the contents of a
-                network.</description>
+                    network.</description>
+                <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="name"/>

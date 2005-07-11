@@ -13,6 +13,7 @@
                 <summary>Tactics for selecting sites</summary>
                 <description>This collects all of the subsetters that make decisions on the contents
                     of a site.</description>
+                <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="code"/>
             <ref name="depthRange"/>

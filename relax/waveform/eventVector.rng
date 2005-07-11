@@ -8,6 +8,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting channel groups for events</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <ref name="ANDEventChannelWrapper"/>
             <ref name="OREventChannelWrapper"/>

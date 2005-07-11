@@ -9,6 +9,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics that work based on the generated request</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="requestAND"/>
             <ref name="requestOR"/>

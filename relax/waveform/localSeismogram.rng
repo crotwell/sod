@@ -4,6 +4,7 @@
         <element name="waveformArm">
             <xsd:annotation>
                 <summary>Downloads and processes waveforms individually</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <optional>
                 <externalRef href="eventStation.rng"/>

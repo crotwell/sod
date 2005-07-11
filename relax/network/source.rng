@@ -17,6 +17,7 @@
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
                         should periodically check for new channels. </description>
+                    <velocity>#networkArmPage()</velocity>
                     <example>
                         <networkFinder>
                             <name>IRIS_NetworkDC</name>

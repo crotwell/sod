@@ -9,6 +9,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for handling available vector data</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <ref name="ANDAvailableDataWrapper"/>
             <ref name="ORAvailableDataWrapper"/>

@@ -12,6 +12,7 @@
                     If there are any event status items present, they generate status information
                     about the events as they step through the process described above. </description>
                 <summary>Selects and processes events</summary>
+                <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <externalRef href="source.rng"/>
             <zeroOrMore>

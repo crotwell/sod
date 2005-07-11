@@ -10,6 +10,7 @@
                     about that pass the subsetters contained in the arm. It then runs those
                     successful items through the processors, all the while keeping the network
                     status items abreast of the process.</description>
+                    <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <externalRef href="source.rng"/>
             <optional>

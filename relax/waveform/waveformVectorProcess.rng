@@ -13,6 +13,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for processing vectors of waveforms</summary>
+                <velocity>#waveformVectorArmPage()</velocity>
             </xsd:annotation>
             <ref name="threeComponentData"/>
             <ref name="ANDWaveformProcessWrapper"/>

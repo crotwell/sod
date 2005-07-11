@@ -10,6 +10,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics that generating requests to the seismogram servers</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="phaseRequest"/>
             <ref name="originOffsetRequest"/>

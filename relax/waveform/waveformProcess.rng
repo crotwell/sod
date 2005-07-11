@@ -23,6 +23,7 @@
                     be of the data after the cut. If you don't want a processor's work to effect
                     later steps use the forkProcess to isolate it.</description>
                 <include/>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="printlineSeismogramProcess"/>
             <ref name="saveSeismogramToFile"/>

@@ -9,6 +9,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting combinations of channels and events</summary>
+                <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
             <ref name="embeddedEventStation"/>
             <ref name="embeddedChannel"/>
