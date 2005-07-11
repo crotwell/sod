@@ -2,8 +2,9 @@
 #set($ann=$instance.annotation)
 #set($curBase=$doc.makePath($def))
 #set($curLoc="${curBase}.html")
-\#set($relativePathToTagDocDir="$util.getRelativePath($curLoc, '', '/')")
-\#set($relativePathToSodDir="../${relativePathToTagDocDir}")
+$ann.velocity
+\#set($relativePathToIngredientDir="$util.getRelativePath($curLoc, '', '/')")
+\#set($relativePathToSodDir="../${relativePathToIngredientDir}")
 #macro(printDef $exp)$helper.getDefName($exp)#end
 #macro(print $exp)$helper.getName($exp)#end
 #macro(makeLink $exp)
@@ -65,7 +66,7 @@
 	</head>
 	<body>
 		#sod_header()
-		#tactic_menu()
+		#sod_menu()
 		<div id="content">
 			<div class="section">
 				<h3>
