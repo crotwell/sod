@@ -1,39 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <sod>
-    <properties>
-        <runName>Archive Test Run</runName>
-        <removeDatabase>TRUE</removeDatabase>
-    </properties>
     <eventArm>
         <eventFinder>
             <name>IRIS_EventDC</name>
             <dns>edu/iris/dmc</dns>
-            <boxArea>
-                <latitudeRange>
-                    <min>-90</min>
-                    <max>90</max>
-                </latitudeRange>
-                <longitudeRange>
-                    <min>-180</min>
-                    <max>180</max>
-                </longitudeRange>
-            </boxArea>
-            <originDepthRange>
-                <unit>KILOMETER</unit>
-                <min>0</min>
-                <max>1000</max>
-            </originDepthRange>
             <originTimeRange>
-                <startTime>20030101T00:00:00.001Z</startTime>
-                <endTime>20030131T23:59:59.999Z</endTime>
+                <startTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>1</day>
+                </startTime>
+                <endTime>
+                    <year>2003</year>
+                    <month>1</month>
+                    <day>10</day>
+                </endTime>
             </originTimeRange>
             <magnitudeRange>
-                <min>6.0</min>
-                <max>10.0</max>
+                <min>5</min>
             </magnitudeRange>
-            <catalog>PREF</catalog>
-            <contributor>IRIS</contributor>
+            <catalog>WHDF</catalog>
         </eventFinder>
+        <originOR>
+            <originAND>
+                <magnitudeRange>
+                    <min>5</min>
+                </magnitudeRange>
+                <originDepthRange>
+                    <unit>KILOMETER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                </originDepthRange>
+            </originAND>
+            <magnitudeRange>
+                <min>6</min>
+            </magnitudeRange>
+        </originOR>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>
@@ -42,19 +44,8 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
-        <siteAND>
-            <siteOR>
-                <siteCode/>
-                <siteCode>00</siteCode>
-            </siteOR>
-        </siteAND>
-        <channelAND>
-            <bandCode>L</bandCode>
-            <channelNOT>
-                <!-- to prevent LOG channels -->
-                <gainCode>O</gainCode>
-            </channelNOT>
-        </channelAND>
+        <bandCode>B</bandCode>
+        <printlineChannelProcessor/>
     </networkArm>
     <waveformArm>
         <distanceRange>
@@ -81,9 +72,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-            <dataDirectory>POND_II</dataDirectory>
-        </saveSeismogramToFile>
+        <saveSeismogramToFile/>
     </waveformArm>
 </sod>
