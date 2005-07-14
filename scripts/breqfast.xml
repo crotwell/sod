@@ -77,32 +77,20 @@
                 <value>360</value>
             </endOffset>
         </phaseRequest>
-        <requestNOT>
-            <breqFastRequest>
-                <dataDirectory>sample_breqfast</dataDirectory>
-                <label>
-                    <originTime>yyyy_DDD_HH_mm_ss</originTime> _A </label>
-                <name>Felix T. Cat</name>
-                <inst>Univ. of Somewhere</inst>
-                <mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
-                <email>cat@seis.somewhere.edu</email>
-                <phone>555-555-5555</phone>
-                <fax>none</fax>
-                <media>Electronic</media>
-                <altmedia1>Electronic</altmedia1>
-                <altmedia2>Electronic</altmedia2>
-                <quality>b</quality>
-            </breqFastRequest>
-        </requestNOT>
-        <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
-            <dns>edu/iris/dmc</dns>
-        </fixedDataCenter>
-        <someCoverage/>
-        <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-            <dataDirectory>POND_II</dataDirectory>
-        </saveSeismogramToFile>
+        <breqFastRequest>
+            <dataDirectory>sample_breqfast</dataDirectory>
+            <label>
+                <originTime>yyyy_DDD_HH_mm_ss</originTime> _A </label>
+            <name>Felix T. Cat</name>
+            <inst>Univ. of Somewhere</inst>
+            <mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
+            <email>cat@seis.somewhere.edu</email>
+            <phone>555-555-5555</phone>
+            <fax>none</fax>
+            <media>Electronic</media>
+            <altmedia1>Electronic</altmedia1>
+            <altmedia2>Electronic</altmedia2>
+            <quality>b</quality>
+        </breqFastRequest>
     </waveformArm>
 </sod>
