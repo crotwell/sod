@@ -22,6 +22,7 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
             if(node instanceof Element) {
                 originSubsetter = (OriginSubsetter)SodUtil.load((Element)node,
                                                                 "origin");
+                nodeName = ((Element)node).getTagName();
                 break;
             }
         }
@@ -32,8 +33,12 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
                           CookieJar cookieJar) throws Exception {
         return new StringTreeLeaf(this, originSubsetter.accept(eventAccess,
                                       eventAccess.get_attributes(),
-                                      eventAccess.get_preferred_origin()));
+                                      eventAccess.get_preferred_origin()),
+                                      nodeName);
     }
 
+    private String nodeName;
+    
     private OriginSubsetter originSubsetter = null;
+    
 }// EmbeddedOriginSubsetter
