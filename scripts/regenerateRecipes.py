@@ -48,6 +48,9 @@ if __name__ == "__main__":
     dropElements(["distanceRange"], 
             'tutorial/subsettingWaveform.xml', 
             'tutorial/simpleWaveform.xml')
+    process('tutorial/simpleWaveform.xml',
+            'xslt/elideNetworkAndEventArms.xslt',
+            'tutorial/incompleteWaveform.xml')
     dropElements(["waveformArm", "networkArm"], 
             'tutorial/waveform.xml', 
             'tutorial/event.xml')
