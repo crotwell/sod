@@ -373,7 +373,7 @@
                 <summary>Checks if a data center has data for a channel
                     for the past week</summary>
             </xsd:annotation>
-            <externalRef href="../waveform/dataCenter.rng"/>
+            <externalRef href="../waveform/fixedDataCenter.rng"/>
         </element>
     </define>
     <define name="responseWriter">
