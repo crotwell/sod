@@ -22,7 +22,7 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
 
     public SacPoleZeroWriter(Element config) {
         template = DOMHelper.extractText(config,
-                                         "responseFileTemplate",
+                                         "poleZeroFileTemplate",
                                          DEFAULT_TEMPLATE);
     }
 
