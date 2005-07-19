@@ -10,7 +10,7 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
-import edu.sc.seis.fissuresUtil.sac.SacPoleZero;
+import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 
@@ -31,7 +31,7 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
                                                                     channel_id.begin_time);
-            String response = new SacPoleZero(inst.the_response).toString();
+            String response = FissuresToSac.getPoleZero(inst.the_response).toString();
             velocitizer.evaluate(template, response, chan);
         } catch(ChannelNotFound ex) {
             GlobalExceptionHandler.handle("Channel not found: "
