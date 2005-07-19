@@ -55,26 +55,31 @@ public class EventFinder extends AbstractSource implements EventSource {
     public CacheEvent[] next() {
         MicroSecondTimeRange queryTime = getQueryTime();
         CacheEvent[] results = null;
-        long retrySleepMillis = 1000;
+        int retryCount = 0;
         while(results == null) {
             try {
                 results = querier.query(queryTime);
             } catch(SystemException se) {
-                GlobalExceptionHandler.handle("This exception was thrown by the event server.  I'm resetting the connection to the server and waiting "
-                                                      + (retrySleepMillis / 1000)
-                                                      + " seconds for things to calm down so that hopefully the next query will be successful.",
-                                              se);
+                if(retryCount++ > 0) {//Do nothing first time
+                    GlobalExceptionHandler.handle("This exception was thrown by the event server.  I'm resetting the connection to the server and waiting "
+                                                          + (sleepForCount(retryCount) / 1000)
+                                                          + " seconds for things to calm down so that hopefully the next query will be successful.",
+                                                  se);
+                }
                 querier.getEventDC().reset();
                 try {
-                    Thread.sleep(retrySleepMillis);
+                    Thread.sleep(sleepForCount(retryCount));
                 } catch(InterruptedException e) {
                     logger.debug("Query retry sleep interrupted", e);
                 }
-                retrySleepMillis *= 10;
             }
         }
         setQueryEdge(queryTime.getEndTime());
         return results;
+    }
+
+    public static long sleepForCount(int count) {
+        return (long)(Math.pow(10, count)) * 1000;
     }
 
     public TimeInterval getWaitBeforeNext() {
