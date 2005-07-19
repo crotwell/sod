@@ -32,6 +32,7 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <ref name="sacPoleZeroWriter"/>
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
@@ -389,6 +390,25 @@
                                 determine the file name. If no template is given, the example
                                 template is the default.</summary>
                             <example>responses/$network.code-$station.code-${channel.code}.resp</example>
+                        </xsd:annotation>
+                    </data>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="sacPoleZeroWriter">
+        <element name="sacPoleZeroWriter">
+            <xsd:annotation>
+                <summary>Prints channel poles and zeros to file</summary>
+            </xsd:annotation>
+            <optional>
+                <element name="poleZeroFileTemplate">
+                    <data type="string">
+                        <xsd:annotation>
+                            <summary>Each response is put in a single file using this template to
+                                determine the file name. If no template is given, the example
+                                template is the default.</summary>
+                            <example>polezero/$network.code-$station.code-${channel.code}.sacpz</example>
                         </xsd:annotation>
                     </data>
                 </element>

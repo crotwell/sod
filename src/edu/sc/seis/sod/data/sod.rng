@@ -37341,6 +37341,13 @@
             <ref name="externalChannelSubsetter4"/>
             <ref name="printline4"/>
             <ref name="responseWriter4"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas4"/>
             <ref name="alwaysSuccess4"/>
             <ref name="hasResponse4"/>
@@ -37415,6 +37422,13 @@
             <ref name="externalChannelSubsetter9"/>
             <ref name="printline9"/>
             <ref name="responseWriter9"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas9"/>
             <ref name="alwaysSuccess9"/>
             <ref name="hasResponse9"/>
@@ -37489,6 +37503,13 @@
             <ref name="externalChannelSubsetter3"/>
             <ref name="printline3"/>
             <ref name="responseWriter3"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas3"/>
             <ref name="alwaysSuccess3"/>
             <ref name="hasResponse3"/>
@@ -37563,6 +37584,13 @@
             <ref name="externalChannelSubsetter13"/>
             <ref name="printline13"/>
             <ref name="responseWriter13"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas13"/>
             <ref name="alwaysSuccess13"/>
             <ref name="hasResponse13"/>
@@ -37637,6 +37665,13 @@
             <ref name="externalChannelSubsetter8"/>
             <ref name="printline8"/>
             <ref name="responseWriter8"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas8"/>
             <ref name="alwaysSuccess8"/>
             <ref name="hasResponse8"/>
@@ -37711,6 +37746,13 @@
             <ref name="externalChannelSubsetter7"/>
             <ref name="printline7"/>
             <ref name="responseWriter7"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas7"/>
             <ref name="alwaysSuccess7"/>
             <ref name="hasResponse7"/>
@@ -37785,6 +37827,13 @@
             <ref name="externalChannelSubsetter5"/>
             <ref name="printline5"/>
             <ref name="responseWriter5"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas5"/>
             <ref name="alwaysSuccess5"/>
             <ref name="hasResponse5"/>
@@ -37859,6 +37908,13 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
@@ -37933,6 +37989,13 @@
             <ref name="externalChannelSubsetter12"/>
             <ref name="printline12"/>
             <ref name="responseWriter12"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas12"/>
             <ref name="alwaysSuccess12"/>
             <ref name="hasResponse12"/>
@@ -38007,6 +38070,13 @@
             <ref name="externalChannelSubsetter10"/>
             <ref name="printline10"/>
             <ref name="responseWriter10"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas10"/>
             <ref name="alwaysSuccess10"/>
             <ref name="hasResponse10"/>
@@ -38081,6 +38151,13 @@
             <ref name="externalChannelSubsetter11"/>
             <ref name="printline11"/>
             <ref name="responseWriter11"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas11"/>
             <ref name="alwaysSuccess11"/>
             <ref name="hasResponse11"/>
@@ -38155,6 +38232,13 @@
             <ref name="externalChannelSubsetter14"/>
             <ref name="printline14"/>
             <ref name="responseWriter14"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas14"/>
             <ref name="alwaysSuccess14"/>
             <ref name="hasResponse14"/>
@@ -38229,6 +38313,13 @@
             <ref name="externalChannelSubsetter6"/>
             <ref name="printline6"/>
             <ref name="responseWriter6"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas6"/>
             <ref name="alwaysSuccess6"/>
             <ref name="hasResponse6"/>
@@ -38303,6 +38394,13 @@
             <ref name="externalChannelSubsetter2"/>
             <ref name="printline2"/>
             <ref name="responseWriter2"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas2"/>
             <ref name="alwaysSuccess2"/>
             <ref name="hasResponse2"/>

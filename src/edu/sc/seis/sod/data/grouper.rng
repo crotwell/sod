@@ -1211,6 +1211,13 @@
             <ref name="externalChannelSubsetter"/>
             <ref name="printline"/>
             <ref name="responseWriter"/>
+            <element name="sacPoleZeroWriter">
+                <optional>
+                    <element name="poleZeroFileTemplate">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
             <ref name="stationHas"/>
             <ref name="alwaysSuccess"/>
             <ref name="hasResponse"/>
