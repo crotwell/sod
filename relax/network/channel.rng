@@ -370,10 +370,10 @@
     <define name="hadDataLastWeek">
         <element name="hadDataLastWeek">
             <xsd:annotation>
-                <summary>Checks if a channel has any available data for the given seismogram server
+                <summary>Checks if a data center has data for a channel
                     for the past week</summary>
             </xsd:annotation>
-            <externalRef href="../waveform/fixedDataCenter.rng"/>
+            <externalRef href="../waveform/dataCenter.rng"/>
         </element>
     </define>
     <define name="responseWriter">
