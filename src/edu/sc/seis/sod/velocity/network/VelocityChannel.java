@@ -54,6 +54,11 @@ public class VelocityChannel extends Channel {
     public VelocitySite getSite() {
         return new VelocitySite(my_site);
     }
+    
+    public String compactToString(){
+        return ChannelIdUtil.toStringNoDates(this);
+    }
+    
 
     public String toString() {
         return ChannelIdUtil.toString(chan.get_id());
