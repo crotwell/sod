@@ -30,7 +30,7 @@ def dropElements(toDrop, infile, outfile):
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == '-v': 
         verbose = True
-    dropElements(['responseGain', 'integrate', 'rMean', 'rTrend', 'taper', 'legacyExecute'], 
+    dropElements(['responseGain', 'integrate', 'rMean', 'rTrend', 'legacyExecute', 'saveSeismogramToFile[dataDirectory]'], 
             'tutorial/waveform.xml', 
             'demo.xml')
     process('demo.xml', 
@@ -52,8 +52,11 @@ if __name__ == "__main__":
             'xslt/elideNetworkAndEventArms.xslt',
             'tutorial/incompleteWaveform.xml')
     dropElements(["waveformArm", "networkArm"], 
-            'tutorial/waveform.xml', 
-            'tutorial/event.xml')
+                'tutorial/waveform.xml', 
+                'tutorial/event.xml')
+    process('tutorial/event.xml', 
+            'xslt/insertPrintlines.xslt',
+            'tutorial/booleanPrinterEvent.xml')
     dropElements(["originOR"], 
             'tutorial/event.xml', 
             'tutorial/simpleEvent.xml')
