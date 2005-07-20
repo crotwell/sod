@@ -72,12 +72,14 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
+        <saveSeismogramToFile/>
         <responseGain/>
         <integrate/>
         <rMean/>
         <rTrend/>
-        <taper/>
-        <saveSeismogramToFile/>
+        <saveSeismogramToFile>
+            <dataDirectory>processedSeismograms</dataDirectory>
+        </saveSeismogramToFile>
         <legacyExecute>
             <command>echo Sod saved this file</command>
         </legacyExecute>
