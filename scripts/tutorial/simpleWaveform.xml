@@ -45,7 +45,7 @@
         </networkFinder>
         <networkCode>II</networkCode>
         <bandCode>B</bandCode>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
     <waveformArm>
         <phaseRequest>

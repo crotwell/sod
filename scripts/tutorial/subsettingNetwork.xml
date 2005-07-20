@@ -6,6 +6,6 @@
             <dns>edu/iris/dmc</dns>
         </networkFinder>
         <networkCode>II</networkCode>
-        <printlineChannelProcessor/>
+        <printlineChannelProcess/>
     </networkArm>
 </sod>
