@@ -363,6 +363,9 @@ public class NetworkArm implements Arm {
             return networkDbObject.stationDbObjects;
         }
         synchronized(this) {
+            if(networkDbObject.stationDbObjects != null) {
+                return networkDbObject.stationDbObjects;
+            }
             statusChanged("Getting stations for "
                     + networkDbObject.getNetworkAccess().get_attributes().name);
             ArrayList arrayList = new ArrayList();
@@ -434,6 +437,9 @@ public class NetworkArm implements Arm {
             return stationDbObject.siteDbObjects;
         }
         synchronized(this) {
+            if(stationDbObject.siteDbObjects != null) {
+                return stationDbObject.siteDbObjects;
+            }
             statusChanged("Getting sites for "
                     + stationDbObject.getStation().get_id().station_code);
             ArrayList successes = new ArrayList();
@@ -516,6 +522,9 @@ public class NetworkArm implements Arm {
             return siteDbObject.channelDbObjects;
         }
         synchronized(this) {
+            if(siteDbObject.channelDbObjects != null) {
+                return siteDbObject.channelDbObjects;
+            }
             statusChanged("Getting channels for " + siteDbObject);
             List successes = new ArrayList();
             ProxyNetworkAccess networkAccess = networkDbObject.getNetworkAccess();
