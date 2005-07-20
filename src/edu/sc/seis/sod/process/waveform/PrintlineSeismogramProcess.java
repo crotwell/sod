@@ -39,5 +39,5 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
 
     private String template, filename;
 
-    public static final String DEFAULT_TEMPLATE = "Got $seismograms.size() seismograms for $channel for $event";
+    public static final String DEFAULT_TEMPLATE = "Got $seismograms.size() seismograms for $channel.compactToString() for eq on $event.time";
 }// PrintlineWaveformProcessor
