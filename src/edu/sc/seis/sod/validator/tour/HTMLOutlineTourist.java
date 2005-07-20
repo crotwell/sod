@@ -158,7 +158,7 @@ public class HTMLOutlineTourist implements Tourist {
     }
 
     private String getTagDocHelpHREF() {
-        return getBasePath() + "tagDocs/abstractStructure.html";
+        return getBasePath() + "ingredients/abstractStructure.html";
     }
 
     private String getBasePath() {
@@ -180,7 +180,7 @@ public class HTMLOutlineTourist implements Tourist {
         String classname = c.getName().substring(c.getPackage()
                 .getName()
                 .length() + 1);
-        return getBasePath() + "tagDocs/datatypes/" + classname + ".html";
+        return getBasePath() + "ingredients/datatypes/" + classname + ".html";
     }
 
     private String getDefLink(Form f) {
