@@ -157,6 +157,8 @@ public class MotionVectorArm implements Subsetter {
         processRequestSubsetter(ecp, infilters);
     }
 
+    private boolean firstRequest = true;
+
     public void processRequestSubsetter(EventVectorPair ecp,
                                         RequestFilter[][] infilters) {
         boolean passed;
@@ -170,6 +172,13 @@ public class MotionVectorArm implements Subsetter {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
             }
+        }
+        if(dcLocator == null) {
+            if(firstRequest) {
+                firstRequest = false;
+                logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
+            }
+            return;
         }
         if(passed) {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,

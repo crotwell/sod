@@ -19,7 +19,9 @@
             <optional>
                 <externalRef href="vectorRequestSubsetter.rng"/>
             </optional>
-            <externalRef href="dataCenter.rng"/>
+            <optional>
+                <externalRef href="dataCenter.rng"/>
+            </optional>
             <optional>
                 <externalRef href="vectorAvailableData.rng"/>
             </optional>

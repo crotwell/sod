@@ -22,13 +22,11 @@ import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.subsetter.Subsetter;
 import edu.sc.seis.sod.subsetter.availableData.AvailableDataSubsetter;
 import edu.sc.seis.sod.subsetter.availableData.PassAvailableData;
-import edu.sc.seis.sod.subsetter.dataCenter.NullSeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.dataCenter.SeismogramDCLocator;
 import edu.sc.seis.sod.subsetter.eventChannel.EventChannelSubsetter;
 import edu.sc.seis.sod.subsetter.eventChannel.PassEventChannel;
 import edu.sc.seis.sod.subsetter.request.PassRequest;
 import edu.sc.seis.sod.subsetter.request.Request;
-import edu.sc.seis.sod.subsetter.requestGenerator.NullRequestGenerator;
 import edu.sc.seis.sod.subsetter.requestGenerator.RequestGenerator;
 
 public class LocalSeismogramArm implements Subsetter {
@@ -115,6 +113,8 @@ public class LocalSeismogramArm implements Subsetter {
         processRequestSubsetter(ecp, SortTool.byBeginTimeAscending(infilters));
     }
 
+    private boolean firstRequest;
+
     public void processRequestSubsetter(EventChannelPair ecp,
                                         RequestFilter[] infilters) {
         boolean passed;
@@ -128,6 +128,13 @@ public class LocalSeismogramArm implements Subsetter {
                 handle(ecp, Stage.REQUEST_SUBSETTER, e);
                 return;
             }
+        }
+        if(getSeismogramDCLocator() == null) {
+            if(firstRequest) {
+                firstRequest = false;
+                logger.info("No seismogram data center has been set, so no data is being requested.  If you're only generating BreqFast requests, this is fine.  Otherwise, it's probably an error.");
+            }
+            return;
         }
         if(passed) {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
@@ -173,7 +180,7 @@ public class LocalSeismogramArm implements Subsetter {
                             // milliseconds
                         } catch(InterruptedException ex) {}
                         if(retries % 2 == 0) {
-                            //force reload from name service evey other try
+                            // force reload from name service evey other try
                             dataCenter.reset();
                         }
                     } else {
@@ -239,8 +246,8 @@ public class LocalSeismogramArm implements Subsetter {
                         if(nsDC.getServerDNS().equals("edu/iris/dmc")
                                 && nsDC.getServerName()
                                         .equals("IRIS_ArchiveDataCenter")) {
-                            //Archive doesn't support retrieve_seismograms
-                            //so try using the queue set of retrieve calls
+                            // Archive doesn't support retrieve_seismograms
+                            // so try using the queue set of retrieve calls
                             try {
                                 String id = dataCenter.queue_seismograms(infilters);
                                 logger.info("request id: " + id);
@@ -394,7 +401,7 @@ public class LocalSeismogramArm implements Subsetter {
 
     private EventChannelSubsetter eventChannel = new PassEventChannel();
 
-    private RequestGenerator requestGenerator = new NullRequestGenerator();
+    private RequestGenerator requestGenerator;
 
     private Request request = new PassRequest();
 
@@ -402,7 +409,7 @@ public class LocalSeismogramArm implements Subsetter {
 
     private LinkedList processes = new LinkedList();
 
-    private SeismogramDCLocator dcLocator = new NullSeismogramDCLocator();
+    private SeismogramDCLocator dcLocator;
 
     public static final String NO_DATA = "no_data";
 

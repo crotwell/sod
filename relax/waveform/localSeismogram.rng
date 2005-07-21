@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <start>
         <element name="waveformArm">
             <xsd:annotation>
@@ -16,14 +17,15 @@
             <optional>
                 <externalRef href="requestSubsetter.rng"/>
             </optional>
-            <externalRef href="dataCenter.rng"/>
+            <optional>
+                <externalRef href="dataCenter.rng"/>
+            </optional>
             <optional>
                 <externalRef href="availableData.rng"/>
             </optional>
             <zeroOrMore>
                 <externalRef href="waveformProcess.rng"/>
             </zeroOrMore>
-            
         </element>
     </start>
 </grammar>
