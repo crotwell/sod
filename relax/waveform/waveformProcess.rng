@@ -17,11 +17,12 @@
                     these items all work on the received data. Some of them like rMean and rTrend
                     perform manipulations on the data. Others like saveSeismogramToFile and
                     seismogramImageProcess write out information based on the data. Some like
-                    fullDataCoverage and phaseSignalToNoise subset the items based on the data's
-                    properties. If several items are used, the data from each step feeds into the
-                    next. So if a seismogramImageProcessor follows a phaseCut the image drawn will
-                    be of the data after the cut. If you don't want a processor's work to effect
-                    later steps use the forkProcess to isolate it.</description>
+                    fullDataCoverage and phaseSignalToNoise subset the items based on the
+                    data&apos;s properties. If several items are used, the data from each step
+                    feeds into the next. So if a seismogramImageProcessor follows a phaseCut the
+                    image drawn will be of the data after the cut. If you don&apos;t want a
+                    processor&apos;s work to effect later steps use the forkProcess to isolate
+                    it.</description>
                 <include/>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
@@ -262,7 +263,7 @@
                     <saveSeismogramToFile>
                         <fileType>sac</fileType>
                         <dataDirectory>POND_II</dataDirectory>
-                        <eventDirLabel>Event_$event.getTime('yyyy_DDD_HH_mm_ss')</eventDirLabel>
+                        <eventDirLabel>Event_$event.getTime(&apos;yyyy_DDD_HH_mm_ss&apos;)</eventDirLabel>
                     </saveSeismogramToFile>
                 </example>
             </xsd:annotation>
@@ -303,6 +304,23 @@
             <optional>
                 <element name="storeSeismogramsInDB">
                     <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="sacHeader">
+                    <zeroOrMore>
+                        <element name="phaseTime">
+                            <element name="model">
+                                <data type="string"/>
+                            </element>
+                            <element name="phaseName">
+                                <data type="string"/>
+                            </element>
+                            <element name="tHeader">
+                                <data type="integer"/>
+                            </element>
+                        </element>
+                    </zeroOrMore>
                 </element>
             </optional>
         </element>

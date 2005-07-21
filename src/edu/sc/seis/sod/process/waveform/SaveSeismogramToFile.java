@@ -13,18 +13,25 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
+import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.TauP.Arrival;
+import edu.sc.seis.TauP.TauModelException;
+import edu.sc.seis.TauP.TauP_SetSac;
+import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.xml.DataSet;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXML;
 import edu.sc.seis.fissuresUtil.xml.DataSetToXMLStAX;
@@ -36,6 +43,7 @@ import edu.sc.seis.fissuresUtil.xml.StdAuxillaryDataNames;
 import edu.sc.seis.fissuresUtil.xml.URLDataSetSeismogram;
 import edu.sc.seis.fissuresUtil.xml.UnsupportedFileTypeException;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
+import edu.sc.seis.seisFile.sac.SacTimeSeries;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
@@ -52,6 +60,20 @@ public class SaveSeismogramToFile implements WaveformProcess {
             fileType = SeismogramFileTypes.MSEED;
         } else if(fileTypeStr.equals(SeismogramFileTypes.SAC.getValue())) {
             fileType = SeismogramFileTypes.SAC;
+            if(DOMHelper.hasElement(config, "sacHeader")) {
+                Element sacHeader = DOMHelper.extractElement(config,
+                                                             "sacHeader");
+                NodeList nl = DOMHelper.getElements(sacHeader, "phaseTime");
+                for(int i = 0; i < nl.getLength(); i++) {
+                    Element phaseEl = (Element)nl.item(i);
+                    String model = DOMHelper.extractText(phaseEl, "model");
+                    String phaseName = DOMHelper.extractText(phaseEl,
+                                                             "phaseName");
+                    int tHeader = Integer.parseInt(DOMHelper.extractText(phaseEl,
+                                                                         "tHeader"));
+                    sacHeaderList.add(new PhaseHeaderProcess(model, phaseName, tHeader));
+                }
+            }
         } else if(fileTypeStr.equals(SeismogramFileTypes.PSN.getValue())) {
             fileType = SeismogramFileTypes.PSN;
         } else if(fileTypeStr.equals(SeismogramFileTypes.RT_130.getValue())) {
@@ -232,11 +254,27 @@ public class SaveSeismogramToFile implements WaveformProcess {
             logger.debug("saveInDataset " + i + " "
                     + ChannelIdUtil.toString(seismograms[i].channel_id));
             seismograms[i].channel_id = channel.get_id();
-            File seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
-                                                        seisFileDirectory,
-                                                        channel,
-                                                        event,
-                                                        type);
+            File seisFile;
+            if(type != SeismogramFileTypes.SAC) {
+                seisFile = URLDataSetSeismogram.saveAs(seismograms[i],
+                                                       seisFileDirectory,
+                                                       channel,
+                                                       event,
+                                                       type);
+            } else {
+                seisFile = URLDataSetSeismogram.getUnusedFileName(seisFileDirectory,
+                                                                  channel,
+                                                                  ".sac");
+                SacTimeSeries sac = FissuresToSac.getSAC(seismograms[i],
+                                                         channel,
+                                                         event != null ? event.get_preferred_origin()
+                                                                 : null);
+                Iterator it = sacHeaderList.iterator();
+                while(it.hasNext()) {
+                    ((SacHeaderProcess)it.next()).process(sac, event, channel);
+                }
+                sac.write(seisFile);
+            }
             if(storeSeismogramsInDB) {
                 jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
                                                       seismograms[i],
@@ -424,6 +462,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     private String id = "";
 
+    private ArrayList sacHeaderList = new ArrayList();
+
     private boolean preserveRequest = false, storeSeismogramsInDB = false;
 
     public static final String COOKIE_PREFIX = "SeisFile_";
@@ -437,4 +477,43 @@ public class SaveSeismogramToFile implements WaveformProcess {
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 
     private JDBCSeismogramFiles jdbcSeisFile;
+}
+
+abstract class SacHeaderProcess {
+
+    abstract void process(SacTimeSeries sac,
+                          EventAccessOperations event,
+                          Channel channel);
+}
+
+class PhaseHeaderProcess extends SacHeaderProcess {
+
+    PhaseHeaderProcess(String model, String phaseName, int tHeader) {
+        this.model = model;
+        this.phaseName = phaseName;
+        this.tHeader = tHeader;
+    }
+
+    void process(SacTimeSeries sac, EventAccessOperations event, Channel channel) {
+        try {
+            Arrival[] arrivals = TauPUtil.getTauPUtil(model)
+                    .calcTravelTimes(channel.my_site.my_location,
+                                     event.get_preferred_origin(),
+                                     new String[] {phaseName});
+            TauP_SetSac.setSacTHeader(sac, tHeader, arrivals[0]);
+        } catch(TauModelException e) {
+            logger.warn("Problem setting travel times for " + phaseName
+                    + " in " + model, e);
+        } catch(NoPreferredOrigin e) {
+            logger.warn("Sigh...", e);
+        }
+    }
+
+    String model;
+
+    String phaseName;
+
+    int tHeader;
+
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(PhaseHeaderProcess.class);
 }

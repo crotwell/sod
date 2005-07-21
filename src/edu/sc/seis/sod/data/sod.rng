@@ -16720,6 +16720,23 @@
                         <empty/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <element name="model">
+                                    <data type="string"/>
+                                </element>
+                                <element name="phaseName">
+                                    <data type="string"/>
+                                </element>
+                                <element name="tHeader">
+                                    <data type="integer"/>
+                                </element>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -17146,6 +17163,23 @@
                 <optional>
                     <element name="storeSeismogramsInDB">
                         <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <element name="model">
+                                    <data type="string"/>
+                                </element>
+                                <element name="phaseName">
+                                    <data type="string"/>
+                                </element>
+                                <element name="tHeader">
+                                    <data type="integer"/>
+                                </element>
+                            </element>
+                        </zeroOrMore>
                     </element>
                 </optional>
             </element>
@@ -17576,6 +17610,23 @@
                         <empty/>
                     </element>
                 </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <element name="model">
+                                    <data type="string"/>
+                                </element>
+                                <element name="phaseName">
+                                    <data type="string"/>
+                                </element>
+                                <element name="tHeader">
+                                    <data type="integer"/>
+                                </element>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
             <element name="recordSectionDisplayGenerator">
                 <element name="id">
@@ -18002,6 +18053,23 @@
                 <optional>
                     <element name="storeSeismogramsInDB">
                         <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <element name="model">
+                                    <data type="string"/>
+                                </element>
+                                <element name="phaseName">
+                                    <data type="string"/>
+                                </element>
+                                <element name="tHeader">
+                                    <data type="integer"/>
+                                </element>
+                            </element>
+                        </zeroOrMore>
                     </element>
                 </optional>
             </element>
