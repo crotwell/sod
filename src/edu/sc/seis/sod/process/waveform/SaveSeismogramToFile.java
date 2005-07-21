@@ -54,6 +54,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
             fileType = SeismogramFileTypes.SAC;
         } else if(fileTypeStr.equals(SeismogramFileTypes.PSN.getValue())) {
             fileType = SeismogramFileTypes.PSN;
+        } else if(fileTypeStr.equals(SeismogramFileTypes.RT_130.getValue())) {
+            fileType = SeismogramFileTypes.RT_130;
         }
         String datadirName = DOMHelper.extractText(config,
                                                    "dataDirectory",
