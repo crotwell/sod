@@ -52,7 +52,7 @@ public class CSVEventSource extends SimpleEventSource {
             throws IOException, FileNotFoundException, ConfigurationException,
             NoSuchFieldException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
-        //let's get the fields
+        // let's get the fields
         List fields = new ArrayList();
         String line = reader.readLine();
         if(line != null) {
@@ -68,7 +68,7 @@ public class CSVEventSource extends SimpleEventSource {
         } else {
             throw new ConfigurationException("no header row in csv file");
         }
-        //let's get the events!
+        // let's get the events!
         List events = new ArrayList();
         while((line = reader.readLine()) != null) {
             List values = new ArrayList();
@@ -79,8 +79,8 @@ public class CSVEventSource extends SimpleEventSource {
             if(values.size() != fields.size()) {
                 throw new ConfigurationException("field-value row size descrepency");
             }
-            //time to start populating field values
-            //first up: the only required field...
+            // time to start populating field values
+            // first up: the only required field...
             Time time = null;
             if(fields.contains(TIME)) {
                 time = new Time((String)values.get(fields.indexOf(TIME)), 0);
@@ -95,14 +95,6 @@ public class CSVEventSource extends SimpleEventSource {
             if(fields.contains(LONGITUDE)) {
                 longitude = Float.parseFloat((String)values.get(fields.indexOf(LONGITUDE)));
             }
-            double elevation = 0f;
-            if(fields.contains(ELEVATION)) {
-                elevation = Double.parseDouble((String)values.get(fields.indexOf(ELEVATION)));
-            }
-            Unit elevationUnit = UnitImpl.METER;
-            if(fields.contains(ELEVATION_UNITS)) {
-                elevationUnit = UnitImpl.getUnitFromString((String)values.get(fields.indexOf(ELEVATION_UNITS)));
-            }
             double depth = 0f;
             if(fields.contains(DEPTH)) {
                 depth = Double.parseDouble((String)values.get(fields.indexOf(DEPTH)));
@@ -113,8 +105,8 @@ public class CSVEventSource extends SimpleEventSource {
             }
             Location location = new Location(latitude,
                                              longitude,
-                                             new QuantityImpl(elevation,
-                                                              elevationUnit),
+                                             new QuantityImpl(0.0,
+                                                              UnitImpl.METER),
                                              new QuantityImpl(depth, depthUnit),
                                              LocationType.GEOGRAPHIC);
             String defaultString = "csvEvent";
@@ -167,11 +159,10 @@ public class CSVEventSource extends SimpleEventSource {
 
     private static boolean isValidField(String field) {
         return field.equals(TIME) || field.equals(LONGITUDE)
-                || field.equals(LATITUDE) || field.equals(ELEVATION)
-                || field.equals(DEPTH) || field.equals(MAGNITUDE)
-                || field.equals(CATALOG) || field.equals(CONTRIBUTOR)
-                || field.equals(NAME) || field.equals(FE_REGION)
-                || field.equals(FE_REGION_TYPE) || field.equals(ELEVATION_UNITS)
+                || field.equals(LATITUDE) || field.equals(DEPTH)
+                || field.equals(MAGNITUDE) || field.equals(CATALOG)
+                || field.equals(CONTRIBUTOR) || field.equals(NAME)
+                || field.equals(FE_REGION) || field.equals(FE_REGION_TYPE)
                 || field.equals(DEPTH_UNITS) || field.equals(MAGNITUDE_TYPE);
     }
 
@@ -179,15 +170,13 @@ public class CSVEventSource extends SimpleEventSource {
 
     private static Logger logger = Logger.getLogger(CSVEventSource.class);
 
-    //required
+    // required
     public static final String TIME = "time";
 
-    //optional
+    // optional
     public static final String LONGITUDE = "longitude";
 
     public static final String LATITUDE = "latitude";
-
-    public static final String ELEVATION = "elevation";
 
     public static final String DEPTH = "depth";
 
@@ -207,9 +196,7 @@ public class CSVEventSource extends SimpleEventSource {
 
     public static final String FE_REGION_TYPE = "flinnEngdahlRegionType";
 
-    //defaultable
-    public static final String ELEVATION_UNITS = "elevationUnits";
-
+    // defaultable
     public static final String DEPTH_UNITS = "depthUnits";
 
     public static final String MAGNITUDE_TYPE = "magnitudeType";

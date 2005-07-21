@@ -26,8 +26,7 @@ public class CSVEventPrinter implements OriginSubsetter {
     public CSVEventPrinter(Element config) throws Exception {
         Element filenameEl = SodUtil.getElement(config, "filename");
         String filename = SodUtil.getNestedText(filenameEl);
-        file = new File(Start.getRunProps().getStatusBaseDir() + '/'
-                + filename);
+        file = new File(Start.getRunProps().getStatusBaseDir() + '/' + filename);
         createFileAndWriteHeaderIfNeeded();
     }
 
@@ -39,10 +38,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         Location loc = preferred_origin.my_location;
         writer.write(loc.latitude + COM);
         writer.write(loc.longitude + COM);
-        Quantity q = loc.elevation;
-        writer.write(q.value + COM);
-        writer.write(q.the_units + COM);
-        q = loc.depth;
+        Quantity q = loc.depth;
         writer.write(q.value + COM);
         writer.write(q.the_units + COM);
         Magnitude mag = preferred_origin.magnitudes[0];
@@ -71,14 +67,12 @@ public class CSVEventPrinter implements OriginSubsetter {
 
     private String getHeader() {
         return CSVEventSource.TIME + COM + CSVEventSource.LATITUDE + COM
-                + CSVEventSource.LONGITUDE + COM + CSVEventSource.ELEVATION
-                + COM + CSVEventSource.ELEVATION_UNITS + COM
-                + CSVEventSource.DEPTH + COM + CSVEventSource.DEPTH_UNITS + COM
-                + CSVEventSource.MAGNITUDE + COM
-                + CSVEventSource.MAGNITUDE_TYPE + COM + CSVEventSource.CATALOG
-                + COM + CSVEventSource.CONTRIBUTOR + COM + CSVEventSource.NAME
-                + COM + CSVEventSource.FE_REGION + COM
-                + CSVEventSource.FE_REGION_TYPE;
+                + CSVEventSource.LONGITUDE + COM + CSVEventSource.DEPTH + COM
+                + CSVEventSource.DEPTH_UNITS + COM + CSVEventSource.MAGNITUDE
+                + COM + CSVEventSource.MAGNITUDE_TYPE + COM
+                + CSVEventSource.CATALOG + COM + CSVEventSource.CONTRIBUTOR
+                + COM + CSVEventSource.NAME + COM + CSVEventSource.FE_REGION
+                + COM + CSVEventSource.FE_REGION_TYPE;
     }
 
     private File file;
