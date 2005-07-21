@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -33,6 +34,10 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
                                                                     channel_id.begin_time);
             String response = FissuresToSac.getPoleZero(inst.the_response).toString();
             velocitizer.evaluate(template, response, chan);
+        } catch(IllegalArgumentException ex) {
+            GlobalExceptionHandler.handle("Channel has invalid response: "
+                                          + ChannelIdUtil.toString(chan.get_id()), ex);
+            return false;
         } catch(ChannelNotFound ex) {
             GlobalExceptionHandler.handle("Channel not found: "
                     + ChannelIdUtil.toString(chan.get_id()), ex);
@@ -45,7 +50,7 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
         return true;
     }
 
-    public static final String DEFAULT_TEMPLATE = "polezero/$network.code-$station.code-${channel.code}.sacpz";
+    public static final String DEFAULT_TEMPLATE = "polezero/${network.code}-${station.code}-${channel.code}.sacpz";
 
     private String template;
 
