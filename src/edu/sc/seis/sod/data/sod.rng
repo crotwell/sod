@@ -755,8 +755,9 @@
                             <optional>
                                 <ref name="request4"/>
                             </optional>
-                            <choice>
-                                <element name="choiceDataCenter">
+                            <optional>
+                                <choice>
+                                    <element name="choiceDataCenter">
                                     <oneOrMore>
                                     <element name="choice">
                                     <ref name="eventChannel8"/>
@@ -804,8 +805,8 @@
                                     </element>
                                     </element>
                                     </element>
-                                </element>
-                                <element name="fixedDataCenter">
+                                    </element>
+                                    <element name="fixedDataCenter">
                                     <element name="name">
                                     <choice>
                                     <value>IRIS_BudDataCenter</value>
@@ -824,8 +825,9 @@
                                     <data type="string"/>
                                     </choice>
                                     </element>
-                                </element>
-                            </choice>
+                                    </element>
+                                </choice>
+                            </optional>
                             <optional>
                                 <ref name="availableData4"/>
                             </optional>
@@ -844,8 +846,9 @@
                             <optional>
                                 <ref name="vectorRequest"/>
                             </optional>
-                            <choice>
-                                <element name="choiceDataCenter">
+                            <optional>
+                                <choice>
+                                    <element name="choiceDataCenter">
                                     <oneOrMore>
                                     <element name="choice">
                                     <ref name="eventChannel4"/>
@@ -893,8 +896,8 @@
                                     </element>
                                     </element>
                                     </element>
-                                </element>
-                                <element name="fixedDataCenter">
+                                    </element>
+                                    <element name="fixedDataCenter">
                                     <element name="name">
                                     <choice>
                                     <value>IRIS_BudDataCenter</value>
@@ -913,8 +916,9 @@
                                     <data type="string"/>
                                     </choice>
                                     </element>
-                                </element>
-                            </choice>
+                                    </element>
+                                </choice>
+                            </optional>
                             <optional>
                                 <ref name="vectorAvailableData"/>
                             </optional>
