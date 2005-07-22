@@ -185,7 +185,7 @@ public abstract class PrintlineEditor implements EditorPlugin {
         }
     }
 
-    private static Text getTextChildFromPossiblyNonexistentElement(Element parentOfElement,
+    protected static Text getTextChildFromPossiblyNonexistentElement(Element parentOfElement,
                                                                    String elementName,
                                                                    String defaultText) {
         Element filenameElement = DOMHelper.extractOrCreateElement(parentOfElement,
