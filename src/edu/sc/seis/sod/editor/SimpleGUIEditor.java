@@ -1,10 +1,10 @@
 /**
  * SimpleGUI.java
- *
+ * 
  * @author Created by Omnicore CodeGuide
  */
-
 package edu.sc.seis.sod.editor;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -52,28 +52,29 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GUIReporter;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.xml.Writer;
 
-
-
 public class SimpleGUIEditor extends CommandLineEditor {
 
     static {
         List ignoreList = new ArrayList();
         // silently eat CommFailure
         ignoreList.add(COMM_FAILURE.class);
-        GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(), ignoreList));
+        GlobalExceptionHandler.add(new FilterReporter(new GUIReporter(),
+                                                      ignoreList));
         GlobalExceptionHandler.registerWithAWTThread();
     }
 
-    public SimpleGUIEditor(String[] args) throws TransformerException, ParserConfigurationException, IOException, DOMException, SAXException {
+    public SimpleGUIEditor(String[] args) throws TransformerException,
+            ParserConfigurationException, IOException, DOMException,
+            SAXException {
         super(args);
         GlobalExceptionHandler.add(new GUIReporter());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            //Oh well, go with the default look and feel
+        } catch(Exception e) {
+            // Oh well, go with the default look and feel
         }
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-tabs")) {
+        for(int i = 0; i < args.length; i++) {
+            if(args[i].equals("-tabs")) {
                 tabs = true;
             }
         }
@@ -87,101 +88,100 @@ public class SimpleGUIEditor extends CommandLineEditor {
         menubar.add(fileMenu);
         final JMenuItem saveAs = new JMenuItem("Save As...");
         saveAs.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        FileDialog fileDialog = new FileDialog(frame);
-                        fileDialog.setMode(FileDialog.SAVE);
-                        fileDialog.show();
-                        String outfiledir = fileDialog.getDirectory();
-                        String outfilename = fileDialog.getFile();
-                        if (outfilename != null) {
-                            File outfile = new File(outfiledir, outfilename);
-                            try {
-                                save(outfile);
-                            } catch (IOException ex) {
-                                GlobalExceptionHandler.handle("Unable to save to "+outfile, ex);
-                            }
-                        }
+
+            public void actionPerformed(ActionEvent e) {
+                FileDialog fileDialog = new FileDialog(frame);
+                fileDialog.setMode(FileDialog.SAVE);
+                fileDialog.show();
+                String outfiledir = fileDialog.getDirectory();
+                String outfilename = fileDialog.getFile();
+                if(outfilename != null) {
+                    File outfile = new File(outfiledir, outfilename);
+                    try {
+                        save(outfile);
+                    } catch(IOException ex) {
+                        GlobalExceptionHandler.handle("Unable to save to "
+                                + outfile, ex);
                     }
-                });
+                }
+            }
+        });
         JMenuItem save = new JMenuItem("Save");
         save.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if(getConfigFilename().startsWith("jar")){
-                            saveAs.doClick();
-                        }else{
-                            File configFile = new File(getConfigFilename());
-                            try {
-                                save(configFile);
-                            } catch (IOException ex) {
-                                GlobalExceptionHandler.handle("Unable to save "+configFile, ex);
-                            }
-                        }
+
+            public void actionPerformed(ActionEvent e) {
+                if(getConfigFilename().startsWith("jar")) {
+                    saveAs.doClick();
+                } else {
+                    File configFile = new File(getConfigFilename());
+                    try {
+                        save(configFile);
+                    } catch(IOException ex) {
+                        GlobalExceptionHandler.handle("Unable to save "
+                                + configFile, ex);
                     }
-                });
+                }
+            }
+        });
         fileMenu.add(save);
         fileMenu.add(saveAs);
         fileMenu.addSeparator();
         JMenuItem load = new JMenuItem("Open");
         fileMenu.add(load);
-        load.addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e) {
-                        FileDialog fileDialog = new FileDialog(frame, "Load a SOD config file");
-                        fileDialog.setDirectory(".");
-                        fileDialog.show();
-                        String infileDir = fileDialog.getDirectory();
-                        String inFile = fileDialog.getFile();
-                        if (inFile != null) {
-                            try {
-                                setConfigFile(infileDir + "/" + inFile);
-                                loadGUI();
-                            } catch (Exception ex) {
-                                GlobalExceptionHandler.handle("Unable to open "+inFile, ex);
-                            }
-                        }
+        load.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                FileDialog fileDialog = new FileDialog(frame,
+                                                       "Load a SOD config file");
+                fileDialog.setDirectory(".");
+                fileDialog.show();
+                String infileDir = fileDialog.getDirectory();
+                String inFile = fileDialog.getFile();
+                if(inFile != null) {
+                    try {
+                        setConfigFile(infileDir + "/" + inFile);
+                        loadGUI();
+                    } catch(Exception ex) {
+                        GlobalExceptionHandler.handle("Unable to open "
+                                + inFile, ex);
                     }
-
-                });
-        JMenuItem loadTutorial = new JMenuItem("Open Tutorial");
-        loadTutorial.addActionListener(tutorialLoader);
+                }
+            }
+        });
+        JMenuItem loadTutorial = new JMenuItem("Open Demo");
+        loadTutorial.addActionListener(demoLoader);
         fileMenu.add(loadTutorial);
-
         JMenuItem loadWeed = new JMenuItem("Open WEED");
         loadWeed.addActionListener(new FileLoader(configFileBase + "weed.xml"));
         fileMenu.add(loadWeed);
-
         JMenuItem loadBreqfast = new JMenuItem("Open BREQFast");
-        loadBreqfast.addActionListener(new FileLoader(configFileBase + "breqfast.xml"));
+        loadBreqfast.addActionListener(new FileLoader(configFileBase
+                + "breqfast.xml"));
         fileMenu.add(loadBreqfast);
         JMenuItem loadMovec = new JMenuItem("Open Motion Vector");
-        loadMovec.addActionListener(new FileLoader(configFileBase + "vector.xml"));
+        loadMovec.addActionListener(new FileLoader(configFileBase
+                + "vector.xml"));
         fileMenu.add(loadMovec);
-
-        JMenuItem loadLegEx = new JMenuItem("Open Legacy Execute");
-        loadLegEx.addActionListener(new FileLoader(configFileBase + "legacyExecute.xml"));
-        fileMenu.add(loadLegEx);
-
-        JMenuItem load3CLegEx = new JMenuItem("Open 3C Legacy Execute");
-        load3CLegEx.addActionListener(new FileLoader(configFileBase + "legacyVectorExecute.xml"));
-        fileMenu.add(load3CLegEx);
-
-        JMenuItem loadRealTime = new JMenuItem("Open Real Time");
-        loadRealTime.addActionListener(new FileLoader(configFileBase + "realtime.xml"));
+        JMenuItem loadRealTime = new JMenuItem("Open Standing Order");
+        loadRealTime.addActionListener(new FileLoader(configFileBase
+                + "standingOrder.xml"));
         fileMenu.add(loadRealTime);
-
         fileMenu.addSeparator();
         JMenuItem quit = new JMenuItem("Quit");
         fileMenu.add(quit);
         quit.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        System.exit(0);
-                    }
-                });
+
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         frame.getContentPane().setLayout(new BorderLayout());
         loadGUI();
     }
 
-    private class FileLoader implements ActionListener{
-        public FileLoader(String filename){
+    private class FileLoader implements ActionListener {
+
+        public FileLoader(String filename) {
             this.filename = filename;
         }
 
@@ -189,40 +189,41 @@ public class SimpleGUIEditor extends CommandLineEditor {
             try {
                 setConfigFile(filename);
                 loadGUI();
-            } catch (Throwable ex) {
+            } catch(Throwable ex) {
                 GlobalExceptionHandler.handle(ex);
             }
         }
+
         private String filename;
     }
 
-    public void loadGUI(){
+    public void loadGUI() {
         Document doc = getDocument();
-        if(doc == null){
-            tutorialLoader.actionPerformed(null);
-        }else{
+        if(doc == null) {
+            demoLoader.actionPerformed(null);
+        } else {
             frame.getContentPane().removeAll();
-            if (tabs) {
+            if(tabs) {
                 JTabbedPane tabPane = new JTabbedPane();
                 frame.getContentPane().add(tabPane, BorderLayout.CENTER);
                 // put each top level sod element in a panel
                 NodeList list = doc.getDocumentElement().getChildNodes();
-                for (int j = 0; j < list.getLength(); j++) {
-                    if (list.item(j) instanceof Element) {
+                for(int j = 0; j < list.getLength(); j++) {
+                    if(list.item(j) instanceof Element) {
                         Element el = (Element)list.item(j);
                         JComponent panel = null;
-                        if(el.getTagName().equals("properties")){
+                        if(el.getTagName().equals("properties")) {
                             try {
                                 panel = propEditor.getGUI(el);
-                            } catch (TransformerException e) {
+                            } catch(TransformerException e) {
                                 GlobalExceptionHandler.handle(e);
                             }
-                        }else{
+                        } else {
                             panel = new JPanel(new BorderLayout());
                             Box box = Box.createVerticalBox();
                             NodeList sublist = ((Element)list.item(j)).getChildNodes();
                             JComponent[] subComponents = getCompsForNodeList(sublist);
-                            for (int i = 0; i < subComponents.length; i++) {
+                            for(int i = 0; i < subComponents.length; i++) {
                                 box.add(subComponents[i]);
                                 box.add(Box.createVerticalStrut(10));
                             }
@@ -234,7 +235,8 @@ public class SimpleGUIEditor extends CommandLineEditor {
                                                                  JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                         scrollPane.getVerticalScrollBar().setBlockIncrement(50);
                         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-                        tabPane.add(EditorUtil.capFirstLetter(tabName),scrollPane);
+                        tabPane.add(EditorUtil.capFirstLetter(tabName),
+                                    scrollPane);
                     }
                 }
             } else {
@@ -242,29 +244,32 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 Box box = Box.createVerticalBox();
                 box.add(comp);
                 box.add(Box.createGlue());
-                frame.getContentPane().add(new JScrollPane(box, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+                frame.getContentPane()
+                        .add(new JScrollPane(box,
+                                             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
+                             BorderLayout.CENTER);
             }
         }
-
         frame.pack();
         frame.show();
         frame.addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
+
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
-    JComponent[] getCompsForNodeList(NodeList nl){
+    JComponent[] getCompsForNodeList(NodeList nl) {
         List comps = new ArrayList();
-        for (int i = 0; i < nl.getLength(); i++) {
-            if (nl.item(i) instanceof Element) {
+        for(int i = 0; i < nl.getLength(); i++) {
+            if(nl.item(i) instanceof Element) {
                 comps.add(getCompForElement((Element)nl.item(i)));
             }
         }
         return (JComponent[])comps.toArray(new JComponent[comps.size()]);
     }
-
 
     protected void save(File file) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
@@ -274,8 +279,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     protected void save(OutputStream out) {
-        BufferedWriter buf =
-            new BufferedWriter(new OutputStreamWriter(out));
+        BufferedWriter buf = new BufferedWriter(new OutputStreamWriter(out));
         Writer xmlWriter = new Writer();
         xmlWriter.setOutput(buf);
         xmlWriter.write(getDocument());
@@ -289,14 +293,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
         JLabel label = new JLabel(getDisplayName(element.getTagName()));
         Box box = Box.createVerticalBox();
         JComponent comp = getCompForAttributes(element);
-        if (comp != null) { box.add(comp); }
-
+        if(comp != null) {
+            box.add(comp);
+        }
         NamedNodeMap attrList = element.getAttributes();
         NodeList list = element.getChildNodes();
         // simple case of only 1 child Text node and no attributes
-        if (list.getLength() == 1 && list.item(0) instanceof Text && attrList.getLength() == 0) {
+        if(list.getLength() == 1 && list.item(0) instanceof Text
+                && attrList.getLength() == 0) {
             comp = getCompForTextNode((Text)list.item(0));
-            if (comp != null) {
+            if(comp != null) {
                 box = Box.createHorizontalBox();
                 box.add(Box.createHorizontalStrut(10));
                 box.add(label);
@@ -305,13 +311,13 @@ public class SimpleGUIEditor extends CommandLineEditor {
                 return box;
             }
         } else {
-            for (int i = 0; i < list.getLength(); i++) {
-                if (list.item(i) instanceof Element) {
+            for(int i = 0; i < list.getLength(); i++) {
+                if(list.item(i) instanceof Element) {
                     box.add(getCompForElement((Element)list.item(i)));
-                } else if (list.item(i) instanceof Text) {
+                } else if(list.item(i) instanceof Text) {
                     Text text = (Text)list.item(i);
                     comp = getCompForTextNode(text);
-                    if (comp != null) {
+                    if(comp != null) {
                         box.add(comp);
                     }
                 }
@@ -327,8 +333,8 @@ public class SimpleGUIEditor extends CommandLineEditor {
         Box valCol = Box.createVerticalBox();
         box.add(valCol);
         NamedNodeMap list = element.getAttributes();
-        for (int i = 0; i < list.getLength(); i++) {
-            if (list.item(i) instanceof Attr) {
+        for(int i = 0; i < list.getLength(); i++) {
+            if(list.item(i) instanceof Attr) {
                 Attr attr = (Attr)list.item(i);
                 valCol.add(EditorUtil.getLabeledTextField(attr));
             }
@@ -337,7 +343,7 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     JComponent getCompForTextNode(Text text) {
-        if (text.getNodeValue().trim().equals("")) {
+        if(text.getNodeValue().trim().equals("")) {
             return null;
         }
         JTextField textField = new JTextField();
@@ -347,15 +353,16 @@ public class SimpleGUIEditor extends CommandLineEditor {
         return textField;
     }
 
-    /** creates a JPanel with the bottom component slightly indented relative
-     to the bottome one. */
+    /**
+     * creates a JPanel with the bottom component slightly indented relative to
+     * the bottome one.
+     */
     public Box indent(JComponent top, JComponent bottom) {
         Box box = Box.createVerticalBox();
         Box topRow = Box.createHorizontalBox();
         box.add(topRow);
         Box botRow = Box.createHorizontalBox();
         box.add(botRow);
-
         topRow.add(Box.createHorizontalStrut(5));
         topRow.add(top);
         topRow.add(Box.createGlue());
@@ -367,10 +374,12 @@ public class SimpleGUIEditor extends CommandLineEditor {
 
     private PropertyEditor propEditor = new PropertyEditor();
 
-    public void setTabbed(boolean tabbed){ this.tabs = tabbed; }
+    public void setTabbed(boolean tabbed) {
+        this.tabs = tabbed;
+    }
 
     public static String getDisplayName(String tagName) {
-        if (nameProps.containsKey(tagName)) {
+        if(nameProps.containsKey(tagName)) {
             return nameProps.getProperty(tagName, tagName);
         } else {
             return tagName;
@@ -384,27 +393,28 @@ public class SimpleGUIEditor extends CommandLineEditor {
     }
 
     private static final String configFileBase = "jar:edu/sc/seis/sod/data/configFiles/";
-    public static final String TUTORIAL_LOC = configFileBase + "tutorial.xml";
-    private FileLoader tutorialLoader = new FileLoader(TUTORIAL_LOC);
+
+    public static final String TUTORIAL_LOC = configFileBase + "demo.xml";
+
+    private FileLoader demoLoader = new FileLoader(TUTORIAL_LOC);
+
     protected String frameName = "Simple XML Editor GUI";
+
     private boolean tabs = false;
+
     private JFrame frame;
+
     static Properties nameProps = new Properties();
+
     private static String NAME_PROPS = "edu/sc/seis/sod/editor/names.prop";
+
     private static Logger logger = Logger.getLogger(SimpleGUIEditor.class);
     static {
         try {
-            nameProps.load(SimpleGUIEditor.class.getClassLoader().getResourceAsStream(NAME_PROPS ));
-        }catch(IOException e) {
-            GlobalExceptionHandler.handle("Error in loading names Prop file",e);
+            nameProps.load(SimpleGUIEditor.class.getClassLoader()
+                    .getResourceAsStream(NAME_PROPS));
+        } catch(IOException e) {
+            GlobalExceptionHandler.handle("Error in loading names Prop file", e);
         }
     }
-
 }
-
-
-
-
-
-
-
