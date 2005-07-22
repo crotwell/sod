@@ -71,7 +71,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                              "phaseName");
                     int tHeader = Integer.parseInt(DOMHelper.extractText(phaseEl,
                                                                          "tHeader"));
-                    sacHeaderList.add(new PhaseHeaderProcess(model, phaseName, tHeader));
+                    sacHeaderList.add(new PhaseHeaderProcess(model,
+                                                             phaseName,
+                                                             tHeader));
                 }
             }
         } else if(fileTypeStr.equals(SeismogramFileTypes.PSN.getValue())) {
@@ -81,7 +83,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         }
         String datadirName = DOMHelper.extractText(config,
                                                    "dataDirectory",
-                                                   "seismograms");
+                                                   DEFAULT_DATA_DIRECTORY);
         dataDirectory = new File(datadirName);
         if(!dataDirectory.exists()) {
             if(!dataDirectory.mkdirs()) {
@@ -469,6 +471,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
     public static final String COOKIE_PREFIX = "SeisFile_";
 
     public static final String DEFAULT_TEMPLATE = "Event_$event.getTime('yyyy_DDD_HH_mm_ss')";
+
+    public static final String DEFAULT_DATA_DIRECTORY = "seismograms";
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 
