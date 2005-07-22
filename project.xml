@@ -344,12 +344,9 @@
                 <targetPath>edu/sc/seis/sod/data/configFiles</targetPath>
                 <includes>
                     <include>weed.xml</include>
-                    <include>tutorial.xml</include>
-                    <include>legacyExecute.xml</include>
-                    <include>legacyVectorExecute.xml</include>
-                    <include>realtime.xml</include>
+                    <include>demo.xml</include>
+                    <include>standingOrder.xml</include>
                     <include>breqfast.xml</include>
-                    <include>passcal_breqfast.xml</include>
                     <include>vector.xml</include>
                 </includes>
             </resource>
