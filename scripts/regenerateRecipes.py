@@ -69,7 +69,7 @@ if __name__ == "__main__":
     process('tutorial/subsettingNetwork.xml',
             'xslt/badNetwork.xslt',
             'tutorial/badNetwork.xml'),
-    dropElements(["printlineChannelProcessor"], 
+    dropElements(["networkCode"], 
             'tutorial/subsettingNetwork.xml', 
             'tutorial/simpleNetwork.xml')
 
