@@ -58,7 +58,7 @@
             <beginPhase>ttp</beginPhase>
             <beginOffset>
                 <unit>SECOND</unit>
-                <value>-60</value>
+                <value>-120</value>
             </beginOffset>
             <endPhase>tts</endPhase>
             <endOffset>
