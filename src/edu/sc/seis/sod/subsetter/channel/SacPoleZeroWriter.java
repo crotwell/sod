@@ -12,6 +12,7 @@ import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
+import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 
@@ -34,7 +35,7 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
                                                                     channel_id.begin_time);
             String response = FissuresToSac.getPoleZero(inst.the_response).toString();
             velocitizer.evaluate(template, response, chan);
-        } catch(IllegalArgumentException ex) {
+        } catch(InvalidResponse ex) {
             GlobalExceptionHandler.handle("Channel has invalid response: "
                                           + ChannelIdUtil.toString(chan.get_id()), ex);
             return false;
