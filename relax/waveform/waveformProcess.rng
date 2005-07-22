@@ -272,7 +272,6 @@
                     <choice>
                         <value>sac</value>
                         <value>mseed</value>
-                        <value>psn</value>
                     </choice>
                 </element>
             </optional>
