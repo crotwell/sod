@@ -66,7 +66,10 @@ if __name__ == "__main__":
     dropElements(["bandCode"], 
             'tutorial/network.xml', 
             'tutorial/subsettingNetwork.xml')
-    dropElements(["printlineChannelProcessor", "networkCode"], 
+    process('tutorial/subsettingNetwork.xml',
+            'xslt/badNetwork.xslt',
+            'tutorial/badNetwork.xml'),
+    dropElements(["printlineChannelProcessor"], 
             'tutorial/subsettingNetwork.xml', 
             'tutorial/simpleNetwork.xml')
 
