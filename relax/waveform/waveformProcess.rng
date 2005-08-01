@@ -50,6 +50,7 @@
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
             <ref name="embeddedEventChannelProcessor"/>
+            <ref name="transferResponse"/>
         </choice>
     </define>
     <define name="seismogramAND">
@@ -674,6 +675,49 @@
                 <summary>Allows any event channel subsetter to be embedded here</summary>
             </xsd:annotation>
             <externalRef href="eventChannel.rng"/>
+        </element>
+    </define>
+    <define name="transferResponse">
+        <element name="transferResponse">
+            <xsd:annotation>
+                <summary>Applies an instrumentation correction as in the transfer command in SAC</summary>
+                <description>This calculates and applies the polezero response from the sensor (stage 1)
+                in the response along with the overall gain. Great care should be taken with this processor
+                as the transfer is a spectral division, and is hence inherently unstable. This basically means
+                that if you allow the frequency limits to be too large, specified in lowCut, lowPass, highPass and highCut,
+                you will be dividing one very small 
+                number by another very small number, which due to rounding errors may generate very large amplitudes
+                at long periods which are not real. Also, you should almost always apply an rmean and taper before
+                applying transferResponse. See the sac manual for more discussion of transfer. </description>
+                <example>
+                    <transferResponse>
+                        <lowCut>0.005</lowCut>
+                        <lowPass>0.01</lowPass>
+                        <highPass>1e5</highPass>
+                        <highCut>1e6</highCut>
+                    </transferResponse>
+                </example>
+            </xsd:annotation>
+            <optional>
+            <element name="lowCut">
+                <data type="float"/>
+            </element>
+            </optional>
+            <optional>
+                <element name="lowPass">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="highPass">
+                    <data type="float"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="highCut">
+                    <data type="float"/>
+                </element>
+            </optional>
         </element>
     </define>
 </grammar>

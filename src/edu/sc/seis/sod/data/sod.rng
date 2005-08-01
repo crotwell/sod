@@ -17112,6 +17112,28 @@
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel2"/>
             </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess3">
@@ -17555,6 +17577,28 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel3"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -18000,6 +18044,28 @@
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel"/>
             </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
         </choice>
     </define>
     <define name="seismogramProcess4">
@@ -18443,6 +18509,28 @@
             </element>
             <element name="embeddedEventChannelProcessor">
                 <ref name="eventChannel9"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
