@@ -278,7 +278,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                 sac.write(seisFile);
             }
             if(storeSeismogramsInDB) {
-                jdbcSeisFile.saveSeismogramToDatabase(channel.get_id(),
+                jdbcSeisFile.saveSeismogramToDatabase(channel,
                                                       seismograms[i],
                                                       seisFile.toString(),
                                                       type);
