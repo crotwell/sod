@@ -37,8 +37,8 @@ if __name__ == "__main__":
             'xslt/waveformToVector.xslt', 
             'vector.xml')
     process('demo.xml', 
-            'xslt/waveformToVector.xslt', 
-            'vector.xml')
+            'xslt/waveformToRealtime.xslt', 
+            'realtime.xml')
     process('demo.xml', 
             'xslt/dataCenterToArchive.xslt', 
             'archive.xml')
