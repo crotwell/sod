@@ -7,6 +7,7 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
@@ -37,6 +38,7 @@ public class ContextWrangler {
     public static VelocityContext createContext(Channel chan) {
         VelocityContext ctx = new VelocityContext();
         insertIntoContext(chan, ctx);
+        ctx.put("formatter", new FissuresFormatter());
         return ctx;
     }
 

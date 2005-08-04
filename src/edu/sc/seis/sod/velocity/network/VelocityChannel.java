@@ -3,6 +3,7 @@ package edu.sc.seis.sod.velocity.network;
 import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
 
 /**
@@ -54,11 +55,18 @@ public class VelocityChannel extends Channel {
     public VelocitySite getSite() {
         return new VelocitySite(my_site);
     }
-    
-    public String compactToString(){
+
+    public MicroSecondDate getStart() {
+        return new MicroSecondDate(effective_time.start_time);
+    }
+
+    public MicroSecondDate getEnd() {
+        return new MicroSecondDate(effective_time.end_time);
+    }
+
+    public String compactToString() {
         return ChannelIdUtil.toStringNoDates(this);
     }
-    
 
     public String toString() {
         return ChannelIdUtil.toString(chan.get_id());
