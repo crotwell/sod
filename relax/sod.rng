@@ -7,7 +7,7 @@
                 <summary>The root of all SOD tactics</summary>
                 <description>
                     <p>This element is the root of all SOD tactics.</p>
-                    <a href="../overview.html">Back to Overview</a>
+                    <a href="../index.html">Back to Overview</a>
                 </description>
             </xsd:annotation>
             <optional>

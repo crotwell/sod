@@ -115,7 +115,7 @@
                 <description>When running SOD in realtime mode, this tells it how long to wait after
                     a fresh event before trying to get data. This allows for data that isn't
                     immediately available to be submitted to the seismogram servers. For more
-                    information look at the <a href="../../../realtime.html">Realtime Run
+                    information look at the <a href="../../../documentation/realtime.html">Realtime Run
                     Considerations</a> for more details on how to use this subsetter in conjunction
                     with the other availableData subsetters.</description>
             </xsd:annotation>
