@@ -44,9 +44,7 @@ import edu.sc.seis.sod.SodUtil;
 public class DateEditor implements EditorPlugin {
 
     public DateEditor() {
-        for(int i = 0; i < REL_TYPES.length; i++) {
-            relTypesSet.add(REL_TYPES[i]);
-        }
+        
     }
 
     public JComponent getGUI(final Element element) throws TransformerException {
@@ -95,7 +93,7 @@ public class DateEditor implements EditorPlugin {
                         replaceComp = true;
                     }
                     if(replaceComp) {
-                        replaceChildComponent(editorBox, comp);
+                        EditorUtil.replaceChildComponent(editorBox, comp);
                     }
                 } catch(TransformerException ex) {
                     GlobalExceptionHandler.handle(ex);
@@ -134,14 +132,6 @@ public class DateEditor implements EditorPlugin {
         }
     }
 
-    public static void replaceChildComponent(JComponent parent, JComponent child) {
-        parent.removeAll();
-        if(child != null) {
-            parent.add(child);
-        }
-        parent.revalidate();
-    }
-
     private JComponent getAbsoluteDateGUI(Element element)
             throws TransformerException {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -149,7 +139,7 @@ public class DateEditor implements EditorPlugin {
         MicroSecondDate date = ClockUtil.now();
         if(firstEl != null) {
             if(relTypesSet.contains(firstEl.getTagName())) {
-                cleanOutElement(element);
+                EditorUtil.cleanOutElement(element);
                 insertDateNodesIntoElement(element, date);
             } else {
                 cal.setTime(date);
@@ -236,14 +226,6 @@ public class DateEditor implements EditorPlugin {
         }
     }
 
-    public static void cleanOutElement(Element element) {
-        NodeList nl = element.getChildNodes();
-        for(int i = nl.getLength() - 1; i >= 0; i--) {
-            Node n = nl.item(i);
-            element.removeChild(n);
-        }
-    }
-
     private boolean isRelativeDate(Element el) {
         if(el != null) {
             return relTypesSet.contains(el.getTagName());
@@ -254,7 +236,7 @@ public class DateEditor implements EditorPlugin {
     private JComponent getRelativeDateGUI(final Element element)
             throws TransformerException {
         if(!isRelativeDate(SodUtil.getFirstEmbeddedElement(element))) {
-            cleanOutElement(element);
+            EditorUtil.cleanOutElement(element);
             insertRelativeNode(element, "now", null);
         }
         Box vBox = Box.createVerticalBox();
@@ -296,7 +278,7 @@ public class DateEditor implements EditorPlugin {
                             .toLowerCase();
                     if(!buttonName.equals(firstElName)) {
                         editorBox.removeAll();
-                        cleanOutElement(element);
+                        EditorUtil.cleanOutElement(element);
                         Quantity q = null;
                         boolean isNow = buttonName.equals("now");
                         if(!isNow) {
@@ -304,7 +286,7 @@ public class DateEditor implements EditorPlugin {
                         }
                         insertRelativeNode(element, buttonName, q);
                         firstEl = SodUtil.getFirstEmbeddedElement(element);
-                        replaceChildComponent(editorBox, (isNow ? null
+                        EditorUtil.replaceChildComponent(editorBox, (isNow ? null
                                 : EditorUtil.makeTimeIntervalTwiddler(firstEl)));
                     }
                 } catch(Exception ex) {
@@ -352,7 +334,13 @@ public class DateEditor implements EditorPlugin {
         }
     }
 
-    private Set relTypesSet = new HashSet();
+    private static final Set relTypesSet = new HashSet();
 
     private static final String[] REL_TYPES = {"earlier", "later", "now"};
+    
+    static {
+        for(int i = 0; i < REL_TYPES.length; i++) {
+            relTypesSet.add(REL_TYPES[i]);
+        }
+    }
 }
