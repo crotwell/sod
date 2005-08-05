@@ -13,27 +13,41 @@ public class TransferResponseEditor implements EditorPlugin {
     public JComponent getGUI(Element element) throws Exception {
         Box hBox = Box.createHorizontalBox();
         hBox.setBorder(new TitledBorder("Transfer Response"));
-        addField("lowCut", TransferResponse.DEFAULT_LOW_CUT, element, hBox, true);
-        addField("lowPass", TransferResponse.DEFAULT_LOW_PASS, element, hBox, true);
-        addField("highPass", TransferResponse.DEFAULT_HIGH_PASS, element, hBox, true);
-        addField("highCut", TransferResponse.DEFAULT_HIGH_CUT, element, hBox, false);
+        addField("lowCut",
+                 TransferResponse.DEFAULT_LOW_CUT,
+                 element,
+                 hBox,
+                 true);
+        addField("lowPass",
+                 TransferResponse.DEFAULT_LOW_PASS,
+                 element,
+                 hBox,
+                 true);
+        addField("highPass",
+                 TransferResponse.DEFAULT_HIGH_PASS,
+                 element,
+                 hBox,
+                 true);
+        addField("highCut",
+                 TransferResponse.DEFAULT_HIGH_CUT,
+                 element,
+                 hBox,
+                 false);
         return hBox;
     }
 
     private static void addField(String name,
                                  float defaultValue,
                                  Element config,
-                                 Box mainBox, 
+                                 Box mainBox,
                                  boolean appendStrut) {
-        //Box fieldBox = Box.createHorizontalBox();
         Text text = DOMHelper.getTextChildFromPossiblyNonexistentElement(config,
                                                                          name,
                                                                          ""
                                                                                  + defaultValue);
         mainBox.add(EditorUtil.getLabeledTextField(text, name));
-        if (appendStrut) {
+        if(appendStrut) {
             mainBox.add(Box.createHorizontalStrut(10));
         }
-        //mainBox.add(fieldBox);
     }
 }
