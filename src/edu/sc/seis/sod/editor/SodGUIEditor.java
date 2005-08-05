@@ -177,6 +177,7 @@ public class SodGUIEditor extends SimpleGUIEditor {
         }
         EmbeddedEditor embedded = new EmbeddedEditor(this);
         editors.put("embeddedOriginSubsetter", embedded);
+        editors.put("transferResponse", new TransferResponseEditor());
         // this puts "switchers" in place of the editors, which are stored with
         // the suffix
         // the switchers contian the origins, plus a popup menu for the types
