@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -28,6 +29,22 @@ import edu.iris.Fissures.model.UnitImpl;
 
 public class EditorUtil {
 
+    public static void replaceChildComponent(JComponent parent, JComponent child) {
+        parent.removeAll();
+        if(child != null) {
+            parent.add(child);
+        }
+        parent.revalidate();
+    }
+
+    public static void cleanOutElement(Element element) {
+        NodeList nl = element.getChildNodes();
+        for(int i = nl.getLength() - 1; i >= 0; i--) {
+            Node n = nl.item(i);
+            element.removeChild(n);
+        }
+    }
+
     public static Box getLabeledTextField(Element element)
             throws TransformerException {
         return getLabeledTextField(element, element.getTagName());
@@ -41,9 +58,13 @@ public class EditorUtil {
     }
 
     public static Box labelTextField(String name, JTextField jtf) {
+        return labelJComponent(name, jtf);
+    }
+    
+    public static Box labelJComponent(String name, JComponent comp) {
         Box b = Box.createHorizontalBox();
         b.add(getLabel(name));
-        b.add(jtf);
+        b.add(comp);
         return b;
     }
 
@@ -58,10 +79,14 @@ public class EditorUtil {
         return b;
     }
 
+    public static Box getLabeledTextField(Text text, String label) {
+        return labelTextField(label, getTextField(text));
+    }
+
     public static JComponent getLabel(String text) {
         return new JLabel(SimpleGUIEditor.getDisplayName(text) + ":");
     }
-
+    
     public static JTextField getTextField(Text text) {
         JTextField textField = new JTextField();
         textField.setText(text.getNodeValue().trim());
