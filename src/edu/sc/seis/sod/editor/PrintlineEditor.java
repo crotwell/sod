@@ -4,6 +4,8 @@ import java.awt.Color;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -83,16 +85,18 @@ public abstract class PrintlineEditor implements EditorPlugin {
                                            String name,
                                            JLabel results,
                                            boolean filize) {
-        final Text template = getTextChildFromPossiblyNonexistentElement(el,
+        final Text template = DOMHelper.getTextChildFromPossiblyNonexistentElement(el,
                                                                          elementName,
                                                                          defaultText);
-        JTextField jtf = new JTextField();
-        jtf.setText(template.getData());
+        JTextArea jta = new JTextArea(1, 30);
+        jta.setEditable(true);
+        jta.setText(template.getData());
         results.setText(evaluate(template.getData()));
-        jtf.getDocument().addDocumentListener(new VelocityUpdater(template,
+        jta.getDocument().addDocumentListener(new VelocityUpdater(template,
                                                                   results));
         Box vertBox = Box.createVerticalBox();
-        vertBox.add(EditorUtil.labelTextField(name, jtf));
+        JScrollPane jtaScrollPane = new JScrollPane(jta);
+        vertBox.add(EditorUtil.labelJComponent(name, jtaScrollPane));
         Box labelBox = Box.createHorizontalBox();
         labelBox.add(results);
         labelBox.add(Box.createHorizontalGlue());
@@ -183,13 +187,5 @@ public abstract class PrintlineEditor implements EditorPlugin {
                 super.setText(text);
             }
         }
-    }
-
-    protected static Text getTextChildFromPossiblyNonexistentElement(Element parentOfElement,
-                                                                   String elementName,
-                                                                   String defaultText) {
-        Element filenameElement = DOMHelper.extractOrCreateElement(parentOfElement,
-                                                                   elementName);
-        return DOMHelper.extractOrCreateTextNode(filenameElement, defaultText);
     }
 }
