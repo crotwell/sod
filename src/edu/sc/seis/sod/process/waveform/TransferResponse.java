@@ -2,13 +2,11 @@ package edu.sc.seis.sod.process.waveform;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.Time;
-import edu.iris.Fissures.Unit;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
-import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Transfer;
@@ -32,10 +30,10 @@ public class TransferResponse implements WaveformProcess {
      *
      */
     public TransferResponse(Element config) throws ConfigurationException {
-        lowCut = DOMHelper.extractFloat(config, "lowCut", -2);
-        lowPass = DOMHelper.extractFloat(config, "lowPass", -2);
-        highPass = DOMHelper.extractFloat(config, "highPass", 1e5f);
-        highCut = DOMHelper.extractFloat(config, "highCut", 1e6f);
+        lowCut = DOMHelper.extractFloat(config, "lowCut", DEFAULT_LOW_CUT);
+        lowPass = DOMHelper.extractFloat(config, "lowPass", DEFAULT_LOW_PASS);
+        highPass = DOMHelper.extractFloat(config, "highPass", DEFAULT_HIGH_PASS);
+        highCut = DOMHelper.extractFloat(config, "highCut", DEFAULT_HIGH_CUT);
     }
 
     /**
@@ -75,4 +73,9 @@ public class TransferResponse implements WaveformProcess {
     }
     
     float lowCut, lowPass, highPass, highCut;
+    
+    public static final float DEFAULT_LOW_CUT = -2f;
+    public static final float DEFAULT_LOW_PASS = -2f;
+    public static final float DEFAULT_HIGH_PASS = 1e5f;
+    public static final float DEFAULT_HIGH_CUT = 1e6f;
 }
