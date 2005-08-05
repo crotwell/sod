@@ -42,7 +42,7 @@ public class SaveSeismogramToFileEditor extends PrintlineEventEditor {
         b.add(Box.createHorizontalGlue());
         b.add(new JLabel("File Type"));
         b.add(Box.createHorizontalStrut(10));
-        final Text text = getTextChildFromPossiblyNonexistentElement(element,
+        final Text text = DOMHelper.getTextChildFromPossiblyNonexistentElement(element,
                                                                      "fileType",
                                                                      fileTypes[1]);
         final JComboBox fileTypeBox = new JComboBox(fileTypes);
@@ -72,7 +72,7 @@ public class SaveSeismogramToFileEditor extends PrintlineEventEditor {
                     hBox.add(EditorUtil.getLabeledTextField(DOMHelper.getElement(phaseEl, "phaseName"), "Phase Name"));
                     hBox.add(Box.createHorizontalStrut(10));
                     hBox.add(new JLabel("tHeader:"));
-                    hBox.add(EditorUtil.createNumberSpinner(getTextChildFromPossiblyNonexistentElement(phaseEl, "tHeader", "0"), 0, 9, 1));
+                    hBox.add(EditorUtil.createNumberSpinner(DOMHelper.getTextChildFromPossiblyNonexistentElement(phaseEl, "tHeader", "0"), 0, 9, 1));
                     hBox.add(Box.createHorizontalGlue());
                     vBox.add(hBox);
                 }
@@ -83,7 +83,7 @@ public class SaveSeismogramToFileEditor extends PrintlineEventEditor {
         b.add(Box.createHorizontalGlue());
         b.add(new JLabel("Data Directory"));
         b.add(Box.createHorizontalStrut(10));
-        Text text2 = getTextChildFromPossiblyNonexistentElement(element,
+        Text text2 = DOMHelper.getTextChildFromPossiblyNonexistentElement(element,
                                                                 "dataDirectory",
                                                                 SaveSeismogramToFile.DEFAULT_DATA_DIRECTORY);
         text2 = (Text)XPathAPI.selectSingleNode(element, "dataDirectory/text()");
