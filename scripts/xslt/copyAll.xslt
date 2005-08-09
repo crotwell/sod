@@ -3,6 +3,9 @@
     <xsl:template match="*">
         <xsl:call-template name="copy"/>
     </xsl:template>
+    <xsl:template match="comment()">
+      <xsl:comment><xsl:value-of select="."/></xsl:comment>
+    </xsl:template>
     <xsl:template name="copy">
         <xsl:copy>
             <xsl:for-each select="@*">
