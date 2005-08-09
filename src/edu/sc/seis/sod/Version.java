@@ -46,8 +46,8 @@ public class Version{
 
     public static String getCVSVersion() { return cvsversion; }
 
-    private static String cvsversion = "$Revision: 10855 $";
-    private static String datetime = "$Date: 2004-10-11 09:47:54 -0400 (Mon, 11 Oct 2004) $";
+    private static String cvsversion = "$Revision: 14518 $";
+    private static String datetime = "$Date: 2005-08-09 15:11:45 -0400 (Tue, 09 Aug 2005) $";
     private static String state = "$State$";
 
     //versionsToDate stores all of the versions that have been released,
@@ -64,7 +64,8 @@ public class Version{
       {"2.0beta7", "false"},   //status table sorting, status beautification, editor load/save, legacy exec, PointLinearDistanceMagnitude
       {"2.0beta8", "false"},   
       {"2.0rc1", "true"},   
-      {"2.0", "false"}          //current internal version
+      {"2.0", "false"},
+      {"2.1", "false"}//current internal version
     };
 
 }
