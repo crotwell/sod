@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<project name="The Standing Order for Data"
-     href="http://www.seis.sc.edu/software/sod/">
+<project name="The Global Earthquake Explorer"
+     href="http://www.seis.sc.edu/software/gee/">
 
-  <title>The Standing Order for Data</title>
-<logo href="http://www.seis.sc.edu/SOD/images/full-sodlogo-y100.gif">SOD</logo>
+     <title>GEE</title>
+     <logo href="http://www.seis.sc.edu/gee/images/title.gif">GEE</logo>
 
   <body>
     <menu name="Essentials">

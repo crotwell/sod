@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <project>
     <pomVersion>3</pomVersion>
     <id>sod</id>
@@ -7,7 +7,7 @@
     <organization>
         <name>Seismology at the University of South Carolina</name>
         <url>http://www.seis.sc.edu</url>
-        <logo>http://www.seis.sc.edu/SOD/seisheader100.jpg</logo>
+        <logo>http://www.seis.sc.edu/images/seislogo.gif</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>edu.sc.seis.sod</package>
@@ -360,7 +360,7 @@
         </resources>
     </build>
     <reports>
-        <report>maven-javadoc-plugin</report>
-        <report>maven-license-plugin</report>
+       <report>maven-javadoc-plugin</report>
+       <report>maven-license-plugin</report>
     </reports>
 </project>
