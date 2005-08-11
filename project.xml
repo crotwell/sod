@@ -133,7 +133,7 @@
         </dependency>
         <dependency>
             <id>fissuresUtil</id>
-            <version>1.0.12</version>
+            <version>1.0.13beta</version>
             <url>http://www.seis.sc.edu/software/fissuresUtil</url>
         </dependency>
         <dependency>
@@ -148,7 +148,7 @@
         </dependency>
         <dependency>
             <id>SeedCodec</id>
-            <version>1.0beta2</version>
+            <version>1.0</version>
             <url>http://www.seis.sc.edu/software/SeedCodec</url>
         </dependency>
         <dependency>
