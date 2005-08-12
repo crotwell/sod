@@ -35,10 +35,5 @@ log4j.appender.C.Threshold=warn
 # for iris
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
-#JacORB setup
-jacorb.connection.client.pending_reply_timeout=120000
-org.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton
-org.omg.CORBA.ORBClass=org.jacorb.orb.ORB
-
 # default database url
 fissuresUtil.database.url=jdbc:hsqldb:SodDb/SodDb
