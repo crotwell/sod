@@ -31,9 +31,9 @@ log4j.appender.C.Threshold=warn
 # You should put your own choices for host.domain and port
 #
 # for pooh
-edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
+#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
 # for iris
-#edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
+edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService
 
 # default database url
 fissuresUtil.database.url=jdbc:hsqldb:SodDb/SodDb
