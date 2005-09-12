@@ -146,7 +146,7 @@ public class Start {
         loadProps((Start.class).getClassLoader()
                 .getResourceAsStream(DEFAULT_PROPS));
         for(int i = 0; i < args.length - 1; i++) {
-            if(args[i].equals("-props")) {
+            if(args[i].equals("-props") || args[i].equals("-p")) {
                 // override with values in local directory,
                 // but still load defaults with original name
                 loadProps(new FileInputStream(args[i + 1]));
