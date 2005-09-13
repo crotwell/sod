@@ -4,9 +4,9 @@
     <start>
         <element name="sod">
             <xsd:annotation>
-                <summary>The root of all SOD tactics</summary>
+                <summary>The root of all SOD recipes</summary>
                 <description>
-                    <p>This element is the root of all SOD tactics.</p>
+                    <p>This element is the root of all SOD recipes.</p>
                     <a href="../index.html">Back to Overview</a>
                 </description>
             </xsd:annotation>

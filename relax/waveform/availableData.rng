@@ -87,7 +87,7 @@
         <element name="noGaps">
             <xsd:annotation>
                 <summary>Accepts data only if it has no gaps</summary>
-                <description>If the server says the data it has is continuous, this tactic passes</description>
+                <description>If the server says the data it has is continuous, this passes</description>
             </xsd:annotation>
             <empty/>
         </element>
