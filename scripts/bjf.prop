@@ -1,0 +1,64 @@
+log4j.rootCategory=debug, everything, error
+
+log4j.appender.C=org.apache.log4j.ConsoleAppender
+log4j.appender.C.layout=org.apache.log4j.PatternLayout
+log4j.appender.C.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.C.Threshold=debug
+
+log4j.appender.everything=org.apache.log4j.RollingFileAppender
+log4j.appender.everything.File=logs/sod.log
+log4j.appender.everything.MaxFileSize=1000000KB
+log4j.appender.everything.MaxBackupIndex=4
+log4j.appender.everything.layout=org.apache.log4j.PatternLayout
+log4j.appender.everything.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+log4j.appender.error=org.apache.log4j.RollingFileAppender
+log4j.appender.error.File=logs/error.log
+log4j.appender.error.MaxFileSize=50000KB
+log4j.appender.error.MaxBackupIndex=50
+log4j.appender.error.layout=org.apache.log4j.PatternLayout
+log4j.appender.error.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+log4j.appender.error.Threshold=error
+
+log4j.logger.edu.sc.seis.sod.subsetter.eventArm=debug,EventFile
+log4j.logger.edu.sc.seis.sod.EventArm=debug,EventFile
+log4j.appender.EventFile=org.apache.log4j.RollingFileAppender
+log4j.appender.EventFile.File=logs/EventArm.log
+log4j.appender.EventFile.MaxFileSize=1000000KB
+log4j.appender.EventFile.MaxBackupIndex=4
+log4j.appender.EventFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.EventFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+
+log4j.logger.edu.sc.seis.sod.subsetter.waveFormArm=debug,WaveformFile
+log4j.logger.edu.sc.seis.sod.WaveformArm=debug,WaveformFile
+log4j.logger.edu.sc.seis.sod.WaveformArmThread=debug,WaveformFile
+log4j.appender.WaveformFile=org.apache.log4j.RollingFileAppender
+log4j.appender.WaveformFile.File=logs/WaveformArm.log
+log4j.appender.WaveformFile.MaxFileSize=1000000KB
+log4j.appender.WaveformFile.MaxBackupIndex=4
+log4j.appender.WaveformFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.WaveformFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+
+log4j.logger.Fail=debug,FailFile
+log4j.appender.FailFile=org.apache.log4j.RollingFileAppender
+log4j.appender.FailFile.File=logs/Fail.log
+log4j.appender.FailFile.MaxFileSize=100000KB
+log4j.appender.FailFile.MaxBackupIndex=9
+log4j.appender.FailFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.FailFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+
+log4j.logger.edu.sc.seis.sod.subsetter.networkArm=debug,NetworkFile
+log4j.logger.edu.sc.seis.sod.NetworkArm=debug,NetworkFile
+log4j.appender.NetworkFile=org.apache.log4j.RollingFileAppender
+log4j.appender.NetworkFile.File=logs/NetworkArm.log
+log4j.appender.NetworkFile.MaxFileSize=1000000KB
+log4j.appender.NetworkFile.MaxBackupIndex=4
+log4j.appender.NetworkFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.NetworkFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
+
+
+fissuresUtil.database.url=jdbc:hsqldb:hsql://localhost:9001/rt130
+edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
