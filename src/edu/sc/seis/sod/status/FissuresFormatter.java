@@ -258,10 +258,15 @@ public class FissuresFormatter {
     public static SimpleDateFormat mediumFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
     private static SimpleDateFormat fancyFormat = new SimpleDateFormat("EEEE, d MMMM yyyy");
+    
     static {
-        yearDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        longFileFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        longFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        TimeZone GMT = TimeZone.getTimeZone("GMT");
+        ymdDateFormat.setTimeZone(GMT);
+        yearDateFormat.setTimeZone(GMT);
+        longFileFormat.setTimeZone(GMT);
+        longFormat.setTimeZone(GMT);
+        mediumFormat.setTimeZone(GMT);
+        fancyFormat.setTimeZone(GMT);
     }
 
     public static ParseRegions pr = ParseRegions.getInstance();
