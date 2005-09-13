@@ -106,6 +106,9 @@ public class NetworkFormatter extends Template implements NetworkTemplate {
             return new NetworkTemplate() {
 
                 public String getResult(NetworkAttr net) {
+                    if(net.name == null || net.name.equals("")){
+                        return "";
+                    }
                     StringTokenizer tok = new StringTokenizer(net.name, " /,.-");
                     return tok.nextToken();
                 }
