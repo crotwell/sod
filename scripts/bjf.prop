@@ -59,6 +59,4 @@ log4j.appender.NetworkFile.MaxBackupIndex=4
 log4j.appender.NetworkFile.layout=org.apache.log4j.PatternLayout
 log4j.appender.NetworkFile.layout.ConversionPattern=%d{ISO8601} %p %t %c{2} - %m%n
 
-
-fissuresUtil.database.url=jdbc:hsqldb:hsql://localhost:9001/rt130
 edu.sc.seis.fissuresUtil.nameServiceCorbaLoc=corbaloc:iiop:pooh.seis.sc.edu:6371/NameService
