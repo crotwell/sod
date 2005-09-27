@@ -94,6 +94,14 @@ public class VelocityStation extends Station {
     public String getName() {
         return name;
     }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public String getOperator() {
+        return operator;
+    }
 
     public String getLatitude() {
         return df.format(sta.my_location.latitude);
