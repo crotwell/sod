@@ -63,6 +63,10 @@ public class VelocityChannel extends Channel {
     public MicroSecondDate getEnd() {
         return new MicroSecondDate(effective_time.end_time);
     }
+    
+    public VelocitySampling getSampling() {
+        return new VelocitySampling(sampling_info);
+    }
 
     public String compactToString() {
         return ChannelIdUtil.toStringNoDates(this);
