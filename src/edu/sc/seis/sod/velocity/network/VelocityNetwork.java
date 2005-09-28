@@ -82,6 +82,18 @@ public class VelocityNetwork extends NetworkAttr {
         return name;
     }
 
+    /** just like getName except special characters for xml are made into entity references. 
+     * This just replaces the main ones: amp, lt, gt, apos, quot.
+     */
+    public String getEntityRefName() {
+        String s = getName();
+        s = s.replaceAll("&", "&amp;");
+        s = s.replaceAll("<", "&lt;");
+        s = s.replaceAll(">", "&gt;");
+        s = s.replaceAll("'", "&apos;");
+        s = s.replaceAll("\"", "&quote;");
+        return s;
+    }
     public String getOwner() {
         return owner;
     }
