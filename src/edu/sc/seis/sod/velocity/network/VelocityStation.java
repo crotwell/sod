@@ -88,7 +88,7 @@ public class VelocityStation extends Station {
     }
 
     public String getEnd() {
-        return FissuresFormatter.formatDate(sta.effective_time.end_time);
+        return FissuresFormatter.formatDate(effective_time.end_time);
     }
 
     public String getName() {
@@ -103,6 +103,10 @@ public class VelocityStation extends Station {
         return operator;
     }
 
+    public String getComment() {
+        return comment;
+    }
+    
     public String getLatitude() {
         return df.format(sta.my_location.latitude);
     }
@@ -197,7 +201,7 @@ public class VelocityStation extends Station {
         return position;
     }
 
-    private DecimalFormat df = new DecimalFormat("0.00");
+    static final DecimalFormat df = new DecimalFormat("0.00");
 
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("station", this);
