@@ -94,6 +94,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
         subDS = DOMHelper.extractText(config, "subEventDataSet", "");
         prefix = DOMHelper.extractText(config, "prefix", "");
         id = DOMHelper.extractText(config, "id", "");
+        masterId = DOMHelper.extractText(config, "masterId", "master_genid"
+                + Math.random());
+        masterFileName = DOMHelper.extractText(config, "masterFileName", "");
         preserveRequest = DOMHelper.hasElement(config, "preserveRequest");
         if(DOMHelper.hasElement(config, "storeSeismogramsInDB")) {
             try {
@@ -104,10 +107,13 @@ public class SaveSeismogramToFile implements WaveformProcess {
             }
             storeSeismogramsInDB = true;
         }
-        veloTemplate = DOMHelper.extractText(config,
-                                             "eventDirLabel",
-                                             DEFAULT_TEMPLATE);
-        createMasterDS();
+        eventDirTemplate = DOMHelper.extractText(config,
+                                                 "eventDirLabel",
+                                                 DEFAULT_TEMPLATE);
+        eventNameTemplate = DOMHelper.extractText(config,
+                                                  "eventName",
+                                                  DEFAULT_TEMPLATE);
+        createMasterDS(DOMHelper.extractText(config, "masterDSName", "Master"));
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -162,20 +168,21 @@ public class SaveSeismogramToFile implements WaveformProcess {
         return id;
     }
 
-    protected void createMasterDS() throws ConfigurationException {
+    protected void createMasterDS(String name) throws ConfigurationException {
         AuditInfo[] audit = new AuditInfo[1];
         audit[0] = new AuditInfo(System.getProperty("user.name"),
                                  "seismogram loaded via sod.");
-        DataSet masterDataSet = new MemoryDataSet("master_genid"
-                                                          + Math.random(),
-                                                  "Master",
+        DataSet masterDataSet = new MemoryDataSet(masterId,
+                                                  name,
                                                   System.getProperty("user.name"),
                                                   audit);
         try {
             // seismogram file type doesn't matter here as no data will be added
             // directly to master dataset
+            String fileName = (masterFileName.equals("") || masterFileName == null) ? DataSetToXMLStAX.createFileName(masterDataSet)
+                    : masterFileName;
             masterDSFile = new File(dataDirectory,
-                                    DataSetToXMLStAX.createFileName(masterDataSet));
+                                    fileName);
             if(!masterDSFile.exists()) {
                 dsToXML.createFile(masterDataSet,
                                    dataDirectory,
@@ -338,7 +345,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
     }
 
     public String getLabel(EventAccessOperations event) {
-        return velocitizer.evaluate(veloTemplate, event);
+        return velocitizer.evaluate(eventDirTemplate, event);
+    }
+
+    public String getName(EventAccessOperations event) {
+        return velocitizer.evaluate(eventNameTemplate, event);
     }
 
     String getRelativeURLString(File base, File ref) {
@@ -368,9 +379,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
             return lastDataSet;
         }
         // always create it so we can get the file name
-        logger.debug("creating new dataset " + getLabel(event));
+        logger.debug("creating new dataset " + getName(event));
         DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
-                                            getLabel(event),
+                                            getName(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
         dataSetFile = new File(eventDirectory,
@@ -399,7 +410,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
     public File getDSMLFile(EventAccessOperations event) throws IOException {
         File eventDirectory = getEventDirectory(event);
         DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
-                                            getLabel(event),
+                                            getName(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
         File dsmlFile = new File(eventDirectory,
@@ -464,6 +475,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     private String id = "";
 
+    private String masterId = "";
+
+    private String masterFileName = "";
+
     private ArrayList sacHeaderList = new ArrayList();
 
     private boolean preserveRequest = false, storeSeismogramsInDB = false;
@@ -476,7 +491,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 
-    private String veloTemplate;
+    private String eventDirTemplate;
+
+    private String eventNameTemplate;
 
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 
