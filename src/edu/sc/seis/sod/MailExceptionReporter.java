@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringBufferInputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -91,12 +94,7 @@ public class MailExceptionReporter implements ExceptionReporter {
 
     private BodyPart createAttachement(Section section) throws IOException,
             MessagingException {
-        String dir = System.getProperty("java.io.tmpdir");
-        File file = new File(dir + section.getName() + ".txt");
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        bw.write(section.getContents());
-        bw.close();
-        DataSource source = new FileDataSource(file);
+        DataSource source = new SectionDataSource(section);
         BodyPart bp = new MimeBodyPart();
         bp.setDataHandler(new DataHandler(source));
         bp.setFileName(section.getName() + ".txt");
@@ -150,4 +148,29 @@ public class MailExceptionReporter implements ExceptionReporter {
         GlobalExceptionHandler.handle("This is a test of the emergency brodcast system",
                                       new Exception("This is only a test"));
     }
+}
+
+class SectionDataSource implements DataSource {
+
+    SectionDataSource(Section s) {
+        this.s = s;
+    }
+
+    public String getContentType() {
+        return "text/plain";
+    }
+
+    public InputStream getInputStream() throws IOException {
+        return new StringBufferInputStream(s.getContents());
+    }
+
+    public String getName() {
+        return s.getName();
+    }
+
+    public OutputStream getOutputStream() throws IOException {
+        throw new RuntimeException("getOutputStream() not impl");
+    }
+
+    Section s;
 }
