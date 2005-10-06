@@ -409,8 +409,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     public File getDSMLFile(EventAccessOperations event) throws IOException {
         File eventDirectory = getEventDirectory(event);
+        //this uses the eventDirLable to name the dataset.  This doesn't matter because it
+        //is only making the dataset so that it can make the file.  For some reason this seems
+        //a bit silly.
         DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
-                                            getName(event),
+                                            getLabel(event),
                                             System.getProperty("user.name"),
                                             new AuditInfo[0]);
         File dsmlFile = new File(eventDirectory,
@@ -418,7 +421,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
         if(dsmlFile.exists()) {
             return dsmlFile;
         }
-        throw new FileNotFoundException("Dsml File not found for "
+        throw new FileNotFoundException("Dsml File " + dsmlFile.getAbsolutePath() + " not found for "
                 + EventUtil.getEventInfo(event));
     }
 
