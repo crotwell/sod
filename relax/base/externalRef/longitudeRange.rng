@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../include/range.rng"/>
     <start combine="choice">
         <element name="longitudeRange">
+            <xsd:annotation>
+                <summary>A range of degrees longitude</summary>
+                <description>From min to max longitude measured in degrees from the Grenwich meridian,
+                    positive is east</description>
+            </xsd:annotation>
             <ref name="degreeRange"/>
         </element>
     </start>

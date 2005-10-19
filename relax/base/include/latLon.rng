@@ -15,6 +15,11 @@
     </define>
     <define name="lon">
         <element name="longitude">
+            <xsd:annotation>
+                <summary>A longitude value from -180 to 180</summary>
+                <description>Longitude measured in degrees from the Grenwich meridian,
+                    positive is east</description>
+            </xsd:annotation>
             <data type="float">
                 <xsd:annotation>
                     <example>-80</example>
