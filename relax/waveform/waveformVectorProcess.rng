@@ -31,6 +31,8 @@
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
             <ref name="rotateGCP"/>
+            <ref name="embeddedEventVector"/>
+            <ref name="embeddedEventStation"/>
         </choice>
     </define>
     <define name="threeComponentData">
@@ -278,6 +280,22 @@
                     will detect the R and T ending and give the appropriate transformed Channel.</description>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="embeddedEventVector">
+        <element name="embeddedEventVector">
+            <xsd:annotation>
+                <summary>Allows any event vector subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="eventVector.rng"/>
+        </element>
+    </define>
+    <define name="embeddedEventStation">
+        <element name="embeddedEventStation">
+            <xsd:annotation>
+                <summary>Allows any event station subsetter to be embedded here</summary>
+            </xsd:annotation>
+            <externalRef href="eventStation.rng"/>
         </element>
     </define>
 </grammar>
