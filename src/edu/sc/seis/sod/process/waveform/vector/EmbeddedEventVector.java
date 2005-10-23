@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.sod.ChannelGroup;
@@ -13,9 +12,7 @@ import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeBranch;
-import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventChannel.vector.EventVectorSubsetter;
-import edu.sc.seis.sod.subsetter.eventStation.EventStationSubsetter;
 
 
 /**
@@ -30,7 +27,7 @@ public class EmbeddedEventVector implements WaveformVectorProcess {
             Node node = childNodes.item(counter);
             if(node instanceof Element) {
                 eventVector =
-                    (EventVectorSubsetter) SodUtil.load((Element)node, "eventVector");
+                    (EventVectorSubsetter) SodUtil.load((Element)node, "eventChannel.vector");
                 break;
             }
         }
