@@ -181,8 +181,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
             // directly to master dataset
             String fileName = (masterFileName.equals("") || masterFileName == null) ? DataSetToXMLStAX.createFileName(masterDataSet)
                     : masterFileName;
-            masterDSFile = new File(dataDirectory,
-                                    fileName);
+            masterDSFile = new File(dataDirectory, fileName);
             if(!masterDSFile.exists()) {
                 dsToXML.createFile(masterDataSet,
                                    dataDirectory,
@@ -372,57 +371,60 @@ public class SaveSeismogramToFile implements WaveformProcess {
             throws IOException, UnsupportedFileTypeException,
             IncomprehensibleDSMLException, ParserConfigurationException,
             XMLStreamException {
-        File eventDirectory = getEventDirectory(event);
         // assume that processing is in event order and never reopens
         // bad but just temporary
         if(lastDataSet != null && lastDataSet.getEvent().equals(event)) {
             return lastDataSet;
         }
-        // always create it so we can get the file name
-        logger.debug("creating new dataset " + getName(event));
-        DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
-                                            getName(event),
-                                            System.getProperty("user.name"),
-                                            new AuditInfo[0]);
-        dataSetFile = new File(eventDirectory,
-                               DataSetToXML.createFileName(dataset));
-        if(dataSetFile.exists()) {
+        DataSet dataset = createDataSet(event);
+        dataSetFile = makeDSMLFilename(event);
+        if(dataSetFile.exists()){
             dataset = DataSetToXML.load(dataSetFile.toURI().toURL());
         } else {
+            logger.debug("creating new dataset " + getName(event));
+            dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
+                                        getName(event),
+                                        System.getProperty("user.name"),
+                                        new AuditInfo[0]);
             StAXFileWriter staxWriter = new StAXFileWriter(dataSetFile);
             XMLStreamWriter writer = staxWriter.getStreamWriter();
             dsToXML.writeDataSetStartElement(writer);
-            dsToXML.insertDSInfo(writer, dataset, eventDirectory, fileType);
+            dsToXML.insertDSInfo(writer,
+                                 dataset,
+                                 getEventDirectory(event),
+                                 fileType);
             dataset.addParameter(DataSet.EVENT, event, new AuditInfo[0]);
             dsToXML.writeParameter(writer, DataSet.EVENT, event);
             XMLUtil.writeEndElementWithNewLine(writer);
             staxWriter.close();
         }
-        // if (lastDataSetStaxWriter != null){
-        // lastDataSetStaxWriter.close();
-        // }
-        // lastDataSetStaxWriter = XMLUtil.openXMLFileForAppending(dataSetFile);
         lastDataSet = dataset;
         lastEvent = event;
         return dataset;
     }
 
     public File getDSMLFile(EventAccessOperations event) throws IOException {
-        File eventDirectory = getEventDirectory(event);
-        //this uses the eventDirLable to name the dataset.  This doesn't matter because it
-        //is only making the dataset so that it can make the file.  For some reason this seems
-        //a bit silly.
-        DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
-                                            getLabel(event),
-                                            System.getProperty("user.name"),
-                                            new AuditInfo[0]);
-        File dsmlFile = new File(eventDirectory,
-                                 DataSetToXML.createFileName(dataset));
+        File dsmlFile = makeDSMLFilename(event);
         if(dsmlFile.exists()) {
             return dsmlFile;
         }
-        throw new FileNotFoundException("Dsml File " + dsmlFile.getAbsolutePath() + " not found for "
+        throw new FileNotFoundException("Dsml File "
+                + dsmlFile.getAbsolutePath() + " not found for "
                 + EventUtil.getEventInfo(event));
+    }
+
+    public File makeDSMLFilename(EventAccessOperations event)
+            throws IOException {
+        return new File(getEventDirectory(event),
+                        DataSetToXML.createFileName(createDataSet(event)));
+    }
+
+    private DataSet createDataSet(EventAccessOperations event) {
+        DataSet dataset = new MemoryDataSet(EventUtil.extractOrigin(event).origin_time.date_time,
+                                            getName(event),
+                                            System.getProperty("user.name"),
+                                            new AuditInfo[0]);
+        return dataset;
     }
 
     public DataSet prepareDataset(EventAccessOperations event, String subDSName)
