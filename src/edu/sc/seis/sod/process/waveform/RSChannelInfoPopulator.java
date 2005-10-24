@@ -100,9 +100,11 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                                                         "height"))).intValue();
             recSecDim = new Dimension(width, height);
         }
-        spacer = new RecordSectionSpacer(distRange,
-                                         idealNumberOfSeismograms,
-                                         maxNumberOfSeismograms);
+        if(distRange != null) {
+            spacer = new RecordSectionSpacer(distRange,
+                                             idealNumberOfSeismograms,
+                                             maxNumberOfSeismograms);
+        }
         if(DOMHelper.hasElement(config, "displayConfig")) {
             displayCreator = SeismogramDisplayConfiguration.create(DOMHelper.getElement(config,
                                                                                         "displayConfig"));
@@ -190,7 +192,10 @@ public class RSChannelInfoPopulator implements WaveformProcess {
                                             internalId);
             }
         }
-        DataSetSeismogram[] bestSeismos = spacer.spaceOut(dss);
+        DataSetSeismogram[] bestSeismos = dss;
+        if(spacer != null) {
+            bestSeismos = spacer.spaceOut(dss);
+        }
         recordSectionChannel.updateChannels(id,
                                             eq_dbid,
                                             getChannelDBIds(bestSeismos),
@@ -223,11 +228,13 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     public RecordSectionDisplay getConfiguredRSDisplay() {
         RecordSectionDisplay rsDisplay = (RecordSectionDisplay)displayCreator.createDisplay();
-        CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
-                                                               distRange.getMaxDistance(),
-                                                               percentSeisHeight);
-        custConfig.setSwapAxes(rsDisplay.getSwapAxes());
-        rsDisplay.setLayout(custConfig);
+        if(distRange != null) {
+            CustomLayOutConfig custConfig = new CustomLayOutConfig(distRange.getMinDistance(),
+                                                                   distRange.getMaxDistance(),
+                                                                   percentSeisHeight);
+            custConfig.setSwapAxes(rsDisplay.getSwapAxes());
+            rsDisplay.setLayout(custConfig);
+        }
         return rsDisplay;
     }
 
@@ -235,7 +242,7 @@ public class RSChannelInfoPopulator implements WaveformProcess {
 
     private String id, saveSeisId;
 
-    private DistanceRange distRange = new DistanceRange(0, 180);
+    private DistanceRange distRange;// = new DistanceRange(0, 180);
 
     private JDBCRecordSectionChannel recordSectionChannel;
 
