@@ -89,7 +89,11 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
     public void outputBestRecordSection(EventAccessOperations event,
                                         DataSetSeismogram[] dataSeis)
             throws Exception {
-        writeImage(wrap(spacer.spaceOut(dataSeis)), event);
+        if(spacer != null) {
+            writeImage(wrap(spacer.spaceOut(dataSeis)), event);
+        } else {
+            writeImage(wrap(dataSeis), event);
+        }
     }
 
     public void outputRecordSection(DataSetSeismogram[] dataSeis,
@@ -104,6 +108,10 @@ public class RecordSectionDisplayGenerator extends RSChannelInfoPopulator {
         String fileLoc = getFileLoc(event);
         RecordSectionDisplay rsDisplay = getConfiguredRSDisplay();
         rsDisplay.add(dataSeis);
+        if(dataSeis.length > 0) {
+            SeismogramImageProcess.setTimeWindow(rsDisplay.getTimeConfig(),
+                                                 dataSeis[0]);
+        }
         logger.debug("Added " + dataSeis.length
                 + " seismograms to RecordSectionDisplay");
         try {
