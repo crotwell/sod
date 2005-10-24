@@ -204,9 +204,14 @@ public class SeismogramImageProcess implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    public void setTimeWindow(TimeConfig tc,
-                              PhaseWindow pw,
-                              DataSetSeismogram dss) throws Exception {
+    public static void setTimeWindow(TimeConfig tc,
+                                     DataSetSeismogram dss) throws Exception {
+        setTimeWindow(tc, null, dss);
+    }
+
+    public static void setTimeWindow(TimeConfig tc,
+                                     PhaseWindow pw,
+                                     DataSetSeismogram dss) throws Exception {
         RequestFilter rf;
         if(pw != null) {
             PhaseRequest pr = pw.getPhaseRequest();
@@ -214,8 +219,14 @@ public class SeismogramImageProcess implements WaveformProcess {
         } else {
             rf = dss.getRequestFilter();
         }
-        double[] shiftNScale = DisplayUtils.getShiftAndScale(new MicroSecondTimeRange(rf),
-                                                             tc.getTime(dss));
+        setTimeWindow(tc, new MicroSecondTimeRange(rf), tc.getTime(dss));
+    }
+
+    public static void setTimeWindow(TimeConfig tc,
+                                     MicroSecondTimeRange newTime,
+                                     MicroSecondTimeRange currentTime) {
+        double[] shiftNScale = DisplayUtils.getShiftAndScale(newTime,
+                                                             currentTime);
         tc.shaleTime(shiftNScale[0], shiftNScale[1]);
     }
 
