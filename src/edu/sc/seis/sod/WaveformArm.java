@@ -15,6 +15,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
@@ -26,11 +27,11 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
+import edu.sc.seis.sod.database.JDBCRetryQueue;
 import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
-import edu.sc.seis.sod.database.waveform.JDBCEventChannelRetry;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 import edu.sc.seis.sod.process.waveform.WaveformProcess;
 import edu.sc.seis.sod.process.waveform.vector.ANDWaveformProcessWrapper;
@@ -50,7 +51,14 @@ public class WaveformArm implements Arm {
                        int threadPoolSize) throws Exception {
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
-        eventRetryTable = new JDBCEventChannelRetry();
+        retries = new JDBCRetryQueue("waveform");
+        retries.setMaxRetries(5);
+        int minRetriesOnAvailableData = 3;
+        retries.setMinRetries(minRetriesOnAvailableData);
+        retries.setMinRetryWait((TimeInterval)MAX_RETRY_DELAY.divideBy(minRetriesOnAvailableData));
+        corbaFailures = new JDBCRetryQueue("corbaFailure");
+        corbaFailures.setMinRetryWait(new TimeInterval(2, UnitImpl.HOUR));
+        corbaFailures.setMaxRetries(10);
         for(int i = 0; i < Status.ALL.length; i++) {
             for(int j = 0; j < Status.ALL[i].length; j++) {
                 int numOfStatus = evChanStatus.getNumOfStatus(Status.ALL[i][j]);
@@ -94,16 +102,13 @@ public class WaveformArm implements Arm {
             logger.info("Main waveform arm done.  Retrying failures.");
             MicroSecondDate runFinishTime = ClockUtil.now();
             MicroSecondDate serverFailDelayEnd = runFinishTime.add(SERVER_RETRY_DELAY);
-            while((serverFailDelayEnd.after(ClockUtil.now()) && serverFailuresRemain())
-                    || availableDataFailuresRemain()) {
+            corbaFailures.setLastRetryTime(serverFailDelayEnd);
+            while(retries.willHaveNext() || corbaFailures.willHaveNext()
+                    || pool.isEmployed()) {
                 retryIfNeededAndAvailable();
                 try {
+                    logger.debug("Sleeping while waiting for retries");
                     Thread.sleep(10000);
-                } catch(InterruptedException e) {}
-            }
-            while(pool.isEmployed()) {
-                try {
-                    Thread.sleep(1000);
                 } catch(InterruptedException e) {}
             }
         } catch(Throwable e) {
@@ -115,18 +120,6 @@ public class WaveformArm implements Arm {
         }
         logger.info("Lo!  I am weary of my wisdom, like the bee that hath gathered too much\n"
                 + "honey; I need hands outstretched to take it.");
-    }
-
-    private boolean availableDataFailuresRemain() throws SQLException {
-        synchronized(eventRetryTable) {
-            return eventRetryTable.availableDataRetriesRemain();
-        }
-    }
-
-    private boolean serverFailuresRemain() throws SQLException {
-        synchronized(eventRetryTable) {
-            return eventRetryTable.serverFailureRetriesRemain();
-        }
     }
 
     public LocalSeismogramArm getLocalSeismogramArm() {
@@ -145,9 +138,9 @@ public class WaveformArm implements Arm {
         return (WaveformMonitor[])statusMonitors.toArray(new WaveformMonitor[0]);
     }
 
-    //fills the eventchannel db with all available events and starts
-    //WaveformWorkerUnits on all inserted event channel pairs
-    //If there are no waiting events, this just returns
+    // fills the eventchannel db with all available events and starts
+    // WaveformWorkerUnits on all inserted event channel pairs
+    // If there are no waiting events, this just returns
     private void populateEventChannelDb() throws Exception {
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()) {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev.getEvent());
@@ -157,10 +150,10 @@ public class WaveformArm implements Arm {
             for(int i = 0; i < networks.length; i++) {
                 startNetwork(ev, overlap, networks[i]);
             }
-            //set the status of the event to be SUCCESS implying that
-            //that all the network information for this particular event is
+            // set the status of the event to be SUCCESS implying that
+            // that all the network information for this particular event is
             // inserted
-            //in the waveformDatabase.
+            // in the waveformDatabase.
             eventArm.change(ev.getEvent(),
                             Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                        Standing.SUCCESS));
@@ -216,59 +209,67 @@ public class WaveformArm implements Arm {
         logger.debug(ExceptionReporterUtils.getMemoryUsage() + " got "
                 + chans.length + " SuccessfulChannels");
         if(motionVectorArm != null) {
-            Channel[] channels = new Channel[chans.length];
-            for(int i = 0; i < channels.length; i++) {
-                channels[i] = chans[i].getChannel();
-            }
-            LinkedList failures = new LinkedList();
-            ChannelGroup[] chanGroups = channelGrouper.group(channels, failures);
-            Iterator it = failures.iterator();
-            int evDbId = ev.getDbId();
-            Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                 Standing.INIT);
-            Status eventStationReject = Status.get(Stage.EVENT_STATION_SUBSETTER,
-                                                   Standing.REJECT);
-            while(it.hasNext()) {
-                Channel failchan = (Channel)it.next();
-                failLogger.info(ChannelIdUtil.toString(failchan.get_id())
-                        + "  Channel not grouped.");
-                for(int k = 0; k < chans.length; k++) {
-                    if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
-                                              failchan.get_id())) {
-                        int chanDbId = chans[k].getDbId();
-                        synchronized(evChanStatus) {
-                            evChanStatus.put(evDbId,
-                                             chanDbId,
-                                             eventStationReject);
-                        }
-                    }
-                }
-            }
-            for(int i = 0; i < chanGroups.length; i++) {
-                int[] pairIds = new int[3];
-                for(int j = 0; j < pairIds.length; j++) {
-                    for(int k = 0; k < chans.length; k++) {
-                        if(ChannelIdUtil.areEqual(chans[k].getChannel()
-                                                          .get_id(),
-                                                  chanGroups[i].getChannels()[j].get_id())) {
-                            synchronized(evChanStatus) {
-                                pairIds[j] = evChanStatus.put(evDbId,
-                                                              chans[k].getDbId(),
-                                                              eventStationInit);
-                            }
-                            break;
-                        }
-                    }
-                }
-                invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(pairIds));
-                // retryIfNeededAndAvailable();
-            }
+            startChannelGroups(ev, chans);
         } else {
             // individual local seismograms
             for(int i = 0; i < chans.length; i++) {
                 startChannel(overlap, chans[i], ev);
             }
         }
+    }
+
+    private void startChannelGroups(EventDbObject ev, ChannelDbObject[] chans)
+            throws SQLException {
+        ChannelGroup[] chanGroups = groupChannels(chans, ev.getDbId());
+        int evDbId = ev.getDbId();
+        Status eventStationInit = Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                             Standing.INIT);
+        for(int i = 0; i < chanGroups.length; i++) {
+            int[] pairIds = new int[3];
+            for(int j = 0; j < pairIds.length; j++) {
+                for(int k = 0; k < chans.length; k++) {
+                    if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
+                                              chanGroups[i].getChannels()[j].get_id())) {
+                        synchronized(evChanStatus) {
+                            pairIds[j] = evChanStatus.put(evDbId,
+                                                          chans[k].getDbId(),
+                                                          eventStationInit);
+                        }
+                        break;
+                    }
+                }
+            }
+            invokeLaterAsCapacityAllows(new MotionVectorWaveformWorkUnit(pairIds));
+            retryIfNeededAndAvailable();
+        }
+    }
+
+    public ChannelGroup[] groupChannels(ChannelDbObject[] chans, int evDbId)
+            throws SQLException {
+        Channel[] channels = new Channel[chans.length];
+        for(int i = 0; i < channels.length; i++) {
+            channels[i] = chans[i].getChannel();
+        }
+        LinkedList failures = new LinkedList();
+        ChannelGroup[] chanGroups = channelGrouper.group(channels, failures);
+        Iterator it = failures.iterator();
+        Status eventStationReject = Status.get(Stage.EVENT_STATION_SUBSETTER,
+                                               Standing.REJECT);
+        while(it.hasNext()) {
+            Channel failchan = (Channel)it.next();
+            failLogger.info(ChannelIdUtil.toString(failchan.get_id())
+                    + "  Channel not grouped.");
+            for(int k = 0; k < chans.length; k++) {
+                if(ChannelIdUtil.areEqual(chans[k].getChannel().get_id(),
+                                          failchan.get_id())) {
+                    int chanDbId = chans[k].getDbId();
+                    synchronized(evChanStatus) {
+                        evChanStatus.put(evDbId, chanDbId, eventStationReject);
+                    }
+                }
+            }
+        }
+        return chanGroups;
     }
 
     private void startChannel(EventEffectiveTimeOverlap overlap,
@@ -278,13 +279,13 @@ public class WaveformArm implements Arm {
             logger.debug("The channel effective time does not overlap the event time");
             return;
         } // end of if ()
-        //cache the channelInformation.
+        // cache the channelInformation.
         int pairId = -1;
         synchronized(evChanStatus) {
             try {
-                //getPairId to see if it exists
+                // getPairId to see if it exists
                 evChanStatus.getPairId(ev.getDbId(), chan.getDbId());
-            } catch(NotFound e) {//pairId doesn't exist. Putting it in the
+            } catch(NotFound e) {// pairId doesn't exist. Putting it in the
                 // database.
                 pairId = evChanStatus.put(ev.getDbId(),
                                           chan.getDbId(),
@@ -299,7 +300,10 @@ public class WaveformArm implements Arm {
     }
 
     private void retryIfNeededAndAvailable() throws SQLException {
-        if(getNumRetryWaiting() / (double)pool.getNumWaiting() < retryPercentage) {
+        int numInPool = pool.getNumWaiting();
+        if(numInPool == 0
+                || getNumRetryWaiting() / (double)numInPool < retryPercentage) {
+            logger.debug("retrying if available");
             retryIfAvailable();
         }
     }
@@ -350,55 +354,55 @@ public class WaveformArm implements Arm {
 
     private WaveformWorkUnit getNextRetry() throws SQLException {
         int pairId;
-        synchronized(eventRetryTable) {
-            pairId = eventRetryTable.next();
+        if(retries.hasNext()) {
+            pairId = retries.next();
+        } else if(corbaFailures.hasNext()) {
+            pairId = corbaFailures.next();
+        } else {
+            return null;
         }
-        if(pairId != -1) {
-            if(motionVectorArm != null) {
+        if(motionVectorArm != null) {
+            try {
+                EventChannelPair ecp;
                 try {
-                    EventChannelPair ecp;
-                    try {
-                        synchronized(evChanStatus) {
-                            ecp = evChanStatus.get(pairId, this);
-                        }
-                    } catch(NotFound e) {
-                        GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair "
-                                                              + pairId
-                                                              + " right after it gave it to me",
-                                                      e);
+                    synchronized(evChanStatus) {
+                        ecp = evChanStatus.get(pairId, this);
+                    }
+                } catch(NotFound e) {
+                    throw new RuntimeException("EventChannelStatus table unable to find pair "
+                                                       + pairId
+                                                       + " right after it gave it to me",
+                                               e);
+                }
+                try {
+                    EventVectorPair ecgp = getEventVectorPair(ecp);
+                    if(ecgp == null) {
                         return null;
                     }
-                    try {
-                        EventVectorPair ecgp = getEventVectorPair(ecp);
-                        if(ecgp == null) {
-                            return null;
-                        }
-                        int[] pairs;
-                        synchronized(evChanStatus) {
-                            pairs = evChanStatus.getPairs(ecgp);
-                        }
-                        return new RetryMotionVectorWaveformWorkUnit(pairs);
-                    } catch(NotFound e) {
-                        GlobalExceptionHandler.handle("EventChannelStatus table unable to find pair right after it gave it to me",
-                                                      e);
+                    int[] pairs;
+                    synchronized(evChanStatus) {
+                        pairs = evChanStatus.getPairs(ecgp);
                     }
-                } catch(SQLException e) {
-                    GlobalExceptionHandler.handle("Trouble matching up a pair with its waveform group",
-                                                  e);
+                    return new RetryMotionVectorWaveformWorkUnit(pairs);
+                } catch(NotFound e) {
+                    throw new RuntimeException("EventChannelStatus table unable to find pair right after it gave it to me",
+                                               e);
                 }
-            } else {
-                return new RetryWaveformWorkUnit(pairId);
+            } catch(SQLException e) {
+                throw new RuntimeException("Trouble matching up a pair with its waveform group",
+                                           e);
             }
+        } else {
+            return new RetryWaveformWorkUnit(pairId);
         }
-        return null;
     }
 
     private void addSuspendedPairsToQueue(int[] pairIds) throws SQLException {
-        //if we're going to run suspended pairs we need to prepopulate the
-        // networkArm.
-        //That's what this lovely monsterous triple for-loop does. You can
-        // remove it
-        //once the network db returns real channels.
+        /*
+         * if we're going to run suspended pairs we need to prepopulate the
+         * networkArm. That's what this lovely monsterous triple for-loop does.
+         * You can remove it once the network db returns real channels.
+         */
         if(pairIds.length > 0) {
             try {
                 NetworkDbObject[] nets = networkArm.getSuccessfulNetworks();
@@ -513,7 +517,7 @@ public class WaveformArm implements Arm {
                     }
                 }
             } // end of if (node instanceof Element)
-        } // end of for (int i=0; i<children.getSize(); i++)
+        } // end of for (intadd i=0; i<children.getSize(); i++)
     }
 
     public static final String[] PACKAGES = new String[] {"waveformArm",
@@ -541,9 +545,9 @@ public class WaveformArm implements Arm {
             }
             Status stat = ecp.getStatus();
             if(stat.getStanding() == Standing.CORBA_FAILURE) {
-                handleCorbaFailure(ecp);
+                    corbaFailures.retry(ecp.getPairId());
             } else if(stat.getStanding() == Standing.RETRY) {
-                handleAvailableDataFailure(ecp);
+                    retries.retry(ecp.getPairId());
             }
         } catch(SQLException e) {
             GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
@@ -559,25 +563,6 @@ public class WaveformArm implements Arm {
                     GlobalExceptionHandler.handle("Problem in setStatus", e);
                 }
             }
-        }
-    }
-
-    private void handleCorbaFailure(EventChannelPair ecp) throws SQLException {
-        synchronized(eventRetryTable) {
-            eventRetryTable.addRetry(ecp.getPairId());
-        }
-    }
-
-    private void handleAvailableDataFailure(EventChannelPair ecp)
-            throws SQLException {
-        MicroSecondDate oTime = new MicroSecondDate(ecp.getEvent().getOrigin().origin_time);
-        if(oTime.after(ClockUtil.now().subtract(MAX_RETRY_DELAY))) {
-            synchronized(eventRetryTable) {
-                eventRetryTable.addRetry(ecp.getPairId());
-            }
-        } else {
-            ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.REJECT));
         }
     }
 
@@ -784,19 +769,19 @@ public class WaveformArm implements Arm {
 
     private JDBCEventChannelStatus evChanStatus;
 
-    private JDBCEventChannelRetry eventRetryTable;
+    private JDBCRetryQueue corbaFailures, retries;
 
     private ChannelGrouper channelGrouper = new ChannelGrouper();
 
     private List usedPairGroups = new ArrayList();
 
-    private double retryPercentage = .02;//2 percent of the pool will be
+    private double retryPercentage = .02;// 2 percent of the pool will be
 
-    //made up of retries if possible
+    // made up of retries if possible
     /** Maxmimun time back from now that it is worth retrying. */
-    private TimeInterval MAX_RETRY_DELAY;
+    private TimeInterval MAX_RETRY_DELAY = new TimeInterval(0, UnitImpl.MINUTE);
 
-    //Amount of time after the run has ended that we retry Server based
+    // Amount of time after the run has ended that we retry Server based
     // failures
     private TimeInterval SERVER_RETRY_DELAY;
 
