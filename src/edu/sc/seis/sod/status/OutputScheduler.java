@@ -51,8 +51,7 @@ public class OutputScheduler extends Thread {
                 boolean MAC_OS_X = lcOSName.startsWith("mac os x");
                 if(MAC_OS_X) {
                     // hopefully everything is done!
-                    System.out.println("Using System.exit(0) only on the mac due to AWT thread not exiting.");
-                    logger.info("Using System.exit(0) only on the mac due to AWT thread not exiting.");
+                    logger.debug("Using System.exit(0) only on the mac due to AWT thread not exiting.");
                     System.exit(0);
                 }
                 return;
