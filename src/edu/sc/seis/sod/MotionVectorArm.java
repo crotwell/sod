@@ -340,7 +340,7 @@ public class MotionVectorArm implements Subsetter {
             processSeismograms(ecp, infilters, outfilters, tempLocalSeismograms);
         } else {
             ecp.update(Status.get(Stage.AVAILABLE_DATA_SUBSETTER,
-                                  Standing.REJECT));
+                                  Standing.RETRY));
             failLogger.info(ecp + " " + result + " on server " + dataCenter);
         }
     }
