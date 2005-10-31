@@ -327,6 +327,7 @@
                 <targetPath>edu/sc/seis/sod/database/props</targetPath>
                 <includes>
                     <include>*.props</include>
+                    <include>*.vm</include>
                 </includes>
             </resource>
             <resource>
