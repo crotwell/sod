@@ -1,0 +1,25 @@
+${tablename}.create=CREATE TABLE ${tablename} (id int, \
+                                           last_query timestamp, \
+                                           numretries int)
+                                           
+${tablename}.next=SELECT TOP 1 id FROM ${tablename} WHERE numretries < ? \
+                  ORDER BY last_query
+                  
+#set($willHave = 'last_query != ? AND numretries < ?')
+
+${tablename}.hasNext=SELECT TOP 1 id FROM ${tablename} WHERE ($willHave) \
+                          AND last_query <= ?
+                          
+${tablename}.willHaveNext=SELECT TOP 1 id FROM ${tablename} WHERE $willHave
+
+${tablename}.get=SELECT id FROM ${tablename} WHERE id = ?
+
+${tablename}.insert=INSERT INTO ${tablename} (last_query, id, numretries) \
+                    VALUES(?, ?, 0)
+                    
+${tablename}.updateNext=UPDATE ${tablename} SET numretries = numretries + 1, \
+                    last_query = ? \
+                    WHERE id = ?
+                    
+${tablename}.updateRetry=UPDATE ${tablename} SET last_query = ? \
+                    WHERE id = ?

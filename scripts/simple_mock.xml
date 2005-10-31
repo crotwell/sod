@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sod>
+    <properties>
+        <runName>Retry Test</runName>
+    </properties>
+    <eventArm>
+        <CSVEventSource>
+            <filename>../events.csv</filename>
+        </CSVEventSource>
+        <printlineEventProcess/>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <name>SingleChannel</name>
+            <dns>edu/sc/seis/mock</dns>
+        </networkFinder>
+        <printlineChannelProcess/>
+    </networkArm>
+    <waveformArm>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-60</value>
+            </beginOffset>
+            <endPhase>tts</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>360</value>
+            </endOffset>
+        </phaseRequest>
+        <fixedDataCenter>
+            <name>Simple</name>
+            <dns>edu/sc/seis/mock</dns>
+        </fixedDataCenter>
+        <someCoverage/>
+        <printlineSeismogramProcess/>
+    </waveformArm>
+</sod>
