@@ -7,7 +7,6 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.sod.ChannelGroup;
 import edu.sc.seis.sod.status.StringTree;
 
 public class WaveformVectorResult {
