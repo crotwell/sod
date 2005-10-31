@@ -10,6 +10,7 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.CookieJar;
 
@@ -57,9 +58,9 @@ public class SimpleVelocitizer {
             return "Unable to evaluate " + template;
         }
     }
-    
+
     public static String cleanUpErrorStringForDisplay(String string) {
-        if (string.startsWith(ERR_PREFIX)){
+        if(string.startsWith(ERR_PREFIX)) {
             return string.substring(ERR_PREFIX.length());
         }
         return string;
@@ -69,16 +70,13 @@ public class SimpleVelocitizer {
     static {
         try {
             Properties props = new Properties();
-            props.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                              "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-            props.setProperty("runtime.log.logsystem.log4j.category",
-                              logger.getName());
+            SQLLoader.setupVelocityLogger(props, logger);
             props.setProperty("velocimacro.library", "");
             Velocity.init(props);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Trouble initializing velocity", e);
         }
     }
-    
+
     public static final String ERR_PREFIX = "#ERROR#";
 }
