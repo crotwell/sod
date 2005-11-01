@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
+import edu.sc.seis.fissuresUtil.xml.StdAuxillaryDataNames;
 
 /**
  * @author groves Created on Apr 8, 2005
@@ -24,8 +25,9 @@ public class RecordSectionSpacer {
         this(range, 15, 21);
     }
 
-    public RecordSectionSpacer(DistanceRange range, int idealSeismograms,
-            int maximumSeismogram) {
+    public RecordSectionSpacer(DistanceRange range,
+                               int idealSeismograms,
+                               int maximumSeismogram) {
         double r = range.getMaxDistance() - range.getMinDistance();
         minimumDegreesBetweenSeis = r / (maximumSeismogram + 1);
         idealDegreesBetweenSeis = r / (idealSeismograms + 1);
@@ -43,27 +45,42 @@ public class RecordSectionSpacer {
         while(remaining.size() > 0) {
             double leastPossibleDist = nextSlot
                     - (idealDegreesBetweenSeis - minimumDegreesBetweenSeis);
-            Iterator it = remaining.iterator();
+            ListIterator it = remaining.listIterator();
             DataSetSeismogram closest = null;
             double closestVal = Double.MAX_VALUE;
+            double closestSToN = Double.MAX_VALUE;
             while(it.hasNext()) {
                 DataSetSeismogram cur = (DataSetSeismogram)it.next();
-                QuantityImpl dist = retrieveOrCalc(cur, distMap);
-                if(dist.getValue() >= nextSlot) {
+                double dist = retrieveOrCalc(cur, distMap).getValue();
+                double sToN = Double.MAX_VALUE;
+                if(cur.getAuxillaryData(StdAuxillaryDataNames.S_TO_N) != null) {
+                    sToN = Double.parseDouble((String)cur.getAuxillaryData(StdAuxillaryDataNames.S_TO_N));
+                }
+                if(dist >= nextSlot
+                        && (closest == null || dist <= nextSlot
+                                + minimumDegreesBetweenSeis)) {
                     if(closest != null
-                            && nextSlot - closestVal <= dist.getValue()
-                                    - nextSlot) {
+                            && nextSlot - closestVal <= dist - nextSlot
+                            && closestSToN >= sToN) {
                         accepted.add(closest);
                         nextSlot = closestVal + idealDegreesBetweenSeis;
                     } else {
+                        if(closest != null
+                                && nextSlot - closestVal > dist - nextSlot) {
+                            logger.debug("Rec sec seis chosen for StoN");
+                        }
                         it.remove();
                         accepted.add(cur);
-                        nextSlot = dist.getValue() + idealDegreesBetweenSeis;
+                        nextSlot = dist + idealDegreesBetweenSeis;
                     }
                     break;
-                } else if(dist.getValue() > leastPossibleDist) {
-                    closest = cur;
-                    closestVal = dist.getValue();
+                } else if(dist > leastPossibleDist) {
+                    if(sToN >= closestSToN) {
+                        closest = cur;
+                        closestVal = dist;
+                    } else {
+                        logger.debug("Rec sec seis rejected for StoN");
+                    }
                 }
                 it.remove();
             }
@@ -103,6 +120,8 @@ public class RecordSectionSpacer {
         }
         return dist;
     }
+
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RecordSectionSpacer.class);
 
     private double minimumDegreesBetweenSeis, idealDegreesBetweenSeis;
 }
