@@ -24,9 +24,12 @@ import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.SamplingImpl;
+import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.fissuresUtil.bag.OrientationUtil;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.NetworkDbObject;
@@ -188,55 +191,31 @@ public class ChannelGrouper {
         return groupableChannels;
     }
 
-    private boolean sanityCheck(Channel[] channelGroup) {
-        if(checkSamplingRate(channelGroup)) {
-            if(checkOrientation(channelGroup)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean sanityCheck(Channel[] channelGroup) {
+        return haveSameSamplingRate(channelGroup)
+                && areOrthogonal(channelGroup);
     }
 
-    private boolean checkOrientation(Channel[] channelGroup) {
-        boolean flag = true;
+    private static boolean areOrthogonal(Channel[] channelGroup) {
         for(int i = 0; i < channelGroup.length; i++) {
-            if(i == (channelGroup.length - 1)) {
-                flag &= checkOrthogonal(channelGroup[i], channelGroup[0]);
-            } else {
-                flag &= checkOrthogonal(channelGroup[i], channelGroup[i + 1]);
+            for(int j = i + 1; j < channelGroup.length; j++) {
+                if(!OrientationUtil.areOrthogonal(channelGroup[i].an_orientation,
+                                                  channelGroup[j].an_orientation)) {
+                    return false;
+                }
             }
         }
-        return flag;
+        return true;
     }
 
-    private boolean checkOrthogonal(Channel one, Channel two) {
-        double oneAzimuth = Math.toRadians(one.an_orientation.azimuth);
-        double oneDip = Math.toRadians(one.an_orientation.dip);
-        double twoAzimuth = Math.toRadians(two.an_orientation.azimuth);
-        double twoDip = Math.toRadians(two.an_orientation.dip);
-        // X,Y and Z coordinates of the motion vector for channel one
-        double oneX = Math.cos(oneDip) * Math.sin(oneAzimuth);
-        double oneY = Math.cos(oneDip) * Math.cos(oneAzimuth);
-        double oneZ = Math.abs(Math.sin(oneDip));
-        // X,Y and Z coordinates of the motion vector for channel two
-        double twoX = Math.cos(twoDip) * Math.sin(twoAzimuth);
-        double twoY = Math.cos(twoDip) * Math.cos(twoAzimuth);
-        double twoZ = Math.abs(Math.sin(twoDip));
-        double angle = Math.toDegrees(Math.acos((oneX * twoX) + (oneY * twoY)
-                + (oneZ * twoZ)));
-        if((angle >= (90 - MARGIN)) && (angle <= (90 + MARGIN))) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkSamplingRate(Channel[] channelGroup) {
+    private static boolean haveSameSamplingRate(Channel[] channelGroup) {
         SamplingImpl sampl = (SamplingImpl)channelGroup[0].sampling_info;
-        double samplingRate0 = (sampl.getFrequency().get_value())
-                * sampl.getNumPoints();
+        QuantityImpl freq = sampl.getFrequency();
+        UnitImpl baseUnit = freq.getUnit();
+        double samplingRate0 = (freq.getValue()) * sampl.getNumPoints();
         for(int i = 1; i < channelGroup.length; i++) {
             SamplingImpl sample = (SamplingImpl)channelGroup[i].sampling_info;
-            double sampleRate = (sample.getFrequency().getValue())
+            double sampleRate = (sample.getFrequency().convertTo(baseUnit).getValue())
                     * sample.getNumPoints();
             if(sampleRate != samplingRate0) {
                 return false;
