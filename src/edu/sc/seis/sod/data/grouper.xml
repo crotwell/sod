@@ -1,36 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules>
-	<rule>
-			<!-->	<networkCode>II</networkCode>
-                <stationEffectiveTimeOverlap>
-                        <startTime>20030101T00:00:00.001Z</startTime>
-                        <endTime>20030131T23:59:59.999Z</endTime>
-                </stationEffectiveTimeOverlap>
-                <siteAND>
-                        <siteOR>
-                                <siteCode/>
-                                <siteCode>00</siteCode>
-                        </siteOR>
-                        <siteEffectiveTimeOverlap>
-                                <startTime>20030101T00:00:00.001Z</startTime>
-                                <endTime>20030131T23:59:59.999Z</endTime>
-                        </siteEffectiveTimeOverlap>
-                </siteAND>
-                <channelAND>
-                              <channelNOT>
-                              <gainCode>O</gainCode>
-                        </channelNOT>
-                        <channelEffectiveTimeOverlap>
-                                <startTime>20030107T00:00:00.001Z</startTime>
-                                <endTime>20030131T23:59:59.999Z</endTime>
-                        </channelEffectiveTimeOverlap>
-                </channelAND>-->
-         		<threeCharacterRule>ZNE</threeCharacterRule>
-          	 	<threeCharacterRule>Z12</threeCharacterRule>
+        <rule>
+                <threeCharacterRule>ZNE</threeCharacterRule>
+                <threeCharacterRule>Z12</threeCharacterRule>
                 <threeCharacterRule>ABC</threeCharacterRule>
-          	 	<threeCharacterRule>123</threeCharacterRule>
-          	 	<threeCharacterRule>UVW</threeCharacterRule>
-          	 	
-    </rule>
-    	       
+                <threeCharacterRule>123</threeCharacterRule>
+                <threeCharacterRule>UVW</threeCharacterRule>
+        </rule>
 </rules>
