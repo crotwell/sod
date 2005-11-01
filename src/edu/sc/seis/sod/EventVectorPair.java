@@ -12,7 +12,9 @@ import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 public class EventVectorPair {
 
     public EventVectorPair(EventChannelPair[] chanPairs) {
-        if(chanPairs == null || chanPairs.length != 3) { throw new IllegalArgumentException("Number of EventChannelPairs must equal 3"); }
+        if(chanPairs == null || chanPairs.length != 3) {
+            throw new IllegalArgumentException("Number of EventChannelPairs must equal 3");
+        }
         this.pairs = chanPairs;
         Channel[] chans = new Channel[pairs.length];
         for(int i = 0; i < pairs.length; i++) {
@@ -67,12 +69,13 @@ public class EventVectorPair {
                         break;
                     }
                 }
-                if(!found) { return false; }
+                if(!found) {
+                    return false;
+                }
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public int hashCode() {
