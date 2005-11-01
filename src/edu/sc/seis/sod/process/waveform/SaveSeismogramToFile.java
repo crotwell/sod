@@ -26,6 +26,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.TauP.Arrival;
 import edu.sc.seis.TauP.TauModelException;
 import edu.sc.seis.TauP.TauP_SetSac;
+import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
 import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
@@ -129,14 +130,16 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                                       true));
         }
         URLDataSetSeismogram urlDSS;
+        LongShortTrigger sToN = (LongShortTrigger)cookieJar.get(PhaseSignalToNoise.PHASE_STON_PREFIX
+                                                                + "ttp");
         if(preserveRequest) {
             urlDSS = saveInDataSet(event,
                                    channel,
                                    seismograms,
                                    fileType,
-                                   original[0]);
+                                   original[0], sToN);
         } else {
-            urlDSS = saveInDataSet(event, channel, seismograms, fileType);
+            urlDSS = saveInDataSet(event, channel, seismograms, fileType, sToN);
         }
         URL[] urls = urlDSS.getURLs();
         for(int i = 0; i < urls.length; i++) {
@@ -222,9 +225,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
-                                                 SeismogramFileTypes type)
+                                                 SeismogramFileTypes type, LongShortTrigger sToN)
             throws Exception {
-        return saveInDataSet(event, channel, seismograms, type, null);
+        return saveInDataSet(event, channel, seismograms, type, null, sToN);
     }
 
     // Used to save a seismogram locally.
@@ -232,7 +235,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes type,
-                                                 RequestFilter request)
+                                                 RequestFilter request,
+                                                 LongShortTrigger sToN)
             throws Exception {
         if(subDS.length() != 0) {
             prepareDataset(event, subDS);
@@ -325,6 +329,13 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                 channel.get_id().network_id.begin_time.date_time);
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
                                 channel.get_id().begin_time.date_time);
+        if(sToN != null) {
+            urlDSS.addAuxillaryData(StdAuxillaryDataNames.S_TO_N, ""
+                    + sToN.getValue());
+            logger.debug("Adding StoN");
+        }else{
+            logger.debug("Not adding StoN");
+        }
         lastDataSet.remove(urlDSS);
         lastDataSet.addDataSetSeismogram(urlDSS, new AuditInfo[] {});
         if(!existingFilesForSeis) {// First insertion of dss into dataset, so
@@ -537,7 +548,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
 
     SeismogramFileTypes fileType;
 
-    private String subDS, prefix, id, masterId, masterFileName;
+    private String subDS, prefix, id, masterId, masterFileName, svnType;
 
     private ArrayList sacHeaderList = new ArrayList();
 
