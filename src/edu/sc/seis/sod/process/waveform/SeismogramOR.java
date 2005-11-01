@@ -36,7 +36,7 @@ public class SeismogramOR extends ForkProcess {
         WaveformProcess processor;
         LinkedList reasons = new LinkedList();
         Iterator it = localSeisProcessList.iterator();
-        WaveformResult result = new WaveformResult(true, seismograms);
+        WaveformResult result = new WaveformResult(true, seismograms, this);
         boolean orResult = false;
         // loop until we hit a true, shortcircut, otherwise all are false and FAIL
         while (it.hasNext() && ! orResult) {

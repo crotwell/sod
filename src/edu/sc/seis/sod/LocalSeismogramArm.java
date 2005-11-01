@@ -362,7 +362,7 @@ public class LocalSeismogramArm implements Subsetter {
                                    LocalSeismogramImpl[] localSeismograms) {
         WaveformProcess processor;
         Iterator it = processes.iterator();
-        WaveformResult result = new WaveformResult(true, localSeismograms);
+        WaveformResult result = new WaveformResult(true, localSeismograms, this);
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
             try {

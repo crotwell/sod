@@ -41,7 +41,7 @@ public class AlwaysSuccess extends ResultWrapper {
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Caught an exception inside Always Success and moving on ...",
                                           e);
-            return new WaveformResult(true, seismograms);
+            return new WaveformResult(true, seismograms, this);
         }
     }
 

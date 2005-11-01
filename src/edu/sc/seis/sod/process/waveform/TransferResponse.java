@@ -69,7 +69,7 @@ public class TransferResponse implements WaveformProcess {
                                                                      + seismograms[0].begin_time.date_time));
             }
         }
-        return new WaveformResult(true, seismograms);
+        return new WaveformResult(true, seismograms, this);
     }
     
     float lowCut, lowPass, highPass, highCut;

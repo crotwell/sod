@@ -32,7 +32,7 @@ public class Integrate implements WaveformProcess {
         for(int i = 0; i < seismograms.length; i++) {
             seismograms[i] = Calculus.integrate(seismograms[i]);
         }
-        return new WaveformResult(true, seismograms);
+        return new WaveformResult(true, seismograms, this);
     }
     
     Element config;

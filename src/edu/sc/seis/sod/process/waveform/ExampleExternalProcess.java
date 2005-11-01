@@ -20,7 +20,7 @@ public class ExampleExternalProcess implements WaveformProcess {
                                   LocalSeismogramImpl[] seismograms,
                                   CookieJar cookieJar) throws Exception {
         if(seismograms.length == 1) {
-            return new WaveformResult(true, seismograms);
+            return new WaveformResult(true, seismograms, this);
         } else {
             return new WaveformResult(seismograms,
                                       new StringTreeLeaf("seismograms does not have length one, "

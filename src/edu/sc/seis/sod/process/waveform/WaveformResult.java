@@ -11,8 +11,8 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class WaveformResult {
 
-    public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms) {
-        this(seismograms, new StringTreeLeaf("", success));
+    public WaveformResult(boolean success, LocalSeismogramImpl[] seismograms, Object actor) {
+        this(seismograms, new StringTreeLeaf(actor, success));
     }
 
     public WaveformResult(LocalSeismogramImpl[] seismograms, StringTree reason) {
