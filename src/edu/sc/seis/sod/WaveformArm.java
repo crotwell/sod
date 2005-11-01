@@ -801,4 +801,8 @@ public class WaveformArm implements Arm {
     private int poolLineCapacity = 100, retryNum;
 
     private Object retryNumLock = new Object();
+
+    public JDBCRetryQueue getRetryQueue() {
+        return retries;
+    }
 }
