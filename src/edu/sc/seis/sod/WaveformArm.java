@@ -543,12 +543,6 @@ public class WaveformArm implements Arm {
             synchronized(evChanStatus) {
                 evChanStatus.setStatus(ecp.getPairId(), ecp.getStatus());
             }
-            Status stat = ecp.getStatus();
-            if(stat.getStanding() == Standing.CORBA_FAILURE) {
-                    corbaFailures.retry(ecp.getPairId());
-            } else if(stat.getStanding() == Standing.RETRY) {
-                    retries.retry(ecp.getPairId());
-            }
         } catch(SQLException e) {
             GlobalExceptionHandler.handle("Trouble setting the status on an event channel pair",
                                           e);
@@ -623,6 +617,12 @@ public class WaveformArm implements Arm {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
                     failLogger.info(ecp + "  " + accepted.toString());
+                }
+                Status stat = ecp.getStatus();
+                if(stat.getStanding() == Standing.CORBA_FAILURE) {
+                    corbaFailures.retry(ecp.getPairId());
+                } else if(stat.getStanding() == Standing.RETRY) {
+                    retries.retry(ecp.getPairId());
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
@@ -719,6 +719,13 @@ public class WaveformArm implements Arm {
                     ecp.update(Status.get(Stage.EVENT_STATION_SUBSETTER,
                                           Standing.REJECT));
                     failLogger.info(ecp + "  " + accepted.toString());
+                }
+                Status stat = ecp.getStatus();
+                //Only make one retry for the whole vector
+                if(stat.getStanding() == Standing.CORBA_FAILURE) {
+                    corbaFailures.retry(pairIds[0]);
+                } else if(stat.getStanding() == Standing.RETRY) {
+                    retries.retry(pairIds[0]);
                 }
             } catch(Throwable t) {
                 System.err.println(BIG_ERROR_MSG);
