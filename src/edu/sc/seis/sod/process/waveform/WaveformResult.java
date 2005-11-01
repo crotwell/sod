@@ -24,14 +24,6 @@ public class WaveformResult {
         return reason.isSuccess();
     }
 
-    public boolean isRetry() {
-        return retry;
-    }
-
-    public void setRetry(boolean retry) {
-        this.retry = retry;
-    }
-
     public LocalSeismogramImpl[] getSeismograms() {
         return seismograms;
     }
@@ -43,6 +35,4 @@ public class WaveformResult {
     private LocalSeismogramImpl[] seismograms;
 
     private StringTree reason;
-
-    private boolean retry;
 }
