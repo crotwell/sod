@@ -362,7 +362,6 @@ public class LocalSeismogramArm implements Subsetter {
                                    LocalSeismogramImpl[] localSeismograms) {
         WaveformProcess processor;
         Iterator it = processes.iterator();
-        boolean retry = false;
         WaveformResult result = new WaveformResult(true, localSeismograms);
         while(it.hasNext() && result.isSuccess()) {
             processor = (WaveformProcess)it.next();
@@ -374,9 +373,6 @@ public class LocalSeismogramArm implements Subsetter {
                                                outfilters,
                                                result.getSeismograms(),
                                                ecp.getCookieJar());
-                    if(!retry) {
-                        retry = result.isRetry();
-                    }
                 }
             } catch(Throwable e) {
                 handle(ecp, Stage.PROCESSOR, e);
@@ -386,9 +382,7 @@ public class LocalSeismogramArm implements Subsetter {
         logger.debug("finished with "
                 + ChannelIdUtil.toStringNoDates(ecp.getChannel().get_id())
                 + " success=" + result.isSuccess());
-        if(retry) {
-            ecp.update(Status.get(Stage.PROCESSOR, Standing.RETRY));
-        } else if(result.isSuccess()) {
+        if(result.isSuccess()) {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         } else {
             ecp.update(Status.get(Stage.PROCESSOR, Standing.REJECT));
