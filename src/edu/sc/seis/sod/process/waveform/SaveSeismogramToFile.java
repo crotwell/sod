@@ -55,6 +55,8 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class SaveSeismogramToFile implements WaveformProcess {
 
+    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX + "ttp";
+
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
@@ -113,6 +115,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                   "eventName",
                                                   DEFAULT_TEMPLATE);
         createMasterDS(DOMHelper.extractText(config, "masterDSName", "Master"));
+        cookiesToParams.add(SVN_PARAM);
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -130,16 +133,20 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                                       true));
         }
         URLDataSetSeismogram urlDSS;
-        LongShortTrigger sToN = (LongShortTrigger)cookieJar.get(PhaseSignalToNoise.PHASE_STON_PREFIX
-                                                                + "ttp");
         if(preserveRequest) {
             urlDSS = saveInDataSet(event,
                                    channel,
                                    seismograms,
                                    fileType,
-                                   original[0], sToN);
+                                   original[0],
+                                   cookieJar);
         } else {
-            urlDSS = saveInDataSet(event, channel, seismograms, fileType, sToN);
+            urlDSS = saveInDataSet(event,
+                                   channel,
+                                   seismograms,
+                                   fileType,
+                                   null,
+                                   cookieJar);
         }
         URL[] urls = urlDSS.getURLs();
         for(int i = 0; i < urls.length; i++) {
@@ -225,9 +232,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
     protected URLDataSetSeismogram saveInDataSet(EventAccessOperations event,
                                                  Channel channel,
                                                  LocalSeismogramImpl[] seismograms,
-                                                 SeismogramFileTypes type, LongShortTrigger sToN)
+                                                 SeismogramFileTypes type)
             throws Exception {
-        return saveInDataSet(event, channel, seismograms, type, null, sToN);
+        return saveInDataSet(event, channel, seismograms, type, null, null);
     }
 
     // Used to save a seismogram locally.
@@ -236,7 +243,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                  LocalSeismogramImpl[] seismograms,
                                                  SeismogramFileTypes type,
                                                  RequestFilter request,
-                                                 LongShortTrigger sToN)
+                                                 CookieJar cookies)
             throws Exception {
         if(subDS.length() != 0) {
             prepareDataset(event, subDS);
@@ -329,12 +336,18 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                 channel.get_id().network_id.begin_time.date_time);
         urlDSS.addAuxillaryData(StdAuxillaryDataNames.CHANNEL_BEGIN,
                                 channel.get_id().begin_time.date_time);
-        if(sToN != null) {
-            urlDSS.addAuxillaryData(StdAuxillaryDataNames.S_TO_N, ""
-                    + sToN.getValue());
-            logger.debug("Adding StoN");
-        }else{
-            logger.debug("Not adding StoN");
+        if(cookies != null) {
+            Iterator it = cookiesToParams.iterator();
+            while(it.hasNext()) {
+                String key = (String)it.next();
+                Object cookie = cookies.get(key);
+                if(cookie != null) {
+                    urlDSS.addAuxillaryData(key, ""
+                            + ((LongShortTrigger)cookie).getValue());
+                }
+                // Hardwired for LongShort now, should be extended to add
+                // anything to the aux data from the cookiejar
+            }
         }
         lastDataSet.remove(urlDSS);
         lastDataSet.addDataSetSeismogram(urlDSS, new AuditInfo[] {});
@@ -547,6 +560,8 @@ public class SaveSeismogramToFile implements WaveformProcess {
     static DataSetToXMLStAX dsToXML = new DataSetToXMLStAX();
 
     SeismogramFileTypes fileType;
+
+    private List cookiesToParams = new ArrayList();
 
     private String subDS, prefix, id, masterId, masterFileName, svnType;
 
