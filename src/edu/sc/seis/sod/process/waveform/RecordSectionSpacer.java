@@ -53,8 +53,8 @@ public class RecordSectionSpacer {
                 DataSetSeismogram cur = (DataSetSeismogram)it.next();
                 double dist = retrieveOrCalc(cur, distMap).getValue();
                 double sToN = Double.MAX_VALUE;
-                if(cur.getAuxillaryData(StdAuxillaryDataNames.S_TO_N) != null) {
-                    sToN = Double.parseDouble((String)cur.getAuxillaryData(StdAuxillaryDataNames.S_TO_N));
+                if(cur.getAuxillaryData(SaveSeismogramToFile.SVN_PARAM) != null) {
+                    sToN = Double.parseDouble((String)cur.getAuxillaryData(SaveSeismogramToFile.SVN_PARAM));
                 }
                 if(dist >= nextSlot
                         && (closest == null || dist <= nextSlot
