@@ -184,8 +184,6 @@ public class ChannelGroup {
         // didn't find by object equals, check for ids
         for(int i = 0; i < channels.length; i++) {
             if(ChannelIdUtil.areEqual(channels[i].get_id(), chan.get_id())) {
-                logger.warn("Found two channels with same id that are not equals()"
-                        + ChannelIdUtil.toString(chan.get_id()));
                 return i;
             }
         }
