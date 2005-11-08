@@ -1,5 +1,10 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.log4j.Category;
+import org.w3c.dom.Element;
+import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
@@ -10,15 +15,12 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
-import java.util.LinkedList;
-import org.apache.log4j.Category;
-import org.w3c.dom.Element;
 
 /**
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 10413 2004-09-09 18:40:30Z groves $
+ * @version $Id: PhaseCut.java 15188 2005-11-08 18:42:33Z groves $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -40,22 +42,28 @@ public class PhaseCut implements WaveformProcess {
         RequestFilter[] cutRequest = phaseRequest.generateRequest(event,
                                                                   channel,
                                                                   cookieJar);
-        logger.debug("Cutting from " + cutRequest[0].start_time.date_time
-                + " to " + cutRequest[0].end_time.date_time);
-        Cut cut = new Cut(new MicroSecondDate(cutRequest[0].start_time),
-                          new MicroSecondDate(cutRequest[0].end_time));
-        LinkedList list = new LinkedList();
-        for(int i = 0; i < seismograms.length; i++) {
-            // cut returns null if the time interval doesn't overlap
-            LocalSeismogramImpl tempSeis = cut.apply(seismograms[i]);
-            if(tempSeis != null) {
-                list.add(tempSeis);
-            }
-        } // end of for (int i=0; i<seismograms.length; i++)
-        if(list.size() != 0) { return new WaveformResult((LocalSeismogramImpl[])list.toArray(new LocalSeismogramImpl[0]),
-                                                         new StringTreeLeaf(this,
-                                                                            true)); }
-        return new WaveformResult(seismograms, new StringTreeLeaf(this, false));
+        LocalSeismogramImpl[] cutSeis = cut(seismograms, cutRequest);
+        return new WaveformResult(cutSeis,
+                                  new StringTreeLeaf(this, cutSeis.length != 0));
+    }
+
+    public static LocalSeismogramImpl[] cut(LocalSeismogramImpl[] seismograms,
+                                            RequestFilter[] cuts)
+            throws FissuresException {
+        List cutSeis = new LinkedList();
+        for(int i = 0; i < cuts.length; i++) {
+            Cut cut = new Cut(new MicroSecondDate(cuts[i].start_time),
+                              new MicroSecondDate(cuts[i].end_time));
+            logger.debug(cut);
+            for(int j = 0; j < seismograms.length; i++) {
+                // cut returns null if the time interval doesn't overlap
+                LocalSeismogramImpl tempSeis = cut.apply(seismograms[j]);
+                if(tempSeis != null) {
+                    cutSeis.add(tempSeis);
+                }
+            } // end of for (int i=0; i<seismograms.length; i++)
+        }
+        return (LocalSeismogramImpl[])cutSeis.toArray(new LocalSeismogramImpl[0]);
     }
 
     Element config;
