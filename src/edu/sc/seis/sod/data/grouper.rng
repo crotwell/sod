@@ -1305,6 +1305,9 @@
                 <element name="globalArea">
                     <empty/>
                 </element>
+                <element name="polygonFile">
+                    <data type="string"/>
+                </element>
             </choice>
         </element>
     </define>
@@ -1339,6 +1342,9 @@
                 </element>
                 <element name="globalArea">
                     <empty/>
+                </element>
+                <element name="polygonFile">
+                    <data type="string"/>
                 </element>
             </choice>
         </element>
@@ -1375,6 +1381,9 @@
                 <element name="globalArea">
                     <empty/>
                 </element>
+                <element name="polygonFile">
+                    <data type="string"/>
+                </element>
             </choice>
         </element>
     </define>
@@ -1409,6 +1418,9 @@
                 </element>
                 <element name="globalArea">
                     <empty/>
+                </element>
+                <element name="polygonFile">
+                    <data type="string"/>
                 </element>
             </choice>
         </element>
@@ -1445,6 +1457,9 @@
                 <element name="globalArea">
                     <empty/>
                 </element>
+                <element name="polygonFile">
+                    <data type="string"/>
+                </element>
             </choice>
         </element>
     </define>
@@ -1479,6 +1494,9 @@
                 </element>
                 <element name="globalArea">
                     <empty/>
+                </element>
+                <element name="polygonFile">
+                    <data type="string"/>
                 </element>
             </choice>
         </element>

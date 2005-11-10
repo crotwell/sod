@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="range.rng"/>
     <start combine="choice">
         <notAllowed/>
@@ -9,9 +10,10 @@
         <choice>
             <xsd:annotation>
                 <summary>Accepts events that occur within a particular area</summary>
-            </xsd:annotation>            
+            </xsd:annotation>
             <ref name="boxArea"/>
             <ref name="globalArea"/>
+            <ref name="polygonFile"/>
         </choice>
     </define>
     <define name="globalArea">
@@ -26,11 +28,24 @@
         <element name="boxArea">
             <xsd:annotation>
                 <summary>Accepts events that occur within a lat lon box </summary>
-                <description>Accepts events that occur within the latitude
-                    longitude box defined here</description>
+                <description>Accepts events that occur within the latitude longitude box defined
+                    here</description>
             </xsd:annotation>
             <externalRef href="../externalRef/latitudeRange.rng"/>
             <externalRef href="../externalRef/longitudeRange.rng"/>
+        </element>
+    </define>
+    <define name="polygonFile">
+        <element name="polygonFile">
+            <xsd:annotation>
+                <summary>Reads in a file with lat long points and accepts anything that falls inside
+                    the shape they create</summary>
+                <description>Reads the file at the location given and parses out a shape based on
+                    the points listed in the file. The points should be given as a latitude value, a space then a longitude value as in <a href="pentagon.txt">this example.</a>
+                    The file can contain as many points as
+                    necessary to create the shape. Any point landing inside the shape is accepted.</description>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
 </grammar>
