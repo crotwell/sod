@@ -26,6 +26,10 @@ import edu.sc.seis.sod.validator.tour.HTMLOutlineTourist;
 public class SchemaDocumenter {
 
     public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage: schemaDocumenter base outputdir");
+            return;
+        }
         base = args[0];
         outputdir = args[1];
         StAXModelBuilder handler = new StAXModelBuilder(base + "relax/sod.rng");
