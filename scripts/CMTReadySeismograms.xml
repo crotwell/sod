@@ -45,8 +45,7 @@
             <siteCode>00</siteCode>
             <siteAND>
                 <stationOR>
-                    <stationCode>...</stationCode>
-                    <stationCode>...</stationCode>
+                    <stationCode>ANMO</stationCode>
                 </stationOR>
                 <siteCode>10</siteCode>
             </siteAND>
@@ -101,8 +100,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-        </saveSeismogramToFile>
+        <saveSeismogramToFile/>
     </waveformArm>
 </sod>
