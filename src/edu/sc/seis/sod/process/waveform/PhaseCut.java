@@ -20,7 +20,7 @@ import edu.sc.seis.sod.subsetter.requestGenerator.PhaseRequest;
  * Cuts seismograms relative to phases. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:crotwell@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: PhaseCut.java 15188 2005-11-08 18:42:33Z groves $
+ * @version $Id: PhaseCut.java 15296 2005-11-21 18:45:21Z groves $
  */
 public class PhaseCut implements WaveformProcess {
 
@@ -55,7 +55,7 @@ public class PhaseCut implements WaveformProcess {
             Cut cut = new Cut(new MicroSecondDate(cuts[i].start_time),
                               new MicroSecondDate(cuts[i].end_time));
             logger.debug(cut);
-            for(int j = 0; j < seismograms.length; i++) {
+            for(int j = 0; j < seismograms.length; j++) {
                 // cut returns null if the time interval doesn't overlap
                 LocalSeismogramImpl tempSeis = cut.apply(seismograms[j]);
                 if(tempSeis != null) {
