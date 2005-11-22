@@ -61,6 +61,14 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return df.format(origin.my_location.longitude);
     }
 
+    public Float getFloatLatitude() {
+        return new Float(origin.my_location.latitude);
+    }
+
+    public Float getFloatLongitude() {
+        return new Float(origin.my_location.longitude);
+    }
+    
     public String getOrientedLatitude() {
         if(origin.my_location.latitude < 0) {
             return df.format(-origin.my_location.latitude) + " S";

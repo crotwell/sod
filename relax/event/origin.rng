@@ -369,6 +369,8 @@
                         <li>$event.maginitudeValue</li>
                         <li>$event.orientedLatitude</li>
                         <li>$event.orientedLongitude</li>
+                        <li>$event.floatLatitude</li>
+                        <li>$event.floatLongitude</li>
                         <li>$event.region</li>
                         <li>$event.time</li>
                         <li>$event.timePrecise</li>
