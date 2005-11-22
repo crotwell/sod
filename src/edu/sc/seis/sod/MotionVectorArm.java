@@ -306,7 +306,7 @@ public class MotionVectorArm implements Subsetter {
                 return;
             }
             for(int i = 0; i < localSeismograms.length; i++) {
-                LinkedList tempForCast = new LinkedList();
+                List tempForCast = new ArrayList();
                 for(int j = 0; j < localSeismograms[i].length; j++) {
                     if(UnitImpl.createUnitImpl(localSeismograms[i][j].y_unit)
                             .equals(COUNT_SQR)) {
