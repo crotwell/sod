@@ -355,7 +355,24 @@
             <xsd:annotation>
                 <summary>Prints out each event on a new line</summary>
                 <description>Prints out each event on a new line. If a filename is included, the
-                    printout goes to the specified file. </description>
+                    printout goes to the specified file. The template can contain plain text as
+                    well as parameters from the event such as:
+                    <ul>
+                        <li>$event.allMagnitudes</li>
+                        <li>$event.catalog</li>
+                        <li>$event.contributor</li>
+                        <li>$event.depth</li>
+                        <li>$event.latitude</li>
+                        <li>$event.longitude</li>
+                        <li>$event.magnitude</li>
+                        <li>$event.magnitudeType</li>
+                        <li>$event.maginitudeValue</li>
+                        <li>$event.orientedLatitude</li>
+                        <li>$event.orientedLongitude</li>
+                        <li>$event.region</li>
+                        <li>$event.time</li>
+                        <li>$event.timePrecise</li>
+                    </ul></description>
             </xsd:annotation>
             <optional>
                 <element name="template">

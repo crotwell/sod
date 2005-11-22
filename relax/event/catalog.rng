@@ -6,7 +6,9 @@
             <xsd:annotation>
                 <xsd:documentation xml:lang="en">
                     <description>Checks the catalog to which an event belongs against
-                        the string specified here. If they match, the event passes.</description>
+                        the string specified here. If they match, the event passes.
+                        The current list of known catalogs for the IRIS_EventDC can be
+                        found <a href="http://www.seis.sc.edu/wily/EventCatalogs?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;dns=edu/iris/dmc&amp;serverObject=IRIS_EventDC&amp;description=IRIS%20DMC">here</a>.</description>
                     <summary>Matches events with a given catalog</summary>
                     <example>
                         <catalog>FINGER</catalog>
