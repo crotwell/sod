@@ -145,8 +145,6 @@ public class WaveformArm implements Arm {
         for(EventDbObject ev = popAndGet(); ev != null; ev = popAndGet()) {
             EventEffectiveTimeOverlap overlap = new EventEffectiveTimeOverlap(ev.getEvent());
             NetworkDbObject[] networks = networkArm.getSuccessfulNetworks();
-            logger.debug("got " + networks.length
-                    + " networks from getSuccessfulNetworks()");
             for(int i = 0; i < networks.length; i++) {
                 startNetwork(ev, overlap, networks[i]);
             }
@@ -173,7 +171,6 @@ public class WaveformArm implements Arm {
             return;
         } // end of if ()
         StationDbObject[] stations = networkArm.getSuccessfulStations(net);
-        logger.debug("got " + stations.length + " SuccessfulStations");
         for(int i = 0; i < stations.length; i++) {
             startStation(overlap, net, stations[i], ev);
         }
@@ -190,7 +187,6 @@ public class WaveformArm implements Arm {
             return;
         } // end of if ()
         SiteDbObject[] sites = networkArm.getSuccessfulSites(net, station);
-        logger.debug("got " + sites.length + " SuccessfulSites");
         for(int i = 0; i < sites.length; i++) {
             startSite(overlap, net, sites[i], ev);
         }
@@ -206,8 +202,6 @@ public class WaveformArm implements Arm {
             return;
         } // end of if ()
         ChannelDbObject[] chans = networkArm.getSuccessfulChannels(net, site);
-        logger.debug(ExceptionReporterUtils.getMemoryUsage() + " got "
-                + chans.length + " SuccessfulChannels");
         if(motionVectorArm != null) {
             startChannelGroups(ev, chans);
         } else {
