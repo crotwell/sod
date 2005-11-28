@@ -2,9 +2,9 @@ package edu.sc.seis.sod.subsetter.network;
 
 import java.util.regex.Pattern;
 import org.w3c.dom.Element;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.FilterNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.sod.SodUtil;
 
 /**
@@ -20,10 +20,10 @@ public class FilterNetworkFinder extends NetworkFinder {
 
     public synchronized ProxyNetworkDC getNetworkDC() {
         if(netDC == null) {
-            netDC = BulletproofVestFactory.vestNetworkDC(getDNS(),
-                                                         getName(),
-                                                         getFissuresNamingService());
-            netDC = new FilterNetworkDC(netDC, patterns);
+            netDC = new FilterNetworkDC(new VestingNetworkDC(getDNS(),
+                                                             getName(),
+                                                             getFissuresNamingService()),
+                                        patterns);
         }
         return netDC;
     }

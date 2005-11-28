@@ -5,6 +5,7 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.namingService.FissuresNamingService;
 import edu.sc.seis.sod.CommonAccess;
 import edu.sc.seis.sod.SodUtil;
@@ -26,9 +27,9 @@ public class NetworkFinder extends AbstractSource {
 
     public synchronized ProxyNetworkDC getNetworkDC() {
         if(netDC == null) {
-            netDC = BulletproofVestFactory.vestNetworkDC(getDNS(),
-                                                         getName(),
-                                                         getFissuresNamingService());
+            netDC = new VestingNetworkDC(getDNS(),
+                                         getName(),
+                                         getFissuresNamingService());
         }
         return netDC;
     }
@@ -43,7 +44,7 @@ public class NetworkFinder extends AbstractSource {
 
     private FissuresNamingService fns;
 
-    private ProxyNetworkDC netDC;
+    private VestingNetworkDC netDC;
 
     private TimeInterval refreshInterval;
 }// NetworkFinder

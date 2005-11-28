@@ -26,7 +26,6 @@ import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.NetworkIdUtil;
 import edu.iris.Fissures.network.SiteIdUtil;
 import edu.iris.Fissures.network.StationIdUtil;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
@@ -237,10 +236,6 @@ public class NetworkArm implements Arm {
         NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
             try {
-                allNets[i] = BulletproofVestFactory.vestNetworkAccess(allNets[i],
-                                                                      BulletproofVestFactory.vestNetworkDC(finder.getDNS(),
-                                                                                                           finder.getName(),
-                                                                                                           finder.getFissuresNamingService()));
                 if(netEffectiveSubsetter.accept(allNets[i].get_attributes())) {
                     if(attrSubsetter.accept(allNets[i].get_attributes())) {
                         int dbid;

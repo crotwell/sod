@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.database;
 
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 
 /**

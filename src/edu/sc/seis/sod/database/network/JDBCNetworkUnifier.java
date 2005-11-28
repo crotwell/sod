@@ -9,14 +9,14 @@ package edu.sc.seis.sod.database.network;
 import java.sql.Connection;
 import java.sql.SQLException;
 import edu.iris.Fissures.IfNetwork.Channel;
-import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.Station;
-import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
+import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkDC;
+import edu.sc.seis.fissuresUtil.cache.VestingNetworkDC;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
@@ -72,13 +72,11 @@ public class JDBCNetworkUnifier {
     public NetworkDbObject getNet(int netDbId, ProxyNetworkDC ndc)
             throws NetworkNotFound, NotFound, SQLException {
         NetworkId id = netDb.get(netDbId).get_id();
-        NetworkAccess na;
+        ProxyNetworkAccess na;
         synchronized(ndc) {
-            na = ndc.a_finder().retrieve_by_id(id);
+            na = (ProxyNetworkAccess)ndc.a_finder().retrieve_by_id(id);
         }
-        return new NetworkDbObject(netDbId,
-                                   BulletproofVestFactory.vestNetworkAccess(na,
-                                                                            ndc));
+        return new NetworkDbObject(netDbId, na);
     }
 
     public int put(NetworkAttr net) throws SQLException {
