@@ -201,6 +201,7 @@ public class ChannelGrouper {
             for(int j = i + 1; j < channelGroup.length; j++) {
                 if(!OrientationUtil.areOrthogonal(channelGroup[i].an_orientation,
                                                   channelGroup[j].an_orientation)) {
+                    logger.info("Fail areOrthogonal ("+i+","+j+"): "+ChannelIdUtil.toString(channelGroup[i].get_id())+" "+OrientationUtil.toString(channelGroup[i].an_orientation)+" "+ChannelIdUtil.toString(channelGroup[j].get_id())+" "+OrientationUtil.toString(channelGroup[j].an_orientation));
                     return false;
                 }
             }
@@ -218,6 +219,7 @@ public class ChannelGrouper {
             double sampleRate = (sample.getFrequency().convertTo(baseUnit).getValue())
                     * sample.getNumPoints();
             if(sampleRate != samplingRate0) {
+                logger.info("Fail haveSameSamplingRate ("+i+"): "+ChannelIdUtil.toString(channelGroup[i].get_id())+" "+channelGroup[i].sampling_info+" "+ChannelIdUtil.toString(channelGroup[0].get_id())+" "+channelGroup[0].sampling_info);
                 return false;
             }
         }
