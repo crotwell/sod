@@ -32,7 +32,7 @@ public class VelocityNetwork extends NetworkAttr {
         this(((VelocityStation)stations.get(0)).my_network, stations);
     }
 
-    private VelocityNetwork(NetworkAttr net, List stations) {
+    public VelocityNetwork(NetworkAttr net, List stations) {
         this(net, -1, stations);
     }
 
