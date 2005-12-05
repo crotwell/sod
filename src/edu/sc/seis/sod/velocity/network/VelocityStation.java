@@ -1,7 +1,10 @@
 package edu.sc.seis.sod.velocity.network;
 
+import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.Station;
 import edu.iris.Fissures.IfNetwork.StationId;
@@ -10,6 +13,9 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.fissuresUtil.xml.XMLEvent;
+import edu.sc.seis.fissuresUtil.xml.XMLStation;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 
@@ -163,6 +169,13 @@ public class VelocityStation extends Station {
     public String getURL() {
         return "stations/" + getNetCode() + "/" + getCode();
     }
+    
+    public String toXML() throws XMLStreamException {
+        StringWriter writer = new StringWriter();
+        XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
+        XMLStation.insert(xmlWriter, this);
+        return writer.toString();
+    }
 
     public boolean equals(Object o) {
         if(o == this) {
@@ -206,5 +219,13 @@ public class VelocityStation extends Station {
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("station", this);
         getNet().insertIntoContext(ctx);
+    }
+    
+    public static VelocityStation[] wrap(Station[] stations) {
+        VelocityStation[] out = new VelocityStation[stations.length];
+        for(int i = 0; i < out.length; i++) {
+            out[i] = new VelocityStation(stations[i]);
+        }
+        return out;
     }
 }
