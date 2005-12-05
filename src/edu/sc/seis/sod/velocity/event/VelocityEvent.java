@@ -1,15 +1,22 @@
 package edu.sc.seis.sod.velocity.event;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.fissuresUtil.cache.ProxyEventAccessOperations;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.xml.XMLEvent;
+import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
@@ -148,6 +155,13 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     public int[] getPosition() {
         return position;
+    }
+    
+    public String toXML() throws XMLStreamException {
+        StringWriter writer = new StringWriter();
+        XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
+        XMLEvent.insert(xmlWriter, this);
+        return writer.toString();
     }
 
     public String getURL() {
