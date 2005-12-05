@@ -430,6 +430,10 @@ public class JDBCEventChannelStatus extends SodJDBC {
         return chanTable;
     }
 
+    public JDBCEventAccess getEventTable() {
+        return eventTable;
+    }
+
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
             ofPair, ofStatus, eventsOfStatus, stationsNotOfStatus,
             stationsOfStatus, channelsForPair, dbIdForEventAndChan, ofStation,
