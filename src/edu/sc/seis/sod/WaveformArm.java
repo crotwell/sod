@@ -23,7 +23,6 @@ import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
-import edu.sc.seis.fissuresUtil.exceptionHandler.ExceptionReporterUtils;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.EventDbObject;
@@ -324,8 +323,9 @@ public class WaveformArm implements Arm {
                 }
             }
             if(pairGroup == null) {
-                throw new IllegalArgumentException("EventChannelPair has no group, this should never happen! "
-                        + ecp);
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
+                setStatus(ecp);
+                return null;
             }
             int[] pairIds;
             synchronized(evChanStatus) {
@@ -425,7 +425,7 @@ public class WaveformArm implements Arm {
                         ecp = evChanStatus.get(pairIds[i], this);
                     }
                     EventVectorPair ecgp = getEventVectorPair(ecp);
-                    if(!usedPairGroups.contains(ecgp)) {
+                    if(ecgp != null && !usedPairGroups.contains(ecgp)) {
                         usedPairGroups.add(ecgp);
                         int[] pairGroup;
                         synchronized(evChanStatus) {
