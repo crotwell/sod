@@ -10,7 +10,6 @@ import java.util.Map;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.sc.seis.fissuresUtil.display.DisplayUtils;
 import edu.sc.seis.fissuresUtil.xml.DataSetSeismogram;
-import edu.sc.seis.fissuresUtil.xml.StdAuxillaryDataNames;
 
 /**
  * @author groves Created on Apr 8, 2005
@@ -35,6 +34,14 @@ public class RecordSectionSpacer {
 
     public DataSetSeismogram[] spaceOut(DataSetSeismogram[] dataSeis) {
         Map distMap = new HashMap();
+        for(int i = 0; i < dataSeis.length; i++) {
+            QuantityImpl dist = DisplayUtils.calculateDistance(dataSeis[i]);
+            if(dist != null) {
+                distMap.put(dataSeis[i], dist);
+            }else{
+                logger.debug("Unable to calculate distance for " + dataSeis[i]);
+            }
+        }
         sortByDistance(dataSeis, distMap);
         List remaining = new ArrayList();
         for(int i = 0; i < dataSeis.length; i++) {
@@ -51,7 +58,7 @@ public class RecordSectionSpacer {
             double closestSToN = Double.MAX_VALUE;
             while(it.hasNext()) {
                 DataSetSeismogram cur = (DataSetSeismogram)it.next();
-                double dist = retrieveOrCalc(cur, distMap).getValue();
+                double dist = ((QuantityImpl)distMap.get(cur)).getValue();
                 double sToN = Double.MAX_VALUE;
                 if(cur.getAuxillaryData(SaveSeismogramToFile.SVN_PARAM) != null) {
                     sToN = Double.parseDouble((String)cur.getAuxillaryData(SaveSeismogramToFile.SVN_PARAM));
@@ -96,10 +103,8 @@ public class RecordSectionSpacer {
         Arrays.sort(seismograms, new Comparator() {
 
             public int compare(Object o1, Object o2) {
-                QuantityImpl dist1 = retrieveOrCalc((DataSetSeismogram)o1,
-                                                    dists);
-                QuantityImpl dist2 = retrieveOrCalc((DataSetSeismogram)o2,
-                                                    dists);
+                QuantityImpl dist1 = (QuantityImpl)dists.get(o1);
+                QuantityImpl dist2 = (QuantityImpl)dists.get(o2);
                 if(dist1.lessThan(dist2)) {
                     return -1;
                 } else if(dist1.greaterThan(dist2)) {
@@ -109,16 +114,6 @@ public class RecordSectionSpacer {
                 }
             }
         });
-    }
-
-    public static QuantityImpl retrieveOrCalc(DataSetSeismogram seis,
-                                              final Map dists) {
-        QuantityImpl dist = (QuantityImpl)dists.get(seis);
-        if(dist == null) {
-            dist = DisplayUtils.calculateDistance(seis);
-            dists.put(seis, dist);
-        }
-        return dist;
     }
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RecordSectionSpacer.class);
