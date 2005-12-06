@@ -61,7 +61,7 @@ public class EventArm implements Arm {
             GlobalExceptionHandler.handle("Exception caught while processing the EventArm",
                                           e);
         }
-        logger.debug("Event arm finished");
+        logger.info("Event arm finished");
         alive = false;
         synchronized(OutputScheduler.getDefault()) {
             OutputScheduler.getDefault().notify();
