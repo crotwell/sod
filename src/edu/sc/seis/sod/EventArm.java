@@ -20,6 +20,7 @@ import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
 import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;
+import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.eventArm.EventMonitor;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
 
@@ -176,11 +177,12 @@ public class EventArm implements Arm {
             Iterator it = subsetters.iterator();
             while(it.hasNext()) {
                 OriginSubsetter cur = (OriginSubsetter)it.next();
-                if(!cur.accept(event, attr, event.getOrigin())) {
+                StringTree result = cur.accept(event, attr, event.getOrigin());
+                if(!result.isSuccess()) {
                     Status status = Status.get(Stage.EVENT_ORIGIN_SUBSETTER,
                                                Standing.REJECT);
                     change(event, status);
-                    failLogger.info(event + " " + status);
+                    failLogger.info(event + " " + result);
                     return;
                 }
             }
