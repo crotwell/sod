@@ -37,18 +37,18 @@ public class MagnitudeRangeTest extends TestCase {
         }
         assertTrue(mag.value + " " + mag.type + "  " + range.getMinValue()
                            + "<" + range.getMaxValue() + " " + searchTypes,
-                   range.accept(null, eventAttr, origin));
+                   range.accept(null, eventAttr, origin).isSuccess());
         mag.type = "Ms";
         assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
                             + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin));
+                    range.accept(null, eventAttr, origin).isSuccess());
         mag.value = 4.9f;
         assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
                             + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin));
+                    range.accept(null, eventAttr, origin).isSuccess());
         mag.value = 6.1f;
         assertFalse(mag.value + " " + mag.type + "  " + range.getMinValue()
                             + "<" + range.getMaxValue() + " " + searchTypes,
-                    range.accept(null, eventAttr, origin));
+                    range.accept(null, eventAttr, origin).isSuccess());
     }
 }
