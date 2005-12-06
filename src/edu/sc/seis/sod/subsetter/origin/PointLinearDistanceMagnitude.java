@@ -10,6 +10,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.eventStation.LinearDistanceMagnitudeRange;
 import org.w3c.dom.Element;
 
@@ -22,9 +24,9 @@ public class PointLinearDistanceMagnitude extends LinearDistanceMagnitudeRange i
         lon = latlon[1];
     }
 
-   public boolean accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin)
+   public StringTree accept(EventAccessOperations eventAccess, EventAttr eventAttr, Origin preferred_origin)
         throws Exception {
-        return accept(eventAccess, lat, lon);
+        return new StringTreeLeaf(this, accept(eventAccess, lat, lon));
     }
 
 

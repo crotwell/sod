@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class PrintlineEventProcess implements OriginSubsetter {
@@ -23,11 +25,11 @@ public class PrintlineEventProcess implements OriginSubsetter {
         return DOMHelper.extractText(config, "filename", "");
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           EventAttr attr,
                           Origin origin) throws IOException {
         velocitizer.evaluate(filenameTemplate, template, event);
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     public static final String DEFAULT_TEMPLATE = "$event.region ($event.latitude, $event.longitude) $event.time $event.magnitude";

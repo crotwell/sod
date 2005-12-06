@@ -7,6 +7,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author <a href="mailto:">Philip Crotwell </a>
@@ -17,11 +19,11 @@ public abstract class FlinnEngdahlRegion implements OriginSubsetter {
         region = Integer.parseInt(SodUtil.getNestedText(config));
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin) {
         edu.iris.Fissures.FlinnEngdahlRegion reg = eventAttr.region;
-        return reg.type.value() == getType().value() && reg.number == region;
+        return new StringTreeLeaf(this, reg.type.value() == getType().value() && reg.number == region);
     }
 
     public abstract FlinnEngdahlType getType();

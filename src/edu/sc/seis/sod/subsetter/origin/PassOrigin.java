@@ -3,6 +3,8 @@ package edu.sc.seis.sod.subsetter.origin;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
 /**
@@ -20,7 +22,7 @@ public class PassOrigin implements OriginSubsetter {
 
     public PassOrigin(Element config) { }
 
-    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
-        return true;
+    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
+        return new StringTreeLeaf(this, true);
     }
 }// PassOrigin

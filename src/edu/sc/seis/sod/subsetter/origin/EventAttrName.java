@@ -5,6 +5,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class EventAttrName implements OriginSubsetter {
 
@@ -12,10 +14,10 @@ public class EventAttrName implements OriginSubsetter {
         name = SodUtil.getNestedText(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           EventAttr attr,
                           Origin origin) {
-        return name.equals(attr);
+        return new StringTreeLeaf(this, name.equals(attr));
     }
 
     private String name;

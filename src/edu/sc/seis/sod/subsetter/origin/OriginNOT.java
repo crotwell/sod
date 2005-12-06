@@ -4,6 +4,9 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.util.Iterator;
 import org.w3c.dom.Element;
 
@@ -28,12 +31,14 @@ public final class OriginNOT extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
+    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         Iterator it = filterList.iterator();
         if (it.hasNext()) {
             OriginSubsetter filter = (OriginSubsetter)it.next();
-            if (filter.accept(event, eventAttr, e)) { return false; }
+            StringTree result = filter.accept(event, eventAttr, e);
+            if (result.isSuccess()) { return new StringTreeBranch(this, false, result); }
+            return new StringTreeBranch(this, true, result);
         }
-        return true;
+        throw new ConfigurationException("empty NOT");
     }
 }// OriginNOT

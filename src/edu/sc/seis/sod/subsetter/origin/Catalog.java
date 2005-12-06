@@ -4,6 +4,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import org.w3c.dom.Element;
 
 /**
@@ -15,9 +17,9 @@ import org.w3c.dom.Element;
 public class Catalog implements OriginSubsetter{
     public Catalog (Element config){ this.config = config; }
 
-    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
-        if(origin.catalog.equals(getCatalog())) return true;
-        return false;
+    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin origin) {
+        if(origin.catalog.equals(getCatalog())) return new StringTreeLeaf(this, true);
+        return new StringTreeLeaf(this, false);
     }
 
     public String getCatalog() { return SodUtil.getNestedText(config); }

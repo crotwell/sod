@@ -5,6 +5,8 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.MagType;
 import edu.sc.seis.sod.subsetter.RangeSubsetter;
 import java.util.ArrayList;
@@ -24,21 +26,21 @@ public class MagnitudeRange extends RangeSubsetter implements OriginSubsetter {
         parseSearchTypes(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           EventAttr eventAttr,
                           Origin origin) {
         for(int i = 0; i < origin.magnitudes.length; i++) {
             if(accept(origin.magnitudes[i].value)) {
                 if(getSearchTypes().length == 0) {
                     // don't care about search types
-                    return true;
+                    return new StringTreeLeaf(this, true);
                 }
                 for(int j = 0; j < searchTypes.length; j++) {
-                    if(origin.magnitudes[i].type.equals(searchTypes[j])) { return true; }
+                    if(origin.magnitudes[i].type.equals(searchTypes[j])) { return new StringTreeLeaf(this, true); }
                 }
             }
         }
-        return false;
+        return new StringTreeLeaf(this, false);
     }
 
     public String[] getSearchTypes() {

@@ -9,6 +9,8 @@ import edu.iris.Fissures.model.TimeInterval;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author groves Created on Apr 19, 2005
@@ -19,12 +21,12 @@ public class YoungerThan implements OriginSubsetter {
         expirationAge = SodUtil.loadTimeInterval(config);
     }
 
-    public boolean accept(EventAccessOperations ev,
+    public StringTree accept(EventAccessOperations ev,
                           EventAttr eventAttr,
                           Origin preferred_origin) throws Exception {
         MicroSecondDate originTime = new MicroSecondDate(preferred_origin.origin_time);
         MicroSecondDate expirationDate = originTime.add(expirationAge);
-        return expirationDate.after(ClockUtil.now());
+        return new StringTreeLeaf(this, expirationDate.after(ClockUtil.now()));
     }
 
     private TimeInterval expirationAge;

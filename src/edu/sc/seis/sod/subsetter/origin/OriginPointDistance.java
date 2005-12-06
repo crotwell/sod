@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 public class OriginPointDistance extends AbstractOriginPoint implements
         OriginSubsetter {
@@ -20,14 +22,14 @@ public class OriginPointDistance extends AbstractOriginPoint implements
      * Accepts an origin only if it lies within the geven distance range of the
      * given lat and lon.
      */
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           EventAttr eventAttr,
                           Origin origin) {
         double oLat = origin.my_location.latitude;
         double oLon = origin.my_location.longitude;
         DistAz distaz = new DistAz(latitude, longitude, oLat, oLon);
         double delta = distaz.getDelta();
-        return min <= delta && max >= delta;
+        return new StringTreeLeaf(this, min <= delta && max >= delta);
     }
 
     private double min, max;

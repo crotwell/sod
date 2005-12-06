@@ -6,6 +6,8 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.TimeRange;
 
 public class OriginTimeRange extends TimeRange implements OriginSubsetter {
@@ -14,9 +16,9 @@ public class OriginTimeRange extends TimeRange implements OriginSubsetter {
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event,
+    public StringTree accept(EventAccessOperations event,
                           EventAttr eventAttr,
                           Origin origin) {
-        return getMSTR().intersects(new MicroSecondDate(origin.origin_time));
+        return new StringTreeLeaf(this, getMSTR().intersects(new MicroSecondDate(origin.origin_time)));
     }
 }// EventTimeRange

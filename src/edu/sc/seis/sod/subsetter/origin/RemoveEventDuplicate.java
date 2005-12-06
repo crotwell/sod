@@ -19,6 +19,8 @@ import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.database.event.JDBCEventStatus;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 import java.sql.SQLException;
 import org.w3c.dom.Element;
 
@@ -53,7 +55,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         }
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin)
         throws Exception {
@@ -85,11 +87,11 @@ public class RemoveEventDuplicate implements OriginSubsetter {
                 Origin curOrig = matchingEvents[i].getOrigin();
                 DistAz distAz = new DistAz(curOrig.my_location, preferred_origin.my_location);
                 if (distAz.getDelta() < distanceVariance.value){
-                    return false;
+                    return new StringTreeLeaf(this, false);
                 }
             }
         }
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     private Quantity timeVariance, distanceVariance, depthVariance;

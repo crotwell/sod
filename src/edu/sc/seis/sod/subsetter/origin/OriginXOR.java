@@ -4,6 +4,8 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import org.w3c.dom.Element;
 
 /**
@@ -48,10 +50,14 @@ public final class OriginXOR extends EventLogicalSubsetter
         super(config);
     }
 
-    public boolean accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
+    public StringTree accept(EventAccessOperations event, EventAttr eventAttr, Origin e) throws Exception{
         OriginSubsetter filterA = (OriginSubsetter)filterList.get(0);
         OriginSubsetter filterB = (OriginSubsetter)filterList.get(1);
-        return ( filterA.accept(event, eventAttr, e) != filterB.accept(event, eventAttr, e));
+        StringTree[] result = new StringTree[2];
+        result[0] = filterA.accept(event, eventAttr, e);
+        result[1] = filterB.accept(event, eventAttr, e);
+        return new StringTreeBranch(this, result[0].isSuccess() != result[1].isSuccess(),
+                                    result);
     }
 
 }// OriginXOR

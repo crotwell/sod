@@ -15,6 +15,8 @@ import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.event.CSVEventSource;
+import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeLeaf;
 
 /**
  * @author oliverpa
@@ -30,7 +32,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         createFileAndWriteHeaderIfNeeded();
     }
 
-    public boolean accept(EventAccessOperations eventAccess,
+    public StringTree accept(EventAccessOperations eventAccess,
                           EventAttr eventAttr,
                           Origin preferred_origin) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
@@ -52,7 +54,7 @@ public class CSVEventPrinter implements OriginSubsetter {
         writer.write("" + region.type.value());
         writer.newLine();
         writer.close();
-        return true;
+        return new StringTreeLeaf(this, true);
     }
 
     private void createFileAndWriteHeaderIfNeeded() throws IOException {
