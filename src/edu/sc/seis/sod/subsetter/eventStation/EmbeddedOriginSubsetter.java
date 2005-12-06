@@ -6,6 +6,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.StringTree;
+import edu.sc.seis.sod.status.StringTreeBranch;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.subsetter.origin.OriginSubsetter;
 import org.w3c.dom.Element;
@@ -31,10 +32,10 @@ public class EmbeddedOriginSubsetter implements EventStationSubsetter {
     public StringTree accept(EventAccessOperations eventAccess,
                           Station station,
                           CookieJar cookieJar) throws Exception {
-        return new StringTreeLeaf(this, originSubsetter.accept(eventAccess,
-                                      eventAccess.get_attributes(),
-                                      eventAccess.get_preferred_origin()),
-                                      nodeName);
+        StringTree result = originSubsetter.accept(eventAccess,
+                                                   eventAccess.get_attributes(),
+                                                   eventAccess.get_preferred_origin());
+        return new StringTreeBranch(this, result.isSuccess(), result);
     }
 
     private String nodeName;
