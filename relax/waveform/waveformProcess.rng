@@ -139,7 +139,8 @@
             <xsd:annotation>
                 <summary>Cuts seismograms relative to predicted phase arrival times</summary>
                 <description>Cuts seismograms relative to offsets from phase arrival time predicted
-                    by TauP for the model.</description>
+                    by TauP for the model. See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
+                    convention. SOD uses the TauP Toolkit internally.</description>
                 <example>
                     <phaseCut>
                         <model>prem</model>
@@ -560,7 +561,8 @@
                 <summary>Accepts or rejects seismograms based on their signal to noise ratio</summary>
                 <description>This calculates the signal to noise ratio in the time window described
                     by the offsets around the given phases and passes if the ratio is less than the
-                    given ratio.</description>
+                    given ratio. See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
+                    convention. SOD uses the TauP Toolkit internally.</description>
                 <example>
                     <phaseSignalToNoise>
                         <phaseName>ttp</phaseName>

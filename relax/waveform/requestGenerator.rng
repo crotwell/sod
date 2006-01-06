@@ -21,7 +21,10 @@
         <element name="phaseRequest">
             <xsd:annotation>
                 <summary>Generates requests based on phases</summary>
-                <description>This generates requests based on the times relative to calculated phase arrivals.</description>
+                <description>This generates requests based on the times relative to calculated phase arrivals.
+                See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
+                convention. SOD uses the TauP Toolkit internally.
+                </description>
             </xsd:annotation>
             <ref name="phaseWindow"/>
         </element>
