@@ -127,7 +127,7 @@
         </dependency>
         <dependency>
             <id>fissuresImpl</id>
-            <version>1.1.11beta</version>
+            <version>1.1.11</version>
             <url>http://www.seis.sc.edu/software/fissuresImpl</url>
         </dependency>
         <dependency>
