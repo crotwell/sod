@@ -55,7 +55,8 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public class SaveSeismogramToFile implements WaveformProcess {
 
-    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX + "ttp";
+    public static final String SVN_PARAM = PhaseSignalToNoise.PHASE_STON_PREFIX
+            + "ttp";
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
         String fileTypeStr = DOMHelper.extractText(config,
