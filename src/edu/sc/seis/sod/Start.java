@@ -257,6 +257,21 @@ public class Start {
         }
     }
 
+    public static ResultMailer getResultMailer() throws ConfigurationException {
+        if (mailer != null) {
+            return mailer;
+        }
+        throw new ConfigurationException("no mailer configured");
+    }
+    
+    public static void addResultMailer(Properties mailProps) throws ConfigurationException {
+        if(mailer == null) {
+            mailer = new ResultMailer(mailProps);
+        }
+    }
+
+    private static ResultMailer mailer;
+
     public void start() throws Exception {
         startTime = ClockUtil.now();
         new UpdateChecker(false);
@@ -276,6 +291,7 @@ public class Start {
         }
         new JDBCStatus();
         addMailExceptionReporter(props);
+        addResultMailer(props);
         if(runProps.checkpointPeriodically()) {
             new PeriodicCheckpointer();
         }
