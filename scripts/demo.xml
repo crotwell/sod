@@ -17,14 +17,14 @@
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
-                <min>5</min>
+                <min>5.5</min>
             </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
         <originOR>
             <originAND>
                 <magnitudeRange>
-                    <min>5</min>
+                    <min>5.5</min>
                 </magnitudeRange>
                 <originDepthRange>
                     <unit>KILOMETER</unit>
