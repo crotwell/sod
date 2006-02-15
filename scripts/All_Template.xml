@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<sod>
+    <eventArm>
+        <eventFinder>
+            <name>IRIS_EventDC</name>
+            <dns>edu/iris/dmc</dns>
+            <originTimeRange>
+                <startTime>
+                    <year>2006</year>
+                    <month>1</month>
+                    <day>1</day>
+                </startTime>
+                <endTime>
+                    <year>2006</year>
+                    <month>1</month>
+                    <day>31</day>
+                </endTime>
+            </originTimeRange>
+            <magnitudeRange>
+                <min>5</min>
+            </magnitudeRange>
+            <catalog>NEICALRT</catalog>
+        </eventFinder>
+    </eventArm>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+	<stationArea>
+	  <boxArea>
+      <latitudeRange>
+	    <min>35.</min>
+		  <max>42.</max>
+		      </latitudeRange>
+		  <longitudeRange>
+	<min>-122.</min>
+		      <max>-117.</max>
+	  </longitudeRange>
+	    </boxArea>
+    </stationArea>
+        <bandCode>B</bandCode>
+    </networkArm>
+    <waveformArm>
+        <distanceRange>
+            <unit>DEGREE</unit>
+            <min>0</min>
+            <max>90</max>
+        </distanceRange>
+        <phaseRequest>
+            <model>prem</model>
+            <beginPhase>ttp</beginPhase>
+            <beginOffset>
+                <unit>SECOND</unit>
+                <value>-120</value>
+            </beginOffset>
+            <endPhase>2kmps</endPhase>
+            <endOffset>
+                <unit>SECOND</unit>
+                <value>0</value>
+            </endOffset>
+        </phaseRequest>
+        <fixedDataCenter>
+            <name>IRIS_BudDataCenter</name>
+            <dns>edu/iris/dmc</dns>
+        </fixedDataCenter>
+        <someCoverage/>
+        <printlineSeismogramProcess>
+<template>
+Waveforms from the $network.name network owned by $network.owner represented by code $network.code 
+These were recorded at $station.code or $station.name It started recording at $station.start and is located at $station.latitude $station.longitude  That could also be represented as $station.orientedLatitude $station.orientedLongitude  It is $station.getDistance($event) away from the event, or $station.getDistanceDeg($event) in degrees.  The back azimuth is $station.getBaz($event)
+
+The recording channel has code $channel.code  It has azimuth $channel.azimuth and dip $channel.dip
+
+The event is in $event.region and had magnitudes $event.allMagnitudes  It was at $event.orientedLatitude $event.orientedLongitude $event.depth at $event.timePrecise  It came from $event.catalog and was recorded by $event.contributor
+
+We requested
+#foreach($req in $originalRequest)
+$req
+#end
+
+We were told
+#foreach($req in $availableRequest)
+$req
+#end
+was available
+
+And got 
+#foreach($seis in $seismograms)
+Seismogram on $channel from $seis.begin to $seis.end
+#end
+</template>
+        </printlineSeismogramProcess>
+	<saveSeismogramToFile>
+	    <fileType>sac</fileType>
+	    <eventDirLabel>Event_$event.getTime('yyyy_DDD_HH_mm_ss')</eventDirLabel>
+      </saveSeismogramToFile>
+    </waveformArm>
+</sod>
