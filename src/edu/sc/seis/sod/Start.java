@@ -21,6 +21,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
+import edu.sc.seis.fissuresUtil.cache.BulletproofVestFactory;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.exceptionHandler.Extractor;
@@ -66,6 +67,7 @@ public class Start {
             }
         });
         GlobalExceptionHandler.registerWithAWTThread();
+        BulletproofVestFactory.setDefaultNumRetry(1000);
     }
 
     /**

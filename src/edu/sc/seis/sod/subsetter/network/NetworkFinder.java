@@ -29,7 +29,8 @@ public class NetworkFinder extends AbstractSource {
         if(netDC == null) {
             netDC = new VestingNetworkDC(getDNS(),
                                          getName(),
-                                         getFissuresNamingService());
+                                         getFissuresNamingService(),
+                                         BulletproofVestFactory.getDefaultNumRetry());
         }
         return netDC;
     }
@@ -47,4 +48,6 @@ public class NetworkFinder extends AbstractSource {
     private VestingNetworkDC netDC;
 
     private TimeInterval refreshInterval;
+    
+    
 }// NetworkFinder
