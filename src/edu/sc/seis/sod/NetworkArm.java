@@ -73,8 +73,9 @@ public class NetworkArm implements Arm {
     public void run() {
         try {
             getSuccessfulNetworks();
-        } catch(Exception e) {
+        } catch(Throwable e) {
             GlobalExceptionHandler.handle(e);
+            logger.info("NetworkArm ending");
         }
     }
 
