@@ -249,6 +249,15 @@ public class SodUtil {
     }
 
     public static Time loadTime(Element el) throws ConfigurationException {
+        return loadTime(el, false);
+    }
+
+    /*
+     * If endOfDay is true, and the hours, minutes and seconds are unspecified
+     * by this time element, those fields are set to the end of the day
+     */
+    public static Time loadTime(Element el, boolean endOfDay)
+            throws ConfigurationException {
         NodeList kids = el.getChildNodes();
         for(int i = 0; i < kids.getLength(); i++) {
             Node node = kids.item(i);
@@ -260,20 +269,27 @@ public class SodUtil {
                 } else if(tagName.equals("now")) {
                     return ClockUtil.now().getFissuresTime();
                 } else {
-                    return loadSplitupTime(el);
+                    return loadSplitupTime(el, endOfDay);
                 }
             }
         }
         return new Time(getNestedText(el), 0);
     }
 
-    private static Time loadSplitupTime(Element element) {
+    private static Time loadSplitupTime(Element element, boolean endOfDay) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.setTime(ClockUtil.now());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
+        if(endOfDay) {
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MILLISECOND, 999);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MINUTE, 59);
+        } else {
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
+        }
         if(DOMHelper.hasElement(element, "year")) {
             cal.set(Calendar.YEAR,
                     Integer.parseInt(DOMHelper.extractText(element, "year")));
@@ -401,7 +417,7 @@ public class SodUtil {
                 if(tagName.equals("startTime")) {
                     begin = loadTime(subElement);
                 } else if(tagName.equals("endTime")) {
-                    end = loadTime(subElement);
+                    end = loadTime(subElement, true);
                 }
             }
         }
