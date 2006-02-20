@@ -267,7 +267,7 @@ public class Start {
     }
     
     public static void addResultMailer(Properties mailProps) throws ConfigurationException {
-        if(mailer == null) {
+        if(mailer == null && mailProps.containsKey("mail.smtp.host")) {
             mailer = new ResultMailer(mailProps);
         }
     }
