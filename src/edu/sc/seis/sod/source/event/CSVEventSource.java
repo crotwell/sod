@@ -38,8 +38,11 @@ public class CSVEventSource extends SimpleEventSource {
         Element filenameEl = SodUtil.getElement(config, "filename");
         try {
             events = getEventsFromCSVFile(SodUtil.getNestedText(filenameEl));
+        } catch(FileNotFoundException e) {
+            throw new ConfigurationException("File '"+SodUtil.getNestedText(filenameEl)+"' does not seem to exist?",
+                                             e);
         } catch(Exception e) {
-            throw new ConfigurationException("problem loading events from file",
+            throw new ConfigurationException("problem loading events from file: "+SodUtil.getNestedText(filenameEl),
                                              e);
         }
     }
