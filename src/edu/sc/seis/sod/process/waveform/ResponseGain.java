@@ -8,7 +8,9 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.Start;
@@ -20,7 +22,7 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
  * deconvolution, merely a constant multiplier. Created: Wed Nov 6 17:58:10 2002
  * 
  * @author <a href="mailto:www@seis.sc.edu">Philip Crotwell </a>
- * @version $Id: ResponseGain.java 15106 2005-11-01 21:27:54Z groves $
+ * @version $Id: ResponseGain.java 16403 2006-03-07 15:27:28Z crotwell $
  */
 public class ResponseGain implements WaveformProcess {
 
@@ -53,6 +55,12 @@ public class ResponseGain implements WaveformProcess {
                                                              false,
                                                              "No instrumentation found for time "
                                                                      + seismograms[0].begin_time.date_time));
+            } catch (InstrumentationInvalid e) {
+                return new WaveformResult(out,
+                                          new StringTreeLeaf(this,
+                                                             false,
+                                                             "Invalid instrumentation for "
+                        + ChannelIdUtil.toString(channel.get_id())));
             }
         }
         return new WaveformResult(true, seismograms, this);

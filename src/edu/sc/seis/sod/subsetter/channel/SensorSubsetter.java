@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
 import edu.iris.Fissures.IfNetwork.Sensor;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 
 /**
@@ -26,6 +27,9 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -36,6 +40,9 @@ public abstract class SensorSubsetter extends InstrumentationSubsetter {
             return ((Sensor)getSeismicHardware(channel, network)).nominal_low_freq == nominalLowFreq;
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
+            return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
             return false;
         }
     }

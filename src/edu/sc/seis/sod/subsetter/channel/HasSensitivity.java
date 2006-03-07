@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Sensitivity;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.sc.seis.fissuresUtil.bag.ResponseGain;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 
@@ -17,7 +18,11 @@ public class HasSensitivity implements ChannelSubsetter {
                                                             channel.get_id().begin_time);
             return InstrumentationLoader.isValid(sens);
         } catch(ChannelNotFound e) {
-            logger.debug("No sensitivity for "
+            logger.info("No sensitivity for "
+                    + ChannelIdUtil.toString(channel.get_id()));
+            return false;
+        } catch (InstrumentationInvalid e) {
+            logger.info("Invalid instrumentation for "
                     + ChannelIdUtil.toString(channel.get_id()));
             return false;
         }

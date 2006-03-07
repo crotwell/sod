@@ -5,6 +5,8 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfNetwork.SeismicHardware;
+import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 
@@ -33,6 +35,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -43,6 +48,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
             return manufacturer.equals(getSeismicHardware(channel, network).manufacturer);
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
+            return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
             return false;
         }
     }
@@ -55,6 +63,9 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
+            return false;
         }
     }
 
@@ -66,13 +77,21 @@ public abstract class InstrumentationSubsetter implements ChannelSubsetter {
         } catch(ChannelNotFound ex) {
             handleChannelNotFound(ex);
             return false;
+        } catch(InstrumentationInvalid ex) {
+            handle(ex);
+            return false;
         }
     }
 
     protected void handleChannelNotFound(ChannelNotFound ex) {
-        GlobalExceptionHandler.handle("channel not found in network, despite the fact that it was found "
-                                              + "in the first place to go through this subsetter.  seems "
-                                              + "rather silly, eh?",
+        logger.info("Channel not found in network, generally indicates no response for this channel in the server.",
                                       ex);
     }
+    
+    protected void handle(InstrumentationInvalid e) {
+        logger.info("Invalid instrumentation for "
+                    + ChannelIdUtil.toString(e.getChannelId()), e);
+    }
+    
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstrumentationSubsetter.class);
 }

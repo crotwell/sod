@@ -8,8 +8,10 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.bag.Transfer;
+import edu.sc.seis.fissuresUtil.cache.InstrumentationInvalid;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
@@ -67,6 +69,12 @@ public class TransferResponse implements WaveformProcess {
                                                              false,
                                                              "No instrumentation found for time "
                                                                      + seismograms[0].begin_time.date_time));
+            } catch (InstrumentationInvalid e) {
+                return new WaveformResult(out,
+                                          new StringTreeLeaf(this,
+                                                             false,
+                                                             "Invalid instrumentation for "
+                        + ChannelIdUtil.toString(channel.get_id())));
             }
         }
         return new WaveformResult(true, seismograms, this);
