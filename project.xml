@@ -275,6 +275,11 @@
             <jar>etopo10.jar</jar>
         </dependency>
         <dependency>
+            <groupId>mapData</groupId>
+            <artifactId>dcwpo_browse</artifactId>
+            <jar>dcwpo_browse.jar</jar>
+        </dependency>
+        <dependency>
             <id>javamail</id>
             <version>1.3.2</version>
         </dependency>
