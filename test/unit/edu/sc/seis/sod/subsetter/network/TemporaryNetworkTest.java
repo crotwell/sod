@@ -15,6 +15,9 @@ public class TemporaryNetworkTest extends TestCase {
         NetworkAttr xa = MockNetworkAttr.createNetworkAttr();
         xa.get_id().network_code = "XA";
         assertTrue(subsetter.accept(xa));
+        NetworkAttr ax = MockNetworkAttr.createNetworkAttr();
+        ax.get_id().network_code = "AX";
+        assertFalse(subsetter.accept(ax));
         NetworkAttr other = MockNetworkAttr.createOtherNetworkAttr();
         assertFalse(subsetter.accept(other));
     }
