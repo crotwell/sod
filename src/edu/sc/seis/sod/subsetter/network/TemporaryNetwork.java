@@ -16,5 +16,5 @@ public class TemporaryNetwork implements NetworkSubsetter {
         return p.matcher(code).matches();
     }
 
-    private static Pattern p = Pattern.compile("X|Y|Z");
+    private static Pattern p = Pattern.compile("[XYZ].?");
 }
