@@ -168,6 +168,13 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return "earthquakes/" + makeDateIdentifier(this);
     }
 
+    public CacheEvent getCacheEvent() {
+        if (event instanceof CacheEvent) {
+            return (CacheEvent)event;
+        }
+        return new CacheEvent(event);
+    }
+    
     private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
     static {
         fullDateIdentifier.setTimeZone(TimeZone.getTimeZone("GMT"));
