@@ -86,12 +86,21 @@ public class VectorImageProcess extends SeismogramImageProcess implements
             setTimeWindow(sd.getTimeConfig(), phaseWindow, seis[0]);
         }
         final String picFileName = locator.getLocation(event, chan);
+        final String fileType = locator.getFileType();
         SwingUtilities.invokeAndWait(new Runnable() {
 
             public void run() {
                 logger.debug("writing " + picFileName);
                 try {
-                    sd.outputToPNG(new File(picFileName), dims);
+                    if(fileType.equals(PDF)) {
+                        sd.setPdfSeismogramsPerPage(3);
+                        sd.outputToPDF(new File(picFileName));
+                    } else if(fileType.equals(PNG)) {
+                        sd.outputToPNG(new File(picFileName), dims);
+                    } else {
+                        // should never happen
+                        throw new RuntimeException("Unknown fileType:"+fileType);
+                    }
                 } catch(IOException e) {
                     GlobalExceptionHandler.handle("Unable to write to "
                             + picFileName, e);
