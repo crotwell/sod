@@ -244,6 +244,9 @@ public class SeismogramImageProcess implements WaveformProcess {
             this.bsd = bsd;
             this.fileType = fileType;
             this.picFileName = picFileName;
+            if ( ! (fileType.equals(PDF) || fileType.equals(PNG))) {
+                throw new IllegalArgumentException("Unknown fileType:"+fileType);
+            }
         }
 
         public void run() {
@@ -251,8 +254,11 @@ public class SeismogramImageProcess implements WaveformProcess {
             try {
                 if(fileType.equals(PDF)) {
                     ((BasicSeismogramDisplay)bsd).outputToPDF(new File(picFileName));
-                } else {
+                } else if(fileType.equals(PNG)) {
                     bsd.outputToPNG(new File(picFileName), dims);
+                } else {
+                    // should never happen
+                    throw new RuntimeException("Unknown fileType:"+fileType);
                 }
             } catch(Throwable e) {
                 GlobalExceptionHandler.handle("unable to save seismogram image to "
