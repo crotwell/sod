@@ -139,6 +139,10 @@ public class VelocityStation extends Station {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.depth));
     }
 
+    public String getElevation() {
+        return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(sta.my_location.elevation));
+    }
+
     public String getDistance(VelocityEvent event) {
         double km = DistAz.degreesToKilometers(new DistAz(this, event).getDelta());
         return FissuresFormatter.formatDistance(new QuantityImpl(km,
