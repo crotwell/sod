@@ -69,18 +69,11 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         QuantityImpl minDepth = originDepth.subtract(depthRangeImpl);
         QuantityImpl maxDepth = originDepth.add(depthRangeImpl);
 
-        if (minDepth.the_units != UnitImpl.KILOMETER){
-            minDepth = minDepth.convertTo(UnitImpl.KILOMETER);
-        }
-        if (maxDepth.the_units != UnitImpl.KILOMETER){
-            maxDepth = maxDepth.convertTo(UnitImpl.KILOMETER);
-        }
-
-        CacheEvent[] matchingEvents =
+        CacheEvent[] matchingEvents = 
             eventTable.getEventsByTimeAndDepthRanges(minTime,
                                                      maxTime,
-                                                     minDepth.value,
-                                                     maxDepth.value);
+                                                     minDepth.getValue(UnitImpl.KILOMETER),
+                                                     maxDepth.getValue(UnitImpl.KILOMETER));
 
         for (int i = 0; i < matchingEvents.length; i++) {
             if (!matchingEvents[i].equals(eventAccess)){
@@ -93,6 +86,7 @@ public class RemoveEventDuplicate implements OriginSubsetter {
         }
         return new StringTreeLeaf(this, true);
     }
+    
 
     private Quantity timeVariance, distanceVariance, depthVariance;
     private JDBCEventStatus eventTable;
