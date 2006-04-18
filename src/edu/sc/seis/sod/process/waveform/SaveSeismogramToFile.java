@@ -608,7 +608,9 @@ class PhaseHeaderProcess extends SacHeaderProcess {
                     .calcTravelTimes(channel.my_site.my_location,
                                      event.get_preferred_origin(),
                                      new String[] {phaseName});
-            TauP_SetSac.setSacTHeader(sac, tHeader, arrivals[0]);
+            if (arrivals.length != 0) {
+                TauP_SetSac.setSacTHeader(sac, tHeader, arrivals[0]);
+            }
         } catch(TauModelException e) {
             logger.warn("Problem setting travel times for " + phaseName
                     + " in " + model, e);
