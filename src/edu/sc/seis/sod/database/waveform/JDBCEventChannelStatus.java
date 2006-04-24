@@ -95,11 +95,24 @@ public class JDBCEventChannelStatus extends SodJDBC {
                 + "FROM channel, site, eventchannelstatus, station "
                 + "WHERE "
                 + chanJoin + " AND station.sta_id = ?" + " AND status = ?");
-        //Since events come in in time order, sorting on reverse id order gives
+        // Since events come in in time order, sorting on reverse id order gives
         // us backwards in time
-        ofStationStatusInTime = conn.prepareStatement("SELECT DISTINCT eventid FROM eventchannelstatus WHERE status = ? AND "
-                + "channelid IN ( SELECT chan_id FROM channel, site WHERE channel.site_id = site.site_id AND site.sta_id = ?) AND "
-                + "eventid IN (SELECT event_id FROM eventaccess, origin, time WHERE eventaccess.origin_id = origin.origin_id AND origin_time_id = time_id AND time_stamp BETWEEN ?  AND ?) ORDER BY eventid DESC");
+        ofStationStatusInTime = conn.prepareStatement("SELECT DISTINCT eventid FROM eventchannelstatus "
+                + "JOIN channel ON (channelid = chan_id) "
+                + "JOIN site ON (channel.site_id = site.site_id) "
+                + "JOIN eventaccess ON (eventid = event_id) "
+                + "JOIN origin ON (eventaccess.origin_id = origin.origin_id) "
+                + "JOIN time ON (origin_time_id = time_id) "
+                + "WHERE status = ? AND "
+                + "time_stamp BETWEEN ?  AND ? AND "
+                + "sta_id = ? ORDER BY eventid DESC");
+        ofChannelStatusInTime = conn.prepareStatement("SELECT eventid FROM eventchannelstatus "
+                + "JOIN eventaccess ON (eventid = event_id) "
+                + "JOIN origin ON (eventaccess.origin_id = origin.origin_id) "
+                + "JOIN time ON (origin_time_id = time_id) "
+                + "WHERE status = ? AND "
+                + "time_stamp BETWEEN ? AND ? AND "
+                + "channelid = ? ORDER BY eventid DESC;");
     }
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException {
@@ -239,19 +252,19 @@ public class JDBCEventChannelStatus extends SodJDBC {
         return extractECPs(ofStationStatus.executeQuery());
     }
 
-    public CacheEvent[] getSuccessfulForStationForTime(int stationId,
+    public CacheEvent[] getSuccessfulForChannelForTime(int channelId,
                                                        MicroSecondTimeRange timeRange)
             throws SQLException, NotFound {
-        ofStationStatusInTime.setShort(1, Status.get(Stage.PROCESSOR,
+        ofChannelStatusInTime.setShort(1, Status.get(Stage.PROCESSOR,
                                                      Standing.SUCCESS)
                 .getAsShort());
-        ofStationStatusInTime.setInt(2, stationId);
-        ofStationStatusInTime.setTimestamp(3, timeRange.getBeginTime()
+        ofChannelStatusInTime.setTimestamp(2, timeRange.getBeginTime()
                 .getTimestamp());
-        ofStationStatusInTime.setTimestamp(4, timeRange.getEndTime()
+        ofChannelStatusInTime.setTimestamp(3, timeRange.getEndTime()
                 .getTimestamp());
+        ofChannelStatusInTime.setInt(4, channelId);
         List events = new ArrayList();
-        ResultSet rs = ofStationStatusInTime.executeQuery();
+        ResultSet rs = ofChannelStatusInTime.executeQuery();
         while(rs.next()) {
             events.add(eventTable.getEvent(rs.getInt("eventid")));
         }
@@ -304,7 +317,9 @@ public class JDBCEventChannelStatus extends SodJDBC {
             SQLException {
         ofPair.setInt(1, pairId);
         ResultSet rs = ofPair.executeQuery();
-        if(rs.next()) { return extractECP(rs, owner); }
+        if(rs.next()) {
+            return extractECP(rs, owner);
+        }
         throw new NotFound("No such pairId: " + pairId
                 + " in the event channel db");
     }
@@ -350,7 +365,8 @@ public class JDBCEventChannelStatus extends SodJDBC {
         ofEventAndPair.setInt(1, eventId);
         ofEventAndPair.setInt(2, chanId);
         ResultSet rs = ofEventAndPair.executeQuery();
-        if(rs.next()) return rs.getInt("pairid");
+        if(rs.next())
+            return rs.getInt("pairid");
         throw new NotFound("No event and channel pair");
     }
 
@@ -423,7 +439,7 @@ public class JDBCEventChannelStatus extends SodJDBC {
             logger.error(query);
             throw e;
         }
-        //return new int[0];
+        // return new int[0];
     }
 
     public JDBCChannel getChannelTable() {
@@ -437,7 +453,8 @@ public class JDBCEventChannelStatus extends SodJDBC {
     private PreparedStatement insert, setStatus, ofEventAndPair, all, ofEvent,
             ofPair, ofStatus, eventsOfStatus, stationsNotOfStatus,
             stationsOfStatus, channelsForPair, dbIdForEventAndChan, ofStation,
-            ofStationStatus, stations, ofStationStatusInTime;
+            ofStationStatus, stations, ofStationStatusInTime,
+            ofChannelStatusInTime;
 
     private JDBCSequence seq;
 
