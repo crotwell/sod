@@ -1,7 +1,5 @@
 package edu.sc.seis.sod.velocity.event;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -10,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
@@ -75,7 +74,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public Float getFloatLongitude() {
         return new Float(origin.my_location.longitude);
     }
-    
+
     public String getOrientedLatitude() {
         if(origin.my_location.latitude < 0) {
             return df.format(-origin.my_location.latitude) + " S";
@@ -156,7 +155,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     public int[] getPosition() {
         return position;
     }
-    
+
     public String toXML() throws XMLStreamException {
         StringWriter writer = new StringWriter();
         XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
@@ -169,12 +168,12 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public CacheEvent getCacheEvent() {
-        if (event instanceof CacheEvent) {
+        if(event instanceof CacheEvent) {
             return (CacheEvent)event;
         }
         return new CacheEvent(event);
     }
-    
+
     private static DateFormat fullDateIdentifier = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
     static {
         fullDateIdentifier.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -197,11 +196,21 @@ public class VelocityEvent extends ProxyEventAccessOperations {
 
     private DecimalFormat df = new DecimalFormat("0.0");
 
-    public static VelocityEvent[] wrap(CacheEvent[] evs) {
+    public static VelocityEvent[] wrap(EventAccessOperations[] evs) {
         VelocityEvent[] velEvs = new VelocityEvent[evs.length];
         for(int i = 0; i < velEvs.length; i++) {
-            velEvs[i] = new VelocityEvent(evs[i]);
+            velEvs[i] = wrap(evs[i]);
         }
         return velEvs;
+    }
+
+    public static VelocityEvent wrap(EventAccessOperations event){
+        if(event instanceof VelocityEvent) {
+            return (VelocityEvent)event;
+        } else if(event instanceof CacheEvent) {
+            return new VelocityEvent((CacheEvent)event);
+        } else {
+            return new VelocityEvent(new CacheEvent(event));
+        }
     }
 }

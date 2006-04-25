@@ -5,11 +5,11 @@ import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.fissuresUtil.cache.CacheEvent;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
+import edu.sc.seis.sod.velocity.seismogram.VelocitySeismogram;
 
 /**
  * @author groves
@@ -18,32 +18,36 @@ import edu.sc.seis.sod.velocity.network.VelocityChannel;
  */
 public class ContextWrangler {
 
-    public static VelocityContext createContext(EventAccessOperations event) {
+    public static VelocityContext createContext() {
         VelocityContext ctx = new VelocityContext();
-        insertIntoContext(event, ctx);
-        return ctx;
-    }
-
-    public static void insertIntoContext(EventAccessOperations event,
-                                         VelocityContext ctx) {
-        if(event instanceof VelocityEvent) {
-            ctx.put("event", event);
-        } else if(event instanceof CacheEvent) {
-            ctx.put("event", new VelocityEvent((CacheEvent)event));
-        } else {
-            ctx.put("event", new VelocityEvent(new CacheEvent(event)));
-        }
-    }
-
-    public static VelocityContext createContext(Channel chan) {
-        VelocityContext ctx = new VelocityContext();
-        insertIntoContext(chan, ctx);
         ctx.put("formatter", new FissuresFormatter());
         return ctx;
     }
 
-    public static void insertIntoContext(Channel chan, VelocityContext ctx) {
-        new VelocityChannel(chan).insertIntoContext(ctx);
+    public static VelocityContext createContext(EventAccessOperations event) {
+        VelocityContext ctx = createContext();
+        insertIntoContext(event, ctx);
+        return ctx;
+    }
+
+    public static VelocityEvent insertIntoContext(EventAccessOperations event,
+                                                  VelocityContext ctx) {
+        VelocityEvent ev = VelocityEvent.wrap(event);
+        ctx.put("event", ev);
+        return ev;
+    }
+
+    public static VelocityContext createContext(Channel chan) {
+        VelocityContext ctx = createContext();
+        insertIntoContext(chan, ctx);
+        return ctx;
+    }
+
+    public static VelocityChannel insertIntoContext(Channel chan,
+                                                    VelocityContext ctx) {
+        VelocityChannel velChan = VelocityChannel.wrap(chan);
+        velChan.insertIntoContext(ctx);
+        return velChan;
     }
 
     public static VelocityContext createContext(EventAccessOperations event,
@@ -59,5 +63,15 @@ public class ContextWrangler {
                                                          seismograms,
                                                          cookieJar);
         return ctx;
+    }
+
+    public static VelocitySeismogram insertIntoContext(LocalSeismogramImpl seis,
+                                                       Channel chan,
+                                                       VelocityContext ctx) {
+        VelocitySeismogram velSeis = VelocitySeismogram.wrap(seis,
+                                                             insertIntoContext(chan,
+                                                                               ctx));
+        ctx.put("seismogram", velSeis);
+        return velSeis;
     }
 }

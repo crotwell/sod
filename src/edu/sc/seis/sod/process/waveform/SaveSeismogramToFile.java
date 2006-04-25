@@ -71,15 +71,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                              "sacHeader");
                 NodeList nl = DOMHelper.getElements(sacHeader, "phaseTime");
                 for(int i = 0; i < nl.getLength(); i++) {
-                    Element phaseEl = (Element)nl.item(i);
-                    String model = DOMHelper.extractText(phaseEl, "model");
-                    String phaseName = DOMHelper.extractText(phaseEl,
-                                                             "phaseName");
-                    int tHeader = Integer.parseInt(DOMHelper.extractText(phaseEl,
-                                                                         "tHeader"));
-                    sacHeaderList.add(new PhaseHeaderProcess(model,
-                                                             phaseName,
-                                                             tHeader));
+                    sacHeaderList.add(new PhaseHeaderProcess((Element)nl.item(i)));
                 }
             }
         }
@@ -309,7 +301,7 @@ public class SaveSeismogramToFile implements WaveformProcess {
                                                                  : null);
                 Iterator it = sacHeaderList.iterator();
                 while(it.hasNext()) {
-                    ((SacHeaderProcess)it.next()).process(sac, event, channel);
+                    ((SacProcess)it.next()).process(sac, event, channel);
                 }
                 sac.write(seisFile);
             }
@@ -585,45 +577,4 @@ public class SaveSeismogramToFile implements WaveformProcess {
     private static final Logger logger = Logger.getLogger(SaveSeismogramToFile.class);
 
     private JDBCSeismogramFiles jdbcSeisFile;
-}
-
-abstract class SacHeaderProcess {
-
-    abstract void process(SacTimeSeries sac,
-                          EventAccessOperations event,
-                          Channel channel);
-}
-
-class PhaseHeaderProcess extends SacHeaderProcess {
-
-    PhaseHeaderProcess(String model, String phaseName, int tHeader) {
-        this.model = model;
-        this.phaseName = phaseName;
-        this.tHeader = tHeader;
-    }
-
-    void process(SacTimeSeries sac, EventAccessOperations event, Channel channel) {
-        try {
-            Arrival[] arrivals = TauPUtil.getTauPUtil(model)
-                    .calcTravelTimes(channel.my_site.my_location,
-                                     event.get_preferred_origin(),
-                                     new String[] {phaseName});
-            if (arrivals.length != 0) {
-                TauP_SetSac.setSacTHeader(sac, tHeader, arrivals[0]);
-            }
-        } catch(TauModelException e) {
-            logger.warn("Problem setting travel times for " + phaseName
-                    + " in " + model, e);
-        } catch(NoPreferredOrigin e) {
-            logger.warn("Sigh...", e);
-        }
-    }
-
-    String model;
-
-    String phaseName;
-
-    int tHeader;
-
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(PhaseHeaderProcess.class);
 }

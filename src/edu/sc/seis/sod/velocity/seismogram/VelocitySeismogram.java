@@ -14,6 +14,7 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
 
     public VelocitySeismogram(LocalSeismogramImpl localSeis, Channel chan) {
         super(localSeis, localSeis.getData());
+        this.chan = VelocityChannel.wrap(chan);
     }
 
     public MicroSecondDate getBegin() {
@@ -35,11 +36,20 @@ public class VelocitySeismogram extends LocalSeismogramImpl {
 
     public static List wrap(LocalSeismogramImpl[] seis, Channel chan) {
         List results = new ArrayList(seis.length);
+        chan = VelocityChannel.wrap(chan);
         for(int i = 0; i < seis.length; i++) {
-            results.add(new VelocitySeismogram(seis[i], chan));
+            results.add(VelocitySeismogram.wrap(seis[i], chan));
         }
         return results;
     }
 
     private VelocityChannel chan;
+
+    public static VelocitySeismogram wrap(LocalSeismogramImpl seis, Channel chan) {
+        if(seis instanceof VelocitySeismogram) {
+            return (VelocitySeismogram)seis;
+        } else {
+            return new VelocitySeismogram(seis, chan);
+        }
+    }
 }

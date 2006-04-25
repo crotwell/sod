@@ -21,6 +21,7 @@ public class VelocityChannel extends Channel {
         an_orientation = chan.an_orientation;
         sampling_info = chan.sampling_info;
         effective_time = chan.effective_time;
+        name = chan.name;
         this.dbid = dbid;
     }
 
@@ -44,6 +45,15 @@ public class VelocityChannel extends Channel {
         return get_code();
     }
 
+    public String getCodes() {
+        return getNet().getCode() + "." + getStation().getCode() + "."
+                + getSite().getCode() + "." + getCode();
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public VelocityNetwork getNet() {
         return getStation().getNet();
     }
@@ -63,7 +73,7 @@ public class VelocityChannel extends Channel {
     public MicroSecondDate getEnd() {
         return new MicroSecondDate(effective_time.end_time);
     }
-    
+
     public VelocitySampling getSampling() {
         return new VelocitySampling(sampling_info);
     }
@@ -94,7 +104,7 @@ public class VelocityChannel extends Channel {
     public static VelocityChannel[] wrap(Channel[] chans) {
         VelocityChannel[] velChans = new VelocityChannel[chans.length];
         for(int i = 0; i < velChans.length; i++) {
-            velChans[i] = new VelocityChannel(chans[i]);
+            velChans[i] = wrap(chans[i]);
         }
         return velChans;
     }
@@ -102,5 +112,12 @@ public class VelocityChannel extends Channel {
     public void insertIntoContext(VelocityContext ctx) {
         ctx.put("channel", this);
         getSite().insertIntoContext(ctx);
+    }
+
+    public static VelocityChannel wrap(Channel chan) {
+        if(chan instanceof VelocityChannel) {
+            return (VelocityChannel)chan;
+        }
+        return new VelocityChannel(chan);
     }
 }
