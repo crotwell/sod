@@ -5,6 +5,7 @@
  */
 package edu.sc.seis.sod.status;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +52,9 @@ public class FissuresFormatter {
     }
 
     public static String formatChannel(ChannelId id) {
-        if(id == null) { return "null"; }
+        if(id == null) {
+            return "null";
+        }
         return ChannelIdUtil.toStringNoDates(id);
     }
 
@@ -124,7 +127,8 @@ public class FissuresFormatter {
     }
 
     public static boolean isNull(Object obj) {
-        if(obj == null) return true;
+        if(obj == null)
+            return true;
         return false;
     }
 
@@ -157,15 +161,25 @@ public class FissuresFormatter {
     }
 
     public static QuantityImpl getDistance(Station station, Origin origin) {
-        if(station == null) { throw new NullPointerException("station is null"); }
-        if(origin == null) { throw new NullPointerException("origin is null"); }
-        if(origin.my_location == null) { throw new NullPointerException("origin.my_location is null"); }
+        if(station == null) {
+            throw new NullPointerException("station is null");
+        }
+        if(origin == null) {
+            throw new NullPointerException("origin is null");
+        }
+        if(origin.my_location == null) {
+            throw new NullPointerException("origin.my_location is null");
+        }
         return getDistance(station.my_location, origin.my_location);
     }
 
     public static QuantityImpl getDistance(Location from, Location to) {
-        if(from == null) { throw new NullPointerException("from Location is null"); }
-        if(to == null) { throw new NullPointerException("to Location is null"); }
+        if(from == null) {
+            throw new NullPointerException("from Location is null");
+        }
+        if(to == null) {
+            throw new NullPointerException("to Location is null");
+        }
         DistAz d = new DistAz(from, to);
         return new QuantityImpl(d.getDelta(), UnitImpl.DEGREE);
     }
@@ -235,9 +249,7 @@ public class FissuresFormatter {
     }
 
     public static String filize(String fileName) {
-        fileName = fileName.trim();
-        fileName = fileName.replaceAll("\r?\n *", "");
-        fileName = fileName.replaceAll(" *\r?\n", "");
+        fileName = fileName.replaceAll(" *\r?\n *", "");
         fileName = fileName.replaceAll("[ :,']", "_");
         fileName = fileName.replaceAll("[\t\f]", "");
         return fileName.trim();
@@ -245,6 +257,30 @@ public class FissuresFormatter {
 
     public static String filize(String base, String extension) {
         return filize(base + "." + extension);
+    }
+
+    public static String filizeWithDirectories(String path) {
+        return filizeWithDirectories(path, File.separator);
+    }
+
+    public static String filizeWithDirectories(String path, String separator) {
+        String result = "";
+        String splitPattern = separator;
+        if(separator.equals("\\")) {
+            splitPattern = "\\\\";
+            if(path.charAt(1) == ':') {
+                result = path.substring(0, 3);
+                path = path.substring(3);
+            }
+        } else if(path.startsWith(separator)) {
+            result = "/";
+            path = path.substring(1);
+        }
+        String[] segments = path.split(splitPattern);
+        for(int i = 0; i < segments.length - 1; i++) {
+            result += filize(segments[i]) + separator;
+        }
+        return result + filize(segments[segments.length - 1]);
     }
 
     public static SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -258,7 +294,6 @@ public class FissuresFormatter {
     public static SimpleDateFormat mediumFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
     private static SimpleDateFormat fancyFormat = new SimpleDateFormat("EEEE, d MMMM yyyy");
-    
     static {
         TimeZone GMT = TimeZone.getTimeZone("GMT");
         ymdDateFormat.setTimeZone(GMT);
@@ -286,9 +321,11 @@ public class FissuresFormatter {
     public static NumberFormat getDepthFormat() {
         return depthFormat;
     }
+
     public static NumberFormat getDistFormat() {
         return distFormat;
     }
+
     private static NumberFormat distFormat = ChoiceDecimalFormat.createTomStyleA();
 
     private static NumberFormat depthFormat = ChoiceDecimalFormat.createTomStyleB();
