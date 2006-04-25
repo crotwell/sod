@@ -24,5 +24,20 @@ public class FissuresFormatterTest extends TestCase {
                      FissuresFormatter.formatNetwork(chan.get_id().network_id));
     }
 
+    public void testFormatWithDirectories() {
+        assertEquals("/2005.265.12/__.BHZ",
+                     FissuresFormatter.filizeWithDirectories("/2005.265.12/  .BHZ",
+                                                             "/"));
+        assertEquals("C:\\home\\_\\__.BHZ",
+                     FissuresFormatter.filizeWithDirectories("C:\\home\\:\\  .BHZ",
+                                                             "\\"));
+        assertEquals("_\\__.BHZ",
+                     FissuresFormatter.filizeWithDirectories(":\\  .BHZ",
+                                                             "\\"));
+        assertEquals("12442/ham/cheese/__.BHZ",
+                     FissuresFormatter.filizeWithDirectories("12442/ham/cheese/  .BHZ",
+                                                             "/"));
+    }
+
     private Channel chan;
 }
