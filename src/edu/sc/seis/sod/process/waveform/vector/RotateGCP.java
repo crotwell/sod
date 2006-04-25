@@ -85,7 +85,9 @@ public class RotateGCP implements WaveformVectorProcess {
         }
         for(int i = 0; i < seismograms[xIndex].length; i++) {
             LocalSeismogramImpl[] rot = Rotate.rotateGCP(seismograms[xIndex][i],
+                                                         horizontal[0].an_orientation,
                                                          seismograms[yIndex][i],
+                                                         horizontal[1].an_orientation,
                                                          staLoc,
                                                          eventLoc,
                                                          transverseOrientationCode,
