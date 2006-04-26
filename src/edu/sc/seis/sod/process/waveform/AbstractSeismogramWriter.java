@@ -90,6 +90,6 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 
     protected static String extractFileTemplate(Element el, String def) {
-        return DOMHelper.extractText(el, "template", def);
+        return DOMHelper.extractText(el, "location", def);
     }
 }
