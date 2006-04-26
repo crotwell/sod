@@ -53,7 +53,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         ContextWrangler.insertIntoContext(representativeSeismogram,
                                           channel,
                                           ctx);
-        return FissuresFormatter.filizeWithDirectories(velocitizer.evaluate(fileTemplate,
+        return FissuresFormatter.filize(velocitizer.evaluate(fileTemplate,
                                                                             ctx));
     }
 

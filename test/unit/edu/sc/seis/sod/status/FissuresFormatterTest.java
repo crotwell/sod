@@ -26,17 +26,12 @@ public class FissuresFormatterTest extends TestCase {
 
     public void testFormatWithDirectories() {
         assertEquals("/2005.265.12/__.BHZ",
-                     FissuresFormatter.filizeWithDirectories("/2005.265.12/  .BHZ",
-                                                             "/"));
+                     FissuresFormatter.filize("/2005.265.12/  .BHZ"));
         assertEquals("C:\\home\\_\\__.BHZ",
-                     FissuresFormatter.filizeWithDirectories("C:\\home\\:\\  .BHZ",
-                                                             "\\"));
-        assertEquals("_\\__.BHZ",
-                     FissuresFormatter.filizeWithDirectories(":\\  .BHZ",
-                                                             "\\"));
+                     FissuresFormatter.filize("C:\\home\\:\\  .BHZ"));
+        assertEquals("_\\__.BHZ", FissuresFormatter.filize(":\\  .BHZ"));
         assertEquals("12442/ham/cheese/__.BHZ",
-                     FissuresFormatter.filizeWithDirectories("12442/ham/cheese/  .BHZ",
-                                                             "/"));
+                     FissuresFormatter.filize("12442/ham/cheese/  .BHZ"));
     }
 
     private Channel chan;

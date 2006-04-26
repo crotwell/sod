@@ -248,39 +248,22 @@ public class FissuresFormatter {
         return ClockUtil.now();
     }
 
-    public static String filize(String fileName) {
-        fileName = fileName.replaceAll(" *\r?\n *", "");
-        fileName = fileName.replaceAll("[ :,']", "_");
-        fileName = fileName.replaceAll("[\t\f]", "");
-        return fileName.trim();
-    }
-
     public static String filize(String base, String extension) {
         return filize(base + "." + extension);
     }
 
-    public static String filizeWithDirectories(String path) {
-        return filizeWithDirectories(path, File.separator);
+    public static String filize(String path) {
+        if(path.charAt(1) == ':' && path.charAt(2) == '\\') {
+            return path.substring(0, 3) + filizeInternal(path.substring(3));
+        }
+        return filizeInternal(path);
     }
 
-    public static String filizeWithDirectories(String path, String separator) {
-        String result = "";
-        String splitPattern = separator;
-        if(separator.equals("\\")) {
-            splitPattern = "\\\\";
-            if(path.charAt(1) == ':') {
-                result = path.substring(0, 3);
-                path = path.substring(3);
-            }
-        } else if(path.startsWith(separator)) {
-            result = "/";
-            path = path.substring(1);
-        }
-        String[] segments = path.split(splitPattern);
-        for(int i = 0; i < segments.length - 1; i++) {
-            result += filize(segments[i]) + separator;
-        }
-        return result + filize(segments[segments.length - 1]);
+    private static String filizeInternal(String fileName) {
+        fileName = fileName.replaceAll(" *\r?\n *", "");
+        fileName = fileName.replaceAll("[ :,']", "_");
+        fileName = fileName.replaceAll("[\t\f]", "");
+        return fileName.trim();
     }
 
     public static SimpleDateFormat ymdDateFormat = new SimpleDateFormat("yyyy-MM-dd");

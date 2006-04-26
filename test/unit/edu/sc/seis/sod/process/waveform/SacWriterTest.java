@@ -38,7 +38,7 @@ public class SacWriterTest extends TestCase {
                                                        {"${channel.name}",
                                                         chan.name}};
         for(int i = 0; i < templateAndResult.length; i++) {
-            assertEquals(FissuresFormatter.filizeWithDirectories(templateAndResult[i][1]),
+            assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
                          new SacWriter(templateAndResult[i][0]).generateBase(ev,
                                                                              chan,
                                                                              seis));
