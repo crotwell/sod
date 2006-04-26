@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Element;
+import edu.iris.Fissures.IfNetwork.NetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.exceptionHandler.HTMLReporter;
@@ -19,7 +20,10 @@ import edu.sc.seis.sod.EventArm;
 import edu.sc.seis.sod.EventChannelPair;
 import edu.sc.seis.sod.NetworkArm;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.Stage;
+import edu.sc.seis.sod.Standing;
 import edu.sc.seis.sod.Start;
+import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.WaveformArm;
 import edu.sc.seis.sod.process.waveform.LocalSeismogramTemplateGenerator;
 import edu.sc.seis.sod.status.eventArm.EventStatusTemplate;
@@ -27,6 +31,7 @@ import edu.sc.seis.sod.status.eventArm.MapEventStatus;
 import edu.sc.seis.sod.status.networkArm.NetworkInfoTemplateGenerator;
 import edu.sc.seis.sod.status.waveformArm.WaveformEventTemplateGenerator;
 import edu.sc.seis.sod.status.waveformArm.WaveformMonitor;
+import edu.sc.seis.sod.status.waveformArm.WaveformNetworkStatus;
 import edu.sc.seis.sod.status.waveformArm.WaveformStationStatus;
 
 public class IndexTemplate extends FileWritingTemplate implements
@@ -136,6 +141,12 @@ public class IndexTemplate extends FileWritingTemplate implements
             Element waveformStationEl = DOMHelper.extractElement(statusConfig,
                                                                  "waveformStationStatus");
             waveformArm.addStatusMonitor(new WaveformStationStatus(waveformStationEl));
+            Element waveformNetworkEl = DOMHelper.extractElement(statusConfig,
+                                                                 "waveformNetworkStatus");
+            WaveformNetworkStatus wns = new WaveformNetworkStatus(waveformNetworkEl);
+            waveformArm.addStatusMonitor(wns);
+            //in case all the networks have been processed already
+            wns.change((NetworkAccess)null, Status.get(Stage.PROCESSOR, Standing.SUCCESS));
         }
     }
 
