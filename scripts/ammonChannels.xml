@@ -13,13 +13,18 @@
                 <startTime>20041226T00:45:00.001Z</startTime>
                 <endTime>20041226T01:45:00.001Z</endTime>
                 </stationEffectiveTimeOverlap>
-        <stationPointDistance>
-            <unit>DEGREE</unit>
-            <min>30</min>
-            <max>90</max>
-            <latitude>35</latitude>
-            <longitude>90</longitude>
-        </stationPointDistance></stationAND>
+		        <stationPointDistance>
+		            <unit>DEGREE</unit>
+		            <min>30</min>
+		            <max>90</max>
+		            <latitude>35</latitude>
+		            <longitude>90</longitude>
+		        </stationPointDistance>
+        </stationAND>
+        <channelEffectiveTimeOverlap>
+            <startTime>20041226T00:45:00.001Z</startTime>
+            <endTime>20041226T01:45:00.001Z</endTime>
+        </channelEffectiveTimeOverlap>
         <bandCode>B</bandCode>
         <gainCode>H</gainCode>
         <channelOR>
