@@ -37,7 +37,9 @@ The next table, In Progress, has events that have been retrieved by the event ar
 The last table, Failures, has events the event arm's subsetters rejected.  To figure out why, you can go to the configuration file for this run and compare the settings on the subsetters in the event arm against the data for the events in this table.
 </p>
 </div>
+<div id="leftColumn">
 <menu><template>jar:edu/sc/seis/sod/data/templates/menu.xml</template></menu>
+</div>
 </body>
 </html>
 </template>

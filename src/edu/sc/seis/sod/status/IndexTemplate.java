@@ -44,8 +44,8 @@ public class IndexTemplate extends FileWritingTemplate implements
                                                               indexLoc);
             parse(template);
             write();
-            FileWritingTemplate help = new FileWritingTemplate(dirName
-                    + "/help/", "eventPageHelp.html");
+            FileWritingTemplate help = new FileWritingTemplate(dirName,
+                                                               "/help/eventPageHelp.html");
             help.parse(TemplateFileLoader.getTemplate(getClass().getClassLoader(),
                                                       eventPageHelp));
             help.write();
