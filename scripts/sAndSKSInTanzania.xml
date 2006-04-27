@@ -116,10 +116,9 @@
                     <value>75</value>
                 </endOffset>
             </phaseCut>
-            <saveSeismogramToFile>
-                <fileType>sac</fileType>
-                <dataDirectory>S_Seismograms</dataDirectory>
-            </saveSeismogramToFile>
+            <sacWriter>
+                <location>S_Seismograms/${event.time}/${channel.codes}</location>
+            </sacWriter>
         </forkProcess>
         <phaseCut>
             <model>prem</model>

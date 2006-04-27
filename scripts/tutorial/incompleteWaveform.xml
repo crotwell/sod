@@ -21,6 +21,6 @@
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile/>
+        <mseedWriter/>
     </waveformArm>
 </sod>
