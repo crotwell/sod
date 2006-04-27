@@ -91,9 +91,8 @@ Seismogram on $channel from $seis.begin to $seis.end
 #end
 </template>
         </printlineSeismogramProcess>
-	<saveSeismogramToFile>
-	    <fileType>sac</fileType>
-	    <eventDirLabel>Event_$event.getTime('yyyy_DDD_HH_mm_ss')</eventDirLabel>
-      </saveSeismogramToFile>
+	<sacWriter>
+	    <location>seismograms/${event.getTime('yyyy_DDD_HH_mm_ss')}/${channel.codes}.mseed</location>
+	</sacWriter>
     </waveformArm>
 </sod>

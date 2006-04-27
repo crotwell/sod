@@ -2,11 +2,27 @@
 <sod>
     <properties>
         <runName>Retry Test</runName>
+        <statusPages>TRUE</statusPages>
     </properties>
     <eventArm>
-        <CSVEventSource>
-            <filename>../events.csv</filename>
-        </CSVEventSource>
+        <eventFinder>
+            <name>Mock</name>
+            <dns>edu/sc/seis/mock</dns>
+            <originTimeRange>
+                <startTime>
+                    <earlier>
+                        <timeInterval>
+                            <unit>WEEK</unit>
+                            <value>10</value></timeInterval>
+                    </earlier></startTime>
+                <endTime>
+                    <earlier>
+                        <timeInterval>
+                            <unit>WEEK</unit>
+                            <value>8</value></timeInterval>
+                    </earlier></endTime>
+            </originTimeRange>
+        </eventFinder>
         <printlineEventProcess/>
     </eventArm>
     <networkArm>

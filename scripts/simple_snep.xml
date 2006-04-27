@@ -51,7 +51,7 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile/>
+        <mseedWriter/>
         <seismogramImageProcess/>
     </waveformArm>
 </sod>

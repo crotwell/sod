@@ -133,8 +133,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-        </saveSeismogramToFile>
+        <sacWriter/>
     </waveformArm>
 </sod>

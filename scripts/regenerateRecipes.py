@@ -30,7 +30,7 @@ def dropElements(toDrop, infile, outfile):
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == '-v': 
         verbose = True
-    dropElements(['responseGain', 'integrate', 'rMean', 'rTrend', 'legacyExecute', 'saveSeismogramToFile[dataDirectory]'], 
+    dropElements(['responseGain', 'integrate', 'rMean', 'rTrend', 'legacyExecute', 'mseedWriter[location]'], 
             'tutorial/waveform.xml', 
             'demo.xml')
     process('demo.xml', 

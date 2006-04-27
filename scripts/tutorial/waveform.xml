@@ -77,9 +77,9 @@
         <integrate/>
         <rMean/>
         <rTrend/>
-        <saveSeismogramToFile>
-            <dataDirectory>processedSeismograms</dataDirectory>
-        </saveSeismogramToFile>
+        <mseedWriter>
+            <location>processedSeismograms/${event.getTime('yyyy_MM_dd_HH_mm_SS')/${channel.codes}.mseed</location>
+        </mseedWriter>
         <legacyExecute>
             <command>echo Sod saved this file</command>
         </legacyExecute>

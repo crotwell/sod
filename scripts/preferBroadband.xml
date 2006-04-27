@@ -126,6 +126,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <saveSeismogramToFile/>
+        <mseedWriter/>
     </waveformArm>
 </sod>

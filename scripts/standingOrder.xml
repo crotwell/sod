@@ -173,6 +173,6 @@
                 <ratio>2</ratio>
             </phaseSignalToNoise>
         </ORWaveformProcessWrapper>
-        <saveSeismogramToFile/>
+        <mseedWriter/>
     </waveformVectorArm>
 </sod>

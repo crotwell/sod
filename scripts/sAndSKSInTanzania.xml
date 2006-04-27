@@ -134,9 +134,8 @@
                 <value>75</value>
             </endOffset>
         </phaseCut>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-            <dataDirectory>SKS_Seismograms</dataDirectory>
-        </saveSeismogramToFile>
+        <sacWriter>
+            <location>SKS_Seismograms/${event.time}/${channel.codes}.sac</location>
+        </sacWriter>
     </waveformArm>
 </sod>

@@ -76,8 +76,6 @@
         <printlineSeismogramProcess/>
         <rMean/>
         <rTrend/>
-        <saveSeismogramToFile>
-            <fileType>sac</fileType>
-        </saveSeismogramToFile>
+        <sacWriter/>
     </waveformVectorArm>
 </sod>

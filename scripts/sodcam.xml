@@ -115,12 +115,12 @@
                 <unit>SECOND</unit>
                 <value>-105</value>
             </longOffsetBegin>
-            <longOffsetEnd>
+            <longOffsetEnd> 
                 <unit>SECOND</unit>
                 <value>-5</value>
             </longOffsetEnd>
             <ratio>2</ratio>
         </phaseSignalToNoise>
-        <saveSeismogramToFile/>
+        <mseedWriter/>
     </waveformVectorArm>
 </sod>
