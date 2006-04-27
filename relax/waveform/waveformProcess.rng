@@ -376,10 +376,12 @@
     <define name="saveSeismogramToFile">
         <element name="saveSeismogramToFile">
             <xsd:annotation>
-                <summary>Saves seismograms in files</summary>
-                <description>The seismograms are written to data files in the given directory. Also
+                <summary>Deprecated!  Use sacWriter or mseedWriter instead!</summary>
+                <description>As of sod-2.1.2 this processor is deprecated.  Unless you specifically want DSML files, use sacWriter or mseedWriter instead.  When sod-2.2 is released, this processor will no longer be allowed.
+                
+                 The seismograms are written to data files in the given directory. Also
                     writes out a dsml file for use in GEE and other fissures tools that support
-                    datasets. Always returns true unless there is an error.</description>
+                    datasets. If fileType isn't set, seismograms will be saved as mseed.  Always returns true unless there is an error.</description>
                 <example>
                     <saveSeismogramToFile>
                         <fileType>sac</fileType>

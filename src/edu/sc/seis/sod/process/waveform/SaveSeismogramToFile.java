@@ -17,17 +17,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.AuditInfo;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
-import edu.iris.Fissures.IfEvent.NoPreferredOrigin;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
-import edu.sc.seis.TauP.Arrival;
-import edu.sc.seis.TauP.TauModelException;
-import edu.sc.seis.TauP.TauP_SetSac;
 import edu.sc.seis.fissuresUtil.bag.LongShortTrigger;
-import edu.sc.seis.fissuresUtil.bag.TauPUtil;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.database.ConnMgr;
 import edu.sc.seis.fissuresUtil.database.seismogram.JDBCSeismogramFiles;
@@ -59,6 +54,9 @@ public class SaveSeismogramToFile implements WaveformProcess {
             + "ttp";
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
+        System.err.println("As of SOD 2.1.2 saveSeismogramToFile is deprecated!");
+        System.err.println("Replace it with sacWriter or mseedWriter in your recipes!");
+        System.err.println("Abandon all hope and so on and so forth!");
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
                                                    SeismogramFileTypes.MSEED.getValue());
