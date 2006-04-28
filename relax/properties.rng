@@ -67,7 +67,7 @@
                 <description>This contents of this tag set the name of the SOD run. This name is
                     used in the web pages and the files that SOD generates so that runs can be
                     distinguished from one another. Try to use a value that makes the run easy to
-                    identify. </description>
+                    identify.  It defaults to "My SOD Run"</description>
                 <include/>
             </xsd:annotation>
             <text>
@@ -82,8 +82,7 @@
             <xsd:annotation>
                 <summary>Specifies the directory to which all status HTML is written</summary>
                 <description>All SOD's status files are written relative to the value of this
-                    directory. If nothing is set, the files are written in the directory status in
-                    the directory in which SOD is started.</description>
+                    directory. It defaults to "status"</description>
             </xsd:annotation>
             <text>
                 <xsd:annotation>
@@ -131,7 +130,7 @@
                     exists so runs that are close to real time may continue to see if events come in
                     for the times they're interested in after that time. For runs in the past, this
                     value will have no effect unless adding it to the event arm's end date pushes it
-                    past the time the run ends.</description>
+                    past the time the run ends.  The default value is one week.</description>
             </xsd:annotation>
             <ref name="time"/>
         </element>
@@ -143,7 +142,7 @@
                 <description>If SOD gets an available data failure, or a transient server failure
                     when trying to process items in the waveform arm, this value comes into play.
                     SOD will periodically retry the item that failed up until the first attempt time
-                    plus this value.</description>
+                    plus this value.  The default value is 180 days.</description>
             </xsd:annotation>
             <ref name="time"/>
         </element>
@@ -181,7 +180,7 @@
             <xsd:annotation>
                 <summary>Remove existing SOD database</summary>
                 <description>If true on a run on an existing SOD database, this will delete the
-                    database before starting the run. </description>
+                    database before starting the run. It defaults to false.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>
@@ -200,7 +199,7 @@
                     might mean that some processors get run a second time on the items, so if a
                     processor expects to see everything only once, use the second value,
                     "atMostOnce". This tells SOD to switch all of the indeterminate items over to
-                    the failed state and ignore them from now on. </description>
+                    the failed state and ignore them from now on. SOD defaults to atLeastOnce</description>
             </xsd:annotation>
             <choice>
                 <value>atLeastOnce</value>
@@ -211,8 +210,8 @@
     <define name="statusPages">
         <element name="statusPages">
             <xsd:annotation>
-                <summary>Should SOD create the status index page?</summary>
-                <description>If TRUE, SOD creates the index page. If false it doesn't</description>
+                <summary>Should SOD create html status pages</summary>
+                <description>If TRUE, SOD creates the status pages. Defaults to FALSE.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>
@@ -222,7 +221,7 @@
             <xsd:annotation>
                 <summary>Periodically send a CHECKPOINT to the database</summary>
                 <description>If present, SOD sends a CHECKPOINT command to the database every
-                hour</description>
+                hour.  Defaults to FALSE.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>
@@ -235,7 +234,7 @@
                 <description>By default SOD doesn't attempt to retrieve data for any network item
                     that isn't active during the requested event interval in the event arm. By
                     adding this tag, SOD will ignore effective times and work on every item returned
-                    by the network arm</description>
+                    by the network arm.</description>
             </xsd:annotation>
             <ref name="trueOrFalse"/>
         </element>
