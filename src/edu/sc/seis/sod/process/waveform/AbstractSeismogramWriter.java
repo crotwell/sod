@@ -16,10 +16,12 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
-    private String fileTemplate;
+    protected static final String DEFAULT_PREFIX = "";
+    private String fileTemplate, prefix;
 
-    public AbstractSeismogramWriter(String fileTemplate) {
+    public AbstractSeismogramWriter(String fileTemplate, String prefix) {
         this.fileTemplate = fileTemplate;
+        this.prefix = prefix;
     }
 
     public void removeExisting(String base) {
@@ -53,8 +55,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         ContextWrangler.insertIntoContext(representativeSeismogram,
                                           channel,
                                           ctx);
-        return FissuresFormatter.filize(velocitizer.evaluate(fileTemplate,
-                                                                            ctx));
+        return FissuresFormatter.filize(velocitizer.evaluate(fileTemplate, ctx));
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -77,6 +78,10 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
                     return new WaveformResult(seismograms, reason);
                 }
                 write(locs[i], seismograms[i], channel, event);
+                cookieJar.put(SaveSeismogramToFile.getCookieName(prefix,
+                                                                 channel.get_id(),
+                                                                 i),
+                              locs[i]);
             }
         }
         return new WaveformResult(true, seismograms, this);
@@ -91,5 +96,9 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     protected static String extractFileTemplate(Element el, String def) {
         return DOMHelper.extractText(el, "location", def);
+    }
+
+    protected static String extractPrefix(Element el) {
+        return DOMHelper.extractText(el, "prefix", DEFAULT_PREFIX);
     }
 }

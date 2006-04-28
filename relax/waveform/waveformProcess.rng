@@ -323,6 +323,9 @@
             <optional>
                 <ref name="seisFileLocation"/>
             </optional>
+            <optional>
+                <ref name="writerName"/>
+            </optional>
             <zeroOrMore>
                 <element name="phaseTimeHeader">
                     <ref name="phaseTimeContents"/>
@@ -345,6 +348,20 @@
             <optional>
                 <ref name="seisFileLocation"/>
             </optional>
+            <optional>
+                <ref name="writerName"/>
+            </optional>
+        </element>
+    </define>
+    <define name="writerName">
+        <element name="name">
+            <xsd:annotation>
+                <summary>The name of this writer for reference by other processors</summary>
+                <description>This only matters to other processors that wish to access the files written by this writer.
+                Things like legacyExecute and sacExecute use the name to find which seismogram writer's seismograms to pass to their command.  
+                If there is only one sacWriter or mseedWriter, you can just leave this alone.</description>
+            </xsd:annotation>
+            <data type="string"/>
         </element>
     </define>
     <define name="seisFileLocation">
@@ -711,7 +728,7 @@
                 <summary>Executes an external program.</summary>
                 <description>The legacyExecute processor is capable of running existing command line
                     programs. It does this by passing the filename of the seismograms saved by a
-                    earlier SaveSeismogramToFile processor to a program started with Runtime.exec(). </description>
+                    earlier sacWriter or mseedWriter processor to a program started with Runtime.exec(). </description>
                 <example>
                     <legacyExecute>
                         <command>echo</command>
@@ -719,7 +736,11 @@
                 </example>
             </xsd:annotation>
             <optional>
-                <element name="prefix">
+                <element name="writerName">
+                    <xsd:annotation>
+                    <summary>The name of the writer that wrote the seismograms</summary>
+                        <description>sacWriter and mseedWriter have a name element.  The files passed to the command here are the ones written by the sacWriter or mseedWriter with this name.  Defaults to no name</description>
+                    </xsd:annotation>
                     <data type="string"/>
                 </element>
             </optional>

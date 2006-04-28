@@ -12,10 +12,11 @@ import edu.sc.seis.seisFile.sac.SacTimeSeries;
 
 public class SacWriter extends AbstractSeismogramWriter {
 
-    private static final String DEFAULT_FILE_TEMPLATE = "seismograms/${event.filizedTime}/${network.code}/${station.code}/${site.code}.${channel.code}.sac";
+    private static final String DEFAULT_FILE_TEMPLATE = "seismograms/Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.sac";
 
     public SacWriter(Element el) {
         this(extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
+             extractPrefix(el),
              extractProcessors(el));
     }
 
@@ -33,15 +34,15 @@ public class SacWriter extends AbstractSeismogramWriter {
     }
 
     public SacWriter(String fileTemplate) {
-        this(fileTemplate, new SacProcess[0]);
+        this(fileTemplate, DEFAULT_PREFIX, new SacProcess[0]);
     }
 
     public SacWriter(SacProcess[] processes) {
-        this(DEFAULT_FILE_TEMPLATE, processes);
+        this(DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes);
     }
 
-    public SacWriter(String fileTemplate, SacProcess[] processes) {
-        super(fileTemplate);
+    public SacWriter(String fileTemplate, String prefix, SacProcess[] processes) {
+        super(fileTemplate, prefix);
         this.processors = processes;
     }
 
