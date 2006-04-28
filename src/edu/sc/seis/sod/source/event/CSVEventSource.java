@@ -39,10 +39,12 @@ public class CSVEventSource extends SimpleEventSource {
         try {
             events = getEventsFromCSVFile(SodUtil.getNestedText(filenameEl));
         } catch(FileNotFoundException e) {
-            throw new ConfigurationException("File '"+SodUtil.getNestedText(filenameEl)+"' does not seem to exist?",
-                                             e);
+            throw new ConfigurationException("File '"
+                    + SodUtil.getNestedText(filenameEl)
+                    + "' does not seem to exist?", e);
         } catch(Exception e) {
-            throw new ConfigurationException("problem loading events from file: "+SodUtil.getNestedText(filenameEl),
+            throw new ConfigurationException("problem loading events from file: "
+                                                     + SodUtil.getNestedText(filenameEl),
                                              e);
         }
     }
@@ -75,9 +77,15 @@ public class CSVEventSource extends SimpleEventSource {
         List events = new ArrayList();
         while((line = reader.readLine()) != null) {
             List values = new ArrayList();
+            if(line.startsWith("#")) {// Comment line
+                continue;
+            }
             StringTokenizer tok = new StringTokenizer(line, ",");
             while(tok.hasMoreTokens()) {
                 values.add(tok.nextToken().trim());
+            }
+            if(values.size() == 0) { // Empty line
+                continue;
             }
             if(values.size() != fields.size()) {
                 throw new ConfigurationException("field-value row size descrepency");
