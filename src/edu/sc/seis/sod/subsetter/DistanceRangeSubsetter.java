@@ -2,6 +2,9 @@ package edu.sc.seis.sod.subsetter;
 
 import org.w3c.dom.Element;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.model.UnitRangeImpl;
+import edu.sc.seis.fissuresUtil.bag.DistAz;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.SodUtil;
@@ -20,6 +23,15 @@ public class DistanceRangeSubsetter implements SodElement {
 
     public void processConfig(Element config) throws ConfigurationException {
         unitRange = SodUtil.loadUnitRange(config);
+        if(((UnitImpl)unitRange.the_units).isConvertableTo(UnitImpl.KILOMETER)) {
+            QuantityImpl min = new QuantityImpl(unitRange.getMinValue(),
+                                                unitRange.getUnit());
+            QuantityImpl max = new QuantityImpl(unitRange.getMaxValue(),
+                                                unitRange.getUnit());
+            unitRange = new UnitRangeImpl(DistAz.kilometersToDegrees(min.getValue(UnitImpl.KILOMETER)),
+                                          DistAz.kilometersToDegrees(max.getValue(UnitImpl.KILOMETER)),
+                                          UnitImpl.DEGREE);
+        }
     }
 
     public edu.iris.Fissures.UnitRange getUnitRange() {
@@ -36,5 +48,5 @@ public class DistanceRangeSubsetter implements SodElement {
                                 getUnitRange().the_units);
     }
 
-    private edu.iris.Fissures.UnitRange unitRange;
+    private UnitRangeImpl unitRange;
 }// DistanceRange
