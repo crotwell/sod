@@ -14,7 +14,9 @@
                 <summary>Selects and processes events</summary>
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
-            <externalRef href="source.rng"/>
+            <oneOrMore>
+                <externalRef href="source.rng"/>
+            </oneOrMore>
             <zeroOrMore>
                 <externalRef href="origin.rng"/>
             </zeroOrMore>
