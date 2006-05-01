@@ -12,10 +12,11 @@ import edu.sc.seis.seisFile.sac.SacTimeSeries;
 
 public class SacWriter extends AbstractSeismogramWriter {
 
-    private static final String DEFAULT_FILE_TEMPLATE = "seismograms/Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.sac";
+    private static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.sac";
 
     public SacWriter(Element el) {
-        this(extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
+        this(extractWorkingDir(el),
+             extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
              extractPrefix(el),
              extractProcessors(el));
     }
@@ -33,16 +34,20 @@ public class SacWriter extends AbstractSeismogramWriter {
         this(DEFAULT_FILE_TEMPLATE);
     }
 
-    public SacWriter(String fileTemplate) {
-        this(fileTemplate, DEFAULT_PREFIX, new SacProcess[0]);
+    public SacWriter(String workingDir) {
+        this(workingDir, DEFAULT_FILE_TEMPLATE);
+    }
+
+    public SacWriter(String workingDir, String fileTemplate) {
+        this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0]);
     }
 
     public SacWriter(SacProcess[] processes) {
-        this(DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes);
+        this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes);
     }
 
-    public SacWriter(String fileTemplate, String prefix, SacProcess[] processes) {
-        super(fileTemplate, prefix);
+    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes) {
+        super(workingDir, fileTemplate, prefix);
         this.processors = processes;
     }
 

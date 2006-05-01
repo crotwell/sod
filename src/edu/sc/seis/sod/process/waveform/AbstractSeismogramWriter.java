@@ -17,9 +17,11 @@ import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     protected static final String DEFAULT_PREFIX = "";
-    private String fileTemplate, prefix;
+    protected static final String DEFAULT_WORKING_DIR = "seismograms";
+    private String workingDir, fileTemplate, prefix;
 
-    public AbstractSeismogramWriter(String fileTemplate, String prefix) {
+    public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix) {
+        this.workingDir = workingDir;
         this.fileTemplate = fileTemplate;
         this.prefix = prefix;
     }
@@ -55,7 +57,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         ContextWrangler.insertIntoContext(representativeSeismogram,
                                           channel,
                                           ctx);
-        return FissuresFormatter.filize(velocitizer.evaluate(fileTemplate, ctx));
+        return FissuresFormatter.filize(workingDir+FILE_SEP+velocitizer.evaluate(fileTemplate, ctx));
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -101,4 +103,9 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     protected static String extractPrefix(Element el) {
         return DOMHelper.extractText(el, "prefix", DEFAULT_PREFIX);
     }
+    protected static String extractWorkingDir(Element el) {
+        return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR);
+    }
+    
+    private static final String FILE_SEP = System.getProperty("file.separator"); 
 }

@@ -306,7 +306,8 @@
                 If multiple seismograms are found for a channel seismograms past the first will be written out with a number appended to their file name.  ie the second seismogram will be filename.1 and the third will be filename.2</description>
                 <example>
                     <sacWriter>
-                        <location>seismograms/${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
+                        <workingDir>seismograms</workingDir>
+                        <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
                         <phaseTimeHeader>
                             <model>prem</model>
                             <phase>ttp</phase>
@@ -320,6 +321,11 @@
                     </sacWriter>
                 </example>
             </xsd:annotation>
+            <optional>
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
             <optional>
                 <ref name="seisFileLocation"/>
             </optional>
@@ -341,10 +347,16 @@
                     If multiple seismograms are found for a channel seismograms past the first will be written out with a number appended to their file name.  ie the second seismogram will be filename.1 and the third will be filename.2</description>
                 <example>
                     <mseedWriter>
+                        <workingDir>seismograms</workingDir>
                         <location>${channel.code}/${event.filizedTime}/${network.code}.${station.code}.${site.code}.mseed</location>
                         </mseedWriter>
                 </example>
             </xsd:annotation>
+            <optional>
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
             <optional>
                 <ref name="seisFileLocation"/>
             </optional>
