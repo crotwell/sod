@@ -74,9 +74,9 @@
         <printlineSeismogramProcess/>
         <mseedWriter/>
         <responseGain/>
-        <integrate/>
         <rMean/>
         <rTrend/>
+        <integrate/>
         <mseedWriter>
             <location>processedSeismograms/${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.mseed</location>
         </mseedWriter>
