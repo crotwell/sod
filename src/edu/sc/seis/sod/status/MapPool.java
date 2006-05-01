@@ -6,47 +6,63 @@ import edu.sc.seis.fissuresUtil.map.layers.EventLayer;
 import edu.sc.seis.fissuresUtil.map.layers.ShapeLayerPropertiesHandler;
 import edu.sc.seis.fissuresUtil.map.layers.StationLayer;
 
-public class MapPool{
-    public MapPool(int mapCount, EventColorizer colorizer){
+public class MapPool {
+
+    public MapPool(int mapCount) {
         maps = new OpenMap[mapCount];
         free = new boolean[mapCount];
-        for (int i = 0; i < maps.length; i++) {
-            maps[i] = 
-            	new OpenMap(ShapeLayerPropertiesHandler.getProperties());
+        for(int i = 0; i < maps.length; i++) {
+            maps[i] = new OpenMap(ShapeLayerPropertiesHandler.getProperties());
             maps[i].setEtopoLayer("edu/sc/seis/mapData");
-            maps[i].setEventLayer(new EventLayer(maps[i], colorizer));
             maps[i].setStationLayer(new StationLayer());
             maps[i].overrideProjChangedInOMLayers(true);
             free[i] = true;
         }
     }
-    
-    public OpenMap getMap(){
-        while(true){
-            for (int i = 0; i < maps.length; i++) {
-                synchronized(free){
+
+    public OpenMap getMap(EventColorizer colorizer) {
+        while(true) {
+            for(int i = 0; i < maps.length; i++) {
+                synchronized(free) {
                     if(free[i]) {
                         free[i] = false;
+                        maps[i].setEventLayer(new EventLayer(maps[i], colorizer));
                         return maps[i];
                     }
                 }
             }
-            try { Thread.sleep(1000);} catch (InterruptedException e) {}
+            try {
+                Thread.sleep(1000);
+            } catch(InterruptedException e) {}
         }
     }
-    
-    public void returnMap(OpenMap map){
+
+    public void returnMap(OpenMap map) {
         clear(map);
-        for (int i = 0; i < maps.length; i++)
-            if(maps[i] == map) synchronized(free){free[i] = true;}
-        
+        for(int i = 0; i < maps.length; i++)
+            if(maps[i] == map)
+                synchronized(free) {
+                    free[i] = true;
+                }
     }
-    
-    private void clear(OpenMap map){
+
+    private void clear(OpenMap map) {
         map.getEventLayer().eventDataCleared();
         map.getStationLayer().stationDataCleared();
     }
-    
+
+    public static MapPool getDefaultPool() {
+        synchronized(MapPool.class) {
+            if(defaultPool == null) {
+                defaultPool = new MapPool(1);
+            }
+            return defaultPool;
+        }
+    }
+
+    private static MapPool defaultPool;
+
     private boolean[] free;
+
     private OpenMap[] maps;
 }

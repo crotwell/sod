@@ -33,7 +33,7 @@ import edu.sc.seis.sod.status.OutputScheduler;
 public class MapWaveformStatus implements Runnable {
 
     public MapWaveformStatus() throws SQLException {
-        this(new MapPool(1, new DefaultEventColorizer()));
+        this(MapPool.getDefaultPool());
     }
 
     public MapWaveformStatus(MapPool pool) throws SQLException {
@@ -59,7 +59,7 @@ public class MapWaveformStatus implements Runnable {
                 eventsToBeRendered.clear();
             }
         }
-        final OpenMap map = pool.getMap();
+        final OpenMap map = pool.getMap(new DefaultEventColorizer());
         try {
             for(int i = 0; i < events.length; i++) {
                 StationLayer sl = map.getStationLayer();

@@ -50,7 +50,7 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
     }
 
     public void run() {
-        OpenMap map = pool.getMap();
+        OpenMap map = pool.getMap(new FreshnessEventColorizer());
         try {
             try {
                 EventLayer el = map.getEventLayer();
@@ -68,7 +68,7 @@ public class MapEventStatus implements SodElement, EventMonitor, Runnable {
 
     public void setArmStatus(String status) {}// noImpl
 
-    private static MapPool pool = new MapPool(1, new FreshnessEventColorizer());
+    private static MapPool pool = MapPool.getDefaultPool();
 
     private JDBCEventStatus events;
 
