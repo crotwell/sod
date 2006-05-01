@@ -82,7 +82,7 @@ public class EventArm implements Arm {
                                                                    "origin",
                                                                    "event"});
                 if(sodElement instanceof EventSource) {
-                    source = (EventSource)sodElement;
+                    sources.add(sodElement);
                 } else if(sodElement instanceof OriginSubsetter) {
                     subsetters.add(sodElement);
                 }
@@ -91,23 +91,41 @@ public class EventArm implements Arm {
     }
 
     private void getEvents() throws Exception {
-        logger.debug("getting events from " + source.getEventTimeRange());
-        while(source.hasNext()) {
-            logger.debug("EventSource has more events");
-            TimeInterval wait = source.getWaitBeforeNext();
-            long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
-                    .get_value();
-            if(waitMillis > 0) {
-                try {
-                    setStatus("Waiting until " + ClockUtil.now().add(wait)
-                            + " to check for new events");
-                    Thread.sleep(waitMillis);
-                } catch(InterruptedException e) {}
+        while(atLeastOneSourceHasNext()) {
+            Iterator it = sources.iterator();
+            while(it.hasNext()) {
+                EventSource source = (EventSource)it.next();
+                logger.debug("getting events from "
+                        + source.getEventTimeRange());
+                if(source.hasNext()) {
+                    logger.debug(source + " has more events");
+                    TimeInterval wait = source.getWaitBeforeNext();
+                    long waitMillis = (long)wait.convertTo(UnitImpl.MILLISECOND)
+                            .get_value();
+                    if(waitMillis > 0) {
+                        try {
+                            setStatus("Waiting until "
+                                    + ClockUtil.now().add(wait)
+                                    + " to check for new events");
+                            Thread.sleep(waitMillis);
+                        } catch(InterruptedException e) {}
+                    }
+                    handle(source.next());
+                    waitForProcessing();
+                }
             }
-            handle(source.next());
-            waitForProcessing();
         }
         logger.debug("Finished processing the event arm.");
+    }
+
+    private boolean atLeastOneSourceHasNext() {
+        Iterator it = sources.iterator();
+        while(it.hasNext()) {
+            if(((EventSource)it.next()).hasNext()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public EventAccessOperations getLastEvent() {
@@ -230,8 +248,8 @@ public class EventArm implements Arm {
         }
     }
 
-    public EventSource getSource() {
-        return source;
+    public EventSource[] getSources() {
+        return (EventSource[])sources.toArray(new EventSource[0]);
     }
 
     private static final Status IN_PROG = Status.get(Stage.EVENT_CHANNEL_POPULATION,
@@ -240,7 +258,7 @@ public class EventArm implements Arm {
     private static final Status SUCCESS = Status.get(Stage.EVENT_CHANNEL_POPULATION,
                                                      Standing.SUCCESS);
 
-    private EventSource source;
+    private List sources = new ArrayList();
 
     private List subsetters = new ArrayList();
 

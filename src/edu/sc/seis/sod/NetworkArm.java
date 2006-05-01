@@ -32,6 +32,7 @@ import edu.sc.seis.fissuresUtil.cache.WorkerThreadPool;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.database.NotFound;
 import edu.sc.seis.fissuresUtil.database.network.JDBCChannel;
+import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.database.ChannelDbObject;
 import edu.sc.seis.sod.database.JDBCQueryTime;
@@ -39,6 +40,7 @@ import edu.sc.seis.sod.database.NetworkDbObject;
 import edu.sc.seis.sod.database.SiteDbObject;
 import edu.sc.seis.sod.database.StationDbObject;
 import edu.sc.seis.sod.database.network.JDBCNetworkUnifier;
+import edu.sc.seis.sod.source.event.EventSource;
 import edu.sc.seis.sod.status.OutputScheduler;
 import edu.sc.seis.sod.status.networkArm.NetworkMonitor;
 import edu.sc.seis.sod.subsetter.channel.ChannelEffectiveTimeOverlap;
@@ -111,9 +113,13 @@ public class NetworkArm implements Arm {
         EventArm arm = Start.getEventArm();
         if(arm != null && !Start.getRunProps().allowDeadNets()) {
             logger.debug("Using event time range to constrain effective times");
-            edu.iris.Fissures.TimeRange eventQueryTimes = arm.getSource()
-                    .getEventTimeRange()
-                    .getFissuresTimeRange();
+            EventSource[] sources = arm.getSources();
+            MicroSecondTimeRange fullTime = sources[0].getEventTimeRange();
+            for(int i = 1; i < sources.length; i++) {
+                fullTime = new MicroSecondTimeRange(fullTime,
+                                                    sources[i].getEventTimeRange());
+            }
+            edu.iris.Fissures.TimeRange eventQueryTimes = fullTime.getFissuresTimeRange();
             netEffectiveSubsetter = new NetworkEffectiveTimeOverlap(eventQueryTimes);
             staEffectiveSubsetter = new StationEffectiveTimeOverlap(eventQueryTimes);
             siteEffectiveSubsetter = new SiteEffectiveTimeOverlap(eventQueryTimes);
