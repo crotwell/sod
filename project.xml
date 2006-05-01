@@ -159,7 +159,7 @@
         </dependency>
         <dependency>
             <id>hsqldb</id>
-            <version>1.7.3_USC1</version>
+            <version>1.8.0.4</version>
             <url>http://hsqldb.sourceforge.net</url>
         </dependency>
         <dependency>
