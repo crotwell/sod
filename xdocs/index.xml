@@ -7,5 +7,6 @@
         <section name="Maven SOD Pages">
             <p>Looking to develop code on top of SOD or use it as a library?  You've come to the right place!  These are the developer pages for SOD.  If you're looking to download a release of SOD or find out what it is, go to its <a href="http://www.seis.sc.edu/SOD/">real home page</a> instead.  These pages contain the <a href="/software/mavenRepository/sod/distributions">source</a> for various SOD releases and the <a href="apidocs/index.html">JavaDocs</a> for the latest release of SOD.  You may also be interested in the source as it stands in CVS, which you can get from <a href="http://roo.seis.sc.edu/fisheye/viewrep/CVS/seis/sod">Fisheye</a>, our CVS viewer.</p>
         </section>
+<section><a href="http://www.yourkit.com"><img src="/images/yjp.gif" alt="Yourkit Java Profiler"/></a></section>
     </body>
 </document>
