@@ -17,6 +17,7 @@ import edu.sc.seis.fissuresUtil.mockFissures.IfEvent.MockEventAccessOperations;
 import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannel;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.status.FissuresFormatter;
 
 public class SacWriterTest extends TestCase {
@@ -29,7 +30,7 @@ public class SacWriterTest extends TestCase {
         BasicConfigurator.configure(new NullAppender());
     }
 
-    public void testGenerateBase() {
+    public void testGenerateBase() throws ConfigurationException {
         String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
                                                          seis.getName()
                                                                  + ".sac"},
@@ -39,17 +40,18 @@ public class SacWriterTest extends TestCase {
                                                         chan.name}};
         for(int i = 0; i < templateAndResult.length; i++) {
             assertEquals(FissuresFormatter.filize(templateAndResult[i][1]),
-                         new SacWriter(templateAndResult[i][0]).generateBase(ev,
-                                                                             chan,
-                                                                             seis));
+                         new SacWriter("", templateAndResult[i][0]).generateBase(ev,
+                                                                                 chan,
+                                                                                 seis));
         }
     }
 
-    public void testApplyProcessorsWithNoProcessors() throws CodecException {
+    public void testApplyProcessorsWithNoProcessors() throws CodecException,
+            ConfigurationException {
         new SacWriter().applyProcessors(sts, ev, chan);
     }
 
-    public void testApplyPhaseHeaderProcessor() {
+    public void testApplyPhaseHeaderProcessor() throws ConfigurationException {
         SacWriter sw = new SacWriter(new SacProcess[] {new SacProcess() {
 
             public void process(SacTimeSeries sac,
@@ -62,7 +64,7 @@ public class SacWriterTest extends TestCase {
         assertEquals(sts.kt0, "ttp");
     }
 
-    public void testGenerateLocations() {
+    public void testGenerateLocations() throws ConfigurationException {
         SacWriter sw = new SacWriter("${seismogram.name}.sac");
         String base = sw.generateBase(ev, chan, seis);
         assertEquals(1, sw.generateLocations(base, 1).length);
@@ -70,9 +72,10 @@ public class SacWriterTest extends TestCase {
         assertTrue(sw.generateLocations(base, 2)[1].endsWith(".sac.1"));
     }
 
-    public void testRemoveExisting() throws FileNotFoundException, IOException {
-        SacWriter sw = new SacWriter(System.getProperty("java.io.tmpdir")
-                + File.pathSeparator + "blahblah");
+    public void testRemoveExisting() throws FileNotFoundException, IOException,
+            ConfigurationException {
+        SacWriter sw = new SacWriter("", System.getProperty("java.io.tmpdir")
+                + File.separator + "blahblah");
         String base = sw.generateBase(ev, chan, seis);
         String[] locs = sw.generateLocations(base, 5);
         for(int i = 0; i < locs.length; i++) {
