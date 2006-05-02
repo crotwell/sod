@@ -386,9 +386,15 @@
                 <element name="responseFileTemplate">
                     <data type="string">
                         <xsd:annotation>
-                            <summary>Each response is put in a single file using this template to
-                                determine the file name. If no template is given, the example
-                                template is the default.</summary>
+                            
+                            <summary>Configures which files to write responses in</summary>
+                            <description>Each response is put in a separate file using this 
+                                <a href="../../templates.html">Velocity template</a> to
+                                determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
+                                <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
+                                and <a href="../../templateTypes.html#net">net</a> variables.
+                                If no template element is given, it defaults to "responses/$network.code-$station.code-${channel.code}.resp".
+                                Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
                             <example>responses/$network.code-$station.code-${channel.code}.resp</example>
                         </xsd:annotation>
                     </data>
@@ -405,9 +411,15 @@
                 <element name="poleZeroFileTemplate">
                     <data type="string">
                         <xsd:annotation>
-                            <summary>Each response is put in a single file using this template to
-                                determine the file name. If no template is given, the example
-                                template is the default.</summary>
+                            
+                            <summary>Configures which files to write pole zeros in</summary>
+                            <description>Each pole zero is put in a separate file using this 
+                                <a href="../../templates.html">Velocity template</a> to
+                                determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
+                                <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
+                                and <a href="../../templateTypes.html#net">net</a> variables.
+                                If no template element is given, it defaults to "polezero/$network.code-$station.code-${channel.code}.sacpz".
+                                Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
                             <example>polezero/$network.code-$station.code-${channel.code}.sacpz</example>
                         </xsd:annotation>
                     </data>
@@ -419,7 +431,13 @@
         <element name="printlineChannelProcess">
             <xsd:annotation>
                 <summary>Prints every successful channel to the console or to the specified
-                file</summary>
+                    file</summary>
+                <description>Prints out each channel on a new line.  The template and filename elements are both
+                    <a href="../../templates.html">Velocity templates</a> containing <a href="../../templateTypes.html#channel">channel</a>
+                    <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
+                    and <a href="../../templateTypes.html#net">net</a> variables.
+                    If no template element is given, it defaults to "Channel: $channel".
+                    If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <optional>
                 <element name="filename">
