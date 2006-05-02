@@ -9,12 +9,13 @@ import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.seisFile.sac.SacTimeSeries;
+import edu.sc.seis.sod.ConfigurationException;
 
 public class SacWriter extends AbstractSeismogramWriter {
 
     private static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.sac";
 
-    public SacWriter(Element el) {
+    public SacWriter(Element el) throws ConfigurationException {
         this(extractWorkingDir(el),
              extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
              extractPrefix(el),
@@ -30,23 +31,23 @@ public class SacWriter extends AbstractSeismogramWriter {
         return processes;
     }
 
-    public SacWriter() {
+    public SacWriter() throws ConfigurationException {
         this(DEFAULT_FILE_TEMPLATE);
     }
 
-    public SacWriter(String workingDir) {
+    public SacWriter(String workingDir) throws ConfigurationException {
         this(workingDir, DEFAULT_FILE_TEMPLATE);
     }
 
-    public SacWriter(String workingDir, String fileTemplate) {
+    public SacWriter(String workingDir, String fileTemplate) throws ConfigurationException {
         this(workingDir, fileTemplate, DEFAULT_PREFIX, new SacProcess[0]);
     }
 
-    public SacWriter(SacProcess[] processes) {
+    public SacWriter(SacProcess[] processes) throws ConfigurationException {
         this(DEFAULT_WORKING_DIR, DEFAULT_FILE_TEMPLATE, DEFAULT_PREFIX, processes);
     }
 
-    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes) {
+    public SacWriter(String workingDir, String fileTemplate, String prefix, SacProcess[] processes) throws ConfigurationException {
         super(workingDir, fileTemplate, prefix);
         this.processors = processes;
     }

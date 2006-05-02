@@ -11,17 +11,20 @@ import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {
 
-    public ResponseWriter(Element config) {
+    public ResponseWriter(Element config) throws ConfigurationException {
         template = DOMHelper.extractText(config,
                                          "responseFileTemplate",
                                          DEFAULT_TEMPLATE);
+        velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
-    public boolean accept(Channel chan, ProxyNetworkAccess network) throws Exception {
+    public boolean accept(Channel chan, ProxyNetworkAccess network)
+            throws Exception {
         try {
             ChannelId channel_id = chan.get_id();
             Instrumentation inst = network.retrieve_instrumentation(channel_id,
@@ -44,5 +47,5 @@ public class ResponseWriter implements ChannelSubsetter {
 
     private String template;
 
-    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
+    private PrintlineVelocitizer velocitizer;
 }

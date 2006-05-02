@@ -4,11 +4,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.exception.ParseErrorException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
+import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 
@@ -21,6 +28,30 @@ import edu.sc.seis.sod.status.FissuresFormatter;
  * Created on May 30, 2005
  */
 public class PrintlineVelocitizer {
+
+    /**
+     * Evaluates the templates such that errors might be discovered
+     */
+    public PrintlineVelocitizer(String[] strings) throws ConfigurationException {
+        for(int i = 0; i < strings.length; i++) {
+            try {
+                Logger velocityLogger = Logger.getLogger(SQLLoader.class);
+                Level current = velocityLogger.getEffectiveLevel();
+                velocityLogger.setLevel(Level.FATAL);
+                Velocity.evaluate(new VelocityContext(),
+                                  new StringWriter(),
+                                  "PrintlineTest",
+                                  strings[i]);
+                velocityLogger.setLevel(current);
+            } catch(ParseErrorException e) {
+                throw new ConfigurationException("Malformed Velocity '"
+                        + strings[i] + "'.  " + e.getMessage());
+            } catch(Exception e) {
+                throw new ConfigurationException("Exception caused by testing Velocity",
+                                                 e);
+            } 
+        }
+    }
 
     public String evaluate(String fileTemplate, String template, Channel chan)
             throws IOException {

@@ -99,7 +99,7 @@ public class Start {
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem configuring schema validator",
                                           e);
-            System.exit(0);
+            exit("Problem configuring schema validator: " + e.getMessage());
         }
         initDocument(args);
     }
@@ -171,6 +171,9 @@ public class Start {
         }
         PropertyConfigurator.configure(props);
         logger.info("logging configured");
+        // Error html dir and output should be set up now, so remove the
+        // Std out reporter
+        GlobalExceptionHandler.remove(sysOutReporter);
         // now override the properties with the properties specified
         // in the configuration file.
         loadRunProps(getConfig());
@@ -260,13 +263,14 @@ public class Start {
     }
 
     public static ResultMailer getResultMailer() throws ConfigurationException {
-        if (mailer != null) {
+        if(mailer != null) {
             return mailer;
         }
         throw new ConfigurationException("no mailer configured");
     }
-    
-    public static void addResultMailer(Properties mailProps) throws ConfigurationException {
+
+    public static void addResultMailer(Properties mailProps)
+            throws ConfigurationException {
         if(mailer == null && mailProps.containsKey("mail.smtp.host")) {
             mailer = new ResultMailer(mailProps);
         }
@@ -464,11 +468,12 @@ public class Start {
         return null;
     }
 
+    // this is not the real exception reporter, but do this to catch
+    // initialization exceptions so they are not lost in the log file
+    private static SystemOutReporter sysOutReporter = new SystemOutReporter();
+
     public static void main(String[] args) {
         try {
-            // this is not the real exception reporter, but do this to catch
-            // initialization exceptions so they are not lost in the log file
-            SystemOutReporter sysOutReporter = new SystemOutReporter();
             GlobalExceptionHandler.add(new WindowConnectionInterceptor());
             GlobalExceptionHandler.add(sysOutReporter);
             // start up log4j before read props so at least there is some
@@ -494,18 +499,14 @@ public class Start {
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
             start.start();
-            // Error html dir and output should be set up now, so remove the
-            // Std out reporter
-            GlobalExceptionHandler.remove(sysOutReporter);
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
-            exit("Problem in main, quiting: " + e.toString());
+            exit("Quitting due to error: " + e.getMessage());
         }
         logger.info("Finished starting all threads.");
     } // end of main ()
 
     private static void exit(String reason) {
-        logger.fatal(reason);
         System.err.println(reason);
         System.exit(1);
     }

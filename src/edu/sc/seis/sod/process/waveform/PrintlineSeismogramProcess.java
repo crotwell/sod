@@ -7,15 +7,17 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class PrintlineSeismogramProcess implements WaveformProcess {
 
-    public PrintlineSeismogramProcess(Element config) {
+    public PrintlineSeismogramProcess(Element config) throws ConfigurationException {
         filename = DOMHelper.extractText(config, "filename", "");
         template = DOMHelper.extractText(config, "template", DEFAULT_TEMPLATE);
+        velocitizer = new PrintlineVelocitizer(new String[] {filename, template});
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -35,7 +37,7 @@ public class PrintlineSeismogramProcess implements WaveformProcess {
         return new WaveformResult(seismograms, new StringTreeLeaf(this, true));
     }
 
-    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
+    private PrintlineVelocitizer velocitizer;
 
     private String template, filename;
 

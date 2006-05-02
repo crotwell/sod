@@ -7,12 +7,12 @@ import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.IfNetwork.ChannelNotFound;
 import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
-import edu.sc.seis.fissuresUtil.cache.InstrumentationLoader;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.fissuresUtil.sac.FissuresToSac;
 import edu.sc.seis.fissuresUtil.sac.InvalidResponse;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 
@@ -22,10 +22,11 @@ import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
  */
 public class SacPoleZeroWriter  implements ChannelSubsetter {
 
-    public SacPoleZeroWriter(Element config) {
+    public SacPoleZeroWriter(Element config) throws ConfigurationException {
         template = DOMHelper.extractText(config,
                                          "poleZeroFileTemplate",
                                          DEFAULT_TEMPLATE);
+        velocitizer = new PrintlineVelocitizer(new String[]{template});
     }
 
     public boolean accept(Channel chan, ProxyNetworkAccess network) throws Exception {
@@ -55,5 +56,5 @@ public class SacPoleZeroWriter  implements ChannelSubsetter {
 
     private String template;
 
-    private PrintlineVelocitizer velocitizer = new PrintlineVelocitizer();
+    private PrintlineVelocitizer velocitizer;
 }

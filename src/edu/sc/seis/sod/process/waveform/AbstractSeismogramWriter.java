@@ -8,22 +8,29 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
+import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
 import edu.sc.seis.sod.velocity.ContextWrangler;
+import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     protected static final String DEFAULT_PREFIX = "";
-    protected static final String DEFAULT_WORKING_DIR = "seismograms";
+
+    protected static final String DEFAULT_WORKING_DIR = "seismograms/";
+
     private String workingDir, fileTemplate, prefix;
 
-    public AbstractSeismogramWriter(String workingDir, String fileTemplate, String prefix) {
+    public AbstractSeismogramWriter(String workingDir,
+                                    String fileTemplate,
+                                    String prefix) throws ConfigurationException {
         this.workingDir = workingDir;
         this.fileTemplate = fileTemplate;
         this.prefix = prefix;
+        new PrintlineVelocitizer(new String[] {fileTemplate});
     }
 
     public void removeExisting(String base) {
@@ -57,7 +64,8 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         ContextWrangler.insertIntoContext(representativeSeismogram,
                                           channel,
                                           ctx);
-        return FissuresFormatter.filize(workingDir+FILE_SEP+velocitizer.evaluate(fileTemplate, ctx));
+        return FissuresFormatter.filize(workingDir
+                + velocitizer.evaluate(fileTemplate, ctx));
     }
 
     public WaveformResult process(EventAccessOperations event,
@@ -103,9 +111,8 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
     protected static String extractPrefix(Element el) {
         return DOMHelper.extractText(el, "prefix", DEFAULT_PREFIX);
     }
+
     protected static String extractWorkingDir(Element el) {
         return DOMHelper.extractText(el, "workingDir", DEFAULT_WORKING_DIR);
     }
-    
-    private static final String FILE_SEP = System.getProperty("file.separator"); 
 }
