@@ -1,13 +1,17 @@
 package edu.sc.seis.sod.velocity;
 
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
+import java.util.TimeZone;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.ParseErrorException;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
+import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
@@ -19,6 +23,12 @@ import edu.sc.seis.sod.CookieJar;
  * Created on May 25, 2005
  */
 public class SimpleVelocitizer {
+    
+    public static String format(MicroSecondDate date, String format){
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return dateFormat.format(date);
+    }
 
     public String evaluate(String template, Channel chan) {
         return evaluate(template, ContextWrangler.createContext(chan));

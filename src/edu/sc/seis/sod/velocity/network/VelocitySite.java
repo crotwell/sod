@@ -1,12 +1,13 @@
 package edu.sc.seis.sod.velocity.network;
 
-import java.text.SimpleDateFormat;
 import org.apache.velocity.VelocityContext;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
+import edu.iris.Fissures.network.SiteIdUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
@@ -33,6 +34,11 @@ public class VelocitySite extends Site {
         return get_code();
     }
 
+    public String getCodes() {
+        return getNet().getCode() + "." + getStation().getCode() + "."
+                + getCode();
+    }
+
     public VelocityStation getStation() {
         return new VelocityStation(site.my_station);
     }
@@ -57,17 +63,26 @@ public class VelocitySite extends Site {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(effective_time.start_time);
         }
-        return new SimpleDateFormat(dateFormat).format(new MicroSecondDate(effective_time.start_time));
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time),
+                                        dateFormat);
     }
 
     public String getEnd() {
         return FissuresFormatter.formatDate(effective_time.end_time);
     }
 
+    public String getEnd(String dateFormat) {
+        if(dateFormat.equals("longfile")) {
+            return FissuresFormatter.formatDateForFile(effective_time.end_time);
+        }
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time),
+                                        dateFormat);
+    }
+
     public String getComment() {
         return comment;
     }
-    
+
     public String getLatitude() {
         return VelocityStation.df.format(site.my_location.latitude);
     }
@@ -85,7 +100,8 @@ public class VelocitySite extends Site {
 
     public String getOrientedLongitude() {
         if(site.my_location.longitude < 0) {
-            return VelocityStation.df.format(-site.my_location.longitude) + " W";
+            return VelocityStation.df.format(-site.my_location.longitude)
+                    + " W";
         }
         return VelocityStation.df.format(site.my_location.longitude) + " E";
     }
@@ -93,7 +109,11 @@ public class VelocitySite extends Site {
     public String getDepth() {
         return FissuresFormatter.formatDepth(QuantityImpl.createQuantityImpl(site.my_location.depth));
     }
-    
+
+    public String toString() {
+        return SiteIdUtil.toString(get_id());
+    }
+
     private Site site;
 
     public void insertIntoContext(VelocityContext ctx) {

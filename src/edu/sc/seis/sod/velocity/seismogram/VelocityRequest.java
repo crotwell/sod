@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityChannel;
 
 /**
@@ -25,9 +26,17 @@ public class VelocityRequest {
     public MicroSecondDate getBegin() {
         return range.getBeginTime();
     }
+    
+    public String getBegin(String dateFormat){
+        return SimpleVelocitizer.format(getBegin(), dateFormat);
+    }
 
     public MicroSecondDate getEnd() {
         return range.getEndTime();
+    }
+    
+    public String getEnd(String dateFormat){
+        return SimpleVelocitizer.format(getEnd(), dateFormat);
     }
 
     public VelocityChannel getChannel() {

@@ -5,6 +5,7 @@ import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfNetwork.ChannelId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.ChannelIdUtil;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
@@ -70,8 +71,16 @@ public class VelocityChannel extends Channel {
         return new MicroSecondDate(effective_time.start_time);
     }
 
+    public String getStart(String format) {
+        return SimpleVelocitizer.format(getStart(), format);
+    }
+
     public MicroSecondDate getEnd() {
         return new MicroSecondDate(effective_time.end_time);
+    }
+
+    public String getEnd(String format) {
+        return SimpleVelocitizer.format(getEnd(), format);
     }
 
     public VelocitySampling getSampling() {

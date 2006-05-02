@@ -2,7 +2,6 @@ package edu.sc.seis.sod.velocity.network;
 
 import java.io.StringWriter;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.velocity.VelocityContext;
@@ -13,10 +12,10 @@ import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.network.StationIdUtil;
 import edu.sc.seis.fissuresUtil.bag.DistAz;
-import edu.sc.seis.fissuresUtil.xml.XMLEvent;
 import edu.sc.seis.fissuresUtil.xml.XMLStation;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.event.VelocityEvent;
 
 /**
@@ -62,6 +61,10 @@ public class VelocityStation extends Station {
     public String getCode() {
         return get_code();
     }
+    
+    public String getCodes(){
+        return getNetCode() + "." + getCode();
+    }
 
     public String getNetCode() {
         return getNet().get_code();
@@ -90,11 +93,18 @@ public class VelocityStation extends Station {
         if(dateFormat.equals("longfile")) {
             return FissuresFormatter.formatDateForFile(effective_time.start_time);
         }
-        return new SimpleDateFormat(dateFormat).format(new MicroSecondDate(effective_time.start_time));
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.start_time), dateFormat);
     }
 
     public String getEnd() {
         return FissuresFormatter.formatDate(effective_time.end_time);
+    }
+
+    public String getEnd(String dateFormat) {
+        if(dateFormat.equals("longfile")) {
+            return FissuresFormatter.formatDateForFile(effective_time.end_time);
+        }
+        return SimpleVelocitizer.format(new MicroSecondDate(effective_time.end_time), dateFormat);
     }
 
     public String getName() {
@@ -179,6 +189,10 @@ public class VelocityStation extends Station {
         XMLStreamWriter xmlWriter = XMLUtil.staxOutputFactory.createXMLStreamWriter(writer);
         XMLStation.insert(xmlWriter, this);
         return writer.toString();
+    }
+    
+    public String toString(){
+        return StationIdUtil.toString(get_id());
     }
 
     public boolean equals(Object o) {

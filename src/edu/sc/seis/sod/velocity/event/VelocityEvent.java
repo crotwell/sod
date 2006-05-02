@@ -17,6 +17,7 @@ import edu.sc.seis.fissuresUtil.display.ParseRegions;
 import edu.sc.seis.fissuresUtil.xml.XMLEvent;
 import edu.sc.seis.fissuresUtil.xml.XMLUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.network.VelocityStation;
 
 /**
@@ -106,9 +107,8 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getTime(String format) {
-        DateFormat dateFormat = new SimpleDateFormat(format);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFormat.format(new MicroSecondDate(origin.origin_time));
+        return SimpleVelocitizer.format(new MicroSecondDate(origin.origin_time),
+                                        format);
     }
 
     public String getCatalog() {
@@ -204,7 +204,7 @@ public class VelocityEvent extends ProxyEventAccessOperations {
         return velEvs;
     }
 
-    public static VelocityEvent wrap(EventAccessOperations event){
+    public static VelocityEvent wrap(EventAccessOperations event) {
         if(event instanceof VelocityEvent) {
             return (VelocityEvent)event;
         } else if(event instanceof CacheEvent) {

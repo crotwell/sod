@@ -6,6 +6,7 @@ import edu.iris.Fissures.IfNetwork.NetworkAttr;
 import edu.iris.Fissures.IfNetwork.NetworkId;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.network.NetworkIdUtil;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 
 /**
  * @author groves Created on Jan 7, 2005
@@ -70,20 +71,43 @@ public class VelocityNetwork extends NetworkAttr {
         return "" + net.get_id().begin_time.leap_seconds_version;
     }
 
-    public MicroSecondDate getStartDate() {
+    public MicroSecondDate getStart() {
         return new MicroSecondDate(effective_time.start_time);
     }
+    
+    public String getStart(String format){
+        return SimpleVelocitizer.format(getStart(), format);
+    }
 
-    public MicroSecondDate getEndDate() {
+    /**
+     * @deprecated - use getStart instead
+     */
+    public MicroSecondDate getStartDate() {
+        return getStart();
+    }
+
+    public MicroSecondDate getEnd() {
         return new MicroSecondDate(effective_time.end_time);
+    }
+    
+    public String getEnd(String format){
+        return SimpleVelocitizer.format(getEnd(), format);
+    }
+
+    /**
+     * @deprecated use getEnd instead
+     */
+    public MicroSecondDate getEndDate() {
+        return getEnd();
     }
 
     public String getName() {
         return name;
     }
 
-    /** just like getName except special characters for xml are made into entity references. 
-     * This just replaces the main ones: amp, lt, gt, apos, quot.
+    /**
+     * just like getName except special characters for xml are made into entity
+     * references. This just replaces the main ones: amp, lt, gt, apos, quot.
      */
     public String getEntityRefName() {
         String s = getName();
@@ -94,6 +118,7 @@ public class VelocityNetwork extends NetworkAttr {
         s = s.replaceAll("\"", "&quote;");
         return s;
     }
+
     public String getOwner() {
         return owner;
     }
@@ -115,6 +140,10 @@ public class VelocityNetwork extends NetworkAttr {
 
     public int getDbId() {
         return dbid;
+    }
+    
+    public String toString(){
+        return NetworkIdUtil.toString(get_id());
     }
 
     private int dbid = -1;
