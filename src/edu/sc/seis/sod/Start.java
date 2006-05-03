@@ -90,8 +90,6 @@ public class Start {
             if(!validator.validate(createInputSource(cl, confFilename))) {
                 logger.info("Invalid strategy file!");
                 allHopeAbandon(validator.getErrorMessage());
-            } else {
-                logger.info("Valid strategy file");
             }
             if(onlyValidate) {
                 System.exit(0);
@@ -499,6 +497,8 @@ public class Start {
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
             start.start();
+        } catch(UserConfigurationException e) {
+            exit(e.getMessage() + "  SOD will quit now and continue to cowardly quit until this is corrected.");
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
             exit("Quitting due to error: " + e.getMessage());

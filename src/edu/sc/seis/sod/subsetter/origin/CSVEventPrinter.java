@@ -13,7 +13,6 @@ import edu.iris.Fissures.IfEvent.EventAttr;
 import edu.iris.Fissures.IfEvent.Magnitude;
 import edu.iris.Fissures.IfEvent.Origin;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.Start;
 import edu.sc.seis.sod.source.event.CSVEventSource;
 import edu.sc.seis.sod.status.StringTree;
 import edu.sc.seis.sod.status.StringTreeLeaf;
@@ -28,13 +27,13 @@ public class CSVEventPrinter implements OriginSubsetter {
     public CSVEventPrinter(Element config) throws Exception {
         Element filenameEl = SodUtil.getElement(config, "filename");
         String filename = SodUtil.getNestedText(filenameEl);
-        file = new File(Start.getRunProps().getStatusBaseDir() + '/' + filename);
+        file = new File(filename);
         createFileAndWriteHeaderIfNeeded();
     }
 
     public StringTree accept(EventAccessOperations eventAccess,
-                          EventAttr eventAttr,
-                          Origin preferred_origin) throws Exception {
+                             EventAttr eventAttr,
+                             Origin preferred_origin) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
         writer.write(preferred_origin.origin_time.date_time + COM);
         Location loc = preferred_origin.my_location;

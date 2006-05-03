@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.FlinnEngdahlRegion;
 import edu.iris.Fissures.FlinnEngdahlType;
@@ -24,8 +23,9 @@ import edu.iris.Fissures.model.FlinnEngdahlRegionImpl;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.sc.seis.fissuresUtil.cache.CacheEvent;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
-import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.UserConfigurationException;
 
 /**
  * @author oliverpa
@@ -35,17 +35,14 @@ import edu.sc.seis.sod.SodUtil;
 public class CSVEventSource extends SimpleEventSource {
 
     public CSVEventSource(Element config) throws ConfigurationException {
-        Element filenameEl = SodUtil.getElement(config, "filename");
+        String filename = DOMHelper.extractText(config, "filename");
         try {
-            events = getEventsFromCSVFile(SodUtil.getNestedText(filenameEl));
+            events = getEventsFromCSVFile(filename);
         } catch(FileNotFoundException e) {
-            throw new ConfigurationException("File '"
-                    + SodUtil.getNestedText(filenameEl)
-                    + "' does not seem to exist?", e);
-        } catch(Exception e) {
-            throw new ConfigurationException("problem loading events from file: "
-                                                     + SodUtil.getNestedText(filenameEl),
-                                             e);
+            throw new UserConfigurationException("CSV event file '" + filename
+                    + "' not found.");
+        } catch(IOException e) {
+            throw new ConfigurationException("Unable to read " + filename, e);
         }
     }
 
@@ -54,8 +51,7 @@ public class CSVEventSource extends SimpleEventSource {
     }
 
     public static CacheEvent[] getEventsFromCSVFile(String filename)
-            throws IOException, FileNotFoundException, ConfigurationException,
-            NoSuchFieldException {
+            throws IOException, FileNotFoundException, ConfigurationException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         // let's get the fields
         List fields = new ArrayList();
@@ -67,15 +63,25 @@ public class CSVEventSource extends SimpleEventSource {
                 if(isValidField(cur)) {
                     fields.add(cur);
                 } else {
-                    throw new ConfigurationException("invalid field in csv file");
+                    String allFields = getHeader();
+                    throw new UserConfigurationException(cur
+                            + " is not a known CSV field.  " + allFields
+                            + " are valid options.");
                 }
             }
         } else {
-            throw new ConfigurationException("no header row in csv file");
+            throw new UserConfigurationException("No header row in csv file "
+                    + filename + ".");
+        }
+        if(!fields.contains("time")) {
+            throw new UserConfigurationException("Required header 'time' not found in csv event file "
+                    + filename + ".");
         }
         // let's get the events!
         List events = new ArrayList();
+        int lineNum = 1;
         while((line = reader.readLine()) != null) {
+            lineNum++;
             List values = new ArrayList();
             if(line.startsWith("#")) {// Comment line
                 continue;
@@ -88,16 +94,14 @@ public class CSVEventSource extends SimpleEventSource {
                 continue;
             }
             if(values.size() != fields.size()) {
-                throw new ConfigurationException("field-value row size descrepency");
+                throw new UserConfigurationException("There are "
+                        + values.size() + " values on line " + lineNum
+                        + " but there are " + fields.size()
+                        + " in the header in csv files" + filename + ".");
             }
             // time to start populating field values
             // first up: the only required field...
-            Time time = null;
-            if(fields.contains(TIME)) {
-                time = new Time((String)values.get(fields.indexOf(TIME)), 0);
-            } else {
-                throw new ConfigurationException("csv entry missing required field 'time'");
-            }
+            Time time = new Time((String)values.get(fields.indexOf(TIME)), 0);
             float latitude = 0f;
             if(fields.contains(LATITUDE)) {
                 latitude = Float.parseFloat((String)values.get(fields.indexOf(LATITUDE)));
@@ -112,7 +116,17 @@ public class CSVEventSource extends SimpleEventSource {
             }
             Unit depthUnit = UnitImpl.METER;
             if(fields.contains(DEPTH_UNITS)) {
-                depthUnit = UnitImpl.getUnitFromString((String)values.get(fields.indexOf(DEPTH_UNITS)));
+                String unitName = (String)values.get(fields.indexOf(DEPTH_UNITS));
+                try {
+                    depthUnit = UnitImpl.getUnitFromString(unitName);
+                } catch(NoSuchFieldException e) {
+                    throw new UserConfigurationException(unitName
+                            + " on line "
+                            + lineNum
+                            + " in "
+                            + filename
+                            + " is not a valid unit name.  Try KILOMETER or METER");
+                }
             }
             Location location = new Location(latitude,
                                              longitude,
@@ -168,18 +182,24 @@ public class CSVEventSource extends SimpleEventSource {
         return (CacheEvent[])events.toArray(new CacheEvent[0]);
     }
 
+    public static String getHeader() {
+        String allFields = "";
+        for(int i = 0; i < FIELDS.length - 1; i++) {
+            allFields += FIELDS[i] + ", ";
+        }
+        return allFields + FIELDS[FIELDS.length - 1];
+    }
+
     private static boolean isValidField(String field) {
-        return field.equals(TIME) || field.equals(LONGITUDE)
-                || field.equals(LATITUDE) || field.equals(DEPTH)
-                || field.equals(MAGNITUDE) || field.equals(CATALOG)
-                || field.equals(CONTRIBUTOR) || field.equals(NAME)
-                || field.equals(FE_REGION) || field.equals(FE_REGION_TYPE)
-                || field.equals(DEPTH_UNITS) || field.equals(MAGNITUDE_TYPE);
+        for(int i = 0; i < FIELDS.length; i++) {
+            if(field.equals(FIELDS[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private CacheEvent[] events;
-
-    private static Logger logger = Logger.getLogger(CSVEventSource.class);
 
     // required
     public static final String TIME = "time";
@@ -211,4 +231,18 @@ public class CSVEventSource extends SimpleEventSource {
     public static final String DEPTH_UNITS = "depthUnits";
 
     public static final String MAGNITUDE_TYPE = "magnitudeType";
+
+    private static final String[] FIELDS = new String[] {TIME,
+                                                         LONGITUDE,
+                                                         LATITUDE,
+                                                         DEPTH,
+                                                         MAGNITUDE,
+                                                         CATALOG,
+                                                         CONTRIBUTOR,
+                                                         NAME,
+                                                         FE_SEIS_REGION,
+                                                         FE_GEO_REGION,
+                                                         FE_REGION,
+                                                         FE_REGION_TYPE,
+                                                         DEPTH_UNITS};
 }

@@ -17,6 +17,7 @@ import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.database.util.SQLLoader;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
+import edu.sc.seis.sod.UserConfigurationException;
 import edu.sc.seis.sod.status.FissuresFormatter;
 
 /**
@@ -44,12 +45,12 @@ public class PrintlineVelocitizer {
                                   strings[i]);
                 velocityLogger.setLevel(current);
             } catch(ParseErrorException e) {
-                throw new ConfigurationException("Malformed Velocity '"
+                throw new UserConfigurationException("Malformed Velocity '"
                         + strings[i] + "'.  " + e.getMessage());
             } catch(Exception e) {
                 throw new ConfigurationException("Exception caused by testing Velocity",
                                                  e);
-            } 
+            }
         }
     }
 
@@ -58,6 +59,23 @@ public class PrintlineVelocitizer {
         return evalulate(fileTemplate,
                          template,
                          ContextWrangler.createContext(chan));
+    }
+
+    public String evaluate(String filename,
+                           String template,
+                           EventAccessOperations event,
+                           Channel channel,
+                           RequestFilter[] original,
+                           RequestFilter[] available,
+                           CookieJar cookieJar) throws IOException {
+        return evaluate(filename,
+                        template,
+                        event,
+                        channel,
+                        original,
+                        available,
+                        new LocalSeismogramImpl[0],
+                        cookieJar);
     }
 
     public String evaluate(String fileTemplate,

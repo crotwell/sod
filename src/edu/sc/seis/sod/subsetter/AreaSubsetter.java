@@ -2,6 +2,7 @@ package edu.sc.seis.sod.subsetter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.w3c.dom.Element;
@@ -14,6 +15,7 @@ import edu.sc.seis.fissuresUtil.bag.AreaUtil;
 import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.SodUtil;
+import edu.sc.seis.sod.UserConfigurationException;
 
 /**
  * SiteArea.java Created: Thu Mar 14 14:02:33 2002
@@ -32,7 +34,8 @@ public class AreaSubsetter {
             for(int i = 0; i < children.getLength(); i++) {
                 Node node = children.item(i);
                 if(node instanceof Element) {
-                    area = (edu.iris.Fissures.Area)SodUtil.load((Element)node, "");
+                    area = (edu.iris.Fissures.Area)SodUtil.load((Element)node,
+                                                                "");
                     break;
                 }
             }
@@ -40,8 +43,12 @@ public class AreaSubsetter {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileLocation)));
                 locationArray = AreaUtil.loadPolygon(reader);
+            } catch(FileNotFoundException e) {
+                throw new UserConfigurationException("Unable to find '"
+                        + fileLocation + "' to load as a polygon.");
             } catch(IOException e) {
-                throw new ConfigurationException("Problem reading from file " + fileLocation, e);
+                throw new ConfigurationException("Problem reading from file "
+                        + fileLocation, e);
             }
         }
     }
