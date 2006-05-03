@@ -82,9 +82,9 @@ public class JDBCEventChannelStatus extends SodJDBC {
         SQLLoader networkSQLLoader = new SQLLoader("edu/sc/seis/fissuresUtil/database/props/network/default.props");
         channelsForPair = conn.prepareStatement("SELECT "
                 + networkSQLLoader.getContext().get("channel_neededForChannel")
-                + " FROM channel, eventchannelstatus "
-                + "WHERE pairid = ? AND "
-                + "site_id = (SELECT site_id FROM channel, eventchannelstatus WHERE chan_id = channelid AND pairid = ?)");
+                + " FROM channel JOIN eventchannelstatus ON (chan_id = channelid) "
+                + " JOIN site ON (channel.site_id = site.site_id) "
+                + "WHERE pairid = ?");
         dbIdForEventAndChan = conn.prepareStatement("SELECT pairid FROM eventchannelstatus "
                 + "WHERE eventid = ? AND channelid = ?");
         ofStation = conn.prepareStatement("SELECT pairid, eventid, channelid, status "
@@ -117,7 +117,6 @@ public class JDBCEventChannelStatus extends SodJDBC {
 
     public Channel[] getAllChansForSite(int pairId) throws SQLException {
         channelsForPair.setInt(1, pairId);
-        channelsForPair.setInt(2, pairId);
         try {
             return chanTable.extractAllChans(channelsForPair);
         } catch(NotFound e) {
