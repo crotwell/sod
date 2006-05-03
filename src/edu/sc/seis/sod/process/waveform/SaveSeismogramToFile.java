@@ -54,9 +54,11 @@ public class SaveSeismogramToFile implements WaveformProcess {
             + "ttp";
 
     public SaveSeismogramToFile(Element config) throws ConfigurationException {
+        System.err.println();
         System.err.println("As of SOD 2.1.2 saveSeismogramToFile is deprecated!");
         System.err.println("Replace it with sacWriter or mseedWriter in your recipes!");
         System.err.println("Abandon all hope and so on and so forth!");
+        System.err.println();
         String fileTypeStr = DOMHelper.extractText(config,
                                                    "fileType",
                                                    SeismogramFileTypes.MSEED.getValue());
