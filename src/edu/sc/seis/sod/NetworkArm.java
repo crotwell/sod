@@ -86,12 +86,16 @@ public class NetworkArm implements Arm {
     }
 
     public ProxyNetworkAccess getNetwork(NetworkId network_id) throws Exception {
+        return getNetworkDbObject(network_id).getNetworkAccess();
+    }
+
+    public NetworkDbObject getNetworkDbObject(NetworkId network_id) throws Exception {
         NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
         for(int i = 0; i < tmpNetDbs.length; i++) {
             if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
                     .get_attributes()
                     .get_id(), network_id)) {
-                return tmpNetDbs[i].getNetworkAccess();
+                return tmpNetDbs[i];
             }
         }
         throw new IllegalArgumentException("No network for id: "
@@ -566,7 +570,9 @@ public class NetworkArm implements Arm {
                                     dbid = netTable.put(chan);
                                 }
                             }
-                            channelMap.put(new Integer(dbid), chan);
+                            Integer dbidInt = new Integer(dbid);
+                            channelMap.put(dbidInt, chan);
+                            channelToSiteMap.put(dbidInt, siteDbObject);
                             ChannelDbObject channelDbObject = new ChannelDbObject(dbid,
                                                                                   chan);
                             successes.add(channelDbObject);
@@ -603,6 +609,18 @@ public class NetworkArm implements Arm {
     }
 
     private Map channelMap = Collections.synchronizedMap(new HashMap());
+    
+    // Yet another HACK. JDBCEventChannelStatus also needs to quickly get all channels
+    // from the site for the vector arm
+    /** 
+     * @returns all channels that are in the same site as the channel with the given database id
+     */
+    public ChannelDbObject[] getAllChannelsFromSite(int chanId) throws Exception {
+        SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
+        return getSuccessfulChannels(getNetworkDbObject(getChannel(chanId).get_id().network_id), site);
+    }
+    
+    private Map channelToSiteMap = Collections.synchronizedMap(new HashMap());
 
     private void statusChanged(String newStatus) {
         synchronized(statusMonitors) {

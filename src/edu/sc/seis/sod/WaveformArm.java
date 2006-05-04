@@ -313,8 +313,15 @@ public class WaveformArm implements Arm {
     public EventVectorPair getEventVectorPair(EventChannelPair ecp) {
         try {
             Channel[] chans;
-            synchronized(evChanStatus) {
-                chans = evChanStatus.getAllChansForSite(ecp.getPairId());
+            try {
+            ChannelDbObject[] chanDb = networkArm.getAllChannelsFromSite(ecp.getChannelDbId());
+            chans = new Channel[chanDb.length];
+            for(int i = 0; i < chanDb.length; i++) {
+                chans[i] = chanDb[i].getChannel();
+            }
+            } catch (Exception e) {
+                // this should never happen, as the ecp was already created
+                throw new RuntimeException("Can't get other channels in motion vector: "+ecp);
             }
             ChannelGroup[] groups = channelGrouper.group(chans, new ArrayList());
             ChannelGroup pairGroup = null;
@@ -345,7 +352,7 @@ public class WaveformArm implements Arm {
             GlobalExceptionHandler.handle(e);
         } catch(NotFound e) {
             GlobalExceptionHandler.handle(e);
-        }
+        } 
         return null;
     }
 
