@@ -31,6 +31,9 @@
                     <ref name="maxRetryDelay"/>
                 </optional>
                 <optional>
+                    <ref name="seismogramLatency"/>
+                </optional>
+                <optional>
                     <ref name="waveformWorkerThreads"/>
                 </optional>
                 <optional>
@@ -131,6 +134,17 @@
                     for the times they're interested in after that time. For runs in the past, this
                     value will have no effect unless adding it to the event arm's end date pushes it
                     past the time the run ends.  The default value is one week.</description>
+            </xsd:annotation>
+            <ref name="time"/>
+        </element>
+    </define>
+    <define name="seismogramLatency">
+        <element name="seismogramLatency">
+            <xsd:annotation>
+                <summary>Amount of time after an event to keep retrying for data</summary>
+                <description>If SOD gets no data for a channel for an event, this value comes into play.
+                    SOD will periodically retry the item that failed up until this long after the event.
+                      The default value is 4 weeks.</description>
             </xsd:annotation>
             <ref name="time"/>
         </element>
