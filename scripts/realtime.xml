@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <sod>
     <properties>
-        <maxRetryDelay>
+        <seismogramLatency>
             <unit>DAY</unit>
             <value>5</value>
-        </maxRetryDelay>
+        </seismogramLatency>
     </properties>
     <eventArm>
         <eventFinder>
