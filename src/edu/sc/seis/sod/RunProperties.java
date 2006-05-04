@@ -44,6 +44,11 @@ public class RunProperties {
             if(maxRetryChild != null) {
                 maxRetry = SodUtil.loadTimeInterval(maxRetryChild);
             }
+            Element seismogramLatencyEl = SodUtil.getElement(el,
+                                                             "seismogramLag");
+            if(maxRetryChild != null) {
+                seismogramLatency = SodUtil.loadTimeInterval(seismogramLatencyEl);
+            }
             Element serverRetryChild = SodUtil.getElement(el,
                                                           "serverRetryDelay");
             if(serverRetryChild != null) {
@@ -96,6 +101,10 @@ public class RunProperties {
 
     public TimeInterval getEventRefreshInterval() {
         return eventRefresh;
+    }
+
+    public TimeInterval getSeismogramLatency() {
+        return seismogramLatency;
     }
 
     public String getRunName() {
@@ -155,6 +164,8 @@ public class RunProperties {
     private TimeInterval maxRetry = DAYS_180;
 
     private TimeInterval serverRetryDelay = NO_TIME;
+
+    private TimeInterval seismogramLatency = (TimeInterval)ONE_WEEK.multiplyBy(4);
 
     private String runName = "Your Sod";
 

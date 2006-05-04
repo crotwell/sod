@@ -48,13 +48,17 @@ public class WaveformArm implements Arm {
                        EventArm eventArm,
                        NetworkArm networkArm,
                        int threadPoolSize) throws Exception {
+        RunProperties runProps = Start.getRunProps();
+        SERVER_RETRY_DELAY = runProps.getServerRetryDelay();
         eventStatus = new JDBCEventStatus();
         evChanStatus = new JDBCEventChannelStatus();
         retries = new JDBCRetryQueue("waveform");
         retries.setMaxRetries(5);
         int minRetriesOnAvailableData = 3;
         retries.setMinRetries(minRetriesOnAvailableData);
-        retries.setMinRetryWait((TimeInterval)MAX_RETRY_DELAY.divideBy(minRetriesOnAvailableData));
+        retries.setMinRetryWait((TimeInterval)runProps.getMaxRetryDelay()
+                .divideBy(minRetriesOnAvailableData));
+        retries.setEventDataLag(runProps.getSeismogramLatency());
         corbaFailures = new JDBCRetryQueue("corbaFailure");
         corbaFailures.setMinRetryWait(new TimeInterval(2, UnitImpl.HOUR));
         corbaFailures.setMaxRetries(10);
@@ -72,8 +76,6 @@ public class WaveformArm implements Arm {
         this.eventArm = eventArm;
         pool = new WorkerThreadPool("Waveform EventChannel Processor",
                                     threadPoolSize);
-        MAX_RETRY_DELAY = Start.getRunProps().getMaxRetryDelay();
-        SERVER_RETRY_DELAY = Start.getRunProps().getServerRetryDelay();
     }
 
     public boolean isActive() {
@@ -323,7 +325,8 @@ public class WaveformArm implements Arm {
                 }
             }
             if(pairGroup == null) {
-                ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION, Standing.SYSTEM_FAILURE));
+                ecp.update(Status.get(Stage.EVENT_CHANNEL_POPULATION,
+                                      Standing.SYSTEM_FAILURE));
                 setStatus(ecp);
                 return null;
             }
@@ -715,7 +718,7 @@ public class WaveformArm implements Arm {
                     failLogger.info(ecp + "  " + accepted.toString());
                 }
                 Status stat = ecp.getStatus();
-                //Only make one retry for the whole vector
+                // Only make one retry for the whole vector
                 if(stat.getStanding() == Standing.CORBA_FAILURE) {
                     corbaFailures.retry(pairIds[0]);
                 } else if(stat.getStanding() == Standing.RETRY) {
@@ -777,10 +780,6 @@ public class WaveformArm implements Arm {
     private List usedPairGroups = new ArrayList();
 
     private double retryPercentage = .02;// 2 percent of the pool will be
-
-    // made up of retries if possible
-    /** Maxmimun time back from now that it is worth retrying. */
-    private TimeInterval MAX_RETRY_DELAY = new TimeInterval(0, UnitImpl.MINUTE);
 
     // Amount of time after the run has ended that we retry Server based
     // failures

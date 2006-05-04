@@ -17,8 +17,7 @@ public class JDBCRetryQueue extends JDBCTable {
 
     public JDBCRetryQueue(String queueName) throws SQLException {
         super(queueName + "RetryQueue", ConnMgr.createConnection());
-        TableSetup.setup(this,
-                         "edu/sc/seis/sod/database/props/retryqueue.vm");
+        TableSetup.setup(this, "edu/sc/seis/sod/database/props/retryqueue.vm");
     }
 
     /**
@@ -43,11 +42,14 @@ public class JDBCRetryQueue extends JDBCTable {
     private int fillInWillHaveParams(PreparedStatement ps, int startPos)
             throws SQLException {
         ps.setTimestamp(startPos++, beingRetried);
-        if(ClockUtil.now().before(lastRetry)){
+        if(ClockUtil.now().before(lastRetry)) {
             ps.setInt(startPos++, maxRetries);
-        }else{
+        } else {
             ps.setInt(startPos++, minRetries);
         }
+        ps.setTimestamp(startPos++, ClockUtil.now()
+                .subtract(eventDataLag)
+                .getTimestamp());
         return startPos;
     }
 
@@ -88,6 +90,20 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setMinRetryWait(TimeInterval wait) {
         minRetryWait = wait;
+    }
+
+    /**
+     * Sets the amount of time after an event an item will be retried.
+     * 
+     * For available data it makes sense to make this as long as you expect data
+     * to show up past the event's time in the server. For corba failures,
+     * making this a huge amount and letting the min and max retries take care
+     * of a retry makes more sense
+     * 
+     * defaults to 1000 years
+     */
+    public void setEventDataLag(TimeInterval lag) {
+        eventDataLag = lag;
     }
 
     /**
@@ -133,6 +149,8 @@ public class JDBCRetryQueue extends JDBCTable {
     private Timestamp beingRetried = TimeUtils.futurePlusOne.getTimestamp();
 
     private TimeInterval minRetryWait = new TimeInterval(0, UnitImpl.SECOND);
+
+    private TimeInterval eventDataLag = new TimeInterval(1000 * 52, UnitImpl.WEEK);
 
     private PreparedStatement next, hasNext, get, insert, updateNext,
             updateRetry, willHaveNext;

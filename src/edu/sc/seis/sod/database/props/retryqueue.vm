@@ -5,12 +5,18 @@ ${tablename}.create=CREATE TABLE ${tablename} (id int, \
 ${tablename}.next=SELECT TOP 1 id FROM ${tablename} WHERE numretries < ? \
                   ORDER BY last_query
                   
-#set($willHave = 'last_query != ? AND numretries < ?')
+#set($willHave = '')
 
-${tablename}.hasNext=SELECT TOP 1 id FROM ${tablename} WHERE ($willHave) \
-                          AND last_query <= ?
+#set($hasNextBase = "SELECT TOP 1 id FROM ${tablename} \
+JOIN eventchannelstatus ON (id = pairid) \
+JOIN eventaccess ON (eventid = event_id) \
+JOIN origin ON (eventaccess.origin_id = origin.origin_id) \
+JOIN time on (origin_time_id = time_id) \
+WHERE last_query != ? AND numretries < ? AND time_stamp > ?")
+
+${tablename}.hasNext=$hasNextBase AND last_query <= ?
                           
-${tablename}.willHaveNext=SELECT TOP 1 id FROM ${tablename} WHERE $willHave
+${tablename}.willHaveNext=$hasNextBase
 
 ${tablename}.get=SELECT id FROM ${tablename} WHERE id = ?
 
