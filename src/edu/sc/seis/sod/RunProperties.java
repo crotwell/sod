@@ -46,7 +46,7 @@ public class RunProperties {
             }
             Element seismogramLatencyEl = SodUtil.getElement(el,
                                                              "seismogramLag");
-            if(maxRetryChild != null) {
+            if(seismogramLatencyEl != null) {
                 seismogramLatency = SodUtil.loadTimeInterval(seismogramLatencyEl);
             }
             Element serverRetryChild = SodUtil.getElement(el,
