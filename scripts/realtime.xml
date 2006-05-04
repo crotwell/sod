@@ -87,6 +87,6 @@
             <someCoverage/>
         </availableDataAND>
         <printlineSeismogramProcess/>
-        <mseedWriter/>
+        <sacWriter/>
     </waveformArm>
 </sod>

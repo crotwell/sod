@@ -72,6 +72,6 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <mseedWriter/>
+        <sacWriter/>
     </waveformVectorArm>
 </sod>

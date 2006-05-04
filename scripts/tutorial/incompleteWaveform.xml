@@ -21,6 +21,6 @@
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <printlineSeismogramProcess/>
-        <mseedWriter/>
+        <sacWriter/>
     </waveformArm>
 </sod>

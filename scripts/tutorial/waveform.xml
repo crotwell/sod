@@ -72,14 +72,14 @@
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
-        <mseedWriter/>
+        <sacWriter/>
         <responseGain/>
         <rMean/>
         <rTrend/>
         <integrate/>
-        <mseedWriter>
-            <location>processedSeismograms/${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.mseed</location>
-        </mseedWriter>
+        <sacWriter>
+            <workingDir>processedSeismograms</workingDir>
+        </sacWriter>
         <legacyExecute>
             <command>echo Sod saved this file</command>
         </legacyExecute>
