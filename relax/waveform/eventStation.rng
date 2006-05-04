@@ -6,6 +6,7 @@
         <ref name="eventStation"/>
     </start>
     <include href="../base/include/range.rng"/>
+    <include href="../base/include/taup.rng"/>
     <define name="eventStation">
         <choice>
             <xsd:annotation>
@@ -209,15 +210,11 @@
             </xsd:annotation>
             <optional>
                 <element name="modelName">
-                    <data type="string"/>
+                    <ref name="model"/>
                 </element>
             </optional>
             <element name="phaseName">
-                    <data type="string">
-                        <xsd:annotation>
-                            <example>P</example>
-                        </xsd:annotation>
-                    </data>
+                <ref name="phaseName"/>
             </element>
         </element>
     </define>

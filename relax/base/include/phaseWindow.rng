@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
-    <include href="quantity.rng"/>
+    <include href="quantity.rng"/>   
+    <include href="taup.rng"/>
     <start combine="choice">
         <notAllowed/>
     </start>
     <define name="phaseWindow">
         <optional>
             <element name="model">
-                <data type="string">
-                    <xsd:annotation>
-                        <example>prem</example>
-                    </xsd:annotation>
-                </data>
+                <ref name="model"/>
             </element>
         </optional>
         <element name="beginPhase">
-            <data type="string">
-                <xsd:annotation>
-                    <example>ttp</example>
-                </xsd:annotation>
-            </data>
+            <ref name="phaseName"/>
         </element>
         <element name="beginOffset">
             <xsd:annotation>
@@ -34,11 +27,7 @@
             <ref name="time"/>
         </element>
         <element name="endPhase">
-            <data type="string">
-                <xsd:annotation>
-                    <example>tts</example>
-                </xsd:annotation>
-            </data>
+            <ref name="phaseName"/>
         </element>
         <element name="endOffset">
             <xsd:annotation>

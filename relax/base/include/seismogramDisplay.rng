@@ -5,6 +5,7 @@
     <start combine="choice">
         <notAllowed/>
     </start>
+    <include href="taup.rng"/>
     <include href="units.rng"/>
     <define name="recordSectionDisplayContents">
         <ref name="defineAndReference"/>
@@ -286,7 +287,7 @@
             </optional>
             <optional>
                 <element name="phaseName">
-                    <data type="string"/>
+                    <ref name="phaseName"/>
                 </element>
             </optional>
         </element>

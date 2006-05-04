@@ -4,7 +4,7 @@
         <notAllowed/>
     </start>
     <include href="units.rng"/>
-    <define name="range">
+    <define name="range" combine="choice">
         <group>
             <xsd:annotation>
                 <summary>A range of lengths</summary>

@@ -91,7 +91,7 @@
             <element name="phaseFlags">
                 <oneOrMore>
                     <element name="phase">
-                        <data type="string"/>
+                        <ref name="phaseName"/>
                     </element>
                 </oneOrMore>
             </element>

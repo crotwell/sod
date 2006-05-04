@@ -7,6 +7,7 @@
     <include href="../base/include/eventLabel.rng"/>
     <include href="../base/include/quantity.rng"/>
     <include href="../base/include/range.rng"/>
+    <include href="../base/include/taup.rng"/>
     <include href="../base/include/seismogramImage.rng"/>
     <include href="../base/include/seismogramDisplay.rng"/>
     <define name="seismogramProcess">
@@ -142,8 +143,7 @@
             <xsd:annotation>
                 <summary>Cuts seismograms relative to predicted phase arrival times</summary>
                 <description>Cuts seismograms relative to offsets from phase arrival time predicted
-                    by TauP for the model. See the documentation for the TauP Toolkit, http://www.seis.sc.edu/TauP for the phase naming
-                    convention. SOD uses the TauP Toolkit internally.</description>
+                    by TauP for the model.</description>
                 <example>
                     <phaseCut>
                         <model>prem</model>
@@ -155,7 +155,7 @@
                         <endPhase>P</endPhase>
                         <endOffset>
                             <unit>SECOND</unit>
-                            <value>-100</value>
+                            <value>100</value>
                         </endOffset>
                     </phaseCut>
                 </example>
@@ -324,6 +324,9 @@
             <ref name="seisWriterBase"/>
             <zeroOrMore>
                 <element name="phaseTimeHeader">
+                <xsd:annotation>
+                    <summary>Inserts estimated arrival times using TauP</summary>
+                </xsd:annotation>
                     <ref name="phaseTimeContents"/>
                 </element>
             </zeroOrMore>
@@ -399,12 +402,13 @@
         </element>
     </define>
     <define name="phaseTimeContents">
-        
+        <optional>
         <element name="model">
-            <data type="string"/>
+            <ref name="model"/>
         </element>
+        </optional>
         <element name="phaseName">
-            <data type="string"/>
+            <ref name="phaseName"/>
         </element>
         <element name="tHeader">
             <data type="integer"/>
