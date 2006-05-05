@@ -8,7 +8,9 @@
         <element name="fixedDataCenter">
             <xsd:annotation>
                 <summary>Pick a central data repository</summary>
-                <description>This specifies the data center to use.</description>
+                <description>This specifies the data center to use.
+                    See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                    for a complete list of SeismogramDCs and their current status.</description>
             </xsd:annotation>
             <ref name="name"/>
             <ref name="dns"/>

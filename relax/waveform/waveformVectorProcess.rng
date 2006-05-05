@@ -31,6 +31,7 @@
             <ref name="vectorImageProcess"/>
             <ref name="vectorForkProcess"/>
             <ref name="rotateGCP"/>
+            <ref name="vectorTrim"/>
             <ref name="embeddedEventVector"/>
             <ref name="embeddedEventStation"/>
         </choice>
@@ -296,6 +297,16 @@
                 <summary>Allows any event station subsetter to be embedded here</summary>
             </xsd:annotation>
             <externalRef href="eventStation.rng"/>
+        </element>
+    </define>
+    <define name="vectorTrim">
+        <element name="vectorTrim">
+            <xsd:annotation>
+                <summary>Cuts all seismograms in the vector to their smallest overlapping pieces.</summary> 
+                <description>Cuts the seismograms in the vector to their intersection.  This is useful for processors like rotateGCP which expect seismograms to be of the same length and time.</description>
+                
+            </xsd:annotation>
+                <text/>
         </element>
     </define>
 </grammar>

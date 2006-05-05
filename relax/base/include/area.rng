@@ -38,10 +38,12 @@
     <define name="polygonFile">
         <element name="polygonFile">
             <xsd:annotation>
-                <summary>Reads in a file with lat long points and accepts anything that falls inside
+                <summary>Reads in a file  with lat long points and accepts anything that falls inside
                     the shape they create</summary>
                 <description>Reads the file at the location given and parses out a shape based on
-                    the points listed in the file. The points should be given as a latitude value, a space then a longitude value as in <a href="pentagon.txt">this example.</a>
+                    the points listed in the file. The points should be given as a longitude value, 
+                    a space then a latitude value as in <a href="../../pentagon.txt">this example</a>.
+                    Longitude values range from -180 to 180 and latitudes range from -90 to 90.
                     The file can contain as many points as
                     necessary to create the shape. Any point landing inside the shape is accepted.</description>
             </xsd:annotation>

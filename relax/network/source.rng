@@ -16,7 +16,9 @@
                         tags. The NetworkFinder is acquired from the NetworkDC, and a query is sent
                         with the given arguments. The networks returned are then sent through the
                         NetworkArm for processing. An optional refresh interval can be given if sod
-                        should periodically check for new channels. </description>
+                        should periodically check for new channels.  
+                        See <a href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active NetworkDCs and their status. </description>
                     <velocity>#networkArmPage()</velocity>
                     <example>
                         <networkFinder>
