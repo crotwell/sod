@@ -12,14 +12,20 @@
             <dns>edu/iris/dmc</dns>
             <originTimeRange>
                 <startTime>
-                    <year>2003</year>
-                    <month>1</month>
-                    <day>1</day>
+                    <earlier>
+ <timeInterval>
+ <unit>DAY</unit>
+ <value>1</value>
+ </timeInterval>
+</earlier>
                 </startTime>
                 <endTime>
-                    <year>2003</year>
-                    <month>1</month>
-                    <day>10</day>
+                <later>
+<timeInterval>
+<unit>DAY</unit>
+<value>50</value>
+</timeInterval>
+</later>
                 </endTime>
             </originTimeRange>
             <magnitudeRange>
@@ -73,7 +79,7 @@
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>
-            <name>IRIS_PondDataCenter</name>
+            <name>IRIS_BudDataCenter</name>
             <dns>edu/iris/dmc</dns>
         </fixedDataCenter>
         <availableDataAND>
