@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" 
+xmlns="http://relaxng.org/ns/structure/1.0" 
+xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
   <start combine="choice">
     <notAllowed/>
   </start>
   <define name="model" combine="choice">
-    <xsd:annotation>
-    <summary>Velocity model used to calculate the arrival time</summary>
-    <description>
-      One of TauP's included velocity models.  Defaults to prem.
-    </description>
-    </xsd:annotation>
     <choice>
+      <xsd:annotation>
+        <summary>Velocity model used to calculate the arrival time</summary>
+        <description>
+          One of TauP's included velocity models.  Defaults to prem.
+        </description>
+      </xsd:annotation>
       <value>1066a</value>
       <value>1066b</value>
       <value>ak135</value>
@@ -26,14 +28,14 @@
     </choice>
   </define>
   <define name="phaseName" combine="choice">
-    <xsd:annotation>
-      <summary>The name of a seismic phase</summary>
-      <description>
-        Tells TauP which phase arrival to estimate.  Can be any of the phase names described in the
-        phase naming section of the <a href="http://www.seis.sc.edu/downloads/TauP/taup.pdf">TauP manual</a>.
-      </description>
-      <example>ttp</example>
-    </xsd:annotation>
-      <data type="string"/>
+    <data type="string">
+      <xsd:annotation>
+        <summary>The name of a seismic phase</summary>
+        <description>
+          Tells TauP which phase arrival to estimate.  Can be any of the phase names described in the
+          phase naming section of the <a href="http://www.seis.sc.edu/downloads/TauP/taup.pdf">TauP manual</a>.
+        </description>
+        <example>ttp</example>
+      </xsd:annotation></data>
   </define>
 </grammar>
