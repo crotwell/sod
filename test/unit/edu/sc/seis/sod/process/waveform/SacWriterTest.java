@@ -34,8 +34,9 @@ public class SacWriterTest extends TestCase {
         String[][] templateAndResult = new String[][] { {"${seismogram.name}.sac",
                                                          seis.getName()
                                                                  + ".sac"},
-                                                       {"${event.catalog}",
-                                                        EventUtil.extractOrigin(ev).catalog},
+                                                       {"/${event.catalog}",
+                                                        "/"
+                                                                + EventUtil.extractOrigin(ev).catalog},
                                                        {"${channel.name}",
                                                         chan.name}};
         for(int i = 0; i < templateAndResult.length; i++) {
@@ -44,6 +45,14 @@ public class SacWriterTest extends TestCase {
                                                                                  chan,
                                                                                  seis));
         }
+        assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
+                     new SacWriter("test/", seis.getName()).generateBase(ev,
+                                                                         chan,
+                                                                         seis));
+        assertEquals(FissuresFormatter.filize("test/" + seis.getName()),
+                     new SacWriter("test", seis.getName()).generateBase(ev,
+                                                                        chan,
+                                                                        seis));
     }
 
     public void testApplyProcessorsWithNoProcessors() throws CodecException,
