@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.BAD_PARAM;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,6 +21,7 @@ import edu.iris.Fissures.IfNetwork.NetworkNotFound;
 import edu.iris.Fissures.IfNetwork.Site;
 import edu.iris.Fissures.IfNetwork.SiteId;
 import edu.iris.Fissures.IfNetwork.Station;
+import edu.iris.Fissures.IfNetwork.VirtualNetworkHelper;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.network.ChannelIdUtil;
@@ -69,6 +71,7 @@ public class NetworkArm implements Arm {
             ConfigurationException {
         queryTimeTable = new JDBCQueryTime();
         netTable = new JDBCNetworkUnifier();
+        Start.network = this;
         processConfig(config);
     }
 
@@ -89,7 +92,8 @@ public class NetworkArm implements Arm {
         return getNetworkDbObject(network_id).getNetworkAccess();
     }
 
-    public NetworkDbObject getNetworkDbObject(NetworkId network_id) throws Exception {
+    public NetworkDbObject getNetworkDbObject(NetworkId network_id)
+            throws Exception {
         NetworkDbObject[] tmpNetDbs = getSuccessfulNetworks();
         for(int i = 0; i < tmpNetDbs.length; i++) {
             if(NetworkIdUtil.areEqual(tmpNetDbs[i].getNetworkAccess()
@@ -161,6 +165,10 @@ public class NetworkArm implements Arm {
 
     public ProxyNetworkDC getNetworkDC() {
         return finder.getNetworkDC();
+    }
+
+    public TimeInterval getRefreshInterval() {
+        return finder.getRefreshInterval();
     }
 
     private boolean needsRefresh() {
@@ -246,6 +254,14 @@ public class NetworkArm implements Arm {
                 + " network access objects from the network DC finder");
         NetworkPusher lastPusher = null;
         for(int i = 0; i < allNets.length; i++) {
+            try{
+                VirtualNetworkHelper.narrow(allNets[i]);
+                //Ignore any virtual nets returned here
+                logger.debug("ignoring virtual network " + allNets[i].get_attributes().get_code());
+                continue;
+            }catch(BAD_PARAM bp){
+                //Must be a concrete, continue
+            }
             try {
                 if(netEffectiveSubsetter.accept(allNets[i].get_attributes())) {
                     if(attrSubsetter.accept(allNets[i].get_attributes())) {
@@ -609,17 +625,21 @@ public class NetworkArm implements Arm {
     }
 
     private Map channelMap = Collections.synchronizedMap(new HashMap());
-    
-    // Yet another HACK. JDBCEventChannelStatus also needs to quickly get all channels
+
+    // Yet another HACK. JDBCEventChannelStatus also needs to quickly get all
+    // channels
     // from the site for the vector arm
-    /** 
-     * @returns all channels that are in the same site as the channel with the given database id
+    /**
+     * @returns all channels that are in the same site as the channel with the
+     *          given database id
      */
-    public ChannelDbObject[] getAllChannelsFromSite(int chanId) throws Exception {
+    public ChannelDbObject[] getAllChannelsFromSite(int chanId)
+            throws Exception {
         SiteDbObject site = (SiteDbObject)channelToSiteMap.get(new Integer(chanId));
-        return getSuccessfulChannels(getNetworkDbObject(getChannel(chanId).get_id().network_id), site);
+        return getSuccessfulChannels(getNetworkDbObject(getChannel(chanId).get_id().network_id),
+                                     site);
     }
-    
+
     private Map channelToSiteMap = Collections.synchronizedMap(new HashMap());
 
     private void statusChanged(String newStatus) {
