@@ -338,13 +338,16 @@ public class Start {
         for(int i = 0; i < armNodes.getLength(); i++) {
             if(armNodes.item(i) instanceof Element) {
                 Element el = (Element)armNodes.item(i);
-                if(el.getTagName().equals("eventArm")) {
+                if(el.getTagName().equals("eventArm")
+                        && (eventOnly || !netOnly)) {
                     event = new EventArm(el);
                     sched.registerArm(event);
-                } else if(el.getTagName().equals("networkArm")) {
+                } else if(el.getTagName().equals("networkArm")
+                        && (netOnly || !eventOnly)) {
                     network = new NetworkArm(el);
                     sched.registerArm(network);
-                } else if(el.getTagName().startsWith("waveform")) {
+                } else if(el.getTagName().startsWith("waveform") && !eventOnly
+                        && !netOnly) {
                     int poolSize = runProps.getNumWaveformWorkerThreads();
                     waveform = new WaveformArm(el, event, network, poolSize);
                     sched.registerArm(waveform);
@@ -492,13 +495,24 @@ public class Start {
                     waitOnError = false;
                 } else if(args[i].equals("--new-config")) {
                     replaceDBConfig = true;
-                }
+                } else if(args[i].equals("-e")) {
+                    if(netOnly) {
+                        exit("Can't have both -e and -n.  Choose one or the other");
+                    }
+                    eventOnly = true;
+                } else if(args[i].equals("-n")) {
+                    if(eventOnly) {
+                        exit("Can't have both -e and -n.  Choose one or the other");
+                    }
+                    netOnly = true;
+                } 
             }
             Start start = new Start(confFilename, args);
             logger.info("Start start()");
             start.start();
         } catch(UserConfigurationException e) {
-            exit(e.getMessage() + "  SOD will quit now and continue to cowardly quit until this is corrected.");
+            exit(e.getMessage()
+                    + "  SOD will quit now and continue to cowardly quit until this is corrected.");
         } catch(Exception e) {
             GlobalExceptionHandler.handle("Problem in main, quiting", e);
             exit("Quitting due to error: " + e.getMessage());
@@ -533,7 +547,7 @@ public class Start {
 
     private static EventArm event;
 
-    private static NetworkArm network;
+    protected static NetworkArm network;
 
     private static String configFileName;
 
@@ -544,6 +558,8 @@ public class Start {
     public static final String DBURL_KEY = "fissuresUtil.database.url";
 
     public static boolean RUN_ARMS = true;
+
+    private static boolean eventOnly = false, netOnly = false;
 
     protected static int[] suspendedPairs = new int[0];
 
