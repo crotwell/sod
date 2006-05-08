@@ -2,7 +2,6 @@
 run(){
     mkdir $1
     cd $1
-    echo $2
     echo $1
     sod $2 > ../$1.out
     cd ../
