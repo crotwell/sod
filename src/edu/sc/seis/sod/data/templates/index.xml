@@ -13,7 +13,7 @@
 <div id="Content">
 <h1><runName/> Information</h1>
 <div><b>Started on: </b><startTime/></div>
-<div><b>Amount of SAC data written: </b><sacDataWritten/> MB</div>
+<div><b>Amount of seismogram data written: </b><sacDataWritten/> MB</div>
 <div><b>Last event received: </b>
 <lastEvent><a><attribute name="href">events/<originTime>yyyy-MM-dd_HH-mm-ss-SSS</originTime>/event.html</attribute><feRegionName/></a></lastEvent>
 </div>
