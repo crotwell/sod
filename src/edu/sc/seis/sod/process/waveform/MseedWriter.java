@@ -13,13 +13,17 @@ public class MseedWriter extends AbstractSeismogramWriter {
     private static final String DEFAULT_FILE_TEMPLATE = "Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.mseed";
 
     public MseedWriter(Element el) throws ConfigurationException {
-        super(extractWorkingDir(el), extractFileTemplate(el, DEFAULT_FILE_TEMPLATE), extractPrefix(el));
+        super(extractWorkingDir(el),
+              extractFileTemplate(el, DEFAULT_FILE_TEMPLATE),
+              extractPrefix(el));
     }
 
     public void write(String loc,
                       LocalSeismogramImpl seis,
                       Channel chan,
                       EventAccessOperations ev) throws Exception {
-        URLDataSetSeismogram.writeMSeed(seis, new File(loc));
+        SaveSeismogramToFile.addBytesWritten(URLDataSetSeismogram.writeMSeed(seis,
+                                                                             new File(loc))
+                .length());
     }
 }

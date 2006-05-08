@@ -530,6 +530,10 @@ public class SaveSeismogramToFile implements WaveformProcess {
     public static long getBytesWritten() {
         return bytesWritten;
     }
+    
+    public static void addBytesWritten(long bytes){
+        bytesWritten += bytes;
+    }
 
     private static long bytesWritten = 0;
 

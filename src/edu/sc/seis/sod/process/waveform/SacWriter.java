@@ -1,5 +1,6 @@
 package edu.sc.seis.sod.process.waveform;
 
+import java.io.File;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
@@ -60,7 +61,9 @@ public class SacWriter extends AbstractSeismogramWriter {
                                                     chan,
                                                     EventUtil.extractOrigin(ev));
         applyProcessors(writer, ev, chan);
-        writer.write(location);
+        File f = new File(location);
+        writer.write(f);
+        SaveSeismogramToFile.addBytesWritten(f.length());
     }
 
     public void applyProcessors(SacTimeSeries writer,

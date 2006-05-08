@@ -26,14 +26,17 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     public AbstractSeismogramWriter(String workingDir,
                                     String fileTemplate,
-                                    String prefix) throws ConfigurationException {
+                                    String prefix)
+            throws ConfigurationException {
         this.workingDir = workingDir;
-        if(!this.workingDir.endsWith(File.separator)){
-            this.workingDir += File.separator;
-        }
         this.fileTemplate = fileTemplate;
-        if(fileTemplate.startsWith(File.separator)){
-            this.fileTemplate = fileTemplate.substring(1);
+        if(workingDir.endsWith(File.separator)) {
+            if(fileTemplate.startsWith(File.separator)) {
+                this.fileTemplate = fileTemplate.substring(1);
+            }
+        } else if(workingDir.length() > 0
+                && !fileTemplate.startsWith(File.separator)) {
+            this.workingDir += File.separator;
         }
         this.prefix = prefix;
         new PrintlineVelocitizer(new String[] {fileTemplate});
