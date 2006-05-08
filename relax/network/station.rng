@@ -31,6 +31,7 @@
             <ref name="NOT"/>
             <ref name="PASS"/>
             <ref name="externalStationSubsetter"/>
+            <ref name="belongsToVirtual"/>
         </choice>
     </define>
     <define name="stationLogical">
@@ -289,6 +290,19 @@
                 </example>
             </xsd:annotation>
             <ref name="externalClass"/>
+        </element>
+    </define>
+    <define name="belongsToVirtual">
+        <element name="belongsToVirtual">
+            <xsd:annotation>
+                <summary>Check if the station belongs to a particular virtual network</summary>
+                <description>If the station belongs to the virtual network of the code in the element, this returns true.
+                    Current virtual networks in the IRIS Network DC can be found from <a href="http://www.iris.edu/SeismiQuery/virtual_net.htm">SeismoQuery</a>.</description>
+                <example>
+                    <belongsToVirtual>_US-TA</belongsToVirtual>
+                </example>
+            </xsd:annotation>
+<text/>
         </element>
     </define>
 </grammar>
