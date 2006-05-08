@@ -42403,6 +42403,9 @@
             <element name="rotateGCP">
                 <empty/>
             </element>
+            <element name="vectorTrim">
+                <text/>
+            </element>
             <element name="embeddedEventVector">
                 <ref name="eventVector"/>
             </element>
@@ -51710,6 +51713,9 @@
             <ref name="NOT36"/>
             <ref name="PASS36"/>
             <ref name="externalStationSubsetter22"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station43">
@@ -51729,6 +51735,9 @@
             <ref name="NOT71"/>
             <ref name="PASS71"/>
             <ref name="externalStationSubsetter43"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station39">
@@ -51748,6 +51757,9 @@
             <ref name="NOT64"/>
             <ref name="PASS64"/>
             <ref name="externalStationSubsetter39"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station40">
@@ -51767,6 +51779,9 @@
             <ref name="NOT66"/>
             <ref name="PASS66"/>
             <ref name="externalStationSubsetter40"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station14">
@@ -51786,6 +51801,9 @@
             <ref name="NOT23"/>
             <ref name="PASS23"/>
             <ref name="externalStationSubsetter14"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station32">
@@ -51805,6 +51823,9 @@
             <ref name="NOT53"/>
             <ref name="PASS53"/>
             <ref name="externalStationSubsetter33"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station25">
@@ -51824,6 +51845,9 @@
             <ref name="NOT40"/>
             <ref name="PASS40"/>
             <ref name="externalStationSubsetter25"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station12">
@@ -51843,6 +51867,9 @@
             <ref name="NOT20"/>
             <ref name="PASS20"/>
             <ref name="externalStationSubsetter12"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station48">
@@ -51862,6 +51889,9 @@
             <ref name="NOT78"/>
             <ref name="PASS78"/>
             <ref name="externalStationSubsetter48"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station13">
@@ -51881,6 +51911,9 @@
             <ref name="NOT21"/>
             <ref name="PASS21"/>
             <ref name="externalStationSubsetter13"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station31">
@@ -51900,6 +51933,9 @@
             <ref name="NOT52"/>
             <ref name="PASS52"/>
             <ref name="externalStationSubsetter32"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station28">
@@ -51919,6 +51955,9 @@
             <ref name="NOT46"/>
             <ref name="PASS46"/>
             <ref name="externalStationSubsetter28"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station45">
@@ -51938,6 +51977,9 @@
             <ref name="NOT74"/>
             <ref name="PASS74"/>
             <ref name="externalStationSubsetter45"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station9">
@@ -51957,6 +51999,9 @@
             <ref name="NOT15"/>
             <ref name="PASS15"/>
             <ref name="externalStationSubsetter9"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station34">
@@ -51976,6 +52021,9 @@
             <ref name="NOT56"/>
             <ref name="PASS56"/>
             <ref name="externalStationSubsetter35"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station20">
@@ -51995,6 +52043,9 @@
             <ref name="NOT33"/>
             <ref name="PASS33"/>
             <ref name="externalStationSubsetter20"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station17">
@@ -52014,6 +52065,9 @@
             <ref name="NOT28"/>
             <ref name="PASS28"/>
             <ref name="externalStationSubsetter17"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station4">
@@ -52033,6 +52087,9 @@
             <ref name="NOT6"/>
             <ref name="PASS6"/>
             <ref name="externalStationSubsetter4"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station6">
@@ -52052,6 +52109,9 @@
             <ref name="NOT10"/>
             <ref name="PASS10"/>
             <ref name="externalStationSubsetter6"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station21">
@@ -52071,6 +52131,9 @@
             <ref name="NOT34"/>
             <ref name="PASS34"/>
             <ref name="externalStationSubsetter21"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station37">
@@ -52090,6 +52153,9 @@
             <ref name="NOT47"/>
             <ref name="PASS47"/>
             <ref name="externalStationSubsetter29"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station">
@@ -52109,6 +52175,9 @@
             <ref name="NOT"/>
             <ref name="PASS"/>
             <ref name="externalStationSubsetter"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station24">
@@ -52128,6 +52197,9 @@
             <ref name="NOT39"/>
             <ref name="PASS39"/>
             <ref name="externalStationSubsetter24"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station51">
@@ -52147,6 +52219,9 @@
             <ref name="NOT83"/>
             <ref name="PASS83"/>
             <ref name="externalStationSubsetter51"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station54">
@@ -52166,6 +52241,9 @@
             <ref name="NOT88"/>
             <ref name="PASS88"/>
             <ref name="externalStationSubsetter54"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station2">
@@ -52185,6 +52263,9 @@
             <ref name="NOT3"/>
             <ref name="PASS3"/>
             <ref name="externalStationSubsetter2"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station16">
@@ -52204,6 +52285,9 @@
             <ref name="NOT26"/>
             <ref name="PASS26"/>
             <ref name="externalStationSubsetter16"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station41">
@@ -52223,6 +52307,9 @@
             <ref name="NOT67"/>
             <ref name="PASS67"/>
             <ref name="externalStationSubsetter41"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station27">
@@ -52242,6 +52329,9 @@
             <ref name="NOT44"/>
             <ref name="PASS44"/>
             <ref name="externalStationSubsetter27"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station10">
@@ -52261,6 +52351,9 @@
             <ref name="NOT16"/>
             <ref name="PASS16"/>
             <ref name="externalStationSubsetter10"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station15">
@@ -52280,6 +52373,9 @@
             <ref name="NOT25"/>
             <ref name="PASS25"/>
             <ref name="externalStationSubsetter15"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station46">
@@ -52299,6 +52395,9 @@
             <ref name="NOT76"/>
             <ref name="PASS76"/>
             <ref name="externalStationSubsetter46"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station53">
@@ -52318,6 +52417,9 @@
             <ref name="NOT87"/>
             <ref name="PASS87"/>
             <ref name="externalStationSubsetter53"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station38">
@@ -52337,6 +52439,9 @@
             <ref name="NOT62"/>
             <ref name="PASS62"/>
             <ref name="externalStationSubsetter38"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station30">
@@ -52356,6 +52461,9 @@
             <ref name="NOT51"/>
             <ref name="PASS51"/>
             <ref name="externalStationSubsetter31"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station5">
@@ -52375,6 +52483,9 @@
             <ref name="NOT8"/>
             <ref name="PASS8"/>
             <ref name="externalStationSubsetter5"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station49">
@@ -52394,6 +52505,9 @@
             <ref name="NOT80"/>
             <ref name="PASS80"/>
             <ref name="externalStationSubsetter49"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station44">
@@ -52413,6 +52527,9 @@
             <ref name="NOT72"/>
             <ref name="PASS72"/>
             <ref name="externalStationSubsetter44"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station3">
@@ -52432,6 +52549,9 @@
             <ref name="NOT5"/>
             <ref name="PASS5"/>
             <ref name="externalStationSubsetter3"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station29">
@@ -52451,6 +52571,9 @@
             <ref name="NOT49"/>
             <ref name="PASS49"/>
             <ref name="externalStationSubsetter30"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station36">
@@ -52470,6 +52593,9 @@
             <ref name="NOT60"/>
             <ref name="PASS60"/>
             <ref name="externalStationSubsetter37"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station47">
@@ -52489,6 +52615,9 @@
             <ref name="NOT77"/>
             <ref name="PASS77"/>
             <ref name="externalStationSubsetter47"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station7">
@@ -52508,6 +52637,9 @@
             <ref name="NOT11"/>
             <ref name="PASS11"/>
             <ref name="externalStationSubsetter7"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station18">
@@ -52527,6 +52659,9 @@
             <ref name="NOT30"/>
             <ref name="PASS30"/>
             <ref name="externalStationSubsetter18"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station52">
@@ -52546,6 +52681,9 @@
             <ref name="NOT85"/>
             <ref name="PASS85"/>
             <ref name="externalStationSubsetter52"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station35">
@@ -52565,6 +52703,9 @@
             <ref name="NOT58"/>
             <ref name="PASS58"/>
             <ref name="externalStationSubsetter36"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station26">
@@ -52584,6 +52725,9 @@
             <ref name="NOT42"/>
             <ref name="PASS42"/>
             <ref name="externalStationSubsetter26"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station33">
@@ -52603,6 +52747,9 @@
             <ref name="NOT55"/>
             <ref name="PASS55"/>
             <ref name="externalStationSubsetter34"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station19">
@@ -52622,6 +52769,9 @@
             <ref name="NOT31"/>
             <ref name="PASS31"/>
             <ref name="externalStationSubsetter19"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station8">
@@ -52641,6 +52791,9 @@
             <ref name="NOT13"/>
             <ref name="PASS13"/>
             <ref name="externalStationSubsetter8"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station11">
@@ -52660,6 +52813,9 @@
             <ref name="NOT18"/>
             <ref name="PASS18"/>
             <ref name="externalStationSubsetter11"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station42">
@@ -52679,6 +52835,9 @@
             <ref name="NOT69"/>
             <ref name="PASS69"/>
             <ref name="externalStationSubsetter42"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station50">
@@ -52698,6 +52857,9 @@
             <ref name="NOT82"/>
             <ref name="PASS82"/>
             <ref name="externalStationSubsetter50"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station23">
@@ -52717,6 +52879,9 @@
             <ref name="NOT38"/>
             <ref name="PASS38"/>
             <ref name="externalStationSubsetter23"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="range18">
