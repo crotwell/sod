@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<sod>
+    <eventArm>
+        <CSVEventSource>
+            <filename>events.csv</filename>
+        </CSVEventSource>
+        <originOR>
+            <originAND>
+                <magnitudeRange>
+                    <min>5</min>
+                </magnitudeRange>
+                <originDepthRange>
+                    <unit>KILOMETER</unit>
+                    <min>100</min>
+                    <max>200</max>
+                </originDepthRange>
+            </originAND>
+            <magnitudeRange>
+                <min>6</min>
+            </magnitudeRange>
+        </originOR>
+        <printlineEventProcess/>
+    </eventArm>
+</sod>
