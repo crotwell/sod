@@ -9,7 +9,14 @@
                     <description> If the origin has a magnitude of the given types, and it falls
                         within the ranges specified, it is accepted. min is the same as
                         greaterThanEquals and max is the same as lessThanEquals. If the type is
-                        missing, then any type is accepted. </description>
+                        missing, then any type is accepted. 
+                        When used in the eventFinder, this tag only guarantees that an event will have a magnitude with one of the magTypes 
+                        and a magnitude with a value inside the min-max range.  Since events have multiple magnitudes the returned event may have
+                        one magnitude that meets the value criteria and another that meets the type criteria but not one that meets both.
+                        If you desire to constrain events to those with a single magnitude with a certain value of
+                        a certain type, use the magnitudeRange both in the eventFinder and immediately after it in the eventArm proper.
+                        magnitudeRanges used outside of the eventFinder don't have this restriction.
+                        </description>
                     <example>
                         <magnitudeRange>
                             <magType>mb</magType>
