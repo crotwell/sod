@@ -58,7 +58,7 @@ public class CSVEventPrinter implements OriginSubsetter {
 
     private void createFileAndWriteHeaderIfNeeded() throws IOException {
         if(!file.exists()) {
-            file.getParentFile().mkdirs();
+            file.getAbsoluteFile().getParentFile().mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(getHeader());
             writer.newLine();
