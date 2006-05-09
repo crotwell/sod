@@ -114,7 +114,7 @@ public class CSVEventSource extends SimpleEventSource {
             if(fields.contains(DEPTH)) {
                 depth = Double.parseDouble((String)values.get(fields.indexOf(DEPTH)));
             }
-            Unit depthUnit = UnitImpl.METER;
+            Unit depthUnit = UnitImpl.KILOMETER;
             if(fields.contains(DEPTH_UNITS)) {
                 String unitName = (String)values.get(fields.indexOf(DEPTH_UNITS));
                 try {
