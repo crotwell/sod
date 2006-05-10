@@ -69,24 +69,30 @@ public class ChannelGroup {
      * Finds the 2 horizontal channels.
      */
     public Channel[] getHorizontal() {
-        Channel[] out = new Channel[2];
+        int[] indices = getHorizontalIndices();
+        Channel[] out = new Channel[indices.length];
+        for(int i = 0; i < indices.length; i++) {
+            out[i] = channels[indices[i]];
+        }
+        return out;
+    }
+
+    private int[] getHorizontalIndices() {
+        int first = -1;
         for(int i = 0; i < channels.length; i++) {
             if(channels[i].an_orientation.dip == 0) {
-                if(out[0] == null) {
-                    out[0] = channels[i];
+                if(first == -1) {
+                    first = i;
                 } else {
-                    out[1] = channels[i];
+                    return new int[] {first, i};
                 }
             }
         }
-        if(out[1] == null) {
-            if(out[0] == null) {
-                return new Channel[0];
-            } else {
-                return new Channel[] {out[0]};
-            }
+        if(first == -1) {
+            return new int[0];
+        } else {
+            return new int[] {first};
         }
-        return out;
     }
 
     /**
@@ -134,25 +140,33 @@ public class ChannelGroup {
         return null;
     }
 
+    /**
+     * replaces the horizontal components with their radial and transverse
+     * versions in the ChannelGroup This should only be called if the
+     * seismograms that are accompanying this ChannelGroup through the vector
+     * process sequence have been rotated.
+     */
+    public void makeTransverseAndRadial(int transverseIndex,
+                                        int radialIndex,
+                                        EventAccessOperations event) {
+        channels[radialIndex] = getRadial(event);
+        channels[transverseIndex] = getTransverse(event);
+    }
+
     public Channel getRadial(EventAccessOperations event) {
         return getRadial(EventUtil.extractOrigin(event).my_location);
     }
 
     public Channel getRadial(Location eventLoc) {
-        Channel[] horizontal = getHorizontalXY();
-        if(horizontal.length == 0) {
-            return null;
-        }
-        Channel radial = new ChannelImpl(Rotate.replaceChannelOrientation(horizontal[0].get_id(),
-                                                                          "R"),
-                                         horizontal[0].name + "Radial",
-                                         new Orientation((float)Rotate.getRadialAzimuth(horizontal[0].my_site.my_location,
-                                                                                        eventLoc),
-                                                         horizontal[0].an_orientation.dip),
-                                         horizontal[0].sampling_info,
-                                         horizontal[0].effective_time,
-                                         horizontal[0].my_site);
-        return radial;
+        return new ChannelImpl(Rotate.replaceChannelOrientation(channels[0].get_id(),
+                                                                "R"),
+                               channels[0].name + "Radial",
+                               new Orientation((float)Rotate.getRadialAzimuth(channels[0].my_site.my_location,
+                                                                              eventLoc),
+                                               0),
+                               channels[0].sampling_info,
+                               channels[0].effective_time,
+                               channels[0].my_site);
     }
 
     public Channel getTransverse(EventAccessOperations event) {
@@ -160,20 +174,15 @@ public class ChannelGroup {
     }
 
     public Channel getTransverse(Location eventLoc) {
-        Channel[] horizontal = getHorizontalXY();
-        if(horizontal.length == 0) {
-            return null;
-        }
-        Channel transverse = new ChannelImpl(Rotate.replaceChannelOrientation(horizontal[0].get_id(),
-                                                                              "T"),
-                                             horizontal[0].name + "Transverse",
-                                             new Orientation((float)Rotate.getTransverseAzimuth(horizontal[0].my_site.my_location,
-                                                                                                eventLoc),
-                                                             horizontal[0].an_orientation.dip),
-                                             horizontal[0].sampling_info,
-                                             horizontal[0].effective_time,
-                                             horizontal[0].my_site);
-        return transverse;
+        return new ChannelImpl(Rotate.replaceChannelOrientation(channels[0].get_id(),
+                                                                "T"),
+                               channels[0].name + "Transverse",
+                               new Orientation((float)Rotate.getTransverseAzimuth(channels[0].my_site.my_location,
+                                                                                  eventLoc),
+                                               0),
+                               channels[0].sampling_info,
+                               channels[0].effective_time,
+                               channels[0].my_site);
     }
 
     private int getIndex(Channel chan) {

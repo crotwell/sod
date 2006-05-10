@@ -106,6 +106,7 @@ public class RotateGCP implements WaveformVectorProcess {
             out[xIndex][i] = rot[0];
             out[yIndex][i] = rot[1];
         }
+        channelGroup.makeTransverseAndRadial(xIndex, yIndex, event);
         return new WaveformVectorResult(out, new StringTreeLeaf(this, true));
     }
 
