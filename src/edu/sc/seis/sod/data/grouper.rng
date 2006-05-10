@@ -1037,6 +1037,9 @@
             <ref name="NOT2"/>
             <ref name="PASS2"/>
             <ref name="externalStationSubsetter"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station4">
@@ -1056,6 +1059,9 @@
             <ref name="NOT6"/>
             <ref name="PASS6"/>
             <ref name="externalStationSubsetter4"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station2">
@@ -1075,6 +1081,9 @@
             <ref name="NOT4"/>
             <ref name="PASS4"/>
             <ref name="externalStationSubsetter2"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="station3">
@@ -1094,6 +1103,9 @@
             <ref name="NOT5"/>
             <ref name="PASS5"/>
             <ref name="externalStationSubsetter3"/>
+            <element name="belongsToVirtual">
+                <text/>
+            </element>
         </choice>
     </define>
     <define name="effectiveTimeOverlap3">
