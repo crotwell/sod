@@ -1,8 +1,12 @@
 package edu.sc.seis.sod.process.waveform.vector;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import junit.framework.TestCase;
 import edu.iris.Fissures.FissuresException;
 import edu.iris.Fissures.model.MicroSecondDate;
+import edu.iris.Fissures.model.SamplingImpl;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
@@ -10,6 +14,7 @@ import edu.sc.seis.fissuresUtil.bag.Cut;
 import edu.sc.seis.fissuresUtil.chooser.ClockUtil;
 import edu.sc.seis.fissuresUtil.display.MicroSecondTimeRange;
 import edu.sc.seis.fissuresUtil.display.SimplePlotUtil;
+import edu.sc.seis.fissuresUtil.mockFissures.IfNetwork.MockChannelId;
 
 public class VectorTrimTest extends TestCase {
 
@@ -57,7 +62,7 @@ public class VectorTrimTest extends TestCase {
                            MicroSecondTimeRange cutTime) {
         for(int i = 0; i < trimmed.length; i++) {
             assertEquals(1, trimmed[i].length);
-            assertEquals(cutTime, new MicroSecondTimeRange(trimmed[i][0]));
+            assertEquals(trimmed[0][0].num_points, trimmed[i][0].num_points);
         }
     }
 
@@ -155,6 +160,52 @@ public class VectorTrimTest extends TestCase {
         for(int i = 0; i < result.length; i++) {
             assertEquals(0, result[i].length);
         }
+    }
+
+    public void testSamplingNormalization() {
+        LocalSeismogramImpl seis = SimplePlotUtil.createSpike();
+        LocalSeismogramImpl other = resample(seis, seis.getNumPoints() + 1);
+        trimmer.normalizeSampling(new LocalSeismogramImpl[][] { {seis}, {other}});
+        assertEquals(seis.getSampling(), other.getSampling());
+        other = resample(seis, seis.getNumPoints() * 2);
+        assertFalse(seis.getSampling().equals(other.getSampling()));
+    }
+
+    private LocalSeismogramImpl resample(LocalSeismogramImpl seis, int numPoints) {
+        LocalSeismogramImpl other = new LocalSeismogramImpl(seis,
+                                                            new int[numPoints]);
+        other.sampling_info = new SamplingImpl(other.getNumPoints(),
+                                               seis.getTimeInterval());
+        return other;
+    }
+
+    public void testOnSeismogramsWithVaryingSamplingALaPond()
+            throws FissuresException, ParseException {
+        String[][] seisTimes = new String[][] { {"2003.01.06 23:50:07.483",
+                                                 "2003.01.07 00:08:08.334"},
+                                               {"2003.01.06 23:51:59.483",
+                                                "2003.01.07 00:06:18.234"},
+                                               {"2003.01.06 23:49:21.983",
+                                                "2003.01.07 00:06:16.734"}};
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
+        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        LocalSeismogramImpl[][] vector = new LocalSeismogramImpl[seisTimes.length][1];
+        for(int i = 0; i < seisTimes.length; i++) {
+            MicroSecondDate start = new MicroSecondDate(timeFormat.parse(seisTimes[i][0]));
+            MicroSecondDate end = new MicroSecondDate(timeFormat.parse(seisTimes[i][1]));
+            vector[i][0] = SimplePlotUtil.createRaggedSpike(start,
+                                                            end.subtract(start),
+                                                            20,
+                                                            0,
+                                                            MockChannelId.createVerticalChanId(),
+                                                            20 - i / 133.0);
+        }
+        trimmer.normalizeSampling(vector);
+        MicroSecondDate start = vector[1][0].getBeginTime();
+        MicroSecondDate end = vector[2][0].getEndTime();
+        checkCut(vector, start, end); 
+        Cut cut = trimmer.findSmallestCoveringCuts(vector)[0];
+        checkTrim(trimmer.trim(vector), new MicroSecondTimeRange(cut.getBegin(), cut.getEnd()));
     }
 
     private LocalSeismogramImpl createSpike() {
