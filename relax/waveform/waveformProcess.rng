@@ -27,28 +27,6 @@
                 <include/>
                 <velocity>#waveformArmPage()</velocity>
             </xsd:annotation>
-            <ref name="vectorSafeProcesses"/>
-            <ref name="retryAndContinue"/>
-            <ref name="retryAndFail"/>
-        </choice>
-    </define>
-    <define name="vectorSafeProcesses">
-        <choice>
-            <xsd:annotation>
-                <summary>All of the items that process seismograms</summary>
-                <description>At this point in the waveform arm, data has been retrieved. Therefore,
-                    these items all work on the received data. Some of them like rMean and rTrend
-                    perform manipulations on the data. Others like saveSeismogramToFile and
-                    seismogramImageProcess write out information based on the data. Some like
-                    fullDataCoverage and phaseSignalToNoise subset the items based on the
-                    data&apos;s properties. If several items are used, the data from each step
-                    feeds into the next. So if a seismogramImageProcessor follows a phaseCut the
-                    image drawn will be of the data after the cut. If you don&apos;t want a
-                    processor&apos;s work to effect later steps use the forkProcess to isolate
-                    it.</description>
-                <include/>
-                <velocity>#waveformArmPage()</velocity>
-            </xsd:annotation>
             <ref name="printlineSeismogramProcess"/>
             <ref name="sacWriter"/>
             <ref name="mseedWriter"/>
@@ -888,16 +866,6 @@
                     <data type="float"/>
                 </element>
             </optional>
-        </element>
-    </define>
-    <define name="retryAndContinue">
-        <element name="retryAndContinue">
-            <ref name="seismogramProcess"/>
-        </element>
-    </define>
-    <define name="retryAndFail">
-        <element name="retryAndFail">
-            <ref name="seismogramProcess"/>
         </element>
     </define>
 </grammar>
