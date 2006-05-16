@@ -1,6 +1,7 @@
 package edu.sc.seis.sod.database;
 
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import junit.framework.TestCase;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
@@ -16,6 +17,8 @@ import edu.sc.seis.sod.Status;
 import edu.sc.seis.sod.database.waveform.JDBCEventChannelStatus;
 
 public class JDBCRetryQueueTest extends TestCase {
+
+    private static final TimeInterval ZERO_TIME = new TimeInterval(0, UnitImpl.MINUTE);
 
     public JDBCRetryQueueTest() {
         BasicConfigurator.configure(new NullAppender());
@@ -38,12 +41,13 @@ public class JDBCRetryQueueTest extends TestCase {
         try {
             queue.next();
             assertTrue(false);
-        } catch(SQLException e) {
+        } catch(NoSuchElementException e) {
             // Next blows up if no data in table
         }
     }
 
     public void testMaxRetries() throws SQLException {
+        queue.setHasNextWaitOnEmpty(ZERO_TIME);
         queue.setMaxRetries(20);
         for(int i = 0; i < 20; i++) {
             queue.retry(statusId);
@@ -66,6 +70,7 @@ public class JDBCRetryQueueTest extends TestCase {
     }
 
     public void testMinRetries() throws SQLException {
+        queue.setHasNextWaitOnEmpty(ZERO_TIME);
         queue.setMaxRetries(20);
         queue.setLastRetryTime(ClockUtil.now());
         queue.retry(statusId);
@@ -75,11 +80,12 @@ public class JDBCRetryQueueTest extends TestCase {
     }
 
     public void testMinRetryWait() throws SQLException {
+        queue.setHasNextWaitOnEmpty(ZERO_TIME);
         queue.setMinRetryWait(new TimeInterval(1, UnitImpl.MINUTE));
         queue.retry(statusId);
         assertTrue(queue.willHaveNext());
         assertFalse(queue.hasNext());
-        queue.setMinRetryWait(new TimeInterval(0, UnitImpl.MINUTE));
+        queue.setMinRetryWait(ZERO_TIME);
         assertTrue(queue.willHaveNext());
         assertTrue(queue.hasNext());
     }

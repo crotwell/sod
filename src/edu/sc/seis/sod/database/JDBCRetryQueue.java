@@ -4,6 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.TimeInterval;
 import edu.iris.Fissures.model.TimeUtils;
@@ -33,10 +36,24 @@ public class JDBCRetryQueue extends JDBCTable {
      * returns true if an item will be returned by next
      */
     public synchronized boolean hasNext() throws SQLException {
+        if(retries.size() > 0) {
+            return true;
+        }
+        if(nextHasNextCheck.after(ClockUtil.now())) {
+            return false;
+        }
         int curPos = fillInWillHaveParams(hasNext, 1);
         MicroSecondDate now = ClockUtil.now();
         hasNext.setTimestamp(curPos, now.subtract(minRetryWait).getTimestamp());
-        return hasNext.executeQuery().next();
+        ResultSet rs = hasNext.executeQuery();
+        retries = new ArrayList();
+        while(rs.next()) {
+            retries.add(new Integer(rs.getInt("id")));
+        }
+        if(retries.size() == 0) {
+            nextHasNextCheck = ClockUtil.now().add(hasNextWaitOnEmpty);
+        }
+        return retries.size() > 0;
     }
 
     private int fillInWillHaveParams(PreparedStatement ps, int startPos)
@@ -61,6 +78,7 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setLastRetryTime(MicroSecondDate lastTimeToRetry) {
         lastRetry = lastTimeToRetry;
+        retries = new ArrayList();
     }
 
     /**
@@ -71,6 +89,7 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setMinRetries(int min) {
         minRetries = min;
+        retries = new ArrayList();
     }
 
     /**
@@ -81,6 +100,7 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setMaxRetries(int max) {
         maxRetries = max;
+        retries = new ArrayList();
     }
 
     /**
@@ -90,6 +110,7 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setMinRetryWait(TimeInterval wait) {
         minRetryWait = wait;
+        retries = new ArrayList();
     }
 
     /**
@@ -104,6 +125,11 @@ public class JDBCRetryQueue extends JDBCTable {
      */
     public void setEventDataLag(TimeInterval lag) {
         eventDataLag = lag;
+        retries = new ArrayList();
+    }
+
+    public void setHasNextWaitOnEmpty(TimeInterval wait) {
+        hasNextWaitOnEmpty = wait;
     }
 
     /**
@@ -127,19 +153,23 @@ public class JDBCRetryQueue extends JDBCTable {
 
     /**
      * returns the next item to be retried. Should only be called after hasNext
-     * has been called or if there is no next, an SQLException will be thrown.
+     * has been called
      * 
      * this item won't be returned from next unless retry is called again
+     * 
+     * @exception NoSuchElementException
+     *                if there are no more retries
      */
     public synchronized int next() throws SQLException {
-        next.setInt(1, maxRetries);
-        ResultSet rs = next.executeQuery();
-        rs.next();
-        updateNext.setTimestamp(1, beingRetried);
-        int id = rs.getInt("id");
-        updateNext.setInt(2, id);
-        updateNext.executeUpdate();
-        return id;
+        try {
+            int id = ((Integer)retries.remove(0)).intValue();
+            updateNext.setTimestamp(1, beingRetried);
+            updateNext.setInt(2, id);
+            updateNext.executeUpdate();
+            return id;
+        } catch(IndexOutOfBoundsException e) {
+            throw new NoSuchElementException("No more retries!");
+        }
     }
 
     private int maxRetries = 1, minRetries = 0;
@@ -150,8 +180,16 @@ public class JDBCRetryQueue extends JDBCTable {
 
     private TimeInterval minRetryWait = new TimeInterval(0, UnitImpl.SECOND);
 
-    private TimeInterval eventDataLag = new TimeInterval(1000 * 52, UnitImpl.WEEK);
+    private TimeInterval eventDataLag = new TimeInterval(1000 * 52,
+                                                         UnitImpl.WEEK);
 
-    private PreparedStatement next, hasNext, get, insert, updateNext,
-            updateRetry, willHaveNext;
+    private TimeInterval hasNextWaitOnEmpty = new TimeInterval(5,
+                                                               UnitImpl.MINUTE);
+
+    private PreparedStatement hasNext, get, insert, updateNext, updateRetry,
+            willHaveNext;
+
+    private List retries = new ArrayList();
+
+    private MicroSecondDate nextHasNextCheck = ClockUtil.now();
 }

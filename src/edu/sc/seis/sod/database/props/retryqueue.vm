@@ -7,7 +7,7 @@ ${tablename}.next=SELECT TOP 1 id FROM ${tablename} WHERE numretries < ? \
                   
 #set($willHave = '')
 
-#set($hasNextBase = "SELECT TOP 1 id FROM ${tablename} \
+#set($hasNextBase = "SELECT TOP 1000 id FROM ${tablename} \
 JOIN eventchannelstatus ON (id = pairid) \
 JOIN eventaccess ON (eventid = event_id) \
 JOIN origin ON (eventaccess.origin_id = origin.origin_id) \
