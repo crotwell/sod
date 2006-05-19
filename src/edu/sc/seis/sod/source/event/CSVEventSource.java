@@ -244,5 +244,6 @@ public class CSVEventSource extends SimpleEventSource {
                                                          FE_GEO_REGION,
                                                          FE_REGION,
                                                          FE_REGION_TYPE,
-                                                         DEPTH_UNITS};
+                                                         DEPTH_UNITS,
+                                                         MAGNITUDE_TYPE};
 }
