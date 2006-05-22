@@ -276,9 +276,9 @@ public class SodUtil {
         return new Time(getNestedText(el), 0);
     }
 
-    private static Time loadSplitupTime(Element element, boolean endOfDay) {
+    private static Time loadSplitupTime(Element element, boolean endOfDay)
+            throws ConfigurationException {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.setTime(ClockUtil.now());
         if(endOfDay) {
             cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MILLISECOND, 999);
@@ -293,14 +293,29 @@ public class SodUtil {
         if(DOMHelper.hasElement(element, "year")) {
             cal.set(Calendar.YEAR,
                     Integer.parseInt(DOMHelper.extractText(element, "year")));
-        }
-        if(DOMHelper.hasElement(element, "month")) {
-            cal.set(Calendar.MONTH,
-                    Integer.parseInt(DOMHelper.extractText(element, "month")) - 1);
-        }
-        if(DOMHelper.hasElement(element, "day")) {
-            cal.set(Calendar.DAY_OF_MONTH,
-                    Integer.parseInt(DOMHelper.extractText(element, "day")));
+            if(DOMHelper.hasElement(element, "month")) {
+                cal.set(Calendar.MONTH,
+                        Integer.parseInt(DOMHelper.extractText(element, "month")) - 1);
+               
+                if(DOMHelper.hasElement(element, "day")) {
+                    cal.set(Calendar.DAY_OF_MONTH,
+                            Integer.parseInt(DOMHelper.extractText(element,
+                                                                   "day")));
+                } else if(endOfDay) {
+                    cal.set(Calendar.DAY_OF_MONTH,
+                            cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                } else {
+                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                }
+            } else if(endOfDay) {
+                cal.set(Calendar.DAY_OF_YEAR, 
+                        cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+            } else {
+                cal.set(Calendar.DAY_OF_YEAR, 1);
+            }
+        } else {
+            throw new ConfigurationException("No year given"
+                    + element.toString());
         }
         return new MicroSecondDate(cal.getTime()).getFissuresTime();
     }
