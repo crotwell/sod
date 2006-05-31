@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry output="target/test-classes" kind="src" path="test/unit"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fissuresUtil"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/fissuresUtil1"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/activation/jars/activation-1.0.2.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.2.jar"/>
 	<classpathentry exported="true" kind="var" path="MAVEN_REPO/nachocalendar/jars/nachocalendar-0.21_USC1.jar"/>
