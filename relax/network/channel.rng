@@ -439,16 +439,17 @@
                     If no template element is given, it defaults to "Channel: $channel".
                     If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
             <optional>
                 <element name="filename">
                     <text/>
                 </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            </optional></interleave>
         </element>
     </define>
     <define name="stationHas">

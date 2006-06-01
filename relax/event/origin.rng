@@ -359,6 +359,7 @@
                     If no template element is given, it defaults to "$event.region ($event.latitude, $event.longitude) $event.time $event.magnitude".
                     If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
+            <interleave>
             <optional>
                 <element name="template">
                     <text/>
@@ -369,6 +370,7 @@
                     <text/>
                 </element>
             </optional>
+            </interleave>
         </element>
     </define>
     <define name="CSVEventPrinter">

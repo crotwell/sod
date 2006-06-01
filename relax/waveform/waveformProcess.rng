@@ -369,7 +369,7 @@
                     another list of <a href="../../templateTypes.html#request">request</a> named availableRequests that are the requests the server said were available for retrieval, 
                                         <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
                     and <a href="../../templateTypes.html#net">net</a> variables.
-                    If no template element is given, it defaults to "Event_${event.getTime('yyyy_MM_dd_HH_mm_SS')}/${channel.codes}.mseed".
+                    If no template element is given, it defaults to "Event_${event.getTime('yyyy_MM_dd_HH_mm_ss')}/${channel.codes}.mseed".
                    The value generated with location is appended to the value in workingDir to make the full location.
                     </description>
                 <example>
@@ -597,6 +597,7 @@
                     If no filename is given, the output goes to standard out.</description>
                 <include/>
             </xsd:annotation>
+            <interleave>
             <optional>
                 <element name="template">
                     <text/>
@@ -607,6 +608,7 @@
                     <text/>
                 </element>
             </optional>
+            </interleave>
         </element>
     </define>
     <define name="localSeismogramStatus">
