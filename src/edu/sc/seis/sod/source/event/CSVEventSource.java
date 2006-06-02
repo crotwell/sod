@@ -35,14 +35,14 @@ import edu.sc.seis.sod.UserConfigurationException;
 public class CSVEventSource extends SimpleEventSource {
 
     public CSVEventSource(Element config) throws ConfigurationException {
-        String filename = DOMHelper.extractText(config, "filename");
+        csvFilename = DOMHelper.extractText(config, "filename");
         try {
-            events = getEventsFromCSVFile(filename);
+            events = getEventsFromCSVFile(csvFilename);
         } catch(FileNotFoundException e) {
-            throw new UserConfigurationException("CSV event file '" + filename
+            throw new UserConfigurationException("CSV event file '" + csvFilename
                     + "' not found.");
         } catch(IOException e) {
-            throw new ConfigurationException("Unable to read " + filename, e);
+            throw new ConfigurationException("Unable to read " + csvFilename, e);
         }
     }
 
@@ -198,6 +198,10 @@ public class CSVEventSource extends SimpleEventSource {
         }
         return false;
     }
+    
+    public String toString(){
+        return "CSVEventSource using " + csvFilename;
+    }
 
     private CacheEvent[] events;
 
@@ -246,4 +250,8 @@ public class CSVEventSource extends SimpleEventSource {
                                                          FE_REGION_TYPE,
                                                          DEPTH_UNITS,
                                                          MAGNITUDE_TYPE};
+
+    private String csvFilename;
+    
+    
 }

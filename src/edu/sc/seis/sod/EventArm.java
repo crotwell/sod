@@ -56,6 +56,11 @@ public class EventArm implements Arm {
 
     public void run() {
         try {
+            for(Iterator iter = sources.iterator(); iter.hasNext();) {
+                EventSource source = (EventSource)iter.next();
+                logger.debug(source + " covers events from "
+                        + source.getEventTimeRange());
+            }
             getEvents();
         } catch(Throwable e) {
             GlobalExceptionHandler.handle("Exception caught while processing the EventArm",
@@ -95,8 +100,6 @@ public class EventArm implements Arm {
             Iterator it = sources.iterator();
             while(it.hasNext()) {
                 EventSource source = (EventSource)it.next();
-                logger.debug("getting events from "
-                        + source.getEventTimeRange());
                 if(source.hasNext()) {
                     logger.debug(source + " has more events");
                     TimeInterval wait = source.getWaitBeforeNext();

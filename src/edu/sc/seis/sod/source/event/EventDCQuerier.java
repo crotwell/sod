@@ -138,6 +138,10 @@ public class EventDCQuerier {
         }
         return cached;
     }
+    
+    public String toString(){
+        return "EventDCQuerier(" + serverDNS + "/" + serverName + ")";
+    }
 
     private int sequenceMaximum = 100;
 

@@ -164,6 +164,10 @@ public class EventFinder extends AbstractSource implements EventSource {
                                        e);
         }
     }
+    
+    public String toString(){
+      return "EventFinder source on " + querier;
+    }
 
     private EventDCQuerier querier;
 
