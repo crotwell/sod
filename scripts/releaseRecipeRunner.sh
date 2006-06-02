@@ -29,8 +29,9 @@ cat network.out | wc -l > ${DOCDIR}/completeSubset
 
 VERSION=2.1.2rc2
 DIR=sod-${VERSION}
-sod.py -o . --tar --release
-tar xzf ${DIR}.tar.gz
+FILE=${DIR}.tar.gz 
+curl -o ${FILE} http://www.seis.sc.edu/downloads/sod/${VERSION}/${FILE}
+xzf ${FILE}
 export SOD_HOME=`pwd`/${DIR}
 echo $SOD_HOME
 export PATH=${SOD_HOME}/bin:$PATH
