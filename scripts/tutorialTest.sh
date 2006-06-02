@@ -29,7 +29,7 @@ cat network.out | wc -l > ${DOCDIR}/completeSubset
 
 VERSION=2.1.2rc2
 DIR=sod-${VERSION}
-sod.py -o . --tar
+sod.py -o . --tar --release
 tar xzf ${DIR}.tar.gz
 export SOD_HOME=`pwd`/${DIR}
 echo $SOD_HOME
