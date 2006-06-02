@@ -169,11 +169,13 @@
                     Template defaults to "Got $availableRequests.size()".
                 </description>
             </xsd:annotation>
+            <interleave>
           <optional>  <element name="template">
               <text/></element></optional>
             <optional>
                 <element name="filename">
                     <text/></element></optional>
+            </interleave>
         </element>
     </define>
 </grammar>
