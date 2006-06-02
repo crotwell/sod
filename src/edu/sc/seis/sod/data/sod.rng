@@ -19673,8 +19673,8 @@
     </define>
     <define name="seismogramProcess3">
         <choice>
-            <choice>
-                <element name="printlineSeismogramProcess">
+            <element name="printlineSeismogramProcess">
+                <interleave>
                     <optional>
                         <element name="template">
                             <text/>
@@ -19685,476 +19685,470 @@
                             <text/>
                         </element>
                     </optional>
+                </interleave>
+            </element>
+            <element name="sacWriter">
+                <ref name="seisWriterBase3"/>
+                <zeroOrMore>
+                    <element name="phaseTimeHeader">
+                        <ref name="phaseTimeContents3"/>
+                    </element>
+                </zeroOrMore>
+            </element>
+            <element name="mseedWriter">
+                <ref name="seisWriterBase3"/>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <element name="id">
+                    <data type="string"/>
                 </element>
-                <element name="sacWriter">
-                    <ref name="seisWriterBase3"/>
-                    <zeroOrMore>
-                        <element name="phaseTimeHeader">
-                            <ref name="phaseTimeContents3"/>
-                        </element>
-                    </zeroOrMore>
-                </element>
-                <element name="mseedWriter">
-                    <ref name="seisWriterBase3"/>
-                </element>
-                <element name="recordSectionDisplayGenerator">
-                    <element name="id">
+                <optional>
+                    <element name="saveSeisId">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="saveSeisId">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileNameBase">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="idealNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="maxNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="distanceRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="percentSeisHeight">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="recordSectionSize">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
-                            </element>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference4"/>
-                            <element name="type">
-                                <value>recordSection</value>
-                            </element>
-                            <optional>
-                                <element name="swapAxes">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed3"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors3"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors3"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground3"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor3"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border3"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig4"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig4"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="responseGain">
-                    <empty/>
-                </element>
-                <element name="phaseCut">
-                    <ref name="phaseWindow3"/>
-                </element>
-                <element name="merge">
-                    <empty/>
-                </element>
-                <element name="rMean">
-                    <empty/>
-                </element>
-                <element name="rTrend">
-                    <empty/>
-                </element>
-                <element name="taper">
-                    <optional>
-                        <element name="width">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="type">
-                            <choice>
-                                <value>HANNING</value>
-                                <value>HAMMING</value>
-                                <value>COSINE</value>
-                            </choice>
-                        </element>
-                    </optional>
-                </element>
-                <element name="externalWaveformProcess">
-                    <element name="classname">
+                </optional>
+                <optional>
+                    <element name="fileNameBase">
                         <data type="string"/>
                     </element>
-                    <oneOrMore>
-                        <choice>
-                            <text/>
-                            <ref name="xml90"/>
-                        </choice>
-                    </oneOrMore>
-                </element>
-                <element name="localSeismogramTemplateGenerator">
-                    <element name="template">
-                        <data type="string"/>
-                    </element>
-                </element>
-                <element name="filter">
-                    <element name="lowFreqCorner">
-                        <ref name="cornerSetting3"/>
-                    </element>
-                    <element name="highFreqCorner">
-                        <ref name="cornerSetting3"/>
-                    </element>
-                    <element name="numPoles">
+                </optional>
+                <optional>
+                    <element name="idealNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
-                    <element name="filterType">
-                        <choice>
-                            <value>NONCAUSAL</value>
-                            <value>CAUSAL</value>
-                            <value>TWOPASS</value>
-                        </choice>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
+                        <data type="integer"/>
                     </element>
-                </element>
-                <element name="forkProcess">
-                    <oneOrMore>
-                        <ref name="seismogramProcess3"/>
-                    </oneOrMore>
-                </element>
-                <element name="alwaysSuccess">
-                    <ref name="seismogramProcess3"/>
-                </element>
-                <element name="phaseSignalToNoise">
-                    <optional>
-                        <element name="modelName">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="distanceRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="percentSeisHeight">
+                        <data type="double"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="recordSectionSize">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <element name="phaseName">
-                        <data type="string"/>
+                        <element name="height">
+                            <data type="integer"/>
+                        </element>
                     </element>
-                    <element name="shortOffsetBegin">
-                        <ref name="time68"/>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference4"/>
+                        <element name="type">
+                            <value>recordSection</value>
+                        </element>
+                        <optional>
+                            <element name="swapAxes">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed3"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor3"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border3"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig4"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig4"/>
+                        </optional>
                     </element>
-                    <element name="shortOffsetEnd">
-                        <ref name="time68"/>
-                    </element>
-                    <element name="longOffsetBegin">
-                        <ref name="time68"/>
-                    </element>
-                    <element name="longOffsetEnd">
-                        <ref name="time68"/>
-                    </element>
-                    <element name="ratio">
+                </optional>
+            </element>
+            <element name="responseGain">
+                <empty/>
+            </element>
+            <element name="phaseCut">
+                <ref name="phaseWindow3"/>
+            </element>
+            <element name="merge">
+                <empty/>
+            </element>
+            <element name="rMean">
+                <empty/>
+            </element>
+            <element name="rTrend">
+                <empty/>
+            </element>
+            <element name="taper">
+                <optional>
+                    <element name="width">
                         <data type="float"/>
                     </element>
-                </element>
-                <element name="seismogramImageProcess">
-                    <optional>
-                        <element name="phaseWindow">
-                            <ref name="phaseWindow3"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileDir">
-                            <oneOrMore>
-                                <choice>
-                                    <text/>
-                                    <ref name="xml89"/>
-                                </choice>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
+                </optional>
+                <optional>
+                    <element name="type">
                         <choice>
-                            <element name="seismogramConfig">
-                                <element name="template">
-                                    <data type="string"/>
-                                </element>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="externalWaveformProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml90"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="localSeismogramTemplateGenerator">
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="filter">
+                <element name="lowFreqCorner">
+                    <ref name="cornerSetting3"/>
+                </element>
+                <element name="highFreqCorner">
+                    <ref name="cornerSetting3"/>
+                </element>
+                <element name="numPoles">
+                    <data type="integer"/>
+                </element>
+                <element name="filterType">
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="forkProcess">
+                <oneOrMore>
+                    <ref name="seismogramProcess3"/>
+                </oneOrMore>
+            </element>
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess3"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time68"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time68"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time68"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time68"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow3"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileDir">
+                        <oneOrMore>
+                            <choice>
+                                <text/>
+                                <ref name="xml89"/>
+                            </choice>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
                             </element>
-                            <element name="outputLocationCreators">
-                                <element name="eventDir">
-                                    <oneOrMore>
+                        </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml88"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="stationDir">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml87"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="picName">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml86"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                            </element>
-                        </choice>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="putDataInCookieJar">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>png</value>
-                                <value>pdf</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dimension">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
+                                </oneOrMore>
                             </element>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="showOnlyFirstArrivals">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseNameMappings">
-                            <oneOrMore>
-                                <element name="mapping">
-                                    <element name="pattern">
-                                    <data type="string"/>
-                                    </element>
-                                    <element name="replacement">
-                                    <data type="string"/>
-                                    </element>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseFlags">
-                            <oneOrMore>
-                                <element name="phase">
-                                    <ref name="phaseName4"/>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference4"/>
-                            <optional>
-                                <element name="type">
-                                    <value>basic</value>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed3"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors3"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors3"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground3"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor3"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border3"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig4"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig4"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="legacyExecute">
-                    <optional>
-                        <element name="writerName">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <element name="command">
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="prefix">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="workingDirectory">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="putDataInCookieJar">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dimension">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                </element>
-                <element name="seismogramAND">
-                    <oneOrMore>
-                        <ref name="seismogramProcess3"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramOR">
-                    <oneOrMore>
-                        <ref name="seismogramProcess3"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramNOT">
-                    <ref name="seismogramProcess3"/>
-                </element>
-                <element name="someDataCoverage">
-                    <empty/>
-                </element>
-                <element name="noDataGaps">
-                    <empty/>
-                </element>
-                <element name="fullDataCoverage">
-                    <empty/>
-                </element>
-                <element name="integrate">
-                    <empty/>
-                </element>
-                <element name="embeddedEventChannelProcessor">
-                    <ref name="eventChannel5"/>
-                </element>
-                <element name="transferResponse">
-                    <optional>
-                        <element name="lowCut">
-                            <data type="float"/>
+                        <element name="height">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="lowPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highCut">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                </element>
-                <element name="saveSeismogramToFile">
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>sac</value>
-                                <value>mseed</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dataDirectory">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventDirLabel">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="id">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="preserveRequest">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="storeSeismogramsInDB">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="sacHeader">
-                            <zeroOrMore>
-                                <element name="phaseTime">
-                                    <ref name="phaseTimeContents3"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="showOnlyFirstArrivals">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseNameMappings">
+                        <oneOrMore>
+                            <element name="mapping">
+                                <element name="pattern">
+                                    <data type="string"/>
                                 </element>
-                            </zeroOrMore>
-                        </element>
-                    </optional>
+                                <element name="replacement">
+                                    <data type="string"/>
+                                </element>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseFlags">
+                        <oneOrMore>
+                            <element name="phase">
+                                <ref name="phaseName4"/>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference4"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed3"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground3"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor3"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border3"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig4"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig4"/>
+                        </optional>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="writerName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
                 </element>
-            </choice>
-            <element name="retryAndContinue">
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess3"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess3"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramNOT">
                 <ref name="seismogramProcess3"/>
             </element>
-            <element name="retryAndFail">
-                <ref name="seismogramProcess3"/>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
+            <element name="integrate">
+                <empty/>
+            </element>
+            <element name="embeddedEventChannelProcessor">
+                <ref name="eventChannel5"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="saveSeismogramToFile">
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <ref name="phaseTimeContents3"/>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
     <define name="seismogramProcess">
         <choice>
-            <choice>
-                <element name="printlineSeismogramProcess">
+            <element name="printlineSeismogramProcess">
+                <interleave>
                     <optional>
                         <element name="template">
                             <text/>
@@ -20165,476 +20159,470 @@
                             <text/>
                         </element>
                     </optional>
+                </interleave>
+            </element>
+            <element name="sacWriter">
+                <ref name="seisWriterBase"/>
+                <zeroOrMore>
+                    <element name="phaseTimeHeader">
+                        <ref name="phaseTimeContents"/>
+                    </element>
+                </zeroOrMore>
+            </element>
+            <element name="mseedWriter">
+                <ref name="seisWriterBase"/>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <element name="id">
+                    <data type="string"/>
                 </element>
-                <element name="sacWriter">
-                    <ref name="seisWriterBase"/>
-                    <zeroOrMore>
-                        <element name="phaseTimeHeader">
-                            <ref name="phaseTimeContents"/>
-                        </element>
-                    </zeroOrMore>
-                </element>
-                <element name="mseedWriter">
-                    <ref name="seisWriterBase"/>
-                </element>
-                <element name="recordSectionDisplayGenerator">
-                    <element name="id">
+                <optional>
+                    <element name="saveSeisId">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="saveSeisId">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileNameBase">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="idealNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="maxNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="distanceRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="percentSeisHeight">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="recordSectionSize">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
-                            </element>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference2"/>
-                            <element name="type">
-                                <value>recordSection</value>
-                            </element>
-                            <optional>
-                                <element name="swapAxes">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig2"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig2"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="responseGain">
-                    <empty/>
-                </element>
-                <element name="phaseCut">
-                    <ref name="phaseWindow"/>
-                </element>
-                <element name="merge">
-                    <empty/>
-                </element>
-                <element name="rMean">
-                    <empty/>
-                </element>
-                <element name="rTrend">
-                    <empty/>
-                </element>
-                <element name="taper">
-                    <optional>
-                        <element name="width">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="type">
-                            <choice>
-                                <value>HANNING</value>
-                                <value>HAMMING</value>
-                                <value>COSINE</value>
-                            </choice>
-                        </element>
-                    </optional>
-                </element>
-                <element name="externalWaveformProcess">
-                    <element name="classname">
+                </optional>
+                <optional>
+                    <element name="fileNameBase">
                         <data type="string"/>
                     </element>
-                    <oneOrMore>
-                        <choice>
-                            <text/>
-                            <ref name="xml54"/>
-                        </choice>
-                    </oneOrMore>
-                </element>
-                <element name="localSeismogramTemplateGenerator">
-                    <element name="template">
-                        <data type="string"/>
-                    </element>
-                </element>
-                <element name="filter">
-                    <element name="lowFreqCorner">
-                        <ref name="cornerSetting"/>
-                    </element>
-                    <element name="highFreqCorner">
-                        <ref name="cornerSetting"/>
-                    </element>
-                    <element name="numPoles">
+                </optional>
+                <optional>
+                    <element name="idealNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
-                    <element name="filterType">
-                        <choice>
-                            <value>NONCAUSAL</value>
-                            <value>CAUSAL</value>
-                            <value>TWOPASS</value>
-                        </choice>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
+                        <data type="integer"/>
                     </element>
-                </element>
-                <element name="forkProcess">
-                    <oneOrMore>
-                        <ref name="seismogramProcess"/>
-                    </oneOrMore>
-                </element>
-                <element name="alwaysSuccess">
-                    <ref name="seismogramProcess"/>
-                </element>
-                <element name="phaseSignalToNoise">
-                    <optional>
-                        <element name="modelName">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="distanceRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="percentSeisHeight">
+                        <data type="double"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="recordSectionSize">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <element name="phaseName">
-                        <data type="string"/>
+                        <element name="height">
+                            <data type="integer"/>
+                        </element>
                     </element>
-                    <element name="shortOffsetBegin">
-                        <ref name="time42"/>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference2"/>
+                        <element name="type">
+                            <value>recordSection</value>
+                        </element>
+                        <optional>
+                            <element name="swapAxes">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig2"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig2"/>
+                        </optional>
                     </element>
-                    <element name="shortOffsetEnd">
-                        <ref name="time42"/>
-                    </element>
-                    <element name="longOffsetBegin">
-                        <ref name="time42"/>
-                    </element>
-                    <element name="longOffsetEnd">
-                        <ref name="time42"/>
-                    </element>
-                    <element name="ratio">
+                </optional>
+            </element>
+            <element name="responseGain">
+                <empty/>
+            </element>
+            <element name="phaseCut">
+                <ref name="phaseWindow"/>
+            </element>
+            <element name="merge">
+                <empty/>
+            </element>
+            <element name="rMean">
+                <empty/>
+            </element>
+            <element name="rTrend">
+                <empty/>
+            </element>
+            <element name="taper">
+                <optional>
+                    <element name="width">
                         <data type="float"/>
                     </element>
-                </element>
-                <element name="seismogramImageProcess">
-                    <optional>
-                        <element name="phaseWindow">
-                            <ref name="phaseWindow"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileDir">
-                            <oneOrMore>
-                                <choice>
-                                    <text/>
-                                    <ref name="xml53"/>
-                                </choice>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
+                </optional>
+                <optional>
+                    <element name="type">
                         <choice>
-                            <element name="seismogramConfig">
-                                <element name="template">
-                                    <data type="string"/>
-                                </element>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="externalWaveformProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml54"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="localSeismogramTemplateGenerator">
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="filter">
+                <element name="lowFreqCorner">
+                    <ref name="cornerSetting"/>
+                </element>
+                <element name="highFreqCorner">
+                    <ref name="cornerSetting"/>
+                </element>
+                <element name="numPoles">
+                    <data type="integer"/>
+                </element>
+                <element name="filterType">
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="forkProcess">
+                <oneOrMore>
+                    <ref name="seismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time42"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time42"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time42"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time42"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileDir">
+                        <oneOrMore>
+                            <choice>
+                                <text/>
+                                <ref name="xml53"/>
+                            </choice>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
                             </element>
-                            <element name="outputLocationCreators">
-                                <element name="eventDir">
-                                    <oneOrMore>
+                        </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml52"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="stationDir">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml51"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="picName">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml50"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                            </element>
-                        </choice>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="putDataInCookieJar">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>png</value>
-                                <value>pdf</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dimension">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
+                                </oneOrMore>
                             </element>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="showOnlyFirstArrivals">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseNameMappings">
-                            <oneOrMore>
-                                <element name="mapping">
-                                    <element name="pattern">
-                                    <data type="string"/>
-                                    </element>
-                                    <element name="replacement">
-                                    <data type="string"/>
-                                    </element>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseFlags">
-                            <oneOrMore>
-                                <element name="phase">
-                                    <ref name="phaseName2"/>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference2"/>
-                            <optional>
-                                <element name="type">
-                                    <value>basic</value>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig2"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig2"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="legacyExecute">
-                    <optional>
-                        <element name="writerName">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <element name="command">
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="prefix">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="workingDirectory">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="putDataInCookieJar">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dimension">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                </element>
-                <element name="seismogramAND">
-                    <oneOrMore>
-                        <ref name="seismogramProcess"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramOR">
-                    <oneOrMore>
-                        <ref name="seismogramProcess"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramNOT">
-                    <ref name="seismogramProcess"/>
-                </element>
-                <element name="someDataCoverage">
-                    <empty/>
-                </element>
-                <element name="noDataGaps">
-                    <empty/>
-                </element>
-                <element name="fullDataCoverage">
-                    <empty/>
-                </element>
-                <element name="integrate">
-                    <empty/>
-                </element>
-                <element name="embeddedEventChannelProcessor">
-                    <ref name="eventChannel3"/>
-                </element>
-                <element name="transferResponse">
-                    <optional>
-                        <element name="lowCut">
-                            <data type="float"/>
+                        <element name="height">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="lowPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highCut">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                </element>
-                <element name="saveSeismogramToFile">
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>sac</value>
-                                <value>mseed</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dataDirectory">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventDirLabel">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="id">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="preserveRequest">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="storeSeismogramsInDB">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="sacHeader">
-                            <zeroOrMore>
-                                <element name="phaseTime">
-                                    <ref name="phaseTimeContents"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="showOnlyFirstArrivals">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseNameMappings">
+                        <oneOrMore>
+                            <element name="mapping">
+                                <element name="pattern">
+                                    <data type="string"/>
                                 </element>
-                            </zeroOrMore>
-                        </element>
-                    </optional>
+                                <element name="replacement">
+                                    <data type="string"/>
+                                </element>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseFlags">
+                        <oneOrMore>
+                            <element name="phase">
+                                <ref name="phaseName2"/>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference2"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig2"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig2"/>
+                        </optional>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="writerName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
                 </element>
-            </choice>
-            <element name="retryAndContinue">
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramNOT">
                 <ref name="seismogramProcess"/>
             </element>
-            <element name="retryAndFail">
-                <ref name="seismogramProcess"/>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
+            <element name="integrate">
+                <empty/>
+            </element>
+            <element name="embeddedEventChannelProcessor">
+                <ref name="eventChannel3"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="saveSeismogramToFile">
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <ref name="phaseTimeContents"/>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
     <define name="seismogramProcess2">
         <choice>
-            <choice>
-                <element name="printlineSeismogramProcess">
+            <element name="printlineSeismogramProcess">
+                <interleave>
                     <optional>
                         <element name="template">
                             <text/>
@@ -20645,476 +20633,470 @@
                             <text/>
                         </element>
                     </optional>
+                </interleave>
+            </element>
+            <element name="sacWriter">
+                <ref name="seisWriterBase2"/>
+                <zeroOrMore>
+                    <element name="phaseTimeHeader">
+                        <ref name="phaseTimeContents2"/>
+                    </element>
+                </zeroOrMore>
+            </element>
+            <element name="mseedWriter">
+                <ref name="seisWriterBase2"/>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <element name="id">
+                    <data type="string"/>
                 </element>
-                <element name="sacWriter">
-                    <ref name="seisWriterBase2"/>
-                    <zeroOrMore>
-                        <element name="phaseTimeHeader">
-                            <ref name="phaseTimeContents2"/>
-                        </element>
-                    </zeroOrMore>
-                </element>
-                <element name="mseedWriter">
-                    <ref name="seisWriterBase2"/>
-                </element>
-                <element name="recordSectionDisplayGenerator">
-                    <element name="id">
+                <optional>
+                    <element name="saveSeisId">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="saveSeisId">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileNameBase">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="idealNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="maxNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="distanceRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="percentSeisHeight">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="recordSectionSize">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
-                            </element>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference3"/>
-                            <element name="type">
-                                <value>recordSection</value>
-                            </element>
-                            <optional>
-                                <element name="swapAxes">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed2"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors2"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors2"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground2"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor2"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border2"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig3"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig3"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="responseGain">
-                    <empty/>
-                </element>
-                <element name="phaseCut">
-                    <ref name="phaseWindow2"/>
-                </element>
-                <element name="merge">
-                    <empty/>
-                </element>
-                <element name="rMean">
-                    <empty/>
-                </element>
-                <element name="rTrend">
-                    <empty/>
-                </element>
-                <element name="taper">
-                    <optional>
-                        <element name="width">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="type">
-                            <choice>
-                                <value>HANNING</value>
-                                <value>HAMMING</value>
-                                <value>COSINE</value>
-                            </choice>
-                        </element>
-                    </optional>
-                </element>
-                <element name="externalWaveformProcess">
-                    <element name="classname">
+                </optional>
+                <optional>
+                    <element name="fileNameBase">
                         <data type="string"/>
                     </element>
-                    <oneOrMore>
-                        <choice>
-                            <text/>
-                            <ref name="xml72"/>
-                        </choice>
-                    </oneOrMore>
-                </element>
-                <element name="localSeismogramTemplateGenerator">
-                    <element name="template">
-                        <data type="string"/>
-                    </element>
-                </element>
-                <element name="filter">
-                    <element name="lowFreqCorner">
-                        <ref name="cornerSetting2"/>
-                    </element>
-                    <element name="highFreqCorner">
-                        <ref name="cornerSetting2"/>
-                    </element>
-                    <element name="numPoles">
+                </optional>
+                <optional>
+                    <element name="idealNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
-                    <element name="filterType">
-                        <choice>
-                            <value>NONCAUSAL</value>
-                            <value>CAUSAL</value>
-                            <value>TWOPASS</value>
-                        </choice>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
+                        <data type="integer"/>
                     </element>
-                </element>
-                <element name="forkProcess">
-                    <oneOrMore>
-                        <ref name="seismogramProcess2"/>
-                    </oneOrMore>
-                </element>
-                <element name="alwaysSuccess">
-                    <ref name="seismogramProcess2"/>
-                </element>
-                <element name="phaseSignalToNoise">
-                    <optional>
-                        <element name="modelName">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="distanceRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="percentSeisHeight">
+                        <data type="double"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="recordSectionSize">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <element name="phaseName">
-                        <data type="string"/>
+                        <element name="height">
+                            <data type="integer"/>
+                        </element>
                     </element>
-                    <element name="shortOffsetBegin">
-                        <ref name="time55"/>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference3"/>
+                        <element name="type">
+                            <value>recordSection</value>
+                        </element>
+                        <optional>
+                            <element name="swapAxes">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed2"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor2"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border2"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig3"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig3"/>
+                        </optional>
                     </element>
-                    <element name="shortOffsetEnd">
-                        <ref name="time55"/>
-                    </element>
-                    <element name="longOffsetBegin">
-                        <ref name="time55"/>
-                    </element>
-                    <element name="longOffsetEnd">
-                        <ref name="time55"/>
-                    </element>
-                    <element name="ratio">
+                </optional>
+            </element>
+            <element name="responseGain">
+                <empty/>
+            </element>
+            <element name="phaseCut">
+                <ref name="phaseWindow2"/>
+            </element>
+            <element name="merge">
+                <empty/>
+            </element>
+            <element name="rMean">
+                <empty/>
+            </element>
+            <element name="rTrend">
+                <empty/>
+            </element>
+            <element name="taper">
+                <optional>
+                    <element name="width">
                         <data type="float"/>
                     </element>
-                </element>
-                <element name="seismogramImageProcess">
-                    <optional>
-                        <element name="phaseWindow">
-                            <ref name="phaseWindow2"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileDir">
-                            <oneOrMore>
-                                <choice>
-                                    <text/>
-                                    <ref name="xml71"/>
-                                </choice>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
+                </optional>
+                <optional>
+                    <element name="type">
                         <choice>
-                            <element name="seismogramConfig">
-                                <element name="template">
-                                    <data type="string"/>
-                                </element>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="externalWaveformProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml72"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="localSeismogramTemplateGenerator">
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="filter">
+                <element name="lowFreqCorner">
+                    <ref name="cornerSetting2"/>
+                </element>
+                <element name="highFreqCorner">
+                    <ref name="cornerSetting2"/>
+                </element>
+                <element name="numPoles">
+                    <data type="integer"/>
+                </element>
+                <element name="filterType">
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="forkProcess">
+                <oneOrMore>
+                    <ref name="seismogramProcess2"/>
+                </oneOrMore>
+            </element>
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess2"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time55"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time55"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time55"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time55"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow2"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileDir">
+                        <oneOrMore>
+                            <choice>
+                                <text/>
+                                <ref name="xml71"/>
+                            </choice>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
                             </element>
-                            <element name="outputLocationCreators">
-                                <element name="eventDir">
-                                    <oneOrMore>
+                        </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml70"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="stationDir">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml69"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="picName">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml68"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                            </element>
-                        </choice>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="putDataInCookieJar">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>png</value>
-                                <value>pdf</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dimension">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
+                                </oneOrMore>
                             </element>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="showOnlyFirstArrivals">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseNameMappings">
-                            <oneOrMore>
-                                <element name="mapping">
-                                    <element name="pattern">
-                                    <data type="string"/>
-                                    </element>
-                                    <element name="replacement">
-                                    <data type="string"/>
-                                    </element>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseFlags">
-                            <oneOrMore>
-                                <element name="phase">
-                                    <ref name="phaseName3"/>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference3"/>
-                            <optional>
-                                <element name="type">
-                                    <value>basic</value>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed2"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors2"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors2"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground2"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor2"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border2"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig3"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig3"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="legacyExecute">
-                    <optional>
-                        <element name="writerName">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <element name="command">
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="prefix">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="workingDirectory">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="putDataInCookieJar">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dimension">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                </element>
-                <element name="seismogramAND">
-                    <oneOrMore>
-                        <ref name="seismogramProcess2"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramOR">
-                    <oneOrMore>
-                        <ref name="seismogramProcess2"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramNOT">
-                    <ref name="seismogramProcess2"/>
-                </element>
-                <element name="someDataCoverage">
-                    <empty/>
-                </element>
-                <element name="noDataGaps">
-                    <empty/>
-                </element>
-                <element name="fullDataCoverage">
-                    <empty/>
-                </element>
-                <element name="integrate">
-                    <empty/>
-                </element>
-                <element name="embeddedEventChannelProcessor">
-                    <ref name="eventChannel4"/>
-                </element>
-                <element name="transferResponse">
-                    <optional>
-                        <element name="lowCut">
-                            <data type="float"/>
+                        <element name="height">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="lowPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highCut">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                </element>
-                <element name="saveSeismogramToFile">
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>sac</value>
-                                <value>mseed</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dataDirectory">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventDirLabel">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="id">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="preserveRequest">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="storeSeismogramsInDB">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="sacHeader">
-                            <zeroOrMore>
-                                <element name="phaseTime">
-                                    <ref name="phaseTimeContents2"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="showOnlyFirstArrivals">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseNameMappings">
+                        <oneOrMore>
+                            <element name="mapping">
+                                <element name="pattern">
+                                    <data type="string"/>
                                 </element>
-                            </zeroOrMore>
-                        </element>
-                    </optional>
+                                <element name="replacement">
+                                    <data type="string"/>
+                                </element>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseFlags">
+                        <oneOrMore>
+                            <element name="phase">
+                                <ref name="phaseName3"/>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference3"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed2"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground2"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor2"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border2"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig3"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig3"/>
+                        </optional>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="writerName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
                 </element>
-            </choice>
-            <element name="retryAndContinue">
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess2"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess2"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramNOT">
                 <ref name="seismogramProcess2"/>
             </element>
-            <element name="retryAndFail">
-                <ref name="seismogramProcess2"/>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
+            <element name="integrate">
+                <empty/>
+            </element>
+            <element name="embeddedEventChannelProcessor">
+                <ref name="eventChannel4"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="saveSeismogramToFile">
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <ref name="phaseTimeContents2"/>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
     <define name="seismogramProcess4">
         <choice>
-            <choice>
-                <element name="printlineSeismogramProcess">
+            <element name="printlineSeismogramProcess">
+                <interleave>
                     <optional>
                         <element name="template">
                             <text/>
@@ -21125,469 +21107,463 @@
                             <text/>
                         </element>
                     </optional>
+                </interleave>
+            </element>
+            <element name="sacWriter">
+                <ref name="seisWriterBase4"/>
+                <zeroOrMore>
+                    <element name="phaseTimeHeader">
+                        <ref name="phaseTimeContents4"/>
+                    </element>
+                </zeroOrMore>
+            </element>
+            <element name="mseedWriter">
+                <ref name="seisWriterBase4"/>
+            </element>
+            <element name="recordSectionDisplayGenerator">
+                <element name="id">
+                    <data type="string"/>
                 </element>
-                <element name="sacWriter">
-                    <ref name="seisWriterBase4"/>
-                    <zeroOrMore>
-                        <element name="phaseTimeHeader">
-                            <ref name="phaseTimeContents4"/>
-                        </element>
-                    </zeroOrMore>
-                </element>
-                <element name="mseedWriter">
-                    <ref name="seisWriterBase4"/>
-                </element>
-                <element name="recordSectionDisplayGenerator">
-                    <element name="id">
+                <optional>
+                    <element name="saveSeisId">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="saveSeisId">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileNameBase">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="idealNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="maxNumberOfSeismograms">
-                            <data type="integer"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="distanceRange">
-                            <optional>
-                                <element name="min">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="max">
-                                    <data type="double"/>
-                                </element>
-                            </optional>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="percentSeisHeight">
-                            <data type="double"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="recordSectionSize">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
-                            </element>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference5"/>
-                            <element name="type">
-                                <value>recordSection</value>
-                            </element>
-                            <optional>
-                                <element name="swapAxes">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed4"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors4"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors4"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground4"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor4"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border4"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig5"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig5"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="responseGain">
-                    <empty/>
-                </element>
-                <element name="phaseCut">
-                    <ref name="phaseWindow4"/>
-                </element>
-                <element name="merge">
-                    <empty/>
-                </element>
-                <element name="rMean">
-                    <empty/>
-                </element>
-                <element name="rTrend">
-                    <empty/>
-                </element>
-                <element name="taper">
-                    <optional>
-                        <element name="width">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="type">
-                            <choice>
-                                <value>HANNING</value>
-                                <value>HAMMING</value>
-                                <value>COSINE</value>
-                            </choice>
-                        </element>
-                    </optional>
-                </element>
-                <element name="externalWaveformProcess">
-                    <element name="classname">
+                </optional>
+                <optional>
+                    <element name="fileNameBase">
                         <data type="string"/>
                     </element>
-                    <oneOrMore>
-                        <choice>
-                            <text/>
-                            <ref name="xml209"/>
-                        </choice>
-                    </oneOrMore>
-                </element>
-                <element name="localSeismogramTemplateGenerator">
-                    <element name="template">
-                        <data type="string"/>
-                    </element>
-                </element>
-                <element name="filter">
-                    <element name="lowFreqCorner">
-                        <ref name="cornerSetting4"/>
-                    </element>
-                    <element name="highFreqCorner">
-                        <ref name="cornerSetting4"/>
-                    </element>
-                    <element name="numPoles">
+                </optional>
+                <optional>
+                    <element name="idealNumberOfSeismograms">
                         <data type="integer"/>
                     </element>
-                    <element name="filterType">
-                        <choice>
-                            <value>NONCAUSAL</value>
-                            <value>CAUSAL</value>
-                            <value>TWOPASS</value>
-                        </choice>
+                </optional>
+                <optional>
+                    <element name="maxNumberOfSeismograms">
+                        <data type="integer"/>
                     </element>
-                </element>
-                <element name="forkProcess">
-                    <oneOrMore>
-                        <ref name="seismogramProcess4"/>
-                    </oneOrMore>
-                </element>
-                <element name="alwaysSuccess">
-                    <ref name="seismogramProcess4"/>
-                </element>
-                <element name="phaseSignalToNoise">
-                    <optional>
-                        <element name="modelName">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="distanceRange">
+                        <optional>
+                            <element name="min">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <element name="max">
+                                <data type="double"/>
+                            </element>
+                        </optional>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="percentSeisHeight">
+                        <data type="double"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="recordSectionSize">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <element name="phaseName">
-                        <data type="string"/>
+                        <element name="height">
+                            <data type="integer"/>
+                        </element>
                     </element>
-                    <element name="shortOffsetBegin">
-                        <ref name="time179"/>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference5"/>
+                        <element name="type">
+                            <value>recordSection</value>
+                        </element>
+                        <optional>
+                            <element name="swapAxes">
+                                <empty/>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed4"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor4"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border4"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig5"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig5"/>
+                        </optional>
                     </element>
-                    <element name="shortOffsetEnd">
-                        <ref name="time179"/>
-                    </element>
-                    <element name="longOffsetBegin">
-                        <ref name="time179"/>
-                    </element>
-                    <element name="longOffsetEnd">
-                        <ref name="time179"/>
-                    </element>
-                    <element name="ratio">
+                </optional>
+            </element>
+            <element name="responseGain">
+                <empty/>
+            </element>
+            <element name="phaseCut">
+                <ref name="phaseWindow4"/>
+            </element>
+            <element name="merge">
+                <empty/>
+            </element>
+            <element name="rMean">
+                <empty/>
+            </element>
+            <element name="rTrend">
+                <empty/>
+            </element>
+            <element name="taper">
+                <optional>
+                    <element name="width">
                         <data type="float"/>
                     </element>
-                </element>
-                <element name="seismogramImageProcess">
-                    <optional>
-                        <element name="phaseWindow">
-                            <ref name="phaseWindow4"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileDir">
-                            <oneOrMore>
-                                <choice>
-                                    <text/>
-                                    <ref name="xml210"/>
-                                </choice>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
+                </optional>
+                <optional>
+                    <element name="type">
                         <choice>
-                            <element name="seismogramConfig">
-                                <element name="template">
-                                    <data type="string"/>
-                                </element>
+                            <value>HANNING</value>
+                            <value>HAMMING</value>
+                            <value>COSINE</value>
+                        </choice>
+                    </element>
+                </optional>
+            </element>
+            <element name="externalWaveformProcess">
+                <element name="classname">
+                    <data type="string"/>
+                </element>
+                <oneOrMore>
+                    <choice>
+                        <text/>
+                        <ref name="xml209"/>
+                    </choice>
+                </oneOrMore>
+            </element>
+            <element name="localSeismogramTemplateGenerator">
+                <element name="template">
+                    <data type="string"/>
+                </element>
+            </element>
+            <element name="filter">
+                <element name="lowFreqCorner">
+                    <ref name="cornerSetting4"/>
+                </element>
+                <element name="highFreqCorner">
+                    <ref name="cornerSetting4"/>
+                </element>
+                <element name="numPoles">
+                    <data type="integer"/>
+                </element>
+                <element name="filterType">
+                    <choice>
+                        <value>NONCAUSAL</value>
+                        <value>CAUSAL</value>
+                        <value>TWOPASS</value>
+                    </choice>
+                </element>
+            </element>
+            <element name="forkProcess">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="alwaysSuccess">
+                <ref name="seismogramProcess4"/>
+            </element>
+            <element name="phaseSignalToNoise">
+                <optional>
+                    <element name="modelName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="phaseName">
+                    <data type="string"/>
+                </element>
+                <element name="shortOffsetBegin">
+                    <ref name="time179"/>
+                </element>
+                <element name="shortOffsetEnd">
+                    <ref name="time179"/>
+                </element>
+                <element name="longOffsetBegin">
+                    <ref name="time179"/>
+                </element>
+                <element name="longOffsetEnd">
+                    <ref name="time179"/>
+                </element>
+                <element name="ratio">
+                    <data type="float"/>
+                </element>
+            </element>
+            <element name="seismogramImageProcess">
+                <optional>
+                    <element name="phaseWindow">
+                        <ref name="phaseWindow4"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileDir">
+                        <oneOrMore>
+                            <choice>
+                                <text/>
+                                <ref name="xml210"/>
+                            </choice>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <choice>
+                        <element name="seismogramConfig">
+                            <element name="template">
+                                <data type="string"/>
                             </element>
-                            <element name="outputLocationCreators">
-                                <element name="eventDir">
-                                    <oneOrMore>
+                        </element>
+                        <element name="outputLocationCreators">
+                            <element name="eventDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml211"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="stationDir">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="stationDir">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml212"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                                <element name="picName">
-                                    <oneOrMore>
+                                </oneOrMore>
+                            </element>
+                            <element name="picName">
+                                <oneOrMore>
                                     <choice>
                                     <text/>
                                     <ref name="xml213"/>
                                     </choice>
-                                    </oneOrMore>
-                                </element>
-                            </element>
-                        </choice>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="putDataInCookieJar">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>png</value>
-                                <value>pdf</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dimension">
-                            <element name="width">
-                                <data type="integer"/>
-                            </element>
-                            <element name="height">
-                                <data type="integer"/>
+                                </oneOrMore>
                             </element>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="showOnlyFirstArrivals">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseNameMappings">
-                            <oneOrMore>
-                                <element name="mapping">
-                                    <element name="pattern">
-                                    <data type="string"/>
-                                    </element>
-                                    <element name="replacement">
-                                    <data type="string"/>
-                                    </element>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="phaseFlags">
-                            <oneOrMore>
-                                <element name="phase">
-                                    <ref name="phaseName6"/>
-                                </element>
-                            </oneOrMore>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="displayConfig">
-                            <ref name="defineAndReference5"/>
-                            <optional>
-                                <element name="type">
-                                    <value>basic</value>
-                                </element>
-                            </optional>
-                            <optional>
-                                <ref name="dontDrawNamed4"/>
-                            </optional>
-                            <optional>
-                                <ref name="flagColors4"/>
-                            </optional>
-                            <optional>
-                                <ref name="traceColors4"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderBackground4"/>
-                            </optional>
-                            <optional>
-                                <ref name="borderColor4"/>
-                            </optional>
-                            <zeroOrMore>
-                                <ref name="border4"/>
-                            </zeroOrMore>
-                            <optional>
-                                <ref name="timeConfig5"/>
-                            </optional>
-                            <optional>
-                                <ref name="ampConfig5"/>
-                            </optional>
-                        </element>
-                    </optional>
-                </element>
-                <element name="legacyExecute">
-                    <optional>
-                        <element name="writerName">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <element name="command">
+                    </choice>
+                </optional>
+                <optional>
+                    <element name="prefix">
                         <data type="string"/>
                     </element>
-                    <optional>
-                        <element name="workingDirectory">
-                            <data type="string"/>
+                </optional>
+                <optional>
+                    <element name="putDataInCookieJar">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>png</value>
+                            <value>pdf</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dimension">
+                        <element name="width">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                </element>
-                <element name="seismogramAND">
-                    <oneOrMore>
-                        <ref name="seismogramProcess4"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramOR">
-                    <oneOrMore>
-                        <ref name="seismogramProcess4"/>
-                    </oneOrMore>
-                </element>
-                <element name="seismogramNOT">
-                    <ref name="seismogramProcess4"/>
-                </element>
-                <element name="someDataCoverage">
-                    <empty/>
-                </element>
-                <element name="noDataGaps">
-                    <empty/>
-                </element>
-                <element name="fullDataCoverage">
-                    <empty/>
-                </element>
-                <element name="integrate">
-                    <empty/>
-                </element>
-                <element name="embeddedEventChannelProcessor">
-                    <ref name="eventChannel11"/>
-                </element>
-                <element name="transferResponse">
-                    <optional>
-                        <element name="lowCut">
-                            <data type="float"/>
+                        <element name="height">
+                            <data type="integer"/>
                         </element>
-                    </optional>
-                    <optional>
-                        <element name="lowPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highPass">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="highCut">
-                            <data type="float"/>
-                        </element>
-                    </optional>
-                </element>
-                <element name="saveSeismogramToFile">
-                    <optional>
-                        <element name="fileType">
-                            <choice>
-                                <value>sac</value>
-                                <value>mseed</value>
-                            </choice>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="prefix">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="dataDirectory">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="eventDirLabel">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="id">
-                            <data type="string"/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="preserveRequest">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="storeSeismogramsInDB">
-                            <empty/>
-                        </element>
-                    </optional>
-                    <optional>
-                        <element name="sacHeader">
-                            <zeroOrMore>
-                                <element name="phaseTime">
-                                    <ref name="phaseTimeContents4"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="showOnlyFirstArrivals">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseNameMappings">
+                        <oneOrMore>
+                            <element name="mapping">
+                                <element name="pattern">
+                                    <data type="string"/>
                                 </element>
-                            </zeroOrMore>
-                        </element>
-                    </optional>
+                                <element name="replacement">
+                                    <data type="string"/>
+                                </element>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="phaseFlags">
+                        <oneOrMore>
+                            <element name="phase">
+                                <ref name="phaseName6"/>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="displayConfig">
+                        <ref name="defineAndReference5"/>
+                        <optional>
+                            <element name="type">
+                                <value>basic</value>
+                            </element>
+                        </optional>
+                        <optional>
+                            <ref name="dontDrawNamed4"/>
+                        </optional>
+                        <optional>
+                            <ref name="flagColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="traceColors4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderBackground4"/>
+                        </optional>
+                        <optional>
+                            <ref name="borderColor4"/>
+                        </optional>
+                        <zeroOrMore>
+                            <ref name="border4"/>
+                        </zeroOrMore>
+                        <optional>
+                            <ref name="timeConfig5"/>
+                        </optional>
+                        <optional>
+                            <ref name="ampConfig5"/>
+                        </optional>
+                    </element>
+                </optional>
+            </element>
+            <element name="legacyExecute">
+                <optional>
+                    <element name="writerName">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="command">
+                    <data type="string"/>
                 </element>
-            </choice>
-            <element name="retryAndContinue">
+                <optional>
+                    <element name="workingDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="seismogramAND">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramOR">
+                <oneOrMore>
+                    <ref name="seismogramProcess4"/>
+                </oneOrMore>
+            </element>
+            <element name="seismogramNOT">
                 <ref name="seismogramProcess4"/>
             </element>
-            <element name="retryAndFail">
-                <ref name="seismogramProcess4"/>
+            <element name="someDataCoverage">
+                <empty/>
+            </element>
+            <element name="noDataGaps">
+                <empty/>
+            </element>
+            <element name="fullDataCoverage">
+                <empty/>
+            </element>
+            <element name="integrate">
+                <empty/>
+            </element>
+            <element name="embeddedEventChannelProcessor">
+                <ref name="eventChannel11"/>
+            </element>
+            <element name="transferResponse">
+                <optional>
+                    <element name="lowCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="lowPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highPass">
+                        <data type="float"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="highCut">
+                        <data type="float"/>
+                    </element>
+                </optional>
+            </element>
+            <element name="saveSeismogramToFile">
+                <optional>
+                    <element name="fileType">
+                        <choice>
+                            <value>sac</value>
+                            <value>mseed</value>
+                        </choice>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="prefix">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="dataDirectory">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="eventDirLabel">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="id">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="preserveRequest">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="storeSeismogramsInDB">
+                        <empty/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="sacHeader">
+                        <zeroOrMore>
+                            <element name="phaseTime">
+                                <ref name="phaseTimeContents4"/>
+                            </element>
+                        </zeroOrMore>
+                    </element>
+                </optional>
             </element>
         </choice>
     </define>
@@ -44513,226 +44489,258 @@
     </define>
     <define name="printline4">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline12">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline3">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline13">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline2">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline10">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline7">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline14">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline6">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline5">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline15">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline8">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline16">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline11">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="printline9">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="stationPointAzimuth12">
@@ -45825,16 +45833,18 @@
                 <ref name="time193"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -46075,16 +46085,18 @@
                 <ref name="time158"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -46325,16 +46337,18 @@
                 <ref name="time40"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -46575,16 +46589,18 @@
                 <ref name="time53"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -46825,16 +46841,18 @@
                 <ref name="time15"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -47075,16 +47093,18 @@
                 <ref name="time168"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -47325,16 +47345,18 @@
                 <ref name="time121"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -47575,16 +47597,18 @@
                 <ref name="time101"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -47825,16 +47849,18 @@
                 <ref name="time105"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -48075,16 +48101,18 @@
                 <ref name="time209"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -48325,16 +48353,18 @@
                 <ref name="time79"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -48575,16 +48605,18 @@
                 <ref name="time181"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -48825,16 +48857,18 @@
                 <ref name="time3"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -49075,16 +49109,18 @@
                 <ref name="time66"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -49325,16 +49361,18 @@
                 <ref name="time197"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -49575,16 +49613,18 @@
                 <ref name="time88"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -49825,16 +49865,18 @@
                 <ref name="time27"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -50075,16 +50117,18 @@
                 <ref name="time133"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -50325,16 +50369,18 @@
                 <ref name="time222"/>
             </element>
             <element name="printlineEventProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
             <element name="CSVEventPrinter">
                 <element name="filename">
@@ -59367,16 +59413,18 @@
                 </oneOrMore>
             </element>
             <element name="printlineAvailableDataProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
         </choice>
     </define>
@@ -59442,16 +59490,18 @@
                 </oneOrMore>
             </element>
             <element name="printlineAvailableDataProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
         </choice>
     </define>
@@ -59517,16 +59567,18 @@
                 </oneOrMore>
             </element>
             <element name="printlineAvailableDataProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
         </choice>
     </define>
@@ -59592,16 +59644,18 @@
                 </oneOrMore>
             </element>
             <element name="printlineAvailableDataProcess">
-                <optional>
-                    <element name="template">
-                        <text/>
-                    </element>
-                </optional>
-                <optional>
-                    <element name="filename">
-                        <text/>
-                    </element>
-                </optional>
+                <interleave>
+                    <optional>
+                        <element name="template">
+                            <text/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="filename">
+                            <text/>
+                        </element>
+                    </optional>
+                </interleave>
             </element>
         </choice>
     </define>

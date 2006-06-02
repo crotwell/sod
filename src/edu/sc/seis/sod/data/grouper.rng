@@ -1553,16 +1553,18 @@
     </define>
     <define name="printline">
         <element name="printlineChannelProcess">
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional>
-            <optional>
-                <element name="template">
-                    <text/>
-                </element>
-            </optional>
+            <interleave>
+                <optional>
+                    <element name="template">
+                        <text/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="PASS3">
