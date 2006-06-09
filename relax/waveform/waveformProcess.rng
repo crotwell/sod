@@ -54,6 +54,7 @@
             <ref name="integrate"/>
             <ref name="embeddedEventChannelProcessor"/>
             <ref name="transferResponse"/>
+            <ref name="collapseOverlaps"/>
             <ref name="saveSeismogramToFile"/>
         </choice>
     </define>
@@ -868,6 +869,17 @@
                     <data type="float"/>
                 </element>
             </optional>
+        </element>
+    </define>
+    <define name="collapseOverlaps">
+        <element name="collapseOverlaps">
+            <xsd:annotation>
+                <summary>Collapses overlapping seismograms.</summary>
+                <description>This checks for overlapping seismograms. If one seismogram is completely contained in another seismogram, it is removed. If two seismograms overlap partially, then the longer of the two is kept in its entirety and the short is cut to no longer overlap
+This processor should ideally not be needed, as the server should refrain from returning overlapping data. See http://www.iris.edu/jira/browse/DHI-6 for the status of this in the Pond server.
+                </description>
+            </xsd:annotation>
+            <empty/>
         </element>
     </define>
 </grammar>
