@@ -289,12 +289,12 @@
                         <location>${network.code}.${station.code}/${event.filizedTime}/${site.code}.${channel.code}.sac</location>
                         <phaseTimeHeader>
                             <model>prem</model>
-                            <phase>ttp</phase>
+                            <phaseName>ttp</phaseName>
                             <tHeader>0</tHeader>
                         </phaseTimeHeader>
                         <phaseTimeHeader>
                             <model>prem</model>
-                            <phase>tts</phase>
+                            <phaseName>tts</phaseName>
                             <tHeader>1</tHeader>
                         </phaseTimeHeader>
                     </sacWriter>
