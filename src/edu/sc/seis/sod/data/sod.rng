@@ -59395,6 +59395,9 @@
             <element name="someCoverage">
                 <empty/>
             </element>
+            <element name="percentCoverage">
+                <data type="double"/>
+            </element>
             <element name="availableDataAND">
                 <oneOrMore>
                     <ref name="availableData2"/>
@@ -59471,6 +59474,9 @@
             </element>
             <element name="someCoverage">
                 <empty/>
+            </element>
+            <element name="percentCoverage">
+                <data type="double"/>
             </element>
             <element name="availableDataAND">
                 <oneOrMore>
@@ -59549,6 +59555,9 @@
             <element name="someCoverage">
                 <empty/>
             </element>
+            <element name="percentCoverage">
+                <data type="double"/>
+            </element>
             <element name="availableDataAND">
                 <oneOrMore>
                     <ref name="availableData3"/>
@@ -59625,6 +59634,9 @@
             </element>
             <element name="someCoverage">
                 <empty/>
+            </element>
+            <element name="percentCoverage">
+                <data type="double"/>
             </element>
             <element name="availableDataAND">
                 <oneOrMore>

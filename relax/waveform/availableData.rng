@@ -20,6 +20,7 @@
             <ref name="postEventWait"/>
             <ref name="noGaps"/>
             <ref name="someCoverage"/>
+            <ref name="percentCoverage"/>
             <ref name="availableDataAND"/>
             <ref name="availableDataOR"/>
             <ref name="availableDataNOT"/>
@@ -107,6 +108,14 @@
                 <summary>Accepts data if it spans some of the generated request</summary>
             </xsd:annotation>
             <empty/>
+        </element>
+    </define>
+    <define name="percentCoverage">
+        <element name="percentCoverage">
+            <xsd:annotation>
+                <summary>Accepts data if it spans the specified percentage of the generated request</summary>
+            </xsd:annotation>
+           <data type="double"/>
         </element>
     </define>
     <define name="postEventWait">
