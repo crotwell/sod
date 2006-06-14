@@ -42,11 +42,15 @@ public class VelocityEvent extends ProxyEventAccessOperations {
     }
 
     public String getAllMagnitudes() {
+        return getAllMagnitudes(", ");
+    }
+
+    public String getAllMagnitudes(String seperator) {
         String s = "";
         for(int i = 0; i < origin.magnitudes.length; i++) {
             s += FissuresFormatter.formatMagnitude(origin.magnitudes[i]);
             if(i != origin.magnitudes.length - 1) {
-                s += ", ";
+                s += seperator;
             }
         }
         return s;
