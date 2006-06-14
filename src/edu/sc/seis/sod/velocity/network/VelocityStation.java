@@ -110,6 +110,10 @@ public class VelocityStation extends Station {
     public String getName() {
         return name;
     }
+
+    public String getCSVName() {
+        return name.replaceAll(",", "");
+    }
     
     public String getDescription() {
         return description;
