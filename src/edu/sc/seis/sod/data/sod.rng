@@ -55695,49 +55695,19 @@
                 <empty/>
             </element>
             <element name="breqFastRequest">
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="label">
-                        <interleave>
-                            <text/>
-                            <optional>
-                                <element name="feRegionName">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="feRegionNumber">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="depth">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="magnitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="latitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="longitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="originTime">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                        </interleave>
+                        <data type="string"/>
                     </element>
                 </optional>
                 <element name="name">
@@ -55770,6 +55740,77 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="netDCRequest">
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="label">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+                <element name="inst">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="mail">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="email">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="phone">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fax">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="media">
+                        <data type="string"/>
+                    </element>
+                    <optional>
+                        <element name="altmedia">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                </optional>
+                <optional>
+                    <element name="format_waveform">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="format_response">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="merge_data">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="disposition">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="passRequest">
                 <zeroOrMore>
@@ -55808,49 +55849,19 @@
                 <empty/>
             </element>
             <element name="breqFastRequest">
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="label">
-                        <interleave>
-                            <text/>
-                            <optional>
-                                <element name="feRegionName">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="feRegionNumber">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="depth">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="magnitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="latitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="longitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="originTime">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                        </interleave>
+                        <data type="string"/>
                     </element>
                 </optional>
                 <element name="name">
@@ -55883,6 +55894,77 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="netDCRequest">
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="label">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+                <element name="inst">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="mail">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="email">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="phone">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fax">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="media">
+                        <data type="string"/>
+                    </element>
+                    <optional>
+                        <element name="altmedia">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                </optional>
+                <optional>
+                    <element name="format_waveform">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="format_response">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="merge_data">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="disposition">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="passRequest">
                 <zeroOrMore>
@@ -55921,49 +56003,19 @@
                 <empty/>
             </element>
             <element name="breqFastRequest">
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="label">
-                        <interleave>
-                            <text/>
-                            <optional>
-                                <element name="feRegionName">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="feRegionNumber">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="depth">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="magnitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="latitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="longitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="originTime">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                        </interleave>
+                        <data type="string"/>
                     </element>
                 </optional>
                 <element name="name">
@@ -55996,6 +56048,77 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="netDCRequest">
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="label">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+                <element name="inst">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="mail">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="email">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="phone">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fax">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="media">
+                        <data type="string"/>
+                    </element>
+                    <optional>
+                        <element name="altmedia">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                </optional>
+                <optional>
+                    <element name="format_waveform">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="format_response">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="merge_data">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="disposition">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="passRequest">
                 <zeroOrMore>
@@ -56034,49 +56157,19 @@
                 <empty/>
             </element>
             <element name="breqFastRequest">
-                <element name="dataDirectory">
-                    <data type="string"/>
-                </element>
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
                 <optional>
                     <element name="label">
-                        <interleave>
-                            <text/>
-                            <optional>
-                                <element name="feRegionName">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="feRegionNumber">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="depth">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="magnitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="latitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="longitude">
-                                    <empty/>
-                                </element>
-                            </optional>
-                            <optional>
-                                <element name="originTime">
-                                    <data type="string"/>
-                                </element>
-                            </optional>
-                        </interleave>
+                        <data type="string"/>
                     </element>
                 </optional>
                 <element name="name">
@@ -56109,6 +56202,77 @@
                 <element name="quality">
                     <data type="string"/>
                 </element>
+            </element>
+            <element name="netDCRequest">
+                <optional>
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="label">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="name">
+                    <data type="string"/>
+                </element>
+                <element name="inst">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="mail">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <element name="email">
+                    <data type="string"/>
+                </element>
+                <optional>
+                    <element name="phone">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="fax">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="media">
+                        <data type="string"/>
+                    </element>
+                    <optional>
+                        <element name="altmedia">
+                            <data type="string"/>
+                        </element>
+                    </optional>
+                </optional>
+                <optional>
+                    <element name="format_waveform">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="format_response">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="merge_data">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="disposition">
+                        <data type="string"/>
+                    </element>
+                </optional>
             </element>
             <element name="passRequest">
                 <zeroOrMore>

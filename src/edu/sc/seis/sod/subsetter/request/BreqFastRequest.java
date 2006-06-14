@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import org.apache.velocity.VelocityContext;
 import org.w3c.dom.Element;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfEvent.Origin;
@@ -15,12 +16,16 @@ import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
 import edu.iris.Fissures.model.MicroSecondDate;
 import edu.iris.Fissures.model.QuantityImpl;
 import edu.iris.Fissures.model.UnitImpl;
+import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
+import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
-import edu.sc.seis.sod.status.EventFormatter;
+import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.velocity.SimpleVelocitizer;
+import edu.sc.seis.sod.velocity.WaveformProcessContext;
 
 /**
  * BreqFastRequestSubsetter.java Created: Wed Mar 19 14:07:16 2003
@@ -32,37 +37,52 @@ public class BreqFastRequest implements Request {
 
     public BreqFastRequest(Element config) throws ConfigurationException {
         this.config = config;
+        this.workingDir = DOMHelper.extractText(config,
+                                                "workingDir",
+                                                getDefaultWorkingDir());
+        this.fileTemplate = DOMHelper.extractText(config,
+                                                  "location",
+                                                  getDefaultFileTemplate());
+        if(workingDir.endsWith(File.separator)) {
+            if(fileTemplate.startsWith(File.separator)) {
+                this.fileTemplate = fileTemplate.substring(1);
+            }
+        } else if(workingDir.length() > 0
+                && !fileTemplate.startsWith(File.separator)) {
+            this.workingDir += File.separator;
+        }
+        labelTemplate = fileTemplate;
         regions = ParseRegions.getInstance();
-        String datadirName = getConfig("dataDirectory");
-        this.dataDirectory = new File(datadirName);
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        nameGenerator = new EventFormatter(SodUtil.getElement(config, "label"),
-                                           true);
     }
 
     public boolean accept(EventAccessOperations event,
                           Channel channel,
                           RequestFilter[] request,
                           CookieJar cookieJar) {
-        writeToBFEmail(event, channel, request);
-        // don't care if yes or no
-        return true;
+        return writeToBFEmail(event, channel, request);
     }
 
     protected String getConfig(String name) {
         return SodUtil.getText(SodUtil.getElement(config, name));
     }
 
-    protected synchronized void writeToBFEmail(EventAccessOperations event,
-                                               Channel channel,
-                                               RequestFilter[] request) {
-        if(!dataDirectory.exists()) {
-            if(!dataDirectory.mkdirs()) {
-                throw new RuntimeException("Unable to create directory."
-                        + dataDirectory);
-            } // end of if (!)
-        } // end of if (dataDirectory.exits())
-        File bfFile = new File(dataDirectory, getFileName(event));
+    protected synchronized boolean writeToBFEmail(EventAccessOperations event,
+                                                  Channel channel,
+                                                  RequestFilter[] request) {
+        VelocityContext ctx = new WaveformProcessContext(event,
+                                                         channel,
+                                                         request,
+                                                         new RequestFilter[0],
+                                                         new LocalSeismogramImpl[0],
+                                                         null);
+        String bfastLoc = FissuresFormatter.filize(workingDir
+                + velocitizer.evaluate(fileTemplate, ctx));
+        File bfFile = new File(bfastLoc);
+        File parent = bfFile.getParentFile();
+        if(!parent.exists() && !parent.mkdirs()) {
+            throw new RuntimeException("Unable to create directory." + parent);
+        }
         // need to check before the writer is created as it creates the file
         boolean fileExists = bfFile.exists();
         Writer out = null;
@@ -70,7 +90,7 @@ public class BreqFastRequest implements Request {
             out = new BufferedWriter(new FileWriter(bfFile.getAbsolutePath(),
                                                     true));
             if(!fileExists) {// first time to this event, insert headers
-                insertEventHeader(event, out);
+                insertEventHeader(event, out, velocitizer.evaluate(labelTemplate, ctx));
             } // end of if ( ! fileExists)
             for(int i = 0; i < request.length; i++) {
                 insertRequest(channel, request, out, i);
@@ -87,12 +107,33 @@ public class BreqFastRequest implements Request {
                 }
             }
         }
+        return true;
     }
 
-    private void insertRequest(Channel channel,
-                               RequestFilter[] request,
-                               Writer out,
-                               int i) throws IOException {
+    protected void optInsert(Writer out, String configName) throws IOException {
+        optInsert(out, configName, configName.toUpperCase());
+    }
+
+    protected void optInsert(Writer out, String configName, String fieldName)
+            throws IOException {
+        if(SodUtil.getElement(config, configName) != null) {
+            insert(out, configName, fieldName);
+        }
+    }
+
+    protected void insert(Writer out, String configName) throws IOException {
+        insert(out, configName, configName.toUpperCase());
+    }
+
+    protected void insert(Writer out, String configName, String fieldName)
+            throws IOException {
+        out.write("." + fieldName + " " + getConfig(configName) + nl);
+    }
+
+    protected void insertRequest(Channel channel,
+                                 RequestFilter[] request,
+                                 Writer out,
+                                 int i) throws IOException {
         MicroSecondDate start = new MicroSecondDate(request[i].start_time);
         MicroSecondDate end = new MicroSecondDate(request[i].end_time);
         out.write(channel.my_site.my_station.get_code() + " "
@@ -103,17 +144,18 @@ public class BreqFastRequest implements Request {
                 + nl);
     }
 
-    private void insertEventHeader(EventAccessOperations event, Writer out)
-            throws IOException {
-        out.write(".NAME " + getConfig("name") + nl);
-        out.write(".INST " + getConfig("inst") + nl);
-        out.write(".MAIL " + getConfig("mail") + nl);
-        out.write(".EMAIL " + getConfig("email") + nl);
-        out.write(".PHONE " + getConfig("phone") + nl);
-        out.write(".FAX " + getConfig("fax") + nl);
-        out.write(".MEDIA " + getConfig("media") + nl);
-        out.write(".ALTERNATE MEDIA " + getConfig("altmedia1") + nl);
-        out.write(".ALTERNATE MEDIA " + getConfig("altmedia2") + nl);
+    protected void insertEventHeader(EventAccessOperations event,
+                                     Writer out,
+                                     String label) throws IOException {
+        insert(out, "name");
+        insert(out, "inst");
+        insert(out, "mail");
+        insert(out, "email");
+        insert(out, "phone");
+        insert(out, "fax");
+        insert(out, "media");
+        insert(out, "altmedia1", "ALTERNATIVE MEDIA");
+        insert(out, "altmedia2", "ALTERNATIVE MEDIA");
         Origin o = EventUtil.extractOrigin(event);
         out.write(".SOURCE " + "~" + o.catalog + " " + o.contributor
                 + "~unknown~unknown~" + nl);
@@ -136,18 +178,18 @@ public class BreqFastRequest implements Request {
             out.write(".MAGNITUDE ~" + o.magnitudes[j].value + "~"
                     + o.magnitudes[j].type + "~" + nl);
         } // end of for (int j=0; j<o.magnitude.length; j++)
-        out.write(".QUALITY " + getConfig("quality") + nl);
-        out.write(".LABEL " + getLabel(event) + nl);
+        insert(out, "quality");
+        out.write(".LABEL " + label + nl);
         out.write(".END" + nl);
         out.write(nl);
     }
 
-    protected String getFileName(EventAccessOperations event) {
-        return getLabel(event) + ".breqfast";
+    protected String getDefaultWorkingDir() {
+        return "breqfast";
     }
 
-    protected String getLabel(EventAccessOperations event) {
-        return nameGenerator.getFilizedName(event);
+    protected String getDefaultFileTemplate() {
+        return "${event.getTime('yyyy.DDD.HH.mm.ss.SSSS')}.breq";
     }
 
     static final String nl = "\n";
@@ -158,11 +200,9 @@ public class BreqFastRequest implements Request {
 
     ParseRegions regions;
 
-    EventFormatter nameGenerator;
-
     Element config;
 
-    File dataDirectory;
+    private String workingDir, labelTemplate, fileTemplate;
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(BreqFastRequest.class);
+    private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 } // BreqFastRequestGenerator

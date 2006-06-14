@@ -62,6 +62,21 @@ public class PrintlineVelocitizer {
     }
 
     public String evaluate(String filename,
+                         String template,
+                         EventAccessOperations event,
+                         Channel channel,
+                         RequestFilter[] request,
+                         CookieJar cookieJar) throws IOException {
+        return evaluate(filename,
+                        template,
+                        event,
+                        channel,
+                        request,
+                        new RequestFilter[0],
+                        cookieJar);
+    }
+
+    public String evaluate(String filename,
                            String template,
                            EventAccessOperations event,
                            Channel channel,
