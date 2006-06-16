@@ -52,6 +52,7 @@
             <ref name="noDataGaps"/>
             <ref name="fullDataCoverage"/>
             <ref name="integrate"/>
+            <ref name="differentiate"/>
             <ref name="embeddedEventChannelProcessor"/>
             <ref name="transferResponse"/>
             <ref name="collapseOverlaps"/>
@@ -817,6 +818,16 @@
                 <summary>Integrates the seismograms, changing velocity to displacement for example.</summary>
                 <description>This processor integrates each seismogram, using a integration constant
                     of zero. This can be used to change velocity to displacement. </description>
+            </xsd:annotation>
+            <empty/>
+        </element>
+    </define>
+    <define name="differentiate">
+        <element name="differentiate">
+            <xsd:annotation>
+                <summary>Takes the derivitive of the seismograms, changing displacement to velocity for example.</summary>
+                <description>This processor takes the derivitive with respect to time of each seismogram.
+                    This can be used to change displacement to velocity. </description>
             </xsd:annotation>
             <empty/>
         </element>
