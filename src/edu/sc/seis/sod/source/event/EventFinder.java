@@ -53,12 +53,11 @@ public class EventFinder extends AbstractSource implements EventSource {
     }
 
     public CacheEvent[] next() {
-        MicroSecondTimeRange queryTime = getQueryTime();
         CacheEvent[] results = null;
         int retryCount = 0;
         while(results == null) {
             try {
-                results = querier.query(queryTime);
+                results = loadMoreResults();
             } catch(SystemException se) {
                 if(retryCount++ > 0) {//Do nothing first time
                     GlobalExceptionHandler.handle("This exception was thrown by the event server.  I'm resetting the connection to the server and waiting "
@@ -74,8 +73,18 @@ public class EventFinder extends AbstractSource implements EventSource {
                 }
             }
         }
-        setQueryEdge(queryTime.getEndTime());
         return results;
+    }
+    
+    protected CacheEvent[] loadMoreResults() {
+        MicroSecondTimeRange queryTime = getQueryTime();
+        CacheEvent[] results = querier.query(queryTime);
+        updateQueryEdge(queryTime);
+        return results;
+    }
+    
+    protected void updateQueryEdge(MicroSecondTimeRange queryTime) {
+        setQueryEdge(queryTime.getEndTime());
     }
 
     public static long sleepForCount(int count) {
@@ -90,7 +99,7 @@ public class EventFinder extends AbstractSource implements EventSource {
         return new TimeInterval(0, UnitImpl.SECOND);
     }
 
-    private boolean caughtUpWithRealtime() {
+    protected boolean caughtUpWithRealtime() {
         return ClockUtil.now()
                 .subtract(getQueryStart())
                 .lessThan(refreshInterval)
@@ -104,7 +113,7 @@ public class EventFinder extends AbstractSource implements EventSource {
     /**
      * @return - the next time to start asking for events
      */
-    private MicroSecondDate getQueryStart() {
+    protected MicroSecondDate getQueryStart() {
         try {
             return getQueryEdge();
         } catch(edu.sc.seis.fissuresUtil.database.NotFound e) {
@@ -116,7 +125,7 @@ public class EventFinder extends AbstractSource implements EventSource {
     /**
      * @return - the next time range to be queried for events
      */
-    private MicroSecondTimeRange getQueryTime() {
+    protected MicroSecondTimeRange getQueryTime() {
         MicroSecondDate queryStart = getQueryStart();
         MicroSecondDate queryEnd = queryStart.add(increment);
         if(getEventTimeRange().getEndTime().before(queryEnd)) {
@@ -144,7 +153,7 @@ public class EventFinder extends AbstractSource implements EventSource {
     /**
      * @return - latest time queried
      */
-    private MicroSecondDate getQueryEdge() throws NotFound {
+    protected MicroSecondDate getQueryEdge() throws NotFound {
         try {
             return queryTimes.getQuery(getName(), getDNS());
         } catch(SQLException e) {
@@ -156,17 +165,13 @@ public class EventFinder extends AbstractSource implements EventSource {
     /**
      * sets the latest time queried
      */
-    private void setQueryEdge(MicroSecondDate edge) {
+    protected void setQueryEdge(MicroSecondDate edge) {
         try {
             queryTimes.setQuery(getName(), getDNS(), edge);
         } catch(SQLException e) {
             throw new RuntimeException("Database trouble with EventFinder query table",
                                        e);
         }
-    }
-    
-    public String toString(){
-      return "EventFinder source on " + querier;
     }
 
     private EventDCQuerier querier;
@@ -177,5 +182,5 @@ public class EventFinder extends AbstractSource implements EventSource {
 
     private JDBCQueryTime queryTimes;
 
-    private TimeInterval increment, lag, refreshInterval;
+    protected TimeInterval increment, lag, refreshInterval;
 }// EventFinder
