@@ -13,6 +13,7 @@
                 <velocity>#eventArmPage()</velocity>
             </xsd:annotation>
             <ref name="eventFinder"/>
+            <ref name="backwardsEventFinder"/>
             <ref name="CSVEventSource"/>
         </choice>
     </define>
@@ -25,6 +26,41 @@
                         is acquired from the EventDC, and a query is sent with the given arguments. The events returned
                         are then sent through the EventArm for processing. See <a
                         href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
+                        for a list of active EventDCs and their current status.</description>
+                </xsd:documentation>
+            </xsd:annotation>
+            <ref name="name"/>
+            <ref name="dns"/>
+            <optional>
+                <choice>
+                    <ref name="globalArea"/>
+                    <ref name="boxArea"/>
+                </choice>
+            </optional>
+            <optional>
+                <externalRef href="../base/externalRef/originDepthRange.rng"/>
+            </optional>
+            <externalRef href="../base/externalRef/originTimeRange.rng"/>
+            <optional>
+                <externalRef href="../base/externalRef/magnitudeRange.rng"/>
+            </optional>
+            <zeroOrMore>
+                <externalRef href="catalog.rng"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <externalRef href="contributor.rng"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="backwardsEventFinder">
+        <element name="backwardsEventFinder">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    <summary> Retrieve events from an EventFinder in reverse time order. </summary>
+                    <description> A Fissures/DHI EventDC service is located via the name and dns tags. The EventFinder
+                        is acquired from the EventDC, and a query is sent with the given arguments. The events returned
+                        are then sent through the EventArm for processing. See <a
+                            href="http://www.seis.sc.edu/wily/GetAllServers?corbaLoc=corbaloc:iiop:dmc.iris.washington.edu:6371/NameService&amp;description=IRIS nameserver">Wily</a>
                         for a list of active EventDCs and their current status.</description>
                 </xsd:documentation>
             </xsd:annotation>
