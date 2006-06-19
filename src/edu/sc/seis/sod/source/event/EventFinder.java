@@ -88,6 +88,10 @@ public class EventFinder extends AbstractSource implements EventSource {
     }
 
     public static long sleepForCount(int count) {
+        if (count > 2) {
+            // cap sleep at 15 minutes
+            return 900000;
+        }
         return (long)(Math.pow(10, count)) * 1000;
     }
 
