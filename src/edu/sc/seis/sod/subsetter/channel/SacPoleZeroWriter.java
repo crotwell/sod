@@ -23,7 +23,7 @@ public class SacPoleZeroWriter implements ChannelSubsetter {
     public SacPoleZeroWriter(Element config) throws ConfigurationException {
         VelocityFileElementParser parser = new VelocityFileElementParser(config,
                                                                          "polezero/",
-                                                                         "${channel.codes}.${channel.start}.sacpz");
+                                                                         "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.sacpz");
         template = parser.getTemplate();
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }

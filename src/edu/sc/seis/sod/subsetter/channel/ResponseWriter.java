@@ -44,7 +44,7 @@ public class ResponseWriter implements ChannelSubsetter {
         return true;
     }
 
-    public static final String DEFAULT_TEMPLATE = "${channel.codes}.${channel.start}.resp";
+    public static final String DEFAULT_TEMPLATE = "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp";
 
     private String template;
 

@@ -403,7 +403,7 @@
                                 determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
                                 <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
                                 and <a href="../../templateTypes.html#net">net</a> variables.
-                                If no location element is given, it defaults to "${channel.codes}.resp".
+                                If no location element is given, it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.resp".
                                 Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
                             <example>$network.code-$station.code-${channel.code}.resp</example>
                         </xsd:annotation>
@@ -437,7 +437,7 @@
                                 determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
                                 <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
                                 and <a href="../../templateTypes.html#net">net</a> variables.
-                                If no location element is given, it defaults to "${channel.codes}.sacpz".
+                                If no location element is given, it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.sacpz".
                                 Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
                             <example>polezero/$network.code-$station.code-${channel.code}.sacpz</example>
                         </xsd:annotation>
