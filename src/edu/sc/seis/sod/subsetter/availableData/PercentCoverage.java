@@ -20,8 +20,8 @@ import edu.sc.seis.sod.status.StringTreeLeaf;
 public class PercentCoverage implements AvailableDataSubsetter {
 
     private double percentage;
-    
-    public PercentCoverage(Element content){
+
+    public PercentCoverage(Element content) {
         DOMHelper.extractDouble(content, ".", 100);
     }
 
@@ -38,10 +38,15 @@ public class PercentCoverage implements AvailableDataSubsetter {
     }
 
     public boolean accept(RequestFilter[] original, RequestFilter[] available) {
+        return percentCovered(original, available) >= percentage;
+    }
+
+    public double percentCovered(RequestFilter[] original,
+                                 RequestFilter[] available) {
         RequestFilter[] uncovered = CoverageTool.notCovered(original, available);
         TimeInterval totalOriginalTime = sum(toMSTR(original));
         TimeInterval totalUncoveredTime = sum(toMSTR(uncovered));
-        return (1 - totalUncoveredTime.divideBy(totalOriginalTime).getValue()) * 100 >= percentage;
+        return (1 - totalUncoveredTime.divideBy(totalOriginalTime).getValue()) * 100;
     }
 
     private TimeInterval sum(List microSecondTimeRanges) {

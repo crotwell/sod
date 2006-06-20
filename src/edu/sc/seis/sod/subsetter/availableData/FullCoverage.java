@@ -4,7 +4,6 @@ import org.apache.log4j.Category;
 import edu.iris.Fissures.IfEvent.EventAccessOperations;
 import edu.iris.Fissures.IfNetwork.Channel;
 import edu.iris.Fissures.IfSeismogramDC.RequestFilter;
-import edu.sc.seis.fissuresUtil.time.CoverageTool;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodElement;
 import edu.sc.seis.sod.status.StringTree;
@@ -17,10 +16,14 @@ public class FullCoverage implements AvailableDataSubsetter, SodElement {
                              RequestFilter[] original,
                              RequestFilter[] available,
                              CookieJar cookieJar) {
-        RequestFilter[] uncovered = CoverageTool.notCovered(original, available);
-        return new StringTreeLeaf(this, uncovered.length == 0, uncovered.length
-                + " uncovered segments");
+        double coveragePercentage = pc.percentCovered(original, available);
+        return new StringTreeLeaf(this,
+                                  coveragePercentage >= 100,
+                                  coveragePercentage
+                                          + " percent of data covered");
     }
+
+    private PercentCoverage pc = new PercentCoverage(100);
 
     static Category logger = Category.getInstance(FullCoverage.class.getName());
 }// FullCoverage
