@@ -24,6 +24,7 @@ public class EventFinder extends AbstractSource implements EventSource {
 
     public EventFinder(Element config) throws Exception {
         super(config);
+        eventFinderId = eventFinderCount++;
         processConfig(config);
         queryTimes = new JDBCQueryTime();
         refreshInterval = Start.getRunProps().getEventRefreshInterval();
@@ -59,7 +60,7 @@ public class EventFinder extends AbstractSource implements EventSource {
             try {
                 results = loadMoreResults();
             } catch(SystemException se) {
-                if(retryCount++ > 0) {//Do nothing first time
+                if(retryCount++ > 0) {// Do nothing first time
                     GlobalExceptionHandler.handle("This exception was thrown by the event server.  I'm resetting the connection to the server and waiting "
                                                           + (sleepForCount(retryCount) / 1000)
                                                           + " seconds for things to calm down so that hopefully the next query will be successful.",
@@ -75,20 +76,20 @@ public class EventFinder extends AbstractSource implements EventSource {
         }
         return results;
     }
-    
+
     protected CacheEvent[] loadMoreResults() {
         MicroSecondTimeRange queryTime = getQueryTime();
         CacheEvent[] results = querier.query(queryTime);
         updateQueryEdge(queryTime);
         return results;
     }
-    
+
     protected void updateQueryEdge(MicroSecondTimeRange queryTime) {
         setQueryEdge(queryTime.getEndTime());
     }
 
     public static long sleepForCount(int count) {
-        if (count > 2) {
+        if(count > 2) {
             // cap sleep at 15 minutes
             return 900000;
         }
@@ -159,7 +160,7 @@ public class EventFinder extends AbstractSource implements EventSource {
      */
     protected MicroSecondDate getQueryEdge() throws NotFound {
         try {
-            return queryTimes.getQuery(getName(), getDNS());
+            return queryTimes.getQuery(getUniqueName(), getDNS());
         } catch(SQLException e) {
             throw new RuntimeException("Database trouble with EventFinder query table",
                                        e);
@@ -171,12 +172,22 @@ public class EventFinder extends AbstractSource implements EventSource {
      */
     protected void setQueryEdge(MicroSecondDate edge) {
         try {
-            queryTimes.setQuery(getName(), getDNS(), edge);
+            queryTimes.setQuery(getUniqueName(), getDNS(), edge);
         } catch(SQLException e) {
             throw new RuntimeException("Database trouble with EventFinder query table",
                                        e);
         }
     }
+
+    private String getUniqueName() {
+        return getName() + eventFinderId;
+    }
+
+    // Unique among eventFinders and constant for this eventFinder for repeated
+    // uses of the same recipe file
+    private int eventFinderId;
+
+    private static int eventFinderCount = 0;
 
     private EventDCQuerier querier;
 
