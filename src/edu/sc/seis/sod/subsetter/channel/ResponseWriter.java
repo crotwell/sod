@@ -9,17 +9,18 @@ import edu.iris.Fissures.IfNetwork.Instrumentation;
 import edu.iris.Fissures.network.ChannelIdUtil;
 import edu.iris.Fissures.network.ResponsePrint;
 import edu.sc.seis.fissuresUtil.cache.ProxyNetworkAccess;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.fissuresUtil.exceptionHandler.GlobalExceptionHandler;
 import edu.sc.seis.sod.ConfigurationException;
+import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 
 public class ResponseWriter implements ChannelSubsetter {
 
     public ResponseWriter(Element config) throws ConfigurationException {
-        template = DOMHelper.extractText(config,
-                                         "responseFileTemplate",
-                                         DEFAULT_TEMPLATE);
+        VelocityFileElementParser parser = new VelocityFileElementParser(config,
+                                                                         "responses/",
+                                                                         DEFAULT_TEMPLATE);
+        template = parser.getTemplate();
         velocitizer = new PrintlineVelocitizer(new String[] {template});
     }
 
@@ -43,7 +44,7 @@ public class ResponseWriter implements ChannelSubsetter {
         return true;
     }
 
-    public static final String DEFAULT_TEMPLATE = "responses/${network.code}-${station.code}-${channel.code}.resp";
+    public static final String DEFAULT_TEMPLATE = "${channel.codes}.${channel.start}.resp";
 
     private String template;
 

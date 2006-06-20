@@ -43241,7 +43241,12 @@
     <define name="responseWriter8">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43250,7 +43255,12 @@
     <define name="responseWriter12">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43259,7 +43269,12 @@
     <define name="responseWriter9">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43268,7 +43283,12 @@
     <define name="responseWriter13">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43277,7 +43297,12 @@
     <define name="responseWriter6">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43286,7 +43311,12 @@
     <define name="responseWriter14">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43295,7 +43325,12 @@
     <define name="responseWriter5">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43304,7 +43339,12 @@
     <define name="responseWriter2">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43313,7 +43353,12 @@
     <define name="responseWriter10">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43322,7 +43367,12 @@
     <define name="responseWriter11">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43331,7 +43381,12 @@
     <define name="responseWriter">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43340,7 +43395,12 @@
     <define name="responseWriter3">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43349,7 +43409,12 @@
     <define name="responseWriter16">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43358,7 +43423,12 @@
     <define name="responseWriter4">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43367,7 +43437,12 @@
     <define name="responseWriter15">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43376,7 +43451,12 @@
     <define name="responseWriter7">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -43650,7 +43730,12 @@
             <ref name="responseWriter4"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -43731,7 +43816,12 @@
             <ref name="responseWriter9"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -43812,7 +43902,12 @@
             <ref name="responseWriter16"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -43893,7 +43988,12 @@
             <ref name="responseWriter3"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -43974,7 +44074,12 @@
             <ref name="responseWriter13"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44055,7 +44160,12 @@
             <ref name="responseWriter2"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44136,7 +44246,12 @@
             <ref name="responseWriter6"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44217,7 +44332,12 @@
             <ref name="responseWriter14"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44298,7 +44418,12 @@
             <ref name="responseWriter12"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44379,7 +44504,12 @@
             <ref name="responseWriter15"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44460,7 +44590,12 @@
             <ref name="responseWriter"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44541,7 +44676,12 @@
             <ref name="responseWriter8"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44622,7 +44762,12 @@
             <ref name="responseWriter11"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44703,7 +44848,12 @@
             <ref name="responseWriter5"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44784,7 +44934,12 @@
             <ref name="responseWriter10"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
@@ -44865,7 +45020,12 @@
             <ref name="responseWriter7"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>

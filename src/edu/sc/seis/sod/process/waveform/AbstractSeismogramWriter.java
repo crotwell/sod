@@ -12,6 +12,7 @@ import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.status.FissuresFormatter;
 import edu.sc.seis.sod.status.StringTreeLeaf;
+import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.ContextWrangler;
 import edu.sc.seis.sod.velocity.PrintlineVelocitizer;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
@@ -22,22 +23,15 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
 
     protected static final String DEFAULT_WORKING_DIR = "seismograms/";
 
-    private String workingDir, fileTemplate, prefix;
+    private String template, prefix;
 
     public AbstractSeismogramWriter(String workingDir,
                                     String fileTemplate,
                                     String prefix)
             throws ConfigurationException {
-        this.workingDir = workingDir;
-        this.fileTemplate = fileTemplate;
-        if(workingDir.endsWith(File.separator)) {
-            if(fileTemplate.startsWith(File.separator)) {
-                this.fileTemplate = fileTemplate.substring(1);
-            }
-        } else if(workingDir.length() > 0
-                && !fileTemplate.startsWith(File.separator)) {
-            this.workingDir += File.separator;
-        }
+        VelocityFileElementParser parser = new VelocityFileElementParser(workingDir,
+                                                                         fileTemplate);
+        this.template = parser.getTemplate();
         this.prefix = prefix;
         new PrintlineVelocitizer(new String[] {fileTemplate});
     }
@@ -73,8 +67,7 @@ public abstract class AbstractSeismogramWriter implements WaveformProcess {
         ContextWrangler.insertIntoContext(representativeSeismogram,
                                           channel,
                                           ctx);
-        return FissuresFormatter.filize(workingDir
-                + velocitizer.evaluate(fileTemplate, ctx));
+        return FissuresFormatter.filize(velocitizer.evaluate(template, ctx));
     }
 
     public WaveformResult process(EventAccessOperations event,

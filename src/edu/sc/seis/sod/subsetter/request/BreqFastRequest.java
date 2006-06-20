@@ -19,11 +19,11 @@ import edu.iris.Fissures.model.UnitImpl;
 import edu.iris.Fissures.seismogramDC.LocalSeismogramImpl;
 import edu.sc.seis.fissuresUtil.cache.EventUtil;
 import edu.sc.seis.fissuresUtil.display.ParseRegions;
-import edu.sc.seis.fissuresUtil.display.configuration.DOMHelper;
 import edu.sc.seis.sod.ConfigurationException;
 import edu.sc.seis.sod.CookieJar;
 import edu.sc.seis.sod.SodUtil;
 import edu.sc.seis.sod.status.FissuresFormatter;
+import edu.sc.seis.sod.subsetter.VelocityFileElementParser;
 import edu.sc.seis.sod.velocity.SimpleVelocitizer;
 import edu.sc.seis.sod.velocity.WaveformProcessContext;
 
@@ -37,21 +37,11 @@ public class BreqFastRequest implements Request {
 
     public BreqFastRequest(Element config) throws ConfigurationException {
         this.config = config;
-        this.workingDir = DOMHelper.extractText(config,
-                                                "workingDir",
-                                                getDefaultWorkingDir());
-        this.fileTemplate = DOMHelper.extractText(config,
-                                                  "location",
-                                                  getDefaultFileTemplate());
-        if(workingDir.endsWith(File.separator)) {
-            if(fileTemplate.startsWith(File.separator)) {
-                this.fileTemplate = fileTemplate.substring(1);
-            }
-        } else if(workingDir.length() > 0
-                && !fileTemplate.startsWith(File.separator)) {
-            this.workingDir += File.separator;
-        }
-        labelTemplate = fileTemplate;
+        VelocityFileElementParser parser = new VelocityFileElementParser(config,
+                                                                         getDefaultWorkingDir(),
+                                                                         getDefaultFileTemplate());
+        labelTemplate = parser.getLocation();
+        fullTemplate = parser.getTemplate();
         regions = ParseRegions.getInstance();
         format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
@@ -76,8 +66,8 @@ public class BreqFastRequest implements Request {
                                                          new RequestFilter[0],
                                                          new LocalSeismogramImpl[0],
                                                          null);
-        String bfastLoc = FissuresFormatter.filize(workingDir
-                + velocitizer.evaluate(fileTemplate, ctx));
+        String bfastLoc = FissuresFormatter.filize(velocitizer.evaluate(fullTemplate,
+                                                                        ctx));
         File bfFile = new File(bfastLoc);
         File parent = bfFile.getParentFile();
         if(!parent.exists() && !parent.mkdirs()) {
@@ -90,7 +80,9 @@ public class BreqFastRequest implements Request {
             out = new BufferedWriter(new FileWriter(bfFile.getAbsolutePath(),
                                                     true));
             if(!fileExists) {// first time to this event, insert headers
-                insertEventHeader(event, out, velocitizer.evaluate(labelTemplate, ctx));
+                insertEventHeader(event,
+                                  out,
+                                  velocitizer.evaluate(labelTemplate, ctx));
             } // end of if ( ! fileExists)
             for(int i = 0; i < request.length; i++) {
                 insertRequest(channel, request, out, i);
@@ -202,7 +194,7 @@ public class BreqFastRequest implements Request {
 
     Element config;
 
-    private String workingDir, labelTemplate, fileTemplate;
+    private String fullTemplate, labelTemplate;
 
     private SimpleVelocitizer velocitizer = new SimpleVelocitizer();
 } // BreqFastRequestGenerator
