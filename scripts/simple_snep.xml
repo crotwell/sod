@@ -25,8 +25,8 @@
     </eventArm>
     <networkArm>
         <networkFinder>
-            <name>SNEP</name>
-            <dns>edu/sc/seis/internal</dns>
+            <name>SNEPNetwork</name>
+            <dns>edu/sc/seis/test</dns>
         </networkFinder>
         <bandCode>B</bandCode>
         <printlineChannelProcess/>
@@ -46,8 +46,8 @@
             </endOffset>
         </phaseRequest>
         <fixedDataCenter>
-            <name>SNEP</name>
-            <dns>edu/sc/seis/internal</dns>
+            <name>SNEPSeismogram</name>
+            <dns>edu/sc/seis/test</dns>
         </fixedDataCenter>
         <someCoverage/>
         <printlineSeismogramProcess/>
