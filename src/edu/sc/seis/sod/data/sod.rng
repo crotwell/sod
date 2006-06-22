@@ -3013,7 +3013,19 @@
             <ref name="phaseName"/>
         </element>
         <element name="tHeader">
-            <data type="integer"/>
+            <choice>
+                <value>a</value>
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>6</value>
+                <value>7</value>
+                <value>8</value>
+                <value>9</value>
+            </choice>
         </element>
     </define>
     <define name="phaseTimeContents4">
@@ -3026,7 +3038,19 @@
             <ref name="phaseName10"/>
         </element>
         <element name="tHeader">
-            <data type="integer"/>
+            <choice>
+                <value>a</value>
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>6</value>
+                <value>7</value>
+                <value>8</value>
+                <value>9</value>
+            </choice>
         </element>
     </define>
     <define name="phaseTimeContents2">
@@ -3039,7 +3063,19 @@
             <ref name="phaseName8"/>
         </element>
         <element name="tHeader">
-            <data type="integer"/>
+            <choice>
+                <value>a</value>
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>6</value>
+                <value>7</value>
+                <value>8</value>
+                <value>9</value>
+            </choice>
         </element>
     </define>
     <define name="phaseTimeContents3">
@@ -3052,7 +3088,19 @@
             <ref name="phaseName9"/>
         </element>
         <element name="tHeader">
-            <data type="integer"/>
+            <choice>
+                <value>a</value>
+                <value>0</value>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+                <value>4</value>
+                <value>5</value>
+                <value>6</value>
+                <value>7</value>
+                <value>8</value>
+                <value>9</value>
+            </choice>
         </element>
     </define>
     <define name="eventStation6">

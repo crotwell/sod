@@ -19,24 +19,15 @@ public class PhaseHeaderProcess implements SacProcess {
 
     private static final String DEFAULT_PHASE = "ttp";
 
-    public PhaseHeaderProcess() {
-        this(DEFAULT_PHASE);
-    }
-
-    public PhaseHeaderProcess(String phaseName) {
-        this(DEFAULT_MODEL, phaseName, DEFAULT_T_HEADER);
-    }
-
-    public PhaseHeaderProcess(String model, String phaseName, int tHeader) {
-        this.model = model;
-        this.phaseName = phaseName;
-        this.tHeader = tHeader;
-    }
-
     public PhaseHeaderProcess(Element phaseEl) {
-        this(DOMHelper.extractText(phaseEl, "model", DEFAULT_MODEL),
-             DOMHelper.extractText(phaseEl, "phaseName", DEFAULT_PHASE),
-             DOMHelper.extractInt(phaseEl, "tHeader", DEFAULT_T_HEADER));
+        this.model = DOMHelper.extractText(phaseEl, "model", DEFAULT_MODEL);
+        this.phaseName = DOMHelper.extractText(phaseEl, "phaseName", DEFAULT_PHASE);
+        String header = DOMHelper.extractText(phaseEl, "tHeader", ""+DEFAULT_T_HEADER);
+        if (header.equalsIgnoreCase("a")) {
+            this.tHeader = TauP_SetSac.A_HEADER;
+        } else {
+            this.tHeader = DOMHelper.extractInt(phaseEl, "tHeader", DEFAULT_T_HEADER);
+        }
     }
 
     public void process(SacTimeSeries sac,

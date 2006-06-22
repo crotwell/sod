@@ -283,7 +283,15 @@
             <xsd:annotation>
                 <summary>Writes sac files from seismograms</summary>
                 <description>The seismograms are written to sac files in the location indicated by location. 
-                If multiple seismograms are found for a channel seismograms past the first will be written out with a number appended to their file name.  ie the second seismogram will be filename.1 and the third will be filename.2</description>
+                If multiple seismograms are found for a channel seismograms past the first will be written 
+                out with a number appended to their file name.  ie the second seismogram will be filename.1 
+                and the third will be filename.2.
+                
+                The phaseTimeHeader element will cause the travel time of the given phase to be placed in the
+                sac header corresponding to the tHeader element. tHeader can be 0-9 as well as a. In the case
+                of 0-9, the ray parameter is inserted into the corresponding userX header as rad/sec.
+                
+                See the TauP user manual, http://www.seis.sc.edu/TauP, for the phase naming convention.</description>
                 <example>
                     <sacWriter>
                         <workingDir>seismograms</workingDir>
@@ -291,7 +299,7 @@
                         <phaseTimeHeader>
                             <model>prem</model>
                             <phaseName>ttp</phaseName>
-                            <tHeader>0</tHeader>
+                            <tHeader>a</tHeader>
                         </phaseTimeHeader>
                         <phaseTimeHeader>
                             <model>prem</model>
@@ -393,7 +401,19 @@
             <ref name="phaseName"/>
         </element>
         <element name="tHeader">
-            <data type="integer"/>
+        <choice>
+            <value>a</value>
+            <value>0</value>
+            <value>1</value>
+            <value>2</value>
+            <value>3</value>
+            <value>4</value>
+            <value>5</value>
+            <value>6</value>
+            <value>7</value>
+            <value>8</value>
+            <value>9</value>
+        </choice>
         </element>
     </define>
     <define name="saveSeismogramToFile">

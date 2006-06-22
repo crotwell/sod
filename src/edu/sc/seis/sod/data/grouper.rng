@@ -934,7 +934,12 @@
     <define name="responseWriter">
         <element name="responseWriter">
             <optional>
-                <element name="responseFileTemplate">
+                <element name="workingDir">
+                    <data type="string"/>
+                </element>
+            </optional>
+            <optional>
+                <element name="location">
                     <data type="string"/>
                 </element>
             </optional>
@@ -1225,7 +1230,12 @@
             <ref name="responseWriter"/>
             <element name="sacPoleZeroWriter">
                 <optional>
-                    <element name="poleZeroFileTemplate">
+                    <element name="workingDir">
+                        <data type="string"/>
+                    </element>
+                </optional>
+                <optional>
+                    <element name="location">
                         <data type="string"/>
                     </element>
                 </optional>
