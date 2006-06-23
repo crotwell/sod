@@ -46,6 +46,18 @@ public class VelocityChannel extends Channel {
         return get_code();
     }
 
+    public String getBandCode() {
+        return get_code().substring(0,1);
+    }
+
+    public String getGainCode() {
+        return get_code().substring(1,2);
+    }
+
+    public String getOrientationCode() {
+        return get_code().substring(2,3);
+    }
+
     public String getCodes() {
         return getNet().getCode() + "." + getStation().getCode() + "."
                 + getSite().getCode() + "." + getCode();
