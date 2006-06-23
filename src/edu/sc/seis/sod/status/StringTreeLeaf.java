@@ -20,8 +20,8 @@ public class StringTreeLeaf extends StringTree {
         this.t = t;
     }
 
-    public StringTreeLeaf(Object name, boolean boo) {
-        this(name, boo, "");
+    public StringTreeLeaf(Object actor, boolean boo) {
+        this(actor, boo, "");
     }
 
     public StringTreeLeaf(String name, boolean boo) {
