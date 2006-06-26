@@ -330,8 +330,7 @@
         <element name="externalOriginSubsetter">
             <xsd:annotation>
                 <summary>Use an Origin subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements
-                    OriginSubsetter, SOD calls accept() on the class for every event.</description>
+                <description>$externalOriginSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalOriginSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.origin.MyOriginSubsetter</classname>

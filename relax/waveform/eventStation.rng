@@ -319,8 +319,7 @@ test suite
         <element name="externalEventStationSubsetter">
             <xsd:annotation>
                 <summary>Use an EventStation subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements
-                    EventStationSubsetter, SOD calls accept() on the class for every event-station pair.</description>
+                <description>$externalEventStationSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalEventStationSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.eventStation.MyEventStationSubsetter</classname>

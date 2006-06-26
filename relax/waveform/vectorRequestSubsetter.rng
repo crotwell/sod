@@ -112,10 +112,7 @@
         <element name="externalVectorRequest">
             <xsd:annotation>
                 <summary>Use a VectorRequest external to SOD</summary>
-                <description>This tag allows you to use a VectorRequest external to SOD. SOD
-                    attempts to load the class named in classname and, provided it implements the
-                    VectorRequest interface, it calls accept() for each event, channel-group, and
-                    request.</description>
+                <description>$externalVectorRequestInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalVectorRequest>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.request.MyVectorRequest</classname>

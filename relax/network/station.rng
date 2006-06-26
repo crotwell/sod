@@ -281,8 +281,7 @@
         <element name="externalStationSubsetter">
             <xsd:annotation>
                 <summary>Use a station subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements
-                    StationSubsetter, SOD calls accept() on the class for every station.</description>
+                <description>$externalStationSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalStationSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.station.MyStationSubsetter</classname>

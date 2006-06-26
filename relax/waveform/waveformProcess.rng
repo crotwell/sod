@@ -585,9 +585,7 @@
         <element name="externalWaveformProcess">
             <xsd:annotation>
                 <summary>Runs an externally defined Java processor</summary>
-                <description>This runs the Java processor defined in the given class, which must
-                    implement the edu.sc.seis.sod.process.waveformArm.process.WaveformProcess
-                    interface.</description>
+                <description>$externalWaveformProcessInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalWaveformProcess>
                         <classname>edu.myuniv.seis.xyz.MySeisProcessor</classname>

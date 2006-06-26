@@ -225,10 +225,7 @@
         <element name="externalWaveformVectorProcess">
             <xsd:annotation>
                 <summary>Use a WaveformVectorProcess external to SOD</summary>
-                <description>This allows you to use a WaveformVectorProcess external to SOD. SOD
-                    attempts to load the class named in classname, and, provided the class
-                    implements the WavformVectorProcess interface, it attempt to call the process()
-                    method for every waveform group.</description>
+                <description>$externalWaveformVectorProcessInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalWaveformVectorProcess>
                         <classname>edu.somewhere.seis.sodExt.process.waveformVector.MyWaveformVectorProcess</classname>

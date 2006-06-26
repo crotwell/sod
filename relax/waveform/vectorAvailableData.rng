@@ -139,13 +139,10 @@
         </element>
     </define>
     <define name="external">
-        <element name="externalVectorAvailableData">
+        <element name="externalVectorAvailableDataSubsetter">
             <xsd:annotation>
                 <summary>Use a VectorAvailableData subsetter external to sod</summary>
-                <description>This allows you to use a VectorAvailableData subsetter that is external
-                    to SOD. SOD attempts to load the class named by classname and, provided it
-                    implements the VectorAvailableDataSubsetter, it will called the accept() method
-                    for every available data request.</description>
+                <description>$externalVectorAvailableDataSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalVectorAvailableData>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyVectorAvailableData</classname>

@@ -175,8 +175,7 @@
         <element name="externalNetworkSubsetter">
             <xsd:annotation>
                 <summary>Use a Network subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements
-                    NetworkSubsetter, SOD calls accept() on the class for every network.</description>
+                <description>$externalNetworkSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalNetworkSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.network.MyNetworkSubsetter</classname>

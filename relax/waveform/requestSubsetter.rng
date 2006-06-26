@@ -394,8 +394,7 @@
         <element name="externalRequest">
             <xsd:annotation>
                 <summary>Use a request subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements Request, SOD calls
-                    accept() on the class for every event-channel pair.</description>
+                <description>$externalRequestInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalRequest>
                         <classname>edu.somewhere.seis.sodExt.subsetter.request.MyRequest</classname>

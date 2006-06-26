@@ -106,9 +106,7 @@
         <element name="externalEventVectorSubsetter">
             <xsd:annotation>
                 <summary>Use an EventVector subsetter external to SOD</summary>
-                <description>This tag allows you to use an EventVector subsetter external to SOD. SOD attempts to load
-                    the class named by classname and then, provided it implements the EventVectorSubsetter interface,
-                    calls the accept() method for each event and channel group.</description>
+                <description>$externalEventVectorSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalEventVectorSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.waveformVector.MyEventVectorSubsetter</classname>

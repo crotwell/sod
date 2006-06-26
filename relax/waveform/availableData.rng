@@ -166,9 +166,7 @@
         <element name="externalAvailableDataSubsetter">
             <xsd:annotation>
                 <summary>Use an AvailableData subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements
-                    AvailableDataSubsetter, SOD calls accept() on the class for every event,
-                    channel, and their available data.</description>
+                <description>$externalAvailableDataSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalAvailableDataSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.availableData.MyAvailableDataSubsetter</classname>

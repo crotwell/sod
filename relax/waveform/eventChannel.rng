@@ -166,8 +166,7 @@
         <element name="externalEventChannelSubsetter">
             <xsd:annotation>
                 <summary>Use an EventChannel subsetter external to SOD</summary>
-                <description>Attempts to load the class named by classname, and if it implements EventChannelSubsetter, SOD
-                    calls accept() on the class for every event-channel pair.</description>
+                <description>$externalEventChannelSubsetterInfo.getRelaxHTML('../../../')</description>
                 <example>
                     <externalEventChannelSubsetter>
                         <classname>edu.somewhere.seis.sodExt.subsetter.eventChannel.MyEventChannelSubsetter</classname>
