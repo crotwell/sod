@@ -21,24 +21,9 @@
             </magnitudeRange>
             <catalog>WHDF</catalog>
         </eventFinder>
-        <originOR>
-            <originAND>
-                <magnitudeRange>
-                    <min>5</min>
-                </magnitudeRange>
-                <originDepthRange>
-                    <unit>KILOMETER</unit>
-                    <min>100</min>
-                    <max>200</max>
-                </originDepthRange>
-            </originAND>
-            <magnitudeRange>
-                <min>6</min>
-            </magnitudeRange>
-        </originOR>
         <externalOriginSubsetter>
             <classname>edu.sc.seis.sod.example.LatOMatic</classname>
-            <maxLat>5</maxLat>
+            <maxLat>45</maxLat>
         </externalOriginSubsetter>
         <printlineEventProcess/>
     </eventArm>
