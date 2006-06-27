@@ -273,7 +273,7 @@
                 <description>The horizontal seismograms are rotated to the great circle path. 
                 The channel codes are changed to end in R for radial or T for transverse, so 
                 BHN and BHE would become BHR and BHT. If seismograms are not being rotated,
-                try applying a <a href="vectorCut.html">vectorCut</a> to align all of the seismograms in the vector.</description>
+                try applying a <a href="vectorTrim.html">vectorTrim</a> to align all of the seismograms in the vector.</description>
             </xsd:annotation>
             <empty/>
         </element>
