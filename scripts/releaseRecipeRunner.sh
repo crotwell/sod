@@ -31,7 +31,7 @@ VERSION=2.2rc1
 DIR=sod-${VERSION}
 FILE=${DIR}.tar.gz 
 curl -o ${FILE} http://www.seis.sc.edu/downloads/sod/${VERSION}/${FILE}
-xzf ${FILE}
+tar xzf ${FILE}
 export SOD_HOME=`pwd`/${DIR}
 echo $SOD_HOME
 export PATH=${SOD_HOME}/bin:$PATH
