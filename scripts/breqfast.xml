@@ -78,9 +78,8 @@
             </endOffset>
         </phaseRequest>
         <breqFastRequest>
-            <dataDirectory>sample_breqfast</dataDirectory>
-            <label>
-                <originTime>yyyy_DDD_HH_mm_ss</originTime> _A </label>
+            <workingDir>sample_breqfast</workingDir>
+            <location>$event.getTime('yyyy_DDD_HH_mm_ss')_A</location>
             <name>Felix T. Cat</name>
             <inst>Univ. of Somewhere</inst>
             <mail>Dept. of Geol. Sci., UoS, Anywhere Sc 55555</mail>
