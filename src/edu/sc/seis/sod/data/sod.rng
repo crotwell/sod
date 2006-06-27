@@ -35638,7 +35638,7 @@
                     <ref name="vectorAvailableData"/>
                 </zeroOrMore>
             </element>
-            <element name="externalVectorAvailableData">
+            <element name="externalVectorAvailableDataSubsetter">
                 <element name="classname">
                     <data type="string"/>
                 </element>
