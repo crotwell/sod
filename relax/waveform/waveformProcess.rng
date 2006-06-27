@@ -420,7 +420,7 @@
         <element name="saveSeismogramToFile">
             <xsd:annotation>
                 <summary>Deprecated!  Use sacWriter or mseedWriter instead!</summary>
-                <description>As of sod-2.1.2 this processor is deprecated.  Unless you specifically want DSML files, use sacWriter or mseedWriter instead.  When sod-2.2 is released, this processor will no longer be allowed.
+                <description>As of sod-2.2 this processor is deprecated.  Unless you specifically want DSML files, use sacWriter or mseedWriter instead.  When sod-2.3 is released, this processor will no longer be allowed.
                 
                  The seismograms are written to data files in the given directory. Also
                     writes out a dsml file for use in GEE and other fissures tools that support

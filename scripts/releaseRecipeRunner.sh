@@ -27,7 +27,7 @@ cat subsettingNetwork.out | wc -l > ${DOCDIR}/subset
 cat network.out | wc -l > ${DOCDIR}/completeSubset
 }
 
-VERSION=2.1.2rc2
+VERSION=2.2rc1
 DIR=sod-${VERSION}
 FILE=${DIR}.tar.gz 
 curl -o ${FILE} http://www.seis.sc.edu/downloads/sod/${VERSION}/${FILE}
