@@ -40,7 +40,7 @@ run demo -demo
 runrecipe waveform
 runrecipe network
 runrecipe event
-runrecipe simpleNetwork
+#runrecipe simpleNetwork takes wayyyyyyy too long
 runrecipe subsettingNetwork
 runrecipe simpleEvent
 runrecipe simpleWaveform
