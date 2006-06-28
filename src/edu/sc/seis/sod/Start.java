@@ -67,7 +67,6 @@ public class Start {
             }
         });
         GlobalExceptionHandler.registerWithAWTThread();
-        BulletproofVestFactory.setDefaultNumRetry(1000);
     }
 
     /**
