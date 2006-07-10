@@ -5,7 +5,7 @@
             <name>IRIS_NetworkDC</name>
             <dns>edu/iris/dmc</dns>
         </networkFinder>
-        <bandCode>Z</bandCode>
+        <orientationCode>Z</orientationCode>
         <printlineChannelProcess>
             <filename>all.channels</filename>
         </printlineChannelProcess>
