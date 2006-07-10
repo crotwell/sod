@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<sod>
+    <networkArm>
+        <networkFinder>
+            <name>IRIS_NetworkDC</name>
+            <dns>edu/iris/dmc</dns>
+        </networkFinder>
+        <bandCode>Z</bandCode>
+        <printlineChannelProcess>
+            <filename>all.channels</filename>
+        </printlineChannelProcess>
+        <channelOR>
+            <channelAND>
+                <hasNegativeSensitivity/>
+                <printlineChannelProcess>
+                    <filename>negativeSensitivity.channels</filename>
+                </printlineChannelProcess>
+                <isFlipped/>
+                <printlineChannelProcess>
+                    <filename>flipped.channels</filename>
+                </printlineChannelProcess>
+                <printlineChannelProcess>
+                    <filename>flippedAndNegative.channels</filename>
+                </printlineChannelProcess>
+            </channelAND>
+            <channelAND>
+                <isFlipped/>
+                <printlineChannelProcess>
+                    <filename>flipped.channels</filename>
+                </printlineChannelProcess>
+            </channelAND>
+        </channelOR>
+    </networkArm>
+</sod>

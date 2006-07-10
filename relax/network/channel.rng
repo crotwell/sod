@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-    xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xsd="http://http://www.w3.org/2001/XMLSchema">
     <include href="../base/include/externalClass.rng"/>
     <start>
         <ref name="channel"/>
@@ -11,8 +10,7 @@
         <choice>
             <xsd:annotation>
                 <summary>Tactics for selecting channels</summary>
-                <description>This collects all of the subsetters that make decisions on the contents
-                    of a channel.</description>
+                <description>This collects all of the subsetters that make decisions on the contents of a channel.</description>
                 <velocity>#networkArmPage()</velocity>
             </xsd:annotation>
             <ref name="hadDataLastWeek"/>
@@ -54,6 +52,8 @@
             <ref name="sensorSerial"/>
             <ref name="sensorNominalHighFreq"/>
             <ref name="sensorNominalLowFreq"/>
+            <ref name="hasNegativeSensitivity"/>
+            <ref name="isFlipped"/>
         </choice>
     </define>
     <define name="channelLogical">
@@ -83,6 +83,24 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="clockId"/>
+            <ref name="clockManufacturer"/>
+            <ref name="clockModel"/>
+            <ref name="clockSerial"/>
+            <ref name="clockType"/>
+            <ref name="dasId"/>
+            <ref name="dasManufacturer"/>
+            <ref name="dasModel"/>
+            <ref name="dasSerial"/>
+            <ref name="dasStyle"/>
+            <ref name="sensorId"/>
+            <ref name="sensorManufacturer"/>
+            <ref name="sensorModel"/>
+            <ref name="sensorSerial"/>
+            <ref name="sensorNominalHighFreq"/>
+            <ref name="sensorNominalLowFreq"/>
+            <ref name="hasNegativeSensitivity"/>
+            <ref name="isFlipped"/>
         </choice>
     </define>
     <define name="singleLetterOrNumber">
@@ -99,8 +117,7 @@
             <xsd:annotation>
                 <summary>Matches the entire channel code</summary>
                 <description>Matches a channel code, such as BHZ. See the <a
-                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the
-                    list of available code letters.</description>
+                        href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available code letters.</description>
             </xsd:annotation>
             <data type="string">
                 <xsd:annotation>
@@ -114,9 +131,9 @@
         <element name="bandCode">
             <xsd:annotation>
                 <summary>Matches the band code of a channel</summary>
-                <description>Matches the band code of a channel, such as B for broadband and L for
-                    long period. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED
-                        manual</a> for the list of available code letters.</description>
+                <description>Matches the band code of a channel, such as B for broadband and L for long period. See the
+                        <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available
+                    code letters.</description>
             </xsd:annotation>
             <ref name="singleLetterOrNumber"/>
         </element>
@@ -125,9 +142,9 @@
         <element name="gainCode">
             <xsd:annotation>
                 <summary>Matches a gain code in a channel code</summary>
-                <description>Matches a gain code in a channel code, such as H for high gain and L
-                    for low gain. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED
-                        manual</a> for the list of available code letters.</description>
+                <description>Matches a gain code in a channel code, such as H for high gain and L for low gain. See the
+                        <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available
+                    code letters.</description>
                 <example>
                     <gainCode>H</gainCode>
                 </example>
@@ -139,9 +156,9 @@
         <element name="orientationCode">
             <xsd:annotation>
                 <summary>Matches a orientation code in a channel code</summary>
-                <description>Matches a orientation code in a channel code, such as Z for vertical
-                    and N for north. See the <a href="http://www.iris.edu/manuals/SEED_appA.htm"
-                        >SEED manual</a> for the list of available code letters.</description>
+                <description>Matches a orientation code in a channel code, such as Z for vertical and N for north. See
+                    the <a href="http://www.iris.edu/manuals/SEED_appA.htm">SEED manual</a> for the list of available
+                    code letters.</description>
                 <example>
                     <orientationCode>Z</orientationCode>
                 </example>
@@ -153,10 +170,9 @@
         <element name="channelAND">
             <xsd:annotation>
                 <summary>Matches all enclosed channel subsetters</summary>
-                <description>The output is the logical AND of the outputs of all included channel
-                    subsetters. This means that it will evaluate to true only if all the enclosed
-                    channel subsetters evaluate to true. The subsetters after the first false
-                    outputted are not evaluated.</description>
+                <description>The output is the logical AND of the outputs of all included channel subsetters. This means
+                    that it will evaluate to true only if all the enclosed channel subsetters evaluate to true. The
+                    subsetters after the first false outputted are not evaluated.</description>
                 <example>
                     <channelAND>
                         <channelEffectiveTimeOverlap>
@@ -183,10 +199,9 @@
         <element name="channelOR">
             <xsd:annotation>
                 <summary>Matches at least one enclosed channel subsetter</summary>
-                <description>The output is the logical OR of the outputs of all included Channeel
-                    subsetters. This means that it will evaluate to true if at least one of the
-                    enclosed channel subsetters evaluates to true. The subsetters after the first
-                    true outputted are not evaluated.</description>
+                <description>The output is the logical OR of the outputs of all included Channeel subsetters. This means
+                    that it will evaluate to true if at least one of the enclosed channel subsetters evaluates to true.
+                    The subsetters after the first true outputted are not evaluated.</description>
                 <example>
                     <channelOR>
                         <channelEffectiveTimeOverlap>
@@ -213,9 +228,8 @@
         <element name="channelNOT">
             <xsd:annotation>
                 <summary>Matches the negated output of the enclosed channel subsetter</summary>
-                <description>The output is the logical NOT of the output of the enclosed channel
-                    subsetter. This means that it will evaluate to false if the enclosed channel
-                    subsetter evaluates to true, and vice versa.</description>
+                <description>The output is the logical NOT of the output of the enclosed channel subsetter. This means
+                    that it will evaluate to false if the enclosed channel subsetter evaluates to true, and vice versa.</description>
             </xsd:annotation>
             <ref name="channel"/>
         </element>
@@ -224,9 +238,8 @@
         <element name="sampling">
             <xsd:annotation>
                 <summary>Matches if the sampling rate of the channel is within the range</summary>
-                <description>Matches if the sampling rate of the channel is within the range. Both
-                    the min and max are optional, although at least one must be given to have any
-                    effect</description>
+                <description>Matches if the sampling rate of the channel is within the range. Both the min and max are
+                    optional, although at least one must be given to have any effect</description>
                 <example>
                     <sampling>
                         <min>1</min>
@@ -257,9 +270,8 @@
         <element name="channelEffectiveTimeOverlap">
             <xsd:annotation>
                 <summary>Matches if the channel effective time overlaps the given time range</summary>
-                <description>Matches if the channel effective time overlaps the given time range.
-                    This is generally used to avoid processing channels that did not yet exist, or
-                    were deactivated before a time range of interest.</description>
+                <description>Matches if the channel effective time overlaps the given time range. This is generally used
+                    to avoid processing channels that did not yet exist, or were deactivated before a time range of interest.</description>
             </xsd:annotation>
             <ref name="timeRange"/>
         </element>
@@ -268,9 +280,8 @@
         <element name="orientationRange">
             <xsd:annotation>
                 <summary>Checks if a channel's orientation lies within a range</summary>
-                <description>The match is true if the channel's orientation is within the offset of
-                    the given azimuth and dip. The offset, as well as the azimuth and dip are given
-                    in degrees.</description>
+                <description>The match is true if the channel's orientation is within the offset of the given azimuth
+                    and dip. The offset, as well as the azimuth and dip are given in degrees.</description>
             </xsd:annotation>
             <element name="azimuth">
                 <data type="float">
@@ -299,8 +310,8 @@
         <element name="orientationAzimuthRange">
             <xsd:annotation>
                 <summary>Matches the azimuth of a channel</summary>
-                <description>The match is true if azimuth of the channel's orientation is within the
-                    given azimuth range. The min and max are given in degrees.</description>
+                <description>The match is true if azimuth of the channel's orientation is within the given azimuth
+                    range. The min and max are given in degrees.</description>
             </xsd:annotation>
             <element name="min">
                 <data type="float">
@@ -322,8 +333,8 @@
         <element name="orientationDipRange">
             <xsd:annotation>
                 <summary>Matches the dip of a channel</summary>
-                <description>The match is true if the dip of the channel's orientation is within the
-                    given dip range. The min and max are given in degrees.</description>
+                <description>The match is true if the dip of the channel's orientation is within the given dip range.
+                    The min and max are given in degrees.</description>
             </xsd:annotation>
             <element name="min">
                 <data type="float">
@@ -345,8 +356,8 @@
         <element name="passChannel">
             <xsd:annotation>
                 <summary>Accepts any channel</summary>
-                <description>This is a simple subsetter that always returns true for any channel,
-                    which is useful for testing purposes.</description>
+                <description>This is a simple subsetter that always returns true for any channel, which is useful for
+                    testing purposes.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="channel"/>
@@ -370,8 +381,7 @@
     <define name="hadDataLastWeek">
         <element name="hadDataLastWeek">
             <xsd:annotation>
-                <summary>Checks if a data center has data for a channel
-                    for the past week</summary>
+                <summary>Checks if a data center has data for a channel for the past week</summary>
             </xsd:annotation>
             <externalRef href="../waveform/fixedDataCenter.rng"/>
         </element>
@@ -385,8 +395,8 @@
                 <element name="workingDir">
                     <xsd:annotation>
                         <summary>The base directory for response file output</summary>
-                        <description>The value generated by location is appened to the value in workingDir to make the 
-                            location to write response files.  This defaults to 'responses/'.</description>
+                        <description>The value generated by location is appened to the value in workingDir to make the
+                            location to write response files. This defaults to 'responses/'.</description>
                     </xsd:annotation>
                     <data type="string"/>
                 </element>
@@ -395,15 +405,16 @@
                 <element name="location">
                     <data type="string">
                         <xsd:annotation>
-                            
                             <summary>Configures which files to write responses in</summary>
-                            <description>Each response is put in a separate file using this 
-                                <a href="../../templates.html">Velocity template</a> to
-                                determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
-                                <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
-                                and <a href="../../templateTypes.html#net">net</a> variables.
-                                If no location element is given, it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.resp".
-                                Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
+                            <description>Each response is put in a separate file using this <a
+                                    href="../../templates.html">Velocity template</a> to determine the file name. The
+                                template contains <a href="../../templateTypes.html#channel">channel</a>
+                                <a href="../../templateTypes.html#site">site</a>, <a
+                                href="../../templateTypes.html#station">station</a> and <a
+                                href="../../templateTypes.html#net">net</a> variables. If no location element is given,
+                                it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.resp".
+                                Since every response should be in a different file, the template should produce unique
+                                values for all successful channels in the run.</description>
                             <example>$network.code-$station.code-${channel.code}.resp</example>
                         </xsd:annotation>
                     </data>
@@ -420,8 +431,8 @@
                 <element name="workingDir">
                     <xsd:annotation>
                         <summary>The base directory for pole zero file output</summary>
-                        <description>The value generated by location is appened to the value in workingDir to make the 
-                            location to write polezero files.  This defaults to 'polezero/'.</description>
+                        <description>The value generated by location is appened to the value in workingDir to make the
+                            location to write polezero files. This defaults to 'polezero/'.</description>
                     </xsd:annotation>
                     <data type="string"/>
                 </element>
@@ -431,13 +442,15 @@
                     <data type="string">
                         <xsd:annotation>
                             <summary>Configures which files to write pole zeros in</summary>
-                            <description>Each pole zero is put in a separate file using this 
-                                <a href="../../templates.html">Velocity template</a> to
-                                determine the file name.  The template contains <a href="../../templateTypes.html#channel">channel</a>
-                                <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
-                                and <a href="../../templateTypes.html#net">net</a> variables.
-                                If no location element is given, it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.sacpz".
-                                Since every response should be in a different file, the template should produce unique values for all successful channels in the run.</description>
+                            <description>Each pole zero is put in a separate file using this <a
+                                    href="../../templates.html">Velocity template</a> to determine the file name. The
+                                template contains <a href="../../templateTypes.html#channel">channel</a>
+                                <a href="../../templateTypes.html#site">site</a>, <a
+                                href="../../templateTypes.html#station">station</a> and <a
+                                href="../../templateTypes.html#net">net</a> variables. If no location element is given,
+                                it defaults to "${channel.codes}.${channel.getStart('yyyy_DDD_HH_mm_ss')}.resp.sacpz".
+                                Since every response should be in a different file, the template should produce unique
+                                values for all successful channels in the run.</description>
                             <example>polezero/$network.code-$station.code-${channel.code}.sacpz</example>
                         </xsd:annotation>
                     </data>
@@ -448,14 +461,13 @@
     <define name="printline">
         <element name="printlineChannelProcess">
             <xsd:annotation>
-                <summary>Prints every successful channel to the console or to the specified
-                    file</summary>
-                <description>Prints out each channel on a new line.  The template and filename elements are both
-                    <a href="../../templates.html">Velocity templates</a> containing <a href="../../templateTypes.html#channel">channel</a>
-                    <a href="../../templateTypes.html#site">site</a>, <a href="../../templateTypes.html#station">station</a>
-                    and <a href="../../templateTypes.html#net">net</a> variables.
-                    If no template element is given, it defaults to "Channel: $channel".
-                    If no filename is given, the output goes to standard out.</description>
+                <summary>Prints every successful channel to the console or to the specified file</summary>
+                <description>Prints out each channel on a new line. The template and filename elements are both <a
+                        href="../../templates.html">Velocity templates</a> containing <a href="../../templateTypes.html#channel">channel</a>
+                    <a href="../../templateTypes.html#site">site</a>, <a
+                    href="../../templateTypes.html#station">station</a> and <a
+                    href="../../templateTypes.html#net">net</a> variables. If no template element is given, it defaults
+                    to "Channel: $channel". If no filename is given, the output goes to standard out.</description>
             </xsd:annotation>
             <interleave>
                 <optional>
@@ -463,21 +475,22 @@
                         <text/>
                     </element>
                 </optional>
-            <optional>
-                <element name="filename">
-                    <text/>
-                </element>
-            </optional></interleave>
+                <optional>
+                    <element name="filename">
+                        <text/>
+                    </element>
+                </optional>
+            </interleave>
         </element>
     </define>
     <define name="stationHas">
         <element name="stationHas">
             <xsd:annotation>
-                <summary>Matches the current channel if the enclosed channel subsetters are
-                    satisfied by the channels in the station</summary>
-                <description>The output is true if at least one channel in the station matches each
-                    of the enclosed channel subsetters. For example this could be used with a
-                    channelNOT to select SH? only if the station does not have BH?.</description>
+                <summary>Matches the current channel if the enclosed channel subsetters are satisfied by the channels in
+                    the station</summary>
+                <description>The output is true if at least one channel in the station matches each of the enclosed
+                    channel subsetters. For example this could be used with a channelNOT to select SH? only if the
+                    station does not have BH?.</description>
             </xsd:annotation>
             <oneOrMore>
                 <ref name="channel"/>
@@ -487,12 +500,10 @@
     <define name="alwaysSuccess">
         <element name="alwaysSuccess">
             <xsd:annotation>
-                <summary>Runs the enclosed subsetters in order until one fails, then passes the
-                    channel</summary>
-                <description>Allows a failing channel subsetter to run while passing the channel
-                    onto the waveform arm. This can be useful if you only want to run a particular
-                    processor if a channel meets a certain criteria, but you want the waveform arm
-                    to process it regardless.</description>
+                <summary>Runs the enclosed subsetters in order until one fails, then passes the channel</summary>
+                <description>Allows a failing channel subsetter to run while passing the channel onto the waveform arm.
+                    This can be useful if you only want to run a particular processor if a channel meets a certain
+                    criteria, but you want the waveform arm to process it regardless.</description>
             </xsd:annotation>
             <zeroOrMore>
                 <ref name="channelLogical"/>
@@ -649,6 +660,16 @@
                 <summary>Matches the sensor's nominal low frequency of the channel's instrumentation</summary>
             </xsd:annotation>
             <data type="float"/>
+        </element>
+    </define>
+    <define name="isFlipped">
+        <element name="isFlipped">
+            <empty/>
+        </element>
+    </define>
+    <define name="hasNegativeSensitivity">
+        <element name="hasNegativeSensitivity">
+            <empty/>
         </element>
     </define>
 </grammar>

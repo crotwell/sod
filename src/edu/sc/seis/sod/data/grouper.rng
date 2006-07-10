@@ -110,6 +110,11 @@
             <data type="float"/>
         </element>
     </define>
+    <define name="isFlipped">
+        <element name="isFlipped">
+            <empty/>
+        </element>
+    </define>
     <define name="siteLogical">
         <choice>
             <ref name="code4"/>
@@ -778,18 +783,18 @@
             <ref name="lon2"/>
         </element>
     </define>
-    <define name="stationPointDistance4">
-        <element name="stationPointDistance">
-            <ref name="range3"/>
-            <ref name="lat3"/>
-            <ref name="lon3"/>
-        </element>
-    </define>
     <define name="stationPointDistance2">
         <element name="stationPointDistance">
             <ref name="range4"/>
             <ref name="lat4"/>
             <ref name="lon4"/>
+        </element>
+    </define>
+    <define name="stationPointDistance4">
+        <element name="stationPointDistance">
+            <ref name="range3"/>
+            <ref name="lat3"/>
+            <ref name="lon3"/>
         </element>
     </define>
     <define name="sampling">
@@ -898,6 +903,11 @@
     <define name="code3">
         <element name="stationCode">
             <data type="string"/>
+        </element>
+    </define>
+    <define name="hasNegativeSensitivity">
+        <element name="hasNegativeSensitivity">
+            <empty/>
         </element>
     </define>
     <define name="stationHas">
@@ -1293,6 +1303,8 @@
             <element name="sensorNominalLowFreq">
                 <data type="float"/>
             </element>
+            <ref name="hasNegativeSensitivity"/>
+            <ref name="isFlipped"/>
         </choice>
     </define>
     <define name="area2">
@@ -1554,6 +1566,13 @@
             </zeroOrMore>
         </element>
     </define>
+    <define name="PASS5">
+        <element name="passStation">
+            <zeroOrMore>
+                <ref name="station3"/>
+            </zeroOrMore>
+        </element>
+    </define>
     <define name="PASS2">
         <element name="passStation">
             <zeroOrMore>
@@ -1588,13 +1607,6 @@
         <element name="passStation">
             <zeroOrMore>
                 <ref name="station2"/>
-            </zeroOrMore>
-        </element>
-    </define>
-    <define name="PASS5">
-        <element name="passStation">
-            <zeroOrMore>
-                <ref name="station3"/>
             </zeroOrMore>
         </element>
     </define>
@@ -1653,6 +1665,8 @@
             <ref name="hasResponse"/>
             <ref name="hasSensitivity"/>
             <ref name="repairSensitivity"/>
+            <ref name="hasNegativeSensitivity"/>
+            <ref name="isFlipped"/>
         </choice>
     </define>
     <define name="NOT">
