@@ -100,7 +100,7 @@ public class ForkProcess implements WaveformProcess {
     }
 
     public String toString() {
-        String s = getName() + "(";
+        String s = getClass().getSimpleName() + "(";
         Iterator it = localSeisProcessList.iterator();
         while(it.hasNext()) {
             s += it.next().toString() + ",";
@@ -108,10 +108,6 @@ public class ForkProcess implements WaveformProcess {
         s = s.substring(0, s.length() - 1);
         s += ")";
         return s;
-    }
-
-    public String getName() {
-        return "ForkProcess";
     }
 
     protected List localSeisProcessList = new ArrayList();

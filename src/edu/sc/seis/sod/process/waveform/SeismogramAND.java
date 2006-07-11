@@ -28,7 +28,4 @@ public class SeismogramAND extends ForkProcess {
         return doAND(event, channel, original, available, seismograms, cookieJar);
     }
 
-    public String getName() {
-        return "SeismogramAND";
-    }
 }

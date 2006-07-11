@@ -553,6 +553,7 @@ public class NetworkArm implements Arm {
             Site site = siteDbObject.getSite();
             try {
                 Channel[] channels = networkAccess.retrieve_for_station(site.my_station.get_id());
+                logger.debug("Got " + channels.length + " from server");
                 JDBCChannel chanDb = netTable.getChannelDb();
                 Status inProg = Status.get(Stage.NETWORK_SUBSETTER,
                                            Standing.IN_PROG);
@@ -563,11 +564,13 @@ public class NetworkArm implements Arm {
                     }
                     change(chan, inProg);
                     if(chanEffectiveSubsetter.accept(chan, networkAccess)) {
+                        logger.debug("Passed effective");
                         boolean accepted = true;
                         synchronized(chanSubsetters) {
                             Iterator it = chanSubsetters.iterator();
                             while(it.hasNext()) {
                                 ChannelSubsetter cur = (ChannelSubsetter)it.next();
+                                logger.debug(chan + " trying " + cur);
                                 if(!cur.accept(chan, networkAccess)) {
                                     change(chan,
                                            Status.get(Stage.NETWORK_SUBSETTER,
